@@ -1117,692 +1117,440 @@
     "PP-LCNet_x1_0_doc_ori": [
       "tensorrt_fp16",
       "paddle_tensorrt",
-      "tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PicoDet_LCNet_x2_5_face": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "MobileFaceNet": [
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet50_face": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "CLIP_vit_base_patch16_224": [
       "tensorrt_fp16",
-      "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt_fp16"
     ],
     "CLIP_vit_large_patch14_224": [
       "tensorrt_fp16",
-      "paddle_tensorrt_fp16",
-      "paddle",
-      "paddle_tensorrt",
-      "tensorrt"
+      "paddle_tensorrt_fp16"
     ],
     "ConvNeXt_base_224": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle",
       "onnxruntime",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "ConvNeXt_base_384": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle",
       "onnxruntime",
-      "tensorrt",
-      "paddle_tensorrt"
+      "tensorrt"
     ],
     "ConvNeXt_large_224": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle",
       "onnxruntime",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "ConvNeXt_large_384": [
-      "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle",
       "onnxruntime",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "ConvNeXt_small": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle",
       "onnxruntime",
-      "tensorrt",
-      "paddle_tensorrt"
+      "tensorrt"
     ],
     "ConvNeXt_tiny": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
       "onnxruntime",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle"
+      "tensorrt"
     ],
     "FasterNet-L": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "FasterNet-M": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "FasterNet-S": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "FasterNet-T0": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "FasterNet-T1": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "FasterNet-T2": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV1_x0_25": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV1_x0_5": [
-      "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV1_x0_75": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV1_x1_0": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV2_x0_25": [
       "paddle_tensorrt",
-      "tensorrt_fp16",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV2_x0_5": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV2_x1_0": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV2_x1_5": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV2_x2_0": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_large_x0_35": [
       "tensorrt_fp16",
-      "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_large_x0_5": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_large_x0_75": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_large_x1_0": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_large_x1_25": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_small_x0_35": [
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_small_x0_5": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_small_x0_75": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_small_x1_0": [
       "tensorrt",
       "paddle_tensorrt",
-      "tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV3_small_x1_25": [
-      "tensorrt_fp16",
       "paddle_tensorrt_fp16",
       "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV4_conv_large": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV4_conv_medium": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV4_conv_small": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV4_hybrid_large": [
       "tensorrt_fp16",
       "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "MobileNetV4_hybrid_medium": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle"
+      "tensorrt_fp16"
     ],
     "PP-HGNetV2-B0": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt_fp16",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B1": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt_fp16",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B2": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B3": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B4": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B5": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B6": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNet_base": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-HGNet_small": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNet_tiny": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNetV2_base": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNetV2_large": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNetV2_small": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x0_25": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x0_35": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x0_5": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x0_75": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
       "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x1_0": [
-      "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x1_5": [
-      "tensorrt_fp16",
       "paddle_tensorrt_fp16",
       "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x2_0": [
-      "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x2_5": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
       "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet101": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet101_vd": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet152": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet152_vd": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet18": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet18_vd": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet200_vd": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet34": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet34_vd": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet50": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet50_vd": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "StarNet-S1": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "StarNet-S2": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "StarNet-S3": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "StarNet-S4": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-ShiTuV2_rec_CLIP_vit_base": [
-      "tensorrt_fp16",
       "tensorrt",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "PP-ShiTuV2_rec_CLIP_vit_large": [
-      "tensorrt_fp16",
       "paddle",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "PP-ShiTuV2_rec": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "CLIP_vit_base_patch16_448_ML": [
       "tensorrt_fp16",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle"
+      "paddle_tensorrt_fp16"
     ],
     "PP-HGNetV2-B0_ML": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-HGNetV2-B4_ML": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-HGNetV2-B6_ML": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-LCNet_x1_0_ML": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ResNet50_ML": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "UVDoc": [
       "paddle"
     ],
     "PP-TinyPose_128x96": [
-      "tensorrt_fp16",
       "tensorrt",
       "onnxruntime",
       "paddle"
     ],
     "PP-TinyPose_256x192": [
-      "tensorrt_fp16",
       "tensorrt",
       "onnxruntime",
       "paddle"
@@ -1812,821 +1560,562 @@
       "onnxruntime"
     ],
     "RT-DETR-H_layout_17cls": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-H_layout_3cls": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-ShiTuV2_det": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-H": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-L": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-R18": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-R50": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-X": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-LCNet_x1_0_pedestrian_attribute": [
       "paddle_tensorrt",
       "tensorrt",
-      "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-OCRv4_mobile_seal_det": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt_fp16",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-OCRv4_server_seal_det": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "Deeplabv3-R101": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "Deeplabv3-R50": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "Deeplabv3_Plus-R101": [
       "tensorrt_fp16",
       "paddle_tensorrt",
-      "paddle",
-      "tensorrt",
       "onnxruntime"
     ],
     "Deeplabv3_Plus-R50": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "OCRNet_HRNet-W18": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "OCRNet_HRNet-W48": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
-      "paddle",
       "tensorrt",
       "onnxruntime"
     ],
     "SeaFormer_base": [
       "onnxruntime",
       "paddle",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "SeaFormer_large": [
       "onnxruntime",
       "paddle",
-      "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "SeaFormer_small": [
       "onnxruntime",
       "paddle",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt"
     ],
     "SeaFormer_tiny": [
       "onnxruntime",
       "paddle",
-      "paddle_tensorrt",
-      "tensorrt_fp16",
       "tensorrt"
     ],
     "RT-DETR-L_wired_table_cell_det": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "RT-DETR-L_wireless_table_cell_det": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-LCNet_x1_0_table_cls": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-OCRv3_mobile_det": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-OCRv3_server_det": [
-      "tensorrt_fp16",
       "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-OCRv4_mobile_det": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-OCRv4_server_det": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-OCRv3_mobile_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-OCRv4_mobile_rec": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt_fp16",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-OCRv4_server_rec_doc": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-OCRv4_server_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "arabic_PP-OCRv3_mobile_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ch_RepSVTR_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ch_SVTRv2_rec": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "chinese_cht_PP-OCRv3_mobile_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "cyrillic_PP-OCRv3_mobile_rec": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "devanagari_PP-OCRv3_mobile_rec": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "en_PP-OCRv3_mobile_rec": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "en_PP-OCRv4_mobile_rec": [
       "paddle_tensorrt",
-      "tensorrt_fp16",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "japan_PP-OCRv3_mobile_rec": [
       "paddle_tensorrt_fp16",
-      "tensorrt_fp16",
-      "paddle_tensorrt",
       "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ka_PP-OCRv3_mobile_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "korean_PP-OCRv3_mobile_rec": [
       "paddle_tensorrt_fp16",
       "tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "latin_PP-OCRv3_mobile_rec": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "ta_PP-OCRv3_mobile_rec": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "te_PP-OCRv3_mobile_rec": [
       "tensorrt_fp16",
       "paddle_tensorrt_fp16",
-      "tensorrt",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-LCNet_x0_25_textline_ori": [
       "tensorrt",
       "paddle_tensorrt",
-      "tensorrt_fp16",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "AutoEncoder_ad": [
       "tensorrt",
-      "tensorrt_fp16",
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "DLinear_ad": [
       "tensorrt_fp16",
-      "tensorrt",
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle_tensorrt_fp16",
-      "paddle"
+      "onnxruntime"
     ],
     "DLinear": [
       "tensorrt_fp16",
-      "tensorrt",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "NLinear": [
       "tensorrt",
-      "tensorrt_fp16",
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle",
-      "paddle_tensorrt_fp16"
+      "paddle_tensorrt"
     ],
     "RLinear": [
       "tensorrt_fp16",
-      "tensorrt",
       "onnxruntime",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt_fp16"
     ],
     "PP-LCNet_x1_0_vehicle_attribute": [
       "tensorrt",
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-TSM-R50_8frames_uniform": [
-      "tensorrt_fp16",
       "tensorrt",
       "paddle",
       "onnxruntime"
     ],
     "PP-TSMv2-LCNetV2_16frames_uniform": [
       "tensorrt_fp16",
-      "tensorrt",
       "paddle",
       "onnxruntime"
     ],
     "PP-TSMv2-LCNetV2_8frames_uniform": [
       "tensorrt_fp16",
-      "tensorrt",
       "paddle",
       "onnxruntime"
     ],
     "DETR-R50": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "BlazeFace-FPN-SSH": [
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt_fp16"
     ],
     "BlazeFace": [
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "PP-YOLOE_plus-S_face": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-FormulaNet-S": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "PP-YOLOE-L_human": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-YOLOE-S_human": [
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "STFPM": [
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt_fp16"
     ],
     "SwinTransformer_base_patch4_window12_384": [
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "paddle",
       "onnxruntime"
     ],
     "SwinTransformer_base_patch4_window7_224": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "SwinTransformer_large_patch4_window12_384": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "SwinTransformer_large_patch4_window7_224": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "SwinTransformer_small_patch4_window7_224": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "SwinTransformer_tiny_patch4_window7_224": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "Cascade-MaskRCNN-ResNet50-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "MaskRCNN-ResNeXt101-vd-FPN": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "MaskRCNN-ResNet101-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "MaskRCNN-ResNet101-vd-FPN": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "MaskRCNN-ResNet50-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "MaskRCNN-ResNet50-vd-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "MaskRCNN-ResNet50": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "PP-YOLOE_seg-S": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "SOLOv2": [
       "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "onnxruntime"
     ],
     "PP-DocLayout-M": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-DocLayout-S": [
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PicoDet-L_layout_17cls": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet-L_layout_3cls": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet-S_layout_17cls": [
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PicoDet-S_layout_3cls": [
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PicoDet_layout_1x_table": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet_layout_1x": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "Cascade-FasterRCNN-ResNet50-FPN": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
-    ],
-    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
-    ],
-    "CenterNet-DLA-34": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
-    ],
-    "CenterNet-ResNet50": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
-    ],
-    "FCOS-ResNet50": [
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "paddle"
     ],
+    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "CenterNet-DLA-34": [
+      "paddle"
+    ],
+    "CenterNet-ResNet50": [
+      "paddle"
+    ],
+    "FCOS-ResNet50": [
+      "paddle_tensorrt_fp16"
+    ],
     "FasterRCNN-ResNeXt101-vd-FPN": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "FasterRCNN-ResNet101-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "FasterRCNN-ResNet101": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "FasterRCNN-ResNet34-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "FasterRCNN-ResNet50-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "FasterRCNN-ResNet50-vd-FPN": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
-      "paddle",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "FasterRCNN-ResNet50": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "FasterRCNN-Swin-Tiny-FPN": [
-      "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt"
+      "paddle"
     ],
     "PP-YOLOE_plus-L": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-YOLOE_plus-M": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-YOLOE_plus-S": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-YOLOE_plus-X": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet-L": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet-M": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet-S": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PicoDet-XS": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "YOLOX-L": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "YOLOX-M": [
       "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "YOLOX-N": [
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "YOLOX-S": [
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "YOLOX-T": [
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "YOLOX-X": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "YOLOv3-DarkNet53": [
-      "paddle_tensorrt",
-      "paddle"
-    ],
-    "YOLOv3-MobileNetV3": [
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle"
-    ],
-    "YOLOv3-ResNet50_vd_DCN": [
-      "paddle_tensorrt",
-      "paddle"
-    ],
-    "PP-YOLOE-R-L": [
-      "paddle_tensorrt",
-      "paddle"
-    ],
-    "PP-LiteSeg-B": [
-      "paddle",
       "paddle_tensorrt"
     ],
-    "PP-LiteSeg-T": [
-      "paddle_tensorrt",
+    "YOLOv3-MobileNetV3": [
+      "paddle_tensorrt_fp16"
+    ],
+    "YOLOv3-ResNet50_vd_DCN": [
+      "paddle_tensorrt"
+    ],
+    "PP-YOLOE-R-L": [
+      "paddle_tensorrt"
+    ],
+    "PP-LiteSeg-B": [
       "paddle"
+    ],
+    "PP-LiteSeg-T": [
+      "paddle_tensorrt"
     ],
     "SegFormer-B0": [
       "paddle",
-      "onnxruntime",
-      "paddle_tensorrt"
+      "onnxruntime"
     ],
     "SegFormer-B1": [
       "paddle",
-      "onnxruntime",
-      "paddle_tensorrt"
+      "onnxruntime"
     ],
     "SegFormer-B2": [
       "paddle",
-      "onnxruntime",
-      "paddle_tensorrt"
+      "onnxruntime"
     ],
     "SegFormer-B3": [
       "paddle",
-      "onnxruntime",
-      "paddle_tensorrt"
+      "onnxruntime"
     ],
     "SegFormer-B4": [
       "paddle",
-      "onnxruntime",
-      "paddle_tensorrt"
+      "onnxruntime"
     ],
     "SegFormer-B5": [
       "paddle",
-      "onnxruntime",
-      "paddle_tensorrt"
+      "onnxruntime"
     ],
     "PP-YOLOE_plus_SOD-L": [
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "PP-YOLOE_plus_SOD-S": [
       "onnxruntime",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
-      "paddle"
+      "paddle_tensorrt_fp16"
     ],
     "SLANeXt_wired": [
       "paddle",
-      "paddle_tensorrt",
       "onnxruntime"
     ],
     "SLANeXt_wireless": [
       "paddle",
-      "paddle_tensorrt",
       "onnxruntime"
     ],
     "SLANet_plus": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "SLANet": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "Nonstationary_ad": [
@@ -2635,53 +2124,38 @@
     ],
     "PatchTST_ad": [
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "TimesNet_ad": [
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "TimesNet_cls": [
       "paddle",
-      "paddle_tensorrt_fp16",
-      "paddle_tensorrt",
       "onnxruntime"
     ],
     "Nonstationary": [
       "onnxruntime",
-      "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "paddle"
+      "paddle_tensorrt"
     ],
     "PatchTST": [
       "paddle_tensorrt",
-      "paddle_tensorrt_fp16",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "TimesNet": [
       "onnxruntime",
-      "paddle_tensorrt_fp16",
-      "paddle",
-      "paddle_tensorrt"
+      "paddle_tensorrt_fp16"
     ],
     "PP-YOLOE-L_vehicle": [
       "paddle_tensorrt",
-      "paddle",
       "onnxruntime"
     ],
     "PP-YOLOE-S_vehicle": [
       "paddle_tensorrt",
-      "onnxruntime",
-      "paddle"
+      "onnxruntime"
     ],
     "PP-FormulaNet-L": [
-      "paddle",
-      "paddle_tensorrt_fp16"
+      "paddle"
     ],
     "PP-YOLOE_plus_SOD-largesize-L": [
       "onnxruntime",
