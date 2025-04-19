@@ -32,7 +32,7 @@ from .utils.deps import (
     get_serving_dep_specs,
     require_paddle2onnx_plugin,
 )
-from .utils.env import get_cuda_version
+from .utils.env import get_paddle_cuda_version
 from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -237,9 +237,8 @@ def install(args):
         SUPPORTED_DEVICE_TYPES = ["cpu", "gpu", "npu"]
         if device_type not in SUPPORTED_DEVICE_TYPES:
             logging.error(
-                "HPI installation failed!\n"
-                "Supported device_type: %s. Your input device_type: %s.\n"
-                "Please ensure the device_type is correct.",
+                "Failed to install the high-performance plugin.\n"
+                "Supported device types: %s. Your input device type: %s.\n",
                 SUPPORTED_DEVICE_TYPES,
                 device_type,
             )
@@ -248,8 +247,10 @@ def install(args):
         if device_type == "cpu":
             package = "ultra-infer-python"
         elif device_type == "gpu":
-            if get_cuda_version()[0] != 11:
-                sys.exit("Currently, the CUDA version must be 11.x for GPU devices.")
+            if get_paddle_cuda_version()[0] != 11:
+                sys.exit(
+                    "You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin."
+                )
             package = "ultra-infer-gpu-python"
         elif device_type == "npu":
             package = "ultra-infer-npu-python"

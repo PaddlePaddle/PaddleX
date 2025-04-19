@@ -37,19 +37,18 @@ def get_paddle_version():
         return major_v, minor_v, patch_v, None
 
 
-def get_cuda_version():
-    # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
-    # versions.
+def get_paddle_cuda_version():
     import paddle.version
 
     cuda_version = paddle.version.cuda()
     return tuple(map(int, cuda_version.split(".")))
 
 
-def get_cudnn_version():
-    # FIXME: We should not rely on the PaddlePaddle library to detemine cuDNN
-    # versions.
+def get_paddle_cudnn_version():
     import paddle.version
 
     cudnn_version = paddle.version.cudnn()
     return tuple(map(int, cudnn_version.split(".")))
+
+
+# Should we also support getting the runtime versions of CUDA and cuDNN?

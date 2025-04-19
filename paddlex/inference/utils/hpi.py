@@ -24,7 +24,11 @@ from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
 from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
-from ...utils.env import get_cuda_version, get_cudnn_version, get_paddle_version
+from ...utils.env import (
+    get_paddle_cuda_version,
+    get_paddle_cudnn_version,
+    get_paddle_version,
+)
 from ...utils.flags import USE_PIR_TRT
 from .model_paths import ModelPaths
 
@@ -156,9 +160,11 @@ def suggest_inference_backend_and_config(
         else:
             return None, f"{repr(arch)} is not a supported architecture."
     elif hpi_config.device_type == "gpu":
-        cuda_version = get_cuda_version()
+        # TODO: Is it better to also check the runtime versions of CUDA and
+        # cuDNN, and the versions of CUDA and cuDNN used to build `ultra-infer`?
+        cuda_version = get_paddle_cuda_version()
         cuda_version = "".join(map(str, cuda_version))
-        cudnn_version = get_cudnn_version()
+        cudnn_version = get_paddle_cudnn_version()
         cudnn_version = "".join(map(str, cudnn_version[:-1]))
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:
