@@ -566,7 +566,7 @@ The high-performance inference plugin achieves inference acceleration by intelli
 
 All pipelines and modules that use static graph models support enabling the high-performance inference plugin; however, in certain scenarios, some models might not be able to achieve accelerated inference. For detailed reasons, please refer to Question 1.
 
-**3. Why does the installation of the high-performance inference plugin fail with a log message stating: “Currently, the CUDA version must be 11.x for GPU devices.”?**
+**3. Why does the installation of the high-performance inference plugin fail with a log message stating: “You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin.”?**
 
 For the GPU version of the high-performance inference plugin, the official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9. The support for CUDA 12 is in progress.
 

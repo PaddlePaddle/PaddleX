@@ -567,7 +567,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 所有使用静态图模型的产线与模块都支持启用高性能推理插件，但部分模型在某些情况下可能无法获得推理加速，具体原因可以参考问题1。
 
-**3. 为什么安装高性能推理插件会失败，日志显示：“Currently, the CUDA version must be 11.x for GPU devices.”？**
+**3. 为什么安装高性能推理插件会失败，日志显示：“You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin.”？**
 
 对于 GPU 版本的高性能推理插件，目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包。CUDA 12 目前正在支持中。
 
