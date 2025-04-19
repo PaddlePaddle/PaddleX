@@ -1113,7 +1113,7 @@
       "paddle"
     ]
   },
-  "gpu_cuda118_cudnn86": {
+  "gpu_cuda118_cudnn89": {
     "PP-LCNet_x1_0_doc_ori": [
       "tensorrt_fp16",
       "paddle_tensorrt",
