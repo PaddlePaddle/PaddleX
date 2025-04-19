@@ -24,7 +24,7 @@ comments: true
 
 使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
-高性能推理插件支持处理 **PaddlePaddle 静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，建议使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。
+高性能推理插件支持处理 **PaddlePaddle 静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，可以使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。**建议在安装高性能推理插件前，首先安装 Paddle2ONNX 插件，以便 PaddleX 可以在需要时转换模型格式。**
 
 ### 1.1 安装高性能推理插件
 
@@ -232,25 +232,25 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 <tbody>
 <tr>
 <td><code>auto_config</code></td>
-<td>是否启用安全自动配置模式。<br /><code>True</code>为启用安全自动配置模式，<code>False</code>为启用无限制手动配置模式。</td>
+<td>是否启用安全自动配置模式。<br /><code>True</code> 为启用安全自动配置模式，<code>False</code> 为启用无限制手动配置模式。</td>
 <td><code>bool</code></td>
 <td><code>True</code></td>
 </tr>
 <tr>
   <td><code>backend</code></td>
-  <td>用于指定要使用的推理后端。在无限制手动配置模式下不能为<code>None</code>。</td>
+  <td>用于指定要使用的推理后端。在无限制手动配置模式下不能为 <code>None</code>。</td>
   <td><code>str | None</code></td>
   <td><code>None</code></td>
 </tr>
 <tr>
   <td><code>backend_config</code></td>
-  <td>推理后端的配置，若不为<code>None</code>则可以覆盖推理后端的默认配置项。</td>
+  <td>推理后端的配置，若不为 <code>None</code> 则可以覆盖推理后端的默认配置项。</td>
   <td><code>dict | None</code></td>
   <td><code>None</code></td>
 </tr>
 <tr>
   <td><code>auto_paddle2onnx</code></td>
-  <td>是否启用 <a href="./paddle2onnx.md">Paddle2ONNX插件</a> 将Paddle模型自动转换为ONNX模型。</td>
+  <td>是否将 PaddlePaddle 静态图模型自动转换为 ONNX 模型。当 Paddle2ONNX 插件不可用时，不执行转换。</td>
   <td><code>bool</code></td>
   <td><code>True</code></td>
 </tr>
@@ -305,16 +305,16 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>openvino</code></td>
-    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理使用的逻辑处理器数量。默认为<code>8</code>。</td>
+    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理使用的逻辑处理器数量。默认为 <code>8</code>。</td>
   </tr>
   <tr>
     <td><code>onnxruntime</code></td>
-    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理时算子内部的并行计算线程数。默认为<code>8</code>。</td>
+    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理时算子内部的并行计算线程数。默认为 <code>8</code>。</td>
   </tr>
   <tr>
     <td><code>tensorrt</code></td>
     <td>
-      <code>precision</code>（<code>str</code>）：使用的精度，<code>"fp16"</code>或<code>"fp32"</code>。默认为<code>"fp32"</code>。
+      <code>precision</code>（<code>str</code>）：使用的精度，<code>"fp16"</code> 或 <code>"fp32"</code>。默认为 <code>"fp32"</code>。
       <br />
       <code>dynamic_shapes</code>（<code>dict</code>）：动态形状配置，指定每个输入对应的最小形状、优化形状以及最大形状。格式为：<code>{输入张量名称}: [{最小形状}, {优化形状}, {最大形状}]</code>。动态形状是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力，更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT 官方文档</a>。
     </td>
@@ -340,7 +340,7 @@ hpi_config:
 ```
 
 </details>
-<details><summary>👉 CLI传参方式（点击展开）</summary>
+<details><summary>👉 CLI 传参方式（点击展开）</summary>
 
 ```bash
 paddlex \
@@ -352,7 +352,7 @@ paddlex \
 ```
 
 </details>
-<details><summary>👉 Python API传参方式（点击展开）</summary>
+<details><summary>👉 Python API 传参方式（点击展开）</summary>
 
 ```python
 from paddlex import create_pipeline
@@ -379,7 +379,7 @@ Predict:
 ```
 
 </details>
-<details><summary>👉 CLI传参方式（点击展开）</summary>
+<details><summary>👉 CLI 传参方式（点击展开）</summary>
 
 ```bash
 python main.py \
@@ -393,7 +393,7 @@ python main.py \
 ```
 
 </details>
-<details><summary>👉 Python API传参方式（点击展开）</summary>
+<details><summary>👉 Python API 传参方式（点击展开）</summary>
 
 ```python
 from paddlex import create_model
@@ -495,9 +495,9 @@ SubModules:
 
 ### 2.5 模型缓存说明
 
-模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 或 `paddle` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
+模型缓存会存放在模型目录下的 `.cache` 目录中。
 
-**修改 TensorRT 相关配置后，建议清理缓存，以避免出现缓存导致新配置不生效的情况。**
+**修改 Paddle Inference TensorRT 子图引擎或 TensorRT 相关配置后，建议清理缓存，以避免出现缓存导致新配置不生效的情况。**
 
 当启用`auto_paddle2onnx`选项时，可能会在模型目录下自动生成`inference.onnx`文件。
 
