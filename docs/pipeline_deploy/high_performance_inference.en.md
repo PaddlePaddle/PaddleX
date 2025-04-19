@@ -24,7 +24,7 @@ In real production environments, many applications impose strict performance met
 
 Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
-The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, it is recommended to convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and aotimatic model conversion may be performed.
+The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed. **It is recommended to install the Paddle2ONNX plugin first before installing the high-performance inference plugin, so that PaddleX can convert model formats when needed.**
 
 ### 1.1 Installing the High-Performance Inference Plugin
 
@@ -248,7 +248,7 @@ Common configuration items for high-performance inference include:
 </tr>
 <tr>
   <td><code>auto_paddle2onnx</code></td>
-  <td>Whether to enable the <a href="./paddle2onnx.en.md">Paddle2ONNX plugin</a> to automatically convert a Paddle model to an ONNX model.</td>
+  <td>Whether to automatically convert the PaddlePaddle static graph model to an ONNX model. When the Paddle2ONNX plugin is unavailable, no conversion will be performed.</td>
   <td><code>bool</code></td>
   <td><code>True</code></td>
 </tr>

@@ -20,6 +20,7 @@ from collections import defaultdict
 from functools import lru_cache, wraps
 
 from packaging.requirements import Requirement
+from packaging.version import Version
 
 from . import logging
 
@@ -38,7 +39,7 @@ def _get_extra_name_and_remove_extra_marker(dep_spec):
         return None, dep_spec
 
 
-def get_extras():
+def _get_extras():
     metadata = importlib.metadata.metadata("paddlex")
     extras = {}
     # XXX: The `metadata.get_all` used here is not well documented.
@@ -55,23 +56,24 @@ def get_extras():
     return extras
 
 
-EXTRAS = get_extras()
+EXTRAS = _get_extras()
 
 
-def get_dep_specs():
-    dep_specs = []
+def _get_dep_specs():
+    dep_specs = defaultdict(list)
     for dep_spec in importlib.metadata.requires("paddlex"):
         extra_name, dep_spec = _get_extra_name_and_remove_extra_marker(dep_spec)
         if extra_name is None or extra_name == "all":
             dep_spec = dep_spec.rstrip()
-            dep_specs.append(dep_spec)
+            req = Requirement(dep_spec)
+            dep_specs[req.name].append(dep_spec)
     return dep_specs
 
 
-DEP_SPECS = get_dep_specs()
+DEP_SPECS = _get_dep_specs()
 
 
-def get_dep_version(dep):
+def _get_dep_version(dep):
     try:
         return importlib.metadata.version(dep)
     except importlib.metadata.PackageNotFoundError:
@@ -79,15 +81,37 @@ def get_dep_version(dep):
 
 
 @lru_cache()
-def is_dep_available(dep, /):
+def is_dep_available(dep, /, check_version=None):
     # Currently for several special deps we check if the import packages exist.
+    if dep in ("paddlepaddle", "paddle-custom-device", "ultra-infer") and check_version:
+        raise ValueError(
+            "Currently, `check_version` is not allowed to be `True` for `paddlepaddle`, `paddle-custom-device`, and `ultra-infer`."
+        )
     if dep == "paddlepaddle":
         return importlib.util.find_spec("paddle") is not None
     elif dep == "paddle-custom-device":
         return importlib.util.find_spec("paddle_custom_device") is not None
     elif dep == "ultra-infer":
         return importlib.util.find_spec("ultra_infer") is not None
-    return get_dep_version(dep) is not None
+    else:
+        if dep != "paddle2onnx" and dep not in DEP_SPECS:
+            raise ValueError("Unknown dependency")
+    if check_version is None:
+        if dep == "paddle2onnx":
+            check_version = True
+        else:
+            check_version = False
+    version = _get_dep_version(dep)
+    if version is None:
+        return False
+    if check_version:
+        if dep == "paddle2onnx":
+            return Version(version) in Requirement(get_paddle2onnx_spec()).specifier
+        for dep_spec in DEP_SPECS[dep]:
+            if Version(version) in Requirement(dep_spec).specifier:
+                return True
+    else:
+        return True
 
 
 def require_deps(*deps, obj_name=None):
