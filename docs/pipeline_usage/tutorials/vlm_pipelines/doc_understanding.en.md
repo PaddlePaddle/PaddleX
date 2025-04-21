@@ -269,18 +269,18 @@ Below is a basic service deployment API reference and multilingual service call 
 
 <details><summary>API Reference</summary>
 
-<p>For the main operations provided by the service:</p>
+<p>Main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body attributes are as follows:</li>
+<li>Both the request and response bodies are in JSON format (JSON object).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body contains the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
@@ -297,7 +297,7 @@ Below is a basic service deployment API reference and multilingual service call 
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed at <code>"Success"</code>.</td>
+<td>Error message. Fixed at <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
@@ -307,14 +307,14 @@ Below is a basic service deployment API reference and multilingual service call 
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body attributes are as follows:</li>
+<li>When the request is not processed successfully, the response body contains the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
@@ -326,12 +326,12 @@ Below is a basic service deployment API reference and multilingual service call 
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
-<td>Error code. The same as the response status code.</td>
+<td>Error code. Same as the response status code.</td>
 </tr>
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
@@ -339,117 +339,329 @@ Below is a basic service deployment API reference and multilingual service call 
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Perform object detection on an image.</p>
-<p><code>POST /open-vocabulary-detection</code></p>
+<p>Generate a response based on the input message.</p>
+<p><code>POST /document-understanding</code></p>
+<p>Note: The above interface is an alias for /chat/completion and is compatible with OpenAI's interface.</p>
+
 <ul>
-<li>The request body attributes are as follows:</li>
+<li>The request body contains the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
+<th>Required</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td><code>string</code></td>
+<td>Name of the model to use</td>
+<td>Required</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>messages</code></td>
+<td><code>array</code></td>
+<td>List of dialogue messages</td>
+<td>Required</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td><code>integer</code></td>
+<td>Maximum number of tokens to generate</td>
+<td>Optional</td>
+<td>1024</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td><code>float</code></td>
+<td>Sampling temperature</td>
+<td>Optional</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td><code>float</code></td>
+<td>Top probability for nucleus sampling</td>
+<td>Optional</td>
+<td>0.95</td>
+</tr>
+<tr>
+<td><code>stream</code></td>
+<td><code>boolean</code></td>
+<td>Whether to output in a streaming manner</td>
+<td>Optional</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+
+<p>Each element in <code>messages</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>image</code></td>
+<td><code>role</code></td>
 <td><code>string</code></td>
-<td>A URL of the image file accessible by the server or the Base64 encoded result of the image file content.</td>
-<td>Yes</td>
+<td>Role of the message (user/assistant/system)</td>
+<td>Required</td>
 </tr>
 <tr>
-<td><code>prompt</code></td>
+<td><code>content</code></td>
+<td><code>string</code> or <code>array</code></td>
+<td>Message content (text or mixed content)</td>
+<td>Required</td>
+</tr>
+</tbody>
+</table>
+
+<p>When <code>content</code> is an array, each element is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
 <td><code>string</code></td>
-<td>The text prompt used for prediction.</td>
-<td>Yes</td>
+<td>Content type (text/image_url)</td>
+<td>Required</td>
+<td>-</td>
 </tr>
 <tr>
-<td><code>thresholds</code></td>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>Text content (when type is text)</td>
+<td>Conditionally Required</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>image_url</code></td>
+<td><code>string</code> or <code>object</code></td>
+<td>Image URL or object (when type is image_url)</td>
+<td>Conditionally Required</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p>When <code>image_url</code> is an object, it contains the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td><code>string</code></td>
+<td>Image URL</td>
+<td>Required</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>detail</code></td>
+<td><code>string</code></td>
+<td>Image detail processing method (low/high/auto)</td>
+<td>Optional</td>
+<td>auto</td>
+</tr>
+</tbody>
+</table>
+
+<p>When the request is processed successfully, the <code>result</code> in the response body contains the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>string</code></td>
+<td>Request ID</td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td><code>string</code></td>
+<td>Object type (chat.completion)</td>
+</tr>
+<tr>
+<td><code>created</code></td>
+<td><code>integer</code></td>
+<td>Creation timestamp</td>
+</tr>
+<tr>
+<td><code>choices</code></td>
+<td><code>array</code></td>
+<td>Generated result options</td>
+</tr>
+<tr>
+<td><code>usage</code></td>
+<td><code>object</code></td>
+<td>Token usage details</td>
+</tr>
+</tbody>
+</table>
+
+<p>Each element in <code>choices</code> is a <code>Choice</code> object with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Optional Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>finish_reason</code></td>
+<td><code>string</code></td>
+<td>Reason the model stopped generating tokens</td>
+<td><code>stop</code> (naturally stopped)<br><code>length</code> (reached max token count)<br><code>tool_calls</code> (called a tool)<br><code>content_filter</code> (content filtered)<br><code>function_call</code> (called a function, deprecated)</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td><code>integer</code></td>
+<td>Index of the option in the list</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>logprobs</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>The thresholds used for model prediction.</td>
-<td>No</td>
+<td>Log probability information of the option</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>ChatCompletionMessage</code></td>
+<td>Chat message generated by the model</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>When the request is processed successfully, the response body's <code>result</code> has the following attributes:</li>
-</ul>
+
+<p>The <code>message</code> object contains the following attributes:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
+<th>Note</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>detectedObjects</code></td>
-<td><code>array</code></td>
-<td>Information on the position, category, etc., of the object.</td>
+<td><code>content</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Message content</td>
+<td>May be null</td>
 </tr>
 <tr>
-<td><code>image</code></td>
+<td><code>refusal</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refusal message generated by the model</td>
+<td>Provided when content is refused</td>
+</tr>
+<tr>
+<td><code>role</code></td>
 <td><code>string</code></td>
-<td>Result image of object detection. The image is in JPEG format, encoded in Base64.</td>
+<td>Role of the message author</td>
+<td>Fixed at <code>"assistant"</code></td>
+</tr>
+<tr>
+<td><code>audio</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Audio output data</td>
+<td>Provided when audio output is requested<br><a href="https://platform.openai.com/docs/guides/audio">Learn more</a></td>
+</tr>
+<tr>
+<td><code>function_call</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Name and parameters of the function to be called</td>
+<td>Deprecated, recommended to use <code>tool_calls</code></td>
+</tr>
+<tr>
+<td><code>tool_calls</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Tool calls generated by the model</td>
+<td>e.g., function calls, etc.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>detectedObjects</code> is an <code>object</code>, with the following attributes:</p>
+
+<p>The <code>usage</code> object contains the following attributes:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>The position of the object. The elements in the array are the x-coordinate of the upper-left corner, the y-coordinate of the upper-left corner, the x-coordinate of the lower-right corner, and the y-coordinate of the lower-right corner respectively.</td>
+<td><code>prompt_tokens</code></td>
+<td><code>integer</code></td>
+<td>Number of prompt tokens</td>
 </tr>
 <tr>
-<td><code>categoryName</code></td>
-<td><code>string</code></td>
-<td>The category name of the object.</td>
+<td><code>completion_tokens</code></td>
+<td><code>integer</code></td>
+<td>Number of generated tokens</td>
 </tr>
 <tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>The score of the object.</td>
+<td><code>total_tokens</code></td>
+<td><code>integer</code></td>
+<td>Total number of tokens</td>
 </tr>
 </tbody>
 </table>
-<p>An example of <code>result</code> is as follows:</p>
+<p>An example of <code>result</code> is shown below:</p>
 <pre><code class="language-json">{
-"detectedObjects": [
-{
-"bbox": [
-404.4967956542969,
-90.15770721435547,
-506.2465515136719,
-285.4187316894531
-],
-"categoryName": "bird",
-"score": 0.7418514490127563
-},
-{
-"bbox": [
-155.33145141601562,
-81.10954284667969,
-199.71136474609375,
-167.4235382080078
-],
-"categoryName": "dog",
-"score": 0.7328268885612488
-}
-],
-"image": "xxxxxx"
+    "id": "ed960013-eb19-43fa-b826-3c1b59657e35",
+    "choices": [
+        {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+                "content": "| 名次 | 国家/地区 | 金牌 | 银牌 | 铜牌 | 奖牌总数 |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 中国（CHN） | 48 | 22 | 30 | 100 |\n| 2 | 美国（USA） | 36 | 39 | 37 | 112 |\n| 3 | 俄罗斯（RUS） | 24 | 13 | 23 | 60 |\n| 4 | 英国（GBR） | 19 | 13 | 19 | 51 |\n| 5 | 德国（GER） | 16 | 11 | 14 | 41 |\n| 6 | 澳大利亚（AUS） | 14 | 15 | 17 | 46 |\n| 7 | 韩国（KOR） | 13 | 11 | 8 | 32 |\n| 8 | 日本（JPN） | 9 | 8 | 8 | 25 |\n| 9 | 意大利（ITA） | 8 | 9 | 10 | 27 |\n| 10 | 法国（FRA） | 7 | 16 | 20 | 43 |\n| 11 | 荷兰（NED） | 7 | 5 | 4 | 16 |\n| 12 | 乌克兰（UKR） | 7 | 4 | 11 | 22 |\n| 13 | 肯尼亚（KEN） | 6 | 4 | 6 | 16 |\n| 14 | 西班牙（ESP） | 5 | 11 | 3 | 19 |\n| 15 | 牙买加（JAM） | 5 | 4 | 2 | 11 |\n",
+                "role": "assistant"
+            }
+        }
+    ],
+    "created": 1745218041,
+    "model": "pp-docbee",
+    "object": "chat.completion"
 }
 </code></pre></details>
 
@@ -459,7 +671,52 @@ Below is a basic service deployment API reference and multilingual service call 
 <summary>Python</summary>
 
 <pre><code class="language-python">import base64
+from openai import OpenAI
 
+API_BASE_URL = "http://0.0.0.0:8080"
+
+# Initialize OpenAI client
+client = OpenAI(
+    api_key='xxxxxxxxx',
+    base_url=f'{API_BASE_URL}'
+)
+
+# Function to convert image to base64
+def encode_image(image_path):
+  with open(image_path, "rb") as image_file:
+    return base64.b64encode(image_file.read()).decode('utf-8')
+
+# Input image path
+image_path = "medal_table.png"
+
+# Convert the original image to base64
+base64_image = encode_image(image_path)
+
+# Submit information to the PP-DocBee model
+response = client.chat.completions.create(
+    model="pp-docbee", # Select model
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content":[
+                {
+                    "type": "text",
+                    "text": "Recognize the content of this table and output the content in HTML format."
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
+                },
+            ]
+        },
+    ],
+)
+content = response.choices[0].message.content
+print('Reply:', content)
 </code></pre></details>
 </details>
 <br/>
