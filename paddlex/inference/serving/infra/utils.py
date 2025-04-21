@@ -111,8 +111,8 @@ def infer_file_type(url: str) -> Optional[FileType]:
                 )
                 if not match_:
                     file_type = mimetypes.guess_type(match_.group(1))[0]
-                    if file_type is None:
-                        return None
+                    if file_type is not None:
+                        return file_type
         return None
 
     if file_type.startswith("image/"):
