@@ -86,13 +86,17 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>--use_hpip</code></td>
 <td>如果指定，则启用高性能推理插件。</td>
 </tr>
+<tr>
+<td><code>--hpi_config</code></td>
+<td>高性能推理配置。</td>
+</tr>
 </tbody>
 </table>
 </table>
 
 在对于服务响应时间要求较严格的应用场景中，可以使用 PaddleX 高性能推理插件对模型推理及前后处理进行加速，从而降低响应时间、提升吞吐量。
 
-使用 PaddleX 高性能推理插件，请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 。不是所有的产线、模型和环境都支持使用高性能推理插件。支持的详细情况请参考支持使用高性能推理插件的产线与模型部分。
+使用 PaddleX 高性能推理插件，请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 。
 
 可以通过指定 `--use_hpip` 以使用高性能推理插件。示例如下：
 
@@ -330,7 +334,7 @@ docker run \
 - 如果希望使用 CPU 部署，则不需要指定 `--gpus`。
 - 如果需要进入容器内部调试，可以将命令中的 `/bin/bash server.sh` 替换为 `/bin/bash`，然后在容器中执行 `/bin/bash server.sh`。
 - 如果希望服务器在后台运行，可以将命令中的 `-it` 替换为 `-d`。容器启动后，可通过 `docker logs -f {容器 ID}` 查看容器日志。
-- 在命令中添加 `-e PADDLEX_USE_HPIP=1` 可以使用 PaddleX 高性能推理插件加速产线推理过程。但请注意，并非所有产线都支持使用高性能推理插件。请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 获取更多信息。
+- 在命令中添加 `-e PADDLEX_USE_HPIP=1` 可以使用 PaddleX 高性能推理插件加速产线推理过程。请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 获取更多信息。
 
 可观察到类似下面的输出信息：
 

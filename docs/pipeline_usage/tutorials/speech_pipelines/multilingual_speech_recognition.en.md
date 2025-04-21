@@ -123,6 +123,20 @@ In the above Python script, the following steps are executed:
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin. If set to `None`, the setting from the configuration file will be used. Not supported for now.</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration. Not supported for now.</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 

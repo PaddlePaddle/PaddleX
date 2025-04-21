@@ -123,6 +123,20 @@ for res in output:
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。目前暂不支持。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置。目前暂不支持。</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 

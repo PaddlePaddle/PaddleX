@@ -441,7 +441,7 @@ def main():
         serve(
             args.pipeline,
             device=args.device,
-            use_hpip=args.use_hpip,
+            use_hpip=args.use_hpip or None,
             hpi_config=args.hpi_config,
             host=args.host,
             port=args.port,
@@ -469,7 +469,7 @@ def main():
                 args.input,
                 args.device,
                 args.save_path,
-                use_hpip=args.use_hpip,
+                use_hpip=args.use_hpip or None,
                 hpi_config=args.hpi_config,
                 **pipeline_args_dict,
             )

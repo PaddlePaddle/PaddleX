@@ -8,19 +8,19 @@ comments: true
 
 ## 目录
 
-- [1. 基础使用方法](#1.-基础使用方法)
+- [1. 安装与基础使用方法](#1.-安装与基础使用方法)
   - [1.1 安装高性能推理插件](#1.1-安装高性能推理插件)
   - [1.2 启用高性能推理插件](#1.2-启用高性能推理插件)
 - [2. 进阶使用方法](#2-进阶使用方法)
   - [2.1 高性能推理工作模式](#21-高性能推理工作模式)
   - [2.2 高性能推理配置](#22-高性能推理配置)
   - [2.3 修改高性能推理配置](#23-修改高性能推理配置)
-  - [2.4 高性能推理插件在子产线/子模块中的启用/禁用](#24-高性能推理插件在子产线子模块中的启用禁用)
+  - [2.4 在配置文件中启用/禁用高性能推理插件](#24-在配置文件中启用禁用高性能推理插件)
   - [2.5 模型缓存说明](#25-模型缓存说明)
   - [2.6 定制模型推理库](#26-定制模型推理库)
 - [3. 常见问题](#3.-常见问题)
 
-## 1. 基础使用方法
+## 1. 安装与基础使用方法
 
 使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
@@ -150,7 +150,6 @@ paddlex --install hpi-gpu
 paddlex \
     --pipeline image_classification \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    --device gpu:0 \
     --use_hpip
 ```
 
@@ -162,7 +161,6 @@ python main.py \
     -o Global.mode=predict \
     -o Predict.model_dir=None \
     -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    -o Global.device=gpu:0 \
     -o Predict.use_hpip=True
 ```
 
@@ -175,7 +173,6 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="image_classification",
-    device="gpu",
     use_hpip=True
 )
 
@@ -189,7 +186,6 @@ from paddlex import create_model
 
 model = create_model(
     model_name="ResNet18",
-    device="gpu",
     use_hpip=True
 )
 
@@ -198,11 +194,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，**在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建**。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
 
-**启用高性能推理插件默认作用于整条产线/整个模块**，若想细粒度控制作用范围，如只对产线中某条子产线或某个子模块启用高性能推理插件，可以在产线配置文件中不同层级的配置里设置`use_hpip`，请参考 [2.4 高性能推理插件在子产线/子模块中的启用/禁用](#24-高性能推理插件在子产线子模块中的启用禁用)。
+**通过 PaddleX CLI 和 Python API 启用高性能推理插件默认作用于整条产线/模块**，若想细粒度控制作用范围，如只对产线中某条子产线或某个子模块启用高性能推理插件，可以在产线配置文件中不同层级的配置里设置 `use_hpip`，请参考 [2.4 在配置文件中启用/禁用高性能推理插件](#24-在配置文件中启用禁用高性能推理插件)。如果 CLI 参数、API 参数以及配置文件中均未指定 `use_hpip`，默认不启用高性能推理插件。
 
 ## 2. 进阶使用方法
 
-本节介绍高性能推理插件的进阶使用方法，适合对模型部署有一定了解或希望进行手动配置调优的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理插件。接下来将对进阶使用方法进行详细介绍。
+本节介绍高性能推理插件的进阶使用方法，适合对模型部署有一定了解或希望进行手动配置调优的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理插件。接下来将对高性能推理插件进阶使用方法进行详细介绍。
 
 ### 2.1 高性能推理工作模式
 
@@ -218,7 +214,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.2 高性能推理配置
 
-常用高性能推理配置包含以下配置项：
+常用高性能推理配置项包括：
 
 <table>
 <thead>
@@ -346,7 +342,6 @@ hpi_config:
 paddlex \
     --pipeline image_classification \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    --device gpu:0 \
     --use_hpip \
     --hpi_config '{"backend": "onnxruntime"}'
 ```
@@ -359,7 +354,6 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="OCR",
-    device="gpu",
     use_hpip=True,
     hpi_config={"backend": "onnxruntime"}
 )
@@ -387,7 +381,6 @@ python main.py \
     -o Global.mode=predict \
     -o Predict.model_dir=None \
     -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    -o Global.device=gpu:0 \
     -o Predict.use_hpip=True \
     -o Predict.hpi_config='{"backend": "onnxruntime"}'
 ```
@@ -400,7 +393,6 @@ from paddlex import create_model
 
 model = create_model(
     model_name="ResNet18",
-    device="gpu",
     use_hpip=True,
     hpi_config={"backend": "onnxruntime"}
 )
@@ -465,9 +457,9 @@ Predict:
 
 </details>
 
-### 2.4 高性能推理插件在子产线/子模块中的启用/禁用
+### 2.4 在配置文件中启用/禁用高性能推理插件
 
-高性能推理支持通过在子产线/子模块级别使用 `use_hpip`，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
+在配置文件中，可以使用 `use_hpip` 控制高性能推理插件的启用和禁用。与通过 CLI 和 API 配置不同的是，这种方式支持通过在子产线/子模块级别使用 `use_hpip`，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
 
 **通用OCR产线的 `text_detection` 模块使用高性能推理，`text_recognition` 模块不使用高性能推理：**
 
@@ -490,7 +482,7 @@ SubModules:
 
 **注意：**
 
-1. 在子产线或子模块中设置 `use_hpip` 时，将以最深层的配置为准。
+1. 在配置文件中的多个层级设置 `use_hpip` 时，将以最深层的配置为准。
 2. **当通过修改产线配置文件的方式启用/禁用高性能推理插件时，不建议同时使用 CLI 或 Python API 的方式进行设置。** 通过 CLI 或 Python API 设置 `use_hpip` 等同于修改配置文件顶层的 `use_hpip`。
 
 ### 2.5 模型缓存说明
@@ -544,7 +536,7 @@ SubModules:
 
 示例：
 
-```shell
+```bash
 # 构建
 cd PaddleX/libs/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...

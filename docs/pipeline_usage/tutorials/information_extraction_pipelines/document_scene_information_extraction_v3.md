@@ -466,9 +466,17 @@ PP-ChatOCRv3-doc 预测的流程、API说明、产出说明如下：
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>initial_predictor</code></td>

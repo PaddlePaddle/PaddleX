@@ -37,6 +37,8 @@ for res in output:
     * `batch_size`：`int` 类型，默认为 `1`；
     * `device`：`str` 类型，用于设置模型推理设备，如为GPU设置则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[4-推理配置](#4-推理配置)；
+    * `use_hpip`：`bool` 类型，是否启用高性能推理插件；
+    * `hpi_config`：`dict | None` 类型，高性能推理配置；
     * _`推理超参数`_：支持常见推理超参数的修改，具体参数说明详见具体模型文档；
   * 返回值：`BasePredictor` 类型。
 
