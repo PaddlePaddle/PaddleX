@@ -16,11 +16,12 @@ import asyncio
 import base64
 import io
 import mimetypes
+import re
 import tempfile
 import uuid
 from functools import partial
 from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, overload
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 import numpy as np
 import pandas as pd
@@ -96,6 +97,22 @@ def infer_file_type(url: str) -> Optional[FileType]:
     file_type = mimetypes.guess_type(filename)[0]
 
     if file_type is None:
+        # HACK: The support for BOS URLs with query params is implementation-based,
+        # not interface-based.
+        is_bos_url = re.fullmatch(r"\w+\.bcebos\.com", url_parts.netloc) is not None
+        if is_bos_url and url_parts.query:
+            params = parse_qs(url_parts.query)
+            if (
+                "responseContentDisposition" in params
+                and len(params["responseContentDisposition"]) == 1
+            ):
+                match_ = re.match(
+                    r"attachment;filename=(.*)", params["responseContentDisposition"][0]
+                )
+                if not match_:
+                    file_type = mimetypes.guess_type(match_.group(1))[0]
+                    if file_type is None:
+                        return None
         return None
 
     if file_type.startswith("image/"):
