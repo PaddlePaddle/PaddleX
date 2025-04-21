@@ -331,11 +331,70 @@ for res in output:
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>对图像进行目标检测。</p>
-<p><code>POST /open-vocabulary-detection</code></p>
+<p>对输入消息进行推理生成响应。</p>
+<p><code>POST /document-understanding</code></p>
+<p>说明 以上接口别名/chat/completion，openai兼容的接口</p>
+
 <ul>
 <li>请求体的属性如下：</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td><code>string</code></td>
+<td>要使用的模型名称</td>
+<td>是</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>messages</code></td>
+<td><code>array</code></td>
+<td>对话消息列表</td>
+<td>是</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td><code>integer</code></td>
+<td>生成的最大token数</td>
+<td>否</td>
+<td>1024</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td><code>float</code></td>
+<td>采样温度</td>
+<td>否</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td><code>float</code></td>
+<td>核心采样概率</td>
+<td>否</td>
+<td>0.95</td>
+</tr>
+<tr>
+<td><code>stream</code></td>
+<td><code>boolean</code></td>
+<td>是否流式输出</td>
+<td>否</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>messages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -347,28 +406,86 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>image</code></td>
+<td><code>role</code></td>
 <td><code>string</code></td>
-<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>消息角色（user/assistant/system）</td>
 <td>是</td>
 </tr>
 <tr>
-<td><code>prompt</code></td>
-<td><code>string</code></td>
-<td>预测使用的文本提示词。</td>
+<td><code>content</code></td>
+<td><code>string</code>或<code>array</code></td>
+<td>消息内容（文本或图文混合）</td>
 <td>是</td>
 </tr>
+</tbody>
+</table>
+
+<p>当<code>content</code>为数组时，每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
 <tr>
-<td><code>thresholds</code></td>
-<td><code>object</code> | <code>null</code></td>
-<td>模型预测使用的阈值。</td>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td><code>string</code></td>
+<td>内容类型（text/image_url）</td>
+<td>是</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>文本内容（当type为text时）</td>
+<td>条件必填</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>image_url</code></td>
+<td><code>string</code>或<code>object</code></td>
+<td>图片URL或对象（当type为image_url时）</td>
+<td>条件必填</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p>当<code>image_url</code>为对象时，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td><code>string</code></td>
+<td>图片URL</td>
+<td>是</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>detail</code></td>
+<td><code>string</code></td>
+<td>图片细节处理方式（low/high/auto）</td>
 <td>否</td>
+<td>auto</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
-</ul>
+
+<p>请求处理成功时，响应体的<code>result</code>具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -379,18 +496,122 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>detectedObjects</code></td>
-<td><code>array</code></td>
-<td>目标的位置、类别等信息。</td>
+<td><code>id</code></td>
+<td><code>string</code></td>
+<td>请求ID</td>
 </tr>
 <tr>
-<td><code>image</code></td>
+<td><code>object</code></td>
 <td><code>string</code></td>
-<td>目标检测结果图。图像为JPEG格式，使用Base64编码。</td>
+<td>对象类型（chat.completion）</td>
+</tr>
+<tr>
+<td><code>created</code></td>
+<td><code>integer</code></td>
+<td>创建时间戳</td>
+</tr>
+<tr>
+<td><code>choices</code></td>
+<td><code>array</code></td>
+<td>生成结果选项</td>
+</tr>
+<tr>
+<td><code>usage</code></td>
+<td><code>object</code></td>
+<td>token使用情况</td>
 </tr>
 </tbody>
 </table>
-<p><code>detectedObjects</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+
+<p><code>choices</code>中的每个元素为一个<code>Choice</code>对象，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>可选值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>finish_reason</code></td>
+<td><code>string</code></td>
+<td>模型停止生成token的原因</td>
+<td><code>stop</code>（自然停止）<br><code>length</code>（达到最大token数）<br><code>tool_calls</code>（调用了工具）<br><code>content_filter</code>（内容过滤）<br><code>function_call</code>（调用了函数，已弃用）</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td><code>integer</code></td>
+<td>选项在列表中的索引</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>logprobs</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>选项的log概率信息</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>ChatCompletionMessage</code></td>
+<td>模型生成的聊天消息</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>message</code>对象具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>content</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>消息内容</td>
+<td>可能为空</td>
+</tr>
+<tr>
+<td><code>refusal</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>模型生成的拒绝消息</td>
+<td>当内容被拒绝时提供</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>string</code></td>
+<td>消息作者角色</td>
+<td>固定为<code>"assistant"</code></td>
+</tr>
+<tr>
+<td><code>audio</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>音频输出数据</td>
+<td>当请求音频输出时提供<br><a href="https://platform.openai.com/docs/guides/audio">了解更多</a></td>
+</tr>
+<tr>
+<td><code>function_call</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>应调用的函数名称和参数</td>
+<td>已弃用，推荐使用<code>tool_calls</code></td>
+</tr>
+<tr>
+<td><code>tool_calls</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>模型生成的工具调用</td>
+<td>如函数调用等</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>usage</code>对象具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -401,47 +622,38 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>目标位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
+<td><code>prompt_tokens</code></td>
+<td><code>integer</code></td>
+<td>提示token数</td>
 </tr>
 <tr>
-<td><code>categoryName</code></td>
-<td><code>string</code></td>
-<td>目标类别名。</td>
+<td><code>completion_tokens</code></td>
+<td><code>integer</code></td>
+<td>生成token数</td>
 </tr>
 <tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>目标得分。</td>
+<td><code>total_tokens</code></td>
+<td><code>integer</code></td>
+<td>总token数</td>
 </tr>
 </tbody>
 </table>
 <p><code>result</code>示例如下：</p>
 <pre><code class="language-json">{
-&quot;detectedObjects&quot;: [
-{
-&quot;bbox&quot;: [
-404.4967956542969,
-90.15770721435547,
-506.2465515136719,
-285.4187316894531
-],
-&quot;categoryName&quot;: "bird",
-&quot;score&quot;: 0.7418514490127563
-},
-{
-&quot;bbox&quot;: [
-155.33145141601562,
-81.10954284667969,
-199.71136474609375,
-167.4235382080078
-],
-&quot;categoryName&quot;: "dog",
-&quot;score&quot;: 0.7328268885612488
-}
-],
-&quot;image&quot;: &quot;xxxxxx&quot;
+    "id": "ed960013-eb19-43fa-b826-3c1b59657e35",
+    "choices": [
+        {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+                "content": "| 名次 | 国家/地区 | 金牌 | 银牌 | 铜牌 | 奖牌总数 |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 中国（CHN） | 48 | 22 | 30 | 100 |\n| 2 | 美国（USA） | 36 | 39 | 37 | 112 |\n| 3 | 俄罗斯（RUS） | 24 | 13 | 23 | 60 |\n| 4 | 英国（GBR） | 19 | 13 | 19 | 51 |\n| 5 | 德国（GER） | 16 | 11 | 14 | 41 |\n| 6 | 澳大利亚（AUS） | 14 | 15 | 17 | 46 |\n| 7 | 韩国（KOR） | 13 | 11 | 8 | 32 |\n| 8 | 日本（JPN） | 9 | 8 | 8 | 25 |\n| 9 | 意大利（ITA） | 8 | 9 | 10 | 27 |\n| 10 | 法国（FRA） | 7 | 16 | 20 | 43 |\n| 11 | 荷兰（NED） | 7 | 5 | 4 | 16 |\n| 12 | 乌克兰（UKR） | 7 | 4 | 11 | 22 |\n| 13 | 肯尼亚（KEN） | 6 | 4 | 6 | 16 |\n| 14 | 西班牙（ESP） | 5 | 11 | 3 | 19 |\n| 15 | 牙买加（JAM） | 5 | 4 | 2 | 11 |\n",
+                "role": "assistant"
+            }
+        }
+    ],
+    "created": 1745218041,
+    "model": "pp-docbee",
+    "object": "chat.completion"
 }
 </code></pre></details>
 
@@ -449,10 +661,55 @@ for res in output:
 
 <details>
 <summary>Python</summary>
-
+openai接口调用示例
 
 <pre><code class="language-python">import base64
+from openai import OpenAI
 
+API_BASE_URL = "http://0.0.0.0:8080"
+
+# 初始化OpenAI客户端
+client = OpenAI(
+    api_key='xxxxxxxxx',
+    base_url=f'{API_BASE_URL}'
+)
+
+#图片转base64函数
+def encode_image(image_path):
+  with open(image_path, "rb") as image_file:
+    return base64.b64encode(image_file.read()).decode('utf-8')
+
+#输入图片路径
+image_path = "medal_table.png"
+
+#原图片转base64
+base64_image = encode_image(image_path)
+
+#提交信息至PP-DocBee模型
+response = client.chat.completions.create(
+    model="pp-docbee",#选择模型
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content":[
+                {
+                    "type": "text",
+                    "text": "识别这份表格的内容,输出html格式的内容"
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
+                },
+            ]
+        },
+    ],
+)
+content = response.choices[0].message.content
+print('Reply:', content)
 </code></pre></details>
 </details>
 <br/>
