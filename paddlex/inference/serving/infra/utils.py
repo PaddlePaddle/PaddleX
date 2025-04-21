@@ -109,7 +109,7 @@ def infer_file_type(url: str) -> Optional[FileType]:
                 match_ = re.match(
                     r"attachment;filename=(.*)", params["responseContentDisposition"][0]
                 )
-                if not match_:
+                if match_:
                     file_type = mimetypes.guess_type(match_.group(1))[0]
                     if file_type is not None:
                         return file_type
