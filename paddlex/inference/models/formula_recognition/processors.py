@@ -631,74 +631,80 @@ class UniMERNetDecode(object):
         self.pad_token_type_id = 0
         self.pad_to_multiple_of = None
 
-        temp_path = tempfile.gettempdir()
-        fast_tokenizer_file = os.path.join(temp_path, "tokenizer.json")
-        tokenizer_config_file = os.path.join(temp_path, "tokenizer_config.json")
-        try:
-            with open(fast_tokenizer_file, "w") as f:
-                json.dump(character_list["fast_tokenizer_file"], f)
-            with open(tokenizer_config_file, "w") as f:
-                json.dump(character_list["tokenizer_config_file"], f)
-        except Exception as e:
-            print(
-                f"创建 tokenizer.json 和 tokenizer_config.json 文件失败, 原因{str(e)}"
-            )
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=True
+        ) as temp_file1, tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=True
+        ) as temp_file2:
+            fast_tokenizer_file = temp_file1.name
+            tokenizer_config_file = temp_file2.name
+            try:
+                with open(fast_tokenizer_file, "w") as f:
+                    json.dump(character_list["fast_tokenizer_file"], f)
+                with open(tokenizer_config_file, "w") as f:
+                    json.dump(character_list["tokenizer_config_file"], f)
+            except Exception as e:
+                print(
+                    f"创建 tokenizer.json 和 tokenizer_config.json 文件失败, 原因{str(e)}"
+                )
 
-        self.tokenizer = TokenizerFast.from_file(fast_tokenizer_file)
-        added_tokens_decoder = {}
-        added_tokens_map = {}
-        if tokenizer_config_file is not None:
-            with open(
-                tokenizer_config_file, encoding="utf-8"
-            ) as tokenizer_config_handle:
-                init_kwargs = json.load(tokenizer_config_handle)
-                if "added_tokens_decoder" in init_kwargs:
-                    for idx, token in init_kwargs["added_tokens_decoder"].items():
-                        if isinstance(token, dict):
-                            token = AddedToken(**token)
-                        if isinstance(token, AddedToken):
-                            added_tokens_decoder[int(idx)] = token
-                            added_tokens_map[str(token)] = token
-                        else:
-                            raise ValueError(
-                                f"Found a {token.__class__} in the saved `added_tokens_decoder`, should be a dictionary or an AddedToken instance"
-                            )
-                init_kwargs["added_tokens_decoder"] = added_tokens_decoder
-                added_tokens_decoder = init_kwargs.pop("added_tokens_decoder", {})
-                tokens_to_add = [
-                    token
-                    for index, token in sorted(
-                        added_tokens_decoder.items(), key=lambda x: x[0]
-                    )
-                    if token not in added_tokens_decoder
-                ]
-                added_tokens_encoder = self.added_tokens_encoder(added_tokens_decoder)
-                encoder = list(added_tokens_encoder.keys()) + [
-                    str(token) for token in tokens_to_add
-                ]
-                tokens_to_add += [
-                    token
-                    for token in self.all_special_tokens_extended
-                    if token not in encoder and token not in tokens_to_add
-                ]
-                if len(tokens_to_add) > 0:
-                    is_last_special = None
-                    tokens = []
-                    special_tokens = self.all_special_tokens
-                    for token in tokens_to_add:
-                        is_special = (
-                            (token.special or str(token) in special_tokens)
-                            if isinstance(token, AddedToken)
-                            else str(token) in special_tokens
+            self.tokenizer = TokenizerFast.from_file(fast_tokenizer_file)
+            added_tokens_decoder = {}
+            added_tokens_map = {}
+            if tokenizer_config_file is not None:
+                with open(
+                    tokenizer_config_file, encoding="utf-8"
+                ) as tokenizer_config_handle:
+                    init_kwargs = json.load(tokenizer_config_handle)
+                    if "added_tokens_decoder" in init_kwargs:
+                        for idx, token in init_kwargs["added_tokens_decoder"].items():
+                            if isinstance(token, dict):
+                                token = AddedToken(**token)
+                            if isinstance(token, AddedToken):
+                                added_tokens_decoder[int(idx)] = token
+                                added_tokens_map[str(token)] = token
+                            else:
+                                raise ValueError(
+                                    f"Found a {token.__class__} in the saved `added_tokens_decoder`, should be a dictionary or an AddedToken instance"
+                                )
+                    init_kwargs["added_tokens_decoder"] = added_tokens_decoder
+                    added_tokens_decoder = init_kwargs.pop("added_tokens_decoder", {})
+                    tokens_to_add = [
+                        token
+                        for index, token in sorted(
+                            added_tokens_decoder.items(), key=lambda x: x[0]
                         )
-                        if is_last_special is None or is_last_special == is_special:
-                            tokens.append(token)
-                        else:
+                        if token not in added_tokens_decoder
+                    ]
+                    added_tokens_encoder = self.added_tokens_encoder(
+                        added_tokens_decoder
+                    )
+                    encoder = list(added_tokens_encoder.keys()) + [
+                        str(token) for token in tokens_to_add
+                    ]
+                    tokens_to_add += [
+                        token
+                        for token in self.all_special_tokens_extended
+                        if token not in encoder and token not in tokens_to_add
+                    ]
+                    if len(tokens_to_add) > 0:
+                        is_last_special = None
+                        tokens = []
+                        special_tokens = self.all_special_tokens
+                        for token in tokens_to_add:
+                            is_special = (
+                                (token.special or str(token) in special_tokens)
+                                if isinstance(token, AddedToken)
+                                else str(token) in special_tokens
+                            )
+                            if is_last_special is None or is_last_special == is_special:
+                                tokens.append(token)
+                            else:
+                                self._add_tokens(tokens, special_tokens=is_last_special)
+                                tokens = [token]
+                            is_last_special = is_special
+                        if tokens:
                             self._add_tokens(tokens, special_tokens=is_last_special)
-                            tokens = [token]
-                        is_last_special = is_special
-                    if tokens:
-                        self._add_tokens(tokens, special_tokens=is_last_special)
 
     def _add_tokens(
         self, new_tokens: "List[Union[AddedToken, str]]", special_tokens: bool = False

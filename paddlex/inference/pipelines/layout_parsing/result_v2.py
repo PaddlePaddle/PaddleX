@@ -16,6 +16,7 @@ from __future__ import annotations
 import copy
 import re
 from pathlib import Path
+from typing import List
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -27,7 +28,6 @@ from ...common.result import (
     MarkdownMixin,
     XlsxMixin,
 )
-from .utils import get_show_color
 
 
 class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
@@ -64,6 +64,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             return fn
 
     def _to_img(self) -> dict[str, np.ndarray]:
+        from .utils import get_show_color
+
         res_img_dict = {}
         model_settings = self["model_settings"]
         if model_settings["use_doc_preprocessor"]:
@@ -101,11 +103,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         # for layout ordering image
         image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
         draw = ImageDraw.Draw(image, "RGBA")
-        parsing_result = self["parsing_res_list"]
+        parsing_result: List[LayoutParsingBlock] = self["parsing_res_list"]
         for block in parsing_result:
-            bbox = block["block_bbox"]
-            index = block.get("index", None)
-            label = block["sub_label"]
+            bbox = block.bbox
+            index = block.index
+            label = block.label
             fill_color = get_show_color(label)
             draw.rectangle(bbox, fill=fill_color)
             if index is not None:
@@ -176,9 +178,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         parsing_res_list = self["parsing_res_list"]
         parsing_res_list = [
             {
-                "block_label": parsing_res["block_label"],
-                "block_content": parsing_res["block_content"],
-                "block_bbox": parsing_res["block_bbox"],
+                "block_label": parsing_res.label,
+                "block_content": parsing_res.content,
+                "block_bbox": parsing_res.bbox,
             }
             for parsing_res in parsing_res_list
         ]
@@ -281,18 +283,18 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     " ",
                 )
 
-            def format_centered_text(key):
+            def format_centered_text():
                 return (
-                    f'<div style="text-align: center;">{block[key]}</div>'.replace(
+                    f'<div style="text-align: center;">{block.content}</div>'.replace(
                         "-\n",
                         "",
                     ).replace("\n", " ")
                     + "\n"
                 )
 
-            def format_image(label):
+            def format_image():
                 img_tags = []
-                image_path = "".join(block[label].keys())
+                image_path = "".join(block.image.keys())
                 img_tags.append(
                     '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
                         image_path.replace("-\n", "").replace("\n", " "),
@@ -301,7 +303,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 return "\n".join(img_tags)
 
             def format_first_line(templates, format_func, spliter):
-                lines = block["block_content"].split(spliter)
+                lines = block.content.split(spliter)
                 for idx in range(len(lines)):
                     line = lines[idx]
                     if line.strip() == "":
@@ -312,23 +314,23 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 return spliter.join(lines)
 
             def format_table():
-                return "\n" + block["block_content"]
+                return "\n" + block.content
 
-            def get_seg_flag(block, prev_block):
+            def get_seg_flag(block: LayoutParsingBlock, prev_block: LayoutParsingBlock):
 
                 seg_start_flag = True
                 seg_end_flag = True
 
-                block_box = block["block_bbox"]
+                block_box = block.bbox
                 context_left_coordinate = block_box[0]
                 context_right_coordinate = block_box[2]
-                seg_start_coordinate = block.get("seg_start_coordinate")
-                seg_end_coordinate = block.get("seg_end_coordinate")
+                seg_start_coordinate = block.seg_start_coordinate
+                seg_end_coordinate = block.seg_end_coordinate
 
                 if prev_block is not None:
-                    prev_block_bbox = prev_block["block_bbox"]
-                    num_of_prev_lines = prev_block.get("num_of_lines")
-                    pre_block_seg_end_coordinate = prev_block.get("seg_end_coordinate")
+                    prev_block_bbox = prev_block.bbox
+                    num_of_prev_lines = prev_block.num_of_lines
+                    pre_block_seg_end_coordinate = prev_block.seg_end_coordinate
                     prev_end_space_small = (
                         context_right_coordinate - pre_block_seg_end_coordinate < 10
                     )
@@ -368,32 +370,30 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 return seg_start_flag, seg_end_flag
 
             handlers = {
-                "paragraph_title": lambda: format_title(block["block_content"]),
-                "doc_title": lambda: f"# {block['block_content']}".replace(
+                "paragraph_title": lambda: format_title(block.content),
+                "doc_title": lambda: f"# {block.content}".replace(
                     "-\n",
                     "",
                 ).replace("\n", " "),
-                "table_title": lambda: format_centered_text("block_content"),
-                "figure_title": lambda: format_centered_text("block_content"),
-                "chart_title": lambda: format_centered_text("block_content"),
-                "text": lambda: block["block_content"]
-                .replace("-\n", " ")
-                .replace("\n", " "),
+                "table_title": lambda: format_centered_text(),
+                "figure_title": lambda: format_centered_text(),
+                "chart_title": lambda: format_centered_text(),
+                "text": lambda: block.content.replace("-\n", " ").replace("\n", " "),
                 "abstract": lambda: format_first_line(
                     ["摘要", "abstract"], lambda l: f"## {l}\n", " "
                 ),
-                "content": lambda: block["block_content"]
-                .replace("-\n", "  \n")
-                .replace("\n", "  \n"),
-                "image": lambda: format_image("block_image"),
-                "chart": lambda: format_image("block_image"),
-                "formula": lambda: f"$${block['block_content']}$$",
+                "content": lambda: block.content.replace("-\n", "  \n").replace(
+                    "\n", "  \n"
+                ),
+                "image": lambda: format_image(),
+                "chart": lambda: format_image(),
+                "formula": lambda: f"$${block.content}$$",
                 "table": format_table,
                 "reference": lambda: format_first_line(
                     ["参考文献", "references"], lambda l: f"## {l}", "\n"
                 ),
-                "algorithm": lambda: block["block_content"].strip("\n"),
-                "seal": lambda: f"Words of Seals:\n{block['block_content']}",
+                "algorithm": lambda: block.content.strip("\n"),
+                "seal": lambda: f"Words of Seals:\n{block.content}",
             }
             parsing_res_list = obj["parsing_res_list"]
             markdown_content = ""
@@ -403,14 +403,10 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             prev_block = None
             page_first_element_seg_start_flag = None
             page_last_element_seg_end_flag = None
-            parsing_res_list = sorted(
-                parsing_res_list,
-                key=lambda x: x.get("sub_index", 999),
-            )
             for block in parsing_res_list:
                 seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
 
-                label = block.get("block_label")
+                label = block.label
                 page_first_element_seg_start_flag = (
                     seg_start_flag
                     if (page_first_element_seg_start_flag is None)
@@ -465,3 +461,100 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             markdown_info["markdown_images"][img["path"]] = img["img"]
 
         return markdown_info
+
+
+class LayoutParsingBlock:
+
+    def __init__(self, label, bbox, content="") -> None:
+        self.label = label
+        self.region_label = "other"
+        self.bbox = [int(item) for item in bbox]
+        self.content = content
+        self.seg_start_coordinate = float("inf")
+        self.seg_end_coordinate = float("-inf")
+        self.width = bbox[2] - bbox[0]
+        self.height = bbox[3] - bbox[1]
+        self.area = self.width * self.height
+        self.num_of_lines = 1
+        self.image = None
+        self.index = None
+        self.visual_index = None
+        self.direction = self.get_bbox_direction()
+        self.child_blocks = []
+        self.update_direction_info()
+
+    def __str__(self) -> str:
+        return f"{self.__dict__}"
+
+    def __repr__(self) -> str:
+        _str = f"\n\n#################\nlabel:\t{self.label}\nregion_label:\t{self.region_label}\nbbox:\t{self.bbox}\ncontent:\t{self.content}\n#################"
+        return _str
+
+    def to_dict(self) -> dict:
+        return self.__dict__
+
+    def update_direction_info(self) -> None:
+        if self.region_label == "vision":
+            self.direction = "horizontal"
+        if self.direction == "horizontal":
+            self.secondary_direction = "vertical"
+            self.short_side_length = self.height
+            self.long_side_length = self.width
+            self.start_coordinate = self.bbox[0]
+            self.end_coordinate = self.bbox[2]
+            self.secondary_direction_start_coordinate = self.bbox[1]
+            self.secondary_direction_end_coordinate = self.bbox[3]
+        else:
+            self.secondary_direction = "horizontal"
+            self.short_side_length = self.width
+            self.long_side_length = self.height
+            self.start_coordinate = self.bbox[1]
+            self.end_coordinate = self.bbox[3]
+            self.secondary_direction_start_coordinate = self.bbox[0]
+            self.secondary_direction_end_coordinate = self.bbox[2]
+
+    def append_child_block(self, child_block: LayoutParsingBlock) -> None:
+        if not self.child_blocks:
+            self.ori_bbox = self.bbox.copy()
+        x1, y1, x2, y2 = self.bbox
+        x1_child, y1_child, x2_child, y2_child = child_block.bbox
+        union_bbox = (
+            min(x1, x1_child),
+            min(y1, y1_child),
+            max(x2, x2_child),
+            max(y2, y2_child),
+        )
+        self.bbox = union_bbox
+        self.update_direction_info()
+        child_blocks = [child_block]
+        if child_block.child_blocks:
+            child_blocks.extend(child_block.get_child_blocks())
+        self.child_blocks.extend(child_blocks)
+
+    def get_child_blocks(self) -> list:
+        self.bbox = self.ori_bbox
+        child_blocks = self.child_blocks.copy()
+        self.child_blocks = []
+        return child_blocks
+
+    def get_centroid(self) -> tuple:
+        x1, y1, x2, y2 = self.bbox
+        centroid = ((x1 + x2) / 2, (y1 + y2) / 2)
+        return centroid
+
+    def get_bbox_direction(self, orientation_ratio: float = 1.0) -> bool:
+        """
+        Determine if a bounding box is horizontal or vertical.
+
+        Args:
+            bbox (List[float]): Bounding box [x_min, y_min, x_max, y_max].
+            orientation_ratio (float): Ratio for determining orientation. Default is 1.0.
+
+        Returns:
+            str: "horizontal" or "vertical".
+        """
+        return (
+            "horizontal"
+            if self.width * orientation_ratio >= self.height
+            else "vertical"
+        )

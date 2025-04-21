@@ -240,10 +240,10 @@ class LayoutParsingPipeline(BasePipeline):
                     )
                     seal_index += 1
             else:
-                ocr_res_in_box, matched_idxs = get_sub_regions_ocr_res(
+                ocr_res_in_box, matched_idxes = get_sub_regions_ocr_res(
                     overall_ocr_res, [box], return_match_idx=True
                 )
-                for matched_idx in matched_idxs:
+                for matched_idx in matched_idxes:
                     if matched_ocr_dict.get(matched_idx, None) is None:
                         matched_ocr_dict[matched_idx] = [object_box_idx]
                     else:
