@@ -1077,7 +1077,10 @@
       "paddle"
     ],
     "LaTeX_OCR_rec": [],
-    "UniMERNet": [],
+    "UniMERNet": [
+      "onnxruntime",
+      "paddle"
+    ],
     "Mask-RT-DETR-H": [
       "paddle"
     ],
@@ -1093,9 +1096,15 @@
     "Mask-RT-DETR-X": [
       "paddle"
     ],
-    "Co-DINO-R50": [],
-    "Co-DINO-Swin-L": [],
-    "Co-Deformable-DETR-R50": [],
+    "Co-DINO-R50": [
+      "paddle"
+    ],
+    "Co-DINO-Swin-L": [
+      "paddle"
+    ],
+    "Co-Deformable-DETR-R50": [
+      "paddle"
+    ],
     "Co-Deformable-DETR-Swin-T": [
       "paddle"
     ],
@@ -1110,6 +1119,22 @@
     "TiDE": [
       "onnxruntime",
       "openvino",
+      "paddle"
+    ],
+    "YOWO": [
+      "paddle"
+    ],
+    "BEVFusion": [],
+    "SAM-H_point": [
+      "paddle"
+    ],
+    "SAM-H_box": [
+      "paddle"
+    ],
+    "GroundingDINO-T": [
+      "paddle"
+    ],
+    "YOLO-Worldv2-L": [
       "paddle"
     ]
   },
@@ -2164,7 +2189,9 @@
     "LaTeX_OCR_rec": [
       "paddle"
     ],
-    "UniMERNet": [],
+    "UniMERNet": [
+      "paddle"
+    ],
     "Mask-RT-DETR-H": [
       "paddle"
     ],
@@ -2183,7 +2210,9 @@
     "Co-DINO-R50": [
       "paddle"
     ],
-    "Co-DINO-Swin-L": [],
+    "Co-DINO-Swin-L": [
+      "paddle"
+    ],
     "Co-Deformable-DETR-R50": [
       "paddle"
     ],
@@ -2198,6 +2227,26 @@
       "paddle",
       "onnxruntime"
     ],
-    "TiDE": []
+    "TiDE": [
+      "paddle"
+    ],
+    "YOWO": [
+      "paddle"
+    ],
+    "BEVFusion": [
+      "paddle"
+    ],
+    "SAM-H_point": [
+      "paddle"
+    ],
+    "SAM-H_box": [
+      "paddle"
+    ],
+    "GroundingDINO-T": [
+      "paddle"
+    ],
+    "YOLO-Worldv2-L": [
+      "paddle"
+    ]
   }
 }
