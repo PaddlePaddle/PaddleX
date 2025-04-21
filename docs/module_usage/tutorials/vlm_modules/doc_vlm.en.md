@@ -110,10 +110,17 @@ The explanation of related methods and parameters are as follows:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Enable high-performance inference</td>
+<td>Whether to enable the high-performance inference plugin. Not supported for now.</td>
 <td><code>bool</code></td>
-<td>None, currently not supported</td>
+<td>None</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration. Not supported for now.</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </table>
 

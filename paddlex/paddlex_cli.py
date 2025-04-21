@@ -166,7 +166,7 @@ def args_cfg():
         default=8080,
         help="Port number to serve on (default: 8080).",
     )
-    # Serving also uses `--pipeline`, `--device`, and `--use_hpip`
+    # Serving also uses `--pipeline`, `--device`, `--use_hpip`, and `--hpi_config`
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
@@ -441,7 +441,7 @@ def main():
         serve(
             args.pipeline,
             device=args.device,
-            use_hpip=args.use_hpip,
+            use_hpip=args.use_hpip or None,
             hpi_config=args.hpi_config,
             host=args.host,
             port=args.port,
@@ -469,7 +469,7 @@ def main():
                 args.input,
                 args.device,
                 args.save_path,
-                use_hpip=args.use_hpip,
+                use_hpip=args.use_hpip or None,
                 hpi_config=args.hpi_config,
                 **pipeline_args_dict,
             )

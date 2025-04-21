@@ -86,13 +86,17 @@ The command-line options related to serving are as follows:
 <td><code>--use_hpip</code></td>
 <td>If specified, enables the high-performance inference plugin.</td>
 </tr>
+<tr>
+<td><code>--hpi_config</code></td>
+<td>High-performance inference configuration</td>
+</tr>
 </tbody>
 </table>
 </table>
 
 In application scenarios where strict requirements are placed on service response time, the PaddleX high-performance inference plugin can be used to accelerate model inference and pre/post-processing, thereby reducing response time and increasing throughput.
 
-To use the PaddleX high-performance inference plugin, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md). Note that not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed information on supported pipelines and models, please refer to the section on supported pipelines and models for high-performance inference plugins.
+To use the PaddleX high-performance inference plugin, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md).
 
 You can use the `--use_hpip` flag to enable the high-performance inference plugin. An example is as follows:
 
@@ -330,7 +334,7 @@ docker run \
 - If CPU deployment is required, there is no need to specify `--gpus`.
 - If you need to enter the container for debugging, you can replace `/bin/bash server.sh` in the command with `/bin/bash`. Then execute `/bin/bash server.sh` inside the container.
 - If you want the server to run in the background, you can replace `-it` in the command with `-d`. After the container starts, you can view the container logs with `docker logs -f {container ID}`.
-- Add `-e PADDLEX_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. However, please note that not all pipelines support using the high-performance inference plugin. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
+- Add `-e PADDLEX_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
 
 You may observe output similar to the following:
 

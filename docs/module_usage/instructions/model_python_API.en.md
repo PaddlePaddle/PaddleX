@@ -36,6 +36,8 @@ In short, just three steps:
     * `batch_size`: `int` type, default to `1`;
     * `device`: `str` type, used to set the inference device, such as "cpu", "gpu:2" for GPU settings. By default, using 0 id GPU if available, otherwise CPU;
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). Please refer to [4-Inference Configuration](#4-inference-configuration) for more details;
+    * `use_hpip`：`bool` type, whether to enable the high-performance inference plugin;
+    * `hpi_config`：`dict | None` type, high-performance inference configuration;
     * _`inference hyperparameters`_: used to set common inference hyperparameters. Please refer to specific model description document for details.
   * Return Value: `BasePredictor` type.
 

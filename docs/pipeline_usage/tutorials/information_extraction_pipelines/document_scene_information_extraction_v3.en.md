@@ -467,9 +467,17 @@ The relevant parameter descriptions are as follows:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, which is only available when the pipeline supports it.</td>
+<td>Whether to enable the high-performance inference plugin. If set to `None`, the setting from the configuration file will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>initial_predictor</code></td>

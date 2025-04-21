@@ -8,19 +8,19 @@ In real production environments, many applications impose strict performance met
 
 ## Table of Contents
 
-- [1. Basic Usage](#1.-Basic-Usage)
+- [1. Installation and Basic Usage](#1.-Installation-and-Basic-Usage)
   - [1.1 Installing the High-Performance Inference Plugin](#1.1-Installing-the-High-Performance-Inference-Plugin)
   - [1.2 Enabling the High-Performance Inference Plugin](#1.2-Enabling-the-High-Performance-Inference-Plugin)
 - [2. Advanced Usage](#2-Advanced-Usage)
   - [2.1 Working Modes of High-Performance Inference](#21-Working-Modes-of-High-Performance-Inference)
   - [2.2 High-Performance Inference Configuration](#22-High-Performance-Inference-Configuration)
   - [2.3 Modifying the High-Performance Inference Configuration](#23-Modifying-the-High-Performance-Inference-Configuration)
-  - [2.4 Enabling/Disabling the High-Performance Inference Plugin on Sub-pipelines/Submodules](#24-EnablingDisabling-the-High-Performance-Inference-Plugin-on-Sub-pipelinesSubmodules)
+  - [2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files](#24-EnablingDisabling-the-High‑Performance-Inference-Plugin-in-Configuration-Files)
   - [2.5 Model Cache Description](#25-Model-Cache-Description)
   - [2.6 Customizing the Model Inference Library](#26-Customizing-the-Model-Inference-Library)
 - [3. Frequently Asked Questions](#3-Frequently-Asked-Questions)
 
-## 1. Basic Usage
+## 1. Installation and Basic Usage
 
 Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
@@ -148,7 +148,6 @@ For the PaddleX CLI, specify `--use_hpip` to enable the high-performance inferen
 paddlex \
     --pipeline image_classification \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    --device gpu:0 \
     --use_hpip
 ```
 
@@ -160,7 +159,6 @@ python main.py \
     -o Global.mode=predict \
     -o Predict.model_dir=None \
     -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    -o Global.device=gpu:0 \
     -o Predict.use_hpip=True
 ```
 
@@ -173,7 +171,6 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="image_classification",
-    device="gpu",
     use_hpip=True
 )
 
@@ -187,7 +184,6 @@ from paddlex import create_model
 
 model = create_model(
     model_name="ResNet18",
-    device="gpu",
     use_hpip=True
 )
 
@@ -196,7 +192,8 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 The inference results obtained with the high-performance inference plugin enabled are identical to those without the plugin. For some models, **the first time the high-performance inference plugin is enabled, it may take a longer time to complete the construction of the inference engine**. PaddleX caches the related information in the model directory after the inference engine is built for the first time, and subsequently reuses the cached content to improve the initialization speed.
 
-**By default, enabling the high-performance inference plugin applies to the entire pipeline/module.** If you want to control the scope in a more granular way (e.g., enabling the high-performance inference plugin for only a sub-pipeline or a submodule), you can set the `use_hpip` parameter at different configuration levels in the pipeline configuration file. Please refer to [2.4 Enabling/Disabling the High-Performance Inference Plugin on Sub-pipelines/Submodules](#24-EnablingDisabling-the-High-Performance-Inference-Plugin-on-Sub-pipelinesSubmodules) for more details.
+**Enabling the high‑performance inference plugin via the PaddleX CLI and Python API applies by default to the entire pipeline/module.**
+If you need finer‑grained control—e.g. to enable the plugin only on a specific sub‑pipeline or sub‑module within your pipeline—you can set `use_hpip` in the configuration file at the appropriate level. Please refer to [2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files](#24-EnablingDisabling-the-High‑Performance-Inference-Plugin-in-Configuration-Files). If `use_hpip` is not specified in the CLI options, API calls, or any configuration file, the high‑performance inference plugin will remain disabled by default.
 
 ## 2. Advanced Usage
 
@@ -344,7 +341,6 @@ hpi_config:
 paddlex \
     --pipeline image_classification \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    --device gpu:0 \
     --use_hpip \
     --hpi_config '{"backend": "onnxruntime"}'
 ```
@@ -357,7 +353,6 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="OCR",
-    device="gpu",
     use_hpip=True,
     hpi_config={"backend": "onnxruntime"}
 )
@@ -385,7 +380,6 @@ python main.py \
     -o Global.mode=predict \
     -o Predict.model_dir=None \
     -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    -o Global.device=gpu:0 \
     -o Predict.use_hpip=True \
     -o Predict.hpi_config='{"backend": "onnxruntime"}'
 ```
@@ -398,7 +392,6 @@ from paddlex import create_model
 
 model = create_model(
     model_name="ResNet18",
-    device="gpu",
     use_hpip=True,
     hpi_config={"backend": "onnxruntime"}
 )
@@ -463,9 +456,9 @@ Predict:
 
 </details>
 
-### 2.4 Enabling/Disabling the High-Performance Inference Plugin on Sub-pipelines/Submodules
+### 2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files
 
-High-performance inference supports enabling the high-performance inference plugin for only specific sub-pipelines/submodules by configuring `use_hpip` at the sub-pipeline or submodule level. For example:
+In the configuration file, you can use `use_hpip` to control whether the high-performance inference plugin is enabled or disabled. Unlike configuring via the CLI or API, this approach allows you to specify `use_hpip` at the sub-pipeline or sub-module level, enabling **high-performance inference only for a specific sub-pipeline or sub-module within the entire pipeline**. For example:
 
 **In the general OCR pipeline, enable high-performance inference for the `text_detection` module, but not for the `text_recognition` module:**
 
@@ -475,21 +468,21 @@ High-performance inference supports enabling the high-performance inference plug
 SubModules:
   TextDetection:
     ...
-    use_hpip: True # This submodule uses high-performance inference
+    use_hpip: True # This sub-module uses high-performance inference
   TextLineOrientation:
     ...
-    # This submodule does not have a specific configuration; it defaults to the global configuration
+    # This sub-module does not have a specific configuration; it defaults to the global configuration
     # (if neither the configuration file nor CLI/API parameters set it, high-performance inference will not be used)
   TextRecognition:
     ...
-    use_hpip: False # This submodule does not use high-performance inference
+    use_hpip: False # This sub-module does not use high-performance inference
 ```
 
 </details>
 
 **Note:**
 
-1. When setting `use_hpip` in sub-pipelines or submodules, the configuration at the deepest level will take precedence.
+1. When `use_hpip` is set at multiple levels in the configuration file, the setting at the deepest level takes precedence.
 2. **When enabling or disabling the high-performance inference plugin by modifying the pipeline configuration file, it is not recommended to also configure it using the CLI or Python API.** Setting `use_hpip` through the CLI or Python API is equivalent to modifying the top-level `use_hpip` in the configuration file.
 
 ### 2.5 Model Cache Description
@@ -543,7 +536,7 @@ If you need to customize the build of `ultra-infer`, you can modify the followin
 
 Example:
 
-```shell
+```bash
 # Build
 cd PaddleX/libs/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...
