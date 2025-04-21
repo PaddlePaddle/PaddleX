@@ -33,7 +33,7 @@ class BaseCVResult(BaseResult, ImgMixin):
 
     def _get_input_fn(self):
         fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
+        if (page_idx := self.get("page_index", None)) is not None:
             fp = Path(fn)
             stem, suffix = fp.stem, fp.suffix
             return f"{stem}_{page_idx}{suffix}"
