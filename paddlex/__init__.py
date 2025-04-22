@@ -42,7 +42,8 @@ def _initialize():
     if flags.EAGER_INITIALIZATION:
         repo_manager.initialize()
 
-    __version__ = version.get_pdx_version()
+
+__version__ = version.get_pdx_version()
 
 
 _initialize()

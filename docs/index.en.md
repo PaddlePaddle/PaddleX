@@ -99,22 +99,23 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 🛠️ Installation
 
 !!! warning
-    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc0 version depends on PaddlePaddle version <b>3.0.0rc0</b> and above.
+    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc1 version depends on PaddlePaddle version <b>3.0.0</b> and above.
 
 ### Installing PaddlePaddle
 
 === "CPU version"
     ```bash
-    python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "GPU version, requiring a GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)."
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+    python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
-=== "GPU version, requiring a GPU driver version ≥545.23.06 (Linux) or ≥545.84 (Windows)."
+=== "GPU version, requiring a GPU driver version ≥550.54.14 (Linux) or ≥550.54.14 (Windows)."
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+    python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
     ```
+
 
 !!! tip
     There is no need to pay attention to the CUDA version on the physical machine; just focus on the GPU driver version. For more information on PaddlePaddle Wheel versions, please refer to the [PaddlePaddle Official Website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html).
@@ -123,7 +124,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ### Installing PaddleX
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex==3.0.0rc1
 ```
 
 > ❗ For more installation methods, please refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)

@@ -17,7 +17,7 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 > ❗ <b>Note</b>: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
 
 ```bash
-pip install "https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl[base]"
+pip install paddlex==3.0.0rc1
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -132,14 +132,10 @@ If your Docker version >= 19.03, please use:
 
 ```bash
 # For CPU
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-cpu /bin/bash
 
-# For GPU
-# For CUDA11.8
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
-
-# For CUDA12.3
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+# gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
 ```
 
 * If your Docker version <= 19.03 and >= 17.06, please use:
@@ -147,19 +143,17 @@ docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=hos
 <details><summary> Click Here</summary>
 
 <pre><code class="language-bash"># For CPU
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-cpu /bin/bash
 
 # For GPU
-# For CUDA11.8
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+# gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
 
-# For CUDA12.3
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 </code></pre></details>
 
 * If your Docker version <= 17.06, please update your Docker.
 
-* If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/).
+* If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/). Support for CUDA 12 and above is currently in progress. Stay tuned.
 
 ### 2.2 Custom Installation of PaddleX
 Before installation, please ensure you have completed the local installation of PaddlePaddle by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md).
