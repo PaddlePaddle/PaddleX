@@ -17,7 +17,22 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 > ❗ <b>Note</b>: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
 
 ```bash
+# Only install the required dependencies (optional dependencies can be installed later as needed)
 pip install paddlex==3.0.0rc1
+```
+
+You can install the optional dependencies as needed using the following method (For more details, please refer to [2.3 Selective Installation of Dependencies](#23-selective-installation-of-dependencies)):
+
+Install all dependencies required for PaddleX "basic features":
+
+```bash
+pip install "paddlex[base]==3.0.0rc1"
+```
+
+Only install the dependencies required for a specific feature:
+
+```bash
+pip install "paddlex[ocr]==3.0.0rc1"
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -235,8 +250,9 @@ If you are only focused on a specific feature of PaddleX and want to minimize th
 
 ```bash
 # For example, to install only the basic OCR features
+
 # Install the precompiled wheel package
-pip install "/url/of/wheel[ocr]"
+pip install "paddlex[ocr]"
 # Install from source
 pip install -e ".[ocr]"
 

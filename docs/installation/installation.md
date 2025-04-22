@@ -19,7 +19,21 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 > ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
 
 ```bash
+# 仅安装必须依赖（可以在之后按需安装可选依赖）
 pip install paddlex==3.0.0rc1
+```
+
+通过如下方式可以安装所需的可选依赖（更多说明请参考 [2.3 选择性安装依赖](#23-选择性安装依赖)）：
+
+安装 PaddleX “基础功能”需要的全部依赖：
+
+```bash
+pip install "paddlex[base]==3.0.0rc1"
+```
+
+仅安装某项功能所需依赖：
+```bash
+pip install "paddlex[ocr]==3.0.0rc1"
 ```
 
 ### 1.2 插件安装模式
@@ -236,8 +250,9 @@ PaddleX 的功能丰富，而不同的功能需要的依赖也不尽相同。将
 
 ```bash
 # 以仅安装 OCR 类基础功能为例
+
 # 安装预编译的 wheel 包
-pip install "/url/of/wheel[ocr]"
+pip install "paddlex[ocr]"
 # 从源码安装
 pip install -e ".[ocr]"
 
