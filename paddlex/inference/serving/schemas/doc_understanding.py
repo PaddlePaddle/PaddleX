@@ -70,6 +70,7 @@ class InferRequest(BaseModel):
     temperature: Optional[float] = 0.1
     top_p: Optional[float] = 0.95
     stream: Optional[bool] = False
+    max_image_tokens: Optional[int] = None
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
