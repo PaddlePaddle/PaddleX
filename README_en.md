@@ -34,7 +34,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 ## 🌟 Why PaddleX ?
 
-  🎨 **Rich Models One-click Call**: Integrate over **200 PaddlePaddle models** covering multiple key areas such as OCR, object detection, and time series forecasting into **19 pipelines**. Experience the model effects quickly through easy Python API calls. Also supports **more than 20 modules** for easy model combination use by developers.
+  🎨 **Rich Models One-click Call**: Integrate over **200 PaddlePaddle models** covering multiple key areas such as OCR, object detection, and time series forecasting into **33 pipelines**. Experience the model effects quickly through easy Python API calls. Also supports **38 modules** for easy model combination use by developers.
 
   🚀 **High Efficiency and Low barrier of entry**: Achieve model **full-process development** based on graphical interfaces and unified commands, creating **8 featured model pipelines** that combine large and small models, semi-supervised learning of large models, and multi-model fusion, greatly reducing the cost of iterating models.
 
@@ -44,7 +44,21 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 ## 📣 Recent Updates
 
-🔥🔥 **2025.2.14, PaddleX v3.0.0rc0 major upgrade.** This version fully adapts to PaddlePaddle 3.0.0rc and above, with the following core upgrades:
+🔥 **2025.4.22, PaddleX v3.0.0rc1 major upgrade.** This version fully adapts to PaddlePaddle 3.0.0, with the following core upgrades:
+
+- **Adapts to New Features of PaddlePaddle 3.0**: Supports compiler training, which can be enabled by appending `-o Global.dy2st=True` to the training command. On GPUs, the training speed of most models can be improved by over 10%, and for a few models, the improvement can exceed 30%. For inference, the models are fully adapted to PaddlePaddle 3.0's Intermediate Representation (PIR) technology, offering more flexible extensibility and compatibility. The file names for inference model have been changed from `xxx.pdmodel` to `xxx.json`.
+- **Newly Added Self-developed MLLM for Document Image Understanding, PP-DocBee**: PP-DocBee has achieved SOTA performance among models with similar parameter sizes on academic and internal business scenario document understanding evaluation benchmarks. It can be applied to document QA scenarios such as financial reports, research reports, contracts, manuals, and legal regulations.
+- **Full Support for ONNX Format Models, with Support for Model Format Conversion via the Paddle2ONNX Plugin.**
+- **Enhanced High-Performance Inference**:
+    - **Added Support for ONNX and OM Format Models**: PaddleX can intelligently select the model format based on needs;
+    - **Expanded Supported Pipelines and Modules**: All single modules and pipelines for inference model can use the high-performance inference plugin to improve inference performance;
+    - **Support for 3 Configuration Methods: CLI, API, and Configuration Files**: Enables more granular configuration, allowing users to enable and disable the high-performance inference plugin at the sub-pipeline and sub-module level.
+
+- **Expanded Multi-Hardware Support**:
+  - **NPU: The number of models fully validated on Ascend NPU has increased to 200. Additionally, common pipelines such as general OCR, image classification, and object detection support OM model format inference, with inference speed improvements ranging from 113.8% to 226.4%. Inference deployment is supported on Atlas 200 and Atlas 300 series products.**
+  - **GCU: Enflame has been officially integrated into the PaddlePaddle regular release system, completing the adaptation of the PaddleX ecosystem. Supports the training and inference of 90 models.**
+
+🔥 **2025.2.14, PaddleX v3.0.0rc0 major upgrade.** This version fully adapts to PaddlePaddle 3.0.0rc and above, with the following core upgrades:
 
 - **Added 12 high-value pipelines, launching self-developed [PP-StructureV3 Pipeline](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html), [PP-ChatOCRv4-doc Pipeline](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html), [Table Recognition v2 Pipeline](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html)**. Additionally, new pipelines for document processing, rotated box detection, open vocabulary detection/segmentation, video analysis, multilingual speech recognition, 3D, and other scenarios have been added.
 
@@ -543,26 +557,26 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 ### 🛠️ Installation
 
-> ❗Before installing PaddleX, please ensure that you have a basic **Python runtime environment** (Note: Currently supports Python 3.8 to Python 3.12). The PaddleX 3.0-rc0 version depends on PaddlePaddle version 3.0.0rc0 and above. Please make sure the version compatibility is maintained before use.
+> ❗Before installing PaddleX, please ensure that you have a basic **Python runtime environment** (Note: Currently supports Python 3.8 to Python 3.12). The PaddleX 3.0-rc1 version depends on PaddlePaddle version 3.0.0 and above. Please make sure the version compatibility is maintained before use.
 
 * **Installing PaddlePaddle**
 
 ```bash
 # CPU
-python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
-python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+ python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
-# gpu，requires GPU driver version ≥545.23.06 (Linux) or ≥545.84 (Windows)
-python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+# gpu，requires GPU driver version ≥550.54.14 (Linux) or ≥550.54.14 (Windows)
+ python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 ```
 > ❗No need to focus on the CUDA version on the physical machine, only the GPU driver version needs attention. For more information on PaddlePaddle Wheel versions, please refer to the [PaddlePaddle Official Website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/en/install/pip/linux-pip.html).
 
 * **Installing PaddleX**
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex==3.0.0rc1
 ```
 
 > ❗For more installation methods, refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/en/installation/installation.html).
