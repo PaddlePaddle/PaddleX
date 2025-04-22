@@ -17,7 +17,22 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 > ❗ <b>Note</b>: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
 
 ```bash
+# Only install the required dependencies (optional dependencies can be installed later as needed)
 pip install paddlex==3.0.0rc1
+```
+
+You can install the optional dependencies as needed using the following method (For more details, please refer to [2.3 Selective Installation of Dependencies](#23-selective-installation-of-dependencies)):
+
+Install all dependencies required for PaddleX "basic features":
+
+```bash
+pip install "paddlex[base]==3.0.0rc1"
+```
+
+Only install the dependencies required for a specific feature:
+
+```bash
+pip install "paddlex[ocr]==3.0.0rc1"
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -109,22 +124,10 @@ The model training related plugins supported by PaddleX are listed below. Please
 If the plugin you need to install is `PaddleXXX`, after installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md)), you can quickly install the corresponding PaddleX plugin by executing the following commands:
 
 ```bash
-# Only install the required dependencies (optional dependencies can be installed later as needed)
-pip install paddlex==3.0.0rc1
-```
-
-You can install the optional dependencies as needed using the following method (For more details, please refer to [2.3 Selective Installation of Dependencies](#23-selective-installation-of-dependencies)):
-
-Install all dependencies required for PaddleX "basic features":
-
-```bash
-pip install "paddlex[base]==3.0.0rc1"
-```
-
-Only install the dependencies required for a specific feature:
-
-```bash
-pip install "paddlex[ocr]==3.0.0rc1"
+git clone https://github.com/PaddlePaddle/PaddleX.git
+cd PaddleX
+pip install -e ".[base]"
+paddlex --install PaddleXXX
 ```
 
 > ❗ Note: The two installation methods are not mutually exclusive, and you can install both simultaneously.
