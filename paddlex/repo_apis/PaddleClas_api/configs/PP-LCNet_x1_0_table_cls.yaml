@@ -131,7 +131,7 @@ Infer:
   PostProcess:
     name: Topk
     topk: 5
-    class_id_map_file: ppcls/utils/imagenet1k_label_list.txt
+    class_id_map_file: ppcls/utils/PULC_label_list/table_classification_label_list.txt
 
 Metric:
   Train:
