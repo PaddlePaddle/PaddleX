@@ -495,18 +495,23 @@ class PaddleInfer(StaticInfer):
             if self._option.trt_dynamic_shapes is None:
                 raise RuntimeError("No dynamic shape information provided")
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
-            _convert_trt(
-                self._option.trt_cfg_setting,
-                model_file,
-                params_file,
-                trt_save_path,
-                self._option.device_id,
-                self._option.trt_dynamic_shapes,
-                self._option.trt_dynamic_shape_input_data,
-            )
-            model_file = trt_save_path.with_suffix(".json")
-            params_file = trt_save_path.with_suffix(".pdiparams")
-            config = paddle.inference.Config(str(model_file), str(params_file))
+            trt_model_file = trt_save_path.with_suffix(".json")
+            trt_params_file = trt_save_path.with_suffix(".pdiparams")
+            if not trt_model_file.exists() or not trt_params_file.exists():
+                _convert_trt(
+                    self._option.trt_cfg_setting,
+                    model_file,
+                    params_file,
+                    trt_save_path,
+                    self._option.device_id,
+                    self._option.trt_dynamic_shapes,
+                    self._option.trt_dynamic_shape_input_data,
+                )
+            else:
+                logging.debug(
+                    f"Use TRT cache files(`{trt_model_file}` and `{trt_params_file}`)."
+                )
+            config = paddle.inference.Config(str(trt_model_file), str(trt_params_file))
         else:
             config = paddle.inference.Config(str(model_file), str(params_file))
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))

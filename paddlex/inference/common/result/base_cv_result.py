@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pathlib import Path
+
 from .base_result import BaseResult
 from .mixin import ImgMixin
 
@@ -28,3 +30,12 @@ class BaseCVResult(BaseResult, ImgMixin):
         """
         super().__init__(data)
         ImgMixin.__init__(self, "pillow")
+
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self.get("page_index", None)) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn

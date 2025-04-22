@@ -51,7 +51,7 @@ DEP_SPECS = {
     "opencv-contrib-python": "== 4.10.0.84",
     "openpyxl": "",
     "packaging": "",
-    "pandas": "",
+    "pandas": "<= 1.5.3",
     "pillow": "",
     "premailer": "",
     "prettytable": "",
