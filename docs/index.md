@@ -100,21 +100,21 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ## 🛠️ 安装
 
 !!! warning
-    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.8 至 Python 3.12</b>）。PaddleX 3.0-rc0 版本依赖的 PaddlePaddle 版本为 <b>3.0.0rc0以上版本</b>。
+    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.8 至 Python 3.12</b>）。PaddleX 3.0-rc1 版本依赖的 PaddlePaddle 版本为 <b>3.0.0以上版本</b>。
 
 ### 安装 PaddlePaddle
 
 === "CPU 版本"
     ```bash
-    python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+     python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
-=== "GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）"
+=== "GPU 版本，需显卡驱动程序版本 ≥550.54.14（Linux）或 ≥550.54.14（Windows）"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+    python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
     ```
 
 !!!tip
@@ -125,7 +125,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ### 安装PaddleX
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex==3.0.0rc1
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)

@@ -19,12 +19,12 @@ The Document Understanding Pipeline is an advanced document processing technolog
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-DocBee-2B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
+<td>PP-DocBee-2B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
 <td>4.2</td>
 <td rowspan="2">PP-DocBee is a self-developed multimodal large model by the PaddlePaddle team, focusing on document understanding with excellent performance on Chinese document understanding tasks. The model is fine-tuned with nearly 5 million multimodal datasets for document understanding, including general VQA, OCR, chart, text-rich documents, mathematics and complex reasoning, synthetic data, and pure text data, with different training data ratios. On several authoritative English document understanding evaluation benchmarks in academia, PP-DocBee has achieved SOTA for models of the same parameter scale. In internal business Chinese scenarios, PP-DocBee also outperforms current popular open and closed-source models.</td>
 </tr>
 <tr>
-<td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
+<td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
 <td>15.8</td>
 </tr>
 </table>

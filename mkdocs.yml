@@ -240,7 +240,7 @@ plugins:
             FAQ: FAQ
             近期更新: Recently Update
       repository: PaddlePaddle/PaddleX #仓库名称
-      branch: release/3.0-rc #仓库分支
+      branch: release/3.0-rc1 #仓库分支
   - git-revision-date-localized: #显示更新时间
       enable_creation_date: true
 
