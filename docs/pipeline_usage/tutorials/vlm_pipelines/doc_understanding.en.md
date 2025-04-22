@@ -399,6 +399,13 @@ Below is a basic service deployment API reference and multilingual service call 
 <td>Optional</td>
 <td>false</td>
 </tr>
+<tr>
+<td><code>max_image_tokens</code></td>
+<td><code>int</code></td>
+<td>Maximum number of tokens of input image</td>
+<td>Optional</td>
+<td>None</td>
+</tr>
 </tbody>
 </table>
 

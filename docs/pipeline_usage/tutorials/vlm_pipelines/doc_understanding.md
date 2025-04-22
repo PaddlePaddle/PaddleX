@@ -399,6 +399,13 @@ for res in output:
 <td>否</td>
 <td>false</td>
 </tr>
+<tr>
+<td><code>max_image_tokens</code></td>
+<td><code>int</code></td>
+<td>图像的最大输入token数</td>
+<td>否</td>
+<td>None</td>
+</tr>
 </tbody>
 </table>
 
