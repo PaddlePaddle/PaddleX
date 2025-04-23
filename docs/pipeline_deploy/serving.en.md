@@ -308,13 +308,13 @@ First, pull the Docker image as needed:
 - Image supporting deployment with NVIDIA GPU (the machine must have NVIDIA drivers that support CUDA 11.8 installed):
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-gpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc1-gpu
     ```
 
 - CPU-only Image:
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-cpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc1-cpu
     ```
 
 With the image prepared, navigate to the `server` directory and execute the following command to run the server:
