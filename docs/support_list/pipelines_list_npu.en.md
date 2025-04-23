@@ -67,6 +67,71 @@ comments: true
       </ul>
     </td>
   </tr>
+<tr>
+    <td rowspan = 7>PP-ChatOCRv3</td>
+    <td>Table Structure Recognition</td>
+    <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Online Experience</a></td>
+    <td rowspan = 7>Document Image Scene Information Extraction v3 (PP-ChatOCRv3-doc) is a PaddlePaddle-specific intelligent document and image analysis solution that integrates LLM and OCR technologies to solve common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating the Wenxin large model, it combines vast data and knowledge, providing high accuracy and wide applicability. The open-source version supports local experience and deployment, and fine-tuning training for each module.</td>
+    <td rowspan="7">
+  <ul>
+    <li>Construction of knowledge graphs</li>
+    <li>Detection of information related to specific events in online news and social media</li>
+    <li>Extraction and analysis of key information in academic literature (especially in scenarios requiring recognition of seals, distorted images, and more complex tables)</li>
+  </ul>
+</td>
+  </tr>
+  <tr>
+    <td>Layout Detection</td>
+  </tr>
+  <tr>
+    <td>Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Recognition</td>
+  </tr>
+  <tr>
+    <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Image Unrapping</td>
+  </tr>
+  <tr>
+    <td>Document Image Orientation Classification</td>
+  </tr>
+  <tr>
+      <td rowspan="8">PP-ChatOCRv4</td>
+      <td>Table Structure Recognition</td>
+      <td rowspan="8">Coming Soon</td>
+      <td rowspan="8">Document Scene Information Extraction v4 (PP-ChatOCRv4) is a PaddlePaddle-featured intelligent analysis solution for documents and images, combining LLM, MLLM, and OCR technologies. Based on PP-ChatOCRv3, it optimizes common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. It integrates massive data and knowledge with the Ernie model, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment methods, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and optimize on your own dataset, and the trained model can be seamlessly integrated.</td>
+      <td rowspan="8">
+          <ul>
+              <li>Knowledge Graph Construction</li>
+              <li>Detection of Information Related to Specific Events in Online News and Social Media</li>
+              <li>Extraction and Analysis of Key Information in Academic Literature (especially scenarios requiring recognition of seals, distorted images, and more complex tables)</li>
+          </ul>
+      </td>
+  </tr>
+  <tr>
+      <td>Layout Detection</td>
+  </tr>
+  <tr>
+      <td>Text Detection</td>
+  </tr>
+  <tr>
+      <td>Text Recognition</td>
+  </tr>
+  <tr>
+      <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+      <td>Text Image Unrapping</td>
+  </tr>
+  <tr>
+      <td>Document Image Orientation Classification</td>
+  </tr>
+  <tr>
+      <td>Document-based Vision-Language Model</td>
+  </tr>
   <tr>
     <td rowspan = 2>General OCR</td>
     <td >Text Detection</td>

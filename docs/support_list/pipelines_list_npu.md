@@ -68,6 +68,72 @@ comments: true
     </td>
   </tr>
   <tr>
+    <td rowspan = 7>文档场景信息抽取v3</td>
+    <td>表格结构识别</td>
+    <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">在线体验</a></td>
+    <td rowspan = 7>文档图像场景信息抽取v3（PP-ChatOCRv3-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。开源版支持本地体验和本地部署，支持各个模块的微调训练。</td>
+    <td rowspan="7">
+  <ul>
+    <li>知识图谱的构建</li>
+    <li>在线新闻和社交媒体中特定事件相关信息的检测</li>
+    <li>学术文献中关键信息的抽取和分析（特别是需要对印章、扭曲图片、更复杂表格进行识别的场景）</li>
+  </ul>
+</td>
+  </tr>
+  <tr>
+    <td>版面区域检测</td>
+  </tr>
+  <tr>
+    <td>文本检测</td>
+  </tr>
+  <tr>
+    <td>文本识别</td>
+  </tr>
+  <tr>
+    <td>印章文本检测</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正</td>
+  </tr>
+  <tr>
+    <td>文档图像方向分类</td>
+  </tr>
+  <tr>
+    <td rowspan = 8>文档场景信息抽取v4</td>
+    <td>表格结构识别</td>
+    <td rowspan = 8>comming soon</td>
+    <td rowspan = 8>文档场景信息抽取v4（PP-ChatOCRv4）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM、MLLM 和 OCR 技术，在文档场景信息抽取v3的基础上，优化了版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上部署。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+</td>
+    <td rowspan="8">
+  <ul>
+    <li>知识图谱的构建</li>
+    <li>在线新闻和社交媒体中特定事件相关信息的检测</li>
+    <li>学术文献中关键信息的抽取和分析（特别是需要对印章、扭曲图片、更复杂表格进行识别的场景）</li>
+  </ul>
+</td>
+  </tr>
+  <tr>
+    <td>版面区域检测</td>
+  </tr>
+  <tr>
+    <td>文本检测</td>
+  </tr>
+  <tr>
+    <td>文本识别</td>
+  </tr>
+  <tr>
+    <td>印章文本检测</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正</td>
+  </tr>
+  <tr>
+    <td>文档图像方向分类</td>
+  </tr>
+  <tr>
+    <td>文档类视觉语言模型</td>
+  </tr>
+  <tr>
     <td rowspan = 2>通用OCR</td>
     <td>文本检测</td>
     <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">在线体验</a></td>
