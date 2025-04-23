@@ -338,7 +338,7 @@ docker run \
 - If CPU deployment is required, there is no need to specify `--gpus`.
 - If you need to enter the container for debugging, you can replace `/bin/bash server.sh` in the command with `/bin/bash`. Then execute `/bin/bash server.sh` inside the container.
 - If you want the server to run in the background, you can replace `-it` in the command with `-d`. After the container starts, you can view the container logs with `docker logs -f {container ID}`.
-- Add `-e PADDLEX_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
+- Add `-e PADDLEX_HPS_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
 
 You may observe output similar to the following:
 

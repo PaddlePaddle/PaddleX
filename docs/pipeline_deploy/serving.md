@@ -338,7 +338,7 @@ docker run \
 - 如果希望使用 CPU 部署，则不需要指定 `--gpus`。
 - 如果需要进入容器内部调试，可以将命令中的 `/bin/bash server.sh` 替换为 `/bin/bash`，然后在容器中执行 `/bin/bash server.sh`。
 - 如果希望服务器在后台运行，可以将命令中的 `-it` 替换为 `-d`。容器启动后，可通过 `docker logs -f {容器 ID}` 查看容器日志。
-- 在命令中添加 `-e PADDLEX_USE_HPIP=1` 可以使用 PaddleX 高性能推理插件加速产线推理过程。请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 获取更多信息。
+- 在命令中添加 `-e PADDLEX_HPS_USE_HPIP=1` 可以使用 PaddleX 高性能推理插件加速产线推理过程。请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 获取更多信息。
 
 可观察到类似下面的输出信息：
 
