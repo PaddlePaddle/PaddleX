@@ -308,13 +308,13 @@ First, pull the Docker image as needed:
 - Image supporting deployment with NVIDIA GPU (the machine must have NVIDIA drivers that support CUDA 11.8 installed):
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-gpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc1-gpu
     ```
 
 - CPU-only Image:
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-cpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc1-cpu
     ```
 
 With the image prepared, navigate to the `server` directory and execute the following command to run the server:
@@ -338,7 +338,7 @@ docker run \
 - If CPU deployment is required, there is no need to specify `--gpus`.
 - If you need to enter the container for debugging, you can replace `/bin/bash server.sh` in the command with `/bin/bash`. Then execute `/bin/bash server.sh` inside the container.
 - If you want the server to run in the background, you can replace `-it` in the command with `-d`. After the container starts, you can view the container logs with `docker logs -f {container ID}`.
-- Add `-e PADDLEX_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
+- Add `-e PADDLEX_HPS_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
 
 You may observe output similar to the following:
 
