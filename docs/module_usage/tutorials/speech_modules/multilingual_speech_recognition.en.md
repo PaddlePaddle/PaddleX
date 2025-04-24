@@ -75,10 +75,17 @@ Related methods, parameters, and explanations are as follows:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. </td>
+<td>Whether to enable the high-performance inference plugin. Not supported for now.</td>
 <td><code>bool</code></td>
 <td>None</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration. Not supported for now.</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </table>
 
@@ -223,7 +230,8 @@ the following steps are required for model inference:
 * Specify the `.yaml` configuration file path for the model (here it is `whisper_large.yaml`)
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the input data path: `-o Predict.input="..."`
-Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 #### 4.4.2 Model Integration
 Models can be directly integrated into the PaddleX pipelines or into your own projects.

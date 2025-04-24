@@ -23,7 +23,7 @@ The document image orientation classification module is aim to distinguish the o
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
 <td>2.31 / 0.43</td>
 <td>3.37 / 1.27</td>
@@ -145,10 +145,17 @@ Related methods, parameters, and other explanations are as follows:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. </td>
+<td>Whether to enable the high-performance inference plugin</td>
 <td><code>bool</code></td>
 <td>None</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </table>
 
@@ -424,7 +431,8 @@ Other relevant parameters can be set by modifying fields under `Global` and `Tra
 </li>
 <li><code>train.log</code>: Training log file, which records changes in model metrics and loss during training.</li>
 <li><code>config.yaml</code>: Training configuration file, which records the hyperparameter configuration for this training.</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ### <b>4.3 Model Evaluation</b>
@@ -475,12 +483,10 @@ python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc
 Similar to model training and evaluation, the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it's `PP-LCNet_x1_0_doc_ori.yaml`)
-
 * Set the mode to model inference prediction: `-o Global.mode=predict`
-
 * Specify the model weights path: -o Predict.model_dir="./output/best_accuracy/inference"
-
-Specify the input data path: `-o Predict.input="..."` Other related parameters can be set by modifying the fields under Global and Predict in the `.yaml` configuration file. For details, refer to PaddleX Common Model Configuration File Parameter Description.
+* Specify the input data path: `-o Predict.input="..."` Other related parameters can be set by modifying the fields under Global and Predict in the `.yaml` configuration file. For details, refer to PaddleX Common Model Configuration File Parameter Description.
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
 

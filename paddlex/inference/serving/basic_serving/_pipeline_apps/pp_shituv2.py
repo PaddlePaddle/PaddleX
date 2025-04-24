@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@ import asyncio
 from operator import attrgetter
 from typing import Any, Dict, List
 
-from fastapi import FastAPI
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from ....pipelines.components import IndexData
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import ResultResponse
+from ...infra.models import AIStudioResultResponse
 from ...schemas import pp_shituv2 as schema
 from .._app import create_app, primary_operation
 from ._common import image_recognition as ir_common
 
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
 
-def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
+
+@function_requires_deps("fastapi")
+def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
@@ -41,7 +44,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _build_index(
         request: schema.BuildIndexRequest,
-    ) -> ResultResponse[schema.BuildIndexResult]:
+    ) -> AIStudioResultResponse[schema.BuildIndexResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -69,7 +72,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         index_data_bytes = index_data.to_bytes()
         await serving_utils.call_async(index_storage.set, index_key, index_data_bytes)
 
-        return ResultResponse[schema.BuildIndexResult](
+        return AIStudioResultResponse[schema.BuildIndexResult](
             logId=serving_utils.generate_log_id(),
             result=schema.BuildIndexResult(
                 indexKey=index_key, imageCount=len(index_data.id_map)
@@ -83,7 +86,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _add_images_to_index(
         request: schema.AddImagesToIndexRequest,
-    ) -> ResultResponse[schema.AddImagesToIndexResult]:
+    ) -> AIStudioResultResponse[schema.AddImagesToIndexResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -111,7 +114,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             index_storage.set, request.indexKey, index_data_bytes
         )
 
-        return ResultResponse[schema.AddImagesToIndexResult](
+        return AIStudioResultResponse[schema.AddImagesToIndexResult](
             logId=serving_utils.generate_log_id(),
             result=schema.AddImagesToIndexResult(imageCount=len(index_data.id_map)),
         )
@@ -123,7 +126,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _remove_images_from_index(
         request: schema.RemoveImagesFromIndexRequest,
-    ) -> ResultResponse[schema.RemoveImagesFromIndexResult]:
+    ) -> AIStudioResultResponse[schema.RemoveImagesFromIndexResult]:
         pipeline = ctx.pipeline
 
         index_storage = ctx.extra["index_storage"]
@@ -141,7 +144,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             index_storage.set, request.indexKey, index_data_bytes
         )
 
-        return ResultResponse[schema.RemoveImagesFromIndexResult](
+        return AIStudioResultResponse[schema.RemoveImagesFromIndexResult](
             logId=serving_utils.generate_log_id(),
             result=schema.RemoveImagesFromIndexResult(
                 imageCount=len(index_data.id_map)
@@ -155,7 +158,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _infer(
         request: schema.InferRequest,
-    ) -> ResultResponse[schema.InferResult]:
+    ) -> AIStudioResultResponse[schema.InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -210,7 +213,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         else:
             output_image_base64 = None
 
-        return ResultResponse[schema.InferResult](
+        return AIStudioResultResponse[schema.InferResult](
             logId=serving_utils.generate_log_id(),
             result=schema.InferResult(detectedObjects=objs, image=output_image_base64),
         )

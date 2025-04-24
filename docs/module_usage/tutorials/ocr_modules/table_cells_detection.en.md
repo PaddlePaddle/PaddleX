@@ -20,7 +20,7 @@ The table cell detection module is a key component of table recognition tasks, r
 </tr>
 <tr>
 <td>RT-DETR-L_wired_table_cell_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
 <td rowspan="2">82.7</td>
 <td rowspan="2">35.00 / 10.45</td>
 <td rowspan="2">495.51 / 495.51</td>
@@ -30,7 +30,7 @@ The table cell detection module is a key component of table recognition tasks, r
 </tr>
 <tr>
 <td>RT-DETR-L_wireless_table_cell_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
 
@@ -151,10 +151,17 @@ The following is the explanation of the methods, parameters, etc.:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. </td>
+<td>Whether to enable the high-performance inference plugin</td>
 <td><code>bool</code></td>
 <td>None</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>img_size</code></td>
@@ -481,7 +488,8 @@ The following steps are required:
 * Specify the path to the model's `.yaml` configuration file (here it is `RT-DETR-L_wired_table_cell_det.yaml`). When training other models, the corresponding configuration file must be specified. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by adding parameters in the command line. For example, to train on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding model task module in [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by adding parameters in the command line. For example, to train on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding model task module in [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Information (Click to Expand)</b></summary>
 
@@ -496,7 +504,8 @@ Other related parameters can be set by modifying the fields under `Global` and `
 </li>
 <li><code>train.log</code>: The training log file, which records changes in model metrics and loss during the training process;</li>
 <li><code>config.yaml</code>: The training configuration file, which logs the hyperparameter settings for this training session;</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: These are model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, and static graph network structure, etc.</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: These are model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, and static graph network structure, etc.</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ## <b>4.3 Model Evaluation</b>

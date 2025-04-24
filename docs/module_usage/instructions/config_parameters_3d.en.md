@@ -223,5 +223,17 @@ comments: true
 <td>Inference engine setting, such as: "paddle"</td>
 <td>paddle</td>
 </tr>
+<tr>
+<td>use_hpip</td>
+<td>bool</td>
+<td>Whether to enable the high-performance inference plugin</td>
+<td></td>
+</tr>
+<tr>
+<td>hpip_config</td>
+<td>dict | None</td>
+<td>High-performance inference configuration</td>
+<td></td>
+</tr>
 </tbody>
 </table>

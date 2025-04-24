@@ -26,7 +26,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/GroundingDINO-T_infer.tar">推理模型</a></td>
+<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">推理模型</a></td>
 <td>49.4</td>
 <td>64.4</td>
 <td>253.72</td>
@@ -85,7 +85,7 @@ comments: true
 ## 2. 快速开始
 
 ### 2.1 本地体验
-> ❗ 在本地使用通用开放词汇检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用通用开放词汇检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `multimodal`。
 
 #### 2.1.1 命令行方式体验
 * 一行命令即可快速体验开放词汇检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg)，并将 `--input` 替换为本地路径，进行预测
@@ -157,9 +157,17 @@ for res in output:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

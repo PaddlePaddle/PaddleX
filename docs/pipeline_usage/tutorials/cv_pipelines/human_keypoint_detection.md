@@ -135,7 +135,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 ### 2.2 本地体验
 
-> ❗ 在本地使用人体关键点检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用人体关键点检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `cv`。
 
 #### 2.2.1 命令行方式体验
 
@@ -203,9 +203,17 @@ for res in output:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

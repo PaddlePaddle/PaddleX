@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple, List
 import copy
+from typing import List, Tuple
+
 import numpy as np
-import cv2
-from shapely.geometry import Polygon
 from numpy.linalg import norm
+
+from .....utils.deps import class_requires_deps, is_dep_available
 from .base_operator import BaseOperator
-from ....utils.io import ImageReader
 from .seal_det_warp import AutoRectifier
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("shapely"):
+    from shapely.geometry import Polygon
 
 
 class CropByBoxes(BaseOperator):
@@ -59,6 +64,7 @@ class CropByBoxes(BaseOperator):
         return output_list
 
 
+@class_requires_deps("opencv-contrib-python", "shapely")
 class CropByPolys(BaseOperator):
     """Crop Image by Polys"""
 

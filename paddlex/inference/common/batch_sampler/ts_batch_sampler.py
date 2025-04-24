@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,13 @@
 # limitations under the License.
 
 import os
-import ast
 from pathlib import Path
-import numpy as np
+
 import pandas as pd
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from .base_batch_sampler import BaseBatchSampler, Batch
 
 
@@ -89,7 +88,7 @@ class TSBatchSampler(BaseBatchSampler):
                 batch.append(input, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch.reset()
+                    batch = Batch()
             elif isinstance(input, str):
                 file_path = (
                     self._download_from_url(input)
@@ -101,7 +100,7 @@ class TSBatchSampler(BaseBatchSampler):
                     batch.append(file_path, file_path)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch.reset()
+                        batch = Batch()
             else:
                 logging.warning(
                     f"Not supported input data type! Only `pd.DataFrame` and `str` are supported! So has been ignored: {input}."

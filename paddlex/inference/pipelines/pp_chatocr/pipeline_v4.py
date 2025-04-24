@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,24 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List, Tuple
-import os
-import re
-import cv2
+import base64
 import copy
 import json
-import base64
+import os
+import re
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import numpy as np
-from .pipeline_base import PP_ChatOCR_Pipeline
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
+
 from ....utils import logging
+from ....utils.deps import (
+    function_requires_deps,
+    is_dep_available,
+    pipeline_requires_extra,
+)
 from ....utils.file_interface import custom_open
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
-from ..layout_parsing.result import LayoutParsingResult
 from ..components.chat_server import BaseChat
+from ..layout_parsing.result import LayoutParsingResult
+from .pipeline_base import PP_ChatOCR_Pipeline
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@pipeline_requires_extra("ie")
 class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     """PP-ChatOCRv4 Pipeline"""
 
@@ -41,6 +52,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         initial_predictor: bool = True,
     ) -> None:
         """Initializes the pp-chatocrv3-doc pipeline.
@@ -49,12 +61,17 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            use_layout_parsing (bool, optional): Whether to use layout parsing. Defaults to True.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The high-performance inference configuration dictionary.
+                Defaults to None.
             initial_predictor (bool, optional): Whether to initialize the predictor. Defaults to True.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.pipeline_name = config["pipeline_name"]
         self.config = config
@@ -574,6 +591,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
 
         return []
 
+    @function_requires_deps("opencv-contrib-python")
     def mllm_pred(
         self,
         input: Union[str, np.ndarray],

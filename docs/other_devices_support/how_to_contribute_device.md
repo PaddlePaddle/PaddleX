@@ -24,41 +24,49 @@
 
 # 2. 更新PaddleX
 
-当完成硬件接入飞桨和各个套件后，需要更新PaddleX中硬件识别相关的代码和说明文档
+当完成硬件接入飞桨和各个套件后，需要更新PaddleX中硬件识别相关的代码和说明文档，相关设备代号应该与飞桨中注册的设备代号一致，如 `npu` `xpu`
 
-## 2.1 推理能力支持
+## 2.1 代码相关
 
-### 2.1.1 版本支持（可忽略）
+### 2.1.1 更新白名单设置
 
-如果相关硬件对于飞桨版本有特定要求，可以在初始化时根据设备信息和版本信息进行判断，相关代码位于 [PaddleX初始化](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/__init__.py)中的 `_check_paddle_version`
+由于不同的AI计算硬件上支持的模型列表不一样，PaddleX内部基于白名单确定特定模型是否支持该硬件，相关代码位于 [PaddleX模型白名单](../../paddlex/utils/custom_device_list.py) 中的 `XXX_WHITELIST`，请根据实际支持情况设置该名单。
 
-### 2.1.2 设置环境变量（可忽略）
+同时需要更新 [设备判断](../../paddlex/utils/device.py) 中的 `check_supported_device_type`
 
-如果相关硬件在使用时，需要设定特殊的环境变量，可以修改设备环境设置代码，相关代码位于 [PaddleX环境变量设置](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/utils/device.py)中的 `set_env_for_device_type`
+### 2.1.2 更新AI计算芯片支持列表
 
-### 2.1.3 创建Predictor
+更新PaddleX中AI计算芯片支持列表，相关代码位于 [PaddleX硬件支持列表](../../paddlex/utils/device.py) 中的 `SUPPORTED_DEVICE_TYPE`
 
-PaddleX的推理能力基于飞桨Paddle Inference Predictor提供，创建Predictor时需要根据设备信息选择不同的硬件并创建pass，相关代码位于[PaddleX Predictor创建](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/inference/components/paddle_predictor/predictor.py)的 `_create`
+### 2.1.3 设置环境变量
 
-### 2.1.4 更新硬件支持列表
+如果相关硬件在使用时，需要设定特殊的环境变量，可以修改设备环境设置代码，相关代码位于 [PaddleX环境变量设置](../../paddlex/utils/device.py) 中的 `set_env_for_device_type`
 
-创建Predictor时会判断设备是否已支持，相关代码位于[PaddleX Predictor Option](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/inference/utils/pp_option.py)中的 `SUPPORT_DEVICE`
+### 2.1.4 更新Predictor Opiton支持的设备列表
 
-### 2.1.5 更新多硬件说明指南
+PaddleX创建Predictor时会判断设备是否已支持，相关代码位于 [PaddleX Predictor Opiton](../../paddlex/inference/utils/pp_option.py) 中的 `SUPPORT_DEVICE`
 
-请更新PaddleX多硬件说明指南，将新支持的硬件信息更新到文档中，需要同时更新中英文版本，中文版本 [PaddleX多硬件使用指南](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/other_devices_support/multi_devices_use_guide.md) ，英文版本 [PaddleX Multi-Hardware Usage Guide](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/other_devices_support/multi_devices_use_guide.en.md)
+### 2.1.5 更新Predictor Opiton支持的设备列表
 
-### 2.1.6 更新安装教程
+PaddleX的推理能力基于飞桨Paddle Inference Predictor提供，创建Predictor时需要根据设备信息选择不同的硬件并创建pass，相关代码位于 [PaddleX Predictor创建](../../paddlex/inference/models/common/static_infer.py) 中的 `_create`
 
-请提供硬件相关的安装教程，需要提供中英文版本，中文版本参考 [昇腾 NPU 飞桨安装教程](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/other_devices_support/paddlepaddle_install_NPU.md) ，英文版本参考 [Ascend NPU PaddlePaddle Installation Tutorial](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/other_devices_support/paddlepaddle_install_NPU.en.md)
-
-### 2.1.7 更新模型列表
-
-请提供硬件支持的模型列表，需要提供中英文版本，中文版本参考 [PaddleX模型列表（昇腾 NPU）](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/support_list/model_list_npu.md) ，英文版本参考 [PaddleX Model List (Huawei Ascend NPU)](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/support_list/model_list_npu.en.md)
-
-## 2.2 训练能力支持
+### 2.1.6 高性能推理支持
 
 TODO
+
+## 2.2 文档相关
+
+### 2.2.1 更新多硬件说明指南
+
+请更新PaddleX多硬件说明指南，将新支持的硬件信息更新到文档中，需要同时更新中英文版本，中文版本 [PaddleX多硬件使用指南](./multi_devices_use_guide.md) ，英文版本 [PaddleX Multi-Hardware Usage Guide](./multi_devices_use_guide.en.md)
+
+### 2.2.2 更新安装教程
+
+请提供硬件相关的安装教程，需要提供中英文版本，中文版本参考 [昇腾 NPU 飞桨安装教程](./paddlepaddle_install_NPU.md) ，英文版本参考 [Ascend NPU PaddlePaddle Installation Tutorial](./paddlepaddle_install_NPU.en.md)
+
+### 2.2.3 更新模型列表
+
+请提供硬件支持的模型列表，需要提供中英文版本，中文版本参考 [PaddleX模型列表（昇腾 NPU）](../support_list/model_list_npu.md) ，英文版本参考 [PaddleX Model List (Huawei Ascend NPU)](../support_list/model_list_npu.en.md)
 
 # 3. 提交PR
 

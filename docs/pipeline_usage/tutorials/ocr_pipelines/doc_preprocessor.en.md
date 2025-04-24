@@ -27,7 +27,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">                Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Train Model</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">                Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Train Model</a></td>
 <td>99.06</td>
 <td>3.84845</td>
 <td>9.23735</td>
@@ -50,7 +50,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Train Model</a></td>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Train Model</a></td>
 <td>0.179</td>
 <td>30.3 M</td>
 <td>High-Precision Text Image Correction Model</td>
@@ -110,7 +110,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 
 PaddleX supports experiencing the effects of the document image preprocessing pipeline locally via command line or Python.
 
-Before using the document image preprocessing pipeline locally, please ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+Before using the document image preprocessing pipeline locally, please ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ocr`.
 
 ### 2.1 Local Experience
 
@@ -188,9 +188,17 @@ In the above Python script, the following steps were executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, available only when the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to `None`, the setting from the configuration file will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -494,7 +502,12 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. For PDF files exceeding 10 pages, only the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. By default, for PDF files exceeding 10 pages, only the first 10 pages will be processed.<br />
+To remove the page limit, please add the following configuration to the pipeline configuration file:
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: null
+</code></pre></td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -532,7 +545,7 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 <tr>
 <td><code>docPreprocessingResults</code></td>
 <td><code>object</code></td>
-<td>Document image preprocessing results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>Document image preprocessing results. The array length is 1 (for image input) or the actual number of document pages processed (for PDF input). For PDF input, each element in the array represents the result of each page actually processed in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -559,7 +572,7 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>A simplified version of the <code>res</code> field in the JSON representation of the result generated by the pipeline object's <code>predict</code> method, excluding the <code>input_path</code> field.</td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the result generated by the pipeline object's <code>predict</code> method, excluding the <code>input_path</code> and the <code>page_index</code> fields.</td>
 </tr>
 <tr>
 <td><code>docPreprocessingImage</code></td>

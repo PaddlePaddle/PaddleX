@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .dataset_checker import build_dataset_checker, BaseDatasetChecker
-from .trainer import build_trainer, BaseTrainer
-from .evaluator import build_evaluater, BaseEvaluator
-from .exportor import build_exportor, BaseExportor
+from .dataset_checker import BaseDatasetChecker, build_dataset_checker
+from .evaluator import BaseEvaluator, build_evaluater
+from .exportor import BaseExportor, build_exportor
+from .trainer import BaseTrainer, build_trainer

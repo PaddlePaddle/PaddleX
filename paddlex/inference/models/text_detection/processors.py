@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,32 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple, Union
-import os
-import sys
-import cv2
-import copy
 import math
-import pyclipper
-import numpy as np
-from numpy.linalg import norm
-from PIL import Image
-from shapely.geometry import Polygon
+import sys
+from typing import Union
 
-from ...utils.io import ImageReader
+import numpy as np
+
 from ....utils import logging
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("pyclipper"):
+    import pyclipper
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class DetResizeForTest:
     """DetResizeForTest"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, input_shape=None, **kwargs):
         super().__init__()
         self.resize_type = 0
         self.keep_ratio = False
-        if "image_shape" in kwargs:
+        if input_shape is not None:
+            self.input_shape = input_shape
+            self.resize_type = 3
+        elif "image_shape" in kwargs:
             self.image_shape = kwargs["image_shape"]
             self.resize_type = 1
             if "keep_ratio" in kwargs:
@@ -80,6 +83,8 @@ class DetResizeForTest:
             )
         elif self.resize_type == 2:
             img, [ratio_h, ratio_w] = self.resize_image_type2(img)
+        elif self.resize_type == 3:
+            img, [ratio_h, ratio_w] = self.resize_image_type3(img)
         else:
             # img, shape = self.resize_image_type1(img)
             img, [ratio_h, ratio_w] = self.resize_image_type1(img)
@@ -182,33 +187,58 @@ class DetResizeForTest:
 
         return img, [ratio_h, ratio_w]
 
+    def resize_image_type3(self, img):
+        """resize the image"""
+        resize_c, resize_h, resize_w = self.input_shape  # (c, h, w)
+        ori_h, ori_w = img.shape[:2]  # (h, w, c)
+        ratio_h = float(resize_h) / ori_h
+        ratio_w = float(resize_w) / ori_w
+        img = cv2.resize(img, (int(resize_w), int(resize_h)))
+        return img, [ratio_h, ratio_w]
+
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class NormalizeImage:
     """normalize image such as substract mean, divide std"""
 
-    def __init__(self, scale=None, mean=None, std=None, order="chw", **kwargs):
+    def __init__(self, scale=None, mean=None, std=None, order="chw"):
         super().__init__()
         if isinstance(scale, str):
             scale = eval(scale)
-        self.scale = np.float32(scale if scale is not None else 1.0 / 255.0)
+        self.order = order
+
+        scale = scale if scale is not None else 1.0 / 255.0
         mean = mean if mean is not None else [0.485, 0.456, 0.406]
         std = std if std is not None else [0.229, 0.224, 0.225]
 
-        shape = (3, 1, 1) if order == "chw" else (1, 1, 3)
-        self.mean = np.array(mean).reshape(shape).astype("float32")
-        self.std = np.array(std).reshape(shape).astype("float32")
+        self.alpha = [scale / std[i] for i in range(len(std))]
+        self.beta = [-mean[i] / std[i] for i in range(len(std))]
 
     def __call__(self, imgs):
         """apply"""
 
-        def norm(img):
-            return (img.astype("float32") * self.scale - self.mean) / self.std
+        def _norm(img):
+            if self.order == "chw":
+                img = np.transpose(img, (2, 0, 1))
 
-        return [norm(img) for img in imgs]
+            split_im = list(cv2.split(img))
+            for c in range(img.shape[2]):
+                split_im[c] = split_im[c].astype(np.float32)
+                split_im[c] *= self.alpha[c]
+                split_im[c] += self.beta[c]
+
+            res = cv2.merge(split_im)
+
+            if self.order == "chw":
+                res = np.transpose(res, (1, 2, 0))
+            return res
+
+        return [_norm(img) for img in imgs]
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python", "pyclipper")
 class DBPostProcess:
     """
     The post process for Differentiable Binarization (DB).
@@ -252,7 +282,8 @@ class DBPostProcess:
 
         bitmap = _bitmap
         height, width = bitmap.shape
-
+        width_scale = dest_width / width
+        height_scale = dest_height / height
         boxes = []
         scores = []
 
@@ -287,10 +318,10 @@ class DBPostProcess:
                 continue
 
             box = np.array(box)
-            box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
-            box[:, 1] = np.clip(
-                np.round(box[:, 1] / height * dest_height), 0, dest_height
-            )
+            for i in range(box.shape[0]):
+                box[i, 0] = max(0, min(round(box[i, 0] * width_scale), dest_width))
+                box[i, 1] = max(0, min(round(box[i, 1] * height_scale), dest_height))
+
             boxes.append(box)
             scores.append(score)
         return boxes, scores
@@ -308,6 +339,8 @@ class DBPostProcess:
 
         bitmap = _bitmap
         height, width = bitmap.shape
+        width_scale = dest_width / width
+        height_scale = dest_height / height
 
         outs = cv2.findContours(
             (bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
@@ -338,20 +371,21 @@ class DBPostProcess:
             box, sside = self.get_mini_boxes(box)
             if sside < self.min_size + 2:
                 continue
-            box = np.array(box)
 
-            box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
-            box[:, 1] = np.clip(
-                np.round(box[:, 1] / height * dest_height), 0, dest_height
-            )
+            box = np.array(box)
+            for i in range(box.shape[0]):
+                box[i, 0] = max(0, min(round(box[i, 0] * width_scale), dest_width))
+                box[i, 1] = max(0, min(round(box[i, 1] * height_scale), dest_height))
+
             boxes.append(box.astype(np.int16))
             scores.append(score)
         return np.array(boxes, dtype=np.int16), scores
 
     def unclip(self, box, unclip_ratio):
         """unclip"""
-        poly = Polygon(box)
-        distance = poly.area * unclip_ratio / poly.length
+        area = cv2.contourArea(box)
+        length = cv2.arcLength(box, True)
+        distance = area * unclip_ratio / length
         offset = pyclipper.PyclipperOffset()
         offset.AddPath(box, pyclipper.JT_ROUND, pyclipper.ET_CLOSEDPOLYGON)
         try:
@@ -386,10 +420,10 @@ class DBPostProcess:
         """box_score_fast: use bbox mean score as the mean score"""
         h, w = bitmap.shape[:2]
         box = _box.copy()
-        xmin = np.clip(np.floor(box[:, 0].min()).astype("int"), 0, w - 1)
-        xmax = np.clip(np.ceil(box[:, 0].max()).astype("int"), 0, w - 1)
-        ymin = np.clip(np.floor(box[:, 1].min()).astype("int"), 0, h - 1)
-        ymax = np.clip(np.ceil(box[:, 1].max()).astype("int"), 0, h - 1)
+        xmin = max(0, min(math.floor(box[:, 0].min()), w - 1))
+        xmax = max(0, min(math.ceil(box[:, 0].max()), w - 1))
+        ymin = max(0, min(math.floor(box[:, 1].min()), h - 1))
+        ymax = max(0, min(math.ceil(box[:, 1].max()), h - 1))
 
         mask = np.zeros((ymax - ymin + 1, xmax - xmin + 1), dtype=np.uint8)
         box[:, 0] = box[:, 0] - xmin

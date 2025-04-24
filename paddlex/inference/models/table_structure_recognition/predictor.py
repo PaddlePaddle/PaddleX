@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,27 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
+
 import numpy as np
 
-from ....utils.func_register import FuncRegister
 from ....modules.table_recognition.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    Resize,
-    ResizeByLong,
-    Normalize,
-    ToCHWImage,
-    ToBatch,
-    StaticInfer,
-)
-from ..base import BasicPredictor
+from ..base import BasePredictor
+from ..common import Normalize, ResizeByLong, ToBatch, ToCHWImage
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 
 
-class TablePredictor(BasicPredictor):
+class TablePredictor(BasePredictor):
     entities = MODELS
 
     _FUNC_MAP = {}
@@ -59,11 +53,7 @@ class TablePredictor(BasicPredictor):
                 preprocessors.append(op)
         preprocessors.append(ToBatch())
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = TableLabelDecode(
             model_name=self.config["Global"]["model_name"],

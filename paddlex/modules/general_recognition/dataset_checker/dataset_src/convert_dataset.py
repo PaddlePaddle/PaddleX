@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
 # limitations under the License.
 
 
-import os
 import json
-from .....utils.file_interface import custom_open
+import os
+
 from .....utils.errors import ConvertFailedError
+from .....utils.file_interface import custom_open
 
 
 def check_src_dataset(root_dir, dataset_type):
     """check src dataset format validity"""
     if dataset_type in ("LabelMe"):
-        anno_suffix = ".json"
+        pass
     else:
         raise ConvertFailedError(
             message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 LabelMe 格式。"
@@ -53,7 +54,7 @@ def convert(dataset_type, input_dir):
 
 
 def convert_labelme_dataset(root_dir):
-    image_dir = os.path.join(root_dir, "images")
+    os.path.join(root_dir, "images")
     anno_path = os.path.join(root_dir, "annotations")
     label_path = os.path.join(root_dir, "label.txt")
     train_rate = 50

@@ -22,7 +22,7 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 </thead>
 <tbody>
 <tr>
-<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td>
+<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td>
 <td>96.2</td>
 <td>21.5 M</td>
 </tr>
@@ -75,7 +75,7 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 ## 2. Quick Start
 PaddleX provides pre-trained models for the anomaly detection pipeline, allowing for quick experience of its effects. You can use the command line or Python to experience the image anomaly detection pipeline locally.
 
-Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 ### 2.1 Command-Line Experience
 You can quickly experience the image anomaly detection pipeline with just one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png), and replace `--input` with the local path for prediction.
@@ -147,9 +147,17 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available when the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to `None`, the setting from the configuration file will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

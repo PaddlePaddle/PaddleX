@@ -21,7 +21,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE-S_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-S_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE-S_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-S_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">Training Model</a></td>
 <td>61.3</td>
 <td>9.79 / 3.48</td>
 <td>54.14 / 46.69</td>
@@ -29,7 +29,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
 </tr>
 <tr>
-<td>PP-YOLOE-L_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-L_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE-L_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-L_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">Training Model</a></td>
 <td>63.9</td>
 <td>32.84 / 9.03</td>
 <td>176.60 / 176.60</td>
@@ -51,7 +51,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
+<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
 <td>91.7</td>
 <td>2.32 / 0.52</td>
 <td>3.22 / 1.26</td>
@@ -122,7 +122,7 @@ You can [experience the vehicle attribute recognition pipeline](https://aistudio
 If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
-Before using the vehicle attribute recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the vehicle attribute recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 #### 2.2.1 Command Line Experience
 You can quickly experience the vehicle attribute recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_002.jpg) and replace `--input` with the local path for prediction.
@@ -182,9 +182,17 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to `None`, the setting from the configuration file will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

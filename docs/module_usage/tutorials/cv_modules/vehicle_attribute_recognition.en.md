@@ -23,7 +23,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
+<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
 <td>91.7</td>
 <td>2.32 / 0.52</td>
 <td>3.22 / 1.26</td>
@@ -156,10 +156,17 @@ Relevant methods, parameters, and explanations are as follows:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. </td>
+<td>Whether to enable the high-performance inference plugin</td>
 <td><code>bool</code></td>
 <td>None</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </table>
 
@@ -431,7 +438,8 @@ The steps required are:
 * Specify the path to the model's `.yaml` configuration file (here it's `PP-LCNet_x1_0_vehicle_attribute.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 <ul>
@@ -445,7 +453,8 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 </li>
 <li><code>train.log</code>: Training log file, recording changes in model metrics and loss during training;</li>
 <li><code>config.yaml</code>: Training configuration file, recording the hyperparameter configuration for this training session;</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ### <b>4.3 Model Evaluation</b>

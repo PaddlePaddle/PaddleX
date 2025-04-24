@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import ast
 from pathlib import Path
-import numpy as np
 
 from ....utils import logging
 from ....utils.cache import CACHE_DIR
@@ -60,9 +57,11 @@ class AudioBatchSampler(BaseBatchSampler):
             if inputs.startswith("http"):
                 inputs = self._download_from_url(inputs)
             yield [inputs]
+        elif isinstance(inputs, list):
+            yield inputs
         else:
-            logging.warning(
-                f"Not supported input data type! Only `str` are supported, but got: {input}."
+            raise TypeError(
+                f"Not supported input data type! Only `str` are supported, but got: {type(inputs)}."
             )
 
     @BaseBatchSampler.batch_size.setter

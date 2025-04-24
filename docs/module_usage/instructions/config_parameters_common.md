@@ -261,5 +261,18 @@ comments: true
 <td></td>
 </tr>
 
+<tr>
+<td>use_hpip</td>
+<td>bool</td>
+<td>是否启用高性能推理插件</td>
+<td></td>
+</tr>
+<tr>
+<td>hpip_config</td>
+<td>dict | None</td>
+<td>高性能推理配置</td>
+<td></td>
+</tr>
+
 </tbody>
 </table>

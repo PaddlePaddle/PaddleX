@@ -185,7 +185,7 @@ PaddleX provides 4 face detection models. For details, please refer to the [Mode
 </thead>
 <tbody>
 <tr>
-<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
+<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
 <td>15.4</td>
 <td>60.34 / 54.76</td>
 <td>84.18 / 84.18</td<td>
@@ -193,7 +193,7 @@ PaddleX provides 4 face detection models. For details, please refer to the [Mode
 <td>A lightweight and efficient face detection model</td>
 </tr>
 <tr>
-<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
+<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
 <td>18.7</td>
 <td>69.29 / 63.42</td>
 <td>86.96 / 86.96</td>
@@ -201,7 +201,7 @@ PaddleX provides 4 face detection models. For details, please refer to the [Mode
 <td>An improved model of BlazeFace with added FPN and SSH structures</td>
 </tr>
 <tr>
-<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
 <td>31.4</td>
 <td>35.37 / 12.88</td>
 <td>126.24 / 126.24</td>
@@ -209,7 +209,7 @@ PaddleX provides 4 face detection models. For details, please refer to the [Mode
 <td>A face detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
 <td>36.1</td>
 <td>22.54 / 8.33</td>
 <td>138.67 / 138.67</td>
@@ -489,7 +489,7 @@ PaddleX provides 2 face feature models. For details, please refer to the [Model 
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
+<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
 <td>3.16 / 0.48</td>
@@ -498,7 +498,7 @@ PaddleX provides 2 face feature models. For details, please refer to the [Model 
 <td>A face feature extraction model trained on the MS1Mv3 dataset based on MobileFaceNet</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
+<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
 <td>5.68 / 1.09</td>

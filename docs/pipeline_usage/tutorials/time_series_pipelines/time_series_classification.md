@@ -22,7 +22,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">训练模型</a></td>
+<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">训练模型</a></td>
 <td>87.5</td>
 <td>792K</td>
 </tr>
@@ -88,7 +88,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 注：由于时序数据和场景紧密相关，时序任务的在线体验官方内置模型仅是在一个特定场景下的模型方案，并非通用方案，不适用其他场景，因此体验方式不支持使用任意的文件来体验官方模型方案效果。但是，在完成自己场景数据下的模型训练之后，可以选择自己训练的模型方案，并使用对应场景的数据进行在线体验。
 
 ### 2.2 本地体验
-在本地使用通用时序分类产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用通用时序分类产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ts`。
 
 #### 2.2.1 命令行方式体验
 一行命令即可快速体验时序分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv)，并将 `--input` 替换为本地路径，进行预测
@@ -159,9 +159,17 @@ for res in output:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

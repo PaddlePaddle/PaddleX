@@ -20,7 +20,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>CLIP_vit_base_patch16_448_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_448_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">训练模型</a></td>
+<td>CLIP_vit_base_patch16_448_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_448_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">训练模型</a></td>
 <td>89.15</td>
 <td>54.75 / 14.30</td>
 <td>280.23 / 280.23</td>
@@ -28,7 +28,7 @@ comments: true
 <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
-<td>PP-HGNetV2-B0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-HGNetV2-B0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">训练模型</a></td>
 <td>80.98</td>
 <td>6.47 / 1.38</td>
 <td>21.56 / 13.69</td>
@@ -36,21 +36,21 @@ comments: true
 <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
-<td>PP-HGNetV2-B4_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B4_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-HGNetV2-B4_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B4_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">训练模型</a></td>
 <td>87.96</td>
 <td>9.63 / 2.79</td>
 <td>43.98 / 36.63</td>
 <td>88.5 M</td>
 </tr>
 <tr>
-<td>PP-HGNetV2-B6_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B6_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-HGNetV2-B6_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B6_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">训练模型</a></td>
 <td>91.25</td>
 <td>37.07 / 9.43</td>
 <td>188.58 / 188.58</td>
 <td>286.5 M</td>
 </tr>
 <tr>
-<td>PP-LCNet_x1_0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">训练模型</a></td>
 <td>77.96</td>
 <td>4.04 / 1.15</td>
 <td>11.76 / 8.32</td>
@@ -58,7 +58,7 @@ comments: true
 <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
-<td>ResNet50_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">训练模型</a></td>
+<td>ResNet50_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">训练模型</a></td>
 <td>83.50</td>
 <td>12.12 / 3.27</td>
 <td>51.79 / 44.36</td>
@@ -188,10 +188,17 @@ for res in output:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理</td>
+<td>是否启用高性能推理插件</td>
 <td><code>bool</code></td>
 <td>无</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </table>
 
@@ -493,7 +500,8 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-LCNet_x1_0_ML.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+* 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)
+* 新特性：Paddle 3.0 版本支持了 CINN 神经网络编译器，在使用 GPU 设备训练时，不同模型有不同程度的训练加速效果。在 PaddleX 中训练模型时，可通过指定参数 `-o Train.dy2st=True` 开启。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 <ul>
@@ -507,7 +515,8 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 </li>
 <li><code>train.log</code>：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；</li>
 <li><code>config.yaml</code>：训练配置文件，记录了本次训练的超参数的配置；</li>
-<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.pdmodel</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.json</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li>【注意】：Paddle 3.0.0 对于静态图网络结构信息的存储格式，由protobuf（原<code>.pdmodel</code>后缀文件）升级为json（现<code>.json</code>后缀文件），以兼容PIR体系，并获得更好的灵活性与扩展性。</li>
 </ul></details>
 
 ## <b>4.3 模型评估</b>

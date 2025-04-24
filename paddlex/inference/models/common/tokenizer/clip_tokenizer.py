@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,16 +14,20 @@
 
 
 import json
+import logging
 import os
 import shutil
-import logging
 import unicodedata
 from functools import lru_cache
 from typing import List, Optional
 
+from .tokenizer_utils import (
+    PretrainedTokenizer,
+    _is_control,
+    _is_punctuation,
+    _is_whitespace,
+)
 from .tokenizer_utils_base import AddedToken
-from .tokenizer_utils import PretrainedTokenizer
-from .tokenizer_utils import _is_control, _is_punctuation, _is_whitespace
 
 __all__ = ["CLIPTokenizer"]
 

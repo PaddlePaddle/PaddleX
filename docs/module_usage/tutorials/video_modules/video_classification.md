@@ -18,7 +18,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSM-R50_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -27,13 +27,13 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 </tr>
 
 <tr>
-<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2是轻量化的视频分类模型，基于CPU端模型PP-LCNetV2进行优化，从骨干网络与预训练模型选择、数据增强、tsm模块调优、输入帧数优化、解码速度优化、DML蒸馏、LTA模块等7个方面进行模型调优，在中心采样评估方式下，精度达到75.16%，输入10s视频在CPU端的推理速度仅需456ms。</td>
 </tr>
 <tr>
-<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
@@ -151,10 +151,17 @@ for res in output:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理</td>
+<td>是否启用高性能推理插件</td>
 <td><code>bool</code></td>
 <td>无</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code> topk</code></td>
@@ -425,7 +432,8 @@ python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-TSMv2-LCNetV2_8frames_uniform.yaml`,训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+* 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+* 新特性：Paddle 3.0 版本支持了 CINN 神经网络编译器，在使用 GPU 设备训练时，不同模型有不同程度的训练加速效果。在 PaddleX 中训练模型时，可通过指定参数 `-o Train.dy2st=True` 开启。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 
@@ -440,7 +448,8 @@ python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_
 </li>
 <li><code>train.log</code>：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；</li>
 <li><code>config.yaml</code>：训练配置文件，记录了本次训练的超参数的配置；</li>
-<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.pdmodel</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.json</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li>【注意】：Paddle 3.0.0 对于静态图网络结构信息的存储格式，由protobuf（原<code>.pdmodel</code>后缀文件）升级为json（现<code>.json</code>后缀文件），以兼容PIR体系，并获得更好的灵活性与扩展性。</li>
 </ul></details>
 
 ## <b>4.3 模型评估</b>

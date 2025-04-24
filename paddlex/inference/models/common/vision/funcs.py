@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cv2
 import numpy as np
 from PIL import Image
+
 from .....utils import logging
+from .....utils.deps import function_requires_deps, is_dep_available
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 def check_image_size(input_):
@@ -32,6 +36,8 @@ def check_image_size(input_):
 def resize(im, target_size, interp, backend="cv2"):
     """resize image to target size"""
     w, h = target_size
+    if w == im.shape[1] and h == im.shape[0]:
+        return im
     if backend.lower() == "pil":
         resize_function = _pil_resize
     else:
@@ -44,6 +50,7 @@ def resize(im, target_size, interp, backend="cv2"):
     return im
 
 
+@function_requires_deps("opencv-contrib-python")
 def _cv2_resize(src, size, resample):
     return cv2.resize(src, size, interpolation=resample)
 
@@ -57,22 +64,16 @@ def _pil_resize(src, size, resample):
     return np.asarray(pil_img)
 
 
+@function_requires_deps("opencv-contrib-python")
 def flip_h(im):
     """flip image horizontally"""
-    if len(im.shape) == 3:
-        im = im[:, ::-1, :]
-    elif len(im.shape) == 2:
-        im = im[:, ::-1]
-    return im
+    return cv2.flip(im, 1)
 
 
+@function_requires_deps("opencv-contrib-python")
 def flip_v(im):
     """flip image vertically"""
-    if len(im.shape) == 3:
-        im = im[::-1, :, :]
-    elif len(im.shape) == 2:
-        im = im[::-1, :]
-    return im
+    return cv2.flip(im, 0)
 
 
 def slice(im, coords):
@@ -82,12 +83,16 @@ def slice(im, coords):
     return im
 
 
+@function_requires_deps("opencv-contrib-python")
 def pad(im, pad, val):
     """padding image by value"""
     if isinstance(pad, int):
         pad = [pad] * 4
     if len(pad) != 4:
         raise ValueError
+    if all(x == 0 for x in pad):
+        return im
+
     chns = 1 if im.ndim == 2 else im.shape[2]
     im = cv2.copyMakeBorder(im, *pad, cv2.BORDER_CONSTANT, value=(val,) * chns)
     return im

@@ -68,7 +68,7 @@ comments: true
     </td>
   </tr>
 <tr>
-    <td rowspan = 7>Document Scene Information Extraction v3</td>
+    <td rowspan = 7>PP-ChatOCRv3</td>
     <td>Table Structure Recognition</td>
     <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Online Experience</a></td>
     <td rowspan = 7>Document Image Scene Information Extraction v3 (PP-ChatOCRv3-doc) is a PaddlePaddle-specific intelligent document and image analysis solution that integrates LLM and OCR technologies to solve common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating the Wenxin large model, it combines vast data and knowledge, providing high accuracy and wide applicability. The open-source version supports local experience and deployment, and fine-tuning training for each module.</td>
@@ -93,10 +93,44 @@ comments: true
     <td>Seal Text Detection</td>
   </tr>
   <tr>
-    <td>Text Image Un ra p ping</td>
+    <td>Text Image Unrapping</td>
   </tr>
   <tr>
     <td>Document Image Orientation Classification</td>
+  </tr>
+  <tr>
+      <td rowspan="8">PP-ChatOCRv4</td>
+      <td>Table Structure Recognition</td>
+      <td rowspan="8">Coming Soon</td>
+      <td rowspan="8">Document Scene Information Extraction v4 (PP-ChatOCRv4) is a PaddlePaddle-featured intelligent analysis solution for documents and images, combining LLM, MLLM, and OCR technologies. Based on PP-ChatOCRv3, it optimizes common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. It integrates massive data and knowledge with the Ernie model, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment methods, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and optimize on your own dataset, and the trained model can be seamlessly integrated.</td>
+      <td rowspan="8">
+          <ul>
+              <li>Knowledge Graph Construction</li>
+              <li>Detection of Information Related to Specific Events in Online News and Social Media</li>
+              <li>Extraction and Analysis of Key Information in Academic Literature (especially scenarios requiring recognition of seals, distorted images, and more complex tables)</li>
+          </ul>
+      </td>
+  </tr>
+  <tr>
+      <td>Layout Detection</td>
+  </tr>
+  <tr>
+      <td>Text Detection</td>
+  </tr>
+  <tr>
+      <td>Text Recognition</td>
+  </tr>
+  <tr>
+      <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+      <td>Text Image Unrapping</td>
+  </tr>
+  <tr>
+      <td>Document Image Orientation Classification</td>
+  </tr>
+  <tr>
+      <td>Document-based Vision-Language Model</td>
   </tr>
   <tr>
     <td rowspan="5">General OCR</td>
@@ -291,6 +325,59 @@ comments: true
 <tr>
     <td>Seal Text Detection</td>
 </tr>
+<tr>
+    <td rowspan="13">General Layout Parsing v3</td>
+    <td>Layout Detection Module</td>
+    <td rowspan="13">Coming Soon</td>
+    <td rowspan="13">Based on the General Layout Parsing v1 pipeline, the General Layout Parsing v3 pipeline enhances the capabilities of layout detection, table recognition, and formula recognition. It adds the ability to restore multi-column reading order and convert results into Markdown files. It performs exceptionally well in various document data and can handle more complex document data. This pipeline also provides flexible service deployment methods, supporting multiple programming languages on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and optimize on your own dataset, and the trained model can be seamlessly integrated.</td>
+    <td rowspan="13">
+        <ul>
+            <li>Intelligent Document Analysis</li>
+            <li>Document Digitization</li>
+            <li>Page Structure Parsing</li>
+            <li>Complex Table Recognition</li>
+            <li>Large Model Data Construction</li>
+            <li>RAG</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>Text Detection Module</td>
+</tr>
+<tr>
+    <td>Text Recognition Module</td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification</td>
+</tr>
+<tr>
+    <td>Text Image Unrapping Module</td>
+</tr>
+<tr>
+    <td>Wired Table Structure Recognition Module</td>
+</tr>
+<tr>
+    <td>Wireless Table Structure Recognition Module</td>
+</tr>
+<tr>
+    <td>Table Classification Module</td>
+</tr>
+<tr>
+    <td>Wired Table Cell Detection Module</td>
+</tr>
+<tr>
+    <td>Wireless Table Cell Detection Module</td>
+</tr>
+<tr>
+    <td>Text Line Orientation Classification Module</td>
+</tr>
+<tr>
+    <td>Formula Recognition Module</td>
+</tr>
+<tr>
+    <td>Seal Text Detection Module</td>
+</tr>
+
 <tr>
     <td rowspan="4">Formula Recognition</td>
     <td>Formula Recognition</td>
@@ -523,6 +610,19 @@ comments: true
         <li>Intrusion detection and alarm in intelligent security systems</li>
         <li>Vehicle detection and violation recognition in traffic monitoring</li>
         <li>Athlete behavior analysis in sports events</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Document Understanding</td>
+    <td>Document-related Visual Language Model</td>
+    <td>Not Available</td>
+    <td>The document understanding product line is an advanced document processing technology based on Visual-Language Models (VLM), aiming to overcome the limitations of traditional document processing. Traditional methods rely on fixed templates or predefined rules to parse documents. In contrast, this product line leverages the multimodal capabilities of VLM to accurately answer user queries by integrating visual and linguistic information, with only the document image and user question as input. This technology does not require pre-training for specific document formats, allowing it to flexibly handle diverse document content, significantly enhancing the generalization and practicality of document processing. It has broad application prospects in scenarios such as intelligent Q&A and information extraction.</td>
+    <td>
+    <ul>
+        <li>Intelligent Q&A</li>
+        <li>Information Extraction</li>
+        <li>Contract Review and Risk Management</li>
     </ul>
     </td>
 </tr>

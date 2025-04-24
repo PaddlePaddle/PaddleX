@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from collections import defaultdict
-import lazy_paddle
+
 from ...utils.flags import USE_PIR_TRT
 
 
@@ -41,7 +41,7 @@ class LazyLoadDict(dict):
 
 class OLD_IR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
     def _load(self):
-        from lazy_paddle.inference import PrecisionType
+        from paddle.inference import PrecisionType
 
         return {
             "trt_int8": PrecisionType.Int8,
@@ -52,7 +52,7 @@ class OLD_IR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
 
 class PIR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
     def _load(self):
-        from lazy_paddle.tensorrt.export import PrecisionMode
+        from paddle.tensorrt.export import PrecisionMode
 
         return {
             "trt_int8": PrecisionMode.INT8,
@@ -187,6 +187,20 @@ OLD_IR_TRT_CFG_SETTING = {
             ]
         ],
     },
+    "PP-YOLOE_plus_SOD-largesize-L": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "conv2d",
+                "fused_conv2d_add_act",
+                "swish",
+                "reduce_mean",
+                "softmax",
+                "layer_norm",
+                "gelu",
+            ]
+        ],
+    },
 }
 
 DISABLE_TRT_HALF_OPS_CONFIG = {
@@ -200,25 +214,107 @@ DISABLE_TRT_HALF_OPS_CONFIG = {
     "MobileNetV1_x0_5": {"fused_conv2d_add_act"},
     "SeaFormer_small": {"fused_conv2d_add_act"},
     "SeaFormer_tiny": {"fused_conv2d_add_act"},
-    "PP-OCRv4_mobile_seal_det": {"fused_conv2d_add_act","softmax"},
+    "PP-OCRv4_mobile_seal_det": {
+        "fused_conv2d_add_act",
+        "softmax",
+        "conv2d",
+        "multiply",
+    },
+    "PicoDet_LCNet_x2_5_face": {
+        "fused_conv2d_add_act",
+        "softmax",
+        "elementwise_mul",
+        "matrix_multiply",
+    },
+    "PP-YOLOE_plus_SOD-S": {
+        "fused_conv2d_add_act",
+        "softmax",
+        "conv2d",
+        "elementwise_mul",
+        "matrix_multiply",
+    },
+    "BlazeFace-FPN-SSH": {"fused_conv2d_add_act"},
+    "PP-YOLOE_plus-S_face": {"fused_conv2d_add_act", "conv2d", "multiply"},
+    "PP-ShiTuV2_det": {
+        "conv2d",
+        "depthwise_conv2d",
+        "fused_conv2d_add_act",
+        "matrix_multiply",
+    },
+    "RT-DETR-H_layout_3cls": {
+        "fused_conv2d_add_act",
+        "elementwise_mul",
+        "elementwise_add",
+        "elementwise_div",
+        "matrix_multiply",
+        "layer_norm",
+    },
+    "DETR-R50": {
+        "fused_conv2d_add_act",
+        "elementwise_mul",
+        "elementwise_add",
+        "elementwise_div",
+        "matrix_multiply",
+        "layer_norm",
+    },
+    "RT-DETR-R50": {
+        "fused_conv2d_add_act",
+        "elementwise_mul",
+        "elementwise_add",
+        "elementwise_div",
+        "matrix_multiply",
+        "layer_norm",
+    },
+    "YOLOX-M": {"fused_conv2d_add_act", "elementwise_mul", "elementwise_add", "scale"},
+    "YOLOv3-MobileNetV3": {
+        "fused_conv2d_add_act",
+        "elementwise_mul",
+        "elementwise_add",
+        "depthwise_conv2d",
+        "elementwise_div",
+    },
+    "PP-OCRv4_server_det": {"fused_conv2d_add_act", "conv2d"},
 }
 
 ############ pir trt ############
 PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
 PIR_TRT_CFG_SETTING = {
-    "PP-YOLOE_plus_SOD-largesize-L": {"workspace_size": 1 << 32},
+    "PP-YOLOE_plus_SOD-largesize-L": {
+        "workspace_size": 1 << 32,
+        "disable_ops": [
+            "pd_op.conv2d",
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.swish",
+            "pd_op.mean",
+            "pd_op.softmax",
+            "pd_op.layer_norm",
+            "pd_op.gelu",
+        ],
+    },
     "SLANeXt_wired": {"disable_ops": ["pd_op.slice"]},
     "SLANeXt_wireless": {"disable_ops": ["pd_op.slice"]},
-    "DETR-R50": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "DETR-R50": {
+        "optimization_level": 4,
+        "workspace_size": 1 << 32,
+        "ops_run_float": {"pd_op.matmul", "pd_op.conv2d", "pd_op.fused_conv2d_add_act"},
+    },
     "SegFormer-B0": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B1": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B2": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B3": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B4": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B5": {"optimization_level": 4, "workspace_size": 1 << 32},
-    "LaTeX_OCR_rec": {"disable_ops": ["pd_op.slice"]},
-    "PP-YOLOE_seg-S": {"disable_ops": ["pd_op.slice", "pd_op.bilinear_interp"]},
+    "LaTeX_OCR_rec": {"disable_ops": ["pd_op.slice", "pd_op.reshape"]},
+    "PP-YOLOE_seg-S": {
+        "disable_ops": ["pd_op.slice", "pd_op.bilinear_interp"],
+        "ops_run_float": {
+            "pd_op.conv2d",
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.conv2d_transpose",
+            "pd_op.matmul",
+        },
+    },
     "PP-FormulaNet-L": {
         "disable_ops": ["pd_op.full_with_tensor"],
         "workspace_size": 2 << 32,
@@ -226,6 +322,89 @@ PIR_TRT_CFG_SETTING = {
     "PP-FormulaNet-S": {
         "disable_ops": ["pd_op.full_with_tensor"],
         "workspace_size": 1 << 32,
+    },
+    "ConvNeXt_tiny": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_small": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_base_224": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_base_384": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_large_224": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_large_384": {"ops_run_float": {"pd_op.layer_norm"}},
+    "PP-HGNetV2-B3": {"ops_run_float": {"pd_op.softmax"}},
+    "BlazeFace-FPN-SSH": {"ops_run_float": {"pd_op.fused_conv2d_add_act"}},
+    "PP-OCRv4_mobile_seal_det": {
+        "ops_run_float": {
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.softmax",
+            "pd_op.multiply",
+            "pd_op.conv2d",
+        }
+    },
+    "PP-YOLOE_plus_SOD-S": {
+        "ops_run_float": {
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.softmax",
+            "pd_op.conv2d",
+            "pd_op.multiply",
+            "pd_op.matmul",
+        }
+    },
+    "PicoDet_LCNet_x2_5_face": {
+        "ops_run_float": {
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.softmax",
+            "pd_op.conv2d",
+            "pd_op.multiply",
+            "pd_op.matmul",
+        }
+    },
+    "PP-YOLOE_plus-S_face": {
+        "ops_run_float": {
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.multiply",
+            "pd_op.conv2d",
+        }
+    },
+    "PP-ShiTuV2_det": {
+        "ops_run_float": {
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.depthwise_conv2d",
+            "pd_op.conv2d",
+        }
+    },
+    "RT-DETR-H_layout_3cls": {
+        "ops_run_float": {
+            "pd_op.matmul",
+            "pd_op.conv2d",
+            "pd_op.depthwise_conv2d",
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.batch_norm_",
+        }
+    },
+    "RT-DETR-R50": {
+        "ops_run_float": {"pd_op.matmul", "pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
+    },
+    "YOLOX-M": {
+        "ops_run_float": {
+            "pd_op.multiply",
+            "pd_op.conv2d",
+            "pd_op.fused_conv2d_add_act",
+        }
+    },
+    "YOLOv3-MobileNetV3": {
+        "ops_run_float": {
+            "pd_op.depthwise_conv2d",
+            "pd_op.conv2d",
+            "pd_op.fused_conv2d_add_act",
+        }
+    },
+    "PP-OCRv4_server_det": {
+        "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
+    },
+    "PP-OCRv4_server_seal_det": {
+        "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
+    },
+    "PP-YOLOE_plus-M": {
+        "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
     },
 }
 

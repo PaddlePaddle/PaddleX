@@ -30,7 +30,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </thead>
 <tbody>
 <tr>
-<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
 <td>90.4</td>
 <td>34.5252</td>
 <td>1454.27</td>
@@ -38,7 +38,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <td>A high-precision layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using RT-DETR-L.</td>
 </tr>
 <tr>
-<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
 <td>75.2</td>
 <td>15.9</td>
 <td>160.1</td>
@@ -46,7 +46,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <td>A layout area localization model with balanced precision and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using PicoDet-L.</td>
 </tr>
 <tr>
-<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
 <td>70.9</td>
 <td>13.8</td>
 <td>46.7</td>
@@ -77,7 +77,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
 <td>97.5</td>
 <td>12.623</td>
 <td>90.8934</td>
@@ -103,7 +103,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </thead>
 <tbody>
 <tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>88.2</td>
 <td>13.5</td>
 <td>45.8</td>
@@ -111,7 +111,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>89.0</td>
 <td>15.7</td>
 <td>159.8</td>
@@ -119,7 +119,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>95.8</td>
 <td>114.6</td>
 <td>3832.6</td>
@@ -145,7 +145,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
 <td>97.8</td>
 <td>13.0</td>
 <td>91.3</td>
@@ -171,7 +171,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </thead>
 <tbody>
 <tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>87.4</td>
 <td>13.6</td>
 <td>46.2</td>
@@ -180,7 +180,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </tr>
 
 <tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>89.0</td>
 <td>17.2</td>
 <td>160.2</td>
@@ -189,7 +189,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 </tr>
 
 <tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>98.3</td>
 <td>115.1</td>
 <td>3827.2</td>
@@ -222,7 +222,7 @@ SubModules:
   ObjectDetection:
     module_name: object_detection
     model_name: PP-DocLayout-L  # Modify it to the layout region detection model name from the model list in the previous text.
-    model_dir: null 
+    model_dir: null
     batch_size: 1
     img_size: null
     threshold: null
@@ -272,7 +272,7 @@ The above command-line method allows you to quickly experience and check the res
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 
 output = pipeline.predict("layout_test_0.jpg", threshold=0.5)
 for res in output:
@@ -304,7 +304,7 @@ Before running the following code, please download the [sample image](https://pa
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") # 阈值参数不设置时，默认为0.5
-output = pipeline.predict("layout_test_2.jpg") 
+output = pipeline.predict("layout_test_2.jpg")
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -318,7 +318,7 @@ In this case, you can enable `threshold={2: 0.6}` to set the detection score thr
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold={2: 0.6}) # To set the detection score threshold specifically for category 2 (text) to 0.6 while keeping the default threshold of 0.5 for other categories
 for res in output:
     res.print()
@@ -350,7 +350,7 @@ When the overlapping box filtering feature is not enabled, you may notice overla
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg", threshold=0.5)  # Disabling the overlapping box filtering feature
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True)  # Enabling the overlapping box filtering feature
 for res in output:
@@ -380,7 +380,7 @@ The `layout_unclip_ratio` parameter allows you to adjust the side length of the 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6})  # Without adjusting the scaling factor of the detection box
 output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6}, layout_unclip_ratio=(1.0, 1.05))  # Adjust the scaling factor of the height of the detection box to 1.05.
 for res in output:
@@ -411,8 +411,8 @@ The visualization results in the saved directory are as follows. It can be obser
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
-output = pipeline.predict("PMC4836298_00004.jpg") # not setting 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
+output = pipeline.predict("PMC4836298_00004.jpg") # not setting
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="small") # 'small' mode
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="large") # 'large' mode
 for res in output:
@@ -454,7 +454,7 @@ class LayoutOCRPipeline():
     def __init__(self):
         self.layout_pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")  # Load the custom configuration file mentioned above to create a layout detection pipeline.
         self.ocr_pipeline = create_pipeline(pipeline="OCR") # init OCR pipeline
-        
+
     def crop_table(self, layout_res, layout_name):
         img_path = layout_res["input_path"]
         img = cv2.imread(img_path)
@@ -466,7 +466,7 @@ class LayoutOCRPipeline():
             table_img = img[ymin:ymax, xmin:xmax]
             table_img_list.append(table_img)
         return table_img_list
-    
+
     def predict(self, data, layout_name):
         for layout_res in self.layout_pipeline.predict(data):  # do layout detection
             final_res = {}
@@ -474,8 +474,8 @@ class LayoutOCRPipeline():
             if len(crop_img_list) == 0:
                 continue
             ocr_res = list(self.ocr_pipeline.predict(    # do OCR
-                                                input=crop_img_list, 
-                                                use_doc_orientation_classify=False, 
+                                                input=crop_img_list,
+                                                use_doc_orientation_classify=False,
                                                 use_doc_unwarping=False,
                                                 use_textline_orientation=False
                                                 ))
@@ -510,7 +510,7 @@ If the layout detection performance meets your requirements for inference speed 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True, layout_merge_bboxes_mode="large")
 for res in output:
     res.print()
@@ -535,7 +535,7 @@ tar -xvf paddlex_hps_object_detection_sdk.tar.gz
 
 - In the "Open Source Model Pipeline Deployment Serial Number Consultation and Acquisition" section of the [PaddlePaddle AI Studio Galaxy Community - AI Learning and Training Community](https://aistudio.baidu.com/paddlex/commercialization), select "Get Now," as shown in the image below:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
 
 Select the target detection pipeline and click "Get." Then, you can find the acquired serial number in the "Open Source Pipeline Deployment SDK Serial Number Management" section at the bottom of the page:
 
@@ -622,5 +622,3 @@ The `client.py` script in the `client` directory contains examples of service ca
 * Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
 
 You can choose the appropriate method to deploy the model pipeline based on your needs, and then proceed with the subsequent integration of AI applications.
-
-

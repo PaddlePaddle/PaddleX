@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,16 @@
 
 import logging
 
-import uvicorn
-from fastapi import FastAPI
+from ....utils.deps import function_requires_deps, is_dep_available
+
+if is_dep_available("uvicorn"):
+    import uvicorn
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
 
 
-def run_server(app: FastAPI, *, host: str, port: int) -> None:
+@function_requires_deps("fastapi", "uvicorn")
+def run_server(app: "FastAPI", *, host: str, port: int) -> None:
     # HACK: Fix duplicate logs
     uvicorn_version = tuple(int(x) for x in uvicorn.__version__.split("."))
     if uvicorn_version < (0, 19, 0):

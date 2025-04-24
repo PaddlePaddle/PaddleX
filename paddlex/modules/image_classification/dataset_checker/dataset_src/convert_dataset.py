@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
-import os
 import json
+import os
+
 from .....utils.file_interface import custom_open
 
 
@@ -34,7 +34,7 @@ def convert(input_dir):
     with custom_open(os.path.join(input_dir, "label.txt"), "w") as f:
         f.write("".join(label_content))
     anno_path = os.path.join(input_dir, "annotations")
-    jsons_path = os.listdir()
+    os.listdir()
     train_list = os.path.join(input_dir, "train.txt")
     val_list = os.path.join(input_dir, "val.txt")
     label_info = []

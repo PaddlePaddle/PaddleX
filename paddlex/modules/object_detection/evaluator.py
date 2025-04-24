@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,11 +24,16 @@ class DetEvaluator(BaseEvaluator):
 
     def _update_dataset(self):
         """update dataset settings"""
-        metric = self.pdx_config.metric if 'metric' in self.pdx_config else 'COCO'
-        data_fields = self.pdx_config.EvalDataset['data_fields'] if 'data_fields' in self.pdx_config.EvalDataset else None
+        metric = self.pdx_config.metric if "metric" in self.pdx_config else "COCO"
+        data_fields = (
+            self.pdx_config.EvalDataset["data_fields"]
+            if "data_fields" in self.pdx_config.EvalDataset
+            else None
+        )
 
         self.pdx_config.update_dataset(
-            self.global_config.dataset_dir, "COCODetDataset",
+            self.global_config.dataset_dir,
+            "COCODetDataset",
             data_fields=data_fields,
             metric=metric,
         )

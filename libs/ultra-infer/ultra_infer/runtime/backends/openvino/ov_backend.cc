@@ -91,9 +91,12 @@ void OpenVINOBackend::InitTensorInfo(
     TensorInfo info;
     auto partial_shape = PartialShapeToVec(ov_outputs[i].get_partial_shape());
     info.shape.assign(partial_shape.begin(), partial_shape.end());
-    info.name = ov_outputs[i].get_any_name();
     info.dtype = OpenVINODataTypeToFD(ov_outputs[i].get_element_type());
-    tensor_infos->insert(std::make_pair(info.name, info));
+    auto names = ov_outputs[i].get_names();
+    for (const auto &name : names) {
+      info.name = name;
+      tensor_infos->insert(std::make_pair(info.name, info));
+    }
   }
 }
 
@@ -216,14 +219,8 @@ bool OpenVINOBackend::InitFromPaddle(const std::string &model_file,
     }
 
     FDINFO << "number of streams:" << option_.num_streams << "." << std::endl;
-    if (option_.affinity == "YES") {
-      properties["AFFINITY"] = "CORE";
-    } else if (option_.affinity == "NO") {
-      properties["AFFINITY"] = "NONE";
-    } else if (option_.affinity == "NUMA") {
-      properties["AFFINITY"] = "NUMA";
-    } else if (option_.affinity == "HYBRID_AWARE") {
-      properties["AFFINITY"] = "HYBRID_AWARE";
+    if (option_.affinity == "NO") {
+      properties.emplace(ov::hint::enable_cpu_pinning(false));
     }
     FDINFO << "affinity:" << option_.affinity << "." << std::endl;
   } else if (option_.hint == "LATENCY") {
@@ -316,15 +313,27 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
   auto reader =
       paddle2onnx::OnnxReader(model_content.c_str(), model_content.size());
   if (reader.num_inputs != input_infos.size()) {
+    FDWARNING << "The number of input names from OnnxReader:"
+              << reader.num_outputs
+              << " not equal to the number of input names from OpenVINO:"
+              << output_infos.size() << "." << std::endl;
+  }
+  if (reader.num_inputs != inputs.size()) {
     FDERROR << "The number of inputs from OnnxReader:" << reader.num_inputs
             << " not equal to the number of inputs from OpenVINO:"
-            << input_infos.size() << "." << std::endl;
+            << inputs.size() << "." << std::endl;
     return false;
   }
   if (reader.num_outputs != output_infos.size()) {
+    FDWARNING << "The number of output names from OnnxReader:"
+              << reader.num_outputs
+              << " not equal to the number of output names from OpenVINO:"
+              << output_infos.size() << "." << std::endl;
+  }
+  if (reader.num_outputs != outputs.size()) {
     FDERROR << "The number of outputs from OnnxReader:" << reader.num_outputs
             << " not equal to the number of outputs from OpenVINO:"
-            << output_infos.size() << "." << std::endl;
+            << outputs.size() << "." << std::endl;
     return false;
   }
   for (int i = 0; i < reader.num_inputs; ++i) {
@@ -360,14 +369,8 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
     }
 
     FDINFO << "number of streams:" << option_.num_streams << "." << std::endl;
-    if (option_.affinity == "YES") {
-      properties["AFFINITY"] = "CORE";
-    } else if (option_.affinity == "NO") {
-      properties["AFFINITY"] = "NONE";
-    } else if (option_.affinity == "NUMA") {
-      properties["AFFINITY"] = "NUMA";
-    } else if (option_.affinity == "HYBRID_AWARE") {
-      properties["AFFINITY"] = "HYBRID_AWARE";
+    if (option_.affinity == "NO") {
+      properties.emplace(ov::hint::enable_cpu_pinning(false));
     }
     FDINFO << "affinity:" << option_.affinity << "." << std::endl;
   } else if (option_.hint == "LATENCY") {

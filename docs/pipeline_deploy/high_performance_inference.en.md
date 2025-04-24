@@ -4,422 +4,565 @@ comments: true
 
 # PaddleX High-Performance Inference Guide
 
-In real-world production environments, many applications have stringent standards for deployment strategy performance metrics, particularly response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins designed to deeply optimize model inference and pre/post-processing, achieving significant speedups in the end-to-end process. This document will first introduce the installation and usage of the high-performance inference plugins, followed by a list of pipelines and models currently supporting the use of these plugins.
+In real production environments, many applications impose strict performance metrics—especially in response time—on deployment strategies to ensure system efficiency and a smooth user experience. To address this, PaddleX offers a high-performance inference plugin that, through automatic configuration and multi-backend inference capabilities, enables users to significantly accelerate model inference without concerning themselves with complex configurations and low-level details.
 
-## 1. Installation and Usage of High-Performance Inference Plugins
+## Table of Contents
 
-Before using the high-performance inference plugins, ensure you have completed the installation of PaddleX according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md), and have successfully run the quick inference of the pipeline using either the PaddleX pipeline command line instructions or the Python script instructions.
+- [1. Installation and Basic Usage](#1.-Installation-and-Basic-Usage)
+  - [1.1 Installing the High-Performance Inference Plugin](#1.1-Installing-the-High-Performance-Inference-Plugin)
+  - [1.2 Enabling the High-Performance Inference Plugin](#1.2-Enabling-the-High-Performance-Inference-Plugin)
+- [2. Advanced Usage](#2-Advanced-Usage)
+  - [2.1 Working Modes of High-Performance Inference](#21-Working-Modes-of-High-Performance-Inference)
+  - [2.2 High-Performance Inference Configuration](#22-High-Performance-Inference-Configuration)
+  - [2.3 Modifying the High-Performance Inference Configuration](#23-Modifying-the-High-Performance-Inference-Configuration)
+  - [2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files](#24-EnablingDisabling-the-High‑Performance-Inference-Plugin-in-Configuration-Files)
+  - [2.5 Model Cache Description](#25-Model-Cache-Description)
+  - [2.6 Customizing the Model Inference Library](#26-Customizing-the-Model-Inference-Library)
+- [3. Frequently Asked Questions](#3-Frequently-Asked-Questions)
 
-### 1.1 Installing High-Performance Inference Plugins
+## 1. Installation and Basic Usage
 
-Find the corresponding installation command based on your processor architecture, operating system, device type, and Python version in the table below and execute it in your deployment environment. Please replace `{paddlex version number}` with the actual paddlex version number, such as the current latest stable version `3.0.0b2`. If you need to use the version corresponding to the development branch, replace `{paddlex version number}` with `0.0.0.dev0`.
+Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
+
+The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed. **It is recommended to install the Paddle2ONNX plugin first before installing the high-performance inference plugin, so that PaddleX can convert model formats when needed.**
+
+### 1.1 Installing the High-Performance Inference Plugin
+
+Currently, the supported processor architectures, operating systems, device types, and Python versions for high-performance inference are as follows:
 
 <table>
   <tr>
-    <th>Processor Architecture</th>
     <th>Operating System</th>
+    <th>Processor Architecture</th>
     <th>Device Type</th>
     <th>Python Version</th>
-    <th>Installation Command</th>
   </tr>
   <tr>
-    <td rowspan="7">x86-64</td>
-    <td rowspan="7">Linux</td>
-    <td rowspan="4">CPU</td>
+    <td rowspan="5">Linux</td>
+    <td rowspan="4">x86-64</td>
   </tr>
   <tr>
-    <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/{paddlex version number}/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device cpu --py 38</td>
+    <td>CPU</td>
+    <td>3.8–3.12</td>
   </tr>
   <tr>
-    <td>3.9</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/{paddlex version number}/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device cpu --py 39</td>
+    <td>GPU&nbsp;(CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.9)</td>
+    <td>3.8–3.12</td>
   </tr>
   <tr>
+    <td>NPU</td>
     <td>3.10</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/{paddlex version number}/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device cpu --py 310</td>
   </tr>
   <tr>
-    <td rowspan="3">GPU&nbsp;(CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6)</td>
-    <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/{paddlex version number}/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 38</td>
-  </tr>
-  <tr>
-    <td>3.9</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/{paddlex version number}/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 39</td>
-  </tr>
-  <tr>
+    <td>AArch64</td>
+    <td>NPU</td>
     <td>3.10</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/{paddlex version number}/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 310</td>
   </tr>
 </table>
 
-* For Linux systems, execute the installation instructions using Bash.
-* When using NVIDIA GPUs, please use the installation instructions corresponding to the CUDA and cuDNN versions that match your environment. Otherwise, you will not be able to use the high-performance inference plugin properly.
-* When the device type is CPU, the installed high-performance inference plugin only supports inference using the CPU; for other device types, the installed high-performance inference plugin supports inference using the CPU or other devices.
+#### 1.1.1 Installing the High-Performance Inference Plugin in a Docker Container (Highly Recommended)
 
-### 1.2 Obtaining Serial Numbers and Activation
+Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obtaining-paddlex-based-on-docker) to start a PaddleX container using Docker. After starting the container, execute the following commands according to your device type to install the high-performance inference plugin:
 
-On the [Baidu AIStudio Community - AI Learning and Training Platform](https://aistudio.baidu.com/paddlex/commercialization) page, under the "Open-source Pipeline Deployment Serial Number Inquiry and Acquisition" section, select "Acquire Now" as shown in the following image:
+<table>
+  <thead>
+      <tr>
+          <th>Device Type</th>
+          <th>Installation Command</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CPU</td>
+          <td><code>paddlex --install hpi-cpu</code></td>
+          <td>Installs the CPU version of the high-performance inference feature.</td>
+      </tr>
+      <tr>
+          <td>GPU</td>
+          <td><code>paddlex --install hpi-gpu</code></td>
+          <td>Installs the GPU version of the high-performance inference feature.<br />Includes all functionalities of the CPU version.</td>
+      </tr>
+  </tbody>
+</table>
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
+In the official PaddleX Docker image, TensorRT is installed by default. The high-performance inference plugin can then accelerate inference using the Paddle Inference TensorRT subgraph engine.
 
-Select the pipeline you wish to deploy and click "Acquire". Afterwards, you can find the acquired serial number in the "Open-source Pipeline Deployment SDK Serial Number Management" section at the bottom of the page:
+**Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-based-on-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png">
+#### 1.1.2 Installing the High-Performance Inference Plugin Locally
 
-After using the serial number to complete activation, you can utilize high-performance inference plugins. PaddleX provides both online and offline activation methods (both only support Linux systems):
+**To install the CPU version of the high-performance inference plugin:**
 
-* Online Activation: When using the inference API or CLI, specify the serial number and enable online activation to automatically complete the process.
-* Offline Activation: Follow the instructions in the serial number management interface (click "Offline Activation" under "Operations") to obtain the device fingerprint of your machine. Bind the serial number with the device fingerprint to obtain a certificate and complete the activation. For this activation method, you need to manually store the certificate in the `${HOME}/.baidu/paddlex/licenses` directory on the machine (create the directory if it does not exist) and specify the serial number when using the inference API or CLI.
+Run:
 
-Please note: Each serial number can only be bound to a unique device fingerprint and can only be bound once. This means that if users deploy models on different machines, they must prepare separate serial numbers for each machine.
+```bash
+paddlex --install hpi-cpu
+```
 
-### 1.3 Enabling High-Performance Inference Plugins
+**To install the GPU version of the high-performance inference plugin:**
 
-For Linux systems, if using the high-performance inference plugin in a Docker container, please mount the host machine's `/dev/disk/by-uuid` and `${HOME}/.baidu/paddlex/licenses` directories to the container.
+Before installation, please ensure that CUDA and cuDNN are installed in your environment. The official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9, so please ensure that the installed versions of CUDA and cuDNN are compatible with the compiled versions. Below are the installation documentation links for CUDA 11.8 and cuDNN 8.9:
 
-For PaddleX CLI, specify `--use_hpip` and set the serial number to enable the high-performance inference plugin. If you wish to activate the license online, specify `--update_license` when using the serial number for the first time. Taking the general image classification pipeline as an example:
+- [Install CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
+- [Install cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
+
+If you are using the official PaddlePaddle image, the CUDA and cuDNN versions in the image already meet the requirements, so there is no need for a separate installation.
+
+If PaddlePaddle is installed via pip, the relevant CUDA and cuDNN Python packages will usually be installed automatically. In this case, **you still need to install the non-Python-specific CUDA and cuDNN**. It is also advisable to install the CUDA and cuDNN versions that match the versions of the Python packages in your environment to avoid potential issues arising from coexisting libraries of different versions. You can check the versions of the CUDA and cuDNN related Python packages as follows:
+
+```bash
+# For CUDA related Python packages
+pip list | grep nvidia-cuda
+# For cuDNN related Python packages
+pip list | grep nvidia-cudnn
+```
+
+If you wish to use the Paddle Inference TensorRT subgraph engine, you will need to install TensorRT additionally. Please refer to the related instructions in the [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md). Note that because the underlying inference library of the high-performance inference plugin also integrates TensorRT, it is recommended to install the same version of TensorRT to avoid version conflicts. Currently, the TensorRT version integrated into the high-performance inference plugin's underlying inference library is 8.6.1.6. If you are using the official PaddlePaddle image, you do not need to worry about version conflicts.
+
+After confirming that the correct versions of CUDA, cuDNN, and TensorRT (optional) are installed, run:
+
+```bash
+paddlex --install hpi-gpu
+```
+
+**To install the NPU version of the high-performance inference plugin:**
+
+Please refer to the [Ascend NPU High-Performance Inference Tutorial](../practical_tutorials/high_performance_npu_tutorial.en.md).
+
+**Note:**
+
+1. **Currently, the official PaddleX only provides precompiled packages for CUDA 11.8 + cuDNN 8.9**; support for CUDA 12 is in progress.
+2. Only one version of the high-performance inference plugin should exist in the same environment.
+3. For Windows systems, it is currently recommended to install and use the high-performance inference plugin within a Docker container or in [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) environments.
+
+### 1.2 Enabling the High-Performance Inference Plugin
+
+Below are examples of enabling the high-performance inference plugin in both the PaddleX CLI and Python API for the general image classification pipeline and the image classification module.
+
+For the PaddleX CLI, specify `--use_hpip` to enable the high-performance inference plugin.
+
+**General Image Classification Pipeline:**
 
 ```bash
 paddlex \
     --pipeline image_classification \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    --device gpu:0 \
-    --use_hpip \
-    --serial_number {serial number}
-
-# If you wish to perform online activation
-paddlex \
-    --pipeline image_classification \
-    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-    --device gpu:0 \
-    --use_hpip \
-    --serial_number {serial number} \
-    --update_license
+    --use_hpip
 ```
 
-For PaddleX Python API, enabling the high-performance inference plugin is similar. Still taking the general image classification pipeline as an example:
+**Image Classification Module:**
+
+```bash
+python main.py \
+    -c paddlex/configs/modules/image_classification/ResNet18.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir=None \
+    -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    -o Predict.use_hpip=True
+```
+
+For the PaddleX Python API, enabling the high-performance inference plugin is similar. For example:
+
+**General Image Classification Pipeline:**
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="image_classification",
-    use_hpip=True,
-    hpi_params={"serial_number": "{serial number}"},
+    use_hpip=True
 )
 
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 ```
 
-The inference results obtained with the high-performance inference plugin enabled are consistent with those without the plugin enabled. For some models, enabling the high-performance inference plugin for the first time may take a longer time to complete the construction of the inference engine. PaddleX will cache the relevant information in the model directory after the first construction of the inference engine and reuse the cached content in subsequent runs to improve initialization speed.
+**Image Classification Module:**
 
-### 1.4 Modifying High-Performance Inference Configurations
+```python
+from paddlex import create_model
 
-PaddleX combines model information and runtime environment information to provide default high-performance inference configurations for each model. These default configurations are carefully prepared to be applicable in several common scenarios and achieve relatively optimal performance. Therefore, users typically may not need to be concerned with the specific details of these configurations. However, due to the diversity of actual deployment environments and requirements, the default configuration may not yield ideal performance in certain scenarios and could even result in inference failures. In cases where the default configuration does not meet the requirements, users can manually adjust the configuration by modifying the Hpi field in the inference.yml file within the model directory (if this field does not exist, it needs to be added). The following are two common situations:
+model = create_model(
+    model_name="ResNet18",
+    use_hpip=True
+)
 
-- Switching inference backends:
+output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+```
 
-    When the default inference backend is not available, the inference backend needs to be switched manually. Users should modify the `selected_backends` field (if it does not exist, it needs to be added).
+The inference results obtained with the high-performance inference plugin enabled are identical to those without the plugin. For some models, **the first time the high-performance inference plugin is enabled, it may take a longer time to complete the construction of the inference engine**. PaddleX caches the related information in the model directory after the inference engine is built for the first time, and subsequently reuses the cached content to improve the initialization speed.
 
-    ```yaml
-    Hpi:
-      ...
-      selected_backends:
-        cpu: paddle_infer
-        gpu: onnx_runtime
-      ...
-    ```
+**Enabling the high‑performance inference plugin via the PaddleX CLI and Python API applies by default to the entire pipeline/module.**
+If you need finer‑grained control—e.g. to enable the plugin only on a specific sub‑pipeline or sub‑module within your pipeline—you can set `use_hpip` in the configuration file at the appropriate level. Please refer to [2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files](#24-EnablingDisabling-the-High‑Performance-Inference-Plugin-in-Configuration-Files). If `use_hpip` is not specified in the CLI options, API calls, or any configuration file, the high‑performance inference plugin will remain disabled by default.
 
-    Each entry should follow the format `{device type}: {inference backend name}`.
+## 2. Advanced Usage
 
-    The currently available inference backends are:
+This section introduces the advanced usage of the high-performance inference plugin, which is suitable for users who have a good understanding of model deployment or wish to manually adjust configurations. Users can customize the use of the high-performance inference plugin according to their requirements by referring to the configuration instructions and examples. The following sections describe advanced usage in detail.
 
-    * `paddle_infer`: The Paddle Inference engine. Supports CPU and GPU. Compared to the PaddleX quick inference, TensorRT subgraphs can be integrated to enhance inference performance on GPUs.
-    * `openvino`: [OpenVINO](https://github.com/openvinotoolkit/openvino), a deep learning inference tool provided by Intel, optimized for model inference performance on various Intel hardware. Supports CPU only. The high-performance inference plugin automatically converts the model to the ONNX format and uses this engine for inference.
-    * `onnx_runtime`: [ONNX Runtime](https://onnxruntime.ai/), a cross-platform, high-performance inference engine. Supports CPU and GPU. The high-performance inference plugin automatically converts the model to the ONNX format and uses this engine for inference.
-    * `tensorrt`: [TensorRT](https://developer.nvidia.com/tensorrt), a high-performance deep learning inference library provided by NVIDIA, optimized for NVIDIA GPUs to improve speed. Supports GPU only. The high-performance inference plugin automatically converts the model to the ONNX format and uses this engine for inference.
+### 2.1 Working Modes of High-Performance Inference
 
-- Modifying dynamic shape configurations for Paddle Inference or TensorRT:
+The high-performance inference plugin supports two working modes. The operating mode can be switched by modifying the high-performance inference configuration.
 
-    Dynamic shape is the ability of TensorRT to defer specifying parts or all of a tensor’s dimensions until runtime. If the default dynamic shape configuration does not meet requirements (e.g., the model may require input shapes beyond the default range), users need to modify the `trt_dynamic_shapes` or `dynamic_shapes` field in the inference backend configuration:
+#### 2.1.1 Safe Auto-Configuration Mode
 
-    ```yaml
-    Hpi:
-      ...
-      backend_configs:
-        # Configuration for the Paddle Inference backend
-        paddle_infer:
-          ...
-          trt_dynamic_shapes:
-            x:
-              - [1, 3, 300, 300]
-              - [4, 3, 300, 300]
-              - [32, 3, 1200, 1200]
-          ...
-        # Configuration for the TensorRT backend
-        tensorrt:
-          ...
+In safe auto-configuration mode, a protective mechanism is enabled. By default, **the configuration with the best performance for the current environment is automatically selected**. In this mode, while the user can override the default configuration, the provided configuration will be subject to checks, and PaddleX will reject configurations that are not available based on prior knowledge. This is the default operating mode.
+
+#### 2.1.2 Unrestricted Manual Configuration Mode
+
+In unrestricted manual configuration mode, full freedom is provided to configure—users can **choose the inference backend freely and modify its configuration, etc.**—but there is no guarantee that inference will always succeed. This mode is recommended for experienced users who have clear requirements for the inference backend and its configuration; it is advised to use this mode only when familiar with high-performance inference.
+
+### 2.2 High-Performance Inference Configuration
+
+Common configuration items for high-performance inference include:
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto_config</code></td>
+<td>Whether to enable the safe auto-configuration mode.<br /><code>True</code> enables safe auto-configuration mode, <code>False</code> enables the unrestricted manual configuration mode.</td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+  <td><code>backend</code></td>
+  <td>Specifies the inference backend to use. In unrestricted manual configuration mode, it cannot be <code>None</code>.</td>
+  <td><code>str | None</code></td>
+  <td><code>None</code></td>
+</tr>
+<tr>
+  <td><code>backend_config</code></td>
+  <td>The configuration for the inference backend. If not <code>None</code>, it can override the default backend configuration options.</td>
+  <td><code>dict | None</code></td>
+  <td><code>None</code></td>
+</tr>
+<tr>
+  <td><code>auto_paddle2onnx</code></td>
+  <td>Whether to automatically convert the PaddlePaddle static graph model to an ONNX model. When the Paddle2ONNX plugin is unavailable, no conversion will be performed.</td>
+  <td><code>bool</code></td>
+  <td><code>True</code></td>
+</tr>
+</tbody>
+</table>
+
+The optional values for `backend` are as follows:
+
+<table>
+  <tr>
+    <th>Option</th>
+    <th>Description</th>
+    <th>Supported Devices</th>
+  </tr>
+  <tr>
+    <td><code>paddle</code></td>
+    <td>Paddle Inference engine; supports enhancing GPU inference performance using the Paddle Inference TensorRT subgraph engine.</td>
+    <td>CPU, GPU</td>
+  </tr>
+  <tr>
+    <td><code>openvino</code></td>
+    <td><a href="https://github.com/openvinotoolkit/openvino">OpenVINO</a>, a deep learning inference tool provided by Intel, optimized for inference performance on various Intel hardware.</td>
+    <td>CPU</td>
+  </tr>
+  <tr>
+    <td><code>onnxruntime</code></td>
+    <td><a href="https://onnxruntime.ai/">ONNX Runtime</a>, a cross-platform, high-performance inference engine.</td>
+    <td>CPU, GPU</td>
+  </tr>
+  <tr>
+    <td><code>tensorrt</code></td>
+    <td><a href="https://developer.nvidia.com/tensorrt">TensorRT</a>, a high-performance deep learning inference library provided by NVIDIA, optimized for NVIDIA GPUs to enhance speed.</td>
+    <td>GPU</td>
+  </tr>
+  <tr>
+    <td><code>om</code></td>
+    <td>The inference engine corresponding to the offline model format customized for Huawei Ascend NPU, deeply optimized for hardware to reduce operator computation and scheduling time, effectively enhancing inference performance.</td>
+    <td>NPU</td>
+  </tr>
+</table>
+
+The available configuration items for `backend_config` vary for different backends, as shown in the following table:
+
+<table>
+  <tr>
+    <th>Backend</th>
+    <th>Configuration Items</th>
+  </tr>
+  <tr>
+    <td><code>paddle</code></td>
+    <td>Refer to <a href="../module_usage/instructions/model_python_API.en.md#4-inference-configuration">PaddleX Single Model Python Usage Instructions</a>. The attributes of the <code>PaddlePredictorOption</code> object can be configured via key-value pairs.</td>
+  </tr>
+  <tr>
+    <td><code>openvino</code></td>
+    <td><code>cpu_num_threads</code> (<code>int</code>): The number of logical processors used for CPU inference. The default is <code>8</code>.</td>
+  </tr>
+  <tr>
+    <td><code>onnxruntime</code></td>
+    <td><code>cpu_num_threads</code> (<code>int</code>): The number of parallel computation threads within the operator during CPU inference. The default is <code>8</code>.</td>
+  </tr>
+  <tr>
+    <td><code>tensorrt</code></td>
+    <td>
+      <code>precision</code> (<code>str</code>): The precision used, either <code>"fp16"</code> or <code>"fp32"</code>. The default is <code>"fp32"</code>.
+      <br />
+      <code>dynamic_shapes</code> (<code>dict</code>): Dynamic shape configuration that specifies, for each input, its minimum shape, optimization shape, and maximum shape. The format is: <code>{input tensor name}: [{minimum shape}, {optimization shape}, {maximum shape}]</code>. Dynamic shapes is TensorRT’s ability to defer specifying some or all tensor dimensions until runtime. For more information, see the <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT official documentation</a>.
+    </td>
+  </tr>
+  <tr>
+    <td><code>om</code></td>
+    <td>None at the moment</td>
+  </tr>
+</table>
+
+### 2.3 Modifying the High-Performance Inference Configuration
+
+Due to the diversity of actual deployment environments and requirements, the default configuration might not meet all needs. In such cases, manual adjustment of the high-performance inference configuration may be necessary. Users can modify the configuration by editing the **pipeline/module configuration file** or by passing the `hpi_config` field in the parameters via **CLI** or **Python API**. **Parameters passed via CLI or Python API will override the settings in the pipeline/module configuration file.** The following examples illustrate how to modify the configuration.
+
+**For the general OCR pipeline, use the `onnxruntime` backend for all models:**
+
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+...
+hpi_config:
+  backend: onnxruntime
+```
+
+</details>
+<details><summary>👉 CLI Parameter Method (click to expand)</summary>
+
+```bash
+paddlex \
+    --pipeline image_classification \
+    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    --use_hpip \
+    --hpi_config '{"backend": "onnxruntime"}'
+```
+
+</details>
+<details><summary>👉 Python API Parameter Method (click to expand)</summary>
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(
+    pipeline="OCR",
+    use_hpip=True,
+    hpi_config={"backend": "onnxruntime"}
+)
+```
+
+</details>
+
+**For the image classification module, use the `onnxruntime` backend:**
+
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+Predict:
+  ...
+  hpi_config:
+    backend: onnxruntime
+```
+
+</details>
+<details><summary>👉 CLI Parameter Method (click to expand)</summary>
+
+```bash
+python main.py \
+    -c paddlex/configs/modules/image_classification/ResNet18.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir=None \
+    -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    -o Predict.use_hpip=True \
+    -o Predict.hpi_config='{"backend": "onnxruntime"}'
+```
+
+</details>
+<details><summary>👉 Python API Parameter Method (click to expand)</summary>
+
+```python
+from paddlex import create_model
+
+model = create_model(
+    model_name="ResNet18",
+    use_hpip=True,
+    hpi_config={"backend": "onnxruntime"}
+)
+```
+
+</details>
+
+**For the general OCR pipeline, use the `onnxruntime` backend for the `text_detection` module and the `tensorrt` backend for the `text_recognition` module:**
+
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+SubModules:
+  TextDetection:
+    ...
+    hpi_config:
+      backend: onnxruntime
+  TextRecognition:
+    ...
+    hpi_config:
+      backend: tensorrt
+```
+
+</details>
+
+**For the general image classification pipeline, modify dynamic shape configuration:**
+
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+  SubModules:
+    ImageClassification:
+      hpi_config:
+        ...
+        backend: tensorrt
+        backend_config:
           dynamic_shapes:
             x:
               - [1, 3, 300, 300]
               - [4, 3, 300, 300]
               - [32, 3, 1200, 1200]
-          ...
-    ```
+```
 
-    In `trt_dynamic_shapes` or `dynamic_shapes`, each input tensor requires a specified dynamic shape in the format: `{input tensor name}: [{minimum shape}, [{optimal shape}], [{maximum shape}]]`. For details on minimum, optimal, and maximum shapes and further information, please refer to the official TensorRT documentation.
+</details>
 
-    After completing the modifications, please delete the cache files in the model directory (`shape_range_info.pbtxt` and files starting with `trt_serialized`).
+**For the image classification module, modify dynamic shape configuration:**
 
-## 2. Pipelines and Models Supporting High-Performance Inference Plugins
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+Predict:
+  hpi_config:
+    ...
+    backend: tensorrt
+    backend_config:
+      dynamic_shapes:
+        x:
+          - [1, 3, 300, 300]
+          - [4, 3, 300, 300]
+          - [32, 3, 1200, 1200]
+```
+
+</details>
+
+### 2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files
+
+In the configuration file, you can use `use_hpip` to control whether the high-performance inference plugin is enabled or disabled. Unlike configuring via the CLI or API, this approach allows you to specify `use_hpip` at the sub-pipeline or sub-module level, enabling **high-performance inference only for a specific sub-pipeline or sub-module within the entire pipeline**. For example:
+
+**In the general OCR pipeline, enable high-performance inference for the `text_detection` module, but not for the `text_recognition` module:**
+
+<details><summary>👉 Click to expand</summary>
+
+```yaml
+SubModules:
+  TextDetection:
+    ...
+    use_hpip: True # This sub-module uses high-performance inference
+  TextLineOrientation:
+    ...
+    # This sub-module does not have a specific configuration; it defaults to the global configuration
+    # (if neither the configuration file nor CLI/API parameters set it, high-performance inference will not be used)
+  TextRecognition:
+    ...
+    use_hpip: False # This sub-module does not use high-performance inference
+```
+
+</details>
+
+**Note:**
+
+1. When `use_hpip` is set at multiple levels in the configuration file, the setting at the deepest level takes precedence.
+2. **When enabling or disabling the high-performance inference plugin by modifying the pipeline configuration file, it is not recommended to also configure it using the CLI or Python API.** Setting `use_hpip` through the CLI or Python API is equivalent to modifying the top-level `use_hpip` in the configuration file.
+
+### 2.5 Model Cache Description
+
+The model caches are stored in the `.cache` directory under the model directory.
+
+**After modifying configurations related to Paddle Inference TensorRT subgraph engine or TensorRT, it is recommended to clear the caches to avoid the new configuration being overridden by the cache.**
+
+When the `auto_paddle2onnx` option is enabled, an `inference.onnx` file may be automatically generated in the model directory.
+
+### 2.6 Customizing the Model Inference Library
+
+`ultra-infer` is the model inference library that the high-performance inference plugin depends on. It is maintained as a sub-project under the `PaddleX/libs/ultra-infer` directory. PaddleX provides a build script for `ultra-infer`, located at `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh`. The build script, by default, builds the GPU version of `ultra-infer` and integrates three inference backends: OpenVINO, TensorRT, and ONNX Runtime.
+
+If you need to customize the build of `ultra-infer`, you can modify the following options in the build script according to your requirements:
 
 <table>
-  <tr>
-    <th>Pipeline</th>
-    <th>Module</th>
-    <th>Model Support List</th>
-  </tr>
-
-  <tr>
-    <td rowspan="2">OCR</td>
-    <td>Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="7">PP-ChatOCRv3-doc</td>
-    <td>Table Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Layout Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Seal Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Image Unwarping</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Document Image Orientation Classification</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="4">Table Recognition</td>
-    <td>Layout Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Table Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Object Detection</td>
-    <td>Object Detection</td>
-    <td>FasterRCNN-Swin-Tiny-FPN ❌<br>CenterNet-DLA-34 ❌ <br>CenterNet-ResNet50 ❌</td>
-  </tr>
-
-  <tr>
-    <td>Instance Segmentation</td>
-    <td>Instance Segmentation</td>
-    <td>Mask-RT-DETR-S ❌</td>
-  </tr>
-
-  <tr>
-    <td>Image Classification</td>
-    <td>Image Classification</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Semantic Segmentation</td>
-    <td>Semantic Segmentation</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Time Series Forecasting</td>
-    <td>Time Series Forecasting</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td>Time Series Anomaly Detection</td>
-    <td>Time Series Anomaly Forecasting</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td>Time Series Classification</td>
-    <td>Time Series Classification</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td>Small Object Detection</td>
-    <td>Small Object Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Multi-Label Image Classification</td>
-    <td>Multi-Label Image  Classification</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Image Anomaly Detection</td>
-    <td>Unsupervised Anomaly Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="8">Layout Parsing</td>
-    <td>Table Structure Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Layout Region Analysis</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Formula Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Seal Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Image Unwarping</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Document Image Orientation Classification</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">Formula Recognition</td>
-    <td>Layout Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Formula Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="3">Seal Recognition</td>
-    <td>Layout Region Analysis</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Seal Text Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Text Recognition</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">Image Recognition</td>
-    <td>Subject Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Image Feature</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">Pedestrian Attribute Recognition</td>
-    <td>Pedestrian Detection</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td>Pedestrian Attribute Recognition</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">Vehicle Attribute Recognition</td>
-    <td>Vehicle Detection</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td>Vehicle Attribute Recognition</td>
-    <td>❌</td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">Face Recognition</td>
-    <td>Face Detection</td>
-    <td>✅</td>
-  </tr>
-
-  <tr>
-    <td>Face Feature</td>
-    <td>✅</td>
-  </tr>
-
+    <thead>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>http_proxy</td>
+            <td>The HTTP proxy used when downloading third-party libraries; default is empty.</td>
+        </tr>
+        <tr>
+            <td>PYTHON_VERSION</td>
+            <td>Python version, default is <code>3.10.0</code>.</td>
+        </tr>
+        <tr>
+            <td>WITH_GPU</td>
+            <td>Whether to enable GPU support, default is <code>ON</code>.</td>
+        </tr>
+        <tr>
+            <td>ENABLE_ORT_BACKEND</td>
+            <td>Whether to integrate the ONNX Runtime backend, default is <code>ON</code>.</td>
+        </tr>
+        <tr>
+            <td>ENABLE_TRT_BACKEND</td>
+            <td>Whether to integrate the TensorRT backend (GPU-only), default is <code>ON</code>.</td>
+        </tr>
+        <tr>
+            <td>ENABLE_OPENVINO_BACKEND</td>
+            <td>Whether to integrate the OpenVINO backend (CPU-only), default is <code>ON</code>.</td>
+        </tr>
+    </tbody>
 </table>
+
+Example:
+
+```bash
+# Build
+cd PaddleX/libs/ultra-infer/scripts/linux
+# export PYTHON_VERSION=...
+# export WITH_GPU=...
+# export ENABLE_ORT_BACKEND=...
+# export ...
+bash set_up_docker_and_build_py.sh
+
+# Install
+python -m pip install ../../python/dist/ultra_infer*.whl
+```
+
+## 3. Frequently Asked Questions
+
+**1. Why does the inference speed not appear to improve noticeably before and after enabling the high-performance inference plugin?**
+
+The high-performance inference plugin achieves inference acceleration by intelligently selecting and configuring the backend. However, due to the complex structure of some models or the presence of unsupported operators, not all models may be able to be accelerated. In these cases, PaddleX will provide corresponding prompts in the log. You can use the [PaddleX benchmark feature](../module_usage/instructions/benchmark.en.md) to measure the inference duration of each module component, thereby facilitating a more accurate performance evaluation. Moreover, for pipelines, the performance bottleneck of inference may not lie in the model inference, but rather in the surrounding logic, which could also result in limited acceleration gains.
+
+**2. Do all pipelines and modules support high-performance inference?**
+
+All pipelines and modules that use static graph models support enabling the high-performance inference plugin; however, in certain scenarios, some models might not be able to achieve accelerated inference. For detailed reasons, please refer to Question 1.
+
+**3. Why does the installation of the high-performance inference plugin fail with a log message stating: “You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin.”?**
+
+For the GPU version of the high-performance inference plugin, the official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9. The support for CUDA 12 is in progress.
+
+**4. Why does the program freeze during runtime or display some "WARNING" and "ERROR" messages after using the high-performance inference feature? What should be done in such cases?**
+
+When initializing the model, operations such as subgraph optimization may take longer and may generate some "WARNING" and "ERROR" messages. However, as long as the program does not exit automatically, it is recommended to wait patiently, as the program usually continues to run to completion.

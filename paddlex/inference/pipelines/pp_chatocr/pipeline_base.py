@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
-from ..base import BasePipeline
+from typing import Any, Dict, Optional, Union
+
 from ....utils import logging
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class PP_ChatOCR_Pipeline(BasePipeline):
@@ -26,6 +28,7 @@ class PP_ChatOCR_Pipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the pp-chatocrv3-doc pipeline.
 
@@ -33,10 +36,16 @@ class PP_ChatOCR_Pipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
     def visual_predict(self):
         """

@@ -37,7 +37,7 @@ function(get_openvino_libs OPENVINO_RUNTIME_DIR)
   find_package(TBB PATHS ${TBB_DIR})
   if (TBB_FOUND)
     # 2024.10.22(zhangyue): Use openvino with tbb on linux
-    set(TBB_LIB "${OPENVINO_RUNTIME_DIR}/3rdparty/tbb/lib/libtbb.so.12")
+    set(TBB_LIB "${OPENVINO_RUNTIME_DIR}/3rdparty/tbb/lib/libtbb.so")
     list(APPEND LIB_LIST ${TBB_LIB})
   else()
     # TODO(zhoushunjie): Use openvino with tbb on linux in future.

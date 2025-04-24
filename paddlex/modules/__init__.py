@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,126 +13,103 @@
 # limitations under the License.
 from importlib import import_module
 
-from .base import (
-    build_dataset_checker,
-    build_trainer,
-    build_evaluater,
-    build_exportor,
-)
-
-from .image_classification import (
-    ClsDatasetChecker,
-    ClsTrainer,
-    ClsEvaluator,
-    ClsExportor,
-)
-
-from .multilabel_classification import (
-    MLClsDatasetChecker,
-    MLClsTrainer,
-    MLClsEvaluator,
-    MLClsExportor,
-)
-
-from .anomaly_detection import (
-    UadDatasetChecker,
-    UadTrainer,
-    UadEvaluator,
-    UadExportor,
+from .anomaly_detection import UadDatasetChecker, UadEvaluator, UadExportor, UadTrainer
+from .base import build_dataset_checker, build_evaluater, build_exportor, build_trainer
+from .face_recognition import (
+    FaceRecDatasetChecker,
+    FaceRecEvaluator,
+    FaceRecExportor,
+    FaceRecTrainer,
 )
 from .general_recognition import (
     ShiTuRecDatasetChecker,
-    ShiTuRecTrainer,
     ShiTuRecEvaluator,
     ShiTuRecExportor,
+    ShiTuRecTrainer,
 )
-from .object_detection import (
-    COCODatasetChecker,
-    DetTrainer,
-    DetEvaluator,
-    DetExportor,
-)
-from .text_detection import (
-    TextDetDatasetChecker,
-    TextDetTrainer,
-    TextDetEvaluator,
-    TextDetExportor,
-)
-from .text_recognition import (
-    TextRecDatasetChecker,
-    TextRecTrainer,
-    TextRecEvaluator,
-    TextRecExportor,
-)
-from .table_recognition import (
-    TableRecDatasetChecker,
-    TableRecTrainer,
-    TableRecEvaluator,
-    TableRecExportor,
-)
-from .semantic_segmentation import (
-    SegDatasetChecker,
-    SegTrainer,
-    SegEvaluator,
-    SegExportor,
+from .image_classification import (
+    ClsDatasetChecker,
+    ClsEvaluator,
+    ClsExportor,
+    ClsTrainer,
 )
 from .instance_segmentation import (
     COCOInstSegDatasetChecker,
-    InstanceSegTrainer,
     InstanceSegEvaluator,
     InstanceSegExportor,
+    InstanceSegTrainer,
+)
+from .keypoint_detection import (
+    KeypointDatasetChecker,
+    KeypointEvaluator,
+    KeypointExportor,
+    KeypointTrainer,
+)
+from .m_3d_bev_detection import (
+    BEVFusionDatasetChecker,
+    BEVFusionEvaluator,
+    BEVFusionExportor,
+    BEVFusionTrainer,
+)
+from .multilabel_classification import (
+    MLClsDatasetChecker,
+    MLClsEvaluator,
+    MLClsExportor,
+    MLClsTrainer,
+)
+from .multilingual_speech_recognition import (
+    WhisperDatasetChecker,
+    WhisperEvaluator,
+    WhisperExportor,
+    WhisperTrainer,
+)
+from .object_detection import COCODatasetChecker, DetEvaluator, DetExportor, DetTrainer
+from .semantic_segmentation import (
+    SegDatasetChecker,
+    SegEvaluator,
+    SegExportor,
+    SegTrainer,
+)
+from .table_recognition import (
+    TableRecDatasetChecker,
+    TableRecEvaluator,
+    TableRecExportor,
+    TableRecTrainer,
+)
+from .text_detection import (
+    TextDetDatasetChecker,
+    TextDetEvaluator,
+    TextDetExportor,
+    TextDetTrainer,
+)
+from .text_recognition import (
+    TextRecDatasetChecker,
+    TextRecEvaluator,
+    TextRecExportor,
+    TextRecTrainer,
 )
 from .ts_anomaly_detection import (
     TSADDatasetChecker,
-    TSADTrainer,
     TSADEvaluator,
     TSADExportor,
+    TSADTrainer,
 )
 from .ts_classification import (
     TSCLSDatasetChecker,
-    TSCLSTrainer,
     TSCLSEvaluator,
     TSCLSExportor,
+    TSCLSTrainer,
 )
-
-from .face_recognition import (
-    FaceRecDatasetChecker,
-    FaceRecTrainer,
-    FaceRecEvaluator,
-    FaceRecExportor,
-)
-
-from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator
-
-module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.modules")
-BEVFusionDatasetChecker = getattr(module_3d_bev_detection, "BEVFusionDatasetChecker")
-BEVFusionTrainer = getattr(module_3d_bev_detection, "BEVFusionTrainer")
-BEVFusionEvaluator = getattr(module_3d_bev_detection, "BEVFusionEvaluator")
-BEVFusionExportor = getattr(module_3d_bev_detection, "BEVFusionExportor")
-
-from .keypoint_detection import (
-    KeypointDatasetChecker,
-    KeypointTrainer,
-    KeypointEvaluator,
-    KeypointExportor,
-)
+from .ts_forecast import TSFCDatasetChecker, TSFCEvaluator, TSFCTrainer
 from .video_classification import (
     VideoClsDatasetChecker,
-    VideoClsTrainer,
     VideoClsEvaluator,
     VideoClsExportor,
+    VideoClsTrainer,
 )
-
 from .video_detection import (
     VideoDetDatasetChecker,
-    VideoDetTrainer,
     VideoDetEvaluator,
     VideoDetExportor,
-)
-
-from .multilingual_speech_recognition import (
-    WhisperDatasetChecker,
-    WhisperTrainer,
-    WhisperEvaluator,
-    WhisperExportor,
+    VideoDetTrainer,
 )

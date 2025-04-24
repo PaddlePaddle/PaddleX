@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,22 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Dict, List
-from abc import ABC, abstractmethod
-
-import time
 import base64
-
-from langchain.docstore.document import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
-from langchain_community import vectorstores
+import time
+from abc import ABC, abstractmethod
+from typing import List
 
 from paddlex.utils import logging
 
+from .....utils.deps import class_requires_deps, is_dep_available
 from .....utils.subclass_register import AutoRegisterABCMetaClass
 
+if is_dep_available("langchain"):
+    from langchain.docstore.document import Document
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+if is_dep_available("langchain-community"):
+    from langchain_community import vectorstores
+    from langchain_community.vectorstores import FAISS
 
+
+@class_requires_deps("langchain", "langchain-community")
 class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
     """Base Retriever"""
 
@@ -112,7 +115,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
         text_list: List[str],
         block_size: int = 300,
         separators: List[str] = ["\t", "\n", "。", "\n\n", ""],
-    ) -> FAISS:
+    ) -> "FAISS":
         """
         Generates a vector database from a list of texts.
 
@@ -137,12 +140,12 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
             vectorstore = FAISS.from_documents(
                 documents=all_splits, embedding=self.embedding
             )
-        except ValueError as e:
+        except ValueError:
             vectorstore = None
 
         return vectorstore
 
-    def encode_vector_store_to_bytes(self, vectorstore: FAISS) -> str:
+    def encode_vector_store_to_bytes(self, vectorstore: "FAISS") -> str:
         """
         Encode the vector store serialized to bytes.
 
@@ -158,7 +161,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
             vectorstore = self.encode_vector_store(vectorstore.serialize_to_bytes())
         return vectorstore
 
-    def decode_vector_store_from_bytes(self, vectorstore: str) -> FAISS:
+    def decode_vector_store_from_bytes(self, vectorstore: str) -> "FAISS":
         """
         Decode a vector store from bytes according to the specified API type.
 
@@ -191,7 +194,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
     def similarity_retrieval(
         self,
         query_text_list: List[str],
-        vectorstore: FAISS,
+        vectorstore: "FAISS",
         sleep_time: float = 0.5,
         topk: int = 2,
         min_characters: int = 3500,
@@ -208,7 +211,6 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
         Returns:
             str: A concatenated string of all unique contexts found.
         """
-        C = []
         all_C = ""
         if vectorstore is None:
             return all_C

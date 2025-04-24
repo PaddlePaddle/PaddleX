@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
-
 
 def get_device_type():
+    import paddle
+
     device_str = paddle.get_device()
     return device_str.split(":")[0]
 
 
 def get_paddle_version():
-    version = paddle.__version__.split(".")
-    # ref: https://github.com/PaddlePaddle/Paddle/blob/release/3.0-beta2/setup.py#L316
+    import paddle
+
+    version = paddle.__version__
+    if "-" in version:
+        version, tag = version.split("-")
+    else:
+        tag = None
+    version = version.split(".")
     assert len(version) == 3
-    major_v, minor_v, patch_v = version
-    return major_v, minor_v, patch_v
+    major_v, minor_v, patch_v = map(int, version)
+    if tag:
+        return major_v, minor_v, patch_v, tag
+    else:
+        return major_v, minor_v, patch_v, None
+
+
+def get_paddle_cuda_version():
+    import paddle.version
+
+    cuda_version = paddle.version.cuda()
+    return tuple(map(int, cuda_version.split(".")))
+
+
+def get_paddle_cudnn_version():
+    import paddle.version
+
+    cudnn_version = paddle.version.cudnn()
+    return tuple(map(int, cudnn_version.split(".")))
+
+
+# Should we also support getting the runtime versions of CUDA and cuDNN?

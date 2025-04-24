@@ -19,7 +19,7 @@ comments: true
    </tr>
    <tr>
      <td>whisper_large</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_large.tar">whisper_large</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_large.tar">whisper_large</a></td>
      <td >680kh</td>
      <td>5.8G</td>
      <td>2.7 (Librispeech)</td>
@@ -27,28 +27,28 @@ comments: true
    </tr>
    <tr>
      <td>whisper_medium</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_medium.tar">whisper_medium</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_medium.tar">whisper_medium</a></td>
      <td>680kh</td>
      <td>2.9G</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_small.tar">whisper_small</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_small.tar">whisper_small</a></td>
      <td>680kh</td>
      <td>923M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_base</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_base.tar">whisper_base</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_base.tar">whisper_base</a></td>
      <td>680kh</td>
      <td>277M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_tiny.tar">whisper_tiny</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">whisper_tiny</a></td>
      <td>680kh</td>
      <td>145M</td>
      <td>-</td>
@@ -58,7 +58,7 @@ comments: true
 ## 2. 快速开始
 PaddleX 支持在本地使用命令行或 Python 体验多语种语音识别产线的效果。
 
-在本地使用多语种语音识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了 PaddleX 的 wheel 包安装。
+在本地使用多语种语音识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了 PaddleX 的 wheel 包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `speech`。
 
 ### 2.1 本地体验
 
@@ -122,6 +122,20 @@ for res in output:
 <td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。目前暂不支持。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置。目前暂不支持。</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

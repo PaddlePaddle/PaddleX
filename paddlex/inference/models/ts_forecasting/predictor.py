@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,31 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
-import numpy as np
-import pandas as pd
-import os
 import copy
+import os
+from typing import Any, Dict, List, Tuple, Union
+
+import pandas as pd
 
 from ....modules.ts_forecast.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
+from ..base import BasePredictor
 from ..common import (
-    TSCutOff,
     BuildTSDataset,
-    TSNormalize,
     TimeFeature,
+    TSCutOff,
+    TSNormalize,
     TStoArray,
     TStoBatch,
-    StaticInfer,
 )
 from .processors import ArraytoTS, TSDeNormalize
-from ..base import BasicPredictor
 from .result import TSFcResult
 
 
-class TSFcPredictor(BasicPredictor):
-    """TSFcPredictor that inherits from BasicPredictor."""
+class TSFcPredictor(BasePredictor):
+    """TSFcPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -95,11 +94,7 @@ class TSFcPredictor(BasicPredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["ArraytoTS"] = ArraytoTS(self.config["info_params"])
         if self.config.get("scale", None):

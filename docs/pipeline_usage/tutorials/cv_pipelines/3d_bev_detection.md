@@ -23,7 +23,7 @@ BEVFusion 是一种多模态 3D 目标检测模型，通过将环视摄像头图
 <th>介绍</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
+<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
 <td>53.9</td>
 <td>60.9</td>
 <td rowspan="2">BEVFusion是一种在BEV视角下的多模态融合检测模型，采用两个分支处理不同模态的数据，得到lidar和camera在BEV视角下的特征，camera分支采用LSS这种自底向上的方式来显式的生成图像BEV特征，lidar分支采用经典的点云检测网络，最后对两种模态的BEV特征进行对齐和融合，应用于检测head或分割head。
@@ -84,7 +84,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 暂不支持在线体验。
 
 ### 2.2 本地体验
-> ❗ 在本地使用3D多模态融合检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用3D多模态融合检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `cv`。
 
 #### 2.2.1 命令行方式体验
 
@@ -216,9 +216,17 @@ python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path=".
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
