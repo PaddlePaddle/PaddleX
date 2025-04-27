@@ -174,7 +174,7 @@ def setup(
                 uninstall_existing = uninstall_existing.lower() in ("y", "yes")
 
             if uninstall_existing:
-                repo.uninstall()
+                build_repo_group_installer(repo).uninstall()
                 repos_to_install.append(repo)
             else:
                 logging.warning(

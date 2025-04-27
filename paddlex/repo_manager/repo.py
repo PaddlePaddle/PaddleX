@@ -133,8 +133,10 @@ class PPRepository(object):
                 try:
                     pip_install_opts = ["--no-deps"]
                     if editable:
-                        pip_install_opts.append("-e")
-                    install_packages(["."], pip_install_opts=pip_install_opts)
+                        reqs = ["-e ."]
+                    else:
+                        reqs = ["."]
+                    install_packages(reqs, pip_install_opts=pip_install_opts)
                     install_external_deps(self.name, self.root_dir)
                 finally:
                     if clean:
@@ -142,14 +144,16 @@ class PPRepository(object):
                         tmp_build_dir = "build"
                         if osp.exists(tmp_build_dir):
                             shutil.rmtree(tmp_build_dir)
-        for e in self.meta.get("extra", []):
+        for e in self.meta.get("extra_pkgs", []):
             if isinstance(e, tuple):
                 with switch_working_dir(osp.join(self.root_dir, e[0])):
+                    pip_install_opts = ["--no-deps"]
+                    if e[3]:
+                        reqs = ["-e ."]
+                    else:
+                        reqs = ["."]
                     try:
-                        pip_install_opts = ["--no-deps"]
-                        if e[3]:
-                            pip_install_opts.append("-e")
-                        install_packages(["."], pip_install_opts=pip_install_opts)
+                        install_packages(reqs, pip_install_opts=pip_install_opts)
                     finally:
                         if clean:
                             tmp_build_dir = "build"
@@ -159,9 +163,9 @@ class PPRepository(object):
     def uninstall_packages(self):
         """uninstall_packages"""
         pkgs = []
-        if self.install_pkg:
+        if self.meta["install_pkg"]:
             pkgs.append(self.dist_name)
-        for e in self.meta.get("extra", []):
+        for e in self.meta.get("extra_pkgs", []):
             if isinstance(e, tuple):
                 pkgs.append(e[1])
         uninstall_packages(pkgs)
@@ -206,7 +210,7 @@ class PPRepository(object):
         """get_deps"""
         # Merge requirement files
         req_list = [self.main_req_file]
-        for e in self.meta.get("extra", []):
+        for e in self.meta.get("extra_pkgs", []):
             if isinstance(e, tuple):
                 e = e[2] or osp.join(e[0], "requirements.txt")
             req_list.append(e)
