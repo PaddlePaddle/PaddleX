@@ -150,13 +150,12 @@ def create_pipeline(
                 pipeline,
                 config["pipeline_name"],
             )
+        config = config.copy()
     pipeline_name = config["pipeline_name"]
-    if device is None:
-        device = config.get("device", None)
-    if use_hpip is None:
-        use_hpip = config.get("use_hpip", False)
-    if hpi_config is None:
-        hpi_config = config.get("hpi_config", None)
+    if use_hpip is not None:
+        config["use_hpip"] = use_hpip
+    if hpi_config is not None:
+        config["hpi_config"] = hpi_config
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,

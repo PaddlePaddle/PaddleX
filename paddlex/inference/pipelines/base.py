@@ -36,7 +36,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         self,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         *args,
         **kwargs,
@@ -47,8 +47,8 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         Args:
             device (str, optional): The device to use for prediction. Defaults to None.
             pp_option (PaddlePredictorOption, optional): The options for PaddlePredictor. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP). Defaults to False.
+            use_hpip (Optional[bool], optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to None.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The high-performance inference configuration dictionary.
                 Defaults to None.
@@ -87,6 +87,8 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         model_dir = config.get("model_dir", None)
         # Should we log if the actual parameter to use is different from the default?
         use_hpip = config.get("use_hpip", self.use_hpip)
+        if use_hpip is None:
+            use_hpip = False
         hpi_config = config.get("hpi_config", None)
         if self.hpi_config is not None:
             hpi_config = hpi_config or {}

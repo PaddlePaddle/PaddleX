@@ -35,7 +35,7 @@ class ShiTuV2Pipeline(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ):
         super().__init__(

@@ -39,7 +39,7 @@ class SealRecognitionPipeline(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the seal recognition pipeline.
@@ -48,8 +48,8 @@ class SealRecognitionPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP). Defaults to False.
+            use_hpip (Optional[bool], optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to None.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The high-performance inference configuration dictionary.
                 Defaults to None.
