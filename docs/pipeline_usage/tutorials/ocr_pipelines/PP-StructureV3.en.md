@@ -790,7 +790,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable the high-performance inference plugin. If set to `None`, the setting from the configuration file will be used.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
 <td>None</td>
 <td><code>None</code></td>
