@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from operator import itemgetter
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
@@ -76,7 +77,7 @@ class DocPreprocessorPipeline(BasePipeline):
             )
             self.doc_unwarping_model = self.create_model(doc_unwarping_config)
 
-        self.batch_sampler = ImageBatchSampler(batch_size=1)
+        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
     def check_model_settings_valid(self, model_settings: Dict) -> bool:
@@ -155,29 +156,42 @@ class DocPreprocessorPipeline(BasePipeline):
         if not self.check_model_settings_valid(model_settings):
             yield {"error": "the input params for model settings are invalid!"}
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            image_array = self.img_reader(batch_data.instances)[0]
+        for _, batch_data in enumerate(self.batch_sampler(input)):
+            image_arrays = self.img_reader(batch_data.instances)
 
             if model_settings["use_doc_orientation_classify"]:
-                pred = next(self.doc_ori_classify_model(image_array))
-                angle = int(pred["label_names"][0])
-                rot_img = rotate_image(image_array, angle)
+                preds = list(self.doc_ori_classify_model(image_arrays))
+                angles = []
+                rot_imgs = []
+                for img, pred in zip(image_arrays, preds):
+                    angle = int(pred["label_names"][0])
+                    angles.append(angle)
+                    rot_img = rotate_image(img, angle)
+                    rot_imgs.append(rot_img)
             else:
-                angle = -1
-                rot_img = image_array
+                angles = [-1 for _ in range(len(image_arrays))]
+                rot_imgs = image_arrays
 
             if model_settings["use_doc_unwarping"]:
-                output_img = next(self.doc_unwarping_model(rot_img))["doctr_img"]
+                output_imgs = list(
+                    map(itemgetter("doctr_img"), self.doc_unwarping_model(rot_imgs))
+                )
             else:
-                output_img = rot_img
+                output_imgs = rot_imgs
 
-            single_img_res = {
-                "input_path": batch_data.input_paths[0],
-                "page_index": batch_data.page_indexes[0],
-                "input_img": image_array,
-                "model_settings": model_settings,
-                "angle": angle,
-                "rot_img": rot_img,
-                "output_img": output_img,
-            }
-            yield DocPreprocessorResult(single_img_res)
+            for input_path, page_index, image_array, output_img in zip(
+                batch_data.input_paths,
+                batch_data.page_indexes,
+                image_arrays,
+                output_imgs,
+            ):
+                single_img_res = {
+                    "input_path": input_path,
+                    "page_index": page_index,
+                    "input_img": image_array,
+                    "model_settings": model_settings,
+                    "angle": angle,
+                    "rot_img": rot_img,
+                    "output_img": output_img,
+                }
+                yield DocPreprocessorResult(single_img_res)

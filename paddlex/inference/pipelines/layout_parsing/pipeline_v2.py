@@ -27,6 +27,7 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingBlock, LayoutParsingResultV2
@@ -47,11 +48,8 @@ from .utils import (
 from .xycut_enhanced import xycut_enhanced
 
 
-@pipeline_requires_extra("ocr")
-class LayoutParsingPipelineV2(BasePipeline):
+class _LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
-
-    entities = ["PP-StructureV3"]
 
     def __init__(
         self,
@@ -82,7 +80,8 @@ class LayoutParsingPipelineV2(BasePipeline):
         )
 
         self.inintial_predictor(config)
-        self.batch_sampler = ImageBatchSampler(batch_size=1)
+        batch_size = config.get("batch_size", 1)
+        self.batch_sampler = ImageBatchSampler(batch_size=batch_size)
 
         self.img_reader = ReadImage(format="BGR")
 
@@ -376,7 +375,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     crop_box = get_bbox_intersection(overall_ocr_box, layout_box)
                     x1, y1, x2, y2 = [int(i) for i in crop_box]
                     crop_img = np.array(image)[y1:y2, x1:x2]
-                    crop_img_rec_res = next(text_rec_model([crop_img]))
+                    crop_img_rec_res = list(text_rec_model([crop_img]))[0]
                     crop_img_dt_poly = get_bbox_intersection(
                         overall_ocr_dt_poly, layout_box, return_format="poly"
                     )
@@ -453,7 +452,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         int(span[0][1]) : int(span[0][3]),
                         int(span[0][0]) : int(span[0][2]),
                     ]
-                    crop_img_rec_res = next(text_rec_model([crop_img]))
+                    crop_img_rec_res = list(text_rec_model([crop_img]))[0]
                     crop_img_rec_score = crop_img_rec_res["rec_score"]
                     crop_img_rec_text = crop_img_rec_res["rec_text"]
                     span[1] = (
@@ -854,55 +853,65 @@ class LayoutParsingPipelineV2(BasePipeline):
             yield {"error": "the input params for model settings are invalid!"}
 
         for batch_data in self.batch_sampler(input):
-            image_array = self.img_reader(batch_data.instances)[0]
+            image_arrays = self.img_reader(batch_data.instances)
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_res = list(
                     self.doc_preprocessor_pipeline(
-                        image_array,
+                        image_arrays,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     ),
                 )
             else:
-                doc_preprocessor_res = {"output_img": image_array}
+                doc_preprocessor_res = [{"output_img": arr} for arr in image_arrays]
 
-            doc_preprocessor_image = doc_preprocessor_res["output_img"]
+            doc_preprocessor_images = [
+                item["output_img"] for item in doc_preprocessor_res
+            ]
 
-            layout_det_res = next(
+            layout_det_res = list(
                 self.layout_det_model(
-                    doc_preprocessor_image,
+                    doc_preprocessor_images,
                     threshold=layout_threshold,
                     layout_nms=layout_nms,
                     layout_unclip_ratio=layout_unclip_ratio,
                     layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                 )
             )
-            imgs_in_doc = gather_imgs(doc_preprocessor_image, layout_det_res["boxes"])
+            imgs_in_doc = [
+                gather_imgs(img, res["boxes"])
+                for img, res in zip(doc_preprocessor_images, layout_det_res)
+            ]
 
             if model_settings["use_formula_recognition"]:
-                formula_res_all = next(
+                formula_res_all = list(
                     self.formula_recognition_pipeline(
-                        doc_preprocessor_image,
+                        doc_preprocessor_images,
                         use_layout_detection=False,
                         use_doc_orientation_classify=False,
                         use_doc_unwarping=False,
                         layout_det_res=layout_det_res,
                     ),
                 )
-                formula_res_list = formula_res_all["formula_res_list"]
+                formula_res_lists = [
+                    item["formula_res_list"] for item in formula_res_all
+                ]
             else:
-                formula_res_list = []
+                formula_res_lists = [[] for _ in doc_preprocessor_res]
 
-            for formula_res in formula_res_list:
-                x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
-                doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = 255.0
+            for doc_preprocessor_image, formula_res_list in zip(
+                doc_preprocessor_images, formula_res_lists
+            ):
+                for formula_res in formula_res_list:
+                    x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+                    doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = 255.0
 
             if (
                 model_settings["use_general_ocr"]
                 or model_settings["use_table_recognition"]
             ):
-                overall_ocr_res = next(
+                overall_ocr_res = list(
                     self.general_ocr_pipeline(
                         doc_preprocessor_image,
                         use_textline_orientation=use_textline_orientation,
@@ -913,7 +922,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         text_det_unclip_ratio=text_det_unclip_ratio,
                         text_rec_score_thresh=text_rec_score_thresh,
                     ),
-                )
+                )[0]
             else:
                 overall_ocr_res = {}
 
@@ -961,7 +970,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     table_contents["rec_polys"].append(poly_points)
                     table_contents["rec_scores"].append(img["score"])
 
-                table_res_all = next(
+                table_res_all = list(
                     self.table_recognition_pipeline(
                         doc_preprocessor_image,
                         use_doc_orientation_classify=False,
@@ -975,13 +984,13 @@ class LayoutParsingPipelineV2(BasePipeline):
                         use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
                         use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
                     ),
-                )
+                )[0]
                 table_res_list = table_res_all["table_res_list"]
             else:
                 table_res_list = []
 
             if model_settings["use_seal_recognition"]:
-                seal_res_all = next(
+                seal_res_all = list(
                     self.seal_recognition_pipeline(
                         doc_preprocessor_image,
                         use_doc_orientation_classify=False,
@@ -995,7 +1004,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         seal_det_unclip_ratio=seal_det_unclip_ratio,
                         seal_rec_score_thresh=seal_rec_score_thresh,
                     ),
-                )
+                )[0]
                 seal_res_list = seal_res_all["seal_res_list"]
             else:
                 seal_res_list = []
@@ -1085,3 +1094,15 @@ class LayoutParsingPipelineV2(BasePipeline):
             )
 
         return markdown_texts
+
+
+@pipeline_requires_extra("ocr")
+class LayoutParsingPipelineV2(AutoParallelImageSimpleInferencePipeline):
+    entities = ["PP-StructureV3"]
+
+    @property
+    def _pipeline_cls(self):
+        return _LayoutParsingPipelineV2
+
+    def _get_batch_size(self, config):
+        return 1
