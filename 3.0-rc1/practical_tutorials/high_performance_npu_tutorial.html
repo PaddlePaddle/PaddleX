@@ -5713,20 +5713,20 @@ You're not viewing the latest version.
 <p>当前 PaddleX 高性能推理支持昇腾 910B、310P、310B 芯片（如果您有其他型号的相关需求，请提交issue告知我们）。考虑到环境差异性，我们推荐使用<b>飞桨官方提供的昇腾开发镜像</b>完成环境准备。</p>
 <h2 id="1docker">1、docker环境准备<a class="headerlink" href="#1docker" title="Permanent link">&para;</a></h2>
 <ul>
-<li>拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.0。</li>
+<li>拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.T113。</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 910B x86 架构</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-x86_64-gcc84
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># 910B aarch64 架构</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-aarch64-gcc84
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-aarch64-gcc84
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># 310P aarch64 架构</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310p-base-aarch64-gcc84
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310p-base-aarch64-gcc84
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 310P x86 架构</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310p-base-x86_64-gcc84
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310p-base-x86_64-gcc84
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># 310B aarch64 架构</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310b-base-aarch64-gcc84
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310b-base-aarch64-gcc84
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 310B x86 架构</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310b-base-x86_64-gcc84
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310b-base-x86_64-gcc84
 </span></code></pre></div>
 <ul>
 <li>以 910B x86 架构为例，使用如下命令启动容器，ASCEND_RT_VISIBLE_DEVICES 指定可见的 NPU 卡号</li>
@@ -5737,23 +5737,21 @@ You're not viewing the latest version.
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-v<span class="w"> </span>/usr/local/bin/npu-smi:/usr/local/bin/npu-smi<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-v<span class="w"> </span>/usr/local/dcmi:/usr/local/dcmi<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-e<span class="w"> </span><span class="nv">ASCEND_RT_VISIBLE_DEVICES</span><span class="o">=</span><span class="s2">&quot;0,1,2,3,4,5,6,7&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-x86_64-gcc84<span class="w"> </span>/bin/bash
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84<span class="w"> </span>/bin/bash
 </span></code></pre></div>
 <h2 id="2paddlex">2、安装PaddleX及高性能推理插件<a class="headerlink" href="#2paddlex" title="Permanent link">&para;</a></h2>
 <h3 id="21-paddlex">2.1 安装PaddleX<a class="headerlink" href="#21-paddlex" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/PaddlePaddle/PaddleX.git
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>PaddleX
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>checkout<span class="w"> </span>develop
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[base]&quot;</span>
 </span></code></pre></div>
 <h3 id="22">2.2 安装高性能推理插件<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
 <p>高性能推理插件的 whl 包已经上传至 PaddleX 官方源，可以直接下载安装，也可以手动编译安装。</p>
 <ul>
 <li>推荐直接下载安装 PaddleX 官方提供的 whl 包</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>regex
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># 使用PaddleX命令安装高性能推理插件</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>paddlex<span class="w"> </span>--install<span class="w"> </span>hpi-npu
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 使用PaddleX命令安装高性能推理插件</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>paddlex<span class="w"> </span>--install<span class="w"> </span>hpi-npu
 </span></code></pre></div>
 <ul>
 <li>手动编译安装</li>
@@ -5761,12 +5759,12 @@ You're not viewing the latest version.
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>PaddleX/libs/ultra-infer/python
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">unset</span><span class="w"> </span>http_proxy<span class="w"> </span>https_proxy
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># 使能om，onnx后端，禁用paddle后端，禁用gpu</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ENABLE_OM_BACKEND</span><span class="o">=</span>ON<span class="w"> </span><span class="nv">ENABLE_ORT_BACKEND</span><span class="o">=</span>ON<span class="w"> </span><span class="nv">ENABLE_PADDLE_BACKEND</span><span class="o">=</span>OFF<span class="w"> </span><span class="nv">WITH_GPU</span><span class="o">=</span>OFF
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ENABLE_OM_BACKEND</span><span class="o">=</span>ON<span class="w"> </span><span class="nv">ENABLE_ORT_BACKEND</span><span class="o">=</span>ON<span class="w"> </span><span class="nv">ENABLE_PADDLE_BACKEND</span><span class="o">=</span>OFF<span class="w"> </span><span class="nv">WITH_GPU</span><span class="o">=</span>OFF<span class="w"> </span><span class="nv">DEVICE_TYPE</span><span class="o">=</span>NPU
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 注意，仅aarch64机器需要设置NPU_HOST_LIB，指定libascend库</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">NPU_HOST_LIB</span><span class="o">=</span>/usr/local/Ascend/ascend-toolkit/latest/aarch64-linux/lib64
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>python<span class="w"> </span>setup.py<span class="w"> </span>build
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>python<span class="w"> </span>setup.py<span class="w"> </span>bdist_wheel
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dist/ultra_infer_python*.whl
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dist/ultra_infer_npu*.whl
 </span></code></pre></div>
 <h2 id="3">3、单模型推理<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
 <p>在昇腾上，PaddleX 高性能推理插件支持 OM 和 ORT 两种后端，其中 OM 后端基于 OM 模型，使用 npu 推理，性能更优；ORT 后端基于 ONNX 模型，使用 cpu 推理，支持模型较全，基本涵盖<a href="../support_list/model_list_npu.html">PaddleX模型列表（昇腾 NPU）</a>所有模型。</p>
@@ -6084,8 +6082,8 @@ You're not viewing the latest version.
 </span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>需要注意的是，因为底层硬件的支持问题，在 arm 机器上，会出现 PP-OCRv4_mobile_det 推理卡住的问题，可以修改 OCR.yml 配置文件，将 PP-OCRv4_mobile_det 的推理后端设置为 onnxruntime，来规避这个问题。这个问题在后续版本中会修复。</p>
-<p>修改 OCR.yml 如下：</p>
+<p>值得一提的是，因为 OM 推理不支持动态 shape，在部分图片上推理精度可能会受影响，可以修改 OCR.yml 配置文件，将推理精度不对的模型推理后端设置为 onnxruntime，来规避这个问题。</p>
+<p>例如修改 PP-OCRv4_mobile_det 的推理后端，可修改 OCR.yml 如下：</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">pipeline_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OCR</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nt">text_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">general</span>
@@ -6158,16 +6156,17 @@ You're not viewing the latest version.
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="5">5、常见问题解决方法<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
-<h3 id="51-runtimeerror-ultrainfer-initalized-failed-error-libopencv_flannso34-cannot-open-shared-object-file-no-such-file-or-directory">5.1 “RuntimeError: UltraInfer initalized failed! Error: libopencv_flann.so.3.4: cannot open shared object file: No such file or directory”<a class="headerlink" href="#51-runtimeerror-ultrainfer-initalized-failed-error-libopencv_flannso34-cannot-open-shared-object-file-no-such-file-or-directory" title="Permanent link">&para;</a></h3>
-<p>找不到 libopencv_flann.so.3.4 库，查找到该库在机器上的路径，然后将路径添加到 LD_LIBRARY_PATH 中，如：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/lib/python3.10/dist-packages/ultra_infer/libs/third_libs/opencv/lib:<span class="nv">$LD_LIBRARY_PATH</span>
-</span></code></pre></div>
-<h3 id="52-cannot-allocate-memory-in-static-tls-block">5.2 “cannot allocate memory in static TLS block”<a class="headerlink" href="#52-cannot-allocate-memory-in-static-tls-block" title="Permanent link">&para;</a></h3>
+<h3 id="51-cannot-allocate-memory-in-static-tls-block">5.1 “cannot allocate memory in static TLS block”<a class="headerlink" href="#51-cannot-allocate-memory-in-static-tls-block" title="Permanent link">&para;</a></h3>
 <p>在 arm 机器上，可能会出现 “xxx.so cannot allocate memory in static TLS block” 的问题，查找报错的.so文件在机器上的路径，然后添加到 LD_PRELOAD 中，如：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/lib/aarch64-linux-gnu/libgomp.so.1:<span class="nv">$LD_PRELOAD</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/lib/aarch64-linux-gnu/libGLdispatch.so.0:<span class="nv">$LD_PRELOAD</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/local/lib/python3.10/dist-packages/scikit_learn.libs/libgomp-d22c30c5.so.1.0.0:<span class="nv">$LD_PRELOAD</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/lib/aarch64-linux-gnu/libgomp.so.1:<span class="nv">$LD_PRELOAD</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/lib/aarch64-linux-gnu/libGLdispatch.so.0:<span class="nv">$LD_PRELOAD</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/local/lib/python3.10/dist-packages/scikit_learn.libs/libgomp-d22c30c5.so.1.0.0:<span class="nv">$LD_PRELOAD</span>
 </span></code></pre></div>
+<h3 id="52">5.2 模型推理精度问题<a class="headerlink" href="#52" title="Permanent link">&para;</a></h3>
+<p>如果模型推理精度有问题，可以尝试以下方法：
+1. 修改模型推理后端，例如将 om 改为 onnxruntime。
+2. 根据实际图片调整模型输入 shape。
+3. 修改模型推理精度，例如将 fp16 改为 fp32。</p>
 <p>更多关于高性能推理的使用教程，可以参考<a href="../pipeline_deploy/high_performance_inference.html">PaddleX 高性能推理指南</a></p>
 
 
@@ -6191,7 +6190,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年4月27日 07:40:37">2025年4月27日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年4月28日 13:15:16">2025年4月28日</span>
   </span>
 
     
@@ -6201,7 +6200,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年4月27日 07:40:37">2025年4月27日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年4月28日 13:15:16">2025年4月28日</span>
   </span>
 
     
