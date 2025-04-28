@@ -8,21 +8,21 @@ comments: true
 
 ## 1、docker环境准备
 
-* 拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.0。
+* 拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.T113。
 
 ```bash
 # 910B x86 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84
 # 910B aarch64 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-aarch64-gcc84
 # 310P aarch64 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310p-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310p-base-aarch64-gcc84
 # 310P x86 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310p-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310p-base-x86_64-gcc84
 # 310B aarch64 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310b-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310b-base-aarch64-gcc84
 # 310B x86 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310b-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310b-base-x86_64-gcc84
 ```
 
 * 以 910B x86 架构为例，使用如下命令启动容器，ASCEND_RT_VISIBLE_DEVICES 指定可见的 NPU 卡号
@@ -34,7 +34,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
     -v /usr/local/bin/npu-smi:/usr/local/bin/npu-smi \
     -v /usr/local/dcmi:/usr/local/dcmi \
     -e ASCEND_RT_VISIBLE_DEVICES="0,1,2,3,4,5,6,7" \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-x86_64-gcc84 /bin/bash
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84 /bin/bash
 ```
 
 ## 2、安装PaddleX及高性能推理插件
@@ -43,8 +43,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-git checkout develop
-pip install -e .
+pip install -e ".[base]"
 ```
 
 ### 2.2 安装高性能推理插件
@@ -54,7 +53,6 @@ pip install -e .
 * 推荐直接下载安装 PaddleX 官方提供的 whl 包
 
 ```bash
-pip install regex
 # 使用PaddleX命令安装高性能推理插件
 paddlex --install hpi-npu
 ```
@@ -65,12 +63,12 @@ paddlex --install hpi-npu
 cd PaddleX/libs/ultra-infer/python
 unset http_proxy https_proxy
 # 使能om，onnx后端，禁用paddle后端，禁用gpu
-export ENABLE_OM_BACKEND=ON ENABLE_ORT_BACKEND=ON ENABLE_PADDLE_BACKEND=OFF WITH_GPU=OFF
+export ENABLE_OM_BACKEND=ON ENABLE_ORT_BACKEND=ON ENABLE_PADDLE_BACKEND=OFF WITH_GPU=OFF DEVICE_TYPE=NPU
 # 注意，仅aarch64机器需要设置NPU_HOST_LIB，指定libascend库
 export NPU_HOST_LIB=/usr/local/Ascend/ascend-toolkit/latest/aarch64-linux/lib64
 python setup.py build
 python setup.py bdist_wheel
-python -m pip install dist/ultra_infer_python*.whl
+python -m pip install dist/ultra_infer_npu*.whl
 ```
 
 ## 3、单模型推理
@@ -303,9 +301,9 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-需要注意的是，因为底层硬件的支持问题，在 arm 机器上，会出现 PP-OCRv4_mobile_det 推理卡住的问题，可以修改 OCR.yml 配置文件，将 PP-OCRv4_mobile_det 的推理后端设置为 onnxruntime，来规避这个问题。这个问题在后续版本中会修复。
+值得一提的是，因为 OM 推理不支持动态 shape，在部分图片上推理精度可能会受影响，可以修改 OCR.yml 配置文件，将推理精度不对的模型推理后端设置为 onnxruntime，来规避这个问题。
 
-修改 OCR.yml 如下：
+例如修改 PP-OCRv4_mobile_det 的推理后端，可修改 OCR.yml 如下：
 
 ```yaml
 pipeline_name: OCR
@@ -384,15 +382,7 @@ for res in output:
 ```
 
 ## 5、常见问题解决方法
-### 5.1 “RuntimeError: UltraInfer initalized failed! Error: libopencv_flann.so.3.4: cannot open shared object file: No such file or directory”
-
-找不到 libopencv_flann.so.3.4 库，查找到该库在机器上的路径，然后将路径添加到 LD_LIBRARY_PATH 中，如：
-
-```bash
-export LD_LIBRARY_PATH=/usr/local/lib/python3.10/dist-packages/ultra_infer/libs/third_libs/opencv/lib:$LD_LIBRARY_PATH
-```
-
-### 5.2 “cannot allocate memory in static TLS block”
+### 5.1 “cannot allocate memory in static TLS block”
 
 在 arm 机器上，可能会出现 “xxx.so cannot allocate memory in static TLS block” 的问题，查找报错的.so文件在机器上的路径，然后添加到 LD_PRELOAD 中，如：
 
@@ -401,5 +391,12 @@ export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:$LD_PRELOAD
 export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libGLdispatch.so.0:$LD_PRELOAD
 export LD_PRELOAD=/usr/local/lib/python3.10/dist-packages/scikit_learn.libs/libgomp-d22c30c5.so.1.0.0:$LD_PRELOAD
 ```
+
+### 5.2 模型推理精度问题
+
+如果模型推理精度有问题，可以尝试以下方法：
+1. 修改模型推理后端，例如将 om 改为 onnxruntime。
+2. 根据实际图片调整模型输入 shape。
+3. 修改模型推理精度，例如将 fp16 改为 fp32。
 
 更多关于高性能推理的使用教程，可以参考[PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)
