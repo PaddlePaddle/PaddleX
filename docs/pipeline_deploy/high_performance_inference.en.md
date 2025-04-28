@@ -263,7 +263,7 @@ The optional values for `backend` are as follows:
   <tr>
     <td><code>paddle</code></td>
     <td>Paddle Inference engine; supports enhancing GPU inference performance using the Paddle Inference TensorRT subgraph engine.</td>
-    <td>CPU, GPU</td>
+    <td>CPU, GPU, NPU</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>
@@ -322,7 +322,7 @@ The available configuration items for `backend_config` vary for different backen
 
 ### 2.3 Modifying the High-Performance Inference Configuration
 
-Due to the diversity of actual deployment environments and requirements, the default configuration might not meet all needs. In such cases, manual adjustment of the high-performance inference configuration may be necessary. Users can modify the configuration by editing the **pipeline/module configuration file** or by passing the `hpi_config` field in the parameters via **CLI** or **Python API**. **Parameters passed via CLI or Python API will override the settings in the pipeline/module configuration file.** The following examples illustrate how to modify the configuration.
+Due to the diversity of actual deployment environments and requirements, the default configuration might not meet all needs. In such cases, manual adjustment of the high-performance inference configuration may be necessary. Users can modify the configuration by editing the **pipeline/module configuration file** or by passing the `hpi_config` field in the parameters via **CLI** or **Python API**. **Parameters passed via CLI or Python API will override the settings in the pipeline/module configuration file.** Different levels of configurations in the config file are automatically merged, and the deepest-level settings take the highest priority. The following examples illustrate how to modify the configuration.
 
 **For the general OCR pipeline, use the `onnxruntime` backend for all models:**
 

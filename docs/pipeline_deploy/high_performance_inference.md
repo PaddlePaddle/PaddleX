@@ -264,7 +264,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   <tr>
     <td><code>paddle</code></td>
     <td>Paddle Inference 推理引擎，支持通过 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
-    <td>CPU，GPU</td>
+    <td>CPU，GPU，NPU</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>
@@ -323,7 +323,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.3 修改高性能推理配置
 
-由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件中的设置**。以下将结合一些例子介绍如何修改配置。
+由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件中的设置**。配置文件中不同层级的配置将自动合并，最深层的配置具有最高的优先级。以下将结合一些例子介绍如何修改配置。
 
 **通用OCR产线的所有模型使用 `onnxruntime` 后端：**
 
