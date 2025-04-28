@@ -118,17 +118,9 @@ class BasePredictor(
         self.batch_sampler.batch_size = batch_size
         self._use_hpip = use_hpip
         if not use_hpip:
-            if hpi_config is not None:
-                logging.warning(
-                    "`hpi_config` will be ignored when not using the high-performance inference plugin."
-                )
             self._pp_option = self._prepare_pp_option(pp_option, device)
         else:
             require_hpip()
-            if pp_option is not None:
-                logging.warning(
-                    "`pp_option` will be ignored when using the high-performance inference plugin."
-                )
             self._hpi_config = self._prepare_hpi_config(hpi_config, device)
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
