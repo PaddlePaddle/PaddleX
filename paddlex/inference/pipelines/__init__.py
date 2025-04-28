@@ -158,7 +158,7 @@ def create_pipeline(
     else:
         config.pop("use_hpip", None)
     if hpi_config is None:
-        hpi_config = config.pop("hpi_config")
+        hpi_config = config.pop("hpi_config", None)
     else:
         config.pop("hpi_config", None)
 
