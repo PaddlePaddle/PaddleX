@@ -34,7 +34,7 @@ class RotatedObjectDetectionPipeline(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: Optional[bool] = None,
+        use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """
@@ -44,10 +44,10 @@ class RotatedObjectDetectionPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing model and other parameters.
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
-            use_hpip (Optional[bool], optional): Whether to use the high-performance
-                inference plugin (HPIP). Defaults to None.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The high-performance inference configuration dictionary.
+                The default high-performance inference configuration dictionary.
                 Defaults to None.
         """
         super().__init__(

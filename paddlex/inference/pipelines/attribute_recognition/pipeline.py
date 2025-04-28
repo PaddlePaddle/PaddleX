@@ -34,7 +34,7 @@ class AttributeRecPipeline(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: Optional[bool] = None,
+        use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ):
         super().__init__(
