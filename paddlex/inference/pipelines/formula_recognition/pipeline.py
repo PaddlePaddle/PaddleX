@@ -270,7 +270,7 @@ class FormulaRecognitionPipeline(BasePipeline):
                         try:
                             layout_det_res = next(external_layout_det_results)
                         except StopIteration:
-                            raise ValueError("No more layout det results.")
+                            raise ValueError("No more layout det results")
                         layout_det_results.append(layout_det_res)
 
                 formula_crop_imgs = []

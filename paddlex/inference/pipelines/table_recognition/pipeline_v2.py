@@ -842,7 +842,7 @@ class TableRecognitionPipelineV2(BasePipeline):
                     try:
                         overall_ocr_res = next(external_overall_ocr_results)
                     except StopIteration:
-                        raise ValueError("No more layout det results.")
+                        raise ValueError("No more overall OCR results")
                     overall_ocr_results.append(overall_ocr_res)
 
                 if use_table_cells_ocr_results:
@@ -888,7 +888,7 @@ class TableRecognitionPipelineV2(BasePipeline):
                         try:
                             layout_det_res = next(external_layout_det_results)
                         except StopIteration:
-                            raise ValueError("No more layout det results.")
+                            raise ValueError("No more layout det results")
                         layout_det_results.append(layout_det_res)
 
                 cropped_imgs = []
