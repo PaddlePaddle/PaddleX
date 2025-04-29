@@ -600,11 +600,14 @@ class TableRecognitionPipelineV2(BasePipeline):
         use_e2e_model = False
 
         wired_table_indices = [
-            table_cls_results[i] == "wired_table" for i in range(len(table_cls_results))
+            i
+            for i in range(len(table_cls_results))
+            if table_cls_results[i] == "wired_table"
         ]
         wireless_table_indices = [
-            table_cls_results[i] == "wireless_table"
+            i
             for i in range(len(table_cls_results))
+            if table_cls_results[i] == "wireless_table"
         ]
 
         table_structure_preds = [{} for _ in table_cls_results]
@@ -744,7 +747,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         use_doc_unwarping: Optional[bool] = None,
         use_layout_detection: Optional[bool] = None,
         use_ocr_model: Optional[bool] = None,
-        overall_ocr_res: Optional[OCRResult] = None,
+        overall_ocr_res: Optional[Union[OCRResult, List[OCRResult]]] = None,
         layout_det_res: Optional[Union[DetResult, List[DetResult]]] = None,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
@@ -765,7 +768,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             use_layout_detection (bool): Whether to use layout detection.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
-            overall_ocr_res (OCRResult): The overall OCR result with convert_points_to_boxes information.
+            overall_ocr_res (Union[OCRResult, List[OCRResult]]): The overall OCR results with convert_points_to_boxes information.
                 It will be used if it is not None and use_ocr_model is False.
             layout_det_res (Union[DetResult, List[DetResult]]): The layout detection result(s).
                 It will be used if it is not None and use_layout_detection is False.
@@ -791,6 +794,12 @@ class TableRecognitionPipelineV2(BasePipeline):
         ):
             yield {"error": "the input params for model settings are invalid!"}
 
+        external_overall_ocr_results = overall_ocr_res
+        if external_overall_ocr_results is not None:
+            if not isinstance(external_overall_ocr_results, list):
+                external_overall_ocr_results = [external_overall_ocr_results]
+            external_overall_ocr_results = iter(external_overall_ocr_results)
+
         external_layout_det_results = layout_det_res
         if external_layout_det_results is not None:
             if not isinstance(external_layout_det_results, list):
@@ -815,7 +824,6 @@ class TableRecognitionPipelineV2(BasePipeline):
                 item["output_img"] for item in doc_preprocessor_results
             ]
 
-            overall_ocr_results = None
             if model_settings["use_ocr_model"]:
                 overall_ocr_results = list(
                     self.general_ocr_pipeline(
@@ -828,11 +836,21 @@ class TableRecognitionPipelineV2(BasePipeline):
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
                 )
-            elif use_table_cells_ocr_results:
-                assert self.general_ocr_config_bak is not None
-                self.general_ocr_pipeline = self.create_pipeline(
-                    self.general_ocr_config_bak
-                )
+            else:
+                overall_ocr_results = []
+                for _ in doc_preprocessor_images:
+                    try:
+                        overall_ocr_res = next(external_overall_ocr_results)
+                    except StopIteration:
+                        raise ValueError("No more layout det results.")
+                    overall_ocr_results.append(overall_ocr_res)
+
+                if use_table_cells_ocr_results:
+                    # FIXME: This creates a new pipeline on each call.
+                    assert self.general_ocr_config_bak is not None
+                    self.general_ocr_pipeline = self.create_pipeline(
+                        self.general_ocr_config_bak
+                    )
 
             if (
                 not model_settings["use_layout_detection"]
@@ -875,9 +893,10 @@ class TableRecognitionPipelineV2(BasePipeline):
 
                 cropped_imgs = []
                 table_boxes = []
+                repeated_overall_ocr_results = []
                 chunk_indices = [0]
-                for image_array, layout_det_res in zip(
-                    image_arrays, layout_det_results
+                for image_array, layout_det_res, overall_ocr_res in zip(
+                    image_arrays, layout_det_results, overall_ocr_results
                 ):
                     for box_info in layout_det_res["boxes"]:
                         if box_info["label"].lower() in ["table"]:
@@ -885,11 +904,12 @@ class TableRecognitionPipelineV2(BasePipeline):
                             crop_img_info = crop_img_info[0]
                             cropped_imgs.append(crop_img_info["img"])
                             table_boxes.append(crop_img_info["box"])
+                            repeated_overall_ocr_results.append(overall_ocr_res)
                     chunk_indices.append(len(cropped_imgs))
 
                 flat_table_results = self._predict(
                     cropped_imgs,
-                    overall_ocr_results,
+                    repeated_overall_ocr_results,
                     table_boxes,
                     use_table_cells_ocr_results,
                     use_e2e_wired_table_rec_model,
@@ -910,14 +930,16 @@ class TableRecognitionPipelineV2(BasePipeline):
             for (
                 input_path,
                 page_index,
-                layout_det_res,
                 doc_preprocessor_res,
+                layout_det_res,
+                overall_ocr_res,
                 table_results_for_img,
             ) in zip(
                 batch_data.input_paths,
                 batch_data.page_indexes,
-                layout_det_results,
                 doc_preprocessor_results,
+                layout_det_results,
+                overall_ocr_results,
                 table_results,
             ):
                 single_img_res = {
