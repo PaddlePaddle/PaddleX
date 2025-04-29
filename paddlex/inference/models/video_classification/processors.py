@@ -18,6 +18,7 @@ from typing import List, Optional, Sequence, Tuple, Union
 import numpy as np
 
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 if is_dep_available("opencv-contrib-python"):
@@ -132,7 +133,7 @@ class Scale:
         Returns:
             List[np.ndarray]: A list of videos after scaling, where each video is a list of images.
         """
-        return [self.scale(video) for video in videos]
+        return maybe_parallelize(self.scale, videos)
 
 
 @benchmark.timeit
@@ -186,7 +187,7 @@ class CenterCrop:
         Returns:
             List[np.ndarray]: A list of videos after center cropping.
         """
-        return [self.center_crop(video) for video in videos]
+        return maybe_parallelize(self.center_crop, videos)
 
 
 @benchmark.timeit
@@ -240,7 +241,7 @@ class Image2Array:
         Returns:
             List[np.ndarray]: A list of numpy arrays, one for each video.
         """
-        return [self.img2array(video) for video in videos]
+        return maybe_parallelize(self.img2array, videos)
 
 
 @benchmark.timeit
@@ -319,7 +320,7 @@ class NormalizeVideo:
         Returns:
             List[np.ndarray]: A list of normalized videos as numpy arrays.
         """
-        return [self.normalize_video(video) for video in videos]
+        return maybe_parallelize(self.normalize_video, videos)
 
 
 @benchmark.timeit

@@ -14,6 +14,7 @@
 
 from typing import List, Optional
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 from ..object_detection.processors import restructured_boxes
 
@@ -91,12 +92,13 @@ class InstanceSegPostProcess(object):
         Returns:
             List[Boxes]: The list of post-processed detection boxes.
         """
-        outputs = []
-        for data, output in zip(datas, batch_outputs):
-            boxes_masks = self.apply(
+        outputs = maybe_parallelize(
+            lambda data, output: self.apply(
                 img_size=data["ori_img_size"],
                 **output,
                 threshold=threshold if threshold is not None else self.threshold
-            )
-            outputs.append(boxes_masks)
+            ),
+            datas,
+            batch_outputs,
+        )
         return outputs

@@ -14,6 +14,7 @@
 
 import numpy as np
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -28,5 +29,5 @@ class NormalizeFeatures:
         return features
 
     def __call__(self, preds):
-        normalized_features = [self._normalize(feature) for feature in preds]
+        normalized_features = maybe_parallelize(self._normalize, preds)
         return normalized_features

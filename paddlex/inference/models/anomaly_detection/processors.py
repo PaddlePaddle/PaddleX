@@ -15,6 +15,7 @@
 import numpy as np
 
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 if is_dep_available("scikit-image"):
@@ -34,7 +35,7 @@ class MapToMask:
 
     def __call__(self, preds, *args):
         """apply"""
-        return [self.apply(pred) for pred in preds]
+        return maybe_parallelize(self.apply, preds)
 
     def apply(
         self,

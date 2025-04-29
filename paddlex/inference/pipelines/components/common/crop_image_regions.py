@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import copy
 from typing import List, Tuple
 
 import numpy as np
 from numpy.linalg import norm
 
 from .....utils.deps import class_requires_deps, is_dep_available
+from .....utils.parallel import maybe_parallelize
 from .base_operator import BaseOperator
 from .seal_det_warp import AutoRectifier
 
@@ -53,15 +53,16 @@ class CropByBoxes(BaseOperator):
             list[dict]: A list of dictionaries, each containing a cropped image ('img'),
                 the original bounding box coordinates ('box'), and the label ('label').
         """
-        output_list = []
-        for bbox_info in boxes:
+
+        def _apply(bbox_info):
             label_id = bbox_info["cls_id"]
             box = bbox_info["coordinate"]
             label = bbox_info.get("label", label_id)
             xmin, ymin, xmax, ymax = [int(i) for i in box]
             img_crop = img[ymin:ymax, xmin:xmax].copy()
-            output_list.append({"img": img_crop, "box": box, "label": label})
-        return output_list
+            return {"img": img_crop, "box": box, "label": label}
+
+        return maybe_parallelize(_apply, boxes)
 
 
 @class_requires_deps("opencv-contrib-python", "shapely")
@@ -96,19 +97,21 @@ class CropByPolys(BaseOperator):
         """
 
         if self.det_box_type == "quad":
-            dt_boxes = np.array(dt_polys)
-            output_list = []
-            for bno in range(len(dt_boxes)):
-                tmp_box = copy.deepcopy(dt_boxes[bno])
+
+            def _apply(dt_box):
+                tmp_box = np.array(dt_box)
                 img_crop = self.get_minarea_rect_crop(img, tmp_box)
-                output_list.append(img_crop)
+                return img_crop
+
+            output_list = maybe_parallelize(_apply, dt_polys)
         elif self.det_box_type == "poly":
-            output_list = []
-            dt_boxes = dt_polys
-            for bno in range(len(dt_boxes)):
-                tmp_box = copy.deepcopy(dt_boxes[bno])
+
+            def _apply(dt_box):
+                tmp_box = np.array(dt_box)
                 img_crop = self.get_poly_rect_crop(img.copy(), tmp_box)
-                output_list.append(img_crop)
+                return img_crop
+
+            output_list = maybe_parallelize(_apply, dt_polys)
         else:
             raise NotImplementedError
 

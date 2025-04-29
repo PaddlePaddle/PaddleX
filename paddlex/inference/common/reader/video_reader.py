@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 from ...utils.io import VideoReader
 
@@ -30,7 +30,7 @@ class ReadVideo:
 
     def __call__(self, videos):
         """apply"""
-        return [self._read(video) for video in videos]
+        return maybe_parallelize(self._read_video, videos)
 
     def _read(self, file_path):
         return self._read_video(file_path)

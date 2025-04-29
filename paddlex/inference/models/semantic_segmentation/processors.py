@@ -13,10 +13,12 @@
 # limitations under the License.
 
 import math
+from functools import partial
 
 import numpy as np
 
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 from ..common.vision import funcs as F
 from ..common.vision.processors import _BaseResize
@@ -59,7 +61,7 @@ class Resize(_BaseResize):
         if isinstance(target_size, int):
             target_size = (target_size, target_size)
         F.check_image_size(target_size)
-        return [self.resize(img, target_size) for img in imgs]
+        return maybe_parallelize(partial(self.resize, target_size=target_size), imgs)
 
     def resize(self, img, target_size):
 
@@ -95,9 +97,7 @@ class SegPostProcess:
         assert len(imgs) == len(src_images)
 
         src_sizes = [src_image.shape[:2][::-1] for src_image in src_images]
-        return [
-            self.reverse_resize(img, src_size) for img, src_size in zip(imgs, src_sizes)
-        ]
+        return maybe_parallelize(self.reverse_resize, imgs, src_sizes)
 
     def reverse_resize(self, img, src_size):
         """Restore the prediction map to source image size using nearest interpolation.
