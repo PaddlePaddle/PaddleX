@@ -36,7 +36,7 @@ In short, there are only three steps:
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). Please refer to [4-Inference Configuration](#4-inference-configuration) for more details;
     * `use_hpip`：`bool | None` type, whether to enable the high-performance inference plugin (`None` for using the setting from the configuration file);
     * `hpi_config`：`dict | None` type, high-performance inference configuration;
-  * Return Value: `BasePredictor` type.
+  * Return Value: `BasePipeline` type.
 
 ### 2. Perform Inference by Calling the `predict()` Method of the Prediction Model Pipeline Object
 

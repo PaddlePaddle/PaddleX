@@ -39,7 +39,6 @@ In short, just three steps:
     * `use_hpip`：`bool` type, whether to enable the high-performance inference plugin;
     * `hpi_config`：`dict | None` type, high-performance inference configuration;
     * _`inference hyperparameters`_: used to set common inference hyperparameters. Please refer to specific model description document for details.
-  * Return Value: `BasePredictor` type.
 
 ### 2. Perform Inference Prediction by Calling the `predict()` Method of the Prediction Model Object
 
