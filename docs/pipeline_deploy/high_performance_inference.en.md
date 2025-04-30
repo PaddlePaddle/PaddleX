@@ -24,7 +24,7 @@ In real production environments, many applications impose strict performance met
 
 Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
-The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed. **It is recommended to install the Paddle2ONNX plugin first before installing the high-performance inference plugin, so that PaddleX can convert model formats when needed.**
+The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed.
 
 ### 1.1 Installing the High-Performance Inference Plugin
 
@@ -86,11 +86,13 @@ Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obt
   </tbody>
 </table>
 
-In the official PaddleX Docker image, TensorRT is installed by default. The high-performance inference plugin can then accelerate inference using the Paddle Inference TensorRT subgraph engine.
+The official PaddleX Docker images come with the Paddle2ONNX plugin pre-installed, allowing PaddleX to convert model formats on demand. In addition, the GPU version of the image includes TensorRT, so the high-performance inference plugin can leverage the Paddle Inference TensorRT subgraph engine for accelerated inference.
 
 **Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-based-on-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
 
 #### 1.1.2 Installing the High-Performance Inference Plugin Locally
+
+**It is recommended to install the Paddle2ONNX plugin first before installing the high-performance inference plugin, so that PaddleX can convert model formats when needed.**
 
 **To install the CPU version of the high-performance inference plugin:**
 
