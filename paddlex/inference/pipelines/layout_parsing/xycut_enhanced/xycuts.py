@@ -115,46 +115,51 @@ def pre_process(
     all_boxes = np.array(
         [block.bbox for block in blocks if block.region_label not in mask_labels]
     )
-    if pre_cut_block_idxes:
-        horizontal_cut_num = 0
-        for block_idx in pre_cut_block_idxes:
-            block = blocks[block_idx]
-            horizontal_cut_num += 1 if block.secondary_direction == "horizontal" else 0
-        cut_direction = (
-            "horizontal"
-            if horizontal_cut_num > len(pre_cut_block_idxes) * 0.5
-            else "vertical"
-        )
-        discontinuous = calculate_discontinuous_projection(
-            all_boxes, direction=cut_direction
-        )
-        for idx in pre_cut_block_idxes:
-            block = blocks[idx]
-            if (
-                block.region_label not in mask_labels
-                and block.secondary_direction == cut_direction
-            ):
+    if len(all_boxes) > 0:
+        if pre_cut_block_idxes:
+            horizontal_cut_num = 0
+            for block_idx in pre_cut_block_idxes:
+                block = blocks[block_idx]
+                horizontal_cut_num += (
+                    1 if block.secondary_direction == "horizontal" else 0
+                )
+            cut_direction = (
+                "horizontal"
+                if horizontal_cut_num > len(pre_cut_block_idxes) * 0.5
+                else "vertical"
+            )
+            discontinuous = calculate_discontinuous_projection(
+                all_boxes, direction=cut_direction
+            )
+            for idx in pre_cut_block_idxes:
+                block = blocks[idx]
                 if (
-                    block.secondary_direction_start_coordinate,
-                    block.secondary_direction_end_coordinate,
-                ) in discontinuous:
-                    cut_coordinates.append(block.secondary_direction_start_coordinate)
-                    cut_coordinates.append(block.secondary_direction_end_coordinate)
-    if not discontinuous:
-        discontinuous = calculate_discontinuous_projection(
-            all_boxes, direction=cut_direction
+                    block.region_label not in mask_labels
+                    and block.secondary_direction == cut_direction
+                ):
+                    if (
+                        block.secondary_direction_start_coordinate,
+                        block.secondary_direction_end_coordinate,
+                    ) in discontinuous:
+                        cut_coordinates.append(
+                            block.secondary_direction_start_coordinate
+                        )
+                        cut_coordinates.append(block.secondary_direction_end_coordinate)
+        if not discontinuous:
+            discontinuous = calculate_discontinuous_projection(
+                all_boxes, direction=cut_direction
+            )
+        current_interval = discontinuous[0]
+        for interval in discontinuous[1:]:
+            gap_len = interval[0] - current_interval[1]
+            if gap_len > 40:
+                cut_coordinates.append(current_interval[1])
+            current_interval = interval
+        overall_region_box = config.get("all_layout_region_box")
+        cut_list = get_cut_blocks(
+            blocks, cut_direction, cut_coordinates, overall_region_box, mask_labels
         )
-    current_interval = discontinuous[0]
-    for interval in discontinuous[1:]:
-        gap_len = interval[0] - current_interval[1]
-        if gap_len > 40:
-            cut_coordinates.append(current_interval[1])
-        current_interval = interval
-    overall_region_box = config.get("all_layout_region_box")
-    cut_list = get_cut_blocks(
-        blocks, cut_direction, cut_coordinates, overall_region_box, mask_labels
-    )
-    pre_cut_list.extend(cut_list)
+        pre_cut_list.extend(cut_list)
 
     return header_blocks, pre_cut_list, footer_blocks, unordered_blocks
 
