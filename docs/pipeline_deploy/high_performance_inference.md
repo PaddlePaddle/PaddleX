@@ -24,7 +24,7 @@ comments: true
 
 使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
-高性能推理插件支持处理 **PaddlePaddle 静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，可以使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。**建议在安装高性能推理插件前，首先安装 Paddle2ONNX 插件，以便 PaddleX 可以在需要时转换模型格式。**
+高性能推理插件支持处理 **PaddlePaddle 静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，可以使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。
 
 ### 1.1 安装高性能推理插件
 
@@ -86,11 +86,13 @@ comments: true
       </tbody>
   </table>
 
-PaddleX 官方 Docker 镜像中默认安装了 TensorRT，高性能推理插件可以使用 Paddle Inference TensorRT 子图引擎进行推理加速。
+PaddleX 官方 Docker 镜像中预装了 Paddle2ONNX 插件，以便 PaddleX 可以在需要时转换模型格式。此外，GPU 版本的镜像中安装了 TensorRT，高性能推理插件可以使用 Paddle Inference TensorRT 子图引擎进行推理加速。
 
 **请注意，以上提到的镜像指的是 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 中描述的 PaddleX 官方镜像，而非 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md#基于-docker-安装飞桨) 中描述的飞桨框架官方镜像。对于后者，请参考高性能推理插件本地安装说明。**
 
 #### 1.1.2 本地安装高性能推理插件
+
+**建议在安装高性能推理插件前，首先安装 Paddle2ONNX 插件，以便 PaddleX 可以在需要时转换模型格式。**
 
 **安装 CPU 版本的高性能推理插件：**
 
@@ -323,7 +325,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.3 修改高性能推理配置
 
-由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件中的设置**。配置文件中不同层级的配置将自动合并，最深层的配置具有最高的优先级。以下将结合一些例子介绍如何修改配置。
+模型初始化时，日志中默认会记录将要使用的高性能推理配置。由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。用户可以通过修改产线/模块配置文件、CLI或Python API所传递参数中的 `hpi_config` 字段内容来修改配置。通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件中的设置。配置文件中不同层级的配置将自动合并，最深层的配置具有最高的优先级。以下将结合一些例子介绍如何修改配置。
 
 **通用OCR产线的所有模型使用 `onnxruntime` 后端：**
 
