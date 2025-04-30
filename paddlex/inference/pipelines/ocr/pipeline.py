@@ -392,16 +392,16 @@ class _OCRPipeline(BasePipeline):
                     all_subs_of_imgs = self.rotate_image(all_subs_of_imgs, angles)
                 else:
                     angles = [-1] * len(all_subs_of_imgs)
-                for idx in indices:
+                for i, idx in enumerate(indices):
                     res = results[idx]
                     res["textline_orientation_angles"] = angles[
-                        chunk_indices[idx] : chunk_indices[idx + 1]
+                        chunk_indices[i] : chunk_indices[i + 1]
                     ]
 
                 # TODO: Process all sub-images in the batch together
-                for idx in indices:
+                for i, idx in enumerate(indices):
                     all_subs_of_img = all_subs_of_imgs[
-                        chunk_indices[idx] : chunk_indices[idx + 1]
+                        chunk_indices[i] : chunk_indices[i + 1]
                     ]
                     res = results[idx]
                     dt_polys = dt_polys_list[idx]
