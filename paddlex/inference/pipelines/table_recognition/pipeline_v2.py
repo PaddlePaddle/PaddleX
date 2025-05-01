@@ -591,84 +591,39 @@ class TableRecognitionPipelineV2(BasePipeline):
         Returns:
             List[SingleTableRecognitionResult]: Single table recognition results.
         """
-
-        table_cls_preds = list(self.table_cls_model(image_arrays))
-        table_cls_results = [
-            self.extract_results(table_cls_pred, "cls")
-            for table_cls_pred in table_cls_preds
-        ]
-        use_e2e_model = False
-
-        wired_table_indices = [
-            i
-            for i in range(len(table_cls_results))
-            if table_cls_results[i] == "wired_table"
-        ]
-        wireless_table_indices = [
-            i
-            for i in range(len(table_cls_results))
-            if table_cls_results[i] == "wireless_table"
-        ]
-
-        table_structure_preds = [{} for _ in table_cls_results]
-        table_cells_preds = [{} for _ in table_cls_results]
-
-        if wired_table_indices:
-            image_arrays_wired = [image_arrays[i] for i in wired_table_indices]
-            table_structure_preds_wired = list(
-                self.wired_table_rec_model(image_arrays_wired)
-            )
-            for idx, pred in zip(wired_table_indices, table_structure_preds_wired):
-                table_structure_preds[idx] = pred
-            if use_e2e_wired_table_rec_model == True:
-                use_e2e_model = True
-            else:
-                table_cells_preds_wired = list(
-                    self.wired_table_cells_detection_model(
-                        image_arrays_wired, threshold=0.3
-                    )
-                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
-                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-                for idx, pred in zip(wired_table_indices, table_cells_preds_wired):
-                    table_cells_preds[idx] = pred
-
-        if wireless_table_indices:
-            image_arrays_wireless = [image_arrays[i] for i in wireless_table_indices]
-            table_structure_preds_wireless = list(
-                self.wireless_table_rec_model(image_arrays_wireless)
-            )
-            for idx, pred in zip(
-                wireless_table_indices, table_structure_preds_wireless
-            ):
-                table_structure_preds[idx] = pred
-            if use_e2e_wireless_table_rec_model == True:
-                use_e2e_model = True
-            else:
-                table_cells_preds_wireless = list(
-                    self.wireless_table_cells_detection_model(
-                        image_arrays_wireless, threshold=0.3
-                    )
-                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
-                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-                for idx, pred in zip(
-                    wireless_table_indices, table_cells_preds_wireless
-                ):
-                    table_cells_preds[idx] = pred
+        # TODO: Batch inference
 
         results = []
-        for (
-            image_array,
-            overall_ocr_res,
-            table_box,
-            table_structure_pred,
-            table_cells_pred,
-        ) in zip(
-            image_arrays,
-            overall_ocr_results,
-            table_boxes,
-            table_structure_preds,
-            table_cells_preds,
+
+        for image_array, overall_ocr_res, table_box in zip(
+            image_arrays, overall_ocr_results, table_boxes
         ):
+            table_cls_pred = next(self.table_cls_model(image_array))
+            table_cls_result = self.extract_results(table_cls_pred, "cls")
+            use_e2e_model = False
+
+            if table_cls_result == "wired_table":
+                table_structure_pred = next(self.wired_table_rec_model(image_array))
+                if use_e2e_wired_table_rec_model == True:
+                    use_e2e_model = True
+                else:
+                    table_cells_pred = next(
+                        self.wired_table_cells_detection_model(
+                            image_array, threshold=0.3
+                        )
+                    )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                    # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
+            elif table_cls_result == "wireless_table":
+                table_structure_pred = next(self.wireless_table_rec_model(image_array))
+                if use_e2e_wireless_table_rec_model == True:
+                    use_e2e_model = True
+                else:
+                    table_cells_pred = next(
+                        self.wireless_table_cells_detection_model(
+                            image_array, threshold=0.3
+                        )
+                    )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                    # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
             if use_e2e_model == False:
                 table_structure_result = self.extract_results(
                     table_structure_pred, "table_stru"
@@ -688,7 +643,6 @@ class TableRecognitionPipelineV2(BasePipeline):
                     ocr_det_boxes,
                     len(table_structure_pred["bbox"]),
                 )
-                # TODO: Support batch processing
                 if use_table_cells_ocr_results == True:
                     cells_texts_list = self.split_ocr_bboxes_by_table_cells(
                         image_array, table_cells_result
@@ -712,7 +666,6 @@ class TableRecognitionPipelineV2(BasePipeline):
                         [rect[0], rect[1], rect[4], rect[5]]
                         for rect in table_cells_result_e2e
                     ]
-                    # TODO: Support batch processing
                     cells_texts_list = self.split_ocr_bboxes_by_table_cells(
                         image_array, table_cells_result_e2e
                     )
@@ -735,7 +688,6 @@ class TableRecognitionPipelineV2(BasePipeline):
                     for idx in match_idx_list:
                         neighbor_text += overall_ocr_res["rec_texts"][idx] + "; "
             single_table_recognition_res["neighbor_texts"] = neighbor_text
-
             results.append(single_table_recognition_res)
 
         return results
