@@ -17,7 +17,6 @@ import numpy as np
 from ....modules.formula_recognition.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
-from ....utils.parallel import maybe_parallelize
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..base import BasePredictor
@@ -110,15 +109,13 @@ class FormulaRecPredictor(BasePredictor):
                 batch_pred_ = self.infer([batch_img])[0].reshape([-1])
                 max_length = max(max_length, batch_pred_.shape[0])
                 batch_preds.append(batch_pred_)
-            batch_preds[:] = maybe_parallelize(
-                lambda pred: np.pad(
-                    pred,
-                    (0, max_length - pred.shape[0]),
+            for i in range(len(batch_preds)):
+                batch_preds[i] = np.pad(
+                    batch_preds[i],
+                    (0, max_length - batch_preds[i].shape[0]),
                     mode="constant",
                     constant_values=0,
-                ),
-                batch_preds,
-            )
+                )
         else:
             x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
             batch_preds = self.infer(x=x)

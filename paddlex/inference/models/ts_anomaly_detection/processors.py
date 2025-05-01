@@ -17,7 +17,6 @@ from typing import Any, Dict, List
 import numpy as np
 import pandas as pd
 
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -50,7 +49,10 @@ class GetAnomaly:
         Returns:
             List[pd.DataFrame]: A list of DataFrames, each containing anomaly labels for the time series.
         """
-        return maybe_parallelize(self.getanomaly, ori_ts_list, pred_list)
+        return [
+            self.getanomaly(ori_ts, pred)
+            for ori_ts, pred in zip(ori_ts_list, pred_list)
+        ]
 
     def getanomaly(self, ori_ts: Dict[str, Any], pred: np.ndarray) -> pd.DataFrame:
         """

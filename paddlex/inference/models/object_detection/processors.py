@@ -18,7 +18,6 @@ import numpy as np
 from numpy import ndarray
 
 from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
-from ....utils.parallel import maybe_parallelize
 from ...common.reader import ReadImage as CommonReadImage
 from ...utils.benchmark import benchmark
 from ..common import Normalize as CommonNormalize
@@ -45,8 +44,8 @@ class ReadImage(CommonReadImage):
         Returns:
             List[dict]: A list of dictionaries, each containing image information.
         """
-
-        def _apply(raw_img):
+        out_datas = []
+        for raw_img in raw_imgs:
             data = dict()
             if isinstance(raw_img, str):
                 data["img_path"] = raw_img
@@ -68,9 +67,7 @@ class ReadImage(CommonReadImage):
             data["img_size"] = [img.shape[1], img.shape[0]]  # [size_w, size_h]
             data["ori_img_size"] = [img.shape[1], img.shape[0]]  # [size_w, size_h]
 
-            return data
-
-        out_datas = maybe_parallelize(_apply, raw_imgs)
+            out_datas.append(data)
 
         return out_datas
 
@@ -112,8 +109,7 @@ class Resize(CommonResize):
             List[dict]: A list of dictionaries with updated image data, including resized images,
                 original image sizes, resized image sizes, and scale factors.
         """
-
-        def _apply(data):
+        for data in datas:
             ori_img = data["img"]
             if "ori_img_size" not in data:
                 data["ori_img_size"] = [ori_img.shape[1], ori_img.shape[0]]
@@ -130,10 +126,6 @@ class Resize(CommonResize):
                 img_size[1] / ori_img_size[1],
             ]
 
-            return data
-
-        datas = maybe_parallelize(_apply, datas)
-
         return datas
 
 
@@ -143,11 +135,8 @@ class Normalize(CommonNormalize):
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
         """
-
-        imgs = maybe_parallelize(self.norm, [d["img"] for d in datas])
-        for data, img in zip(datas, imgs):
-            data["img"] = img
-
+        for data in datas:
+            data["img"] = self.norm(data["img"])
         return datas
 
 

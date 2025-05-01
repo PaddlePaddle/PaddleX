@@ -24,7 +24,6 @@ import numpy as np
 from PIL import Image, ImageOps
 
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 if is_dep_available("opencv-contrib-python"):
@@ -157,7 +156,7 @@ class MinMaxResize:
         Returns:
             list of np.ndarray: The list of resized images as numpy arrays with three channels.
         """
-        return maybe_parallelize(self.resize, imgs)
+        return [self.resize(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -199,7 +198,7 @@ class LatexTestTransform:
         Returns:
             list of np.array: The list of transformed images.
         """
-        return maybe_parallelize(self.transform, imgs)
+        return [self.transform(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -238,7 +237,7 @@ class LatexImageFormat:
         Returns:
             list of numpy.ndarray: A list of formatted images as numpy arrays.
         """
-        return maybe_parallelize(self.format, imgs)
+        return [self.format(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -287,7 +286,7 @@ class NormalizeImage(object):
 
     def __call__(self, imgs: List[Union[np.ndarray, Image.Image]]) -> List[np.ndarray]:
         """Apply normalization to a list of images."""
-        return maybe_parallelize(self.normalize, imgs)
+        return [self.normalize(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -564,7 +563,7 @@ class UniMERNetImgDecode(object):
 
         Returns:
             list of numpy.ndarray: The list of decoded image arrays."""
-        return maybe_parallelize(self.img_decode, imgs)
+        return [self.img_decode(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -967,7 +966,7 @@ class UniMERNetTestTransform:
         Returns:
             list of numpy.ndarray: The list of transformed images.
         """
-        return maybe_parallelize(self.transform, imgs)
+        return [self.transform(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -1006,4 +1005,4 @@ class UniMERNetImageFormat:
         Returns:
             list of numpy.ndarray: The list of formatted images.
         """
-        return maybe_parallelize(self.format, imgs)
+        return [self.format(img) for img in imgs]

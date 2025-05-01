@@ -16,7 +16,6 @@ from typing import List, Tuple, Union
 
 import numpy as np
 
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -62,7 +61,7 @@ class DocTrPostProcess:
         Returns:
             List[np.ndarray]: A list of processed images.
         """
-        return maybe_parallelize(self.doctr, imgs)
+        return [self.doctr(img) for img in imgs]
 
     def doctr(self, pred: Union[np.ndarray, Tuple[np.ndarray, ...]]) -> np.ndarray:
         """

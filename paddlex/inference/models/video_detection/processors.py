@@ -18,7 +18,6 @@ from typing import List
 import numpy as np
 
 from ....utils.deps import class_requires_deps
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -89,7 +88,7 @@ class ResizeVideo:
         Returns:
             list: A list of videos with each frame resized to the target size.
         """
-        return maybe_parallelize(self.resize, videos)
+        return [self.resize(video) for video in videos]
 
 
 @benchmark.timeit
@@ -145,7 +144,7 @@ class Image2Array:
         Returns:
             List[np.ndarray]: A list of processed videos with transposed frames.
         """
-        return maybe_parallelize(self.img2array, videos)
+        return [self.img2array(video) for video in videos]
 
 
 @benchmark.timeit
@@ -194,7 +193,7 @@ class NormalizeVideo:
         Returns:
             List[List[np.ndarray]]: A list of normalized videos, each represented as a list of normalized frames.
         """
-        return maybe_parallelize(self.normalize_video, videos)
+        return [self.normalize_video(video) for video in videos]
 
 
 def convert2cpu(gpu_matrix):
@@ -461,6 +460,4 @@ class DetVideoPostProcess:
         return pred_all
 
     def __call__(self, preds: List, nms_thresh, score_thresh) -> List:
-        return maybe_parallelize(
-            lambda pred: self.postprocess(pred, nms_thresh, score_thresh), preds
-        )
+        return [self.postprocess(pred, nms_thresh, score_thresh) for pred in preds]

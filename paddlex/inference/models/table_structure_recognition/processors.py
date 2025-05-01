@@ -15,7 +15,6 @@
 
 import numpy as np
 
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 from ..common.vision import funcs as F
 
@@ -59,7 +58,7 @@ class Pad:
 
     def __call__(self, imgs):
         """apply"""
-        return maybe_parallelize(self.apply, imgs)
+        return [self.apply(img) for img in imgs]
 
 
 @benchmark.timeit

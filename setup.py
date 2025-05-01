@@ -82,7 +82,6 @@ REQUIRED_DEPS = [
     "colorlog",
     "filelock",
     "GPUtil",
-    "joblib",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
@@ -158,6 +157,7 @@ EXTRAS = {
         ],
         "ts": [
             "chinese-calendar",
+            "joblib",
             "matplotlib",
             "scikit-learn",
         ],

@@ -17,7 +17,6 @@ from typing import Generic
 
 import numpy as np
 
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -239,4 +238,4 @@ class ReadNuscenesData:
         return sample
 
     def __call__(self, batch_data):
-        return maybe_parallelize(self.prepare_test_data, batch_data)
+        return [self.prepare_test_data(data_info) for data_info in batch_data]

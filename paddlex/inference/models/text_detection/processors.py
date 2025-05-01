@@ -13,14 +13,12 @@
 # limitations under the License.
 
 import math
-from functools import partial
 from typing import Union
 
 import numpy as np
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 if is_dep_available("opencv-contrib-python"):
@@ -64,10 +62,8 @@ class DetResizeForTest:
     ):
         """apply"""
         resize_imgs, img_shapes = [], []
-        for img, shape in maybe_parallelize(
-            partial(self.resize, limit_side_len=limit_side_len, limit_type=limit_type),
-            imgs,
-        ):
+        for ori_img in imgs:
+            img, shape = self.resize(ori_img, limit_side_len, limit_type)
             resize_imgs.append(img)
             img_shapes.append(shape)
         return resize_imgs, img_shapes
@@ -234,6 +230,9 @@ class NormalizeImage:
         """apply"""
 
         def _norm(img):
+            if self.order == "chw":
+                img = np.transpose(img, (2, 0, 1))
+
             split_im = list(cv2.split(img))
             for c in range(img.shape[2]):
                 split_im[c] = split_im[c].astype(np.float32)
@@ -246,7 +245,7 @@ class NormalizeImage:
                 res = np.transpose(res, (1, 2, 0))
             return res
 
-        return maybe_parallelize(_norm, imgs)
+        return [_norm(img) for img in imgs]
 
 
 @benchmark.timeit
@@ -472,17 +471,14 @@ class DBPostProcess:
     ):
         """apply"""
         boxes, scores = [], []
-        for box, score in maybe_parallelize(
-            lambda pred, img_shape: self.process(
+        for pred, img_shape in zip(preds[0], img_shapes):
+            box, score = self.process(
                 pred,
                 img_shape,
                 thresh or self.thresh,
                 box_thresh or self.box_thresh,
                 unclip_ratio or self.unclip_ratio,
-            ),
-            preds[0],
-            img_shapes,
-        ):
+            )
             boxes.append(box)
             scores.append(score)
         return boxes, scores

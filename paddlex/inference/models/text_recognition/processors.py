@@ -55,8 +55,7 @@ class OCRReisizeNormImg:
                 resized_w = int(math.ceil(imgH * ratio))
             resized_image = cv2.resize(img, (resized_w, imgH))
         resized_image = resized_image.astype("float32")
-        resized_image = resized_image.transpose((2, 0, 1))
-        resized_image /= 255
+        resized_image = resized_image.transpose((2, 0, 1)) / 255
         resized_image -= 0.5
         resized_image /= 0.5
         padding_im = np.zeros((imgC, imgH, imgW), dtype=np.float32)
