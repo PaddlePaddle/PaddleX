@@ -24,9 +24,11 @@ __all__ = [
     "INFER_BENCHMARK_ITERS",
     "INFER_BENCHMARK_WARMUP",
     "INFER_BENCHMARK_OUTPUT_DIR",
+    "INFER_BENCHMARK_USE_NEW_INFER_API",
     "FLAGS_json_format_model",
     "USE_PIR_TRT",
     "DISABLE_DEV_MODEL_WL",
+    "DISABLE_CINN_MODEL_WL",
     "EXP_USE_PARALLEL_COMPUTING",
 ]
 
@@ -47,9 +49,10 @@ DEBUG = get_flag_from_env_var("PADDLE_PDX_DEBUG", False)
 DRY_RUN = get_flag_from_env_var("PADDLE_PDX_DRY_RUN", False)
 CHECK_OPTS = get_flag_from_env_var("PADDLE_PDX_CHECK_OPTS", False)
 EAGER_INITIALIZATION = get_flag_from_env_var("PADDLE_PDX_EAGER_INIT", True)
-FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", None)
-USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", False)
+FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", True)
+USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", True)
 DISABLE_DEV_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_DEV_MODEL_WL", False)
+DISABLE_CINN_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_CINN_MODEL_WL", False)
 
 # Inference Benchmark
 INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)

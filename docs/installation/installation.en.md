@@ -17,7 +17,22 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 > ❗ <b>Note</b>: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl[base]
+# Only install the required dependencies (optional dependencies can be installed later as needed)
+pip install paddlex==3.0.0rc1
+```
+
+You can install the optional dependencies as needed using the following method (For more details, please refer to [2.3 Selective Installation of Dependencies](#23-selective-installation-of-dependencies)):
+
+Install all dependencies required for PaddleX "basic features":
+
+```bash
+pip install "paddlex[base]==3.0.0rc1"
+```
+
+Only install the dependencies required for a specific feature:
+
+```bash
+pip install "paddlex[ocr]==3.0.0rc1"
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -25,7 +40,7 @@ If your use case for PaddleX involves <b>custom development</b> (e.g. retraining
 
 After installing the PaddleX plugins you need, you can not only perform inference and integration with the supported models but also conduct advanced operations such as model training for custom development.
 
-The plugins supported by PaddleX are listed below. Please determine the name(s) of the plugin(s) you need based on your development requirements:
+The model training related plugins supported by PaddleX are listed below. Please determine the name(s) of the plugin(s) you need based on your development requirements:
 
 <details><summary>👉 <b>Plugin and Pipeline Correspondence (Click to Expand)</b></summary>
 
@@ -111,7 +126,7 @@ If the plugin you need to install is `PaddleXXX`, after installing PaddlePaddle 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-pip install -e .[base]
+pip install -e ".[base]"
 paddlex --install PaddleXXX
 ```
 
@@ -122,7 +137,7 @@ Next, we provide detailed installation tutorials for your reference. If you are 
 ## 2. Detailed Tutorial for Installing PaddleX on Linux
 When installing PaddleX on Linux, we <b>strongly recommend using the official PaddleX Docker image</b>. Alternatively, you can use other custom installation methods.
 
-When using the official Docker image, <b>PaddlePaddle, PaddleX (including the wheel package and all plugins), and the corresponding CUDA environment are already pre-installed</b>. You can simply obtain the Docker image and start the container to begin using it.
+When using the official Docker image, <b>PaddlePaddle, PaddleX (including the wheel package and all plugins), and the corresponding CUDA environment are already pre-installed</b>. You can simply obtain the Docker image and start the container to begin using it. <b>Please note that the official Docker image of PaddleX is different from the official Docker image of the PaddlePaddle framework, as the latter does not come with PaddleX pre-installed.</b>
 
 When using custom installation methods, you need to first install the PaddlePaddle framework, then obtain the PaddleX source code, and finally choose the PaddleX installation mode.
 ### 2.1 Get PaddleX based on Docker
@@ -132,14 +147,10 @@ If your Docker version >= 19.03, please use:
 
 ```bash
 # For CPU
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-cpu /bin/bash
 
-# For GPU
-# For CUDA11.8
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
-
-# For CUDA12.3
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+# gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
 ```
 
 * If your Docker version <= 19.03 and >= 17.06, please use:
@@ -147,19 +158,17 @@ docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=hos
 <details><summary> Click Here</summary>
 
 <pre><code class="language-bash"># For CPU
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-cpu /bin/bash
 
 # For GPU
-# For CUDA11.8
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+# gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
 
-# For CUDA12.3
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 </code></pre></details>
 
 * If your Docker version <= 17.06, please update your Docker.
 
-* If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/).
+* If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/). Support for CUDA 12 and above is currently in progress. Stay tuned.
 
 ### 2.2 Custom Installation of PaddleX
 Before installation, please ensure you have completed the local installation of PaddlePaddle by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md).
@@ -186,7 +195,7 @@ cd PaddleX
 
 # Install PaddleX whl
 # -e: Install in editable mode, so changes to the current project's code will directly affect the installed PaddleX Wheel
-pip install -e .[base]
+pip install -e ".[base]"
 ```
 
 * <b>If you choose plugin installation mode</b> and the plugin you need is named PaddleXXX (there can be multiple), execute the following commands:
@@ -196,7 +205,7 @@ cd PaddleX
 
 # Install PaddleX whl
 # -e: Install in editable mode, so changes to the current project's code will directly affect the installed PaddleX Wheel
-pip install -e .[base]
+pip install -e ".[base]"
 
 # Install PaddleX plugins
 paddlex --install PaddleXXX
@@ -233,25 +242,22 @@ All packages are installed.
 
 For PaddleX installation on more hardware environments, please refer to the [PaddleX Multi-hardware Usage Guide](../other_devices_support/multi_devices_use_guide.en.md)
 
-Sure! Here's the English translation:
-
----
-
 ### 2.3 Selective Installation of Dependencies
 
-PaddleX offers a wide range of features, and different features require different dependencies. The features in PaddleX that can be used without installing plugins are categorized as "basic features." The official PaddleX Docker images have all dependencies required for these basic features preinstalled. Similarly, using the installation method introduced earlier—`pip install ...[base]`—will install all dependencies needed for the basic features.
+PaddleX offers a wide range of features, and different features require different dependencies. The features in PaddleX that can be used without installing plugins are categorized as "basic features." The official PaddleX Docker images have all dependencies required for these basic features preinstalled. Similarly, using the installation method introduced earlier—`pip install "...[base]"`—will install all dependencies needed for the basic features.
 
 If you are only focused on a specific feature of PaddleX and want to minimize the size of the installed dependencies, you can selectively install them by specifying a "dependency group":
 
 ```bash
 # For example, to install only the basic OCR features
+
 # Install the precompiled wheel package
-pip install /url/of/wheel[ocr]
+pip install "paddlex[ocr]"
 # Install from source
-pip install -e .[ocr]
+pip install -e ".[ocr]"
 
 # You can also specify multiple dependency groups at once
-pip install -e .[ocr,cv]
+pip install -e ".[ocr,cv]"
 ```
 
 PaddleX currently provides the following dependency groups:
@@ -259,7 +265,7 @@ PaddleX currently provides the following dependency groups:
 | Dependency Group | Corresponding Features |
 | - | - |
 | `base` | All basic features of PaddleX. |
-| `cv` | Basic features of computer vision pipelines (excluding multimodal pipelines). |
+| `cv` | Basic features of computer vision pipelines. |
 | `multimodal` | Basic features of multimodal pipelines. |
 | `ie` | Basic features of information extraction pipelines. |
 | `ocr` | Basic features of OCR-related pipelines. |

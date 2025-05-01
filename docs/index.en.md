@@ -99,22 +99,23 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 🛠️ Installation
 
 !!! warning
-    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc0 version depends on PaddlePaddle version <b>3.0.0rc0</b> and above.
+    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc1 version depends on PaddlePaddle version <b>3.0.0</b> and above.
 
 ### Installing PaddlePaddle
 
 === "CPU version"
     ```bash
-    python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "GPU version, requiring a GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)."
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+    python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
-=== "GPU version, requiring a GPU driver version ≥545.23.06 (Linux) or ≥545.84 (Windows)."
+=== "GPU version, requiring a GPU driver version ≥550.54.14 (Linux) or ≥550.54.14 (Windows)."
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+    python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
     ```
+
 
 !!! tip
     There is no need to pay attention to the CUDA version on the physical machine; just focus on the GPU driver version. For more information on PaddlePaddle Wheel versions, please refer to the [PaddlePaddle Official Website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html).
@@ -123,7 +124,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ### Installing PaddleX
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex==3.0.0rc1
 ```
 
 > ❗ For more installation methods, please refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
@@ -1180,7 +1181,7 @@ The following steps were executed:
 * Process the prediction results
 
 
-!!! example "OCR-related Python"
+!!! example "OCR-related Python Usage"
 
     === "OCR"
 
@@ -1342,7 +1343,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Computer Vision Pipeline Command-Line Usage"
+!!! example "Computer Vision Pipeline Python Usage"
 
     === "General Image Classification"
 
@@ -1526,7 +1527,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Command Line Usage for Time Series pipelines"
+!!! example "Time Series pipelines Python Usage"
 
     === "Time Series Forecasting"
 
@@ -1568,7 +1569,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/") ## Save results in JSON format
         ```
 
-!!! example "Command Line Usage for Speech pipelines"
+!!! example "Speech pipelines Python Usage"
 
     === "Multilingual Speech Recognition"
 
@@ -1583,7 +1584,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Command Line Usage for Video pipelines"
+!!! example "Video pipelines Python Usage"
 
     === "General Video Classification"
 
@@ -1611,6 +1612,25 @@ The following steps were executed:
             res.save_to_video(save_path="./output/") ## Save the visualized video results
             res.save_to_json(save_path="./output/") ## Save the structured prediction output
         ```
+
+!!! example "Multimodal Vision-Language Model pipelines Python Usage"
+
+    === "doc_understanding"
+
+        ```python
+        from paddlex import create_pipeline
+        pipeline = create_pipeline(pipeline="doc_understanding")
+        output = pipeline.predict(
+            {
+                "image": "medal_table.png",
+                "query": "识别这份表格的内容"
+            }
+        )
+        for res in output:
+            res.print() ## Print the structured prediction output
+            res.save_to_json("./output/") ## Save the structured prediction output
+        ```
+
 
 ## 🚀 Detailed Tutorials
 

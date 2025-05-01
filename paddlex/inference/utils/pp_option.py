@@ -76,7 +76,7 @@ class PaddlePredictorOption(object):
             self._cfg.setdefault(k, v)
 
         # for trt
-        if self.run_mode in TRT_PRECISION_MAP:
+        if self.run_mode in ("trt_int8", "trt_fp32", "trt_fp16"):
             trt_cfg_setting = TRT_CFG_SETTING[self.model_name]
             if USE_PIR_TRT:
                 trt_cfg_setting["precision_mode"] = TRT_PRECISION_MAP[self.run_mode]
@@ -97,6 +97,7 @@ class PaddlePredictorOption(object):
             "cpu_threads": 8,
             "delete_pass": [],
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
+            "enable_cinn": False,
             "trt_cfg_setting": {},
             "trt_use_dynamic_shapes": True,  # only for trt
             "trt_collect_shape_range_info": True,  # only for trt
@@ -186,6 +187,15 @@ class PaddlePredictorOption(object):
     def enable_new_ir(self, enable_new_ir: bool):
         """set run mode"""
         self._update("enable_new_ir", enable_new_ir)
+
+    @property
+    def enable_cinn(self):
+        return self._cfg["enable_cinn"]
+
+    @enable_cinn.setter
+    def enable_cinn(self, enable_cinn: bool):
+        """set run mode"""
+        self._update("enable_cinn", enable_cinn)
 
     @property
     def trt_cfg_setting(self):

@@ -21,8 +21,10 @@ from ...utils.device import (
     set_env_for_device,
     update_device_num,
 )
+from ...utils.flags import FLAGS_json_format_model, DISABLE_CINN_MODEL_WL
 from ...utils.misc import AutoRegisterABCMetaClass
 from .build_model import build_model
+from .utils.cinn_setting import CINN_WHITELIST, enable_cinn_backend
 
 
 def build_trainer(config: AttrDict) -> "BaseTrainer":
@@ -73,9 +75,9 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         train_args = self.get_train_kwargs()
         if self.benchmark_config is not None:
             train_args.update({"benchmark": self.benchmark_config})
-        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
-            "FLAGS_json_format_model"
-        ) in ["1", "True"]
+        export_with_pir = (
+            self.global_config.get("export_with_pir", False) or FLAGS_json_format_model
+        )
         train_args.update(
             {
                 "uniform_output_enabled": self.train_config.get(
@@ -84,6 +86,15 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
                 "export_with_pir": export_with_pir,
             }
         )
+
+        # apply CINN when model is supported
+        if (
+            not DISABLE_CINN_MODEL_WL
+            and self.train_config.get("dy2st", False)
+            and self.global_config.model in CINN_WHITELIST
+        ):
+            enable_cinn_backend()
+
         train_result = self.pdx_model.train(**train_args)
         assert (
             train_result.returncode == 0

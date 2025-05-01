@@ -223,6 +223,9 @@ class NormalizeImage:
         """apply"""
 
         def _norm(img):
+            if self.order == "chw":
+                img = np.transpose(img, (2, 0, 1))
+
             split_im = list(cv2.split(img))
             for c in range(img.shape[2]):
                 split_im[c] = split_im[c].astype(np.float32)

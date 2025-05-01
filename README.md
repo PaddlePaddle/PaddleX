@@ -31,7 +31,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
 ## 🌟 特性
-  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的 **200+ 飞桨模型**整合为 **20 条模型产线**，通过极简的 Python API 一键调用，快速体验模型效果。同时支持 **20+ 单功能模块**，方便开发者进行模型组合使用。
+  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的 **200+ 飞桨模型**整合为 **33 条模型产线**，通过极简的 Python API 一键调用，快速体验模型效果。同时支持 **38 种单功能模块**，方便开发者进行模型组合使用。
 
   🚀 **提高效率降低门槛**：实现基于统一命令和图形界面的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的[**8 条特色模型产线**](https://aistudio.baidu.com/intro/paddlex)，大幅度降低迭代模型的成本。
 
@@ -41,7 +41,22 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 
 ## 📣 近期更新
 
-🔥🔥 **2025.2.14，PaddleX v3.0.0rc0 重磅升级。** 本次版本全面适配 PaddlePaddle 3.0rc0及以上版本，核心升级如下：
+🔥🔥 **2025.4.22，发布 PaddleX v3.0.0rc1 。** 本次版本全面适配 PaddlePaddle 3.0正式版，核心升级如下：
+
+- **全面适配飞桨框架3.0新特性**：支持编译器训练，训练命令通过追加 `-o Global.dy2st=True` 即可开启编译器训练，在 GPU 上，多数模型训练速度可提升 10% 以上，少部分模型训练速度可以提升 30% 以上。推理方面，模型整体适配飞桨 3.0 中间表示技术（PIR），拥有更加灵活的扩展能力和兼容性，静态图模型存储文件名由 `xxx.pdmodel` 改为 `xxx.json`。
+- **新增飞桨自研文档图像理解多模态大模型 PP-DocBee**：在学术界及内部业务场景文档理解评测榜单上，PP-DocBee 均达到同参数量级别模型的 SOTA 水平。可应用到财报、研报、合同、说明书、法律法规等文档 QA 场景。
+- **全面支持 ONNX 格式模型，支持通过Paddle2ONNX插件转换模型格式。**
+- **升级高性能推理：**
+    - **新增对 ONNX、OM 格式模型的支持：** PaddleX 可以根据需要智能选择模型格式；
+    - **扩展支持的产线和模块：** 所有静态图推理的单功能模块与产线均可使用高性能推理插件来提升推理性能；
+    - **支持 CLI、API、配置文件 3 种配置方式：** 支持更精细的配置，用户可以在子产线、子模块粒度启用和禁用高性能推理插件。
+
+- **多硬件支持扩展：**
+  - **NPU：昇腾全面验证的模型数量提升到 200 个。此外，通用 OCR、图像分类、目标检测等常用产线支持 OM 模型格式推理，推理速度能够提升 113.8%-226.4%，支持在 Atlas 200、Atlas 300 系列产品上推理部署。**
+  - **GCU：燧原正式纳入飞桨例行发版体系，完成了 PaddleX 生态适配。支持 90 个模型的训练和推理。**
+
+
+🔥 **2025.2.14，PaddleX v3.0.0rc0 重磅升级。** 本次版本全面适配 PaddlePaddle 3.0rc0及以上版本，核心升级如下：
 
 - **新增 12 条高价值产线，重磅推出自研 [通用版面解析v3产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html)、[PP-ChatOCRv4-doc产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html)、[表格识别v2产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html)**。此外新增了文档处理、旋转框检测、开放词汇检测/分割、视频分析、多语种语音识别、3D 等场景的产线。
 
@@ -265,7 +280,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">人体关键点检测</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -275,7 +290,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">开放词汇检测</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -285,7 +300,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">开放词汇分割</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -295,7 +310,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">旋转目标检测</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -305,7 +320,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D多模态融合检测</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -315,7 +330,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">通用表格识别v2</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -335,7 +350,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">通用版面解析v3</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -345,7 +360,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">文档图像预处理</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -385,7 +400,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html">通用视频分类</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -395,10 +410,20 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html">通用视频检测</a></td>
         <td>🚧</td>
         <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html">文档理解</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
+        <td>🚧</td>
         <td>🚧</td>
     </tr>
 
@@ -535,25 +560,25 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
 
 ### 🛠️ 安装
 
-> ❗在安装 PaddleX 之前，请确保您已具备基本的 **Python 运行环境**（注：目前支持 Python 3.8 至 Python 3.12）。PaddleX 3.0-rc0 版本依赖的 PaddlePaddle 版本为 3.0.0rc0及以上版本，请在使用前务必保证版本的对应关系。
+> ❗在安装 PaddleX 之前，请确保您已具备基本的 **Python 运行环境**（注：目前支持 Python 3.8 至 Python 3.12）。PaddleX 3.0-rc1 版本依赖的 PaddlePaddle 版本为 3.0.0 及以上版本，请在使用前务必保证版本的对应关系。
 
 * **安装 PaddlePaddle**
 ```bash
 # CPU 版本
-python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）
-python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+ python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
-# GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）
-python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+# GPU 版本，需显卡驱动程序版本 ≥550.54.14（Linux）或 ≥550.54.14（Windows）
+ python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 ```
 > ❗无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。更多飞桨 Wheel 版本信息，请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
 
 * **安装PaddleX**
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex==3.0rc1
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
@@ -697,6 +722,7 @@ for res in output:
 | 多语种语音识别       | `multilingual_speech_recognition`                           | [多语种语音识别产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/multilingual_speech_recognition.html#212-python脚本方式集成)                 |
 | 通用视频分类       | `video_classification`                           | [通用视频分类产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/video_classification.html#22-python脚本方式集成)                 |
 | 通用视频检测       | `video_detection`                           | [通用视频检测产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/video_detection.html#212-python脚本方式集成)                 |
+| 文档理解       | `doc_understanding`                           | [文档理解产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html#211-python脚本方式集成)                 |
 
 </details>
 
@@ -774,6 +800,12 @@ for res in output:
 
     * [📈 通用视频分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html)
     * [🔍 通用视频检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html)
+
+* <details open>
+    <summary> <b> 🌐 多模态视觉语言模型</b> </summary>
+
+   * [📝 文档理解产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html)
+  </details>
 
 * <details>
     <summary> <b>🔧 相关说明文件</b> </summary>
@@ -882,6 +914,12 @@ for res in output:
 
   * [📈 视频分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 视频检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)
+
+* <details open>
+  <summary> <b> 🌐 多模态视觉语言模型 </b></summary>
+
+  * [📝 文档类视觉语言模型模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/doc_vlm.html)
+  </details>
 
 * <details>
   <summary> <b> 📄 相关说明文件 </b></summary>

@@ -23,8 +23,32 @@ def get_device_type():
 def get_paddle_version():
     import paddle
 
-    version = paddle.__version__.split(".")
-    # ref: https://github.com/PaddlePaddle/Paddle/blob/release/3.0-beta2/setup.py#L316
+    version = paddle.__version__
+    if "-" in version:
+        version, tag = version.split("-")
+    else:
+        tag = None
+    version = version.split(".")
     assert len(version) == 3
-    major_v, minor_v, patch_v = version
-    return major_v, minor_v, patch_v
+    major_v, minor_v, patch_v = map(int, version)
+    if tag:
+        return major_v, minor_v, patch_v, tag
+    else:
+        return major_v, minor_v, patch_v, None
+
+
+def get_paddle_cuda_version():
+    import paddle.version
+
+    cuda_version = paddle.version.cuda()
+    return tuple(map(int, cuda_version.split(".")))
+
+
+def get_paddle_cudnn_version():
+    import paddle.version
+
+    cudnn_version = paddle.version.cudnn()
+    return tuple(map(int, cudnn_version.split(".")))
+
+
+# Should we also support getting the runtime versions of CUDA and cuDNN?

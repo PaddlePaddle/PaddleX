@@ -21,7 +21,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/GroundingDINO-T_infer.tar">推理模型</a></td>
+<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">推理模型</a></td>
 <td>49.4</td>
 <td>64.4</td>
 <td>253.72</td>
@@ -30,7 +30,7 @@ comments: true
 <td rowspan="1">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
 </tr>
 <tr>
-<td>YOLO-Worldv2-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLO-Worldv2-L_infer.tar">推理模型</a></td>
+<td>YOLO-Worldv2-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">推理模型</a></td>
 <td>44.4</td>
 <td>59.8</td>
 <td>24.32</td>
@@ -152,10 +152,17 @@ for res in results:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理</td>
+<td>是否启用高性能推理插件</td>
 <td><code>bool</code></td>
 <td>无</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>thresholds</code></td>

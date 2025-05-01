@@ -5,6 +5,23 @@ comments: true
 # Version Update Information
 
 ## Latest Version Information
+
+### PaddleX v3.0.0rc1(4.22/2025)
+
+This version fully adapts to PaddlePaddle 3.0.0, with the following core upgrades:
+
+- **Adapts to New Features of PaddlePaddle 3.0**: Supports compiler training, which can be enabled by appending `-o Global.dy2st=True` to the training command. On GPUs, the training speed of most models can be improved by over 10%, and for a few models, the improvement can exceed 30%. For inference, the models are fully adapted to PaddlePaddle 3.0's Intermediate Representation (PIR) technology, offering more flexible extensibility and compatibility. The file names for inference model have been changed from `xxx.pdmodel` to `xxx.json`.
+- **Newly Added Self-developed MLLM for Document Image Understanding, PP-DocBee**: PP-DocBee has achieved SOTA performance among models with similar parameter sizes on academic and internal business scenario document understanding evaluation benchmarks. It can be applied to document QA scenarios such as financial reports, research reports, contracts, manuals, and legal regulations.
+- **Full Support for ONNX Format Models, with Support for Model Format Conversion via the Paddle2ONNX Plugin.**
+- **Enhanced High-Performance Inference**:
+    - **Added Support for ONNX and OM Format Models**: PaddleX can intelligently select the model format based on needs;
+    - **Expanded Supported Pipelines and Modules**: All single modules and pipelines for inference model can use the high-performance inference plugin to improve inference performance;
+    - **Support for 3 Configuration Methods: CLI, API, and Configuration Files**: Enables more granular configuration, allowing users to enable and disable the high-performance inference plugin at the sub-pipeline and sub-module level.
+
+- **Expanded Multi-Hardware Support**:
+  - **NPU: The number of models fully validated on Ascend NPU has increased to 200. Additionally, common pipelines such as general OCR, image classification, and object detection support OM model format inference, with inference speed improvements ranging from 113.8% to 226.4%. Inference deployment is supported on Atlas 200 and Atlas 300 series products.**
+  - **GCU: Enflame has been officially integrated into the PaddlePaddle regular release system, completing the adaptation of the PaddleX ecosystem. Supports the training and inference of 90 models.**
+
 ### PaddleX v3.0.0rc0(2.14/2025)
 
 PaddleX 3.0 rc0 is fully compatible with PaddlePaddle 3.0rc0 version, adding 10+ pipelines, 40+ models, optimizing model and pipeline APIs, and adapting more models to multiple hardware. The high-performance inference and serving capabilities have been comprehensively upgraded. The specific new features are as follows:

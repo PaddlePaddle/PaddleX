@@ -67,4 +67,6 @@ class SegTrainer(BaseTrainer):
         train_args["dy2st"] = self.train_config.get("dy2st", False)
         if self.train_config.get("input_shape") is not None:
             train_args["input_shape"] = self.train_config.input_shape
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         return train_args

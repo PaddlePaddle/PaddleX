@@ -17,10 +17,15 @@ from typing import Dict, Generic, List, Tuple, TypeVar, Union
 from pydantic import BaseModel, Discriminator
 from typing_extensions import Annotated, Literal, TypeAlias
 
+from ....utils.deps import is_dep_available
+
+if is_dep_available("openai"):
+    from openai.types.chat import ChatCompletion
+
 __all__ = [
-    "NoResultResponse",
+    "AIStudioNoResultResponse",
     "ResultT",
-    "ResultResponse",
+    "AIStudioResultResponse",
     "Response",
     "ImageInfo",
     "PDFPageInfo",
@@ -30,7 +35,7 @@ __all__ = [
 ]
 
 
-class NoResultResponse(BaseModel):
+class AIStudioNoResultResponse(BaseModel):
     logId: str
     errorCode: int
     errorMsg: str
@@ -39,14 +44,16 @@ class NoResultResponse(BaseModel):
 ResultT = TypeVar("ResultT", bound=BaseModel)
 
 
-class ResultResponse(BaseModel, Generic[ResultT]):
+class AIStudioResultResponse(BaseModel, Generic[ResultT]):
     logId: str
     result: ResultT
     errorCode: Literal[0] = 0
     errorMsg: Literal["Success"] = "Success"
 
 
-Response: TypeAlias = Union[ResultResponse, NoResultResponse]
+Response: TypeAlias = Union[
+    AIStudioResultResponse, AIStudioNoResultResponse, "ChatCompletion"
+]
 
 
 class ImageInfo(BaseModel):

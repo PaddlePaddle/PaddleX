@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+import ast
 import importlib.resources
 import os
 import shutil
@@ -23,6 +24,7 @@ from pathlib import Path
 from . import create_pipeline
 from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
+from .inference.utils.model_paths import get_model_paths
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.deps import (
@@ -30,7 +32,7 @@ from .utils.deps import (
     get_serving_dep_specs,
     require_paddle2onnx_plugin,
 )
-from .utils.flags import FLAGS_json_format_model
+from .utils.env import get_paddle_cuda_version
 from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -132,7 +134,12 @@ def args_cfg():
     pipeline_group.add_argument(
         "--use_hpip",
         action="store_true",
-        help="Enable HPIP acceleration by default.",
+        help="Use high-performance inference plugin.",
+    )
+    pipeline_group.add_argument(
+        "--hpi_config",
+        type=ast.literal_eval,
+        help="High-performance inference configuration.",
     )
     pipeline_group.add_argument(
         "--get_pipeline_config",
@@ -159,26 +166,26 @@ def args_cfg():
         default=8080,
         help="Port number to serve on (default: 8080).",
     )
-    # Serving also uses `--pipeline`, `--device`, and `--use_hpip`
+    # Serving also uses `--pipeline`, `--device`, `--use_hpip`, and `--hpi_config`
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
         "--paddle2onnx",
         action="store_true",
-        help="Convert PaddlePaddle model to ONNX format",
+        help="Convert PaddlePaddle model to ONNX format.",
     )
     paddle2onnx_group.add_argument(
         "--paddle_model_dir",
         type=str,
-        help="Directory containing the PaddlePaddle model",
+        help="Directory containing the PaddlePaddle model.",
     )
     paddle2onnx_group.add_argument(
         "--onnx_model_dir",
         type=str,
-        help="Output directory for the ONNX model",
+        help="Output directory for the ONNX model.",
     )
     paddle2onnx_group.add_argument(
-        "--opset_version", type=int, help="Version of the ONNX opset to use"
+        "--opset_version", type=int, default=7, help="Version of the ONNX opset to use."
     )
 
     # Parse known arguments to get the pipeline name
@@ -230,9 +237,8 @@ def install(args):
         SUPPORTED_DEVICE_TYPES = ["cpu", "gpu", "npu"]
         if device_type not in SUPPORTED_DEVICE_TYPES:
             logging.error(
-                "HPI installation failed!\n"
-                "Supported device_type: %s. Your input device_type: %s.\n"
-                "Please ensure the device_type is correct.",
+                "Failed to install the high-performance plugin.\n"
+                "Supported device types: %s. Your input device type: %s.\n",
                 SUPPORTED_DEVICE_TYPES,
                 device_type,
             )
@@ -241,6 +247,10 @@ def install(args):
         if device_type == "cpu":
             package = "ultra-infer-python"
         elif device_type == "gpu":
+            if get_paddle_cuda_version()[0] != 11:
+                sys.exit(
+                    "You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin."
+                )
             package = "ultra-infer-gpu-python"
         elif device_type == "npu":
             package = "ultra-infer-npu-python"
@@ -310,10 +320,13 @@ def pipeline_predict(
     device,
     save_path,
     use_hpip,
+    hpi_config,
     **pipeline_args,
 ):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline, device=device, use_hpip=use_hpip)
+    pipeline = create_pipeline(
+        pipeline, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+    )
     result = pipeline.predict(input, **pipeline_args)
     for res in result:
         res.print()
@@ -321,11 +334,13 @@ def pipeline_predict(
             res.save_all(save_path=save_path)
 
 
-def serve(pipeline, *, device, use_hpip, host, port):
+def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
     from .inference.serving.basic_serving import create_pipeline_app, run_server
 
     pipeline_config = load_pipeline_config(pipeline)
-    pipeline = create_pipeline(config=pipeline_config, device=device, use_hpip=use_hpip)
+    pipeline = create_pipeline(
+        config=pipeline_config, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+    )
     app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port)
 
@@ -334,25 +349,20 @@ def serve(pipeline, *, device, use_hpip, host, port):
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     require_paddle2onnx_plugin()
 
-    PD_MODEL_FILE_PREFIX = MODEL_FILE_PREFIX
-    PD_PARAMS_FILENAME = f"{MODEL_FILE_PREFIX}.pdiparams"
     ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"
     CONFIG_FILENAME = f"{MODEL_FILE_PREFIX}.yml"
     ADDITIONAL_FILENAMES = ["scaler.pkl"]
 
-    def _check_input_dir(input_dir, pd_model_file_ext):
+    def _check_input_dir(input_dir):
         if input_dir is None:
             sys.exit("Input directory must be specified")
         if not input_dir.exists():
             sys.exit(f"{input_dir} does not exist")
         if not input_dir.is_dir():
             sys.exit(f"{input_dir} is not a directory")
-        model_path = (input_dir / PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)
-        if not model_path.exists():
-            sys.exit(f"{model_path} does not exist")
-        params_path = input_dir / PD_PARAMS_FILENAME
-        if not params_path.exists():
-            sys.exit(f"{params_path} does not exist")
+        model_paths = get_model_paths(input_dir)
+        if "paddle" not in model_paths:
+            sys.exit("PaddlePaddle model does not exist")
         config_path = input_dir / CONFIG_FILENAME
         if not config_path.exists():
             sys.exit(f"{config_path} does not exist")
@@ -361,23 +371,18 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
         if shutil.which("paddle2onnx") is None:
             sys.exit("Paddle2ONNX is not available. Please install the plugin first.")
 
-    def _run_paddle2onnx(input_dir, pd_model_file_ext, output_dir, opset_version):
+    def _run_paddle2onnx(input_dir, output_dir, opset_version):
+        model_paths = get_model_paths(input_dir)
         logging.info("Paddle2ONNX conversion starting...")
         # XXX: To circumvent Paddle2ONNX's bug
-        if opset_version is None:
-            if pd_model_file_ext == ".json":
-                opset_version = 19
-            else:
-                opset_version = 7
-            logging.info("Using default ONNX opset version: %d", opset_version)
         cmd = [
             "paddle2onnx",
             "--model_dir",
-            str(input_dir),
+            str(model_paths["paddle"][0].parent),
             "--model_filename",
-            str(Path(PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)),
+            str(model_paths["paddle"][0].name),
             "--params_filename",
-            PD_PARAMS_FILENAME,
+            str(model_paths["paddle"][1].name),
             "--save_file",
             str(output_dir / ONNX_MODEL_FILENAME),
             "--opset_version",
@@ -410,13 +415,9 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     onnx_model_dir = Path(onnx_model_dir)
     logging.info(f"Input dir: {paddle_model_dir}")
     logging.info(f"Output dir: {onnx_model_dir}")
-    pd_model_file_ext = ".json"
-    if not FLAGS_json_format_model:
-        if not (paddle_model_dir / f"{PD_MODEL_FILE_PREFIX}.json").exists():
-            pd_model_file_ext = ".pdmodel"
-    _check_input_dir(paddle_model_dir, pd_model_file_ext)
+    _check_input_dir(paddle_model_dir)
     _check_paddle2onnx()
-    _run_paddle2onnx(paddle_model_dir, pd_model_file_ext, onnx_model_dir, opset_version)
+    _run_paddle2onnx(paddle_model_dir, onnx_model_dir, opset_version)
     if not (onnx_model_dir.exists() and onnx_model_dir.samefile(paddle_model_dir)):
         _copy_config_file(paddle_model_dir, onnx_model_dir)
         _copy_additional_files(paddle_model_dir, onnx_model_dir)
@@ -440,7 +441,8 @@ def main():
         serve(
             args.pipeline,
             device=args.device,
-            use_hpip=args.use_hpip,
+            use_hpip=args.use_hpip or None,
+            hpi_config=args.hpi_config,
             host=args.host,
             port=args.port,
         )
@@ -467,6 +469,7 @@ def main():
                 args.input,
                 args.device,
                 args.save_path,
-                use_hpip=args.use_hpip,
+                use_hpip=args.use_hpip or None,
+                hpi_config=args.hpi_config,
                 **pipeline_args_dict,
             )

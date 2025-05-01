@@ -57,9 +57,11 @@ class AudioBatchSampler(BaseBatchSampler):
             if inputs.startswith("http"):
                 inputs = self._download_from_url(inputs)
             yield [inputs]
+        elif isinstance(inputs, list):
+            yield inputs
         else:
-            logging.warning(
-                f"Not supported input data type! Only `str` are supported, but got: {input}."
+            raise TypeError(
+                f"Not supported input data type! Only `str` are supported, but got: {type(inputs)}."
             )
 
     @BaseBatchSampler.batch_size.setter

@@ -8,21 +8,21 @@ comments: true
 
 ## 1、docker环境准备
 
-* 拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.0。
+* 拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.T113。
 
 ```bash
 # 910B x86 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84
 # 910B aarch64 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-aarch64-gcc84
 # 310P aarch64 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310p-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310p-base-aarch64-gcc84
 # 310P x86 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310p-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310p-base-x86_64-gcc84
 # 310B aarch64 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310b-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310b-base-aarch64-gcc84
 # 310B x86 架构
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-310b-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-310b-base-x86_64-gcc84
 ```
 
 * 以 910B x86 架构为例，使用如下命令启动容器，ASCEND_RT_VISIBLE_DEVICES 指定可见的 NPU 卡号
@@ -34,7 +34,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
     -v /usr/local/bin/npu-smi:/usr/local/bin/npu-smi \
     -v /usr/local/dcmi:/usr/local/dcmi \
     -e ASCEND_RT_VISIBLE_DEVICES="0,1,2,3,4,5,6,7" \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80RC2-ubuntu20-npu-base-x86_64-gcc84 /bin/bash
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84 /bin/bash
 ```
 
 ## 2、安装PaddleX及高性能推理插件
@@ -43,8 +43,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-git checkout develop
-pip install -e .
+pip install -e ".[base]"
 ```
 
 ### 2.2 安装高性能推理插件
@@ -54,10 +53,8 @@ pip install -e .
 * 推荐直接下载安装 PaddleX 官方提供的 whl 包
 
 ```bash
-# x86 架构
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/infer_om/ultar_infer_whl/ultra_infer_python-1.0.0-cp310-cp310-linux_x86_64.whl
-# aarch64 架构
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/infer_om/ultar_infer_whl/ultra_infer_python-1.0.0-cp310-cp310-linux_aarch64.whl
+# 使用PaddleX命令安装高性能推理插件
+paddlex --install hpi-npu
 ```
 
 * 手动编译安装
@@ -66,15 +63,12 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy
 cd PaddleX/libs/ultra-infer/python
 unset http_proxy https_proxy
 # 使能om，onnx后端，禁用paddle后端，禁用gpu
-export ENABLE_OM_BACKEND=ON ENABLE_ORT_BACKEND=ON ENABLE_PADDLE_BACKEND=OFF WITH_GPU=OFF
-# 第一次编译需要设置
-export ENABLE_VISION=ON
-export ENABLE_TEXT=ON
-# 注意，仅aarch机器需要设置NPU_HOST_LIB，指定libascend库
+export ENABLE_OM_BACKEND=ON ENABLE_ORT_BACKEND=ON ENABLE_PADDLE_BACKEND=OFF WITH_GPU=OFF DEVICE_TYPE=NPU
+# 注意，仅aarch64机器需要设置NPU_HOST_LIB，指定libascend库
 export NPU_HOST_LIB=/usr/local/Ascend/ascend-toolkit/latest/aarch64-linux/lib64
 python setup.py build
 python setup.py bdist_wheel
-python -m pip install dist/ultra_infer_python*.whl
+python -m pip install dist/ultra_infer_npu*.whl
 ```
 
 ## 3、单模型推理
@@ -99,6 +93,13 @@ OM 后端支持模型列表如下，不同芯片之间 OM 模型不通用（更�
 | 时序异常检测 | DLinear_ad | observed_cov_numeric:1,96,2 | 待提供 |
 | 图像特征 | PP-ShiTuV2_rec | x:1,3,224,224 | 待提供 |
 | 印章文本检测 | PP-OCRv4_server_seal_det | x:1,3,640,480 | 待提供 |
+| 印章文本检测 | PP-OCRv4_mobile_seal_det | x:1,3,640,480 | 待提供 |
+| 文档图像方向分类 | PP-LCNet_x1_0_doc_ori | x:1,3,224,224 | 待提供 |
+| 文档矫正 | UVDoc | x:1,3,736,736 | 待提供 |
+| 版面区域检测 | PP-DocLayout-L | im_shape:1,2;image:1,3,640,640;scale_factor:1,2 | 待提供 |
+| 表格分类 | PP-LCNet_x1_0_table_cls | x:1,3,224,224 | 待提供 |
+| 表格单元格检测 | RT-DETR-L_wired_table_cell_det | im_shape:1,2;image:1,3,640,640;scale_factor:1,2 | 待提供 |
+| 表格单元格检测 | RT-DETR-L_wireless_table_cell_det | im_shape:1,2;image:1,3,640,640;scale_factor:1,2 | 待提供 |
 
 ### 3.1 OM后端推理
 
@@ -108,15 +109,15 @@ OM 后端支持模型列表如下，不同芯片之间 OM 模型不通用（更�
 
 如果您想使用自己的模型进行推理部署，先用 paddle2onnx 插件将导出的静态图模型转换为 ONNX 模型，再使用 ATC 工具转换为 OM 模型。inference.yml 在 PaddleX 导出模型时会自动生成，或者下载使用官方模型中的配置文件。
 
-值得注意的是，目前只支持使用 OM 静态 shape 进行推理，在转换时需要指定 input_shape，各模型输入shape参考上表，如果指定 shape 推理精度异常，可以参考 PaddleX 导出模型生成的 inference.yml 配置文件，修改 input_shape 参数。动态 shape 会在下个版本支持。
+由于310系列机器不支持动态 shape，目前只能使用固定 shape 进行推理，在转换 OM 时需要指定 input_shape，各模型输入shape参考上表，如果指定 shape 推理精度异常，可以参考 PaddleX 导出模型生成的 inference.yml 配置文件，修改 input_shape 参数。
 
-以 PP-OCRv4_mobile_rec 为例说明转化方法：
+以 PP-OCRv4_mobile_rec 为例说明 OM 转化方法：
 
  ```bash
 # 先使用PaddleX提供的paddle2onnx插件将训练导出的静态图转成onnx模型
 paddlex --paddle2onnx --paddle_model_dir <PaddlePaddle模型存储目录> --onnx_model_dir <ONNX模型存储目录>
 
-# 昇腾默认支持fp16,即算子支持float16和float32数据类型时，强制选择float16
+# 昇腾默认支持fp16精度
 # 使用静态shape，通过参数input_shape指定输入shape
 atc --model=inference.onnx --framework=5 --output=inference --soc_version=Ascend910B2 --input_shape "x:1,3,48,320"
 # 如果需要fp32精度，需要在转换命令中加上--precision_mode_v2=origin
@@ -131,10 +132,9 @@ atc --model=inference.onnx --framework=5 --output=inference --soc_version=Ascend
 
 PP-OCRv4_mobile_rec：
 
-```python
-# 下载推理示例图片
-# wget https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png
+下载官方提供的[OCR示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png)，运行下面 python 代码即可完成推理。
 
+```python
 from paddlex import create_model
 
 hpi_config = {
@@ -156,15 +156,14 @@ for res in output:
 
 ResNet50：
 
-```python
-# 下载推理示例图片
-# wget https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
+下载官方提供的[图像分类示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg)，运行下面 python 代码即可完成推理。
 
+```python
 from paddlex import create_model
 
 hpi_config = {
     "auto_config": False,   # 关闭自动配置功能，手动配置后端
-    "backend": "om", # 选用om后端，昇腾上可选值为："onnxruntime"、"om"
+    "backend": "om", # 选用om后端
 }
 
 # 无需传参input_shape
@@ -176,13 +175,14 @@ for res in output:
     res.save_to_json("./output/res.json")
 ```
 
-如遇到推理问题，可以先参考本文档第5小节：常见问题解决方法，如果仍未解决，可以给 PaddleX 官方提 issue，或者加入 PaddleX 官方交流群进行讨论。
+如果遇到问题，可以先参考本文档第5小节：常见问题解决方法，如果仍未解决，可以给 PaddleX 官方提 issue，或者加入 PaddleX 官方交流群进行讨论。
 
 ### 3.2 ORT后端推理
 
-ORT 后端推理使用方法与 OM 后端类似，OM 不支持的模型，可以使用 ORT 后端进行推理。
+ORT 即 ONNXRUNTIME, 推理使用方法与 OM 后端类似，OM 不支持的模型，可以使用 ORT 后端进行推理。
 
 * 准备 ONNX 模型及配置文件
+
 各模型的静态图权重可通过[PaddleX模型列表（昇腾 NPU）](../support_list/model_list_npu.md)进行下载，如果使用您自己训练的模型，可以使用 PaddleX 提供的 paddle2onnx 插件将静态图模型转换为 ONNX 模型，放置在指定目录下。
 
 ```bash
@@ -196,9 +196,6 @@ ORT 后端支持动态 shape，不需要考虑 input_shape 的问题；此外，
 以 PP-OCRv4_mobile_rec 为例：
 
 ```python
-# 下载推理示例图片
-# wget https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png
-
 from paddlex import create_model
 
 hpi_config = {
@@ -285,10 +282,9 @@ SubModules:
 
 * 使用 PaddleX Python API 进行推理
 
-```python
-# 下载推理示例图片
-# wget https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png
+下载官方提供的[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png)，运行下面 python 代码即可完成产线推理。
 
+```python
 from paddlex import create_pipeline
 # pipeline设置为修改后的产线配置文件，use_hpip表示使用高性能推理
 pipeline = create_pipeline(pipeline="./my_path/OCR.yaml", device="npu", use_hpip=True)
@@ -305,9 +301,9 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-需要注意的是，因为底层硬件的支持问题，在 arm 机器上，会出现 PP-OCRv4_mobile_det 推理卡住的问题，可以修改 OCR.yml 配置文件，将 PP-OCRv4_mobile_det 的推理后端设置为 onnxruntime，来规避这个问题。这个问题在后续版本中会修复。
+值得一提的是，因为 OM 推理不支持动态 shape，在部分图片上推理精度可能会受影响，可以修改 OCR.yml 配置文件，将推理精度不对的模型推理后端设置为 onnxruntime，来规避这个问题。
 
-修改 OCR.yml 如下：
+例如修改 PP-OCRv4_mobile_det 的推理后端，可修改 OCR.yml 如下：
 
 ```yaml
 pipeline_name: OCR
@@ -386,15 +382,7 @@ for res in output:
 ```
 
 ## 5、常见问题解决方法
-### 5.1 “RuntimeError: UltraInfer initalized failed! Error: libopencv_flann.so.3.4: cannot open shared object file: No such file or directory”
-
-找不到 libopencv_flann.so.3.4 库，查找到该库在机器上的路径，然后将路径添加到 LD_LIBRARY_PATH 中，如：
-
-```bash
-export LD_LIBRARY_PATH=/usr/local/lib/python3.10/dist-packages/ultra_infer/libs/third_libs/opencv/lib:$LD_LIBRARY_PATH
-```
-
-### 5.2 “cannot allocate memory in static TLS block”
+### 5.1 “cannot allocate memory in static TLS block”
 
 在 arm 机器上，可能会出现 “xxx.so cannot allocate memory in static TLS block” 的问题，查找报错的.so文件在机器上的路径，然后添加到 LD_PRELOAD 中，如：
 
@@ -403,3 +391,12 @@ export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:$LD_PRELOAD
 export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libGLdispatch.so.0:$LD_PRELOAD
 export LD_PRELOAD=/usr/local/lib/python3.10/dist-packages/scikit_learn.libs/libgomp-d22c30c5.so.1.0.0:$LD_PRELOAD
 ```
+
+### 5.2 模型推理精度问题
+
+如果模型推理精度有问题，可以尝试以下方法：
+1. 修改模型推理后端，例如将 om 改为 onnxruntime。
+2. 根据实际图片调整模型输入 shape。
+3. 修改模型推理精度，例如将 fp16 改为 fp32。
+
+更多关于高性能推理的使用教程，可以参考[PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)

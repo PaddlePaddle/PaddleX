@@ -1,0 +1,14 @@
+Global:
+  model: PP-DocBee-2B
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "/path/to/PP-DocBee-2B"
+  input:
+    image: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png"
+    query: "识别这份表格的内容"
+  kernel_option:
+    run_mode: paddle

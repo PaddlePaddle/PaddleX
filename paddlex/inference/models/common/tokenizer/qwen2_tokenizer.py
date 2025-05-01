@@ -18,10 +18,12 @@ import unicodedata
 from functools import lru_cache
 from typing import List, Optional, Tuple
 
-import regex as re
-
+from .....utils.deps import is_dep_available
 from .tokenizer_utils import PretrainedTokenizer
 from .tokenizer_utils_base import AddedToken, TextInput
+
+if is_dep_available("regex"):
+    import regex as re
 
 VOCAB_FILES_NAMES = {
     "vocab_file": "vocab.json",

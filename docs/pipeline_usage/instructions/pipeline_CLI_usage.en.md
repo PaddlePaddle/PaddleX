@@ -25,6 +25,8 @@ This single step completes the inference prediction and saves the prediction res
 * `input`: The path to the data file to be predicted, supporting local file paths, local directories containing data files to be predicted, and file URL links;
 * `device`: Used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, using 0 id GPU if available, otherwise CPU;
 * `save_path`: The save path for prediction results. By default, the prediction results will not be saved;
+* `use_hpip`: Enable the high-performance inference plugin;
+* `hpi_config`: The high-performance inference configuration;
 * _`inference hyperparameters`_: Different pipelines support different inference hyperparameter settings. And the priority of this parameter is greater than the pipeline default configuration. Such as the image classification pipeline, it supports `topk` parameter. Please refer to the specific pipeline description document for details.
 
 ### 2. Custom Pipeline Configuration

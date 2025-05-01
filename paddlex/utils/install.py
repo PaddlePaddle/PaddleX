@@ -29,15 +29,16 @@ def install_packages_from_requirements_file(
 
     # TODO: Precompute or cache the constraints
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
-        for req in DEP_SPECS:
-            req = Requirement(req)
-            if req.marker and not req.marker.evaluate():
-                continue
-            if req.url:
-                req = f"{req.name}@{req.url}"
-            else:
-                req = f"{req.name}{req.specifier}"
-            f.write(req + "\n")
+        for reqs in DEP_SPECS.values():
+            for req in reqs:
+                req = Requirement(req)
+                if req.marker and not req.marker.evaluate():
+                    continue
+                if req.url:
+                    req = f"{req.name}@{req.url}"
+                else:
+                    req = f"{req.name}{req.specifier}"
+                f.write(req + "\n")
         constraints_file_path = f.name
 
     args = [

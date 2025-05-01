@@ -27,7 +27,7 @@ if is_dep_available("opencv-contrib-python"):
 
 
 def prune_result(result: dict) -> dict:
-    KEYS_TO_REMOVE = ["input_path"]
+    KEYS_TO_REMOVE = ["input_path", "page_index"]
 
     def _process_obj(obj):
         if isinstance(obj, dict):
@@ -90,7 +90,11 @@ def postprocess_images(
     output_images: Dict[str, str] = {}
     for key, img in images.items():
         output_images[key] = postprocess_image(
-            np.array(img) if isinstance(img, Image) else img,
+            (
+                cv2.cvtColor(np.array(img.convert("RGB")), cv2.COLOR_RGB2BGR)
+                if isinstance(img, Image)
+                else img
+            ),
             log_id=log_id,
             filename=filename_template.format(key=key),
             file_storage=file_storage,

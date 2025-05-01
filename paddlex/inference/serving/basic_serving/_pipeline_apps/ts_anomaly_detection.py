@@ -17,7 +17,7 @@ from typing import Any
 from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import ResultResponse
+from ...infra.models import AIStudioResultResponse
 from ...schemas.ts_anomaly_detection import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 
@@ -36,7 +36,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         INFER_ENDPOINT,
         "infer",
     )
-    async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
+    async def _infer(request: InferRequest) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -57,7 +57,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         else:
             output_image = None
 
-        return ResultResponse[InferResult](
+        return AIStudioResultResponse[InferResult](
             logId=serving_utils.generate_log_id(),
             result=InferResult(csv=output_csv, image=output_image),
         )

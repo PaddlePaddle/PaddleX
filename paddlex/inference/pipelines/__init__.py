@@ -27,6 +27,7 @@ from .attribute_recognition import (
 from .base import BasePipeline
 from .components import BaseChat, BaseGeneratePrompt, BaseRetriever
 from .doc_preprocessor import DocPreprocessorPipeline
+from .doc_understanding import DocUnderstandingPipeline
 from .face_recognition import FaceRecPipeline
 from .formula_recognition import FormulaRecognitionPipeline
 from .image_classification import ImageClassificationPipeline
@@ -125,10 +126,10 @@ def create_pipeline(
         pp_option (Optional[PaddlePredictorOption], optional): The options for
             the PaddlePredictor. Defaults to None.
         use_hpip (Optional[bool], optional): Whether to use the high-performance
-            inference plugin (HPIP) for prediction by default.
-            Defaults to None.
+            inference plugin (HPIP). If set to None, the setting from the
+            configuration file or `config` will be used. Defaults to None.
         hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
-            default high-performance inference configuration dictionary.
+            high-performance inference configuration dictionary.
             Defaults to None.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
@@ -150,20 +151,17 @@ def create_pipeline(
                 pipeline,
                 config["pipeline_name"],
             )
+        config = config.copy()
     pipeline_name = config["pipeline_name"]
-    if device is None:
-        device = config.get("device", None)
-    if use_hpip is None:
-        use_hpip = config.get("use_hpip", False)
-    if hpi_config is None:
-        hpi_config = config.get("hpi_config", None)
+    if use_hpip is not None:
+        config["use_hpip"] = use_hpip
+    if hpi_config is not None:
+        config["hpi_config"] = hpi_config
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
         pp_option=pp_option,
-        use_hpip=use_hpip,
-        hpi_config=hpi_config,
         *args,
         **kwargs,
     )

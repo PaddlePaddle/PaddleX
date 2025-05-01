@@ -143,10 +143,17 @@ Related methods and parameter explanations are as follows:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. </td>
+<td>Whether to enable the high-performance inference plugin</td>
 <td><code>bool</code></td>
 <td>None</td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>threshold</code></td>
@@ -451,7 +458,8 @@ The following steps are required:
 * Specify the path of the model's `.yaml` configuration file (here it is `PP-YOLOE-R-L.yaml`. When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU))](../../../support_list/models_list.en.md)）
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under Global and Train in the `.yaml` configuration file, or by adding parameters in the command line. For example, specify the first 2 GPU cards for training: `-o Global.device=gpu:0,1`; set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and detailed explanations, please refer to the configuration file instructions for the corresponding task module [PaddleX Common Model Configuration File Parameter Instructions.](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the fields under Global and Train in the `.yaml` configuration file, or by adding parameters in the command line. For example, specify the first 2 GPU cards for training: `-o Global.device=gpu:0,1`; set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and detailed explanations, please refer to the configuration file instructions for the corresponding task module [PaddleX Common Model Configuration File Parameter Instructions.](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Explanations (Click to Expand)</b></summary>
 
@@ -466,7 +474,8 @@ Other related parameters can be set by modifying the fields under Global and Tra
 </li>
 <li><code>train.log</code>: Training log file, recording changes in model metrics and loss during training;</li>
 <li><code>config.yaml</code>: Training configuration file, recording the hyperparameter configuration for this training session;</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ## <b>4.3 Model Evaluation</b>

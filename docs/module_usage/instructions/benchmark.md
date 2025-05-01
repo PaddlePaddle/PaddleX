@@ -19,7 +19,7 @@ Benchmark 功能会统计模型在端到端推理过程中，所有操作的每�
 * `PADDLE_PDX_INFER_BENCHMARK_ITERS`：测试的循环次数，默认为 `0`；
 * `PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR`：保存指标的目录，如 `./benchmark`，默认为 `None`，表示不保存 benchmark 指标；
 * `PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ`：设置为 `True` 时则对读取输入数据操作应用缓存机制，避免重复I/O开销，并且数据读取及缓存消耗的时间不记录到核心耗时中。默认为 `False`；
-* `PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API`：设置为 `True` 时则使用新的推理API，可以看更细致的分阶段结果。默认为 `False`；
+* `PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API`：设置为 `True` 时则使用新的推理API，可以看更细致的分阶段结果。默认为 `False`。
 
 **注意**：
 
