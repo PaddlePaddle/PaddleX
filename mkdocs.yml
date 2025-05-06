@@ -367,6 +367,7 @@ nav:
        - 说明文件: 
          - PaddleX产线命令行使用说明: pipeline_usage/instructions/pipeline_CLI_usage.md
          - PaddleX产线Python脚本使用说明: pipeline_usage/instructions/pipeline_python_API.md
+         - 产线并行推理: pipline_usage/instructions/parallel_inference.md
   - 单功能模块使用教程:
        - OCR:
          - 文本检测模块: module_usage/tutorials/ocr_modules/text_detection.md
