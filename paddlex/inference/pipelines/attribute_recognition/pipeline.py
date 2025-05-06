@@ -21,12 +21,13 @@ from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from .result import AttributeRecResult
 
 
-class AttributeRecPipeline(BasePipeline):
+class _AttributeRecPipeline(BasePipeline):
     """Attribute Rec Pipeline"""
 
     def __init__(
@@ -98,6 +99,15 @@ class AttributeRecPipeline(BasePipeline):
                 }
             )
         return AttributeRecResult(single_img_res)
+
+
+class AttributeRecPipeline(AutoParallelImageSimpleInferencePipeline):
+    @property
+    def _pipeline_cls(self):
+        return _AttributeRecPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["Detection"]["batch_size"]
 
 
 @pipeline_requires_extra("cv")

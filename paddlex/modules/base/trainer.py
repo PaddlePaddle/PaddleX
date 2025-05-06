@@ -21,7 +21,7 @@ from ...utils.device import (
     set_env_for_device,
     update_device_num,
 )
-from ...utils.flags import FLAGS_json_format_model, DISABLE_CINN_MODEL_WL
+from ...utils.flags import DISABLE_CINN_MODEL_WL, FLAGS_json_format_model
 from ...utils.misc import AutoRegisterABCMetaClass
 from .build_model import build_model
 from .utils.cinn_setting import CINN_WHITELIST, enable_cinn_backend

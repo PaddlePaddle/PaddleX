@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.semantic_segmentation.result import SegResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class SemanticSegmentationPipeline(BasePipeline):
+class _SemanticSegmentationPipeline(BasePipeline):
     """Semantic Segmentation Pipeline"""
-
-    entities = "semantic_segmentation"
 
     def __init__(
         self,
@@ -83,3 +81,15 @@ class SemanticSegmentationPipeline(BasePipeline):
             SegResult: The predicted segmentation results.
         """
         yield from self.semantic_segmentation_model(input, target_size=target_size)
+
+
+@pipeline_requires_extra("cv")
+class SemanticSegmentationPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "semantic_segmentation"
+
+    @property
+    def _pipeline_cls(self):
+        return _SemanticSegmentationPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["SemanticSegmentation"].get("batch_size", 1)

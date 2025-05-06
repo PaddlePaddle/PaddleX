@@ -23,16 +23,14 @@ from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import rotate_image
 from .result import DocPreprocessorResult
 
 
-@pipeline_requires_extra("ocr")
-class DocPreprocessorPipeline(BasePipeline):
+class _DocPreprocessorPipeline(BasePipeline):
     """Doc Preprocessor Pipeline"""
-
-    entities = "doc_preprocessor"
 
     def __init__(
         self,
@@ -195,3 +193,15 @@ class DocPreprocessorPipeline(BasePipeline):
                     "output_img": output_img,
                 }
                 yield DocPreprocessorResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class DocPreprocessorPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "doc_preprocessor"
+
+    @property
+    def _pipeline_cls(self):
+        return _DocPreprocessorPipeline
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)

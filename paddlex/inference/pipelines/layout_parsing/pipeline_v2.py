@@ -1143,4 +1143,4 @@ class LayoutParsingPipelineV2(AutoParallelImageSimpleInferencePipeline):
         return _LayoutParsingPipelineV2
 
     def _get_batch_size(self, config):
-        return 1
+        return config.get("batch_size", 1)

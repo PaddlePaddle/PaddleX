@@ -23,6 +23,7 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..ocr.result import OCRResult
@@ -30,11 +31,8 @@ from .result import LayoutParsingResult
 from .utils import get_sub_regions_ocr_res, sorted_layout_boxes
 
 
-@pipeline_requires_extra("ocr")
-class LayoutParsingPipeline(BasePipeline):
+class _LayoutParsingPipeline(BasePipeline):
     """Layout Parsing Pipeline"""
-
-    entities = ["layout_parsing"]
 
     def __init__(
         self,
@@ -579,3 +577,15 @@ class LayoutParsingPipeline(BasePipeline):
                 "model_settings": model_settings,
             }
             yield LayoutParsingResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class LayoutParsingPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = ["layout_parsing"]
+
+    @property
+    def _pipeline_cls(self):
+        return _LayoutParsingPipeline
+
+    def _get_batch_size(self, config):
+        return 1

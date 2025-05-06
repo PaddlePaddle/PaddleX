@@ -28,6 +28,7 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..doc_preprocessor.result import DocPreprocessorResult
@@ -43,11 +44,8 @@ if is_dep_available("scikit-learn"):
     from sklearn.cluster import KMeans
 
 
-@pipeline_requires_extra("ocr")
-class TableRecognitionPipelineV2(BasePipeline):
+class _TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
-
-    entities = ["table_recognition_v2"]
 
     def __init__(
         self,
@@ -904,3 +902,15 @@ class TableRecognitionPipelineV2(BasePipeline):
                     "model_settings": model_settings,
                 }
                 yield TableRecognitionResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class TableRecognitionPipelineV2(AutoParallelImageSimpleInferencePipeline):
+    entities = ["table_recognition_v2"]
+
+    @property
+    def _pipeline_cls(self):
+        return _TableRecognitionPipelineV2
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)

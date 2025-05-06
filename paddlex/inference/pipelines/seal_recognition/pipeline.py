@@ -23,16 +23,14 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from .result import SealRecognitionResult
 
 
-@pipeline_requires_extra("ocr")
-class SealRecognitionPipeline(BasePipeline):
+class _SealRecognitionPipeline(BasePipeline):
     """Seal Recognition Pipeline"""
-
-    entities = ["seal_recognition"]
 
     def __init__(
         self,
@@ -323,3 +321,15 @@ class SealRecognitionPipeline(BasePipeline):
                     "model_settings": model_settings,
                 }
                 yield SealRecognitionResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class SealRecognitionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = ["seal_recognition"]
+
+    @property
+    def _pipeline_cls(self):
+        return _SealRecognitionPipeline
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)
