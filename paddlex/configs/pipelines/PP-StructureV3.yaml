@@ -1,6 +1,8 @@
 
 pipeline_name: PP-StructureV3
 
+batch_size: 8
+
 use_doc_preprocessor: True
 use_general_ocr: True
 use_seal_recognition: True
@@ -12,6 +14,7 @@ SubModules:
     module_name: layout_detection
     model_name: PP-DocLayout-L
     model_dir: null
+    batch_size: 8
     threshold: 
       0: 0.3  # paragraph_title
       1: 0.5  # image
@@ -89,6 +92,7 @@ SubModules:
 SubPipelines:
   DocPreprocessor:
     pipeline_name: doc_preprocessor
+    batch_size: 8
     use_doc_orientation_classify: True
     use_doc_unwarping: True
     SubModules:
@@ -96,6 +100,7 @@ SubPipelines:
         module_name: doc_text_orientation
         model_name: PP-LCNet_x1_0_doc_ori
         model_dir: null
+        batch_size: 8
       DocUnwarping:
         module_name: image_unwarping
         model_name: UVDoc
@@ -103,6 +108,7 @@ SubPipelines:
 
   GeneralOCR:
     pipeline_name: OCR
+    batch_size: 8
     text_type: general
     use_doc_preprocessor: False
     use_textline_orientation: True
@@ -111,8 +117,8 @@ SubPipelines:
         module_name: text_detection
         model_name: PP-OCRv4_server_det
         model_dir: null
-        limit_side_len: 736
-        limit_type: min
+        limit_side_len: 4000
+        limit_type: max
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 1.5
@@ -120,17 +126,18 @@ SubPipelines:
         module_name: textline_orientation
         model_name: PP-LCNet_x0_25_textline_ori
         model_dir: null
-        batch_size: 1 
+        batch_size: 8
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec_doc
         model_dir: null
-        batch_size: 6
+        batch_size: 8
         score_thresh: 0.0
  
 
   TableRecognition:
     pipeline_name: table_recognition_v2
+    batch_size: 8
     use_layout_detection: False
     use_doc_preprocessor: False
     use_ocr_model: False
@@ -162,6 +169,7 @@ SubPipelines:
     SubPipelines:
       GeneralOCR:
         pipeline_name: OCR
+        batch_size: 8
         text_type: general
         use_doc_preprocessor: False
         use_textline_orientation: True
@@ -170,8 +178,8 @@ SubPipelines:
             module_name: text_detection
             model_name: PP-OCRv4_server_det
             model_dir: null
-            limit_side_len: 736
-            limit_type: min
+            limit_side_len: 4000
+            limit_type: max
             thresh: 0.3
             box_thresh: 0.4
             unclip_ratio: 2.0
@@ -179,21 +187,23 @@ SubPipelines:
             module_name: textline_orientation
             model_name: PP-LCNet_x0_25_textline_ori
             model_dir: null
-            batch_size: 1 
+            batch_size: 8
           TextRecognition:
             module_name: text_recognition
             model_name: PP-OCRv4_server_rec_doc
             model_dir: null
-            batch_size: 6
+            batch_size: 8
         score_thresh: 0.0
 
   SealRecognition:
     pipeline_name: seal_recognition
+    batch_size: 8
     use_layout_detection: False
     use_doc_preprocessor: False
     SubPipelines:
       SealOCR:
         pipeline_name: OCR
+        batch_size: 8
         text_type: seal
         use_doc_preprocessor: False
         use_textline_orientation: False
@@ -202,8 +212,8 @@ SubPipelines:
             module_name: seal_text_detection
             model_name: PP-OCRv4_server_seal_det
             model_dir: null
-            limit_side_len: 736
-            limit_type: min
+            limit_side_len: 4000
+            limit_type: max
             thresh: 0.2
             box_thresh: 0.6
             unclip_ratio: 0.5
@@ -211,11 +221,12 @@ SubPipelines:
             module_name: text_recognition
             model_name: PP-OCRv4_server_rec
             model_dir: null
-            batch_size: 1
+            batch_size: 8
             score_thresh: 0
     
   FormulaRecognition:
     pipeline_name: formula_recognition
+    batch_size: 8
     use_layout_detection: False
     use_doc_preprocessor: False
     SubModules:
@@ -223,4 +234,4 @@ SubPipelines:
         module_name: formula_recognition
         model_name: PP-FormulaNet-L
         model_dir: null
-        batch_size: 5
+        batch_size: 8
