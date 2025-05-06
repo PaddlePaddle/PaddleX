@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX High-Performance Inference Guide
 
-In real production environments, many applications impose strict performance metrics—especially in response time—on deployment strategies to ensure system efficiency and a smooth user experience. To address this, PaddleX offers a high-performance inference plugin that, through automatic configuration and multi-backend inference capabilities, enables users to significantly accelerate model inference without concerning themselves with complex configurations and low-level details.
+In real production environments, many applications impose strict performance metrics—especially in response time—on deployment strategies to ensure system efficiency and a smooth user experience. To address this, PaddleX offers a high-performance inference plugin that, through automatic configuration and multi-backend inference capabilities, enables users to significantly accelerate model inference without concerning themselves with complex configurations and low-level details. In addition to supporting inference acceleration on pipelines, the PaddleX high-performance inference plugin can also be used to accelerate inference when modules are used standalone.
 
 ## Table of Contents
 

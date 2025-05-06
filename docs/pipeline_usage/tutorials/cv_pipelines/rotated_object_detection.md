@@ -95,7 +95,7 @@ paddlex --pipeline rotated_object_detection \
         --save_path ./output \
         --device gpu:0 \
 ```
-相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
 
 运行后，会将结果打印到终端上，结果如下：
 ```bash
@@ -148,7 +148,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。支持同时指定多个设备以进行并行推理，详情请参考 <a href="../../instructions/parallel_inference.md#指定多个推理设备">产线并行推理</a>。</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
