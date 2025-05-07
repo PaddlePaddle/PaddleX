@@ -1,4 +1,6 @@
-简体中文 | [English](human_keypoint_detection.en.md)
+---
+comments: true
+---
 
 # 人体关键点检测模块使用教程
 
@@ -11,7 +13,7 @@
 
 <table>
   <tr>
-    <th >模型</th>
+    <th >模型</th><th>模型下载链接</th>
     <th >方案</th>
     <th >输入尺寸</th>
     <th >AP(0.5:0.95)</th>
@@ -21,7 +23,7 @@
     <th >介绍</th>
   </tr>
   <tr>
-    <td>PP-TinyPose_128x96</td>
+    <td>PP-TinyPose_128x96</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TinyPose_128x96_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_128x96_pretrained.pdparams">训练模型</a></td>
     <td>Top-Down</td>
     <td>128*96</td>
     <td>58.4</td>
@@ -31,9 +33,9 @@
     <td rowspan="2">PP-TinyPose 是百度飞桨视觉团队自研的针对移动端设备优化的实时关键点检测模型，可流畅地在移动端设备上执行多人姿态估计任务</td>
   </tr>
   <tr>
-    <td>PP-TinyPose_256x192</td>
+    <td>PP-TinyPose_256x192</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TinyPose_256x192_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_256x192_pretrained.pdparams">训练模型</a></td>
     <td>Top-Down</td>
-    <td>128*96</td>
+    <td>256*192</td>
     <td>68.3</td>
     <td></td>
     <td></td>
@@ -41,7 +43,48 @@
   </tr>
 </table>
 
-**注：以上精度指标为COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+<strong>测试环境说明:</strong>
+
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+             <li><strong>测试数据集：</strong>COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。</li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 
 ## 三、快速集成
@@ -52,28 +95,41 @@
 ```python
 from paddlex import create_model
 
-model_name = "PP-TinyPose_128x96"
-
-model = create_model(model_name)
+model = create_model(model_name="PP-TinyPose_128x96")
 output = model.predict("keypoint_detection_002.jpg", batch_size=1)
 
 for res in output:
-    res.print(json_format=False)
+    res.print()
     res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
-
+    res.save_to_json("./output/")
 ```
 
-<details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
+<details><summary>👉 运行后，得到的结果为：（点击展开）</summary>
 
 ```bash
-{'res': {'input_path': 'keypoint_detection_002.jpg', 'kpts': [{'keypoints': [[175.2838134765625, 56.043609619140625, 0.6522828936576843], [181.32794189453125, 49.642051696777344, 0.7338210940361023], [169.46002197265625, 50.59111022949219, 0.6837076544761658], [193.3421173095703, 51.91969680786133, 0.8676544427871704], [164.50787353515625, 55.6519889831543, 0.8232858777046204], [219.7235870361328, 90.28710174560547, 0.8812915086746216], [152.90377807617188, 95.07806396484375, 0.9093065857887268], [233.1095733642578, 149.6704864501953, 0.7706904411315918], [139.5576629638672, 144.38327026367188, 0.7555014491081238], [245.22830200195312, 202.4243927001953, 0.706590473651886], [117.83794403076172, 188.56410217285156, 0.8892115950584412], [203.29542541503906, 200.2967071533203, 0.838330864906311], [172.00791931152344, 201.1993865966797, 0.7636935710906982], [181.18797302246094, 273.0669250488281, 0.8719099164009094], [185.1750030517578, 278.4797668457031, 0.6878190040588379], [171.55068969726562, 362.42730712890625, 0.7994316816329956], [201.6941375732422, 354.5953369140625, 0.6789217591285706]], 'kpt_score': 0.7831441760063171}]}}
+{'res': {'input_path': 'keypoint_detection_002.jpg', 'kpts': [{'keypoints': array([[175.28381   ,  56.04361   ,   0.6522829 ],
+       [181.32794   ,  49.64205   ,   0.7338211 ],
+       [169.46002   ,  50.59111   ,   0.68370765],
+       [193.34212   ,  51.919697  ,   0.86765444],
+       [164.50787   ,  55.65199   ,   0.8232859 ],
+       [219.72359   ,  90.2871    ,   0.8812915 ],
+       [152.90378   ,  95.078064  ,   0.9093066 ],
+       [233.10957   , 149.67049   ,   0.77069044],
+       [139.55766   , 144.38327   ,   0.75550145],
+       [245.2283    , 202.4244    ,   0.7065905 ],
+       [117.837944  , 188.5641    ,   0.8892116 ],
+       [203.29543   , 200.2967    ,   0.83833086],
+       [172.00792   , 201.19939   ,   0.7636936 ],
+       [181.18797   , 273.06693   ,   0.8719099 ],
+       [185.175     , 278.47977   ,   0.687819  ],
+       [171.55069   , 362.4273    ,   0.7994317 ],
+       [201.69414   , 354.59534   ,   0.67892176]], dtype=float32), 'kpt_score': 0.7831442}]}}
 ```
 
 参数含义如下：
 - `input_path`：输入的待预测图像的路径
 - `kpts`：预测的关键点信息，一个字典列表。每个字典包含以下信息：
-  - `keypoints`：关键点坐标和置信度列表，一个列表。每个元素是一个包含关键点信息的列表，格式为<code>[x, y, score]</code>，其中score为关键点的置信度
+  - `keypoints`：关键点坐标信息，一个numpy数组，形状为[num_keypoints, 3]，其中每个关键点由[x, y, score]组成，score为该关键点的置信度
   - `kpt_score`：关键点整体的置信度，即关键点的平均置信度
 
 </details>
@@ -110,8 +166,29 @@ for res in output:
 <td>无</td>
 </tr>
 <tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>flip</code></td>
-<td>是否进行反转推理； 如果为True，模型会对输入图像水平翻转后再次推理，并融合两次推理结果以增加关键点预测的准确性</td>
+<td>是否进行图像水平反转推理结果融合； 如果为True，模型会对输入图像水平翻转后再次推理，并融合两次推理结果以增加关键点预测的准确性</td>
 <td><code>bool</code></td>
 <td>无</td>
 <td><code>False</code></td>
@@ -135,15 +212,14 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -157,7 +233,7 @@ for res in output:
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -247,8 +323,7 @@ for res in output:
 如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的关键点检测模型。在使用PaddleX开发关键点检测模型之前，请务必安装PaddleX的PaddleDetection插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)。
 
 ### 4.1 数据准备
-在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX为每一个模块都提供了demo数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX关键点检测任务模块数据标注教程](../../../data_annotations/cv_modules/keypoint_detection.md)。
-
+在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX为每一个模块都提供了demo数据集，您可以基于官方提供的 Demo 数据完成后续的开发。
 #### 4.1.1 Demo 数据下载
 您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
 
@@ -261,7 +336,7 @@ tar -xf ./dataset/keypoint_coco_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
+python main.py -c paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples
 ```
@@ -353,7 +428,7 @@ CheckDataset:
 随后执行命令：
 
 ```bash
-python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
+python main.py -c paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples
 ```
@@ -362,7 +437,7 @@ python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
 以上参数同样支持通过追加命令行参数的方式进行设置：
 
 ```bash
-python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml  \
+python main.py -c paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -377,7 +452,7 @@ python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml  \
 一条命令即可完成模型的训练，以此处`PP-TinyPose_128x96`的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
+python main.py -c paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples
 ```
@@ -386,27 +461,32 @@ python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-TinyPose_128x96.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
-
-<details>
-  <summary>👉 <b>更多说明（点击展开）</b></summary>
+* 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)
+* 新特性：Paddle 3.0 版本支持了 CINN 神经网络编译器，在使用 GPU 设备训练时，不同模型有不同程度的训练加速效果。在 PaddleX 中训练模型时，可通过指定参数 `-o Train.dy2st=True` 开启。
 
 
-* 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
-* PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
-* 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
+<details><summary>👉 <b>更多说明（点击展开）</b></summary>
 
-* `train_result.json`：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
-* `train.log`：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；
-* `config.yaml`：训练配置文件，记录了本次训练的超参数的配置；
-* `.pdparams`、`.pdema`、`.pdopt.pdstate`、`.pdiparams`、`.pdmodel`：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；
-</details>
+<ul>
+<li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
+<li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
+<li>
+<p>在完成模型训练后，所有产出保存在指定的输出目录（默认为<code>./output/</code>）下，通常有以下产出：</p>
+</li>
+<li>
+<p><code>train_result.json</code>：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；</p>
+</li>
+<li><code>train.log</code>：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；</li>
+<li><code>config.yaml</code>：训练配置文件，记录了本次训练的超参数的配置；</li>
+<li><code>.pdparams</code>、<code>.pdopt</code>、<code>.pdiparams</code>、<code>.json</code>：模型权重相关文件，包括网络参数、优化器、静态图网络参数、静态图网络结构等；</li>
+<li>【注意】：Paddle 3.0.0 对于静态图网络结构信息的存储格式，由protobuf（原<code>.pdmodel</code>后缀文件）升级为json（现<code>.json</code>后缀文件），以兼容PIR体系，并获得更好的灵活性与扩展性。</li>
+</ul></details>
 
 ## **4.3 模型评估**
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
+python main.py -c paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples
 ```
@@ -433,7 +513,7 @@ python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
 #### 4.4.1 模型推理
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_002.jpg)到本地。
 ```bash
-python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
+python main.py -c paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="keypoint_detection_002.jpg"

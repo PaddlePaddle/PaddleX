@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,13 +21,14 @@ __all__ = [
     "CHECK_OPTS",
     "EAGER_INITIALIZATION",
     "INFER_BENCHMARK",
-    "INFER_BENCHMARK_ITER",
+    "INFER_BENCHMARK_ITERS",
     "INFER_BENCHMARK_WARMUP",
-    "INFER_BENCHMARK_OUTPUT",
-    "INFER_BENCHMARK_DATA_SIZE",
+    "INFER_BENCHMARK_OUTPUT_DIR",
+    "INFER_BENCHMARK_USE_NEW_INFER_API",
     "FLAGS_json_format_model",
-    "USE_NEW_INFERENCE",
-    "NEW_PREDICTOR",
+    "USE_PIR_TRT",
+    "DISABLE_DEV_MODEL_WL",
+    "DISABLE_CINN_MODEL_WL",
 ]
 
 
@@ -47,19 +48,25 @@ DEBUG = get_flag_from_env_var("PADDLE_PDX_DEBUG", False)
 DRY_RUN = get_flag_from_env_var("PADDLE_PDX_DRY_RUN", False)
 CHECK_OPTS = get_flag_from_env_var("PADDLE_PDX_CHECK_OPTS", False)
 EAGER_INITIALIZATION = get_flag_from_env_var("PADDLE_PDX_EAGER_INIT", True)
-FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", None)
-USE_NEW_INFERENCE = get_flag_from_env_var("USE_NEW_INFERENCE", False)
-NEW_PREDICTOR = get_flag_from_env_var("PADDLE_PDX_NEW_PREDICTOR", False)
+FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", True)
+USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", True)
+DISABLE_DEV_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_DEV_MODEL_WL", False)
+DISABLE_CINN_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_CINN_MODEL_WL", False)
 
 # Inference Benchmark
-INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", None)
+INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)
 INFER_BENCHMARK_WARMUP = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_WARMUP", 0, int
 )
-INFER_BENCHMARK_OUTPUT = get_flag_from_env_var(
-    "PADDLE_PDX_INFER_BENCHMARK_OUTPUT", None
+INFER_BENCHMARK_OUTPUT_DIR = get_flag_from_env_var(
+    "PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR", None
 )
-INFER_BENCHMARK_ITER = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK_ITER", 10, int)
-INFER_BENCHMARK_DATA_SIZE = get_flag_from_env_var(
-    "PADDLE_PDX_INFER_BENCHMARK_DATA_SIZE", 1024
+INFER_BENCHMARK_ITERS = get_flag_from_env_var(
+    "PADDLE_PDX_INFER_BENCHMARK_ITERS", 0, int
+)
+INFER_BENCHMARK_USE_CACHE_FOR_READ = get_flag_from_env_var(
+    "PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ", False
+)
+INFER_BENCHMARK_USE_NEW_INFER_API = get_flag_from_env_var(
+    "PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API", False
 )

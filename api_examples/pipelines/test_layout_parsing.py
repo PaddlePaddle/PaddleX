@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,8 +52,16 @@ output = pipeline.predict(
 #     use_table_recognition=True,
 # )
 
+# output = pipeline.predict(
+#     "./test_samples/layout_double_column.png",
+#     use_doc_orientation_classify=False,
+#     use_doc_unwarping=False,
+#     use_common_ocr=True,
+#     use_seal_recognition=True,
+#     use_table_recognition=True,
+# )
+
 for res in output:
-    print(res)
     res.print()
     res.save_to_img("./output")
     res.save_to_json("./output")

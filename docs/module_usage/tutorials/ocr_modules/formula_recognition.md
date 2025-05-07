@@ -12,38 +12,83 @@ comments: true
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>Avg-BLEU</th>
-<th>GPU推理耗时 (ms)</th>
+<th>Avg-BLEU(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
-<td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
-<td>0.8613</td>
-<td>2266.96</td>
+<td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
+<td>86.13</td>
+<td>2266.96/-</td>
+<td>-/-</td>
 <td>1.4 G</td>
 <td>UniMERNet是由上海AI Lab研发的一款公式识别模型。该模型采用Donut Swin作为编码器，MBartDecoder作为解码器，并通过在包含简单公式、复杂公式、扫描捕捉公式和手写公式在内的一百万数据集上进行训练，大幅提升了模型对真实场景公式的识别准确率</td>
 <tr>
-<td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
-<td>0.8712</td>
-<td>202.25</td>
+<td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
+<td>87.12</td>
+<td>202.25/-</td>
+<td>-/-</td>
 <td>167.9 M</td>
 <td rowspan="2">PP-FormulaNet 是由百度飞桨视觉团队开发的一款先进的公式识别模型，支持5万个常见LateX源码词汇的识别。PP-FormulaNet-S 版本采用了 PP-HGNetV2-B4 作为其骨干网络，通过并行掩码和模型蒸馏等技术，大幅提升了模型的推理速度，同时保持了较高的识别精度，适用于简单印刷公式、跨行简单印刷公式等场景。而 PP-FormulaNet-L 版本则基于 Vary_VIT_B 作为骨干网络，并在大规模公式数据集上进行了深入训练，在复杂公式的识别方面，相较于PP-FormulaNet-S表现出显著的提升，适用于简单印刷公式、复杂印刷公式、手写公式等场景。 </td>
 
 </tr>
-<td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
-<td>0.9213</td>
-<td>1976.52</td>
+<td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
+<td>92.13</td>
+<td>1976.52/-</td>
+<td>-/-</td>
 <td>535.2 M</td>
 <tr>
-<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
-<td>0.7163</td>
-<td>-</td>
+<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
+<td>71.63</td>
+<td>-/-</td>
+<td>-/-</td>
 <td>89.7 M</td>
 <td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性。</td>
 </tr>
 </table>
+ <strong>测试环境说明:</strong>
 
-<b>注：以上精度指标测量自 PaddleX 内部自建公式识别测试集。LaTeX_OCR_rec在LaTeX-OCR公式识别测试集的BLEU score为 0.8821。所有模型 GPU 推理耗时基于 Tesla V100 GPUs 机器，精度类型为 FP32。</b>
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+              <li><strong>测试数据集：</strong>PaddleX 内部自建公式识别测试集</li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 
 ## 三、快速集成
@@ -51,7 +96,7 @@ comments: true
 
 wheel 包的安装后，几行代码即可完成公式识别模块的推理，可以任意切换该模块下的模型，您也可以将公式识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png)到本地。
 
-```bash
+```python
 from paddlex import create_model
 model = create_model(model_name="PP-FormulaNet-S")
 output = model.predict(input="general_formula_rec_001.png", batch_size=1)
@@ -62,10 +107,11 @@ for res in output:
 ```
 运行后，得到的结果为：
 ```bash
-{'res': {'input_path': 'general_formula_rec_001.png', 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
+{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
 ```
 运行结果参数含义如下：
 - `input_path`：表示输入待预测公式图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `rec_formula`：表示公式图像的预测LaTeX源码
 
 
@@ -73,7 +119,7 @@ for res in output:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/formula_recog/general_formula_rec_001_res.png">
 
-<b> 注：如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装。目前公式识别产线可视化只支持Ubuntu环境，其他环境暂不支持：</b>
+<b> 注：如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装。目前公式识别产线可视化只支持Ubuntu环境，其他环境暂不支持。对于复杂公式，LaTeX 结果可能包含部分高级的表示，Markdown等环境中未必可以成功显示：</b>
 ```bash
 sudo apt-get update
 sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
@@ -106,11 +152,32 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 <td>无</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用公式识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
@@ -125,15 +192,14 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -147,7 +213,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -259,45 +325,48 @@ python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.ya
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
 
 <p>校验结果文件具体内容为：</p>
-<pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 9452,
-    &quot;train_sample_paths&quot;: [
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0109284.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0217434.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0166758.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0022294.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/val_0071799.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0017043.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0026204.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0209202.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/val_0157332.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0232582.png&quot;
+
+<pre><code class="language-bash">
+{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 10001,
+    "train_sample_paths": [
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0077809.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0161600.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0002077.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0178425.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0010959.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0079266.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0142495.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0196376.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0185513.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0217146.png"
     ],
-    &quot;val_samples&quot;: 1050,
-    &quot;val_sample_paths&quot;: [
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0070221.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0157901.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0085392.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0196480.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0096180.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0136149.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0143310.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0004560.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0115191.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0015323.png&quot;
+    "val_samples": 501,
+    "val_sample_paths": [
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0053264.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0100521.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0146333.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0072788.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0002022.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0203664.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0082217.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0208199.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0111236.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0204453.png"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/ocr_rec_latexocr_dataset_example&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;FormulaRecDataset&quot;
+  "dataset_path": "ocr_rec_latexocr_dataset_example",
+  "show_type": "image",
+  "dataset_type": "FormulaRecDataset"
 }
 </code></pre>
+
 <p>上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>
 <ul>
 <li><code>attributes.train_samples</code>：该数据集训练集样本数量为 9452；</li>
@@ -389,7 +458,7 @@ FLAGS_json_format_model=1 python main.py -c paddlex/configs/modules/formula_reco
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet-S.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+* 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 * 除 LaTeX_OCR_rec外， 公式识别模型只支持导出json格式的模型，因此训练时需要设置参数`FLAGS_json_format_model=1`。
 * 对于 PP-FormulaNet-S、PP-FormulaNet-L、UniMERNet 模型，在训练还需要安装额外的Linux包，具体命令如下：
 ```bash
@@ -397,6 +466,7 @@ sudo apt-get update
 sudo apt-get install libmagickwand-dev
 python -m pip install Wand
 ```
+* 新特性：Paddle 3.0 版本支持了 CINN 神经网络编译器，在使用 GPU 设备训练时，不同模型有不同程度的训练加速效果。在 PaddleX 中训练模型时，可通过指定参数 `-o Train.dy2st=True` 开启。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 
@@ -411,7 +481,8 @@ python -m pip install Wand
 </li>
 <li><code>train.log</code>：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；</li>
 <li><code>config.yaml</code>：训练配置文件，记录了本次训练的超参数的配置；</li>
-<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.pdmodel</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.json</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li>【注意】：Paddle 3.0.0 对于静态图网络结构信息的存储格式，由protobuf（原<code>.pdmodel</code>后缀文件）升级为json（现<code>.json</code>后缀文件），以兼容PIR体系，并获得更好的灵活性与扩展性。</li>
 </ul></details>
 
 ## <b>4.3 模型评估</b>
@@ -457,3 +528,5 @@ python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.ya
 #### 4.4.2 模型集成
 
 您产出的权重可以直接集成到公式识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

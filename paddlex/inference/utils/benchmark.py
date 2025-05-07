@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,204 +12,144 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import csv
 import functools
-from types import GeneratorType
+import inspect
 import time
+import uuid
 from pathlib import Path
+from types import GeneratorType
+
 import numpy as np
 from prettytable import PrettyTable
 
-from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT
-from ...utils.misc import Singleton
 from ...utils import logging
+from ...utils.flags import (
+    INFER_BENCHMARK,
+    INFER_BENCHMARK_OUTPUT_DIR,
+    INFER_BENCHMARK_USE_CACHE_FOR_READ,
+)
+
+ENTRY_POINT_NAME = "_entry_point_"
+
+# XXX: Global mutable state
+_inference_operations = []
+
+_is_measuring_time = False
 
 
-class Benchmark(metaclass=Singleton):
-    def __init__(self):
-        self._components = {}
-        self._warmup_start = None
-        self._warmup_elapse = None
-        self._warmup_num = None
-        self._e2e_tic = None
-        self._e2e_elapse = None
+class Benchmark:
+    def __init__(self, enabled):
+        self._enabled = enabled
+        self._elapses = {}
+        self._warmup = False
 
-    def attach(self, component):
-        self._components[component.name] = component
+    def timeit_with_options(self, name=None, is_read_operation=False):
+        # TODO: Refactor
+        def _deco(func_or_cls):
+            if not self._enabled:
+                return func_or_cls
 
-    def start(self):
-        self._warmup_start = time.time()
-        self._reset()
+            nonlocal name
+            if name is None:
+                name = func_or_cls.__qualname__
 
-    def warmup_stop(self, warmup_num):
-        self._warmup_elapse = (time.time() - self._warmup_start) * 1000
-        self._warmup_num = warmup_num
-        self._reset()
-
-    def _reset(self):
-        for name, cmp in self.iterate_cmp(self._components):
-            cmp.timer.reset()
-        self._e2e_tic = time.time()
-
-    def iterate_cmp(self, cmps):
-        if cmps is None:
-            return
-        for name, cmp in cmps.items():
-            if hasattr(cmp, "benchmark"):
-                yield from self.iterate_cmp(cmp.benchmark)
-            yield name, cmp
-
-    def gather(self, e2e_num):
-        # lazy import for avoiding circular import
-        from ...utils.flags import NEW_PREDICTOR
-
-        if NEW_PREDICTOR:
-            from ..new_models.base import BasePaddlePredictor
-        else:
-            from ..models.common_components.paddle_predictor import BasePaddlePredictor
-
-        detail = []
-        summary = {"preprocess": 0, "inference": 0, "postprocess": 0}
-        op_tag = "preprocess"
-        for name, cmp in self._components.items():
-            if isinstance(cmp, BasePaddlePredictor):
-                # TODO(gaotingquan): show by hierarchy. Now dont show xxxPredictor benchmark info to ensure mutual exclusivity between components.
-                for name, sub_cmp in cmp.benchmark.items():
-                    times = sub_cmp.timer.logs
-                    counts = len(times)
-                    avg = np.mean(times) * 1000
-                    total = np.sum(times) * 1000
-                    detail.append((name, total, counts, avg))
-                    summary["inference"] += total
-                op_tag = "postprocess"
+            if isinstance(func_or_cls, type):
+                if not hasattr(func_or_cls, "__call__"):
+                    raise TypeError
+                func = func_or_cls.__call__
             else:
-                # TODO(gaotingquan): support sub_cmps for others
-                # if hasattr(cmp, "benchmark"):
-                times = cmp.timer.logs
-                counts = len(times)
-                avg = np.mean(times) * 1000
-                total = np.sum(times) * 1000
-                detail.append((name, total, counts, avg))
-                summary[op_tag] += total
+                if not callable(func_or_cls):
+                    raise TypeError
+                func = func_or_cls
 
-        summary = [
-            (
-                "PreProcess",
-                summary["preprocess"],
-                e2e_num,
-                summary["preprocess"] / e2e_num,
-            ),
-            (
-                "Inference",
-                summary["inference"],
-                e2e_num,
-                summary["inference"] / e2e_num,
-            ),
-            (
-                "PostProcess",
-                summary["postprocess"],
-                e2e_num,
-                summary["postprocess"] / e2e_num,
-            ),
-            ("End2End", self._e2e_elapse, e2e_num, self._e2e_elapse / e2e_num),
-        ]
-        if self._warmup_elapse:
-            warmup_elapse, warmup_num, warmup_avg = (
-                self._warmup_elapse,
-                self._warmup_num,
-                self._warmup_elapse / self._warmup_num,
-            )
-        else:
-            warmup_elapse, warmup_num, warmup_avg = 0, 0, 0
-        summary.append(
-            (
-                "WarmUp",
-                warmup_elapse,
-                warmup_num,
-                warmup_avg,
-            )
-        )
-        return detail, summary
+            try:
+                source_file = inspect.getsourcefile(func)
+                source_line = inspect.getsourcelines(func)[1]
+                location = f"{source_file}:{source_line}"
+            except (TypeError, OSError) as e:
+                location = uuid.uuid4().hex
+                logging.debug(
+                    f"Benchmark: failed to get source file and line number: {e}"
+                )
 
-    def collect(self, e2e_num):
-        self._e2e_elapse = (time.time() - self._e2e_tic) * 1000
-        detail, summary = self.gather(e2e_num)
+            use_cache = is_read_operation and INFER_BENCHMARK_USE_CACHE_FOR_READ
+            if use_cache:
+                if inspect.isgeneratorfunction(func):
+                    raise RuntimeError(
+                        "When `is_read_operation` is `True`, the wrapped function should not be a generator."
+                    )
 
-        detail_head = [
-            "Component",
-            "Total Time (ms)",
-            "Number of Calls",
-            "Avg Time Per Call (ms)",
-        ]
-        table = PrettyTable(detail_head)
-        table.add_rows(
-            [
-                (name, f"{total:.8f}", cnts, f"{avg:.8f}")
-                for name, total, cnts, avg in detail
-            ]
-        )
-        logging.info(table)
+                func = functools.lru_cache(maxsize=128)(func)
 
-        summary_head = [
-            "Stage",
-            "Total Time (ms)",
-            "Number of Instances",
-            "Avg Time Per Instance (ms)",
-        ]
-        table = PrettyTable(summary_head)
-        table.add_rows(
-            [
-                (name, f"{total:.8f}", cnts, f"{avg:.8f}")
-                for name, total, cnts, avg in summary
-            ]
-        )
-        logging.info(table)
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    args = tuple(
+                        tuple(arg) if isinstance(arg, list) else arg for arg in args
+                    )
+                    kwargs = {
+                        k: tuple(v) if isinstance(v, list) else v
+                        for k, v in kwargs.items()
+                    }
+                    output = func(*args, **kwargs)
+                    output = copy.deepcopy(output)
+                    return output
 
-        if INFER_BENCHMARK_OUTPUT:
-            save_dir = Path(INFER_BENCHMARK_OUTPUT)
-            save_dir.mkdir(parents=True, exist_ok=True)
-            csv_data = [detail_head, *detail]
-            with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(csv_data)
-
-            csv_data = [summary_head, *summary]
-            with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(csv_data)
-
-
-class Timer:
-    def __init__(self, component):
-        from ..new_models.base import BaseComponent
-
-        assert isinstance(component, BaseComponent)
-        benchmark.attach(component)
-        component.apply = self.watch_func(component.apply)
-        self._tic = None
-        self._elapses = []
-
-    def watch_func(self, func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            tic = time.time()
-            output = func(*args, **kwargs)
-            if isinstance(output, GeneratorType):
-                return self.watch_generator(output)
             else:
-                self._update(time.time() - tic)
-                return output
 
-        return wrapper
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    global _is_measuring_time
+                    operation_name = f"{name}@{location}"
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
+                    tic = time.perf_counter()
+                    try:
+                        output = func(*args, **kwargs)
+                    finally:
+                        if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
+                    if isinstance(output, GeneratorType):
+                        return self.watch_generator(output, operation_name)
+                    else:
+                        self._update(time.perf_counter() - tic, operation_name)
+                        return output
 
-    def watch_generator(self, generator):
+            if isinstance(func_or_cls, type):
+                func_or_cls.__call__ = _wrapper
+                return func_or_cls
+            else:
+                return _wrapper
+
+        return _deco
+
+    def timeit(self, func_or_cls):
+        return self.timeit_with_options()(func_or_cls)
+
+    def watch_generator(self, generator, name):
         @functools.wraps(generator)
         def wrapper():
-            while 1:
+            global _is_measuring_time
+            while True:
                 try:
-                    tic = time.time()
-                    item = next(generator)
-                    self._update(time.time() - tic)
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
+                    tic = time.perf_counter()
+                    try:
+                        item = next(generator)
+                    finally:
+                        if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
+                    self._update(time.perf_counter() - tic, name)
                     yield item
                 except StopIteration:
                     break
@@ -217,15 +157,223 @@ class Timer:
         return wrapper()
 
     def reset(self):
-        self._tic = None
-        self._elapses = []
+        self._elapses = {}
 
-    def _update(self, elapse):
-        self._elapses.append(elapse)
+    def _update(self, elapse, name):
+        elapse = elapse * 1000
+        if name in self._elapses:
+            self._elapses[name].append(elapse)
+        else:
+            self._elapses[name] = [elapse]
 
     @property
     def logs(self):
         return self._elapses
 
+    def start_timing(self):
+        self._enabled = True
 
-benchmark = Benchmark() if INFER_BENCHMARK else None
+    def stop_timing(self):
+        self._enabled = False
+
+    def start_warmup(self):
+        self._warmup = True
+
+    def stop_warmup(self):
+        self._warmup = False
+        self.reset()
+
+    def gather(self, batch_size):
+        # NOTE: The gathering logic here is based on the following assumptions:
+        # 1. The operations are performed sequentially.
+        # 2. An operation is performed only once at each iteration.
+        # 3. Operations do not nest, except that the entry point operation
+        #    contains all other operations.
+        # 4. The input batch size for each operation is `batch_size`.
+        # 5. Preprocessing operations are always performed before inference
+        #    operations, and inference operations are completed before
+        #    postprocessing operations. There is no interleaving among these
+        #    stages.
+
+        logs = {k: v for k, v in self.logs.items()}
+
+        summary = {"preprocessing": 0, "inference": 0, "postprocessing": 0}
+        for key in logs:
+            if key.startswith(f"{ENTRY_POINT_NAME}@"):
+                base_predictor_time_list = logs.pop(key)
+                break
+        iters = len(base_predictor_time_list)
+        instances = iters * batch_size
+        summary["end_to_end"] = np.mean(base_predictor_time_list)
+        detail_list = []
+        operation_list = []
+        op_tag = "preprocessing"
+
+        for name, time_list in logs.items():
+            assert len(time_list) == iters
+            avg = np.mean(time_list)
+            operation_name = name.split("@")[0]
+            location = name.split("@")[1]
+            if ":" not in location:
+                location = "Unknown"
+            detail_list.append(
+                (iters, batch_size, instances, operation_name, avg, avg / batch_size)
+            )
+            operation_list.append((operation_name, location))
+
+            if operation_name in _inference_operations:
+                summary["inference"] += avg
+                op_tag = "postprocessing"
+            else:
+                summary[op_tag] += avg
+
+        summary["core"] = (
+            summary["preprocessing"] + summary["inference"] + summary["postprocessing"]
+        )
+
+        summary["other"] = summary["end_to_end"] - summary["core"]
+
+        summary_list = [
+            (
+                iters,
+                batch_size,
+                instances,
+                "Preprocessing",
+                summary["preprocessing"],
+                summary["preprocessing"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
+                "Inference",
+                summary["inference"],
+                summary["inference"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
+                "Postprocessing",
+                summary["postprocessing"],
+                summary["postprocessing"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
+                "Core",
+                summary["core"],
+                summary["core"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
+                "Other",
+                summary["other"],
+                summary["other"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
+                "End-to-End",
+                summary["end_to_end"],
+                summary["end_to_end"] / batch_size,
+            ),
+        ]
+
+        return detail_list, summary_list, operation_list
+
+    def collect(self, batch_size):
+        detail_list, summary_list, operation_list = self.gather(batch_size)
+
+        if self._warmup:
+            summary_head = [
+                "Iters",
+                "Batch Size",
+                "Instances",
+                "Type",
+                "Avg Time Per Iter (ms)",
+                "Avg Time Per Instance (ms)",
+            ]
+            table = PrettyTable(summary_head)
+            summary_list = [
+                i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
+            ]
+            table.add_rows(summary_list)
+            table_title = "Warmup Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
+            logging.info(table)
+
+        else:
+            operation_head = [
+                "Operation",
+                "Source Code Location",
+            ]
+            table = PrettyTable(operation_head)
+            table.add_rows(operation_list)
+            table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
+            logging.info(table)
+
+            detail_head = [
+                "Iters",
+                "Batch Size",
+                "Instances",
+                "Operation",
+                "Avg Time Per Iter (ms)",
+                "Avg Time Per Instance (ms)",
+            ]
+            table = PrettyTable(detail_head)
+            detail_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in detail_list]
+            table.add_rows(detail_list)
+            table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
+            logging.info(table)
+
+            summary_head = [
+                "Iters",
+                "Batch Size",
+                "Instances",
+                "Type",
+                "Avg Time Per Iter (ms)",
+                "Avg Time Per Instance (ms)",
+            ]
+            table = PrettyTable(summary_head)
+            summary_list = [
+                i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
+            ]
+            table.add_rows(summary_list)
+            table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
+            logging.info(table)
+
+            if INFER_BENCHMARK_OUTPUT_DIR:
+                save_dir = Path(INFER_BENCHMARK_OUTPUT_DIR)
+                save_dir.mkdir(parents=True, exist_ok=True)
+                csv_data = [detail_head, *detail_list]
+                with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
+                    writer = csv.writer(file)
+                    writer.writerows(csv_data)
+
+                csv_data = [summary_head, *summary_list]
+                with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
+                    writer = csv.writer(file)
+                    writer.writerows(csv_data)
+
+
+def get_inference_operations():
+    return _inference_operations
+
+
+def set_inference_operations(val):
+    global _inference_operations
+    _inference_operations = val
+
+
+if INFER_BENCHMARK:
+    benchmark = Benchmark(enabled=True)
+else:
+    benchmark = Benchmark(enabled=False)

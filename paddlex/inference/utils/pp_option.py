@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,9 +15,17 @@
 import os
 from typing import Dict, List
 
-from ...utils.device import parse_device, set_env_for_device, get_default_device
 from ...utils import logging
-from .new_ir_blacklist import NEWIR_BLOCKLIST
+from ...utils.device import (
+    check_supported_device_type,
+    get_default_device,
+    parse_device,
+    set_env_for_device_type,
+)
+from ...utils.flags import USE_PIR_TRT
+from .new_ir_blocklist import NEWIR_BLOCKLIST
+from .trt_blocklist import TRT_BLOCKLIST
+from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
 
 
 class PaddlePredictorOption(object):
@@ -26,6 +34,8 @@ class PaddlePredictorOption(object):
     # NOTE: TRT modes start with `trt_`
     SUPPORT_RUN_MODE = (
         "paddle",
+        "paddle_fp32",
+        "paddle_fp16",
         "trt_fp32",
         "trt_fp16",
         "trt_int8",
@@ -34,12 +44,16 @@ class PaddlePredictorOption(object):
     )
     SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu")
 
-    def __init__(self, model_name=None, **kwargs):
+    def __init__(self, model_name, **kwargs):
         super().__init__()
-        self.model_name = model_name
+        self._model_name = model_name
         self._cfg = {}
         self._init_option(**kwargs)
         self._changed = False
+
+    @property
+    def model_name(self):
+        return self._model_name
 
     @property
     def changed(self):
@@ -61,23 +75,39 @@ class PaddlePredictorOption(object):
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
+        # for trt
+        if self.run_mode in ("trt_int8", "trt_fp32", "trt_fp16"):
+            trt_cfg_setting = TRT_CFG_SETTING[self.model_name]
+            if USE_PIR_TRT:
+                trt_cfg_setting["precision_mode"] = TRT_PRECISION_MAP[self.run_mode]
+            else:
+                trt_cfg_setting["enable_tensorrt_engine"]["precision_mode"] = (
+                    TRT_PRECISION_MAP[self.run_mode]
+                )
+            self.trt_cfg_setting = trt_cfg_setting
+
     def _get_default_config(self):
         """get default config"""
-        device_type, device_id = parse_device(get_default_device())
-        return {
+        device_type, device_ids = parse_device(get_default_device())
+
+        default_config = {
             "run_mode": "paddle",
-            "device": device_type,
-            "device_id": 0 if device_id is None else device_id[0],
-            "min_subgraph_size": 3,
-            "shape_info_filename": None,
-            "trt_calib_mode": False,
+            "device_type": device_type,
+            "device_id": None if device_ids is None else device_ids[0],
             "cpu_threads": 8,
-            "trt_use_static": False,
             "delete_pass": [],
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
-            "batch_size": 1,  # only for trt
-            "trt_dynamic_shapes": {},  # only for trt
+            "enable_cinn": False,
+            "trt_cfg_setting": {},
+            "trt_use_dynamic_shapes": True,  # only for trt
+            "trt_collect_shape_range_info": True,  # only for trt
+            "trt_discard_cached_shape_range_info": False,  # only for trt
+            "trt_dynamic_shapes": None,  # only for trt
+            "trt_dynamic_shape_input_data": None,  # only for trt
+            "trt_shape_range_info_path": None,  # only for trt
+            "trt_allow_rebuild_at_runtime": True,  # only for trt
         }
+        return default_config
 
     def _update(self, k, v):
         self._cfg[k] = v
@@ -95,81 +125,40 @@ class PaddlePredictorOption(object):
             raise ValueError(
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
+        # TRT Blocklist
+        if run_mode.startswith("trt") and self._model_name in TRT_BLOCKLIST:
+            logging.warning(
+                f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
+            )
+            run_mode = "paddle"
+
         self._update("run_mode", run_mode)
 
     @property
     def device_type(self):
-        return self._cfg["device"]
+        return self._cfg["device_type"]
 
-    @property
-    def device_id(self):
-        return self._cfg["device_id"]
-
-    @property
-    def device(self):
-        return self._cfg["device"]
-
-    @device.setter
-    def device(self, device: str):
-        """set device"""
-        if not device:
-            return
-        device_type, device_ids = parse_device(device)
+    @device_type.setter
+    def device_type(self, device_type):
         if device_type not in self.SUPPORT_DEVICE:
             support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
             raise ValueError(
                 f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
             )
-        self._update("device", device_type)
-        device_id = device_ids[0] if device_ids is not None else 0
-        self._update("device_id", device_id)
-        set_env_for_device(device)
-        if device_type not in ("cpu"):
-            if device_ids is None or len(device_ids) > 1:
-                logging.debug(f"The device ID has been set to {device_id}.")
+        check_supported_device_type(device_type, self.model_name)
+        self._update("device_type", device_type)
+        set_env_for_device_type(device_type)
         # XXX(gaotingquan): set flag to accelerate inference in paddle 3.0b2
         if device_type in ("gpu", "cpu"):
             os.environ["FLAGS_enable_pir_api"] = "1"
 
     @property
-    def min_subgraph_size(self):
-        return self._cfg["min_subgraph_size"]
+    def device_id(self):
+        return self._cfg["device_id"]
 
-    @min_subgraph_size.setter
-    def min_subgraph_size(self, min_subgraph_size: int):
-        """set min subgraph size"""
-        if not isinstance(min_subgraph_size, int):
-            raise Exception()
-        self._update("min_subgraph_size", min_subgraph_size)
-
-    @property
-    def shape_info_filename(self):
-        return self._cfg["shape_info_filename"]
-
-    @shape_info_filename.setter
-    def shape_info_filename(self, shape_info_filename: str):
-        """set shape info filename"""
-        self._update("shape_info_filename", shape_info_filename)
-
-    @property
-    def trt_dynamic_shapes(self):
-        return self._cfg["trt_dynamic_shapes"]
-
-    @trt_dynamic_shapes.setter
-    def trt_dynamic_shapes(self, trt_dynamic_shapes: Dict[str, List[List[int]]]):
-        assert isinstance(trt_dynamic_shapes, dict)
-        for input_k in trt_dynamic_shapes:
-            assert isinstance(trt_dynamic_shapes[input_k], list)
-        self._update("trt_dynamic_shapes", trt_dynamic_shapes)
-
-    @property
-    def trt_calib_mode(self):
-        return self._cfg["trt_calib_mode"]
-
-    @trt_calib_mode.setter
-    def trt_calib_mode(self, trt_calib_mode):
-        """set trt calib mode"""
-        self._update("trt_calib_mode", trt_calib_mode)
+    @device_id.setter
+    def device_id(self, device_id):
+        self._update("device_id", device_id)
 
     @property
     def cpu_threads(self):
@@ -181,15 +170,6 @@ class PaddlePredictorOption(object):
         if not isinstance(cpu_threads, int) or cpu_threads < 1:
             raise Exception()
         self._update("cpu_threads", cpu_threads)
-
-    @property
-    def trt_use_static(self):
-        return self._cfg["trt_use_static"]
-
-    @trt_use_static.setter
-    def trt_use_static(self, trt_use_static):
-        """set trt use static"""
-        self._update("trt_use_static", trt_use_static)
 
     @property
     def delete_pass(self):
@@ -209,12 +189,110 @@ class PaddlePredictorOption(object):
         self._update("enable_new_ir", enable_new_ir)
 
     @property
-    def batch_size(self):
-        return self._cfg["batch_size"]
+    def enable_cinn(self):
+        return self._cfg["enable_cinn"]
 
-    @batch_size.setter
-    def batch_size(self, batch_size):
-        self._update("batch_size", batch_size)
+    @enable_cinn.setter
+    def enable_cinn(self, enable_cinn: bool):
+        """set run mode"""
+        self._update("enable_cinn", enable_cinn)
+
+    @property
+    def trt_cfg_setting(self):
+        return self._cfg["trt_cfg_setting"]
+
+    @trt_cfg_setting.setter
+    def trt_cfg_setting(self, config: Dict):
+        """set trt config"""
+        assert isinstance(
+            config, dict
+        ), f"The trt_cfg_setting must be `dict` type, but recived `{type(config)}` type!"
+        self._update("trt_cfg_setting", config)
+
+    @property
+    def trt_use_dynamic_shapes(self):
+        return self._cfg["trt_use_dynamic_shapes"]
+
+    @trt_use_dynamic_shapes.setter
+    def trt_use_dynamic_shapes(self, trt_use_dynamic_shapes):
+        self._update("trt_use_dynamic_shapes", trt_use_dynamic_shapes)
+
+    @property
+    def trt_collect_shape_range_info(self):
+        return self._cfg["trt_collect_shape_range_info"]
+
+    @trt_collect_shape_range_info.setter
+    def trt_collect_shape_range_info(self, trt_collect_shape_range_info):
+        self._update("trt_collect_shape_range_info", trt_collect_shape_range_info)
+
+    @property
+    def trt_discard_cached_shape_range_info(self):
+        return self._cfg["trt_discard_cached_shape_range_info"]
+
+    @trt_discard_cached_shape_range_info.setter
+    def trt_discard_cached_shape_range_info(self, trt_discard_cached_shape_range_info):
+        self._update(
+            "trt_discard_cached_shape_range_info", trt_discard_cached_shape_range_info
+        )
+
+    @property
+    def trt_dynamic_shapes(self):
+        return self._cfg["trt_dynamic_shapes"]
+
+    @trt_dynamic_shapes.setter
+    def trt_dynamic_shapes(self, trt_dynamic_shapes: Dict[str, List[List[int]]]):
+        assert isinstance(trt_dynamic_shapes, dict)
+        for input_k in trt_dynamic_shapes:
+            assert isinstance(trt_dynamic_shapes[input_k], list)
+        self._update("trt_dynamic_shapes", trt_dynamic_shapes)
+
+    @property
+    def trt_dynamic_shape_input_data(self):
+        return self._cfg["trt_dynamic_shape_input_data"]
+
+    @trt_dynamic_shape_input_data.setter
+    def trt_dynamic_shape_input_data(
+        self, trt_dynamic_shape_input_data: Dict[str, List[float]]
+    ):
+        self._update("trt_dynamic_shape_input_data", trt_dynamic_shape_input_data)
+
+    @property
+    def trt_shape_range_info_path(self):
+        return self._cfg["trt_shape_range_info_path"]
+
+    @trt_shape_range_info_path.setter
+    def trt_shape_range_info_path(self, trt_shape_range_info_path: str):
+        """set shape info filename"""
+        self._update("trt_shape_range_info_path", trt_shape_range_info_path)
+
+    @property
+    def trt_allow_rebuild_at_runtime(self):
+        return self._cfg["trt_allow_rebuild_at_runtime"]
+
+    @trt_allow_rebuild_at_runtime.setter
+    def trt_allow_rebuild_at_runtime(self, trt_allow_rebuild_at_runtime):
+        self._update("trt_allow_rebuild_at_runtime", trt_allow_rebuild_at_runtime)
+
+    # For backward compatibility
+    # TODO: Issue deprecation warnings
+    @property
+    def shape_info_filename(self):
+        return self.trt_shape_range_info_path
+
+    @shape_info_filename.setter
+    def shape_info_filename(self, shape_info_filename):
+        self.trt_shape_range_info_path = shape_info_filename
+
+    def set_device(self, device: str):
+        """set device"""
+        if not device:
+            return
+        device_type, device_ids = parse_device(device)
+        self.device_type = device_type
+        device_id = device_ids[0] if device_ids is not None else None
+        self.device_id = device_id
+        if device_ids is None or len(device_ids) > 1:
+            logging.debug(f"The device ID has been set to {device_id}.")
 
     def get_support_run_mode(self):
         """get supported run mode"""

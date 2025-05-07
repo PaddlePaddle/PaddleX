@@ -25,7 +25,7 @@ info_params:
 model: 
   name: NonStationary_AD
   model_cfg:
-    c_in: 2
+    c_in: 5
     factor: 3
     p_hidden_dims: [32, 32]
     d_model: 64

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,22 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from pathlib import Path
 
 import PIL
 from PIL import ImageFont
 
+from .. import logging
+from ..download import download
 
-def get_pingfang_file_path() -> str:
+
+def get_font_file_path(file_name: str) -> str:
     """
-    Get the path of the PingFang font file.
+    Get the path of the font file.
 
     Returns:
-    str: The path to the PingFang font file.
+    str: The path to the font file.
     """
+    font_path = (Path(__file__).parent / file_name).resolve().as_posix()
+    if not Path(font_path).exists():
+        download(
+            url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{file_name}",
+            save_path=font_path,
+        )
 
-    return (Path(__file__).parent / "PingFang-SC-Regular.ttf").resolve().as_posix()
+    return font_path
 
 
 def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
@@ -56,4 +64,5 @@ def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
     return font
 
 
-PINGFANG_FONT_FILE_PATH = get_pingfang_file_path()
+PINGFANG_FONT_FILE_PATH = get_font_file_path("PingFang-SC-Regular.ttf")
+SIMFANG_FONT_FILE_PATH = get_font_file_path("simfang.ttf")

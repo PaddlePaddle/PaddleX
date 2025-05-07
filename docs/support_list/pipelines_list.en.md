@@ -10,7 +10,7 @@ comments: true
   <tr>
     <th width="10%">Pipeline Name</th>
     <th width="10%">Pipeline Modules</th>
-    <th width="10%">Baidu AIStudio Community Experience URL</th>
+    <th width="10%">Baidu AI Studio Community Experience URL</th>
     <th width="50%">Pipeline Introduction</th>
     <th width="20%">Applicable Scenarios</th>
   </tr>
@@ -22,7 +22,7 @@ comments: true
     <td>
       <ul>
         <li>Automatic classification and recognition of product images</li>
-        <li>Real-time monitoring of defective products on production lines</li>
+        <li>Real-time monitoring of defective products on pipelines</li>
         <li>Personnel recognition in security surveillance</li>
       </ul>
     </td>
@@ -68,7 +68,7 @@ comments: true
     </td>
   </tr>
 <tr>
-    <td rowspan = 7>Document Scene Information Extraction v3</td>
+    <td rowspan = 7>PP-ChatOCRv3</td>
     <td>Table Structure Recognition</td>
     <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Online Experience</a></td>
     <td rowspan = 7>Document Image Scene Information Extraction v3 (PP-ChatOCRv3-doc) is a PaddlePaddle-specific intelligent document and image analysis solution that integrates LLM and OCR technologies to solve common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating the Wenxin large model, it combines vast data and knowledge, providing high accuracy and wide applicability. The open-source version supports local experience and deployment, and fine-tuning training for each module.</td>
@@ -81,7 +81,7 @@ comments: true
 </td>
   </tr>
   <tr>
-    <td>Layout Area Detection</td>
+    <td>Layout Detection</td>
   </tr>
   <tr>
     <td>Text Detection</td>
@@ -93,49 +93,99 @@ comments: true
     <td>Seal Text Detection</td>
   </tr>
   <tr>
-    <td>Text Image Correction</td>
+    <td>Text Image Unrapping</td>
   </tr>
   <tr>
     <td>Document Image Orientation Classification</td>
   </tr>
   <tr>
-    <td rowspan = 2>OCR</td>
-    <td >Text Detection</td>
-    <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Online Experience</a></td>
-    <td rowspan = 2>OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols. The General OCR Pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that achieves millisecond-level text content prediction on CPUs, achieving state-of-the-art (SOTA) performance in general scenarios. Based on this project, developers from academia, industry, and research have quickly implemented various OCR applications covering general, manufacturing, finance, transportation.</td>
-    <td rowspan = 2>
-      <ul>
-        <li>Document digitization</li>
-        <li>Information extraction</li>
-        <li>Data processing</li>
-      </ul>
+      <td rowspan="8">PP-ChatOCRv4</td>
+      <td>Table Structure Recognition</td>
+      <td rowspan="8">Coming Soon</td>
+      <td rowspan="8">Document Scene Information Extraction v4 (PP-ChatOCRv4) is a PaddlePaddle-featured intelligent analysis solution for documents and images, combining LLM, MLLM, and OCR technologies. Based on PP-ChatOCRv3, it optimizes common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. It integrates massive data and knowledge with the Ernie model, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment methods, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and optimize on your own dataset, and the trained model can be seamlessly integrated.</td>
+      <td rowspan="8">
+          <ul>
+              <li>Knowledge Graph Construction</li>
+              <li>Detection of Information Related to Specific Events in Online News and Social Media</li>
+              <li>Extraction and Analysis of Key Information in Academic Literature (especially scenarios requiring recognition of seals, distorted images, and more complex tables)</li>
+          </ul>
+      </td>
+  </tr>
+  <tr>
+      <td>Layout Detection</td>
+  </tr>
+  <tr>
+      <td>Text Detection</td>
+  </tr>
+  <tr>
+      <td>Text Recognition</td>
+  </tr>
+  <tr>
+      <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+      <td>Text Image Unrapping</td>
+  </tr>
+  <tr>
+      <td>Document Image Orientation Classification</td>
+  </tr>
+  <tr>
+      <td>Document-based Vision-Language Model</td>
+  </tr>
+  <tr>
+    <td rowspan="5">General OCR</td>
+    <td>Text Detection</td>
+    <td rowspan="5"><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Online Experience</a></td>
+    <td rowspan="5">OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols. General OCR is used to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that can achieve millisecond-level accurate text prediction on CPUs, reaching open-source SOTA in general scenarios. Based on this project, many developers from academia, industry, and research have quickly implemented multiple OCR applications, covering various fields such as general, manufacturing, finance, and transportation.</td>
+    <td rowspan="5">
+    <ul>
+        <li>License plate recognition in intelligent security</li>
+        <li>Recognition of house numbers and other information</li>
+        <li>Digitization of paper documents</li>
+        <li>Recognition of ancient characters in cultural heritage</li>
+    </ul>
     </td>
-  </tr>
-    <tr>
-    <td>Text Recognition</td>
-  </tr>
+</tr>
 <tr>
-        <td rowspan = 4>Table Recognition</td>
-        <td>Layout Detection</td>
-        <td rowspan = 4><a href="https://aistudio.baidu.com/community/app/91661/webUI">Online Experience</a></td>
-        <td rowspan = 4>Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By leveraging computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further data processing and analysis by users</td>
-<td rowspan = 4>
+    <td>Text Recognition</td>
+</tr>
+<tr>
+    <td>Document Image Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unwarping </td>
+</tr>
+<tr>
+    <td>Text Line Orientation Classification </td>
+</tr>
+<tr>
+    <td rowspan="6">General Table Recognition</td>
+    <td>Table Structure Recognition</td>
+    <td rowspan="6"><a href="https://aistudio.baidu.com/community/app/91661/webUI">Online Experience</a></td>
+    <td rowspan="6">Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, facilitating further processing and analysis by users.</td>
+    <td rowspan="6">
     <ul>
         <li>Processing of bank statements</li>
-        <li>recognition and extraction of various indicators in medical reports</li>
-        <li>extraction of tabular information from contracts</li>
-      </ul>
-      </td>
-   </tr>
-  <tr>
-    <td>Table Structure Recognition </td>
-  </tr>
-  <tr>
+        <li>Recognition and extraction of indicators in medical reports</li>
+        <li>Extraction of table information in contracts</li>
+    </ul>
+    </td>
+</tr>
+<tr>
     <td>Text Detection</td>
-  </tr>
-  <tr>
+</tr>
+<tr>
     <td>Text Recognition</td>
-  </tr>
+</tr>
+<tr>
+    <td>Layout Detection </td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping </td>
+</tr>
     <tr>
         <td>Time Series Forecasting</td>
         <td>Time Series Forecasting Module</td>
@@ -188,7 +238,7 @@ comments: true
 <tr>
     <td>Multi-label Image Classification</td>
     <td>Multi-label Image Classification</td>
-    <td>None</td>
+    <td><a href="https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter">Online Experience</a></td>
     <td>Image multi-label classification is a technology that assigns an image to multiple related categories simultaneously. It is widely used in image tagging, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, such as both "dog" and "outdoor" labels in a single picture. By using deep learning models, image multi-label classification can automatically extract image features and perform accurate classification to provide more comprehensive information for users. This technology is significant in applications like intelligent search engines and automatic content generation.</td>
     <td>
     <ul>
@@ -205,7 +255,7 @@ comments: true
   <tr>
     <td>Small Object Detection</td>
     <td>Small Object Detection</td>
-    <td>None</td>
+    <td><a href="https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter">Online Experience</a></td>
     <td>Small object detection is a technology specifically for identifying small objects in images. It is widely used in surveillance, autonomous driving, and satellite image analysis. It can accurately find and classify small-sized objects like pedestrians, traffic signs, or small animals in complex scenes. By using deep learning algorithms and optimized convolutional neural networks, small object detection can effectively enhance the recognition ability of small objects, ensuring that important information is not missed in practical applications. This technology plays an important role in improving safety and automation levels.</td>
     <td>
   <ul>
@@ -235,82 +285,153 @@ comments: true
   </ul></td>
   </tr>
   <tr>
-    <td rowspan = 8>Layout Parsing</td>
+    <td rowspan="10">General Layout Parsing</td>
+    <td>Layout Detection</td>
+    <td rowspan="10">None</td>
+    <td rowspan="10">Layout parsing is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout parsing can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically includes three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to enhance the efficiency and accuracy of data processing.</td>
+    <td rowspan="10">
+        <ul>
+            <li>Analysis of financial and legal documents</li>
+            <li>Digitization of historical documents and archives</li>
+            <li>Automated form filling</li>
+            <li>Page structure parsing</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>Layout Detection Module</td>
+</tr>
+<tr>
+    <td>Text Detection Module</td>
+</tr>
+<tr>
+    <td>Text Recognition Module</td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification</td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
+<tr>
     <td>Table Structure Recognition</td>
-    <td rowspan = 8>None</td>
-    <td rowspan = 8>Layout analysis is a technology for extracting structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology has wide applications in document management, information extraction, and data digitization. By combining optical character recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, titles, paragraphs, images, tables, and other layout elements from documents. This process typically includes three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data that enhances data processing efficiency and accuracy.</td>
-    <td rowspan="8">
-  <ul>
-    <li>Financial and legal document analysis</li>
-    <li>Digitization of historical documents and archives</li>
-    <li>Automated form filling</li>
-    <li>Page structure analysis</li>
-  </ul>
-</td>
-  </tr>
-  <tr>
-    <td>Layout Area Detection</td>
-  </tr>
-  <tr>
-    <td>Text Detection</td>
-  </tr>
-  <tr>
-    <td>Text Recognition</td>
-  </tr>
-  <tr>
+</tr>
+<tr>
+    <td>Text Line Orientation Classification</td>
+</tr>
+<tr>
     <td>Formula Recognition</td>
-  </tr>
-  <tr>
+</tr>
+<tr>
     <td>Seal Text Detection</td>
-  </tr>
-  <tr>
-    <td>Text Image Correction</td>
-  </tr>
-  <tr>
-    <td>Document Image Orientation Classification</td>
-  </tr>
-    <tr>
-    <td rowspan = 2>Formula Recognition</td>
-    <td>Layout Area Detection</td>
-    <td rowspan = 2>None</td>
-    <td rowspan = 2>Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and its structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. By using computer vision and machine learning algorithms, formula recognition can convert complex mathematical formula information into an editable LaTeX format, facilitating further data processing and analysis by users.</td>
-    <td rowspan = 2>
-    <ul>
-        <li>Document digitization and retrieval</li>
-        <li>Formula search engine</li>
-        <li>Formula editor</li>
-        <li>Automated typesetting</li>
-      </ul>
-      </td>
-  </tr>
-  <tr>
+</tr>
+<tr>
+    <td rowspan="13">General Layout Parsing v3</td>
+    <td>Layout Detection Module</td>
+    <td rowspan="13">Coming Soon</td>
+    <td rowspan="13">Based on the General Layout Parsing v1 pipeline, the General Layout Parsing v3 pipeline enhances the capabilities of layout detection, table recognition, and formula recognition. It adds the ability to restore multi-column reading order and convert results into Markdown files. It performs exceptionally well in various document data and can handle more complex document data. This pipeline also provides flexible service deployment methods, supporting multiple programming languages on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and optimize on your own dataset, and the trained model can be seamlessly integrated.</td>
+    <td rowspan="13">
+        <ul>
+            <li>Intelligent Document Analysis</li>
+            <li>Document Digitization</li>
+            <li>Page Structure Parsing</li>
+            <li>Complex Table Recognition</li>
+            <li>Large Model Data Construction</li>
+            <li>RAG</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>Text Detection Module</td>
+</tr>
+<tr>
+    <td>Text Recognition Module</td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification</td>
+</tr>
+<tr>
+    <td>Text Image Unrapping Module</td>
+</tr>
+<tr>
+    <td>Wired Table Structure Recognition Module</td>
+</tr>
+<tr>
+    <td>Wireless Table Structure Recognition Module</td>
+</tr>
+<tr>
+    <td>Table Classification Module</td>
+</tr>
+<tr>
+    <td>Wired Table Cell Detection Module</td>
+</tr>
+<tr>
+    <td>Wireless Table Cell Detection Module</td>
+</tr>
+<tr>
+    <td>Text Line Orientation Classification Module</td>
+</tr>
+<tr>
+    <td>Formula Recognition Module</td>
+</tr>
+<tr>
+    <td>Seal Text Detection Module</td>
+</tr>
+
+<tr>
+    <td rowspan="4">Formula Recognition</td>
     <td>Formula Recognition</td>
-  </tr>
-  <tr>
-    <td rowspan = 3>Seal Text Recognition</td>
-    <td>Layout Area Detection</td>
-    <td rowspan = 3>None</td>
-    <td rowspan = 3>Seal text recognition is a technology that automatically extracts and recognizes seal content from documents or images. Recognizing seal text is part of document processing and has applications in many scenarios, such as contract comparison, inventory audit, and invoice reimbursement audit.</td>
-    <td rowspan = 3>
-    <ul>
-        <li>Contract and agreement validation</li>
-        <li>Check processing</li>
-        <li>Loan approval</li>
-        <li>Legal document management</li>
-      </ul>
-      </td>
-  </tr>
-  <tr>
+    <td rowspan="4"><a href="https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter">Online Experience</a></td>
+    <td rowspan="4">Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. By using computer vision and machine learning algorithms, formula recognition can convert complex mathematical formula information into editable LaTeX format, facilitating further processing and analysis by users.</td>
+    <td rowspan="4">
+        <ul>
+            <li>Document digitization and retrieval</li>
+            <li>Formula search engine</li>
+            <li>Formula editor</li>
+            <li>Automated typesetting</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>Layout Detection Module </td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
+<tr>
+    <td rowspan="5">Seal Text Recognition</td>
     <td>Seal Text Detection</td>
-  </tr>
-  <tr>
+    <td rowspan="5"><a href="https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter">Online Experience</a></td>
+    <td rowspan="5">Seal text recognition is a technology that automatically extracts and identifies seal content from documents or images. Seal text recognition is a part of document processing and is useful in many scenarios, such as contract comparison, inventory audit, and invoice reimbursement review.</td>
+    <td rowspan="5">
+        <ul>
+            <li>Contract and agreement verification</li>
+            <li>Check processing</li>
+            <li>Loan approval</li>
+            <li>Legal document management</li>
+        </ul>
+    </td>
+</tr>
+<tr>
     <td>Text Recognition</td>
-  </tr>
+</tr>
+<tr>
+    <td>Layout Detection </td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
 <tr>
     <td rowspan = 2>General Image Recognition</td>
-    <td>Subject Detection</td>
+    <td>Mainbody Detection</td>
     <td rowspan = 2>None</td>
-    <td rowspan = 2>The general image recognition production line is designed to address open-domain target localization and recognition issues. It can effectively identify and differentiate various target objects in different environments and conditions, making it widely applicable in autonomous driving, intelligent security, medical image analysis, and industrial automation, among other fields.</td>
+    <td rowspan = 2>The general image recognition pipeline is designed to address open-domain target localization and recognition issues. It can effectively identify and differentiate various target objects in different environments and conditions, making it widely applicable in autonomous driving, intelligent security, medical image analysis, and industrial automation, among other fields.</td>
     <td rowspan = 2>
     <ul>
         <li>Automated Identity Verification</li>
@@ -369,6 +490,142 @@ comments: true
   <tr>
     <td>Face Features</td>
   </tr>
+  <tr>
+    <td>3D Multimodal Fusion Detection</td>
+    <td>3D Multimodal Fusion Detection</td>
+    <td>Not Available</td>
+    <td>3D multimodal fusion detection is a technology that combines multiple data modalities (such as LiDAR, cameras, and millimeter-wave radar) to detect targets in three-dimensional space. It leverages the strengths of different modalities to achieve more accurate target localization, classification, and tracking. Through deep learning algorithms, this technology can process complex 3D scenes, identify vehicles, pedestrians, obstacles, and other targets, and provide key support for fields such as autonomous driving, intelligent transportation, and robot navigation.</td>
+    <td>
+    <ul>
+        <li>Obstacle detection and avoidance in autonomous vehicles</li>
+        <li>Traffic flow monitoring in intelligent transportation systems</li>
+        <li>Object recognition and grasping in industrial robots</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">Human Keypoint Detection</td>
+    <td>Pedestrian Detection</td>
+    <td rowspan="2">Not Available</td>
+    <td rowspan="2">Human keypoint detection is an important task in computer vision, aiming to locate specific parts of the human body (such as the head, shoulders, elbows, knees, etc.) through image or video data. By analyzing the geometric structure and appearance features of the human body, this technology can capture human posture and movements in real-time and is widely used in human-computer interaction, motion analysis, and virtual reality.</td>
+    <td rowspan="2">
+    <ul>
+        <li>Movement guidance in smart fitness applications</li>
+        <li>Character movement capture in virtual reality</li>
+        <li>Abnormal behavior analysis in security surveillance</li>
+      </ul>
+      </td>
+</tr>
+<tr>
+    <td>Keypoint Detection</td>
+</tr>
+<tr>
+    <td>Open-Vocabulary Detection</td>
+    <td>Open-Vocabulary Detection</td>
+    <td>Not Available</td>
+    <td>Open-vocabulary detection is an emerging computer vision technology aimed at enabling models to recognize and understand new categories or vocabulary not seen during training. Unlike traditional object detection, open-vocabulary detection does not rely on large amounts of labeled data but instead combines pre-trained language models and visual features to quickly recognize and understand unknown categories. This technology has broad application prospects in dynamic environment object detection, image classification, and intelligent robots.</td>
+    <td>
+    <ul>
+        <li>Recognition of unknown obstacles in autonomous driving</li>
+        <li>Abnormal behavior detection in intelligent security</li>
+        <li>Target exploration by intelligent robots in complex environments</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Open-Vocabulary Segmentation</td>
+    <td>Open-Vocabulary Segmentation</td>
+    <td>Not Available</td>
+    <td>Open-vocabulary segmentation is a cutting-edge computer vision technology aimed at performing pixel-level semantic segmentation of unknown categories in images. Unlike traditional segmentation methods limited to labeled categories, open-vocabulary segmentation combines pre-trained language models and visual features to dynamically recognize and segment new categories not seen during training. This technology excels in open-world scenarios and brings new possibilities to fields such as autonomous driving, intelligent robots, and dynamic environment perception.</td>
+    <td>
+    <ul>
+        <li>Segmentation and path planning of unknown objects in autonomous driving</li>
+        <li>Scene understanding by intelligent robots in unknown environments</li>
+        <li>Real-time semantic segmentation and analysis in dynamic scenes</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Rotated Object Detection</td>
+    <td>Rotated Object Detection</td>
+    <td>Not Available</td>
+    <td>Rotated object detection is an important technology in the field of computer vision, focusing on detecting and locating objects with arbitrary orientations in images. Unlike traditional object detection methods (which usually assume objects are horizontal or vertical), rotated object detection can handle objects at any rotation angle, thus more accurately identifying and locating targets. By introducing oriented bounding boxes (OBB) and improved deep learning algorithms, this technology performs well in complex scenes such as aerial images, satellite images, and traffic sign detection in autonomous driving.</td>
+    <td>
+    <ul>
+        <li>Target recognition and localization in aerial images</li>
+        <li>Rotated traffic sign detection in autonomous driving</li>
+        <li>Infrastructure detection in satellite images</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">Document Image Preprocessing</td>
+    <td>Doc Img Orientation Classification</td>
+    <td rowspan="2">Not Available</td>
+    <td rowspan="2">Document image preprocessing is a key step in document analysis and recognition, aiming to optimize document images through a series of technical means to improve the accuracy and efficiency of subsequent processing. Document image preprocessing includes operations such as orientation classification, text rectification, noise removal, and binarization, which can effectively improve image quality, correct document orientation, and remove interference factors. This technology is widely used in document scanning, OCR text recognition, and electronic document generation.</td>
+    <td rowspan="2">
+    <ul>
+        <li>Automatic orientation correction in document scanners</li>
+        <li>Text image optimization in OCR systems</li>
+        <li>Image restoration in historical document digitization</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
+<tr>
+    <td>Multilingual Speech Recognition</td>
+    <td>Multilingual Speech Recognition</td>
+    <td>Not Available</td>
+    <td>Multilingual speech recognition is an advanced speech processing technology that aims to automatically identify and transcribe speech signals in multiple languages to achieve efficient information extraction and communication. Compared to single-language speech recognition, multilingual speech recognition needs to handle differences in pronunciation, grammar, and vocabulary across languages, thus requiring more powerful models and richer language resources. Through deep learning and large-scale multilingual data training, this technology can recognize speech content in multiple languages in real-time and is widely used in intelligent translation, voice assistants, and multilingual customer service.</td>
+    <td>
+    <ul>
+        <li>Multilingual interaction in intelligent voice assistants</li>
+        <li>Real-time speech translation in international conferences</li>
+        <li>Multilingual voice customer service systems</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>General Video Classification</td>
+    <td>Video Classification</td>
+    <td>Not Available</td>
+    <td>Video classification is an important task in the field of computer vision, aiming to automatically analyze and identify the semantic categories of video content. Through deep learning models, video classification technology can extract spatiotemporal features from video frame sequences to accurately classify the themes, scenes, or activities in the video. This technology is widely used in video content recommendation, video surveillance analysis, intelligent media management, and video retrieval.</td>
+    <td>
+    <ul>
+        <li>Content recommendation and classification in video platforms</li>
+        <li>Abnormal behavior recognition in security surveillance</li>
+        <li>Automatic classification and management of intelligent media libraries</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>General Video Detection</td>
+    <td>Video Detection</td>
+    <td>Not Available</td>
+    <td>Video detection is a key technology in the field of computer vision, focusing on real-time or offline analysis of video content to identify and locate target objects and events in the video. By combining deep learning and object detection algorithms, video detection technology can handle complex dynamic scenes, detecting objects, people, behaviors, and abnormal events in the video. This technology has broad application prospects in intelligent security, traffic monitoring, sports analysis, and video content review.</td>
+    <td>
+    <ul>
+        <li>Intrusion detection and alarm in intelligent security systems</li>
+        <li>Vehicle detection and violation recognition in traffic monitoring</li>
+        <li>Athlete behavior analysis in sports events</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Document Understanding</td>
+    <td>Document-related Visual Language Model</td>
+    <td>Not Available</td>
+    <td>The document understanding product line is an advanced document processing technology based on Visual-Language Models (VLM), aiming to overcome the limitations of traditional document processing. Traditional methods rely on fixed templates or predefined rules to parse documents. In contrast, this product line leverages the multimodal capabilities of VLM to accurately answer user queries by integrating visual and linguistic information, with only the document image and user question as input. This technology does not require pre-training for specific document formats, allowing it to flexibly handle diverse document content, significantly enhancing the generalization and practicality of document processing. It has broad application prospects in scenarios such as intelligent Q&A and information extraction.</td>
+    <td>
+    <ul>
+        <li>Intelligent Q&A</li>
+        <li>Information Extraction</li>
+        <li>Contract Review and Risk Management</li>
+    </ul>
+    </td>
+</tr>
 </table>
 
 ## 2. Featured Pipelines

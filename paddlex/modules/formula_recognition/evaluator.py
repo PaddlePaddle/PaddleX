@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,6 +51,19 @@ class FormulaRecEvaluator(BaseEvaluator):
                 label_dict_path = None
         if label_dict_path is not None:
             self.pdx_config.update_label_dict_path(label_dict_path)
+
+        if self.eval_config.batch_size is not None:
+            if self.global_config["model"] == "LaTeX_OCR_rec":
+                self.pdx_config.update_batch_size_pair(
+                    self.eval_config.batch_size, mode="eval"
+                )
+            else:
+                self.pdx_config.update_batch_size(
+                    self.eval_config.batch_size, mode="eval"
+                )
+
+        if self.eval_config.get("delimiter", None) is not None:
+            self.pdx_config.update_delimiter(self.eval_config.delimiter, mode="eval")
 
     def get_eval_kwargs(self) -> dict:
         """get key-value arguments of model evalution function

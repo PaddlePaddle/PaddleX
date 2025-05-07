@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Time Series Classification Module Development Tutorial
+# Time Series Classification Module Tutorial
 
 ## I. Overview
 Time series classification involves identifying and categorizing different patterns in time series data by analyzing trends, periodicity, seasonality, and other factors that vary over time. This technique is widely used in medical diagnosis and other fields, effectively classifying key information in time series data to provide robust support for decision-making.
@@ -20,14 +20,56 @@ Time series classification involves identifying and categorizing different patte
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Trained Model</a></td>
+<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td>
 <td>87.5</td>
 <td>792K</td>
 <td>TimesNet is an adaptive and high-accuracy time series classification model through multi-period analysis</td>
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation set for the above accuracy metrics is UWaveGestureLibrary.</b>
+
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+           <li><strong>Test Dataset：</strong> UWaveGestureLibrary.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
@@ -36,12 +78,205 @@ After installing the wheel package, you can perform inference for the time serie
 
 ```bash
 from paddlex import create_model
-model = create_model("TimesNet_cls")
+model = create_model(model_name="TimesNet_cls")
 output = model.predict("ts_cls.csv", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_csv("./output/")
+    res.print()
+    res.save_to_csv(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{
+    "res": {
+        "input_path": "ts_cls.csv",
+        "classification": [
+            {
+                "classid": 0,
+                "score": 0.617687881
+            }
+        ]
+    }
+}
+```
+
+The meanings of the parameters in the running results are as follows:
+- `input_path`: Indicates the path to the input time-series file for prediction.
+- `classification`: Indicates the time-series classification result. `classid` represents the predicted category, and `score` represents the prediction confidence. You can save the prediction results to a CSV file using `res.save_to_csv()` or to a JSON file using `res.save_to_json()`.
+
+Descriptions of related methods, parameters, etc., are as follows:
+
+* The `create_model` method instantiates a time-series classification model (using `TimesNet_cls` as an example). Specific descriptions are as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>The name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>The storage path of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, PaddleX's built-in model parameters are used by default. If `model_dir` is specified, the user-defined model is used.
+
+* The `predict()` method of the time-series classification model is called for inference prediction. The parameters of the `predict()` method are `input` and `batch_size`, with specific descriptions as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as time-series data represented by <code>pandas.DataFrame</code></li>
+  <li><b>File path</b>, such as the local path of a time-series file: <code>/root/data/ts.csv</code></li>
+  <li><b>URL link</b>, such as the network URL of a time-series file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv">Example</a></li>
+  <li><b>Local directory</b>, which must contain data files for prediction, such as the local path: <code>/root/data/</code></li>
+  <li><b>List</b>, elements of the list must be of the above types, such as <code>[pandas.DataFrame, pandas.DataFrame]</code>, <code>[\"/root/data/ts1.csv\", \"/root/data/ts2.csv\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code>, <code>[{\"ts\": \"/root/data1\"}, {\"ts\": \"/root/data2/ts.csv\"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+</table>
+
+* The prediction results are processed for each sample, with the prediction result being of type `dict`, and support operations such as printing, saving as a `csv` file, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Explanation</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a <code>json</code> file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is provided, the saved file name matches the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_csv()</code></td>
+<td>Save the result as a time-series <code>csv</code> file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is provided, the saved file name matches the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining the visualized time-series with results and the prediction results via attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>csv</code></td>
+<td rowspan="1">Get the time-series classification prediction result in <code>csv</code> format</td>
+</tr>
+</table>
+
+
 For more information on using PaddleX's single-model inference APIs, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
@@ -62,7 +297,7 @@ tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
 You can complete data validation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -163,12 +398,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 </code></pre>
 <p>The above parameters can also be set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o CheckDataset.convert.enable=True
@@ -196,13 +431,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o CheckDataset.split.enable=True \
@@ -216,7 +451,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the Time Series Forecasting model (TimesNet_cls) as an example:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -226,8 +461,8 @@ You need to follow these steps:
 * Specify the `.yaml` configuration file path for the model (here it's `TimesNet_cls.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
-
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX TS Configuration Parameters Documentation](../../instructions/config_parameters_time_series.en.md).
+* Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX TS Configuration Parameters Documentation](../../instructions/config_parameters_time_series.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 
@@ -250,7 +485,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -276,7 +511,7 @@ To perform inference prediction via the command line, simply use the following c
 Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="ts_cls.csv"
@@ -298,4 +533,6 @@ The time series prediction module can be integrated into PaddleX pipelines such 
 
 2. <b>Module Integration</b>
 
-The weights you produce can be directly integrated into the time series classification module. Refer to the Python example code in [Quick Integration](#iii-quick-integration) (Note: This section header is in Chinese and should be translated or removed for consistency), simply replace the model with the path to your trained model.
+The weights you produce can be directly integrated into the time series classification module. Refer to the Python example code in [Quick Integration](#iii-quick-integration), simply replace the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

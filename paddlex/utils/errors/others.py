@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 import json
 import signal
-from typing import Union
 from pathlib import Path
+from typing import Union
 
 __all__ = [
     "UnsupportedAPIError",
@@ -34,37 +34,25 @@ __all__ = [
 class UnsupportedAPIError(Exception):
     """UnsupportedAPIError"""
 
-    pass
-
 
 class UnsupportedParamError(Exception):
     """UnsupportedParamError"""
-
-    pass
 
 
 class KeyNotFoundError(Exception):
     """KeyNotFoundError"""
 
-    pass
-
 
 class ClassNotFoundException(Exception):
     """ClassNotFoundException"""
-
-    pass
 
 
 class NoEntityRegisteredException(Exception):
     """NoEntityRegisteredException"""
 
-    pass
-
 
 class UnsupportedDeviceError(Exception):
     """UnsupportedDeviceError"""
-
-    pass
 
 
 class CalledProcessError(Exception):
@@ -89,8 +77,6 @@ class CalledProcessError(Exception):
 
 class DuplicateRegistrationError(Exception):
     """DuplicateRegistrationError"""
-
-    pass
 
 
 class ModelNotFoundError(Exception):

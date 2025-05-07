@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,14 @@
 # limitations under the License.
 
 
-import os
 import json
+import os
 import os.path as osp
-from PIL import Image, ImageOps
 from collections import defaultdict
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+
+from PIL import Image, ImageOps
+
+from .....utils.errors import DatasetFileNotFoundError
 
 
 def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=10):
@@ -32,7 +34,6 @@ def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=
             raise DatasetFileNotFoundError(file_path=dataset_dir)
 
         tags = ["train", "val"]
-        max_recorded_sample_cnts = 50
         sample_cnts = dict()
         sample_paths = defaultdict(list)
 
@@ -55,8 +56,8 @@ def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=
                     for line in all_lines:
                         info = json.loads(line.strip("\n"))
                         file_name = info["filename"]
-                        cells = info["html"]["cells"].copy()
-                        structure = info["html"]["structure"]["tokens"].copy()
+                        info["html"]["cells"].copy()
+                        info["html"]["structure"]["tokens"].copy()
 
                         img_path = osp.join(dataset_dir, file_name)
 
@@ -75,18 +76,6 @@ def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=
                             )
                             sample_paths[tag].append(sample_path)
 
-                        boxes_num = len(cells)
-                        tokens_num = sum(
-                            [
-                                structure.count(x)
-                                for x in ["<td>", "<td", "<eb></eb>", "<td></td>"]
-                            ]
-                        )
-                        if boxes_num != tokens_num:
-                            raise CheckFailedError(
-                                f"The number of cells needs to be consistent with the number of tokens "
-                                "but the number of cells is {boxes_num}, and the number of tokens is {tokens_num}."
-                            )
         meta = {}
 
         meta["train_samples"] = sample_cnts["train"]

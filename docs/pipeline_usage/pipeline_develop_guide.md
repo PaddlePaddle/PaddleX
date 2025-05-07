@@ -164,17 +164,17 @@ Pipeline:
 
 若您需要将产线直接应用在您的Python项目中，可以参考[PaddleX产线Python脚本使用说明](./instructions/pipeline_python_API.md)及[快速体验](#2快速体验)中的Python示例代码。
 
-此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
+PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 
 🚀 <b>高性能推理</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../pipeline_deploy/high_performance_inference.md)。
 
-☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../pipeline_deploy/service_deploy.md)。
+☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../pipeline_deploy/serving.md)。
 
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
-
+PaddleX 提供了将 Paddle 模型转换为 ONNX 模型的能力，详细说明请参考[Paddle2ONNX 插件的安装与使用](../pipeline_deploy/paddle2onnx.md)
 
 > ❗ PaddleX为每个产线都提供了详细的使用说明，您可以根据需要进行选择，所有产线对应的使用说明如下：
 
@@ -188,7 +188,7 @@ Pipeline:
 <tbody>
 <tr>
 <td>文档场景信息抽取v3</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">文档场景信息抽取v3产线使用教程</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">文档场景信息抽取v3产线使用教程</a></td>
 </tr>
 <tr>
 <td>通用图像分类</td>
@@ -235,6 +235,26 @@ Pipeline:
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html">图像异常检测产线使用教程</a></td>
 </tr>
 <tr>
+<td>人体关键点检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">人体关键点检测产线使用教程</a></td>
+</tr>
+<tr>
+<td>开放词汇检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">开放词汇检测产线使用教程</a></td>
+</tr>
+<tr>
+<td>开放词汇分割</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">开放词汇分割产线使用教程</a></td>
+</tr>
+<tr>
+<td>旋转目标检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">旋转目标检测产线使用教程</a></td>
+</tr>
+<tr>
+<td>3D多模态融合检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D多模态融合检测产线使用教程</a></td>
+</tr>
+<tr>
 <td>通用OCR</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/OCR.html">通用OCR产线使用教程</a></td>
 </tr>
@@ -243,8 +263,16 @@ Pipeline:
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html">通用表格识别产线使用教程</a></td>
 </tr>
 <tr>
+<td>通用表格识别v2</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">通用表格识别产线v2使用教程</a></td>
+</tr>
+<tr>
 <td>通用版面解析</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">通用版面解析产线使用教程</a></td>
+</tr>
+<tr>
+<td>通用版面解析v3</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">通用版面解析v3产线使用教程</a></td>
 </tr>
 <tr>
 <td>公式识别</td>
@@ -253,6 +281,10 @@ Pipeline:
 <tr>
 <td>印章文本识别</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html">印章文本识别产线使用教程</a></td>
+</tr>
+<tr>
+<td>文档图像预处理</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">文档图像预处理产线使用教程</a></td>
 </tr>
 <tr>
 <td>时序预测</td>
@@ -265,6 +297,18 @@ Pipeline:
 <tr>
 <td>时序分类</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html">通用时序分类产线使用教程</a></td>
+</tr>
+<tr>
+<td>多语种语音识别</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">多语种语音识别产线使用教程</a></td>
+</tr>
+<tr>
+<td>通用视频分类</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html">通用视频分类产线使用教程</a></td>
+</tr>
+<tr>
+<td>通用视频检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html">通用视频检测产线使用教程</a></td>
 </tr>
 </tbody>
 </table>

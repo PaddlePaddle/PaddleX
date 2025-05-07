@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Tutorial for Text Line Orientation Classification Module
+# Text Line Orientation Classification Module Tutorial
 
 ## I. Overview
 The text line orientation classification module primarily distinguishes the orientation of text lines and corrects them using post-processing. In processes such as document scanning and license/certificate photography, to capture clearer images, the capture device may be rotated, resulting in text lines in various orientations. Standard OCR pipelines cannot handle such data well. By utilizing image classification technology, the orientation of text lines can be predetermined and adjusted, thereby enhancing the accuracy of OCR processing.
@@ -14,7 +14,7 @@ The text line orientation classification module primarily distinguishes the orie
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -22,7 +22,7 @@ The text line orientation classification module primarily distinguishes the orie
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x0_25_textline_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x0_25_textline_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">Trained Model</a></td>
+<td>PP-LCNet_x0_25_textline_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">Training Model</a></td>
 <td>95.54</td>
 <td>-</td>
 <td>-</td>
@@ -31,23 +31,253 @@ The text line orientation classification module primarily distinguishes the orie
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are evaluated on a self-built dataset covering multiple scenarios such as documents and licenses, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+             <li><strong>Test Dataset：</strong> PaddleX Self-built Dataset, Covering Multiple Scenarios Such as Documents and Certificates, Containing 1000 Images.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## III. Quick Integration
 
-> ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the text line orientation classification module. You can switch models under this module freely, and you can also integrate the model inference of the text line orientation classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/textline_rot180_demo.jpg) locally.
+After completing the installation of the wheel package, you can perform inference for the text line orientation classification module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the text line orientation classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/textline_rot180_demo.jpg) to your local machine. If the download link is not working, please check the validity of the URL and try again.
 
 ```bash
 from paddlex import create_model
-model = create_model("PP-LCNet_x0_25_textline_ori")
-output = model.predict("textline_rot180_demo.jpg", batch_size=1)
+model = create_model(model_name="PP-LCNet_x0_25_textline_ori")
+output = model.predict("textline_rot180_demo.jpg",  batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/demo.png")
     res.save_to_json("./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{'res': {'input_path': 'test_imgs/textline_rot180_demo.jpg', 'class_ids': [1], 'scores': [1.0], 'label_names': ['180_degree']}}
+```
+
+The meanings of the running results parameters are as follows:
+
+- `input_path`：Indicates the path of the input image.
+- `class_ids`：Indicates the class ID of the prediction result.
+- `scores`：Indicates the confidence score of the prediction result.
+- `label_names`：Indicates the class name of the prediction result.
+The visualization image is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_classification/general_image_classification_001_res.jpg">
+
+The explanations for the methods, parameters, etc., are as follows:
+
+* `create_model` instantiates a text recognition model (here, `PP-LCNet_x0_25_textline_ori` is used as an example), and the specific explanations are as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td><code>PP-LCNet_x0_25_textline_ori</code></td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
+
+* The `predict()` method of the text recognition model is called for inference prediction. The `predict()` method has parameters `input` and `batch_size`, which are explained as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/textline_rot180_demo.jpg">Example</a></li>
+  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer</td>
+<td>1</td>
+</tr>
+</table>
+
+* The prediction results are processed, and the prediction result for each sample is of type `dict`. It supports operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the results as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The path to save the file. If it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the results as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The path to save the file. If it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it supports obtaining the visualization image with results and the prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualization image in <code>dict</code> format</td>
+</tr>
+</table>
+
 For more information on using the PaddleX single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
@@ -67,7 +297,7 @@ tar -xf ./dataset/textline_orientation_example_data.tar -C ./dataset/
 You can complete data validation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 ```
@@ -154,13 +384,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data \
     -o CheckDataset.split.enable=True \
@@ -172,7 +402,7 @@ CheckDataset:
 Model training can be completed with a single command. Here, the training of the text line orientation classification model (PP-LCNet_x1_0_textline_ori) is taken as an example:
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 ```
@@ -181,7 +411,8 @@ The following steps are required:
 * Specify the path to the `.yaml` configuration file for the model (here it is `PP-LCNet_x0_25_textline_ori.yaml`. When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file or by appending parameters in the command line. For example, to specify the first two GPUs for training: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file description for the corresponding task module of the model [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file or by appending parameters in the command line. For example, to specify the first two GPUs for training: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file description for the corresponding task module of the model [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 
@@ -196,14 +427,15 @@ Other related parameters can be set by modifying the fields under `Global` and `
 </li>
 <li><code>train.log</code>: Training log file, recording changes in model metrics, loss, etc., during training;</li>
 <li><code>config.yaml</code>: Training configuration file, recording the hyperparameter configurations for this training;</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ### **4.3 Model Evaluation**
 After completing model training, you can evaluate the specified model weights on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 ```
@@ -227,7 +459,7 @@ After completing model training and evaluation, you can use the trained model we
 Performing inference predictions through the command line requires only the following single command. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/textline_rot180_demo.jpg) locally.
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="textline_rot180_demo.jpg"
@@ -245,8 +477,10 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. **Pipeline Integration**
 
-The text line orientation classification module can be integrated into the [Document Scene Information Extraction v3 Pipeline (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.en.md). Simply replace the model path to update the text line orientation classification module.
+The text line orientation classification module can be integrated into the [Document Scene Information Extraction v3 Pipeline (PP-ChatOCRv3-doc)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the text line orientation classification module.
 
 2. **Module Integration**
 
 The weights you produce can be directly integrated into the text line orientation classification module. You can refer to the Python example code in [Quick Integration](##Quick-Integration) and only need to replace the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

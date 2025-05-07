@@ -30,7 +30,7 @@ PaddleX provides the following quick experience methods, which can be directly e
   The quick experience produces the following inference result example:
   <center>
 
-  <img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/01.png" width=600>
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/02.png" width=600>
 
   </center>
 
@@ -45,13 +45,13 @@ PaddleX provides 3 high-precision and high-efficiency end-to-end small object de
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
 <td>31.9</td>
 <td>52.1</td>
 <td>57.1</td>
@@ -60,7 +60,7 @@ PaddleX provides 3 high-precision and high-efficiency end-to-end small object de
 <td rowspan="3">PP-YOLOE_plus small object detection model trained based on VisDrone. VisDrone is a benchmark dataset for UAV vision data, which is used for training and evaluation of small object detection tasks due to its small targets and certain challenges.</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
 <td>25.1</td>
 <td>42.8</td>
 <td>65.5</td>
@@ -68,7 +68,7 @@ PaddleX provides 3 high-precision and high-efficiency end-to-end small object de
 <td>77.29</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
 <td>42.7</td>
 <td>65.9</td>
 <td>458.5</td>
@@ -96,7 +96,7 @@ tar -xf ./dataset/remote_scene_object_detection.tar -C ./dataset/
 When validating the dataset, you only need one line of command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection
 ```
@@ -138,7 +138,7 @@ After executing the above command, PaddleX will validate the dataset and count t
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "\/git_commit\/final_commit_dev\/PaddleX\/_zzl_sod\/rdet_dota_examples",
+  "dataset_path": "rdet_dota_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }
@@ -154,7 +154,7 @@ In the above validation result, `check_pass` being `True` indicates that the dat
 In addition, the dataset validation also analyzed the sample number distribution of all categories in the dataset and plotted the distribution histogram (`histogram.png`):
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/03.png" width=600>
 
 </center>
 
@@ -183,7 +183,7 @@ Dataset conversion and dataset splitting support being enabled at the same time.
 Before training, please ensure that you have validated the dataset. To complete the training of the PaddleX model, you only need the following command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection \
     -o Train.epochs_iters=80
@@ -221,7 +221,7 @@ After completing the model training, all outputs are saved under the specified o
 After completing the model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. Using PaddleX for model evaluation requires only one command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection
 ```
@@ -267,7 +267,7 @@ Experiment results after changing epoch:
 Replace the model in the pipeline with the fine-tuned model for testing, such as:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remote-scene-det_example.png"
@@ -276,16 +276,38 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 Through the above, the prediction results can be generated under `./output`, as follows:
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/04.png" width="600"/>
 
 </center>
 
 ## 7. Development Integration/Deployment
 If the small object detection pipeline can meet your requirements for pipeline inference speed and accuracy, you can directly proceed with development integration/deployment.
-1. Directly apply the trained model in your Python project. You can refer to the following sample code, and modify `Pipeline.model` in `paddlex/pipelines/small_object_detection.yaml` configuration file to your own model path `output/best_model/inference`:
+
+1. If you need to use the fine-tuned model weights, you can obtain the configuration file for the small_object_detection pipeline and load it for prediction. You can execute the following command to save the results in my_path:
+
+```
+paddlex --get_pipeline_config small_object_detection --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` field in the configuration file. If you need to directly apply the general small_object_detection pipeline to your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: small_object_detection
+
+SubModules:
+  SmallObjectDetection:
+    module_name: small_object_detection
+    model_name: PP-YOLOE_plus_SOD-L
+    model_dir: null # Replace this with the local path to your trained model weights.
+    batch_size: 1
+    threshold: 0.5
+```
+
+Subsequently, in your Python code, you can utilize the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/small_object_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/small_object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remote-scene-det_example.png")
 for res in output:
     res.print() # Print the structured output of the prediction
@@ -296,8 +318,8 @@ For more parameters, please refer to [Small Object Detection Pipeline Usage Tuto
 
 2. In addition, PaddleX also provides three other deployment methods, detailed explanations are as follows:
 
-* High-performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smooth user experience. For this reason, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment processes, please refer to [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.md).
-* Service deployment: Service deployment is a common deployment form in actual production environments. By encapsulating inference functions into services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service deployment of the pipeline at a low cost. For detailed service deployment processes, please refer to [PaddleX Service Deployment Guide](../pipeline_deploy/service_deploy.md).
-* Edge deployment: Edge deployment is a way of placing computing and data processing functions on user devices themselves, where devices can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.md).
+* High-performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smooth user experience. For this reason, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment processes, please refer to [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
+* Service deployment: Service deployment is a common deployment form in actual production environments. By encapsulating inference functions into services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service deployment of the pipeline at a low cost. For detailed service deployment processes, please refer to [PaddleX Service Deployment Guide](../pipeline_deploy/serving.en.md).
+* Edge deployment: Edge deployment is a way of placing computing and data processing functions on user devices themselves, where devices can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
 
 You can choose an appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.

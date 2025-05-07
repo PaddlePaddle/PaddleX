@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,19 +15,21 @@
 
 import enum
 import itertools
-import cv2
-import fitz
-from PIL import Image, ImageOps
-import pandas as pd
-import numpy as np
-import yaml
-import soundfile
 import random
-import platform
-import importlib
 
-from ....utils import logging
+import numpy as np
+import pandas as pd
+import yaml
+from PIL import Image, ImageOps
 
+from ....utils.deps import class_requires_deps, is_dep_available
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("PyMuPDF"):
+    import fitz
+if is_dep_available("soundfile"):
+    import soundfile
 
 __all__ = [
     "ReaderType",
@@ -215,14 +217,15 @@ class _BaseReaderBackend(object):
 class _ImageReaderBackend(_BaseReaderBackend):
     """_ImageReaderBackend"""
 
-    pass
 
-
+@class_requires_deps("opencv-contrib-python")
 class OpenCVImageReaderBackend(_ImageReaderBackend):
     """OpenCVImageReaderBackend"""
 
-    def __init__(self, flags=cv2.IMREAD_COLOR):
+    def __init__(self, flags=None):
         super().__init__()
+        if flags is None:
+            flags = cv2.IMREAD_COLOR
         self.flags = flags
 
     def read_file(self, in_path):
@@ -241,6 +244,7 @@ class PILImageReaderBackend(_ImageReaderBackend):
         return ImageOps.exif_transpose(Image.open(in_path))
 
 
+@class_requires_deps("PyMuPDF", "opencv-contrib-python")
 class PDFReaderBackend(_BaseReaderBackend):
 
     def __init__(self, rotate=0, zoom_x=2.0, zoom_y=2.0):
@@ -249,11 +253,11 @@ class PDFReaderBackend(_BaseReaderBackend):
 
     def read_file(self, in_path):
         for page in fitz.open(in_path):
-            pix = page.get_pixmap(matrix=self.mat, alpha=False)
-            getpngdata = pix.tobytes(output="png")
-            # decode as np.uint8
-            image_array = np.frombuffer(getpngdata, dtype=np.uint8)
-            img_cv = cv2.imdecode(image_array, cv2.IMREAD_ANYCOLOR)
+            pixmap = page.get_pixmap(matrix=self.mat, alpha=False)
+            img_cv = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
+                pixmap.h, pixmap.w, pixmap.n
+            )
+            img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
             yield img_cv
 
 
@@ -269,6 +273,7 @@ class _VideoReaderBackend(_BaseReaderBackend):
         raise NotImplementedError
 
 
+@class_requires_deps("opencv-contrib-python")
 class OpenCVVideoReaderBackend(_VideoReaderBackend):
     """OpenCVVideoReaderBackend"""
 
@@ -284,7 +289,7 @@ class OpenCVVideoReaderBackend(_VideoReaderBackend):
         return self._cap.get(cv2.CAP_PROP_FPS)
 
     def read_file(self, in_path):
-        """read vidio file from path"""
+        """read video file from path"""
         if self._cap is not None:
             self._cap_release()
         self._cap = self._cap_open(in_path)
@@ -318,9 +323,9 @@ class OpenCVVideoReaderBackend(_VideoReaderBackend):
         self._cap_release()
 
     def _cap_open(self, video_path):
-        self.cap_init_args.pop("num_seg")
-        self.cap_init_args.pop("seg_len")
-        self.cap_init_args.pop("sample_type")
+        self.cap_init_args.pop("num_seg", None)
+        self.cap_init_args.pop("seg_len", None)
+        self.cap_init_args.pop("sample_type", None)
         self._cap = cv2.VideoCapture(video_path, **self.cap_init_args)
         if not self._cap.isOpened():
             raise RuntimeError(f"Failed to open {video_path}")
@@ -358,7 +363,9 @@ class DecordVideoReaderBackend(_VideoReaderBackend):
 
         # XXX(gaotingquan): There is a confict with `paddle` when import `decord` globally.
         try:
-            self.decord_module = importlib.import_module("decord")
+            import decord
+
+            self.decord_module = decord
         except ModuleNotFoundError():
             raise Exception(
                 "Please install `decord` manually, otherwise, the related model cannot work. It can be automatically installed only on `x86_64`. Refers: `https://github.com/dmlc/decord`."
@@ -403,7 +410,7 @@ class DecordVideoReaderBackend(_VideoReaderBackend):
         return self._cap.get_avg_fps()
 
     def read_file(self, in_path):
-        """read vidio file from path"""
+        """read video file from path"""
         self._cap = self.decord_module.VideoReader(in_path)
         frame_len = len(self._cap)
         if self.sample_type == "uniform":
@@ -441,8 +448,6 @@ class CSVReader(_BaseReader):
 
 class _CSVReaderBackend(_BaseReaderBackend):
     """_CSVReaderBackend"""
-
-    pass
 
 
 class PandasCSVReaderBackend(_CSVReaderBackend):
@@ -483,9 +488,8 @@ class AudioReader(_BaseReader):
 class _AudioReaderBackend(_BaseReaderBackend):
     """_AudioReaderBackend"""
 
-    pass
 
-
+@class_requires_deps("soundfile")
 class WAVReaderBackend(_AudioReaderBackend):
     """PandasCSVReaderBackend"""
 

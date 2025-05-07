@@ -139,7 +139,7 @@ In addition, PaddleX provides detailed tutorials for preparing private datasets 
 
 After fine-tuning your model with a private dataset, you will obtain local model weight files.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local paths of the fine-tuned model weights with the corresponding paths in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the fine-tuned model weights with the corresponding paths in the configuration file:
 
 ```bash
 ......
@@ -167,7 +167,7 @@ In addition, PaddleX also provides three other deployment methods, with detailed
 
 🚀 <b>high-performance inference</b>: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant speedups in the end-to-end process. Refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md) for detailed high-performance inference procedures.
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. Refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy.en.md) for detailed service-oriented deployment procedures.
+☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../pipeline_deploy/serving.md).
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md) for detailed edge deployment procedures.
 
@@ -186,7 +186,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tbody>
 <tr>
 <td>PP-ChatOCR-doc v3</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">PP-ChatOCR-doc v3 Pipeline Usage Tutorial</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">PP-ChatOCR-doc v3 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Image Classification</td>
@@ -233,6 +233,26 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html">Image Anomaly Detection Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
+<td>Human Keypoint Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">Human Keypoint Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Open Vocabulary Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">Open Vocabulary Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Open Vocabulary Segmentation</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">Open Vocabulary Segmentation Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Rotated Object Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">Rotated Object Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>3D Bev Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D Bev Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
 <td>OCR</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/OCR.html">OCR Pipeline Usage Tutorial</a></td>
 </tr>
@@ -241,8 +261,16 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html">Table Recognition Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
+<td>Table Recognition v2</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">Table Recognition v2 Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
 <td>Layout Parsing</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">Layout Parsing Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Layout Parsing v3</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">Layout Parsing v3 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Formula Recognition</td>
@@ -251,6 +279,10 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tr>
 <td>Seal Recognition</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html">Seal Recognition Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Document Image Preprocessing</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">Document Image Preprocessing Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Time Series Forecasting</td>
@@ -263,6 +295,18 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tr>
 <td>Time Series Classification</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html">Time Series Classification Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Multilingual Speech Recognition</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">Multilingual Speech Recognition Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Video Classification</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_classification.html">Video Classification Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Video Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_detection.html">Video Detection Pipeline Usage Tutorial</a></td>
 </tr>
 </tbody>
 </table>

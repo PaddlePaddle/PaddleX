@@ -21,17 +21,67 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">推理模型</a></td>
+<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">推理模型</a></td>
 <td>49.4</td>
 <td>64.4</td>
 <td>253.72</td>
 <td>1807.4</td>
 <td>658.3</td>
-<td rowspan="3">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
+<td rowspan="1">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
+</tr>
+<tr>
+<td>YOLO-Worldv2-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">推理模型</a></td>
+<td>44.4</td>
+<td>59.8</td>
+<td>24.32</td>
+<td>374.89</td>
+<td>421.4</td>
+<td rowspan="1">基于O365,GoldG两个数据集训练的开放词汇目标目标检测模型。文本编码器采用CLIP，视觉模型部份整体采用YOLOv8，额外设计了一些轻量化的跨模态融合模块，在精度和速度取得了较好的均衡。</td>
 </tr>
 </table>
 
-<b>注：以上精度指标为 COCO val2017 验证集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32</b>。
+<strong>测试环境说明:</strong>
+
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+            <li><strong>测试数据集：</strong>基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标检测模型。 </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 
 ## 三、快速集成
@@ -41,8 +91,8 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model('GroundingDINO-T')
-results = model.predict('open_vocabulary_detection.jpg', prompt = 'bus . walking man . rearview mirror .')
+model = create_model(model_name='GroundingDINO-T')
+results = model.predict(input='open_vocabulary_detection.jpg', prompt = 'bus . walking man . rearview mirror .', batch_size=1)
 for res in results:
     res.print()
     res.save_to_img(f"./output/")
@@ -50,6 +100,7 @@ for res in results:
 ```
 
 运行后，得到的结果为：
+
 ```bash
 {'res': "{'input_path': 'open_vocabulary_detection.jpg', 'boxes': [{'coordinate': [112.10542297363281, 117.93667602539062, 514.35693359375, 382.10150146484375], 'label': 'bus', 'score': 0.9348853230476379}, {'coordinate': [264.1828918457031, 162.6674346923828, 286.8844909667969, 201.86187744140625], 'label': 'rearview mirror', 'score': 0.6022508144378662}, {'coordinate': [606.1133422851562, 254.4973907470703, 622.56982421875, 293.7867126464844], 'label': 'walking man', 'score': 0.4384709894657135}, {'coordinate': [591.8192138671875, 260.2451171875, 607.3953247070312, 294.2210388183594], 'label': 'man', 'score': 0.3573091924190521}]}"}
 ```
@@ -62,7 +113,7 @@ for res in results:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
 
 
 相关方法、参数等说明如下：
@@ -93,6 +144,27 @@ for res in results:
 <td>无</td>
 </tr>
 <tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>thresholds</code></td>
 <td>模型使用的过滤阈值</td>
 <td><code>dict/None</code></td>
@@ -120,7 +192,7 @@ for res in results:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -156,11 +228,11 @@ for res in results:
 <td>模型预测使用的提示词</td>
 <td><code>str</code></td>
 <td>任意字符串</td>
-<td>1</td>
+<td>无</td>
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>

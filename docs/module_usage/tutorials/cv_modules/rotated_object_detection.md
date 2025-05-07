@@ -19,7 +19,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R_L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-YOLOE-R_L_infer.tar">推理模型</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">训练模型</a></td>
+<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">推理模型</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">训练模型</a></td>
 <td>78.14</td>
 <td>20.7039</td>
 <td>157.942</td>
@@ -27,20 +27,58 @@ comments: true
 <td rowspan="1">PP-YOLOE-R是一个高效的单阶段Anchor-free旋转框检测模型。基于PP-YOLOE, PP-YOLOE-R以极少的参数量和计算量为代价，引入了一系列有用的设计来提升检测精度。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标为<a href="https://captain-whu.github.io/DOTA/">DOTA</a>验证集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA TRX2080 Ti 机器，精度类型为 F16， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-> ❗ 以上列出的是paddleX当前支持的旋转目标检测模型</b>，实际的PaddleDetection套件支持<b>10</b>个旋转目标检测模型，详细模型列表请参考<a href="https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.8/configs/rotate">PaddleDetection</a>
 
+<strong>测试环境说明:</strong>
+
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+           <li><strong>测试数据集：</strong><a href="https://captain-whu.github.io/DOTA/">DOTA</a>验证集</li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 完成 wheel 包的安装后，几行代码即可完成旋转目标检测模块的推理，可以任意切换该模块下的模型，您也可以将旋转目标检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png)到本地。
-
 ```python
 from paddlex import create_model
-model_name = "PP-YOLOE-R_L"
-model = create_model(model_name, img_size = 1024)
-output = model.predict("rotated_object_detection_001.png", batch_size=1, threshold=0.5)
+model = create_model(model_name="PP-YOLOE-R-L")
+output = model.predict(input="rotated_object_detection_001.png", batch_size=1)
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -49,7 +87,7 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'rotated_object_detection_001.png', 'boxes': [{'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7513620853424072, 'coordinate': [92.72234, 763.36676, 84.7699, 749.9725, 116.207375, 731.8547, 124.15982, 745.2489]}, {'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7284387350082397, 'coordinate': [348.60703, 177.85127, 332.80432, 149.83975, 345.37347, 142.95677, 361.17618, 170.96828]}, {'cls_id': 11, 'label': 'roundabout', 'score': 0.7909174561500549, 'coordinate': [535.02216, 697.095, 201.49803, 608.4738, 292.2446, 276.9634, 625.76874, 365.5845]}]}"}
+{'res': {'input_path': 'rotated_object_detection_001.png', 'page_index': None, 'boxes': [{'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7409099340438843, 'coordinate': [92.88687, 763.1569, 85.163124, 749.5868, 116.07975, 731.99414, 123.8035, 745.5643]}, {'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7393015623092651, 'coordinate': [348.2332, 177.55974, 332.77704, 150.24973, 345.2183, 143.21028, 360.67444, 170.5203]}, {'cls_id': 11, 'label': 'roundabout', 'score': 0.8101699948310852, 'coordinate': [537.1732, 695.5475, 204.4297, 612.9735, 286.71338, 281.48022, 619.4569, 364.05426]}]}}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
@@ -61,12 +99,12 @@ for res in output:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/robj_det/rotated_object_detection_001_res.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/rotated_object_detection/rotated_object_detection_001_res.png">
 
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化旋转目标检测模型（此处以`PP-YOLOE-R_L`为例），具体说明如下：
+* `create_model`实例化旋转目标检测模型（此处以`PP-YOLOE-R-L`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -92,9 +130,30 @@ for res in output:
 <td>无</td>
 </tr>
 <tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>threshold</code></td>
 <td>低分object过滤阈值</td>
-<td><code>float/None/dict</code></td>
+<td><code>float/None/dict[int, float]</code></td>
 <td>无</td>
 <td>None</td>
 </tr>
@@ -111,7 +170,7 @@ for res in output:
 
 * `threshold`为低分object过滤阈值，默认为None，表示使用上一层设置，参数设置的优先级从高到低为：`predict参数传入 > create_model初始化传入 > yaml配置文件设置`。目前支持float和dict两种阈值设置方式：
   * `float`, 对于所有的类别使用同一个阈值。
-  * `dict`, key为类别ID，value为阈值，对于不同的类别使用不同的阈值。
+  * `dict[int, float]`, key为类别ID，value为阈值，对于不同的类别使用不同的阈值。
 
 * `img_size`为模型实际预测使用的分辨率，默认为None，表示使用上一层设置，参数设置的优先级从高到低为：`create_model初始化 > yaml配置文件设置`。
 
@@ -130,7 +189,7 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -152,19 +211,19 @@ for res in output:
 <tr>
 <td><code>threshold</code></td>
 <td>低分object过滤阈值</td>
-<td><code>float</code>/<code>dict</code>/<code>None</code></td>
+<td><code>float</code>/<code>dict[int, float]</code>/<code>None</code></td>
 <td>
 <ul>
   <li><b>None</b>，表示沿用上一层设置, 参数设置优先级从高到低为: <code>predict参数传入 > create_model初始化传入 > yaml配置文件设置</code></li>
-  <li><b>float</b>，如0.5，表示推理时使用<code>0.5</code>作为所有类别的低分object过滤阈值</li>
-  <li><b>dict</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。</li>
+  <li><b>float</b>，对于所有的类别使用同一个阈值。如0.5，表示推理时使用0.5作为所有类别的低分object过滤阈值</li>
+  <li><b>dict[int, float]</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。</li>
 </ul>
 </td>
 <td>None</td>
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -264,7 +323,7 @@ tar -xf ./dataset/rdet_dota_examples.tar -C ./dataset/
 ```
 解压后，数据集目录结构如下：
 ```bash
-- dataset/DOTA-sampled200_crop1024_data
+- dataset/rdet_dota_examples
   - annotations
     - instance_train.json
     - instance_val.json
@@ -278,9 +337,9 @@ tar -xf ./dataset/rdet_dota_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 ```
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
@@ -292,37 +351,37 @@ python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
   &quot;check_pass&quot;: true,
   &quot;attributes&quot;: {
     &quot;num_classes&quot;: 15,
-    &quot;train_samples&quot;: 1892,
+    &quot;train_samples&quot;: 194,
     &quot;train_sample_paths&quot;: [
-      &quot;check_dataset\/demo_img\/P2610__1.0__0___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1137__1.0__0___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1122__1.0__5888___1648.png&quot;,
-      &quot;check_dataset\/demo_img\/P0543__1.0__0___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P0518__1.0__0___91.png&quot;,
-      &quot;check_dataset\/demo_img\/P0961__1.0__1648___87.png&quot;,
-      &quot;check_dataset\/demo_img\/P1732__1.0__0___824.png&quot;,
+      &quot;check_dataset\/demo_img\/P0457__1.0__379___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P1560__1.0__0___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P2722__1.0__0___1422.png&quot;,
+      &quot;check_dataset\/demo_img\/P1750__1.0__824___1648.png&quot;,
+      &quot;check_dataset\/demo_img\/P1560__1.0__1648___824.png&quot;,
+      &quot;check_dataset\/demo_img\/P1751__1.0__2472___1648.png&quot;,
+      &quot;check_dataset\/demo_img\/P1560__1.0__2976___2976.png&quot;,
       &quot;check_dataset\/demo_img\/P2766__1.0__4421___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P2582__1.0__674___725.png&quot;,
-      &quot;check_dataset\/demo_img\/P1529__1.0__2976___1648.png&quot;
+      &quot;check_dataset\/demo_img\/P2365__1.0__1807___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P0117__1.0__0___138.png&quot;
     ],
-    &quot;val_samples&quot;: 473,
+    &quot;val_samples&quot;: 21,
     &quot;val_sample_paths&quot;: [
-      &quot;check_dataset\/demo_img\/P2342__1.0__890___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1386__1.0__2472___1648.png&quot;,
-      &quot;check_dataset\/demo_img\/P0961__1.0__824___87.png&quot;,
+      &quot;check_dataset\/demo_img\/P0844__1.0__0___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P0457__1.0__0___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P2645__1.0__0___0.png&quot;,
       &quot;check_dataset\/demo_img\/P1651__1.0__824___824.png&quot;,
       &quot;check_dataset\/demo_img\/P1529__1.0__824___2976.png&quot;,
-      &quot;check_dataset\/demo_img\/P0961__1.0__4944___87.png&quot;,
+      &quot;check_dataset\/demo_img\/P1750__1.0__3260___824.png&quot;,
       &quot;check_dataset\/demo_img\/P0725__1.0__634___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1679__1.0__1648___1648.png&quot;,
-      &quot;check_dataset\/demo_img\/P2726__1.0__824___1578.png&quot;,
-      &quot;check_dataset\/demo_img\/P0457__1.0__379___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P2722__1.0__2472___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P0262__1.0__0___1414.png&quot;,
+      &quot;check_dataset\/demo_img\/P1750__1.0__0___2472.png&quot;,
     ]
   },
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/DOTA-sampled200_crop1024_data&quot;,
+  &quot;dataset_path&quot;: &quot;rdet_dota_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
@@ -330,13 +389,13 @@ python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
 <p>上述校验结果中，check_pass 为 true 表示数据集格式符合要求，其他部分指标的说明如下：</p>
 <ul>
 <li><code>attributes.num_classes</code>：该数据集类别数为 15；</li>
-<li><code>attributes.train_samples</code>：该数据集训练集样本数量为 1892；</li>
-<li><code>attributes.val_samples</code>：该数据集验证集样本数量为 473；</li>
+<li><code>attributes.train_samples</code>：该数据集训练集样本数量为 194</li>
+<li><code>attributes.val_samples</code>：该数据集验证集样本数量为 21</li>
 <li><code>attributes.train_sample_paths</code>：该数据集训练集样本可视化图片相对路径列表；</li>
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/robj_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/rotated_object_detection/01.png"></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
@@ -345,7 +404,7 @@ python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
 
 <p><b>（1）数据集格式转换</b></p>
 
-旋转目标检测赞不支持数据格式转换，只支持标准DOTA的COCO数据格式。
+旋转目标检测暂不支持数据格式转换，只支持标准DOTA的COCO数据格式。
 
 <p><b>（2）数据集划分</b></p>
 <p>数据集划分的参数可以通过修改配置文件中 <code>CheckDataset</code> 下的字段进行设置，配置文件中部分参数的示例说明如下：</p>
@@ -367,34 +426,35 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data \
+    -o Global.dataset_dir=./dataset/rdet_dota_examples \
     -o CheckDataset.split.enable=True \
     -o CheckDataset.split.train_percent=90 \
     -o CheckDataset.split.val_percent=10
 </code></pre></details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处旋转目标检测模型 `PP-YOLOE-R_L` 的训练为例：
+一条命令即可完成模型的训练，以此处旋转目标检测模型 `PP-YOLOE-R-L` 的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=train \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-R_L.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-R-L.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+* 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)
+* 新特性：Paddle 3.0 版本支持了 CINN 神经网络编译器，在使用 GPU 设备训练时，不同模型有不同程度的训练加速效果。在 PaddleX 中训练模型时，可通过指定参数 `-o Train.dy2st=True` 开启。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 
@@ -409,20 +469,21 @@ python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
 </li>
 <li><code>train.log</code>：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；</li>
 <li><code>config.yaml</code>：训练配置文件，记录了本次训练的超参数的配置；</li>
-<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.pdmodel</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.json</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li>【注意】：Paddle 3.0.0 对于静态图网络结构信息的存储格式，由protobuf（原<code>.pdmodel</code>后缀文件）升级为json（现<code>.json</code>后缀文件），以兼容PIR体系，并获得更好的灵活性与扩展性。</li>
 </ul></details>
 
 ## <b>4.3 模型评估</b>
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=evaluate \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-R_L.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-R-L.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -439,14 +500,14 @@ python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
 
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png)到本地。
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml  \
+python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="rotated_object_detection_001.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-R_L.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-R-L.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`

@@ -8,22 +8,22 @@ use_mllm_predict: True
 SubModules:
   LLM_Chat:
     module_name: chat_bot
-    model_name: ernie-3.5
-    api_type: qianfan
-    ak: "api_key" # Set this to a real API key
-    sk: "secret_key"  # Set this to a real secret key
+    model_name: ernie-3.5-8k
+    base_url: "https://qianfan.baidubce.com/v2"
+    api_type: openai
+    api_key: "api_key" # Set this to a real API key
 
   LLM_Retriever:
     module_name: retriever
-    model_name: ernie-3.5
+    model_name: embedding-v1
+    base_url: "https://qianfan.baidubce.com/v2"
     api_type: qianfan
-    ak: "api_key" # Set this to a real API key
-    sk: "secret_key"  # Set this to a real secret key
+    api_key: "api_key" # Set this to a real API key
 
   MLLM_Chat:
     module_name: chat_bot
     model_name: PP-DocBee
-    base_url: "http://127.0.0.1/v1/chat/completions"
+    base_url: "http://127.0.0.1:8080/v1/chat/completions"
     api_type: openai
     api_key: "api_key"
 
@@ -74,7 +74,7 @@ SubModules:
     
     Ensemble:
       module_name: prompt_engneering
-      
+
       task_type: ensemble_prompt
 
       task_description: '你现在的任务是，对于一个问题，对比方法A和方法B的结果，选择更准确的一个回答。
@@ -140,10 +140,10 @@ SubPipelines:
             
           TextRecognition:
             module_name: text_recognition
-            model_name: PP-OCRv4_server_rec
+            model_name: PP-OCRv4_server_rec_doc
             model_dir: null
-            batch_size: 1
-            score_thresh: 0
+            batch_size: 6
+            score_thresh: 0.0
 
       TableRecognition:
         pipeline_name: table_recognition
@@ -178,7 +178,7 @@ SubPipelines:
                 unclip_ratio: 0.5
               TextRecognition:
                 module_name: text_recognition
-                model_name: PP-OCRv4_server_rec
+                model_name: PP-OCRv4_server_rec_doc
                 model_dir: null
                 batch_size: 1
                 score_thresh: 0

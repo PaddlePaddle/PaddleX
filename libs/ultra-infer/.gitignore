@@ -13,14 +13,12 @@ ultra_infer/version.py
 ultra_infer/core/config.h
 python/ultra_infer/c_lib_wrap.py
 python/ultra_infer/LICENSE*
-python/build_cpu.sh
 python/ultra_infer/ThirdPartyNotices*
 *.so*
 python/ultra_infer/libs/third_libs
 ultra_infer/core/config.h
 ultra_infer/pybind/main.cc
 python/ultra_infer/libs/lib*
-python/ultra_infer/libs/third_libs
 __pycache__
 python/scripts/process_libraries.py
 .vs
@@ -37,8 +35,6 @@ coverage
 *.local
 yalc.*
 .yalc
-examples/vision/collect_quantize_cc.sh
-examples/vision/tests_quantize
 ultra_infer/LICENSE
 ultra_infer/ThirdPartyNotices.txt
 UltraInferCSharp.cmake
@@ -47,8 +43,5 @@ python/ultra_infer/code_version.py
 *.pdiparams
 *.pdiparams.info
 log.txt
-benchmark/paddlex/build
-benchmark/cpp/build
-!paddlex/paddlex3.0/serving/libs/**/*.so*
 TensorRT*
 third_party

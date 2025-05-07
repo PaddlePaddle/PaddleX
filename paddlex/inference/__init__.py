@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,7 @@
 # limitations under the License.
 
 from ..utils import logging
-from ..utils.flags import USE_NEW_INFERENCE, NEW_PREDICTOR
-
-if USE_NEW_INFERENCE:
-    logging.warning("=" * 20 + " Using pipelines_new " + "=" * 20)
-    from .pipelines_new import create_pipeline
-else:
-    from .pipelines import create_pipeline
-if NEW_PREDICTOR:
-    logging.warning("=" * 20 + " Using models_new " + "=" * 20)
-    from .models_new import create_predictor
-else:
-    from .models import create_predictor
+from .models import create_predictor
+from .pipelines import create_pipeline, load_pipeline_config
+from .utils.hpi import HPIConfig
 from .utils.pp_option import PaddlePredictorOption

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pathlib import Path
+
 from .base_result import BaseResult
 from .mixin import ImgMixin
-from ...utils.io import ImageWriter
 
 
 class BaseCVResult(BaseResult, ImgMixin):
@@ -26,9 +27,15 @@ class BaseCVResult(BaseResult, ImgMixin):
 
         Args:
             data (dict): The initial data.
-
-        Raises:
-            AssertionError: If the required key (`BaseCVResult.INPUT_IMG_KEY`) are not found in the data.
         """
         super().__init__(data)
         ImgMixin.__init__(self, "pillow")
+
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self.get("page_index", None)) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn

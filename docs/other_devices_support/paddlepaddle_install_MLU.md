@@ -30,8 +30,8 @@ docker run -it --name paddle-mlu-dev -v $(pwd):/work \
 ```
 # 下载并安装 wheel 包
 # 注意需要先安装飞桨 cpu 版本
-python -m pip install paddlepaddle==3.0.0.dev20240624 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
-python -m pip install paddle-custom-mlu==3.0.0.dev20240806 -i https://www.paddlepaddle.org.cn/packages/nightly/mlu/
+python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddle-custom-mlu -i https://www.paddlepaddle.org.cn/packages/nightly/mlu
 ```
 验证安装包 安装完成之后，运行如下命令
 

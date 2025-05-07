@@ -19,21 +19,61 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_box_infer.tar">推理模型</a></td>
+<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_box_infer.tar">推理模型</a></td>
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
-<td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。</td>
+<td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。其中SAM-H_box表示使用框作为分割提示输入，SAM会分割被框包裹主的主体；SAM-H_point表示使用点作为分割提示输入，SAM会分割点所在的主体。</td>
 </tr>
 <tr>
-<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_point_infer.tar">推理模型</a></td>
+<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_point_infer.tar">推理模型</a></td>
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
 </tr>
 </table>
 
-<b>注：所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32</b>。
+<strong>测试环境说明:</strong>
+
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 
 ## 三、快速集成
@@ -43,16 +83,17 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model('SAM-H_box')
+model = create_model(model_name='SAM-H_box')
 results = model.predict(
-    "open_vocabulary_segmentation.jpg",
-    prompts = {
+    input="open_vocabulary_segmentation.jpg",
+    prompts={
         "box_prompt": [
             [112.9239273071289,118.38755798339844,513.7587890625,382.0570068359375],
             [4.597158432006836,263.5540771484375,92.20092010498047,336.5640869140625],
             [592.3548583984375,260.8838806152344,607.1813354492188,294.2261962890625]
         ],
-    }
+    },
+    batch_size=1
 )
 for res in results:
     res.print()
@@ -62,7 +103,7 @@ for res in results:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': '000000004505.jpg', 'prompts': {'box_prompt': [[112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375], [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625], [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]]}, 'masks': '...', 'mask_infos': [{'label': 'box_prompt', 'prompt': [112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375]}, {'label': 'box_prompt', 'prompt': [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625]}, {'label': 'box_prompt', 'prompt': [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]}]}"}
+{'res': "{'input_path': 'open_vocabulary_segmentation.jpg', 'prompts': {'box_prompt': [[112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375], [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625], [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]]}, 'masks': '...', 'mask_infos': [{'label': 'box_prompt', 'prompt': [112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375]}, {'label': 'box_prompt', 'prompt': [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625]}, {'label': 'box_prompt', 'prompt': [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]}]}"}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
@@ -74,8 +115,7 @@ for res in results:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
 
 相关方法、参数等说明如下：
 
@@ -104,6 +144,27 @@ for res in results:
 <td>无</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
@@ -123,7 +184,7 @@ for res in results:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -155,7 +216,7 @@ for res in results:
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>

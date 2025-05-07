@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,29 @@
 # limitations under the License.
 
 import os
-import ast
 from pathlib import Path
+
 import numpy as np
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from ...utils.io import PDFReader
-from .base_batch_sampler import BaseBatchSampler
+from .base_batch_sampler import BaseBatchSampler, Batch
+
+
+class ImgBatch(Batch):
+    def __init__(self):
+        super().__init__()
+        self.page_indexes = []
+
+    def append(self, instance, input_path, page_index):
+        super().append(instance, input_path)
+        self.page_indexes.append(page_index)
+
+    def reset(self):
+        super().reset()
+        self.page_indexes = []
 
 
 class ImageBatchSampler(BaseBatchSampler):
@@ -60,24 +74,24 @@ class ImageBatchSampler(BaseBatchSampler):
         if not isinstance(inputs, list):
             inputs = [inputs]
 
-        batch = []
+        batch = ImgBatch()
         for input in inputs:
             if isinstance(input, np.ndarray):
-                batch.append(input)
+                batch.append(input, None, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch = []
+                    batch = ImgBatch()
             elif isinstance(input, str) and input.split(".")[-1] in ("PDF", "pdf"):
                 file_path = (
                     self._download_from_url(input)
                     if input.startswith("http")
                     else input
                 )
-                for page_img in self.pdf_reader.read(file_path):
-                    batch.append(page_img)
+                for page_idx, page_img in enumerate(self.pdf_reader.read(file_path)):
+                    batch.append(page_img, file_path, page_idx)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch = []
+                        batch = ImgBatch()
             elif isinstance(input, str):
                 file_path = (
                     self._download_from_url(input)
@@ -86,31 +100,13 @@ class ImageBatchSampler(BaseBatchSampler):
                 )
                 file_list = self._get_files_list(file_path)
                 for file_path in file_list:
-                    batch.append(file_path)
+                    batch.append(file_path, file_path, None)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch = []
+                        batch = ImgBatch()
             else:
                 logging.warning(
                     f"Not supported input data type! Only `numpy.ndarray` and `str` are supported! So has been ignored: {input}."
                 )
         if len(batch) > 0:
             yield batch
-
-    def _rand_batch(self, data_size):
-        def parse_size(s):
-            res = ast.literal_eval(s)
-            if isinstance(res, int):
-                return (res, res)
-            else:
-                assert isinstance(res, (tuple, list))
-                assert len(res) == 2
-                assert all(isinstance(item, int) for item in res)
-                return res
-
-        size = parse_size(data_size)
-        rand_batch = [
-            np.random.randint(0, 256, (*size, 3), dtype=np.uint8)
-            for _ in range(self.batch_size)
-        ]
-        return rand_batch

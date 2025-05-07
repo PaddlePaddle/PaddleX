@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@
 # limitations under the License.
 
 from .base_result import BaseResult
-from .mixin import CSVMixin
-from ...utils.io import CSVWriter
+from .mixin import CSVMixin, ImgMixin
 
 
-class BaseTSResult(BaseResult, CSVMixin):
+class BaseTSResult(BaseResult, CSVMixin, ImgMixin):
     """Base class for times series results."""
 
     INPUT_TS_KEY = "input_ts"
@@ -39,3 +38,4 @@ class BaseTSResult(BaseResult, CSVMixin):
 
         super().__init__(data)
         CSVMixin.__init__(self, "pandas")
+        ImgMixin.__init__(self, "pillow")

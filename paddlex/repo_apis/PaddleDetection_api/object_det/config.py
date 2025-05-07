@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...base import BaseConfig
-from ....utils.misc import abspath
+from typing import List
+
 from ....utils import logging
+from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_helper import PPDetConfigMixin
 
 
@@ -51,7 +53,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
         dataset_path: str,
         dataset_type: str = None,
         *,
-        data_fields: list[str] = None,
+        data_fields: List[str] = None,
         image_dir: str = "images",
         train_anno_path: str = "annotations/instance_train.json",
         val_anno_path: str = "annotations/instance_val.json",
@@ -113,7 +115,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
     def _make_dataset_config(
         self,
         dataset_root_path: str,
-        data_fields: list[str,] = None,
+        data_fields: List[str,] = None,
         image_dir: str = "images",
         train_anno_path: str = "annotations/instance_train.json",
         val_anno_path: str = "annotations/instance_val.json",
@@ -229,7 +231,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
             if sch[key] == "CosineDecay":
                 sch["max_epochs"] = max_epochs
 
-    def update_milestone(self, milestones: list[int]):
+    def update_milestone(self, milestones: List[int]):
         """update milstone of `PiecewiseDecay` learning scheduler
 
         Args:
@@ -398,7 +400,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
                         "num_classes"
                     ] = num_classes
 
-    def update_random_size(self, randomsize: list[list[int, int]]):
+    def update_random_size(self, randomsize):
         """update `target_size` of `BatchRandomResize` op in TestReader
 
         Args:

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
-import yaml
 from typing import Union
 
-from ...base import BaseConfig
+import yaml
+
 from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_utils import merge_config
 
 
@@ -295,7 +296,7 @@ indicating that no pretrained model to be used."
         Args:
             dy2st (bool): whether or not to use the dynamic to static mode.
         """
-        self.update({"Global.to_static": dy2st})
+        self.update({"to_static": dy2st})
 
     def _update_use_vdl(self, use_vdl: bool):
         """update config to set VisualDL
