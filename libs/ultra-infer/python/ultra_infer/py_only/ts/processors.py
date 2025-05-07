@@ -14,13 +14,7 @@
 
 from typing import List, Optional, Union, Dict
 
-import chinese_calendar
-import joblib
 import numpy as np
-import pandas as pd
-from pandas.tseries.offsets import DateOffset, Easter, Day
-from pandas.tseries import holiday as hd
-from sklearn.preprocessing import StandardScaler
 
 from ..base import PyOnlyProcessor
 
@@ -35,51 +29,6 @@ __all__ = [
 ]
 
 _MAX_WINDOW = 183 + 17
-_EASTER_SUNDAY = hd.Holiday("Easter Sunday", month=1, day=1, offset=[Easter(), Day(0)])
-_NEW_YEARS_DAY = hd.Holiday("New Years Day", month=1, day=1)
-_SUPER_BOWL = hd.Holiday(
-    "Superbowl", month=2, day=1, offset=DateOffset(weekday=hd.SU(1))
-)
-_MOTHERS_DAY = hd.Holiday(
-    "Mothers Day", month=5, day=1, offset=DateOffset(weekday=hd.SU(2))
-)
-_INDEPENDENCE_DAY = hd.Holiday("Independence Day", month=7, day=4)
-_CHRISTMAS_EVE = hd.Holiday("Christmas", month=12, day=24)
-_CHRISTMAS_DAY = hd.Holiday("Christmas", month=12, day=25)
-_NEW_YEARS_EVE = hd.Holiday("New Years Eve", month=12, day=31)
-_BLACK_FRIDAY = hd.Holiday(
-    "Black Friday",
-    month=11,
-    day=1,
-    offset=[pd.DateOffset(weekday=hd.TH(4)), Day(1)],
-)
-_CYBER_MONDAY = hd.Holiday(
-    "Cyber Monday",
-    month=11,
-    day=1,
-    offset=[pd.DateOffset(weekday=hd.TH(4)), Day(4)],
-)
-
-_HOLYDAYS = [
-    hd.EasterMonday,
-    hd.GoodFriday,
-    hd.USColumbusDay,
-    hd.USLaborDay,
-    hd.USMartinLutherKingJr,
-    hd.USMemorialDay,
-    hd.USPresidentsDay,
-    hd.USThanksgivingDay,
-    _EASTER_SUNDAY,
-    _NEW_YEARS_DAY,
-    _SUPER_BOWL,
-    _MOTHERS_DAY,
-    _INDEPENDENCE_DAY,
-    _CHRISTMAS_EVE,
-    _CHRISTMAS_DAY,
-    _NEW_YEARS_EVE,
-    _BLACK_FRIDAY,
-    _CYBER_MONDAY,
-]
 
 
 def _cal_year(
@@ -151,12 +100,16 @@ def _cal_weekofyear(
 def _cal_holiday(
     x: np.datetime64,
 ):
+    import chinese_calendar
+
     return float(chinese_calendar.is_holiday(x))
 
 
 def _cal_workday(
     x: np.datetime64,
 ):
+    import chinese_calendar
+
     return float(chinese_calendar.is_workday(x))
 
 
@@ -192,13 +145,15 @@ _CAL_DATE_METHOD = {
 
 
 def _load_from_one_dataframe(
-    data: Union[pd.DataFrame, pd.Series],
+    data: Union["pd.DataFrame", "pd.Series"],  # noqa: F821
     time_col: Optional[str] = None,
     value_cols: Optional[Union[List[str], str]] = None,
     freq: Optional[Union[str, int]] = None,
     drop_tail_nan: bool = False,
     dtype: Optional[Union[type, Dict[str, type]]] = None,
 ):
+    import pandas as pd
+
     series_data = None
     if value_cols is None:
         if isinstance(data, pd.Series):
@@ -261,7 +216,7 @@ def _load_from_one_dataframe(
 
 
 def _load_from_dataframe(
-    df: pd.DataFrame,
+    df: "pd.DataFrame",  # noqa: F821
     group_id: str = None,
     time_col: Optional[str] = None,
     target_cols: Optional[Union[List[str], str]] = None,
@@ -350,6 +305,8 @@ def _load_from_dataframe(
 
 def _distance_to_holiday(holiday):
     def _distance_to_day(index):
+        import pandas as pd
+
         holiday_date = holiday.dates(
             index - pd.Timedelta(days=_MAX_WINDOW),
             index + pd.Timedelta(days=_MAX_WINDOW),
@@ -367,6 +324,8 @@ def _distance_to_holiday(holiday):
 def _to_time_features(
     dataset, freq, feature_cols, extend_points, inplace: bool = False
 ):
+    import pandas as pd
+
     new_ts = dataset
     if not inplace:
         new_ts = dataset.copy()
@@ -405,6 +364,57 @@ def _to_time_features(
                 )
 
         else:
+            from pandas.tseries.offsets import DateOffset, Easter, Day
+            from pandas.tseries import holiday as hd
+            from sklearn.preprocessing import StandardScaler
+
+            _EASTER_SUNDAY = hd.Holiday(
+                "Easter Sunday", month=1, day=1, offset=[Easter(), Day(0)]
+            )
+            _NEW_YEARS_DAY = hd.Holiday("New Years Day", month=1, day=1)
+            _SUPER_BOWL = hd.Holiday(
+                "Superbowl", month=2, day=1, offset=DateOffset(weekday=hd.SU(1))
+            )
+            _MOTHERS_DAY = hd.Holiday(
+                "Mothers Day", month=5, day=1, offset=DateOffset(weekday=hd.SU(2))
+            )
+            _INDEPENDENCE_DAY = hd.Holiday("Independence Day", month=7, day=4)
+            _CHRISTMAS_EVE = hd.Holiday("Christmas", month=12, day=24)
+            _CHRISTMAS_DAY = hd.Holiday("Christmas", month=12, day=25)
+            _NEW_YEARS_EVE = hd.Holiday("New Years Eve", month=12, day=31)
+            _BLACK_FRIDAY = hd.Holiday(
+                "Black Friday",
+                month=11,
+                day=1,
+                offset=[pd.DateOffset(weekday=hd.TH(4)), Day(1)],
+            )
+            _CYBER_MONDAY = hd.Holiday(
+                "Cyber Monday",
+                month=11,
+                day=1,
+                offset=[pd.DateOffset(weekday=hd.TH(4)), Day(4)],
+            )
+
+            _HOLYDAYS = [
+                hd.EasterMonday,
+                hd.GoodFriday,
+                hd.USColumbusDay,
+                hd.USLaborDay,
+                hd.USMartinLutherKingJr,
+                hd.USMemorialDay,
+                hd.USPresidentsDay,
+                hd.USThanksgivingDay,
+                _EASTER_SUNDAY,
+                _NEW_YEARS_DAY,
+                _SUPER_BOWL,
+                _MOTHERS_DAY,
+                _INDEPENDENCE_DAY,
+                _CHRISTMAS_EVE,
+                _CHRISTMAS_DAY,
+                _NEW_YEARS_EVE,
+                _BLACK_FRIDAY,
+                _CYBER_MONDAY,
+            ]
             holidays_col = []
             for i, H in enumerate(_HOLYDAYS):
                 v = tf_kcov[time_col].apply(_distance_to_holiday(H))
@@ -448,6 +458,8 @@ class CutOff(PyOnlyProcessor):
 
 class Normalize(PyOnlyProcessor):
     def __init__(self, scale_path, params_info):
+        import joblib
+
         super().__init__()
         self._scaler = joblib.load(scale_path)
         self._params_info = params_info
@@ -469,6 +481,8 @@ class Normalize(PyOnlyProcessor):
 
 class Denormalize(PyOnlyProcessor):
     def __init__(self, scale_path, params_info):
+        import joblib
+
         super().__init__()
         self._scaler = joblib.load(scale_path)
         self._params_info = params_info
