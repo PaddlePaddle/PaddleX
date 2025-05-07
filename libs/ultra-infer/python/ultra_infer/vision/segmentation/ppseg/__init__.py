@@ -19,7 +19,6 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as np
-from skimage import morphology
 
 from .... import UltraInferModel, ModelFormat
 from .... import c_lib_wrap as C
@@ -299,6 +298,8 @@ class _PyOnlyAnomalyDetectionPreprocessor(object):
 
 class _PyOnlyAnomalyDetectionPostprocessor(object):
     def run(self, data):
+        from skimage import morphology
+
         score_map = data["score_map"]
 
         thred = 0.01
