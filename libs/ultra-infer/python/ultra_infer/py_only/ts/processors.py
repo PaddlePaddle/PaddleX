@@ -15,7 +15,6 @@
 from typing import List, Optional, Union, Dict
 
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 
 from ..base import PyOnlyProcessor
 
@@ -367,6 +366,7 @@ def _to_time_features(
         else:
             from pandas.tseries.offsets import DateOffset, Easter, Day
             from pandas.tseries import holiday as hd
+            from sklearn.preprocessing import StandardScaler
 
             _EASTER_SUNDAY = hd.Holiday(
                 "Easter Sunday", month=1, day=1, offset=[Easter(), Day(0)]

@@ -435,7 +435,6 @@ if sys.version_info[0] == 3:
 ################################################################################
 
 extras_require["pyonly"] = [
-    "pyyaml",
     "pillow<10.0.0",
     "pandas>=0.25.0,<=1.3.5",
     "pycocotools",
