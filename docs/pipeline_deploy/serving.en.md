@@ -76,11 +76,11 @@ The command-line options related to serving are as follows:
 </tr>
 <tr>
 <td><code>--host</code></td>
-<td>Hostname or IP address the server binds to. Defaults to `0.0.0.0`.</td>
+<td>Hostname or IP address the server binds to. Defaults to <code>0.0.0.0</code>.</td>
 </tr>
 <tr>
 <td><code>--port</code></td>
-<td>Port number the server listens on. Defaults to `8080`.</td>
+<td>Port number the server listens on. Defaults to <code>8080</code>.</td>
 </tr>
 <tr>
 <td><code>--use_hpip</code></td>
