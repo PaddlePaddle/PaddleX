@@ -137,7 +137,7 @@ class TextRecModel(BaseModel):
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         export_with_pir = kwargs.pop("export_with_pir", False)
         config.update({"Global.uniform_output_enabled": uniform_output_enabled})
-        config.update({"Global.pdx_model_name": self.name})
+        config.update({"Global.model_name": self.name})
         if export_with_pir:
             config.update({"Global.export_with_pir": export_with_pir})
 
@@ -274,7 +274,7 @@ class TextRecModel(BaseModel):
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         export_with_pir = kwargs.pop("export_with_pir", False)
         config.update({"Global.uniform_output_enabled": uniform_output_enabled})
-        config.update({"Global.pdx_model_name": self.name})
+        config.update({"Global.model_name": self.name})
         if export_with_pir:
             config.update({"Global.export_with_pir": export_with_pir})
 
