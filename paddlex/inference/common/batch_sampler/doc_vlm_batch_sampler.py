@@ -18,14 +18,26 @@ from .base_batch_sampler import BaseBatchSampler
 
 
 class DocVLMBatchSampler(BaseBatchSampler):
-    def __init__(self):
+
+    model_names_only_supports_batchsize_of_one = {"PP-DocBee-2B", "PP-DocBee-7B"}
+
+    def __init__(self, model_name, batch_size: int = 1) -> None:
         """Initializes the BaseBatchSampler.
 
         Args:
+            model_name (str): The name of the model.
             batch_size (int, optional): The size of each batch. Only support 1.
         """
-        super().__init__()
-        self.batch_size = 1
+        self.model_name = model_name
+        if (
+            self.model_name in self.model_names_only_supports_batchsize_of_one
+            and batch_size != 1
+        ):
+            logging.warning(
+                f"doc vlm batch sampler only support batch size 1 for {self.model_name}, but got {batch_size} and it will not take effect."
+            )
+            batch_size = 1
+        super().__init__(batch_size)
 
     def sample(self, inputs):
         """Generate list of input file path.
@@ -37,13 +49,21 @@ class DocVLMBatchSampler(BaseBatchSampler):
             list: list of file path.
         """
         if isinstance(inputs, dict):
-            yield [inputs]
-        elif isinstance(inputs, list) and all(isinstance(i, dict) for i in inputs):
-            yield inputs
-        else:
+            inputs = [inputs]
+        if not (isinstance(inputs, list) and all(isinstance(i, dict) for i in inputs)):
             raise TypeError(
-                f"Not supported input data type! Only `dict` are supported, but got: {type(inputs)}."
+                f"Not supported input data type! Only `Dict` or `List[Dict]` are supported, but got: {type(inputs)}."
             )
+
+        batch = []
+        for input_ in inputs:
+            batch.append(input_)
+            if len(batch) == self.batch_size:
+                yield batch
+                batch = []
+
+        if len(batch) > 0:
+            yield batch
 
     @BaseBatchSampler.batch_size.setter
     def batch_size(self, batch_size):
@@ -56,9 +76,12 @@ class DocVLMBatchSampler(BaseBatchSampler):
             Warning: If the batch size is not equal 1.
         """
         # only support batch size 1
-        if batch_size != 1:
+        if (
+            self.model_name in self.model_names_only_supports_batchsize_of_one
+            and batch_size != 1
+        ):
             logging.warning(
-                f"doc vlm batch sampler only support batch size 1, but got {batch_size}."
+                f"doc vlm batch sampler only support batch size 1 for {self.model_name}, but got {batch_size} and it will not take effect."
             )
         else:
             self._batch_size = batch_size

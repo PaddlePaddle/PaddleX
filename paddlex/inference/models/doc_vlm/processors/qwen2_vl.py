@@ -670,10 +670,16 @@ class PPDocBeeProcessor(Qwen2VLProcessor):
     """
 
     @benchmark.timeit
-    def preprocess(self, image: Union[str, Image.Image, np.ndarray], query: str):
+    def preprocess(self, input_dicts):
         """
         PreProcess for PP-DocBee Series
         """
+        assert (
+            isinstance(input_dicts, list) and len(input_dicts) == 1
+        ), f"PP-DocBee series only supports batchsize of one, but received {len(input_dicts)} samples."
+        input_dict = input_dicts[0]
+        image = input_dict["image"]
+        query = input_dict["query"]
         image_inputs = fetch_image(image)
         image_pad_token = "<|vision_start|><|image_pad|><|vision_end|>"
         text = f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n{image_pad_token}{query}<|im_end|>\n<|im_start|>assistant\n"

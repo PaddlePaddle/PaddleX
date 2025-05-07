@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .GOT_ocr_2_0 import GOTImageProcessor, PPChart2TableProcessor
 from .qwen2_vl import PPDocBeeProcessor, Qwen2VLImageProcessor

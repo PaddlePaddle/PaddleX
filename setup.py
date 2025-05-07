@@ -69,6 +69,7 @@ DEP_SPECS = {
     "shapely": "",
     "soundfile": "",
     "starlette": ">= 0.36",
+    "tiktoken": "",
     "tokenizers": "== 0.19.1",
     "tqdm": "",
     "typing-extensions": "",
@@ -116,6 +117,7 @@ EXTRAS = {
             # For the same reason as in `cv`
             "PyMuPDF",
             "regex",
+            "tiktoken",
         ],
         "ie": [
             "ftfy",

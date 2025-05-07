@@ -75,6 +75,7 @@ MOD_TO_DEP = {
     "shapely": "shapely",
     "soundfile": "soundfile",
     "starlette": "starlette",
+    "tiktoken": "tiktoken",
     "tokenizers": "tokenizers",
     "tqdm": "tqdm",
     "typing_extensions": "typing-extensions",
