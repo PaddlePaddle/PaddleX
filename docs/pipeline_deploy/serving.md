@@ -323,8 +323,8 @@ paddlex --serve --pipeline image_classification --use_hpip
 docker run \
     -it \
     -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
-    -v "$(pwd)":/workspace \
-    -w /workspace \
+    -v "$(pwd)":/app \
+    -w /app \
     --rm \
     --gpus all \
     --init \

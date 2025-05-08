@@ -323,8 +323,8 @@ With the image prepared, navigate to the `server` directory and execute the foll
 docker run \
     -it \
     -e PADDLEX_HPS_DEVICE_TYPE={deployment device type} \
-    -v "$(pwd)":/workspace \
-    -w /workspace \
+    -v "$(pwd)":/app \
+    -w /app \
     --rm \
     --gpus all \
     --init \
