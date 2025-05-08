@@ -2612,7 +2612,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <thead>
 <tr>
 <th>模型名称</th>
-<th>precison</th>
+<th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
 <th>模型存储大小</th>

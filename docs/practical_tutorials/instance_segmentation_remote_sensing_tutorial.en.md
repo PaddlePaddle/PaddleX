@@ -362,7 +362,7 @@ for res in output:
     res.save_to_img("./output/") # Save the result as a visualized image
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
-For more parameters, please refer to the [General Instance Segmentation Pipline User Guide](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.en.md)。
+For more parameters, please refer to the [General Instance Segmentation Pipeline User Guide](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.en.md)。
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 

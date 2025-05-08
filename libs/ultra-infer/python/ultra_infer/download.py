@@ -104,7 +104,7 @@ def download(url, path, rename=None, md5sum=None, show_progress=False):
                 "{}!".format(url, req.status_code)
             )
 
-        # For protecting download interupted, download to
+        # For protecting download interrupted, download to
         # tmp_fullname firstly, move tmp_fullname to fullname
         # after download finished
         tmp_fullname = fullname + "_tmp"
@@ -133,7 +133,7 @@ def decompress(fname):
     """
     logging.info("Decompressing {}...".format(fname))
 
-    # For protecting decompressing interupted,
+    # For protecting decompressing interrupted,
     # decompress to fpath_tmp directory firstly, if decompress
     # successed, move decompress files to fpath and delete
     # fpath_tmp and remove download compress file.
@@ -183,7 +183,7 @@ def decompress(fname):
 
 def url2dir(url, path, rename=None):
     full_name = download(url, path, rename, show_progress=True)
-    print("File is donwloaded, now extracting...")
+    print("File is downloaded, now extracting...")
     if url.count(".tgz") > 0 or url.count(".tar") > 0 or url.count("zip") > 0:
         return decompress(full_name)
 

@@ -167,7 +167,7 @@ if os.name == "nt":
 try:
     from .libs.@PY_LIBRARY_NAME@ import *
 except Exception as e:
-    raise RuntimeError(f"UltraInfer initalized failed! Error: {e}")
+    raise RuntimeError(f"UltraInfer initialized failed! Error: {e}")
 
 
 def TensorInfoStr(tensor_info):

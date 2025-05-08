@@ -103,7 +103,7 @@ PaddleX 支持通过`PaddlePredictorOption`修改推理配置，相关API如下�
 
 #### 属性：
 
-* `deivce`：推理设备；
+* `device`：推理设备；
   * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 “gpu”、“cpu”、“npu”、“xpu”、“mlu”、“dcu”，当使用加速卡时，支持指定卡号，如使用 0 号 GPU：`gpu:0`，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
   * 返回值：`str`类型，当前设置的推理设备。
 * `run_mode`：运行模式；

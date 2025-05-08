@@ -738,7 +738,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 * [📑 PaddleX Pipeline Usage Overview](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/pipeline_develop_guide.html)
 
 * <details open>
-    <summary> <b> 📝 Information Extracion</b></summary>
+    <summary> <b> 📝 Information Extraction</b></summary>
 
    * [📄 PP-ChatOCRv3 Pipeline Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html)
   </details>
