@@ -2180,7 +2180,7 @@
       "onnxruntime"
     ],
     "PP-FormulaNet-L": [
-      "paddle"
+      "paddle_fp16"
     ],
     "PP-YOLOE_plus_SOD-largesize-L": [
       "onnxruntime",
