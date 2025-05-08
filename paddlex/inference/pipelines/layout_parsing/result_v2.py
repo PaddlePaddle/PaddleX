@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 import copy
+import math
 import re
 from pathlib import Path
 from typing import List
@@ -72,6 +73,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             for key, value in self["doc_preprocessor_res"].img.items():
                 res_img_dict[key] = value
         res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
+
+        if model_settings["use_region_detection"]:
+            res_img_dict["region_det_res"] = self["region_det_res"].img["res"]
 
         if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
             res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
@@ -283,22 +287,33 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     " ",
                 )
 
+            # def format_centered_text():
+            #     return (
+            #         f'<div style="text-align: center;">{block.content}</div>'.replace(
+            #             "-\n",
+            #             "",
+            #         ).replace("\n", " ")
+            #         + "\n"
+            #     )
+
             def format_centered_text():
-                return (
-                    f'<div style="text-align: center;">{block.content}</div>'.replace(
-                        "-\n",
-                        "",
-                    ).replace("\n", " ")
-                    + "\n"
-                )
+                return block.content
+
+            # def format_image():
+            #     img_tags = []
+            #     image_path = "".join(block.image.keys())
+            #     img_tags.append(
+            #         '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
+            #             image_path.replace("-\n", "").replace("\n", " "),
+            #         ),
+            #     )
+            #     return "\n".join(img_tags)
 
             def format_image():
                 img_tags = []
                 image_path = "".join(block.image.keys())
                 img_tags.append(
-                    '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
-                        image_path.replace("-\n", "").replace("\n", " "),
-                    ),
+                    "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
                 )
                 return "\n".join(img_tags)
 
@@ -332,7 +347,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     num_of_prev_lines = prev_block.num_of_lines
                     pre_block_seg_end_coordinate = prev_block.seg_end_coordinate
                     prev_end_space_small = (
-                        context_right_coordinate - pre_block_seg_end_coordinate < 10
+                        abs(prev_block_bbox[2] - pre_block_seg_end_coordinate) < 10
                     )
                     prev_lines_more_than_one = num_of_prev_lines > 1
 
@@ -347,8 +362,12 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                             prev_block_bbox[2], context_right_coordinate
                         )
                         prev_end_space_small = (
-                            prev_block_bbox[2] - pre_block_seg_end_coordinate < 10
+                            abs(context_right_coordinate - pre_block_seg_end_coordinate)
+                            < 10
                         )
+                        edge_distance = 0
+                    else:
+                        edge_distance = abs(block_box[0] - prev_block_bbox[2])
 
                     current_start_space_small = (
                         seg_start_coordinate - context_left_coordinate < 10
@@ -358,6 +377,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                         prev_end_space_small
                         and current_start_space_small
                         and prev_lines_more_than_one
+                        and edge_distance < max(prev_block.width, block.width)
                     ):
                         seg_start_flag = False
                 else:
@@ -371,6 +391,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
             handlers = {
                 "paragraph_title": lambda: format_title(block.content),
+                "abstract_title": lambda: format_title(block.content),
+                "reference_title": lambda: format_title(block.content),
+                "content_title": lambda: format_title(block.content),
                 "doc_title": lambda: f"# {block.content}".replace(
                     "-\n",
                     "",
@@ -378,7 +401,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "table_title": lambda: format_centered_text(),
                 "figure_title": lambda: format_centered_text(),
                 "chart_title": lambda: format_centered_text(),
-                "text": lambda: block.content.replace("-\n", " ").replace("\n", " "),
+                "text": lambda: block.content.replace("\n\n", "\n").replace(
+                    "\n", "\n\n"
+                ),
                 "abstract": lambda: format_first_line(
                     ["摘要", "abstract"], lambda l: f"## {l}\n", " "
                 ),
@@ -416,24 +441,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 if handler:
                     prev_block = block
                     if label == last_label == "text" and seg_start_flag == False:
-                        last_char_of_markdown = (
-                            markdown_content[-1] if markdown_content else ""
-                        )
-                        first_char_of_handler = handler()[0] if handler() else ""
-                        last_is_chinese_char = (
-                            re.match(r"[\u4e00-\u9fff]", last_char_of_markdown)
-                            if last_char_of_markdown
-                            else False
-                        )
-                        first_is_chinese_char = (
-                            re.match(r"[\u4e00-\u9fff]", first_char_of_handler)
-                            if first_char_of_handler
-                            else False
-                        )
-                        if not (last_is_chinese_char or first_is_chinese_char):
-                            markdown_content += " " + handler()
-                        else:
-                            markdown_content += handler()
+                        markdown_content += handler()
                     else:
                         markdown_content += (
                             "\n\n" + handler() if markdown_content else handler()
@@ -467,7 +475,7 @@ class LayoutParsingBlock:
 
     def __init__(self, label, bbox, content="") -> None:
         self.label = label
-        self.region_label = "other"
+        self.order_label = "other"
         self.bbox = [int(item) for item in bbox]
         self.content = content
         self.seg_start_coordinate = float("inf")
@@ -479,39 +487,39 @@ class LayoutParsingBlock:
         self.image = None
         self.index = None
         self.visual_index = None
-        self.direction = self.get_bbox_direction()
+        self.orientation = self.get_bbox_orientation()
         self.child_blocks = []
-        self.update_direction_info()
+        self.update_orientation_info()
 
     def __str__(self) -> str:
         return f"{self.__dict__}"
 
     def __repr__(self) -> str:
-        _str = f"\n\n#################\nlabel:\t{self.label}\nregion_label:\t{self.region_label}\nbbox:\t{self.bbox}\ncontent:\t{self.content}\n#################"
+        _str = f"\n\n#################\nlabel:\t{self.label}\nregion_label:\t{self.order_label}\nbbox:\t{self.bbox}\ncontent:\t{self.content}\n#################"
         return _str
 
     def to_dict(self) -> dict:
         return self.__dict__
 
-    def update_direction_info(self) -> None:
-        if self.region_label == "vision":
-            self.direction = "horizontal"
-        if self.direction == "horizontal":
-            self.secondary_direction = "vertical"
+    def update_orientation_info(self) -> None:
+        if self.order_label == "vision":
+            self.orientation = "horizontal"
+        if self.orientation == "horizontal":
+            self.secondary_orientation = "vertical"
             self.short_side_length = self.height
             self.long_side_length = self.width
             self.start_coordinate = self.bbox[0]
             self.end_coordinate = self.bbox[2]
-            self.secondary_direction_start_coordinate = self.bbox[1]
-            self.secondary_direction_end_coordinate = self.bbox[3]
+            self.secondary_orientation_start_coordinate = self.bbox[1]
+            self.secondary_orientation_end_coordinate = self.bbox[3]
         else:
-            self.secondary_direction = "horizontal"
+            self.secondary_orientation = "horizontal"
             self.short_side_length = self.width
             self.long_side_length = self.height
             self.start_coordinate = self.bbox[1]
             self.end_coordinate = self.bbox[3]
-            self.secondary_direction_start_coordinate = self.bbox[0]
-            self.secondary_direction_end_coordinate = self.bbox[2]
+            self.secondary_orientation_start_coordinate = self.bbox[0]
+            self.secondary_orientation_end_coordinate = self.bbox[2]
 
     def append_child_block(self, child_block: LayoutParsingBlock) -> None:
         if not self.child_blocks:
@@ -525,7 +533,7 @@ class LayoutParsingBlock:
             max(y2, y2_child),
         )
         self.bbox = union_bbox
-        self.update_direction_info()
+        self.update_orientation_info()
         child_blocks = [child_block]
         if child_block.child_blocks:
             child_blocks.extend(child_block.get_child_blocks())
@@ -542,7 +550,7 @@ class LayoutParsingBlock:
         centroid = ((x1 + x2) / 2, (y1 + y2) / 2)
         return centroid
 
-    def get_bbox_direction(self, orientation_ratio: float = 1.0) -> bool:
+    def get_bbox_orientation(self, orientation_ratio: float = 1.0) -> bool:
         """
         Determine if a bounding box is horizontal or vertical.
 
@@ -558,3 +566,91 @@ class LayoutParsingBlock:
             if self.width * orientation_ratio >= self.height
             else "vertical"
         )
+
+
+class LayoutParsingRegion:
+
+    def __init__(
+        self, region_bbox, blocks: List[LayoutParsingBlock] = [], block_label_mapping={}
+    ) -> None:
+        self.region_bbox = region_bbox
+        self.blocks = blocks
+        self.block_map = {}
+        self.update_config(block_label_mapping)
+        self.orientation = None
+        self.calculate_bbox_metrics()
+
+    def update_config(self, block_label_mapping):
+        self.block_map = {}
+        self.config = copy.deepcopy(block_label_mapping)
+        self.config["region_bbox"] = self.region_bbox
+        horizontal_text_block_num = 0
+        for idx, block in enumerate(self.blocks):
+            label = block.label
+            if (
+                block.order_label not in ["vision", "vision_title"]
+                and block.orientation == "horizontal"
+            ):
+                horizontal_text_block_num += 1
+            self.block_map[idx] = block
+            self.update_layout_order_config_block_index(label, idx)
+        text_block_num = (
+            len(self.blocks)
+            - len(self.config.get("vision_block_idxes", []))
+            - len(self.config.get("vision_title_block_idxes", []))
+        )
+        self.orientation = (
+            "horizontal"
+            if horizontal_text_block_num >= text_block_num * 0.5
+            else "vertical"
+        )
+        self.config["region_orientation"] = self.orientation
+
+    def calculate_bbox_metrics(self):
+        x1, y1, x2, y2 = self.region_bbox
+        x_center, y_center = (x1 + x2) / 2, (y1 + y2) / 2
+        self.euclidean_distance = math.sqrt(((x1) ** 2 + (y1) ** 2))
+        self.center_euclidean_distance = math.sqrt(((x_center) ** 2 + (y_center) ** 2))
+        self.angle_rad = math.atan2(y_center, x_center)
+
+    def sort(self):
+        from .xycut_enhanced import xycut_enhanced
+
+        return xycut_enhanced(self.blocks, self.config)
+
+    def update_layout_order_config_block_index(
+        self, block_label: str, block_idx: int
+    ) -> None:
+        doc_title_labels = self.config["doc_title_labels"]
+        paragraph_title_labels = self.config["paragraph_title_labels"]
+        vision_labels = self.config["vision_labels"]
+        vision_title_labels = self.config["vision_title_labels"]
+        header_labels = self.config["header_labels"]
+        unordered_labels = self.config["unordered_labels"]
+        footer_labels = self.config["footer_labels"]
+        text_labels = self.config["text_labels"]
+        self.config.setdefault("doc_title_block_idxes", [])
+        self.config.setdefault("paragraph_title_block_idxes", [])
+        self.config.setdefault("vision_block_idxes", [])
+        self.config.setdefault("vision_title_block_idxes", [])
+        self.config.setdefault("unordered_block_idxes", [])
+        self.config.setdefault("text_block_idxes", [])
+        self.config.setdefault("header_block_idxes", [])
+        self.config.setdefault("footer_block_idxes", [])
+
+        if block_label in doc_title_labels:
+            self.config["doc_title_block_idxes"].append(block_idx)
+        if block_label in paragraph_title_labels:
+            self.config["paragraph_title_block_idxes"].append(block_idx)
+        if block_label in vision_labels:
+            self.config["vision_block_idxes"].append(block_idx)
+        if block_label in vision_title_labels:
+            self.config["vision_title_block_idxes"].append(block_idx)
+        if block_label in unordered_labels:
+            self.config["unordered_block_idxes"].append(block_idx)
+        if block_label in text_labels:
+            self.config["text_block_idxes"].append(block_idx)
+        if block_label in header_labels:
+            self.config["header_block_idxes"].append(block_idx)
+        if block_label in footer_labels:
+            self.config["footer_block_idxes"].append(block_idx)

@@ -12,77 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 import numpy as np
 
 from ..result_v2 import LayoutParsingBlock
-
-
-def calculate_projection_iou(
-    bbox1: List[float], bbox2: List[float], direction: str = "horizontal"
-) -> float:
-    """
-    Calculate the IoU of lines between two bounding boxes.
-
-    Args:
-        bbox1 (List[float]): First bounding box [x_min, y_min, x_max, y_max].
-        bbox2 (List[float]): Second bounding box [x_min, y_min, x_max, y_max].
-        direction (str): direction of the projection, "horizontal" or "vertical".
-
-    Returns:
-        float: Line IoU. Returns 0 if there is no overlap.
-    """
-    start_index, end_index = 1, 3
-    if direction == "horizontal":
-        start_index, end_index = 0, 2
-
-    intersection_start = max(bbox1[start_index], bbox2[start_index])
-    intersection_end = min(bbox1[end_index], bbox2[end_index])
-    overlap = intersection_end - intersection_start
-    if overlap <= 0:
-        return 0
-    union_width = max(bbox1[end_index], bbox2[end_index]) - min(
-        bbox1[start_index], bbox2[start_index]
-    )
-
-    return overlap / union_width if union_width > 0 else 0.0
-
-
-def calculate_iou(
-    bbox1: Union[list, tuple],
-    bbox2: Union[list, tuple],
-) -> float:
-    """
-    Calculate the Intersection over Union (IoU) of two bounding boxes.
-
-    Parameters:
-    bbox1 (list or tuple): The first bounding box, format [x_min, y_min, x_max, y_max]
-    bbox2 (list or tuple): The second bounding box, format [x_min, y_min, x_max, y_max]
-
-    Returns:
-    float: The IoU value between the two bounding boxes
-    """
-
-    x_min_inter = max(bbox1[0], bbox2[0])
-    y_min_inter = max(bbox1[1], bbox2[1])
-    x_max_inter = min(bbox1[2], bbox2[2])
-    y_max_inter = min(bbox1[3], bbox2[3])
-
-    inter_width = max(0, x_max_inter - x_min_inter)
-    inter_height = max(0, y_max_inter - y_min_inter)
-
-    inter_area = inter_width * inter_height
-
-    bbox1_area = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
-    bbox2_area = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
-
-    union_area = bbox1_area + bbox2_area - inter_area
-
-    if union_area == 0:
-        return 0.0
-
-    return inter_area / union_area
+from ..utils import calculate_projection_overlap_ratio
 
 
 def get_nearest_edge_distance(
@@ -91,12 +26,12 @@ def get_nearest_edge_distance(
     weight: List[float] = [1.0, 1.0, 1.0, 1.0],
 ) -> Tuple[float]:
     """
-    Calculate the nearest edge distance between two bounding boxes, considering directional weights.
+    Calculate the nearest edge distance between two bounding boxes, considering orientational weights.
 
     Args:
         bbox1 (list): The bounding box coordinates [x1, y1, x2, y2] of the input object.
         bbox2 (list): The bounding box coordinates [x1', y1', x2', y2'] of the object to match against.
-        weight (list, optional): Directional weights for the edge distances [left, right, up, down]. Defaults to [1, 1, 1, 1].
+        weight (list, optional): orientational weights for the edge distances [left, right, up, down]. Defaults to [1, 1, 1, 1].
 
     Returns:
         float: The calculated minimum edge distance between the bounding boxes.
@@ -104,8 +39,8 @@ def get_nearest_edge_distance(
     x1, y1, x2, y2 = bbox1
     x1_prime, y1_prime, x2_prime, y2_prime = bbox2
     min_x_distance, min_y_distance = 0, 0
-    horizontal_iou = calculate_projection_iou(bbox1, bbox2, "horizontal")
-    vertical_iou = calculate_projection_iou(bbox1, bbox2, "vertical")
+    horizontal_iou = calculate_projection_overlap_ratio(bbox1, bbox2, "horizontal")
+    vertical_iou = calculate_projection_overlap_ratio(bbox1, bbox2, "vertical")
     if horizontal_iou > 0 and vertical_iou > 0:
         return 0.0
     if horizontal_iou == 0:
@@ -412,7 +347,7 @@ def weighted_distance_insert(
         x1_prime, y1_prime, x2_prime, y2_prime = sorted_block.bbox
 
         # Calculate edge distance
-        weight = _get_weights(block.region_label, block.direction)
+        weight = _get_weights(block.order_label, block.orientation)
         edge_distance = get_nearest_edge_distance(block.bbox, sorted_block.bbox, weight)
 
         if block.label in doc_title_labels:
@@ -476,7 +411,7 @@ def insert_child_blocks(
     if block.child_blocks:
         sub_blocks = block.get_child_blocks()
         sub_blocks.append(block)
-        sub_blocks = sort_child_blocks(sub_blocks, block.direction)
+        sub_blocks = sort_child_blocks(sub_blocks, block.orientation)
         sorted_blocks[block_idx] = sub_blocks[0]
         for block in sub_blocks[1:]:
             block_idx += 1
@@ -484,17 +419,17 @@ def insert_child_blocks(
     return sorted_blocks
 
 
-def sort_child_blocks(blocks, direction="horizontal") -> List[LayoutParsingBlock]:
+def sort_child_blocks(blocks, orientation="horizontal") -> List[LayoutParsingBlock]:
     """
     Sort child blocks based on their bounding box coordinates.
 
     Args:
         blocks: A list of LayoutParsingBlock objects representing the child blocks.
-        direction: Orientation of the blocks ('horizontal' or 'vertical'). Default is 'horizontal'.
+        orientation: Orientation of the blocks ('horizontal' or 'vertical'). Default is 'horizontal'.
     Returns:
         sorted_blocks: A sorted list of LayoutParsingBlock objects.
     """
-    if direction == "horizontal":
+    if orientation == "horizontal":
         # from top to bottom
         blocks.sort(
             key=lambda x: (
@@ -584,14 +519,14 @@ def sort_blocks(blocks, median_width=None, reverse=False):
 
 
 def get_cut_blocks(
-    blocks, cut_direction, cut_coordinates, overall_region_box, mask_labels=[]
+    blocks, cut_orientation, cut_coordinates, overall_region_box, mask_labels=[]
 ):
     """
-    Cut blocks based on the given cut direction and coordinates.
+    Cut blocks based on the given cut orientation and coordinates.
 
     Args:
         blocks (list): list of blocks to be cut.
-        cut_direction (str): cut direction, either "horizontal" or "vertical".
+        cut_orientation (str): cut orientation, either "horizontal" or "vertical".
         cut_coordinates (list): list of cut coordinates.
         overall_region_box (list): the overall region box that contains all blocks.
 
@@ -602,10 +537,9 @@ def get_cut_blocks(
     # filter out mask blocks,including header, footer, unordered and child_blocks
 
     # 0: horizontal, 1: vertical
-    cut_aixis = 0 if cut_direction == "horizontal" else 1
+    cut_aixis = 0 if cut_orientation == "horizontal" else 1
     blocks.sort(key=lambda x: x.bbox[cut_aixis + 2])
-    overall_max_axis_coordinate = overall_region_box[cut_aixis + 2]
-    cut_coordinates.append(overall_max_axis_coordinate)
+    cut_coordinates.append(float("inf"))
 
     cut_coordinates = list(set(cut_coordinates))
     cut_coordinates.sort()
@@ -618,7 +552,7 @@ def get_cut_blocks(
             block = blocks[block_idx]
             if block.bbox[cut_aixis + 2] > cut_coordinate:
                 break
-            elif block.region_label not in mask_labels:
+            elif block.order_label not in mask_labels:
                 group_blocks.append(block)
             block_idx += 1
         cut_idx = block_idx
@@ -628,62 +562,42 @@ def get_cut_blocks(
     return cuted_list
 
 
-def split_sub_region_blocks(
-    blocks: List[LayoutParsingBlock],
-    config: Dict,
-) -> List:
-    """
-    Split blocks into sub regions based on the all layout region bbox.
-
-    Args:
-        blocks (List[LayoutParsingBlock]): A list of blocks.
-        config (Dict): Configuration dictionary.
-    Returns:
-        List: A list of lists of blocks, each representing a sub region.
-    """
-
-    region_bbox = config.get("all_layout_region_box", None)
-    x1, y1, x2, y2 = region_bbox
-    region_width = x2 - x1
-    region_height = y2 - y1
-
-    if region_width < region_height:
-        return [(blocks, region_bbox)]
-
-    all_boxes = np.array([block.bbox for block in blocks])
-    discontinuous = calculate_discontinuous_projection(all_boxes, direction="vertical")
-    if len(discontinuous) > 1:
-        cut_coordinates = []
-        region_boxes = []
-        current_interval = discontinuous[0]
-        for x1, x2 in discontinuous[1:]:
-            if x1 - current_interval[1] > 100:
-                cut_coordinates.extend([x1, x2])
-                region_boxes.append([x1, y1, x2, y2])
-            current_interval = [x1, x2]
-        region_blocks = get_cut_blocks(blocks, "vertical", cut_coordinates, region_bbox)
-
-        return [region_info for region_info in zip(region_blocks, region_boxes)]
-    else:
-        return [(blocks, region_bbox)]
+def add_split_block(
+    blocks: List[LayoutParsingBlock], region_bbox: List[int]
+) -> List[LayoutParsingBlock]:
+    block_bboxes = np.array([block.bbox for block in blocks])
+    discontinuous = calculate_discontinuous_projection(
+        block_bboxes, orientation="vertical"
+    )
+    current_interval = discontinuous[0]
+    for interval in discontinuous[1:]:
+        gap_len = interval[0] - current_interval[1]
+        if gap_len > 40:
+            x1, _, x2, __ = region_bbox
+            y1 = current_interval[1] + 5
+            y2 = interval[0] - 5
+            bbox = [x1, y1, x2, y2]
+            split_block = LayoutParsingBlock(label="split", bbox=bbox)
+            blocks.append(split_block)
+        current_interval = interval
 
 
-def get_adjacent_blocks_by_direction(
+def get_adjacent_blocks_by_orientation(
     blocks: List[LayoutParsingBlock],
     block_idx: int,
     ref_block_idxes: List[int],
     iou_threshold,
 ) -> List:
     """
-    Get the adjacent blocks with the same direction as the current block.
+    Get the adjacent blocks with the same orientation as the current block.
     Args:
         block (LayoutParsingBlock): The current block.
         blocks (List[LayoutParsingBlock]): A list of all blocks.
         ref_block_idxes (List[int]): A list of indices of reference blocks.
         iou_threshold (float): The IOU threshold to determine if two blocks are considered adjacent.
     Returns:
-        Int: The index of the previous block with same direction.
-        Int: The index of the following block with same direction.
+        Int: The index of the previous block with same orientation.
+        Int: The index of the following block with same orientation.
     """
     min_prev_block_distance = float("inf")
     prev_block_index = None
@@ -697,21 +611,21 @@ def get_adjacent_blocks_by_direction(
         "vision_title",
     ]
 
-    # find the nearest text block with same direction to the current block
+    # find the nearest text block with same orientation to the current block
     for ref_block_idx in ref_block_idxes:
         ref_block = blocks[ref_block_idx]
-        ref_block_direction = ref_block.direction
-        if ref_block.region_label in child_labels:
+        ref_block_orientation = ref_block.orientation
+        if ref_block.order_label in child_labels:
             continue
-        match_block_iou = calculate_projection_iou(
+        match_block_iou = calculate_projection_overlap_ratio(
             block.bbox,
             ref_block.bbox,
-            ref_block_direction,
+            ref_block_orientation,
         )
 
         child_match_distance_tolerance_len = block.short_side_length / 10
 
-        if block.region_label == "vision":
+        if block.order_label == "vision":
             if ref_block.num_of_lines == 1:
                 gap_tolerance_len = ref_block.short_side_length * 2
             else:
@@ -721,38 +635,38 @@ def get_adjacent_blocks_by_direction(
 
         if match_block_iou >= iou_threshold:
             prev_distance = (
-                block.secondary_direction_start_coordinate
-                - ref_block.secondary_direction_end_coordinate
+                block.secondary_orientation_start_coordinate
+                - ref_block.secondary_orientation_end_coordinate
                 + child_match_distance_tolerance_len
             ) // 5 + ref_block.start_coordinate / 5000
             next_distance = (
-                ref_block.secondary_direction_start_coordinate
-                - block.secondary_direction_end_coordinate
+                ref_block.secondary_orientation_start_coordinate
+                - block.secondary_orientation_end_coordinate
                 + child_match_distance_tolerance_len
             ) // 5 + ref_block.start_coordinate / 5000
             if (
-                ref_block.secondary_direction_end_coordinate
-                <= block.secondary_direction_start_coordinate
+                ref_block.secondary_orientation_end_coordinate
+                <= block.secondary_orientation_start_coordinate
                 + child_match_distance_tolerance_len
                 and prev_distance < min_prev_block_distance
             ):
                 min_prev_block_distance = prev_distance
                 if (
-                    block.secondary_direction_start_coordinate
-                    - ref_block.secondary_direction_end_coordinate
+                    block.secondary_orientation_start_coordinate
+                    - ref_block.secondary_orientation_end_coordinate
                     < gap_tolerance_len
                 ):
                     prev_block_index = ref_block_idx
             elif (
-                ref_block.secondary_direction_start_coordinate
-                > block.secondary_direction_end_coordinate
+                ref_block.secondary_orientation_start_coordinate
+                > block.secondary_orientation_end_coordinate
                 - child_match_distance_tolerance_len
                 and next_distance < min_post_block_distance
             ):
                 min_post_block_distance = next_distance
                 if (
-                    ref_block.secondary_direction_start_coordinate
-                    - block.secondary_direction_end_coordinate
+                    ref_block.secondary_orientation_start_coordinate
+                    - block.secondary_orientation_end_coordinate
                     < gap_tolerance_len
                 ):
                     post_block_index = ref_block_idx
@@ -781,7 +695,7 @@ def update_doc_title_child_blocks(
 
     The child blocks need to meet the following conditions:
         1. They must be adjacent
-        2. They must have the same direction as the parent block.
+        2. They must have the same orientation as the parent block.
         3. Their short side length should be less than 80% of the parent's short side length.
         4. Their long side length should be less than 150% of the parent's long side length.
         5. The child block must be text block.
@@ -801,7 +715,7 @@ def update_doc_title_child_blocks(
         if idx is None:
             continue
         ref_block = blocks[idx]
-        with_seem_direction = ref_block.direction == block.direction
+        with_seem_orientation = ref_block.orientation == block.orientation
 
         short_side_length_condition = (
             ref_block.short_side_length < block.short_side_length * 0.8
@@ -813,12 +727,12 @@ def update_doc_title_child_blocks(
         )
 
         if (
-            with_seem_direction
+            with_seem_orientation
             and short_side_length_condition
             and long_side_length_condition
             and ref_block.num_of_lines < 3
         ):
-            ref_block.region_label = "doc_title_text"
+            ref_block.order_label = "doc_title_text"
             block.append_child_block(ref_block)
             config["text_block_idxes"].remove(idx)
 
@@ -835,7 +749,7 @@ def update_paragraph_title_child_blocks(
 
     The child blocks need to meet the following conditions:
         1. They must be adjacent
-        2. They must have the same direction as the parent block.
+        2. They must have the same orientation as the parent block.
         3. The child block must be paragraph title block.
 
     Args:
@@ -854,9 +768,15 @@ def update_paragraph_title_child_blocks(
         if idx is None:
             continue
         ref_block = blocks[idx]
-        with_seem_direction = ref_block.direction == block.direction
-        if with_seem_direction and ref_block.label in paragraph_title_labels:
-            ref_block.region_label = "sub_paragraph_title"
+        min_height = min(block.height, ref_block.height)
+        nearest_edge_distance = get_nearest_edge_distance(block.bbox, ref_block.bbox)
+        with_seem_orientation = ref_block.orientation == block.orientation
+        if (
+            with_seem_orientation
+            and ref_block.label in paragraph_title_labels
+            and nearest_edge_distance <= min_height * 2
+        ):
+            ref_block.order_label = "sub_paragraph_title"
             block.append_child_block(ref_block)
             config["paragraph_title_block_idxes"].remove(idx)
 
@@ -908,14 +828,14 @@ def update_vision_child_blocks(
         if ref_block.label in vision_title_labels and nearest_edge_distance <= min(
             block.height * 0.5, ref_block.height * 2
         ):
-            ref_block.region_label = "vision_title"
+            ref_block.order_label = "vision_title"
             block.append_child_block(ref_block)
             config["vision_title_block_idxes"].remove(idx)
         elif (
             nearest_edge_distance <= 15
             and ref_block.short_side_length < block.short_side_length
             and ref_block.long_side_length < 0.5 * block.long_side_length
-            and ref_block.direction == block.direction
+            and ref_block.orientation == block.orientation
             and (
                 abs(block_center[0] - ref_block_center[0]) < 10
                 or (
@@ -934,54 +854,65 @@ def update_vision_child_blocks(
                     if child_block.label in text_labels:
                         has_vision_footnote = True
             if not has_vision_footnote:
-                ref_block.region_label = "vision_footnote"
+                ref_block.order_label = "vision_footnote"
                 block.append_child_block(ref_block)
                 config["text_block_idxes"].remove(idx)
 
 
-def calculate_discontinuous_projection(boxes, direction="horizontal") -> List:
+def calculate_discontinuous_projection(
+    boxes, orientation="horizontal", return_num=False
+) -> List:
     """
-    Calculate the discontinuous projection of boxes along the specified direction.
+    Calculate the discontinuous projection of boxes along the specified orientation.
 
     Args:
         boxes (ndarray): Array of bounding boxes represented by [[x_min, y_min, x_max, y_max]].
-        direction (str): Direction along which to perform the projection ('horizontal' or 'vertical').
+        orientation (str): orientation along which to perform the projection ('horizontal' or 'vertical').
 
     Returns:
         list: List of tuples representing the merged intervals.
     """
-    if direction == "horizontal":
+    boxes = np.array(boxes)
+    if orientation == "horizontal":
         intervals = boxes[:, [0, 2]]
-    elif direction == "vertical":
+    elif orientation == "vertical":
         intervals = boxes[:, [1, 3]]
     else:
-        raise ValueError("Direction must be 'horizontal' or 'vertical'")
+        raise ValueError("orientation must be 'horizontal' or 'vertical'")
 
     intervals = intervals[np.argsort(intervals[:, 0])]
 
     merged_intervals = []
+    num = 1
     current_start, current_end = intervals[0]
+    num_list = []
 
     for start, end in intervals[1:]:
         if start <= current_end:
+            num += 1
             current_end = max(current_end, end)
         else:
+            num_list.append(num)
             merged_intervals.append((current_start, current_end))
+            num = 1
             current_start, current_end = start, end
 
+    num_list.append(num)
     merged_intervals.append((current_start, current_end))
+    if return_num:
+        return merged_intervals, num_list
     return merged_intervals
 
 
 def shrink_overlapping_boxes(
-    boxes, direction="horizontal", min_threshold=0, max_threshold=0.1
+    boxes, orientation="horizontal", min_threshold=0, max_threshold=0.1
 ) -> List:
     """
-    Shrink overlapping boxes along the specified direction.
+    Shrink overlapping boxes along the specified orientation.
 
     Args:
         boxes (ndarray): Array of bounding boxes represented by [[x_min, y_min, x_max, y_max]].
-        direction (str): Direction along which to perform the shrinking ('horizontal' or 'vertical').
+        orientation (str): orientation along which to perform the shrinking ('horizontal' or 'vertical').
         min_threshold (float): Minimum threshold for shrinking. Default is 0.
         max_threshold (float): Maximum threshold for shrinking. Default is 0.2.
 
@@ -992,15 +923,15 @@ def shrink_overlapping_boxes(
     for block in boxes[1:]:
         x1, y1, x2, y2 = current_block.bbox
         x1_prime, y1_prime, x2_prime, y2_prime = block.bbox
-        cut_iou = calculate_projection_iou(
-            current_block.bbox, block.bbox, direction=direction
+        cut_iou = calculate_projection_overlap_ratio(
+            current_block.bbox, block.bbox, orientation=orientation
         )
-        match_iou = calculate_projection_iou(
+        match_iou = calculate_projection_overlap_ratio(
             current_block.bbox,
             block.bbox,
-            direction="horizontal" if direction == "vertical" else "vertical",
+            orientation="horizontal" if orientation == "vertical" else "vertical",
         )
-        if direction == "vertical":
+        if orientation == "vertical":
             if (
                 (match_iou > 0 and cut_iou > min_threshold and cut_iou < max_threshold)
                 or y2 == y1_prime

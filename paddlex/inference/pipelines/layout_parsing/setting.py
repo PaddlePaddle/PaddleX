@@ -12,18 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-layout_order_config = {
-    # 人工配置项
-    "line_height_iou_threshold": 0.4,  # For line segmentation of OCR results
-    "title_area_max_block_threshold": 0.3,  # update paragraph_title -> doc_title
-    "block_label_match_iou_threshold": 0.1,
-    "block_title_match_iou_threshold": 0.1,
+parameters_config = {
+    "page": {},
+    "region": {
+        "match_block_overlap_ratio_threshold": 0.8,
+        "split_block_overlap_ratio_threshold": 0.4,
+    },
+    "block": {
+        "title_conversion_area_ratio_threshold": 0.3,  # update paragraph_title -> doc_title
+    },
+    "line": {
+        "line_height_iou_threshold": 0.6,  # For line segmentation of OCR results
+        "delimiter_map": {
+            "doc_title": " ",
+            "content": "\n",
+        },
+    },
+    "word": {
+        "delimiter": " ",
+    },
+    "order": {
+        "block_label_match_iou_threshold": 0.1,
+        "block_title_match_iou_threshold": 0.1,
+    },
+}
+
+block_label_mapping = {
     "doc_title_labels": ["doc_title"],  # 文档标题
-    "paragraph_title_labels": ["paragraph_title"],  # 段落标题
+    "paragraph_title_labels": [
+        "paragraph_title",
+        "abstract_title",
+        "reference_title",
+        "content_title",
+    ],  # 段落标题
     "vision_labels": [
         "image",
         "table",
         "chart",
+        "flowchart",
         "figure",
     ],  # 图、表、印章、图表、图
     "vision_title_labels": ["table_title", "chart_title", "figure_title"],  # 图表标题
@@ -52,19 +78,9 @@ layout_order_config = {
         "table",
         "chart",
         "figure",
+        "abstract_title",
+        "refer_title",
+        "content_title",
+        "flowchart",
     ],
-    # 自动补全配置项
-    "layout_to_ocr_mapping": {},
-    "all_layout_region_box": [],  # 区域box
-    "doc_title_block_idxes": [],
-    "paragraph_title_block_idxes": [],
-    "text_title_labels": [],  # doc_title_labels+paragraph_title_labels
-    "text_title_block_idxes": [],
-    "vision_block_idxes": [],
-    "vision_title_block_idxes": [],
-    "vision_footnote_block_idxes": [],
-    "text_block_idxes": [],
-    "header_block_idxes": [],
-    "footer_block_idxes": [],
-    "unordered_block_idxes": [],
 }

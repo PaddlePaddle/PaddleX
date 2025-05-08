@@ -16,7 +16,6 @@ __all__ = [
     "get_sub_regions_ocr_res",
     "get_show_color",
     "sorted_layout_boxes",
-    "update_layout_order_config_block_index",
 ]
 
 import re
@@ -28,7 +27,6 @@ from PIL import Image
 
 from ..components import convert_points_to_boxes
 from ..ocr.result import OCRResult
-from .xycut_enhanced import calculate_projection_iou
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
@@ -172,64 +170,129 @@ def sorted_layout_boxes(res, w):
     return new_res
 
 
-def _calculate_overlap_area_div_minbox_area_ratio(
-    bbox1: Union[list, tuple],
-    bbox2: Union[list, tuple],
+def calculate_projection_overlap_ratio(
+    bbox1: List[float],
+    bbox2: List[float],
+    orientation: str = "horizontal",
+    mode="union",
 ) -> float:
     """
-    Calculate the ratio of the overlap area between bbox1 and bbox2
-    to the area of the smaller bounding box.
+    Calculate the IoU of lines between two bounding boxes.
 
     Args:
-        bbox1 (list or tuple): Coordinates of the first bounding box [x_min, y_min, x_max, y_max].
-        bbox2 (list or tuple): Coordinates of the second bounding box [x_min, y_min, x_max, y_max].
+        bbox1 (List[float]): First bounding box [x_min, y_min, x_max, y_max].
+        bbox2 (List[float]): Second bounding box [x_min, y_min, x_max, y_max].
+        orientation (str): orientation of the projection, "horizontal" or "vertical".
 
     Returns:
-        float: The ratio of the overlap area to the area of the smaller bounding box.
+        float: Line overlap ratio. Returns 0 if there is no overlap.
     """
-    bbox1 = list(map(int, bbox1))
-    bbox2 = list(map(int, bbox2))
+    start_index, end_index = 1, 3
+    if orientation == "horizontal":
+        start_index, end_index = 0, 2
 
-    x_left = max(bbox1[0], bbox2[0])
-    y_top = max(bbox1[1], bbox2[1])
-    x_right = min(bbox1[2], bbox2[2])
-    y_bottom = min(bbox1[3], bbox2[3])
+    intersection_start = max(bbox1[start_index], bbox2[start_index])
+    intersection_end = min(bbox1[end_index], bbox2[end_index])
+    overlap = intersection_end - intersection_start
+    if overlap <= 0:
+        return 0
 
-    if x_right <= x_left or y_bottom <= y_top:
+    if mode == "union":
+        ref_width = max(bbox1[end_index], bbox2[end_index]) - min(
+            bbox1[start_index], bbox2[start_index]
+        )
+    elif mode == "small":
+        ref_width = min(
+            bbox1[end_index] - bbox1[start_index], bbox2[end_index] - bbox2[start_index]
+        )
+    elif mode == "large":
+        ref_width = max(
+            bbox1[end_index] - bbox1[start_index], bbox2[end_index] - bbox2[start_index]
+        )
+    else:
+        raise ValueError(
+            f"Invalid mode {mode}, must be one of ['union', 'small', 'large']."
+        )
+
+    return overlap / ref_width if ref_width > 0 else 0.0
+
+
+def calculate_overlap_ratio(
+    bbox1: Union[list, tuple], bbox2: Union[list, tuple], mode="union"
+) -> float:
+    """
+    Calculate the overlap ratio between two bounding boxes.
+
+    Args:
+        bbox1 (list or tuple): The first bounding box, format [x_min, y_min, x_max, y_max]
+        bbox2 (list or tuple): The second bounding box, format [x_min, y_min, x_max, y_max]
+        mode (str): The mode of calculation, either 'union', 'small', or 'large'.
+
+    Returns:
+        float: The overlap ratio value between the two bounding boxes
+    """
+    x_min_inter = max(bbox1[0], bbox2[0])
+    y_min_inter = max(bbox1[1], bbox2[1])
+    x_max_inter = min(bbox1[2], bbox2[2])
+    y_max_inter = min(bbox1[3], bbox2[3])
+
+    inter_width = max(0, x_max_inter - x_min_inter)
+    inter_height = max(0, y_max_inter - y_min_inter)
+
+    inter_area = inter_width * inter_height
+
+    bbox1_area = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
+    bbox2_area = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
+
+    if mode == "union":
+        ref_area = bbox1_area + bbox2_area - inter_area
+    elif mode == "small":
+        ref_area = min(bbox1_area, bbox2_area)
+    elif mode == "large":
+        ref_area = max(bbox1_area, bbox2_area)
+    else:
+        raise ValueError(
+            f"Invalid mode {mode}, must be one of ['union', 'small', 'large']."
+        )
+
+    if ref_area == 0:
         return 0.0
 
-    intersection_area = (x_right - x_left) * (y_bottom - y_top)
-    area_bbox1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
-    area_bbox2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
-    min_box_area = min(area_bbox1, area_bbox2)
-
-    if min_box_area <= 0:
-        return 0.0
-
-    return intersection_area / min_box_area
+    return inter_area / ref_area
 
 
-def group_boxes_into_lines(ocr_rec_res, block_info, line_height_iou_threshold):
+def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
     rec_boxes = ocr_rec_res["boxes"]
     rec_texts = ocr_rec_res["rec_texts"]
     rec_labels = ocr_rec_res["rec_labels"]
 
-    spans = list(zip(rec_boxes, rec_texts, rec_labels))
+    text_boxes = [
+        rec_boxes[i] for i in range(len(rec_boxes)) if rec_labels[i] == "text"
+    ]
+    text_orientation = calculate_text_orientation(text_boxes)
 
-    spans.sort(key=lambda span: span[0][1])
+    match_orientation = "vertical" if text_orientation == "horizontal" else "horizontal"
+
+    spans = list(zip(rec_boxes, rec_texts, rec_labels))
+    sort_index = 1
+    reverse = False
+    if text_orientation == "vertical":
+        sort_index = 0
+        reverse = True
+    spans.sort(key=lambda span: span[0][sort_index], reverse=reverse)
     spans = [list(span) for span in spans]
 
     lines = []
     line = [spans[0]]
     line_region_box = spans[0][0][:]
-    block_info.seg_start_coordinate = spans[0][0][0]
-    block_info.seg_end_coordinate = spans[-1][0][2]
 
     # merge line
     for span in spans[1:]:
         rec_bbox = span[0]
         if (
-            calculate_projection_iou(line_region_box, rec_bbox, "vertical")
+            calculate_projection_overlap_ratio(
+                line_region_box, rec_bbox, match_orientation, mode="small"
+            )
             >= line_height_iou_threshold
         ):
             line.append(span)
@@ -241,7 +304,33 @@ def group_boxes_into_lines(ocr_rec_res, block_info, line_height_iou_threshold):
             line_region_box = rec_bbox[:]
 
     lines.append(line)
-    return lines
+    return lines, text_orientation
+
+
+def calculate_minimum_enclosing_bbox(bboxes):
+    """
+    Calculate the minimum enclosing bounding box for a list of bounding boxes.
+
+    Args:
+        bboxes (list): A list of bounding boxes represented as lists of four integers [x1, y1, x2, y2].
+
+    Returns:
+        list: The minimum enclosing bounding box represented as a list of four integers [x1, y1, x2, y2].
+    """
+    if not bboxes:
+        raise ValueError("The list of bounding boxes is empty.")
+
+    # Convert the list of bounding boxes to a NumPy array
+    bboxes_array = np.array(bboxes)
+
+    # Compute the minimum and maximum values along the respective axes
+    min_x = np.min(bboxes_array[:, 0])
+    min_y = np.min(bboxes_array[:, 1])
+    max_x = np.max(bboxes_array[:, 2])
+    max_y = np.max(bboxes_array[:, 3])
+
+    # Return the minimum enclosing bounding box
+    return [min_x, min_y, max_x, max_y]
 
 
 def calculate_text_orientation(
@@ -258,24 +347,30 @@ def calculate_text_orientation(
         str: "horizontal" or "vertical".
     """
 
-    bboxes = np.array(bboxes)
-    x_min = np.min(bboxes[:, 0])
-    x_max = np.max(bboxes[:, 2])
-    width = x_max - x_min
-    y_min = np.min(bboxes[:, 1])
-    y_max = np.max(bboxes[:, 3])
-    height = y_max - y_min
-    return "horizontal" if width * orientation_ratio >= height else "vertical"
+    horizontal_box_num = 0
+    for bbox in bboxes:
+        if len(bbox) != 4:
+            raise ValueError(
+                "Invalid bounding box format. Expected a list of length 4."
+            )
+        x1, y1, x2, y2 = bbox
+        width = x2 - x1
+        height = y2 - y1
+        horizontal_box_num += 1 if width * orientation_ratio >= height else 0
+
+    return "horizontal" if horizontal_box_num >= len(bboxes) * 0.5 else "vertical"
+
+
+def is_english_letter(char):
+    return bool(re.match(r"^[A-Za-z]$", char))
 
 
 def format_line(
     line: List[List[Union[List[int], str]]],
-    block_left_coordinate: int,
     block_right_coordinate: int,
-    first_line_span_limit: int = 10,
     last_line_span_limit: int = 10,
     block_label: str = "text",
-    delimiter_map: Dict = {},
+    # delimiter_map: Dict = {},
 ) -> None:
     """
     Format a line of text spans based on layout constraints.
@@ -290,92 +385,108 @@ def format_line(
     Returns:
         None: The function modifies the line in place.
     """
-    first_span = line[0]
-    last_span = line[-1]
+    last_span_box = line[-1][0]
 
-    if first_span[0][0] - block_left_coordinate > first_line_span_limit:
-        first_span[1] = "\n" + first_span[1]
-    if block_right_coordinate - last_span[0][2] > last_line_span_limit:
-        last_span[1] = last_span[1] + "\n"
+    for span in line:
+        if span[2] == "formula" and block_label != "formula":
+            if len(line) > 1:
+                span[1] = f"${span[1]}$"
+            else:
+                span[1] = f"\n${span[1]}$"
 
-    line[0] = first_span
-    line[-1] = last_span
+    line_text = " ".join([span[1] for span in line])
 
-    delim = delimiter_map.get(block_label, " ")
-    line_text = delim.join([span[1] for span in line])
-
-    if block_label != "reference":
-        line_text = remove_extra_space(line_text)
+    need_new_line = False
+    if (
+        block_right_coordinate - last_span_box[2] > last_line_span_limit
+        and not line_text.endswith("-")
+        and len(line_text) > 0
+        and not is_english_letter(line_text[-1])
+    ):
+        need_new_line = True
 
     if line_text.endswith("-"):
         line_text = line_text[:-1]
-    return line_text
+    elif (
+        len(line_text) > 0 and is_english_letter(line_text[-1])
+    ) or line_text.endswith("$"):
+        line_text += " "
+
+    return line_text, need_new_line
 
 
-def split_boxes_if_x_contained(boxes, offset=1e-5):
+def split_boxes_by_projection(spans: List[List[int]], orientation, offset=1e-5):
     """
-    Check if there is any complete containment in the x-direction
+    Check if there is any complete containment in the x-orientation
     between the bounding boxes and split the containing box accordingly.
 
     Args:
-        boxes (list of lists): Each element is a list containing an ndarray of length 4, a description, and a label.
+        spans (list of lists): Each element is a list containing an ndarray of length 4, a text string, and a label.
+        orientation: 'horizontal' or 'vertical', indicating whether the spans are arranged horizontally or vertically.
         offset (float): A small offset value to ensure that the split boxes are not too close to the original boxes.
     Returns:
         A new list of boxes, including split boxes, with the same `rec_text` and `label` attributes.
     """
 
-    def is_x_contained(box_a, box_b):
-        """Check if box_a completely contains box_b in the x-direction."""
-        return box_a[0][0] <= box_b[0][0] and box_a[0][2] >= box_b[0][2]
+    def is_projection_contained(box_a, box_b, start_idx, end_idx):
+        """Check if box_a completely contains box_b in the x-orientation."""
+        return box_a[start_idx] <= box_b[start_idx] and box_a[end_idx] >= box_b[end_idx]
 
     new_boxes = []
+    if orientation == "horizontal":
+        projection_start_index, projection_end_index = 0, 2
+    else:
+        projection_start_index, projection_end_index = 1, 3
 
-    for i in range(len(boxes)):
-        box_a = boxes[i]
+    for i in range(len(spans)):
+        span = spans[i]
+        box_a, text, label = span
         is_split = False
-        for j in range(len(boxes)):
+        for j in range(len(spans)):
             if i == j:
                 continue
-            box_b = boxes[j]
-            if is_x_contained(box_a, box_b):
+            box_b = spans[j][0]
+            if is_projection_contained(
+                box_a, box_b, projection_start_index, projection_end_index
+            ):
                 is_split = True
                 # Split box_a based on the x-coordinates of box_b
-                if box_a[0][0] < box_b[0][0]:
-                    w = box_b[0][0] - offset - box_a[0][0]
+                if box_a[projection_start_index] < box_b[projection_start_index]:
+                    w = (
+                        box_b[projection_start_index]
+                        - offset
+                        - box_a[projection_start_index]
+                    )
                     if w > 1:
+                        box_a[projection_end_index] = (
+                            box_b[projection_start_index] - offset
+                        )
                         new_boxes.append(
                             [
-                                np.array(
-                                    [
-                                        box_a[0][0],
-                                        box_a[0][1],
-                                        box_b[0][0] - offset,
-                                        box_a[0][3],
-                                    ]
-                                ),
-                                box_a[1],
-                                box_a[2],
+                                np.array(box_a),
+                                text,
+                                label,
                             ]
                         )
-                if box_a[0][2] > box_b[0][2]:
-                    w = box_a[0][2] - box_b[0][2] + offset
+                if box_a[projection_end_index] > box_b[projection_end_index]:
+                    w = (
+                        box_a[projection_end_index]
+                        - box_b[projection_end_index]
+                        + offset
+                    )
                     if w > 1:
-                        box_a = [
-                            np.array(
-                                [
-                                    box_b[0][2] + offset,
-                                    box_a[0][1],
-                                    box_a[0][2],
-                                    box_a[0][3],
-                                ]
-                            ),
-                            box_a[1],
-                            box_a[2],
+                        box_a[projection_start_index] = (
+                            box_b[projection_end_index] + offset
+                        )
+                        span = [
+                            np.array(box_a),
+                            text,
+                            label,
                         ]
-            if j == len(boxes) - 1 and is_split:
-                new_boxes.append(box_a)
+            if j == len(spans) - 1 and is_split:
+                new_boxes.append(span)
         if not is_split:
-            new_boxes.append(box_a)
+            new_boxes.append(span)
 
     return new_boxes
 
@@ -454,7 +565,7 @@ def _get_minbox_if_overlap_by_ratio(
     area1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
     area2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
     # Calculate the overlap ratio using a helper function
-    overlap_ratio = _calculate_overlap_area_div_minbox_area_ratio(bbox1, bbox2)
+    overlap_ratio = calculate_overlap_ratio(bbox1, bbox2, mode="small")
     # Check if the overlap ratio exceeds the threshold
     if overlap_ratio > ratio:
         if (area1 <= area2 and smaller) or (area1 >= area2 and not smaller):
@@ -496,8 +607,17 @@ def remove_overlap_blocks(
                 smaller=smaller,
             )
             if overlap_box_index is not None:
-                # Determine which block to remove based on overlap_box_index
-                if overlap_box_index == 1:
+                if block1["label"] == "image" and block2["label"] == "image":
+                    # Determine which block to remove based on overlap_box_index
+                    if overlap_box_index == 1:
+                        drop_index = i
+                    else:
+                        drop_index = j
+                elif block1["label"] == "image" and block2["label"] != "image":
+                    drop_index = i
+                elif block1["label"] != "image" and block2["label"] == "image":
+                    drop_index = j
+                elif overlap_box_index == 1:
                     drop_index = i
                 else:
                     drop_index = j
@@ -556,39 +676,99 @@ def get_bbox_intersection(bbox1, bbox2, return_format="bbox"):
         raise ValueError("return_format must be either 'bbox' or 'poly'.")
 
 
-def update_layout_order_config_block_index(
-    config: dict, block_label: str, block_idx: int
-) -> None:
+def shrink_supplement_region_bbox(
+    supplement_region_bbox,
+    ref_region_bbox,
+    image_width,
+    image_height,
+    block_idxes_set,
+    block_bboxes,
+    parameters_config,
+) -> List:
+    """
+    Shrink the supplement region bbox according to the reference region bbox and match the block bboxes.
 
-    doc_title_labels = config["doc_title_labels"]
-    paragraph_title_labels = config["paragraph_title_labels"]
-    vision_labels = config["vision_labels"]
-    vision_title_labels = config["vision_title_labels"]
-    header_labels = config["header_labels"]
-    unordered_labels = config["unordered_labels"]
-    footer_labels = config["footer_labels"]
-    text_labels = config["text_labels"]
-    text_title_labels = doc_title_labels + paragraph_title_labels
-    config["text_title_labels"] = text_title_labels
+    Args:
+        supplement_region_bbox (list): The supplement region bbox.
+        ref_region_bbox (list): The reference region bbox.
+        image_width (int): The width of the image.
+        image_height (int): The height of the image.
+        block_idxes_set (set): The indexes of the blocks that intersect with the region bbox.
+        block_bboxes (dict): The dictionary of block bboxes.
+        parameters_config (dict): The configuration parameters.
 
-    if block_label in doc_title_labels:
-        config["doc_title_block_idxes"].append(block_idx)
-    if block_label in paragraph_title_labels:
-        config["paragraph_title_block_idxes"].append(block_idx)
-    if block_label in vision_labels:
-        config["vision_block_idxes"].append(block_idx)
-    if block_label in vision_title_labels:
-        config["vision_title_block_idxes"].append(block_idx)
-    if block_label in unordered_labels:
-        config["unordered_block_idxes"].append(block_idx)
-    if block_label in text_title_labels:
-        config["text_title_block_idxes"].append(block_idx)
-    if block_label in text_labels:
-        config["text_block_idxes"].append(block_idx)
-    if block_label in header_labels:
-        config["header_block_idxes"].append(block_idx)
-    if block_label in footer_labels:
-        config["footer_block_idxes"].append(block_idx)
+    Returns:
+        list: The new region bbox and the matched block idxes.
+    """
+    x1, y1, x2, y2 = supplement_region_bbox
+    x1_prime, y1_prime, x2_prime, y2_prime = ref_region_bbox
+    index_conversion_map = {0: 2, 1: 3, 2: 0, 3: 1}
+    edge_distance_list = [
+        (x1_prime - x1) / image_width,
+        (y1_prime - y1) / image_height,
+        (x2 - x2_prime) / image_width,
+        (y2 - y2_prime) / image_height,
+    ]
+    edge_distance_list_tmp = edge_distance_list[:]
+    min_distance = min(edge_distance_list)
+    src_index = index_conversion_map[edge_distance_list.index(min_distance)]
+    if len(block_idxes_set) == 0:
+        return supplement_region_bbox, []
+    for _ in range(3):
+        dst_index = index_conversion_map[src_index]
+        tmp_region_bbox = supplement_region_bbox[:]
+        tmp_region_bbox[dst_index] = ref_region_bbox[src_index]
+        iner_block_idxes, split_block_idxes = [], []
+        for block_idx in block_idxes_set:
+            overlap_ratio = calculate_overlap_ratio(
+                tmp_region_bbox, block_bboxes[block_idx], mode="small"
+            )
+            if overlap_ratio > parameters_config["region"].get(
+                "match_block_overlap_ratio_threshold", 0.8
+            ):
+                iner_block_idxes.append(block_idx)
+            elif overlap_ratio > parameters_config["region"].get(
+                "split_block_overlap_ratio_threshold", 0.4
+            ):
+                split_block_idxes.append(block_idx)
+
+        if len(iner_block_idxes) > 0:
+            if len(split_block_idxes) > 0:
+                for split_block_idx in split_block_idxes:
+                    split_block_bbox = block_bboxes[split_block_idx]
+                    x1, y1, x2, y2 = tmp_region_bbox
+                    x1_prime, y1_prime, x2_prime, y2_prime = split_block_bbox
+                    edge_distance_list = [
+                        (x1_prime - x1) / image_width,
+                        (y1_prime - y1) / image_height,
+                        (x2 - x2_prime) / image_width,
+                        (y2 - y2_prime) / image_height,
+                    ]
+                    max_distance = max(edge_distance_list)
+                    src_index = edge_distance_list.index(max_distance)
+                    dst_index = index_conversion_map[src_index]
+                    tmp_region_bbox[dst_index] = split_block_bbox[src_index]
+                    tmp_region_bbox, iner_idxes = shrink_supplement_region_bbox(
+                        tmp_region_bbox,
+                        ref_region_bbox,
+                        image_width,
+                        image_height,
+                        iner_block_idxes,
+                        block_bboxes,
+                        parameters_config,
+                    )
+                    if len(iner_idxes) == 0:
+                        continue
+            matched_bboxes = [block_bboxes[idx] for idx in iner_block_idxes]
+            supplement_region_bbox = calculate_minimum_enclosing_bbox(matched_bboxes)
+            break
+        else:
+            edge_distance_list_tmp = [
+                x for x in edge_distance_list_tmp if x != min_distance
+            ]
+            min_distance = min(edge_distance_list_tmp)
+            src_index = index_conversion_map[edge_distance_list.index(min_distance)]
+    return supplement_region_bbox, iner_block_idxes
 
 
 def update_region_box(bbox, region_box):
@@ -618,7 +798,7 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
             (x_min, y_max),
         ]
         ocr_res["dt_polys"].append(poly_points)
-        ocr_res["rec_texts"].append(f"${formula_res['rec_formula']}$")
+        ocr_res["rec_texts"].append(f"{formula_res['rec_formula']}")
         ocr_res["rec_boxes"] = np.vstack(
             (ocr_res["rec_boxes"], [formula_res["dt_polys"]])
         )
