@@ -1314,7 +1314,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <thead>
 <tr>
 <th>模型名称</th>
-<th>precison</th>
+<th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
 <th>模型存储大小（M)</th>

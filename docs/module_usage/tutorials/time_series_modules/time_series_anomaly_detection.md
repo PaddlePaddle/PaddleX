@@ -14,7 +14,7 @@ comments: true
 <thead>
 <tr>
 <th>模型名称</th><th>模型下载链接</th>
-<th>precison</th>
+<th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
 <th>模型存储大小（M）</th>

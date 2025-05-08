@@ -512,7 +512,7 @@ python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
 
 1.<b>产线集成</b>
 
-图像特征模块可以集成的 PaddleX 产线有<b>通用图像特征产线</b>(comming soon)，只需要替换模型路径即可完成相关产线的图像特征模块的模型更新。在产线集成中，你可以使用服务化部署来部署你得到的模型。
+图像特征模块可以集成的 PaddleX 产线有<b>通用图像特征产线</b>(coming soon)，只需要替换模型路径即可完成相关产线的图像特征模块的模型更新。在产线集成中，你可以使用服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 

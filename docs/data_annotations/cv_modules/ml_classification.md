@@ -53,7 +53,7 @@ labelme images --labels label.txt --nodata --autosave --output annotations
 * `flags` 为图像创建分类标签，传入标签路径。
 * `nodata` 停止将图像数据存储到 `JSON`文件。
 * `autosave` 自动存储。
-* `ouput` 标签文件存储路径。
+* `output` 标签文件存储路径。
 #### 2.3.3 开始图片标注
 * 启动 `Labelme` 后如图所示：
 
