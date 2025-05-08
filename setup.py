@@ -59,7 +59,7 @@ DEP_SPECS = {
     "pyclipper": "",
     "pycocotools": "",
     "pydantic": ">= 2",
-    "PyMuPDF": "",
+    "pypdfium2": ">= 4",
     "PyYAML": "== 6.0.2",
     "regex": "",
     "requests": "",
@@ -104,8 +104,8 @@ EXTRAS = {
             "matplotlib",
             "opencv-contrib-python",
             "pycocotools",
-            # Currently `PyMuPDF` is required by the image batch sampler
-            "PyMuPDF",
+            # Currently `pypdfium2` is required by the image batch sampler
+            "pypdfium2",
             "scikit-image",
         ],
         "multimodal": [
@@ -114,7 +114,7 @@ EXTRAS = {
             "Jinja2",
             "opencv-contrib-python",
             # For the same reason as in `cv`
-            "PyMuPDF",
+            "pypdfium2",
             "regex",
         ],
         "ie": [
@@ -130,7 +130,7 @@ EXTRAS = {
             "openpyxl",
             "premailer",
             "pyclipper",
-            "PyMuPDF",
+            "pypdfium2",
             "scikit-learn",
             "shapely",
             "tokenizers",
@@ -143,7 +143,7 @@ EXTRAS = {
             "openpyxl",
             "premailer",
             "pyclipper",
-            "PyMuPDF",
+            "pypdfium2",
             "scikit-learn",
             "shapely",
             "tokenizers",

@@ -32,8 +32,8 @@ from ...common.result import BaseCVResult, JsonMixin
 
 if is_dep_available("opencv-contrib-python"):
     import cv2
-if is_dep_available("PyMuPDF"):
-    import fitz
+if is_dep_available("pypdfium2"):
+    import pypdfium2 as pdfium
 
 
 class FormulaRecResult(BaseCVResult):
@@ -236,7 +236,7 @@ def crop_white_area(image: np.ndarray) -> Optional[List[int]]:
         return None
 
 
-@function_requires_deps("PyMuPDF", "opencv-contrib-python")
+@function_requires_deps("pypdfium2", "opencv-contrib-python")
 def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
     """
     Converts a single-page PDF to an image, optionally cropping white areas and adding padding.
@@ -249,21 +249,16 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
     Returns:
         np.ndarray: The resulting image as a NumPy array, or None if the PDF is not single-page.
     """
-
-    pdfDoc = fitz.open(pdf_path)
-    if pdfDoc.page_count != 1:
+    pdfDoc = pdfium.PdfDocument(pdf_path)
+    if len(pdfDoc) != 1:
         return None
-    for pg in range(pdfDoc.page_count):
-        page = pdfDoc[pg]
+    for page in pdfDoc:
         rotate = int(0)
-        zoom_x = 2
-        zoom_y = 2
-        mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
-        pix = page.get_pixmap(matrix=mat, alpha=False)
-        getpngdata = pix.tobytes(output="png")
-        # decode as np.uint8
-        image_array = np.frombuffer(getpngdata, dtype=np.uint8)
-        img = cv2.imdecode(image_array, cv2.IMREAD_ANYCOLOR)
+        zoom = 2
+        img = page.render(scale=zoom, rotation=rotate).to_pil()
+        img = img.convert("RGB")
+        img = np.array(img)
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         xywh = crop_white_area(img)
 
         if xywh is not None:

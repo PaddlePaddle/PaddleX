@@ -65,7 +65,7 @@ MOD_TO_DEP = {
     "pyclipper": "pyclipper",
     "pycocotools": "pycocotools",
     "pydantic": "pydantic",
-    "fitz": "PyMuPDF",
+    "pypdfium2": "pypdfium2",
     "yaml": "PyYAML",
     "regex": "regex",
     "requests": "requests",
