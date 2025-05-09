@@ -1582,7 +1582,7 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>vectorInfo</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
+<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation. Please note that the deserialization process involves performing an unpickle operation. To prevent malicious attacks, be sure to use data from trusted sources.</td>
 <td>No</td>
 </tr>
 <tr>
