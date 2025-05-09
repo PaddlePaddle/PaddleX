@@ -568,3 +568,11 @@ For the GPU version of the high-performance inference plugin, the official Paddl
 **4. Why does the program freeze during runtime or display some "WARNING" and "ERROR" messages after using the high-performance inference feature? What should be done in such cases?**
 
 When initializing the model, operations such as subgraph optimization may take longer and may generate some "WARNING" and "ERROR" messages. However, as long as the program does not exit automatically, it is recommended to wait patiently, as the program usually continues to run to completion.
+
+**5. When using GPU for inference, enabling the high-performance inference plugin increases memory usage and causes OOM. How can this be resolved?**
+
+Some acceleration methods trade off memory usage to support a broader range of inference scenarios. If memory becomes a bottleneck, consider the following optimization strategies:
+
+* **Adjust pipeline configurations**: Disable unnecessary features to avoid loading redundant models. Appropriately reduce the batch size based on business requirements to balance throughput and memory usage.
+* **Switch inference backends**: Different inference backends have varying memory management strategies. Try benchmarking various backends to compare memory usage and performance.
+* **Optimize dynamic shape configurations**: For modules using TensorRT or Paddle Inference TensorRT subgraph engine, narrow the dynamic shape range based on the actual distribution of input data.
