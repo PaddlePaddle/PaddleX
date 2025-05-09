@@ -34,6 +34,7 @@ DEP_SPECS = {
     "filetype": ">= 1.2",
     "ftfy": "",
     "GPUtil": ">= 1.4",
+    "huggingface-hub": "",
     "imagesize": "",
     "Jinja2": "",
     "joblib": "",
@@ -95,6 +96,7 @@ REQUIRED_DEPS = [
     "ruamel.yaml",
     "typing-extensions",
     "ujson",
+    "huggingface-hub",
 ]
 
 EXTRAS = {

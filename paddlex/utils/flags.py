@@ -52,6 +52,7 @@ FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", True)
 USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", True)
 DISABLE_DEV_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_DEV_MODEL_WL", False)
 DISABLE_CINN_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_CINN_MODEL_WL", False)
+USING_HUGGINGFACE = get_flag_from_env_var("PADDLE_PDX_USING_HUGGINGFACE", False)
 
 # Inference Benchmark
 INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)

@@ -17,6 +17,7 @@ from pathlib import Path
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
+from ...utils.flags import USING_HUGGINGFACE
 
 OFFICIAL_MODELS = {
     "ResNet18": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet18_infer.tar",
@@ -342,12 +343,21 @@ class OfficialModelsDict(dict):
     """Official Models Dict"""
 
     def __getitem__(self, key):
-        url = super().__getitem__(key)
         save_dir = Path(CACHE_DIR) / "official_models"
         logging.info(
             f"Using official model ({key}), the model files will be automatically downloaded and saved in {save_dir}."
         )
-        download_and_extract(url, save_dir, f"{key}", overwrite=False)
+        if not USING_HUGGINGFACE:
+            url = super().__getitem__(key)
+            download_and_extract(url, save_dir, f"{key}", overwrite=False)
+        else:
+            from huggingface_hub import snapshot_download
+
+            snapshot_download(
+                repo_id="baidu/{key}",
+                local_dir=save_dir,
+                max_workers=4,
+            )
         return save_dir / f"{key}"
 
 
