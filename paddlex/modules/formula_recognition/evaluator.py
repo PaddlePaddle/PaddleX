@@ -25,7 +25,7 @@ class FormulaRecEvaluator(BaseEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         if self.global_config["model"] == "LaTeX_OCR_rec":
@@ -66,7 +66,7 @@ class FormulaRecEvaluator(BaseEvaluator):
             self.pdx_config.update_delimiter(self.eval_config.delimiter, mode="eval")
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

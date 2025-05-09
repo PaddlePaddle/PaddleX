@@ -23,7 +23,7 @@ class KeypointEvaluator(DetEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         metric = self.pdx_config.metric

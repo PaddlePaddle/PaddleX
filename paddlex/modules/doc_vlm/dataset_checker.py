@@ -18,12 +18,12 @@ from .model_list import MODELS
 
 
 class DocVLMDatasetChecker(BaseDatasetChecker):
-    """Dataset Checker for Document Vision Languange Model"""
+    """Dataset Checker for Document Vision Language Model"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
         raise UnsupportedAPIError(
-            "document vision languange models do not support data check for now."
+            "document vision language models do not support data check for now."
         )

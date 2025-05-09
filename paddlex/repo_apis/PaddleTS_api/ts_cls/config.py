@@ -24,7 +24,7 @@ class TSClassifyConfig(BaseTSConfig):
 
     def update_dataset(self, dataset_dir: str, dataset_type: str = None):
         """
-        upadte the dataset
+        update the dataset
 
         Args:
             dataset_dir (str): dataset root path
@@ -41,7 +41,7 @@ class TSClassifyConfig(BaseTSConfig):
         update basic info including time_col, freq, target_cols.
 
         Args:
-            info_params (dict): upadte basic info
+            info_params (dict): update basic info
 
         Raises:
             TypeError: if info_params is not dict, raising TypeError

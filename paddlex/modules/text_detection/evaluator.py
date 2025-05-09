@@ -23,14 +23,14 @@ class TextDetEvaluator(BaseEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
 
         self.pdx_config.update_dataset(self.global_config.dataset_dir, "TextDetDataset")
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.
