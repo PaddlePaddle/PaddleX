@@ -109,7 +109,7 @@ paddlex --install hpi-cpu
 - [安装 CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 - [安装 cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
 
-如果使用的是飞桨框架官方镜像，则镜像中的 CUDA 和 cuDNN 版本已经是满足要求的，无需重新安装。
+如果使用的是飞桨框架官方镜像，则镜像中的 CUDA 和 cuDNN 版本已经是满足要求的，无需额外安装。
 
 如果通过 pip 安装飞桨，通常 CUDA、cuDNN 的相关 Python 包将被自动安装。在这种情况下，**仍需要通过安装非 Python 专用的 CUDA 与 cuDNN**。同时，建议安装的 CUDA 和 cuDNN 版本与环境中存在的 Python 包版本保持一致，以避免不同版本的库共存导致的潜在问题。可以通过如下方式可以查看 CUDA 和 cuDNN 相关 Python 包的版本：
 

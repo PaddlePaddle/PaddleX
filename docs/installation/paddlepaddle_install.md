@@ -47,7 +47,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 在刚刚启动的 `paddlex` 容器中执行下面指令安装 TensorRT，即可使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)：
 
 ```bash
-python -m pip install /usr/local/TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
+python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x86_64.whl
 ```
 
 ## 基于 pip 安装飞桨
@@ -94,7 +94,7 @@ tar xvf TensorRT-8.6.1.6.Linux.x86_64-gnu.cuda-11.8.tar.gz
 # 安装 TensorRT wheel 包
 python -m pip install TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
 # 添加 TensorRT 的 `lib` 目录的绝对路径到 LD_LIBRARY_PATH 中
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:TensorRT-8.6.1.6/lib
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:TensorRT-8.6.1.6/lib"
 ```
 
 > ❗ <b>注</b>：如果在安装的过程中，出现任何问题，欢迎在Paddle仓库中[提Issue](https://github.com/PaddlePaddle/Paddle/issues)。
