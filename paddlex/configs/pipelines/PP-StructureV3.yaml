@@ -85,6 +85,11 @@ SubModules:
       20: "union" # header_image
       21: "union" # footer_image
       22: "union" # aside_text
+  ChartRecognition:
+    module_name: chart_recognition
+    model_name: PP-Chart2Table
+    model_dir: null
+    batch_size: 1 
 
 SubPipelines:
   DocPreprocessor:

@@ -326,6 +326,15 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
                 return "\n".join(img_tags)
 
+            def format_chart():
+                if not self["model_settings"].get("use_chart_recognition", False):
+                    return format_image()
+                lines_list = block.content.split("\n")
+                column_num = len(lines_list[0].split("|"))
+                lines_list.insert(1, "|".join(["---"] * column_num))
+                lines_list = [f"|{line}|" for line in lines_list]
+                return "\n".join(lines_list)
+
             def format_first_line(templates, format_func, spliter):
                 lines = block.content.split(spliter)
                 for idx in range(len(lines)):
@@ -420,7 +429,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     "\n", "  \n"
                 ),
                 "image": lambda: format_image(),
-                "chart": lambda: format_image(),
+                "chart": lambda: format_chart(),
                 "formula": lambda: f"$${block.content}$$",
                 "table": format_table,
                 "reference": lambda: format_first_line(
