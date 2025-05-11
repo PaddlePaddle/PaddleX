@@ -312,7 +312,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 img_tags = []
                 image_path = "".join(block.image.keys())
                 img_tags.append(
-                    '<div style="text-align: center;"><img src="{}" alt="Image" style="width: auto; height: auto;" /></div>'.format(
+                    '<div style="text-align: center;"><img src="{}" alt="Image" width="100%" height="100%" /></div>'.format(
                         image_path.replace("-\n", "").replace("\n", " "),
                     ),
                 )
