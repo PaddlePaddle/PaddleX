@@ -73,7 +73,7 @@ public:
    *
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] ocr_result The output of OCR
-   * recognition model result will be writen to this structure. \return true if
+   * recognition model result will be written to this structure. \return true if
    * the prediction is successed, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img, vision::OCRResult *ocr_result);
@@ -83,7 +83,7 @@ public:
    *
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] ocr_result The output of OCR
-   * classification model result will be writen to this structure. \return true
+   * classification model result will be written to this structure. \return true
    * if the prediction is successed, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,

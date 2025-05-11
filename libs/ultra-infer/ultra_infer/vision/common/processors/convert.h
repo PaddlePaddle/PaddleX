@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace vision {
-/*! @brief Processor for convert images with given paramters.
+/*! @brief Processor for convert images with given parameters.
  */
 class ULTRAINFER_DECL Convert : public Processor {
 public:

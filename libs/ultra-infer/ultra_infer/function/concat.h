@@ -19,7 +19,7 @@
 namespace ultra_infer {
 namespace function {
 
-/** Excute the concatenate operation for input FDTensor along given axis.
+/** Execute the concatenate operation for input FDTensor along given axis.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param axis Axis which will be concatenated.

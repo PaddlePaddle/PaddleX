@@ -63,14 +63,14 @@ class PIPNet(UltraInferModel):
     @property
     def mean_vals(self):
         """
-        Returns the mean value of normlization, default mean_vals = [0.485f, 0.456f, 0.406f];
+        Returns the mean value of normalization, default mean_vals = [0.485f, 0.456f, 0.406f];
         """
         return self._model.mean_vals
 
     @property
     def std_vals(self):
         """
-        Returns the std value of normlization, default std_vals = [0.229f, 0.224f, 0.225f];
+        Returns the std value of normalization, default std_vals = [0.229f, 0.224f, 0.225f];
         """
         return self._model.std_vals
 

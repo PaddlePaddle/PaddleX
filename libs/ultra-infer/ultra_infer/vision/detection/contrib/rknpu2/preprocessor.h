@@ -73,7 +73,7 @@ protected:
   // padding value, size should be the same as channels
   std::vector<float> padding_value_;
 
-  // only pad to the minimum rectange which height and width is times of stride
+  // only pad to the minimum rectangle which height and width is times of stride
   bool is_mini_pad_;
 
   // while is_mini_pad = false and is_no_pad = true,
@@ -87,7 +87,7 @@ protected:
   // padding stride, for is_mini_pad
   int stride_;
 
-  // for offseting the boxes by classes when using NMS
+  // for offsetting the boxes by classes when using NMS
   float max_wh_;
 
   std::vector<std::vector<int>> pad_hw_values_;

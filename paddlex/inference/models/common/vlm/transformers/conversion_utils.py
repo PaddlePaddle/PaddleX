@@ -51,7 +51,7 @@ class StateDictNameMapping:
         return self.action == "transpose"
 
     def should_merge_last_two_dim(self) -> bool:
-        """check that wether merge last two dim"""
+        """check that whether merge last two dim"""
         return self.action == "merge_last_two_dim"
 
     def run(self, state_dict: dict[str, ndarray], name: str) -> ndarray:
@@ -104,7 +104,7 @@ class StateDictNameMapping:
 class ConversionMixin:
     @classmethod
     def support_conversion(cls, config: PretrainedConfig) -> bool:
-        """check wether the model support conversion"""
+        """check whether the model support conversion"""
         try:
             # try to get the name-mapping info
             _ = cls._get_name_mappings(config)
@@ -166,7 +166,7 @@ class ConversionMixin:
             with device_guard("cpu"):
                 state_dict = paddle.load(weight_file, return_numpy=False)
             logging.info(
-                "Starting to convert orignal state_dict to tensor parallel state_dict."
+                "Starting to convert original state_dict to tensor parallel state_dict."
             )
 
         state_keys_map = cls._resolve_prefix_keys(
