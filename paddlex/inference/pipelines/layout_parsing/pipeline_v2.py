@@ -114,6 +114,11 @@ class LayoutParsingPipelineV2(BasePipeline):
             True,
         )
 
+        self.pretty_markdown = config.get(
+            "pretty_markdown",
+            True,
+        )
+
         if self.use_doc_preprocessor:
             doc_preprocessor_config = config.get("SubPipelines", {}).get(
                 "DocPreprocessor",
@@ -938,6 +943,9 @@ class LayoutParsingPipelineV2(BasePipeline):
 
         if use_chart_recognition is None:
             use_chart_recognition = self.use_chart_recognition
+
+        if pretty_markdown is None:
+            pretty_markdown = self.pretty_markdown
 
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,

@@ -6,6 +6,7 @@ use_general_ocr: True
 use_seal_recognition: True
 use_table_recognition: True
 use_formula_recognition: True
+pretty_markdown: True
 
 SubModules:
   LayoutDetection:
