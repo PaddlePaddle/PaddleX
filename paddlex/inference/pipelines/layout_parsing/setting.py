@@ -12,32 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-parameters_config = {
-    "page": {},
-    "region": {
-        "match_block_overlap_ratio_threshold": 0.8,
-        "split_block_overlap_ratio_threshold": 0.4,
-    },
-    "block": {
-        "title_conversion_area_ratio_threshold": 0.3,  # update paragraph_title -> doc_title
-    },
-    "line": {
-        "line_height_iou_threshold": 0.6,  # For line segmentation of OCR results
-        "delimiter_map": {
-            "doc_title": " ",
-            "content": "\n",
-        },
-    },
-    "word": {
-        "delimiter": " ",
-    },
-    "order": {
-        "block_label_match_iou_threshold": 0.1,
-        "block_title_match_iou_threshold": 0.1,
+
+XYCUT_SETTINGS = {
+    "child_block_overlap_ratio_threshold": 0.1,
+    "edge_distance_compare_tolerance_len": 2,
+    "distance_weight_map": {
+        "edge_weight": 10**4,
+        "up_edge_weight": 1,
+        "down_edge_weight": 0.0001,
     },
 }
 
-block_label_mapping = {
+REGION_SETTINGS = {
+    "match_block_overlap_ratio_threshold": 0.6,
+    "split_block_overlap_ratio_threshold": 0.4,
+}
+
+BLOCK_SETTINGS = {
+    "title_conversion_area_ratio_threshold": 0.3,  # update paragraph_title -> doc_title
+}
+
+LINE_SETTINGS = {
+    "line_height_iou_threshold": 0.6,  # For line segmentation of OCR results
+    "delimiter_map": {
+        "doc_title": " ",
+        "content": "\n",
+    },
+}
+
+BLOCK_LABEL_MAP = {
     "doc_title_labels": ["doc_title"],  # 文档标题
     "paragraph_title_labels": [
         "paragraph_title",

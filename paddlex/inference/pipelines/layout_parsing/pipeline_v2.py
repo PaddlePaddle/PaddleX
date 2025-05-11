@@ -30,6 +30,7 @@ from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingBlock, LayoutParsingRegion, LayoutParsingResultV2
+from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, LINE_SETTINGS, REGION_SETTINGS
 from .utils import (
     caculate_bbox_area,
     calculate_minimum_enclosing_bbox,
@@ -260,8 +261,6 @@ class LayoutParsingPipelineV2(BasePipeline):
     def standardized_data(
         self,
         image: list,
-        parameters_config: dict,
-        block_label_mapping: dict,
         region_det_res: DetResult,
         layout_det_res: DetResult,
         overall_ocr_res: OCRResult,
@@ -360,7 +359,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             paragraph_title_block_area = caculate_bbox_area(
                 layout_det_res["boxes"][paragraph_title_list[0]]["coordinate"]
             )
-            title_area_max_block_threshold = parameters_config["block"].get(
+            title_area_max_block_threshold = BLOCK_SETTINGS.get(
                 "title_conversion_area_ratio_threshold", 0.3
             )
             if (
@@ -441,7 +440,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     break
             if not has_text and layout_det_res["boxes"][layout_box_idx][
                 "label"
-            ] not in block_label_mapping.get("vision_labels", []):
+            ] not in BLOCK_LABEL_MAP.get("vision_labels", []):
                 crop_box = layout_det_res["boxes"][layout_box_idx]["coordinate"]
                 x1, y1, x2, y2 = [int(i) for i in crop_box]
                 crop_img = np.array(image)[y1:y2, x1:x2]
@@ -506,7 +505,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     overlap_ratio = calculate_overlap_ratio(
                         region_bbox, block_bboxes[block_idx], mode="small"
                     )
-                    if overlap_ratio > parameters_config["region"].get(
+                    if overlap_ratio > REGION_SETTINGS.get(
                         "match_block_overlap_ratio_threshold", 0.8
                     ):
                         region_to_block_map[region_idx].append(block_idx)
@@ -540,7 +539,6 @@ class LayoutParsingPipelineV2(BasePipeline):
                                     image.shape[0],
                                     block_idxes_set,
                                     block_bboxes,
-                                    parameters_config,
                                 )
                             )
                     if len(matched_idxes) == 0:
@@ -570,7 +568,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         input_img: np.ndarray,
         text_rec_model: Any,
         text_rec_score_thresh: Union[float, None] = None,
-        orientation: str = "vertical",
+        direction: str = "vertical",
     ) -> None:
         """
         Sort a line of text spans based on their vertical position within the layout bounding box.
@@ -583,8 +581,8 @@ class LayoutParsingPipelineV2(BasePipeline):
         Returns:
             list: The sorted line of text spans.
         """
-        sort_index = 0 if orientation == "horizontal" else 1
-        splited_boxes = split_boxes_by_projection(line, orientation)
+        sort_index = 0 if direction == "horizontal" else 1
+        splited_boxes = split_boxes_by_projection(line, direction)
         splited_lines = []
         if len(line) != len(splited_boxes):
             splited_boxes.sort(key=lambda span: span[0][sort_index])
@@ -614,7 +612,6 @@ class LayoutParsingPipelineV2(BasePipeline):
     def get_block_rec_content(
         self,
         image: list,
-        line_parameters_config: dict,
         ocr_rec_res: dict,
         block: LayoutParsingBlock,
         text_rec_model: Any,
@@ -625,37 +622,49 @@ class LayoutParsingPipelineV2(BasePipeline):
             block.content = ""
             return block
 
-        lines, text_orientation = group_boxes_into_lines(
+        lines, text_direction = group_boxes_into_lines(
             ocr_rec_res,
-            line_parameters_config.get("line_height_iou_threshold", 0.8),
+            LINE_SETTINGS.get("line_height_iou_threshold", 0.8),
         )
 
         if block.label == "reference":
             rec_boxes = ocr_rec_res["boxes"]
             block_right_coordinate = max([box[2] for box in rec_boxes])
-            last_line_span_limit = 20
         else:
             block_right_coordinate = block.bbox[2]
-            last_line_span_limit = 10
 
         # format line
         text_lines = []
         need_new_line_num = 0
-        sort_index = 0 if text_orientation == "horizontal" else 1
+        start_index = 0 if text_direction == "horizontal" else 1
+        secondary_direction_start_index = 1 if text_direction == "horizontal" else 0
+        line_height_list, line_width_list = [], []
         for idx, line in enumerate(lines):
-            line.sort(key=lambda span: span[0][sort_index])
+            line.sort(key=lambda span: span[0][start_index])
 
+            text_bboxes_height = [
+                span[0][secondary_direction_start_index + 2]
+                - span[0][secondary_direction_start_index]
+                for span in line
+            ]
+            text_bboxes_width = [
+                span[0][start_index + 2] - span[0][start_index] for span in line
+            ]
+
+            line_height = np.mean(text_bboxes_height)
+            line_height_list.append(line_height)
+            line_width_list.append(np.mean(text_bboxes_width))
             # merge formula and text
             ocr_labels = [span[2] for span in line]
             if "formula" in ocr_labels:
                 line = self.sort_line_by_projection(
-                    line, image, text_rec_model, text_rec_score_thresh, text_orientation
+                    line, image, text_rec_model, text_rec_score_thresh, text_direction
                 )
 
             line_text, need_new_line = format_line(
                 line,
                 block_right_coordinate,
-                last_line_span_limit=last_line_span_limit,
+                last_line_span_limit=line_height * 1.5,
                 block_label=block.label,
             )
             if need_new_line:
@@ -668,21 +677,21 @@ class LayoutParsingPipelineV2(BasePipeline):
                 block.seg_end_coordinate = line_end_coordinate
             text_lines.append(line_text)
 
-        delim = line_parameters_config["delimiter_map"].get(block.label, "")
+        delim = LINE_SETTINGS["delimiter_map"].get(block.label, "")
         if need_new_line_num > len(text_lines) * 0.5 and delim == "":
             delim = "\n"
         content = delim.join(text_lines)
         block.content = content
         block.num_of_lines = len(text_lines)
-        block.orientation = text_orientation
+        block.direction = text_direction
+        block.text_line_height = np.mean(line_height_list)
+        block.text_line_width = np.mean(line_width_list)
 
         return block
 
     def get_layout_parsing_blocks(
         self,
         image: list,
-        parameters_config: dict,
-        block_label_mapping: dict,
         region_block_ocr_idx_map: dict,
         region_det_res: DetResult,
         overall_ocr_res: OCRResult,
@@ -759,7 +768,6 @@ class LayoutParsingPipelineV2(BasePipeline):
                 block = self.get_block_rec_content(
                     image=image,
                     block=block,
-                    line_parameters_config=parameters_config["line"],
                     ocr_rec_res=rec_res,
                     text_rec_model=text_rec_model,
                     text_rec_score_thresh=text_rec_score_thresh,
@@ -781,9 +789,8 @@ class LayoutParsingPipelineV2(BasePipeline):
                 for idx in region_block_ocr_idx_map["region_to_block_map"][region_idx]
             ]
             region = LayoutParsingRegion(
-                region_bbox=region_bbox,
+                bbox=region_bbox,
                 blocks=region_blocks,
-                block_label_mapping=block_label_mapping,
             )
             region_list.append(region)
 
@@ -818,14 +825,11 @@ class LayoutParsingPipelineV2(BasePipeline):
         Returns:
             list: A list of dictionaries representing the layout parsing result.
         """
-        from .setting import block_label_mapping, parameters_config
 
         # Standardize data
         region_block_ocr_idx_map, region_det_res, layout_det_res = (
             self.standardized_data(
                 image=image,
-                parameters_config=parameters_config,
-                block_label_mapping=block_label_mapping,
                 region_det_res=region_det_res,
                 layout_det_res=layout_det_res,
                 overall_ocr_res=overall_ocr_res,
@@ -838,8 +842,6 @@ class LayoutParsingPipelineV2(BasePipeline):
         # Format layout parsing block
         region_list = self.get_layout_parsing_blocks(
             image=image,
-            parameters_config=parameters_config,
-            block_label_mapping=block_label_mapping,
             region_block_ocr_idx_map=region_block_ocr_idx_map,
             region_det_res=region_det_res,
             overall_ocr_res=overall_ocr_res,
@@ -854,11 +856,10 @@ class LayoutParsingPipelineV2(BasePipeline):
         for region in region_list:
             parsing_res_list.extend(region.sort())
 
-        visualize_index_labels = block_label_mapping["visualize_index_labels"]
         index = 1
         for block in parsing_res_list:
-            if block.label in visualize_index_labels:
-                block.index = index
+            if block.label in BLOCK_LABEL_MAP["visualize_index_labels"]:
+                block.order_index = index
                 index += 1
 
         return parsing_res_list
@@ -956,8 +957,6 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
         is_pretty_markdown: Union[bool, None] = None,
-        use_layout_gt: bool = False,
-        layout_gt_dir: Union[str, None] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -1032,65 +1031,16 @@ class LayoutParsingPipelineV2(BasePipeline):
 
             doc_preprocessor_image = doc_preprocessor_res["output_img"]
 
-            use_layout_gt = use_layout_gt
-            if not use_layout_gt:
-                layout_det_res = next(
-                    self.layout_det_model(
-                        doc_preprocessor_image,
-                        threshold=layout_threshold,
-                        layout_nms=layout_nms,
-                        layout_unclip_ratio=layout_unclip_ratio,
-                        layout_merge_bboxes_mode=layout_merge_bboxes_mode,
-                    )
+            layout_det_res = next(
+                self.layout_det_model(
+                    doc_preprocessor_image,
+                    threshold=layout_threshold,
+                    layout_nms=layout_nms,
+                    layout_unclip_ratio=layout_unclip_ratio,
+                    layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                 )
-            else:
-                import json
-                import os
+            )
 
-                from ...models.object_detection.result import DetResult
-
-                label_dir = layout_gt_dir
-                notes_path = f"{label_dir}/notes.json"
-                labels = f"{label_dir}/labels"
-                gt_file = os.path.basename(input)[:-4] + ".txt"
-                gt_path = f"{labels}/{gt_file}"
-                with open(notes_path, "r") as f:
-                    notes = json.load(f)
-                categories_map = {}
-                for categories in notes["categories"]:
-                    id = int(categories["id"])
-                    name = categories["name"]
-                    categories_map[id] = name
-                with open(gt_path, "r") as f:
-                    lines = f.readlines()
-                layout_det_res_dic = {
-                    "input_img": doc_preprocessor_image,
-                    "page_index": None,
-                    "boxes": [],
-                }
-                for line in lines:
-                    line = line.strip().split(" ")
-                    category_id = int(line[0])
-                    label = categories_map[category_id]
-                    img_h, img_w = doc_preprocessor_image.shape[:2]
-                    center_x = float(line[1]) * img_w
-                    center_y = float(line[2]) * img_h
-                    w = float(line[3]) * img_w
-                    h = float(line[4]) * img_h
-                    x0 = center_x - w / 2
-                    y0 = center_y - h / 2
-                    x1 = center_x + w / 2
-                    y1 = center_y + h / 2
-                    box = [x0, y0, x1, y1]
-                    layout_det_res_dic["boxes"].append(
-                        {
-                            "cls_id": category_id,
-                            "label": label,
-                            "coordinate": box,
-                            "score": 1.0,
-                        }
-                    )
-                layout_det_res = DetResult(layout_det_res_dic)
             imgs_in_doc = gather_imgs(doc_preprocessor_image, layout_det_res["boxes"])
 
             if model_settings["use_region_detection"]:
@@ -1139,7 +1089,13 @@ class LayoutParsingPipelineV2(BasePipeline):
                     ),
                 )
             else:
-                overall_ocr_res = {}
+                overall_ocr_res = {
+                    "dt_polys": [],
+                    "rec_texts": [],
+                    "rec_scores": [],
+                    "rec_polys": [],
+                    "rec_boxes": np.array([]),
+                }
 
             overall_ocr_res["rec_labels"] = ["text"] * len(overall_ocr_res["rec_texts"])
 
@@ -1157,9 +1113,14 @@ class LayoutParsingPipelineV2(BasePipeline):
                     table_contents["rec_texts"].append(
                         f"${formula_res['rec_formula']}$"
                     )
-                    table_contents["rec_boxes"] = np.vstack(
-                        (table_contents["rec_boxes"], [formula_res["dt_polys"]])
-                    )
+                    if table_contents["rec_boxes"].size == 0:
+                        table_contents["rec_boxes"] = np.array(
+                            [formula_res["dt_polys"]]
+                        )
+                    else:
+                        table_contents["rec_boxes"] = np.vstack(
+                            (table_contents["rec_boxes"], [formula_res["dt_polys"]])
+                        )
                     table_contents["rec_polys"].append(poly_points)
                     table_contents["rec_scores"].append(1)
 

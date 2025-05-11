@@ -27,6 +27,7 @@ from PIL import Image
 
 from ..components import convert_points_to_boxes
 from ..ocr.result import OCRResult
+from .setting import REGION_SETTINGS
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
@@ -173,7 +174,7 @@ def sorted_layout_boxes(res, w):
 def calculate_projection_overlap_ratio(
     bbox1: List[float],
     bbox2: List[float],
-    orientation: str = "horizontal",
+    direction: str = "horizontal",
     mode="union",
 ) -> float:
     """
@@ -182,13 +183,13 @@ def calculate_projection_overlap_ratio(
     Args:
         bbox1 (List[float]): First bounding box [x_min, y_min, x_max, y_max].
         bbox2 (List[float]): Second bounding box [x_min, y_min, x_max, y_max].
-        orientation (str): orientation of the projection, "horizontal" or "vertical".
+        direction (str): direction of the projection, "horizontal" or "vertical".
 
     Returns:
         float: Line overlap ratio. Returns 0 if there is no overlap.
     """
     start_index, end_index = 1, 3
-    if orientation == "horizontal":
+    if direction == "horizontal":
         start_index, end_index = 0, 2
 
     intersection_start = max(bbox1[start_index], bbox2[start_index])
@@ -241,8 +242,8 @@ def calculate_overlap_ratio(
 
     inter_area = inter_width * inter_height
 
-    bbox1_area = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
-    bbox2_area = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
+    bbox1_area = caculate_bbox_area(bbox1)
+    bbox2_area = caculate_bbox_area(bbox2)
 
     if mode == "union":
         ref_area = bbox1_area + bbox2_area - inter_area
@@ -271,7 +272,7 @@ def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
     ]
     text_orientation = calculate_text_orientation(text_boxes)
 
-    match_orientation = "vertical" if text_orientation == "horizontal" else "horizontal"
+    match_direction = "vertical" if text_orientation == "horizontal" else "horizontal"
 
     spans = list(zip(rec_boxes, rec_texts, rec_labels))
     sort_index = 1
@@ -284,14 +285,14 @@ def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
 
     lines = []
     line = [spans[0]]
-    line_region_box = spans[0][0][:]
+    line_region_box = spans[0][0].copy()
 
     # merge line
     for span in spans[1:]:
         rec_bbox = span[0]
         if (
             calculate_projection_overlap_ratio(
-                line_region_box, rec_bbox, match_orientation, mode="small"
+                line_region_box, rec_bbox, match_direction, mode="small"
             )
             >= line_height_iou_threshold
         ):
@@ -301,7 +302,7 @@ def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
         else:
             lines.append(line)
             line = [span]
-            line_region_box = rec_bbox[:]
+            line_region_box = rec_bbox.copy()
 
     lines.append(line)
     return lines, text_orientation
@@ -365,12 +366,31 @@ def is_english_letter(char):
     return bool(re.match(r"^[A-Za-z]$", char))
 
 
+def is_non_breaking_punctuation(char):
+    """
+    判断一个字符是否是不需要换行的标点符号，包括全角和半角的符号。
+
+    :param char: str, 单个字符
+    :return: bool, 如果字符是不需要换行的标点符号，返回True，否则返回False
+    """
+    non_breaking_punctuations = {
+        ",",  # 半角逗号
+        "，",  # 全角逗号
+        "、",  # 顿号
+        ";",  # 半角分号
+        "；",  # 全角分号
+        ":",  # 半角冒号
+        "：",  # 全角冒号
+    }
+
+    return char in non_breaking_punctuations
+
+
 def format_line(
     line: List[List[Union[List[int], str]]],
     block_right_coordinate: int,
     last_line_span_limit: int = 10,
     block_label: str = "text",
-    # delimiter_map: Dict = {},
 ) -> None:
     """
     Format a line of text spans based on layout constraints.
@@ -402,6 +422,7 @@ def format_line(
         and not line_text.endswith("-")
         and len(line_text) > 0
         and not is_english_letter(line_text[-1])
+        and not is_non_breaking_punctuation(line_text[-1])
     ):
         need_new_line = True
 
@@ -415,37 +436,35 @@ def format_line(
     return line_text, need_new_line
 
 
-def split_boxes_by_projection(spans: List[List[int]], orientation, offset=1e-5):
+def split_boxes_by_projection(spans: List[List[int]], direction, offset=1e-5):
     """
-    Check if there is any complete containment in the x-orientation
+    Check if there is any complete containment in the x-direction
     between the bounding boxes and split the containing box accordingly.
 
     Args:
         spans (list of lists): Each element is a list containing an ndarray of length 4, a text string, and a label.
-        orientation: 'horizontal' or 'vertical', indicating whether the spans are arranged horizontally or vertically.
+        direction: 'horizontal' or 'vertical', indicating whether the spans are arranged horizontally or vertically.
         offset (float): A small offset value to ensure that the split boxes are not too close to the original boxes.
     Returns:
         A new list of boxes, including split boxes, with the same `rec_text` and `label` attributes.
     """
 
     def is_projection_contained(box_a, box_b, start_idx, end_idx):
-        """Check if box_a completely contains box_b in the x-orientation."""
+        """Check if box_a completely contains box_b in the x-direction."""
         return box_a[start_idx] <= box_b[start_idx] and box_a[end_idx] >= box_b[end_idx]
 
     new_boxes = []
-    if orientation == "horizontal":
+    if direction == "horizontal":
         projection_start_index, projection_end_index = 0, 2
     else:
         projection_start_index, projection_end_index = 1, 3
 
     for i in range(len(spans)):
         span = spans[i]
-        box_a, text, label = span
         is_split = False
-        for j in range(len(spans)):
-            if i == j:
-                continue
+        for j in range(i, len(spans)):
             box_b = spans[j][0]
+            box_a, text, label = span
             if is_projection_contained(
                 box_a, box_b, projection_start_index, projection_end_index
             ):
@@ -458,12 +477,13 @@ def split_boxes_by_projection(spans: List[List[int]], orientation, offset=1e-5):
                         - box_a[projection_start_index]
                     )
                     if w > 1:
-                        box_a[projection_end_index] = (
+                        new_bbox = box_a.copy()
+                        new_bbox[projection_end_index] = (
                             box_b[projection_start_index] - offset
                         )
                         new_boxes.append(
                             [
-                                np.array(box_a),
+                                np.array(new_bbox),
                                 text,
                                 label,
                             ]
@@ -562,8 +582,8 @@ def _get_minbox_if_overlap_by_ratio(
             The selected bounding box or None if the overlap ratio is not exceeded.
     """
     # Calculate the areas of both bounding boxes
-    area1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
-    area2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
+    area1 = caculate_bbox_area(bbox1)
+    area2 = caculate_bbox_area(bbox2)
     # Calculate the overlap ratio using a helper function
     overlap_ratio = calculate_overlap_ratio(bbox1, bbox2, mode="small")
     # Check if the overlap ratio exceeds the threshold
@@ -683,7 +703,6 @@ def shrink_supplement_region_bbox(
     image_height,
     block_idxes_set,
     block_bboxes,
-    parameters_config,
 ) -> List:
     """
     Shrink the supplement region bbox according to the reference region bbox and match the block bboxes.
@@ -695,7 +714,6 @@ def shrink_supplement_region_bbox(
         image_height (int): The height of the image.
         block_idxes_set (set): The indexes of the blocks that intersect with the region bbox.
         block_bboxes (dict): The dictionary of block bboxes.
-        parameters_config (dict): The configuration parameters.
 
     Returns:
         list: The new region bbox and the matched block idxes.
@@ -723,11 +741,11 @@ def shrink_supplement_region_bbox(
             overlap_ratio = calculate_overlap_ratio(
                 tmp_region_bbox, block_bboxes[block_idx], mode="small"
             )
-            if overlap_ratio > parameters_config["region"].get(
+            if overlap_ratio > REGION_SETTINGS.get(
                 "match_block_overlap_ratio_threshold", 0.8
             ):
                 iner_block_idxes.append(block_idx)
-            elif overlap_ratio > parameters_config["region"].get(
+            elif overlap_ratio > REGION_SETTINGS.get(
                 "split_block_overlap_ratio_threshold", 0.4
             ):
                 split_block_idxes.append(block_idx)
@@ -755,7 +773,6 @@ def shrink_supplement_region_bbox(
                         image_height,
                         iner_block_idxes,
                         block_bboxes,
-                        parameters_config,
                     )
                     if len(iner_idxes) == 0:
                         continue
@@ -799,50 +816,68 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
         ]
         ocr_res["dt_polys"].append(poly_points)
         ocr_res["rec_texts"].append(f"{formula_res['rec_formula']}")
-        ocr_res["rec_boxes"] = np.vstack(
-            (ocr_res["rec_boxes"], [formula_res["dt_polys"]])
-        )
+        if ocr_res["rec_boxes"].size == 0:
+            ocr_res["rec_boxes"] = np.array(formula_res["dt_polys"])
+        else:
+            ocr_res["rec_boxes"] = np.vstack(
+                (ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+            )
         ocr_res["rec_labels"].append("formula")
         ocr_res["rec_polys"].append(poly_points)
         ocr_res["rec_scores"].append(1)
 
 
 def caculate_bbox_area(bbox):
-    x1, y1, x2, y2 = bbox
+    x1, y1, x2, y2 = map(float, bbox)
     area = abs((x2 - x1) * (y2 - y1))
     return area
 
 
-def get_show_color(label: str) -> Tuple:
-    label_colors = {
-        # Medium Blue (from 'titles_list')
-        "paragraph_title": (102, 102, 255, 100),
-        "doc_title": (255, 248, 220, 100),  # Cornsilk
-        # Light Yellow (from 'tables_caption_list')
-        "table_title": (255, 255, 102, 100),
-        # Sky Blue (from 'imgs_caption_list')
-        "figure_title": (102, 178, 255, 100),
-        "chart_title": (221, 160, 221, 100),  # Plum
-        "vision_footnote": (144, 238, 144, 100),  # Light Green
-        # Deep Purple (from 'texts_list')
-        "text": (153, 0, 76, 100),
-        # Bright Green (from 'interequations_list')
-        "formula": (0, 255, 0, 100),
-        "abstract": (255, 239, 213, 100),  # Papaya Whip
-        # Medium Green (from 'lists_list' and 'indexs_list')
-        "content": (40, 169, 92, 100),
-        # Neutral Gray (from 'dropped_bbox_list')
-        "seal": (158, 158, 158, 100),
-        # Olive Yellow (from 'tables_body_list')
-        "table": (204, 204, 0, 100),
-        # Bright Green (from 'imgs_body_list')
-        "image": (153, 255, 51, 100),
-        # Bright Green (from 'imgs_body_list')
-        "figure": (153, 255, 51, 100),
-        "chart": (216, 191, 216, 100),  # Thistle
-        # Pale Yellow-Green (from 'tables_footnote_list')
-        "reference": (229, 255, 204, 100),
-        "algorithm": (255, 250, 240, 100),  # Floral White
-    }
+def get_show_color(label: str, order_label=False) -> Tuple:
+    if order_label:
+        label_colors = {
+            "doc_title": (255, 248, 220, 100),  # Cornsilk
+            "doc_title_text": (255, 239, 213, 100),
+            "paragraph_title": (102, 102, 255, 100),
+            "sub_paragraph_title": (102, 178, 255, 100),
+            "vision": (153, 255, 51, 100),
+            "vision_title": (144, 238, 144, 100),  # Light Green
+            "vision_footnote": (144, 238, 144, 100),  # Light Green
+            "normal_text": (153, 0, 76, 100),
+            "cross_layout": (53, 218, 207, 100),  # Thistle
+            "cross_reference": (221, 160, 221, 100),  # Floral White
+        }
+    else:
+        label_colors = {
+            # Medium Blue (from 'titles_list')
+            "paragraph_title": (102, 102, 255, 100),
+            "doc_title": (255, 248, 220, 100),  # Cornsilk
+            # Light Yellow (from 'tables_caption_list')
+            "table_title": (255, 255, 102, 100),
+            # Sky Blue (from 'imgs_caption_list')
+            "figure_title": (102, 178, 255, 100),
+            "chart_title": (221, 160, 221, 100),  # Plum
+            "vision_footnote": (144, 238, 144, 100),  # Light Green
+            # Deep Purple (from 'texts_list')
+            "text": (153, 0, 76, 100),
+            # Bright Green (from 'interequations_list')
+            "formula": (0, 255, 0, 100),
+            "abstract": (255, 239, 213, 100),  # Papaya Whip
+            # Medium Green (from 'lists_list' and 'indexs_list')
+            "content": (40, 169, 92, 100),
+            # Neutral Gray (from 'dropped_bbox_list')
+            "seal": (158, 158, 158, 100),
+            # Olive Yellow (from 'tables_body_list')
+            "table": (204, 204, 0, 100),
+            # Bright Green (from 'imgs_body_list')
+            "image": (153, 255, 51, 100),
+            # Bright Green (from 'imgs_body_list')
+            "figure": (153, 255, 51, 100),
+            "chart": (216, 191, 216, 100),  # Thistle
+            # Pale Yellow-Green (from 'tables_footnote_list')
+            "reference": (229, 255, 204, 100),
+            # "reference_content": (229, 255, 204, 100),
+            "algorithm": (255, 250, 240, 100),  # Floral White
+        }
     default_color = (158, 158, 158, 100)
     return label_colors.get(label, default_color)
