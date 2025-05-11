@@ -21,7 +21,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
-from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font
+from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font, create_font_vertical
 from ...common.result import BaseCVResult, JsonMixin
 
 if is_dep_available("opencv-contrib-python"):
@@ -106,7 +106,9 @@ class OCRResult(BaseCVResult):
                     height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
                     box[:2, 1] = np.mean(box[:, 1])
                     box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
-                draw_left.polygon(box, fill=color)
+                box_pts = [(int(x), int(y)) for x, y in box.tolist()]
+                draw_left.polygon(box_pts, fill=color)
+
                 img_right_text = draw_box_txt_fine(
                     (w, h), box, txt, SIMFANG_FONT_FILE_PATH
                 )
@@ -221,12 +223,13 @@ def draw_box_txt_fine(
     )
 
     if box_height > 2 * box_width and box_height > 30:
-        img_text = Image.new("RGB", (box_height, box_width), (255, 255, 255))
+        img_text = Image.new("RGB", (box_width, box_height), (255, 255, 255))
         draw_text = ImageDraw.Draw(img_text)
         if txt:
-            font = create_font(txt, (box_height, box_width), font_path)
-            draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font)
-        img_text = img_text.transpose(Image.ROTATE_270)
+            font = create_font_vertical(txt, (box_width, box_height), font_path)
+            draw_vertical_text(
+                draw_text, (0, 0), txt, font, fill=(0, 0, 0), line_spacing=2
+            )
     else:
         img_text = Image.new("RGB", (box_width, box_height), (255, 255, 255))
         draw_text = ImageDraw.Draw(img_text)
@@ -250,3 +253,13 @@ def draw_box_txt_fine(
         borderValue=(255, 255, 255),
     )
     return img_right_text
+
+
+@function_requires_deps("opencv-contrib-python")
+def draw_vertical_text(draw, position, text, font, fill=(0, 0, 0), line_spacing=2):
+    x, y = position
+    for char in text:
+        draw.text((x, y), char, font=font, fill=fill)
+        bbox = font.getbbox(char)
+        char_height = bbox[3] - bbox[1]
+        y += char_height + line_spacing
