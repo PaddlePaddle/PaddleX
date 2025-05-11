@@ -311,9 +311,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             def format_image_centered_by_html():
                 img_tags = []
                 image_path = "".join(block.image.keys())
+                image_width = block.image[image_path].width
+                scale = int(image_width / original_image_width * 100)
                 img_tags.append(
-                    '<div style="text-align: center;"><img src="{}" alt="Image" width="100%" height="100%" /></div>'.format(
-                        image_path.replace("-\n", "").replace("\n", " "),
+                    '<div style="text-align: center;"><img src="{}" alt="Image" width="{}%" /></div>'.format(
+                        image_path.replace("-\n", "").replace("\n", " "), scale
                     ),
                 )
                 return "\n".join(img_tags)
@@ -480,6 +482,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             )
 
         markdown_info = dict()
+        original_image_width = self["doc_preprocessor_res"]["input_img"].shape[1]
         markdown_info["markdown_texts"], (
             page_first_element_seg_start_flag,
             page_last_element_seg_end_flag,
