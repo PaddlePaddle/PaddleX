@@ -296,29 +296,29 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     " ",
                 )
 
-            # def format_centered_text():
-            #     return (
-            #         f'<div style="text-align: center;">{block.content}</div>'.replace(
-            #             "-\n",
-            #             "",
-            #         ).replace("\n", " ")
-            #         + "\n"
-            #     )
+            def format_text_centered_by_html():
+                return (
+                    f'<div style="text-align: center;">{block.content}</div>'.replace(
+                        "-\n",
+                        "",
+                    ).replace("\n", " ")
+                    + "\n"
+                )
 
-            def format_centered_text():
+            def format_text_plain():
                 return block.content
 
-            # def format_image():
-            #     img_tags = []
-            #     image_path = "".join(block.image.keys())
-            #     img_tags.append(
-            #         '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
-            #             image_path.replace("-\n", "").replace("\n", " "),
-            #         ),
-            #     )
-            #     return "\n".join(img_tags)
+            def format_image_centered_by_html():
+                img_tags = []
+                image_path = "".join(block.image.keys())
+                img_tags.append(
+                    '<div style="text-align: center;"><img src="{}" alt="Image" style="width: auto; height: auto;" /></div>'.format(
+                        image_path.replace("-\n", "").replace("\n", " "),
+                    ),
+                )
+                return "\n".join(img_tags)
 
-            def format_image():
+            def format_image_plain():
                 img_tags = []
                 image_path = "".join(block.image.keys())
                 img_tags.append(
@@ -407,6 +407,13 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
                 return seg_start_flag, seg_end_flag
 
+            if self["model_settings"].get("is_pretty_markdown", True):
+                format_text = format_text_centered_by_html
+                format_image = format_image_centered_by_html
+            else:
+                format_text = format_text_plain
+                format_image = format_image_plain
+
             handlers = {
                 "paragraph_title": lambda: format_title(block.content),
                 "abstract_title": lambda: format_title(block.content),
@@ -416,9 +423,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     "-\n",
                     "",
                 ).replace("\n", " "),
-                "table_title": lambda: format_centered_text(),
-                "figure_title": lambda: format_centered_text(),
-                "chart_title": lambda: format_centered_text(),
+                "table_title": lambda: format_text(),
+                "figure_title": lambda: format_text(),
+                "chart_title": lambda: format_text(),
                 "text": lambda: block.content.replace("\n\n", "\n").replace(
                     "\n", "\n\n"
                 ),
