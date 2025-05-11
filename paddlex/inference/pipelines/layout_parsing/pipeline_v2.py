@@ -896,7 +896,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
-        is_pretty_markdown: Union[bool, None],
+        pretty_markdown: Union[bool, None],
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -947,7 +947,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition=use_formula_recognition,
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
-            is_pretty_markdown=is_pretty_markdown,
+            pretty_markdown=pretty_markdown,
         )
 
     def predict(
@@ -983,7 +983,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_e2e_wireless_table_rec_model: bool = True,
         max_new_tokens: int = 1024,
         no_repeat_ngram_size: int = 20,
-        is_pretty_markdown: Union[bool, None] = None,
+        pretty_markdown: Union[bool, None] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -1023,7 +1023,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
             max_new_tokens: int = 1024,
             no_repeat_ngram_size: int = 20,
-            is_pretty_markdown,
+            pretty_markdown,
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -1039,7 +1039,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition,
             use_chart_recognition,
             use_region_detection,
-            is_pretty_markdown,
+            pretty_markdown,
         )
 
         if not self.check_model_settings_valid(model_settings):

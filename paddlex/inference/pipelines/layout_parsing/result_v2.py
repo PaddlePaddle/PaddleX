@@ -407,7 +407,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
                 return seg_start_flag, seg_end_flag
 
-            if self["model_settings"].get("is_pretty_markdown", True):
+            if self["model_settings"].get("pretty_markdown", True):
                 format_text = format_text_centered_by_html
                 format_image = format_image_centered_by_html
             else:
