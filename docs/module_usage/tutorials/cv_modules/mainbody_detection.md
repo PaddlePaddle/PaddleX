@@ -479,7 +479,7 @@ python main.py -c paddlex/configs/modules/mainbody_detection/PP-ShiTuV2_det.yaml
 
 1.<b>产线集成</b>
 
-主体检测模块可以集成的PaddleX产线有<b>通用图像识别</b>（comming soon），只需要替换模型路径即可完成相关产线的主体检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+主体检测模块可以集成的PaddleX产线有<b>通用图像识别</b>（coming soon），只需要替换模型路径即可完成相关产线的主体检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 

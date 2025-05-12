@@ -21,7 +21,6 @@ import re
 import tempfile
 from dataclasses import dataclass
 
-from tokenizers import Tokenizer as TokenizerFast
 
 from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
@@ -1880,6 +1879,8 @@ class _PyOnlyFormulaRecognitionResult(object):
 
 class LaTeXOCRDecode(object):
     def __init__(self, character_list=None):
+        from tokenizers import Tokenizer as TokenizerFast
+
         super().__init__()
         character_list = character_list
         temp_path = tempfile.gettempdir()

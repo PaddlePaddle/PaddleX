@@ -373,7 +373,7 @@ class PaddleInfer(StaticInfer):
             logging.debug("`device_id` has been set to None")
 
         if (
-            self._option.device_type in ("gpu", "dcu")
+            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0
@@ -417,12 +417,14 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
             elif self._option.device_type == "xpu":
+                config.enable_xpu()
+                config.set_xpu_device_id(self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
             elif self._option.device_type == "mlu":
-                config.enable_custom_device("mlu")
+                config.enable_custom_device("mlu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):
@@ -431,7 +433,7 @@ class PaddleInfer(StaticInfer):
                 from paddle_custom_device.gcu import passes as gcu_passes
 
                 gcu_passes.setUp()
-                config.enable_custom_device("gcu")
+                config.enable_custom_device("gcu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir()
                 if hasattr(config, "enable_new_executor"):

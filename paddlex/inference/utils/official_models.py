@@ -335,6 +335,7 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
     "YOLO-Worldv2-L": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar",
     "PP-DocBee-2B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar",
     "PP-DocBee-7B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar",
+    "PP-Chart2Table": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar",
 }
 
 
