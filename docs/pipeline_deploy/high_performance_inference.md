@@ -24,7 +24,7 @@ comments: true
 
 使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了 PaddleX 的安装，且按照 PaddleX 产线命令行使用说明或 PaddleX 产线 Python 脚本使用说明跑通了产线的快速推理。
 
-高性能推理插件支持处理 **PaddlePaddle 静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，可以使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。
+高性能推理插件支持处理 **飞桨静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，可以使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。
 
 ### 1.1 安装高性能推理插件
 
@@ -248,7 +248,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 </tr>
 <tr>
   <td><code>auto_paddle2onnx</code></td>
-  <td>是否将 PaddlePaddle 静态图模型自动转换为 ONNX 模型。当 Paddle2ONNX 插件不可用时，不执行转换。</td>
+  <td>是否将飞桨静态图模型自动转换为 ONNX 模型。当 Paddle2ONNX 插件不可用时，不执行转换。</td>
   <td><code>bool</code></td>
   <td><code>True</code></td>
 </tr>
