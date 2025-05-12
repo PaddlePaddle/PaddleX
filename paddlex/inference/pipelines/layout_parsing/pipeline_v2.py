@@ -114,11 +114,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             False,
         )
 
-        self.pretty_markdown = config.get(
-            "pretty_markdown",
-            True,
-        )
-
         if self.use_doc_preprocessor:
             doc_preprocessor_config = config.get("SubPipelines", {}).get(
                 "DocPreprocessor",
@@ -910,7 +905,6 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
-        pretty_markdown: Union[bool, None],
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -953,9 +947,6 @@ class LayoutParsingPipelineV2(BasePipeline):
         if use_chart_recognition is None:
             use_chart_recognition = self.use_chart_recognition
 
-        if pretty_markdown is None:
-            pretty_markdown = self.pretty_markdown
-
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_general_ocr=use_general_ocr,
@@ -964,7 +955,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition=use_formula_recognition,
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
-            pretty_markdown=pretty_markdown,
         )
 
     def predict(
@@ -1000,7 +990,6 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_e2e_wireless_table_rec_model: bool = True,
         max_new_tokens: int = 1024,
         no_repeat_ngram_size: int = 20,
-        pretty_markdown: Union[bool, None] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -1038,9 +1027,8 @@ class LayoutParsingPipelineV2(BasePipeline):
             use_table_cells_ocr_results (bool): whether to use OCR results with cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
-            max_new_tokens: int = 1024,
-            no_repeat_ngram_size: int = 20,
-            pretty_markdown,
+            max_new_tokens (int): argument for chart to table model, default by 1024.
+            no_repeat_ngram_size (int): argument for chart to table model, default by 20.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -1056,7 +1044,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition,
             use_chart_recognition,
             use_region_detection,
-            pretty_markdown,
         )
 
         if not self.check_model_settings_valid(model_settings):

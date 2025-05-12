@@ -255,9 +255,12 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_markdown(self) -> dict:
+    def _to_markdown(self, pretty_markdown=True) -> dict:
         """
         Save the parsing result to a Markdown file.
+
+        Args:
+            pretty_markdown (Optional[bool]): wheather to pretting markdown by HTML, default by True.
 
         Returns:
             Dict
@@ -414,7 +417,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     "</html>", ""
                 ).replace("<body>", "").replace("</body>", "")
 
-            if self["model_settings"].get("pretty_markdown", True):
+            if pretty_markdown:
                 format_text = format_text_centered_by_html
                 format_image = format_image_centered_by_html
                 format_table = format_table_with_html_body
