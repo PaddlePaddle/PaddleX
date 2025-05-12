@@ -19,6 +19,7 @@ from PIL import ImageFont
 
 from .. import logging
 from ..download import download
+from ..flags import LOCAL_FONT_FILE_PATH
 
 
 def get_font_file_path(file_name: str) -> str:
@@ -29,7 +30,7 @@ def get_font_file_path(file_name: str) -> str:
     str: The path to the font file.
     """
     font_path = (Path(__file__).parent / file_name).resolve().as_posix()
-    if not Path(font_path).exists():
+    if not Path(font_path).is_file():
         download(
             url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{file_name}",
             save_path=font_path,
@@ -85,5 +86,12 @@ def create_font_vertical(
     return font
 
 
-PINGFANG_FONT_FILE_PATH = get_font_file_path("PingFang-SC-Regular.ttf")
-SIMFANG_FONT_FILE_PATH = get_font_file_path("simfang.ttf")
+if Path(str(LOCAL_FONT_FILE_PATH)).is_file():
+    logging.warning(
+        f"Using the local font file(`{LOCAL_FONT_FILE_PATH}`) specified by `LOCAL_FONT_FILE_PATH`!"
+    )
+    PINGFANG_FONT_FILE_PATH = LOCAL_FONT_FILE_PATH
+    SIMFANG_FONT_FILE_PATH = LOCAL_FONT_FILE_PATH
+else:
+    PINGFANG_FONT_FILE_PATH = get_font_file_path("PingFang-SC-Regular.ttf")
+    SIMFANG_FONT_FILE_PATH = get_font_file_path("simfang.ttf")
