@@ -25,6 +25,16 @@ comments: true
 <td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">推理模型</a></td>
 <td>15.8</td>
 </tr>
+<tr>
+<td>PP-DocBee2-3B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">推理模型</a></td>
+<td>7.6</td>
+<td>PP-DocBee2 是飞桨团队自研的一款专注于文档理解的多模态大模型，在PP-DocBee的基础上进一步优化了基础模型，并引入了新的数据优化方案，提高了数据质量，使用自研数据合成策略生成的少量的47万数据便使得PP-DocBee2在中文文档理解任务上表现更佳。在内部业务中文场景类的指标上，PP-DocBee2相较于PP-DocBee提升了约11.4%，同时也高于目前的同规模热门开源和闭源模型。</td>
+</tr>
+<tr>
+<td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">推理模型</a></td>
+<td>1.4</td>
+<td>PP-Chart2Table 是飞桨团队自研的一款专注于图表解析的多模态模型，在中英文图表解析任务上具有卓越表现。该模型通过近 70 万条图表解析多模态数据集进行微调优化，数据集囊括了常见的图表类型（饼图，柱状图，堆叠面积图等）和场景，并设计二阶段训练方法对OOD数据进行大模型蒸馏。在内部业务中英文场景下，PP-Chart2Table达到了同参数量级模型的SOTA，并且在关键场景上达到7B参数量级的VLM精度。</td>
+</tr>
 </table>
 
 
@@ -147,7 +157,9 @@ for res in results:
 <td>待预测数据</td>
 <td><code>dict</code></td>
 <td>
-<code>Dict</code>, 需要根据具体的模型确定，如PP-DocBee系列的输入为{'image': image_path, 'query': query_text}
+<code>Dict</code>, 由于多模态模型对输入有不同的要求，需要根据具体的模型确定，具体而言:
+<li>PP-DocBee系列的输入形式为<code>{'image': image_path, 'query': query_text}</code></li>
+<li>PP-Chart2Table的输入形式为<code>{'image': image_path}</code></li>
 </td>
 <td>无</td>
 </tr>
@@ -155,7 +167,7 @@ for res in results:
 <td><code>batch_size</code></td>
 <td>批大小</td>
 <td><code>int</code></td>
-<td>整数(目前仅支持为1)</td>
+<td>整数</td>
 <td>1</td>
 </tr>
 </table>
