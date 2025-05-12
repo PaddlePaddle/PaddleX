@@ -607,7 +607,7 @@ def remove_extra_space(input_text: str) -> str:
 def gather_imgs(original_img, layout_det_objs):
     imgs_in_doc = []
     for det_obj in layout_det_objs:
-        if det_obj["label"] in ("image", "chart"):
+        if det_obj["label"] in ("image", "chart", "seal"):
             x_min, y_min, x_max, y_max = list(map(int, det_obj["coordinate"]))
             img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
             img = Image.fromarray(original_img[y_min:y_max, x_min:x_max, ::-1])

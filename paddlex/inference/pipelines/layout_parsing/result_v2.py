@@ -81,9 +81,9 @@ def format_title_func(block):
     )
 
 
-def format_text_centered_by_html_func(block):
+def format_centered_by_html(string):
     return (
-        f'<div style="text-align: center;">{block.content}</div>'.replace(
+        f'<div style="text-align: center;">{string}</div>'.replace(
             "-\n",
             "",
         ).replace("\n", " ")
@@ -91,13 +91,17 @@ def format_text_centered_by_html_func(block):
     )
 
 
-def format_image_centered_by_html_func(block, original_image_width):
+def format_text_plain_func(block):
+    return block.content
+
+
+def format_image_scaled_by_html_func(block, original_image_width):
     img_tags = []
     image_path = "".join(block.image.keys())
     image_width = block.image[image_path].width
     scale = int(image_width / original_image_width * 100)
     img_tags.append(
-        '<div style="text-align: center;"><img src="{}" alt="Image" width="{}%" /></div>'.format(
+        '<img src="{}" alt="Image" width="{}%" />'.format(
             image_path.replace("-\n", "").replace("\n", " "), scale
         ),
     )
@@ -111,7 +115,7 @@ def format_image_plain_func(block):
     return "\n".join(img_tags)
 
 
-def format_chart_func(block):
+def format_chart2table_func(block):
     lines_list = block.content.split("\n")
     column_num = len(lines_list[0].split("|"))
     lines_list.insert(1, "|".join(["---"] * column_num))
@@ -418,16 +422,32 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
 
         if pretty_markdown:
-            format_text_func = format_text_centered_by_html_func
-            format_image_func = partial(
-                format_image_centered_by_html_func,
-                original_image_width=original_image_width,
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                )
             )
             format_table = lambda block: "\n" + format_text_func(block)
         else:
             format_text_func = lambda block: block.content
             format_image_func = format_image_plain_func
             format_table = lambda block: simplify_table_func("\n" + block.content)
+
+        if self["model_settings"].get("use_chart_recognition", False):
+            format_chart_func = format_chart2table_func
+        else:
+            format_chart_func = format_image_func
+
+        if self["model_settings"].get("use_seal_recognition", False):
+            format_seal_func = lambda block: "\n".join(
+                [format_image_func(block), format_text_func(block)]
+            )
+        else:
+            format_seal_func = format_image_func
 
         handle_funcs_dict = {
             "paragraph_title": format_title_func,
@@ -464,7 +484,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 spliter="\n",
             ),
             "algorithm": lambda block: block.content.strip("\n"),
-            "seal": partial(compose_funcs, funcs=[format_image_func, format_text_func]),
+            "seal": format_seal_func,
         }
 
         markdown_content = ""

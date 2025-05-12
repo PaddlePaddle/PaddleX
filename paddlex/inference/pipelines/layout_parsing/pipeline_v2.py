@@ -770,7 +770,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 block.content = table_res_list[table_index]["pred_html"]
                 table_index += 1
             elif label == "seal" and len(seal_res_list) > 0:
-                block.content = seal_res_list[seal_index]["rec_texts"]
+                block.content = "\n".join(seal_res_list[seal_index]["rec_texts"])
                 seal_index += 1
             elif label == "chart" and len(chart_res_list) > 0:
                 block.content = chart_res_list[chart_index]
@@ -801,7 +801,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
 
-            if label in ["chart", "image"]:
+            if label in ["chart", "image", "seal"]:
                 x_min, y_min, x_max, y_max = list(map(int, block_bbox))
                 img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
                 img = Image.fromarray(image[y_min:y_max, x_min:x_max, ::-1])
