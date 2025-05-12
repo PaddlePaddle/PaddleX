@@ -39,6 +39,8 @@ class InferRequest(ocr.BaseInferRequest):
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
+    useChartRecognition: Optional[bool] = None
+    useRegionDetection: Optional[bool] = None
     layoutThreshold: Optional[float] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
@@ -58,6 +60,7 @@ class InferRequest(ocr.BaseInferRequest):
     useTableCellsOcrResults: bool = False
     useE2eWiredTableRecModel: bool = False
     useE2eWirelessTableRecModel: bool = False
+    prettyMarkdown: Union[bool, None] = None
 
 
 class MarkdownData(BaseModel):

@@ -58,6 +58,8 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_seal_recognition=request.useSealRecognition,
             use_table_recognition=request.useTableRecognition,
             use_formula_recognition=request.useFormulaRecognition,
+            use_chart_recognition=request.useChartRecognition,
+            use_region_detection=request.useRegionDetection,
             layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,
             layout_unclip_ratio=request.layoutUnclipRatio,
@@ -77,6 +79,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_table_cells_ocr_results=request.useTableCellsOcrResults,
             use_e2e_wired_table_rec_model=request.useE2eWiredTableRecModel,
             use_e2e_wireless_table_rec_model=request.useE2eWirelessTableRecModel,
+            pretty_markdown=request.prettyMarkdown,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []
