@@ -124,9 +124,9 @@ def format_chart2table_func(block):
 
 
 def simplify_table_func(table_code):
-    return "\n" + table_code.replace("<html>", "").replace(
-        "</html>", ""
-    ).replace("<body>", "").replace("</body>", "")
+    return "\n" + table_code.replace("<html>", "").replace("</html>", "").replace(
+        "<body>", ""
+    ).replace("</body>", "")
 
 
 def format_first_line_func(block, templates, format_func, spliter):
@@ -409,19 +409,19 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_markdown(self, pretty_markdown=True) -> dict:
+    def _to_markdown(self, pretty=True) -> dict:
         """
         Save the parsing result to a Markdown file.
 
         Args:
-            pretty_markdown (Optional[bool]): wheather to pretting markdown by HTML, default by True.
+            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
 
         Returns:
             Dict
         """
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
 
-        if pretty_markdown:
+        if pretty:
             format_text_func = lambda block: format_centered_by_html(
                 format_text_plain_func(block)
             )
