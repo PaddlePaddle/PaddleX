@@ -96,7 +96,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         """
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
-        self.use_general_ocr = config.get("use_general_ocr", True)
         self.use_table_recognition = config.get("use_table_recognition", True)
         self.use_seal_recognition = config.get("use_seal_recognition", True)
         self.use_region_detection = config.get(
@@ -154,14 +153,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
             layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
         self.layout_det_model = self.create_model(layout_det_config, **layout_kwargs)
 
-        if self.use_general_ocr or self.use_table_recognition:
-            general_ocr_config = config.get("SubPipelines", {}).get(
-                "GeneralOCR",
-                {"pipeline_config_error": "config error for general_ocr_pipeline!"},
-            )
-            self.general_ocr_pipeline = self.create_pipeline(
-                general_ocr_config,
-            )
+        general_ocr_config = config.get("SubPipelines", {}).get(
+            "GeneralOCR",
+            {"pipeline_config_error": "config error for general_ocr_pipeline!"},
+        )
+        self.general_ocr_pipeline = self.create_pipeline(
+            general_ocr_config,
+        )
 
         if self.use_seal_recognition:
             seal_recognition_config = config.get("SubPipelines", {}).get(
@@ -248,12 +246,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if input_params["use_doc_preprocessor"] and not self.use_doc_preprocessor:
             logging.error(
                 "Set use_doc_preprocessor, but the models for doc preprocessor are not initialized.",
-            )
-            return False
-
-        if input_params["use_general_ocr"] and not self.use_general_ocr:
-            logging.error(
-                "Set use_general_ocr, but the models for general OCR are not initialized.",
             )
             return False
 
@@ -897,7 +889,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self,
         use_doc_orientation_classify: Union[bool, None],
         use_doc_unwarping: Union[bool, None],
-        use_general_ocr: Union[bool, None],
         use_seal_recognition: Union[bool, None],
         use_table_recognition: Union[bool, None],
         use_formula_recognition: Union[bool, None],
@@ -910,7 +901,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         Args:
             use_doc_orientation_classify (Union[bool, None]): Enables document orientation classification if True. Defaults to system setting if None.
             use_doc_unwarping (Union[bool, None]): Enables document unwarping if True. Defaults to system setting if None.
-            use_general_ocr (Union[bool, None]): Enables general OCR if True. Defaults to system setting if None.
             use_seal_recognition (Union[bool, None]): Enables seal recognition if True. Defaults to system setting if None.
             use_table_recognition (Union[bool, None]): Enables table recognition if True. Defaults to system setting if None.
             use_formula_recognition (Union[bool, None]): Enables formula recognition if True. Defaults to system setting if None.
@@ -926,9 +916,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 use_doc_preprocessor = True
             else:
                 use_doc_preprocessor = False
-
-        if use_general_ocr is None:
-            use_general_ocr = self.use_general_ocr
 
         if use_seal_recognition is None:
             use_seal_recognition = self.use_seal_recognition
@@ -947,7 +934,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
-            use_general_ocr=use_general_ocr,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
             use_formula_recognition=use_formula_recognition,
@@ -961,7 +947,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_doc_orientation_classify: Union[bool, None] = None,
         use_doc_unwarping: Union[bool, None] = None,
         use_textline_orientation: Optional[bool] = None,
-        use_general_ocr: Union[bool, None] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
@@ -986,8 +971,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_table_cells_ocr_results: bool = False,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
-        max_new_tokens: int = 1024,
-        no_repeat_ngram_size: int = 20,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -997,7 +980,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
             use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
-            use_general_ocr (Optional[bool]): Whether to use general OCR.
             use_seal_recognition (Optional[bool]): Whether to use seal recognition.
             use_table_recognition (Optional[bool]): Whether to use table recognition.
             use_formula_recognition (Optional[bool]): Whether to use formula recognition.
@@ -1025,8 +1007,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_table_cells_ocr_results (bool): whether to use OCR results with cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
-            max_new_tokens (int): argument for chart to table model, default by 1024.
-            no_repeat_ngram_size (int): argument for chart to table model, default by 20.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -1036,7 +1016,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
             use_doc_unwarping,
-            use_general_ocr,
             use_seal_recognition,
             use_table_recognition,
             use_formula_recognition,
@@ -1113,33 +1092,18 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
                     doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = 255.0
 
-            if (
-                model_settings["use_general_ocr"]
-                or model_settings["use_table_recognition"]
-            ):
-                overall_ocr_results = list(
-                    self.general_ocr_pipeline(
-                        doc_preprocessor_images,
-                        use_textline_orientation=use_textline_orientation,
-                        text_det_limit_side_len=text_det_limit_side_len,
-                        text_det_limit_type=text_det_limit_type,
-                        text_det_thresh=text_det_thresh,
-                        text_det_box_thresh=text_det_box_thresh,
-                        text_det_unclip_ratio=text_det_unclip_ratio,
-                        text_rec_score_thresh=text_rec_score_thresh,
-                    ),
-                )
-            else:
-                overall_ocr_results = [
-                    {
-                        "dt_polys": [],
-                        "rec_texts": [],
-                        "rec_scores": [],
-                        "rec_polys": [],
-                        "rec_boxes": np.array([]),
-                    }
-                    for _ in doc_preprocessor_images
-                ]
+            overall_ocr_results = list(
+                self.general_ocr_pipeline(
+                    doc_preprocessor_images,
+                    use_textline_orientation=use_textline_orientation,
+                    text_det_limit_side_len=text_det_limit_side_len,
+                    text_det_limit_type=text_det_limit_type,
+                    text_det_thresh=text_det_thresh,
+                    text_det_box_thresh=text_det_box_thresh,
+                    text_det_unclip_ratio=text_det_unclip_ratio,
+                    text_rec_score_thresh=text_rec_score_thresh,
+                ),
+            )
 
             for overall_ocr_res in overall_ocr_results:
                 overall_ocr_res["rec_labels"] = ["text"] * len(
@@ -1244,6 +1208,22 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 seal_res_lists = [item["seal_res_list"] for item in seal_res_all]
             else:
                 seal_res_lists = [[] for _ in doc_preprocessor_images]
+
+            chart_res_list = []
+            if model_settings["use_chart_recognition"]:
+                chart_imgs_list = []
+                for bbox in layout_det_res["boxes"]:
+                    if bbox["label"] == "chart":
+                        x_min, y_min, x_max, y_max = bbox["coordinate"]
+                        chart_img = doc_preprocessor_image[
+                            int(y_min) : int(y_max), int(x_min) : int(x_max), :
+                        ]
+                        chart_imgs_list.append({"image": chart_img})
+
+                for chart_res_batch in self.chart_recognition_model(
+                    input=chart_imgs_list,
+                ):
+                    chart_res_list.append(chart_res_batch["result"])
 
             for (
                 input_path,

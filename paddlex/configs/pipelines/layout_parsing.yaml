@@ -2,7 +2,6 @@
 pipeline_name: layout_parsing
 
 use_doc_preprocessor: True
-use_general_ocr: True
 use_seal_recognition: True
 use_table_recognition: True
 use_formula_recognition: False

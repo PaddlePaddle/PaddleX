@@ -47,8 +47,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
             res_img_dict.update(**self["doc_preprocessor_res"].img)
         res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
+        res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
@@ -106,8 +105,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["layout_det_res"] = self["layout_det_res"].str["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -149,8 +147,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
