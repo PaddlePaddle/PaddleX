@@ -111,7 +111,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         )
         self.use_chart_recognition = config.get(
             "use_chart_recognition",
-            True,
+            False,
         )
 
         self.pretty_markdown = config.get(
@@ -642,38 +642,42 @@ class LayoutParsingPipelineV2(BasePipeline):
             block.content = ""
             return block
 
-        lines, text_direction = group_boxes_into_lines(
+        lines, text_direction, text_line_height = group_boxes_into_lines(
             ocr_rec_res,
             LINE_SETTINGS.get("line_height_iou_threshold", 0.8),
         )
 
-        if block.label == "reference":
-            rec_boxes = ocr_rec_res["boxes"]
-            block_right_coordinate = max([box[2] for box in rec_boxes])
-        else:
-            block_right_coordinate = block.bbox[2]
-
         # format line
         text_lines = []
         need_new_line_num = 0
-        start_index = 0 if text_direction == "horizontal" else 1
-        secondary_direction_start_index = 1 if text_direction == "horizontal" else 0
-        line_height_list, line_width_list = [], []
+        # words start coordinate and stop coordinate in the line
+        words_start_index = 0 if text_direction == "horizontal" else 1
+        words_stop_index = words_start_index + 2
+        lines_start_index = 1 if text_direction == "horizontal" else 3
+        line_width_list = []
+
+        if block.label == "reference":
+            rec_boxes = ocr_rec_res["boxes"]
+            block_start_coordinate = min([box[words_start_index] for box in rec_boxes])
+            block_stop_coordinate = max([box[words_stop_index] for box in rec_boxes])
+        else:
+            block_start_coordinate = block.bbox[words_start_index]
+            block_stop_coordinate = block.bbox[words_stop_index]
+
         for idx, line in enumerate(lines):
-            line.sort(key=lambda span: span[0][start_index])
+            line.sort(
+                key=lambda span: (
+                    span[0][words_start_index] // 2,
+                    (
+                        span[0][lines_start_index]
+                        if text_direction == "horizontal"
+                        else -span[0][lines_start_index]
+                    ),
+                )
+            )
 
-            text_bboxes_height = [
-                span[0][secondary_direction_start_index + 2]
-                - span[0][secondary_direction_start_index]
-                for span in line
-            ]
-            text_bboxes_width = [
-                span[0][start_index + 2] - span[0][start_index] for span in line
-            ]
-
-            line_height = np.mean(text_bboxes_height)
-            line_height_list.append(line_height)
-            line_width_list.append(np.mean(text_bboxes_width))
+            line_width = line[-1][0][words_stop_index] - line[0][0][words_start_index]
+            line_width_list.append(line_width)
             # merge formula and text
             ocr_labels = [span[2] for span in line]
             if "formula" in ocr_labels:
@@ -683,8 +687,11 @@ class LayoutParsingPipelineV2(BasePipeline):
 
             line_text, need_new_line = format_line(
                 line,
-                block_right_coordinate,
-                last_line_span_limit=line_height * 1.5,
+                text_direction,
+                np.max(line_width_list),
+                block_start_coordinate,
+                block_stop_coordinate,
+                line_gap_limit=text_line_height * 1.5,
                 block_label=block.label,
             )
             if need_new_line:
@@ -699,12 +706,13 @@ class LayoutParsingPipelineV2(BasePipeline):
 
         delim = LINE_SETTINGS["delimiter_map"].get(block.label, "")
         if need_new_line_num > len(text_lines) * 0.5 and delim == "":
+            text_lines = [text.replace("\n", "") for text in text_lines]
             delim = "\n"
         content = delim.join(text_lines)
         block.content = content
         block.num_of_lines = len(text_lines)
         block.direction = text_direction
-        block.text_line_height = np.mean(line_height_list)
+        block.text_line_height = text_line_height
         block.text_line_width = np.mean(line_width_list)
 
         return block
@@ -816,12 +824,13 @@ class LayoutParsingPipelineV2(BasePipeline):
             region = LayoutParsingRegion(
                 bbox=region_bbox,
                 blocks=region_blocks,
+                image_shape=image.shape[:2],
             )
             region_list.append(region)
 
         region_list = sorted(
             region_list,
-            key=lambda r: (r.euclidean_distance // 50, r.center_euclidean_distance),
+            key=lambda r: (r.weighted_distance),
         )
 
         return region_list

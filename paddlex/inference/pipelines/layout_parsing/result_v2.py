@@ -115,8 +115,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         for block in parsing_result:
             bbox = block.bbox
             index = block.order_index
-            label = block.order_label
-            fill_color = get_show_color(label, True)
+            label = block.label
+            fill_color = get_show_color(label, False)
             draw.rectangle(bbox, fill=fill_color)
             if index is not None:
                 text_position = (bbox[2] + 2, bbox[1] - font_size // 2)
@@ -348,9 +348,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     break
                 return spliter.join(lines)
 
-            def format_table():
-                return "\n" + block.content
-
             def get_seg_flag(block: LayoutParsingBlock, prev_block: LayoutParsingBlock):
 
                 seg_start_flag = True
@@ -409,12 +406,22 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
                 return seg_start_flag, seg_end_flag
 
+            def format_table_with_html_body():
+                return "\n" + block.content
+
+            def format_table_wo_html_body():
+                return "\n" + block.content.replace("<html>", "").replace(
+                    "</html>", ""
+                ).replace("<body>", "").replace("</body>", "")
+
             if self["model_settings"].get("pretty_markdown", True):
                 format_text = format_text_centered_by_html
                 format_image = format_image_centered_by_html
+                format_table = format_table_with_html_body
             else:
                 format_text = format_text_plain
                 format_image = format_image_plain
+                format_table = format_table_wo_html_body
 
             handlers = {
                 "paragraph_title": lambda: format_title(block.content),
@@ -482,7 +489,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             )
 
         markdown_info = dict()
-        original_image_width = self["doc_preprocessor_res"]["input_img"].shape[1]
+        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
         markdown_info["markdown_texts"], (
             page_first_element_seg_start_flag,
             page_last_element_seg_end_flag,
@@ -532,8 +539,6 @@ class LayoutParsingBlock:
         return self.__dict__
 
     def update_direction_info(self) -> None:
-        if self.order_label == "vision":
-            self.direction = "horizontal"
         if self.direction == "horizontal":
             self.secondary_direction = "vertical"
             self.short_side_length = self.height
@@ -598,11 +603,13 @@ class LayoutParsingBlock:
 
 class LayoutParsingRegion:
 
-    def __init__(self, bbox, blocks: List[LayoutParsingBlock] = []) -> None:
+    def __init__(
+        self, bbox, blocks: List[LayoutParsingBlock] = [], image_shape=None
+    ) -> None:
         self.bbox = bbox
         self.block_map = {}
         self.direction = "horizontal"
-        self.calculate_bbox_metrics()
+        self.calculate_bbox_metrics(image_shape)
         self.doc_title_block_idxes = []
         self.paragraph_title_block_idxes = []
         self.vision_block_idxes = []
@@ -678,12 +685,17 @@ class LayoutParsingRegion:
             + self.bbox[self.secondary_direction_end_index]
         ) / 2
 
-    def calculate_bbox_metrics(self):
+    def calculate_bbox_metrics(self, image_shape):
         x1, y1, x2, y2 = self.bbox
+        width = x2 - x1
+        image_height, image_width = image_shape
         x_center, y_center = (x1 + x2) / 2, (y1 + y2) / 2
         self.euclidean_distance = math.sqrt(((x1) ** 2 + (y1) ** 2))
         self.center_euclidean_distance = math.sqrt(((x_center) ** 2 + (y_center) ** 2))
         self.angle_rad = math.atan2(y_center, x_center)
+        self.weighted_distance = (
+            y1 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
+        )
 
     def sort_normal_blocks(self, blocks):
         if self.direction == "horizontal":

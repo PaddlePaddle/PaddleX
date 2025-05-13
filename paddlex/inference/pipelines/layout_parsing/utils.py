@@ -274,6 +274,9 @@ def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
 
     match_direction = "vertical" if text_orientation == "horizontal" else "horizontal"
 
+    line_start_index = 1 if text_orientation == "horizontal" else 0
+    line_end_index = 3 if text_orientation == "horizontal" else 2
+
     spans = list(zip(rec_boxes, rec_texts, rec_labels))
     sort_index = 1
     reverse = False
@@ -286,7 +289,7 @@ def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
     lines = []
     line = [spans[0]]
     line_region_box = spans[0][0].copy()
-
+    line_heights = []
     # merge line
     for span in spans[1:]:
         rec_bbox = span[0]
@@ -297,15 +300,36 @@ def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
             >= line_height_iou_threshold
         ):
             line.append(span)
-            line_region_box[1] = min(line_region_box[1], rec_bbox[1])
-            line_region_box[3] = max(line_region_box[3], rec_bbox[3])
+            line_region_box[line_start_index] = min(
+                line_region_box[line_start_index], rec_bbox[line_start_index]
+            )
+            line_region_box[line_end_index] = max(
+                line_region_box[line_end_index], rec_bbox[line_end_index]
+            )
         else:
+            line_heights.append(
+                line_region_box[line_end_index] - line_region_box[line_start_index]
+            )
             lines.append(line)
             line = [span]
             line_region_box = rec_bbox.copy()
 
     lines.append(line)
-    return lines, text_orientation
+    line_heights.append(
+        line_region_box[line_end_index] - line_region_box[line_start_index]
+    )
+
+    min_height = min(line_heights) if line_heights else 0
+    max_height = max(line_heights) if line_heights else 0
+
+    if max_height > min_height * 2 and text_orientation == "vertical":
+        line_heights = np.array(line_heights)
+        min_height_num = np.sum(line_heights < min_height * 1.1)
+        if min_height_num < len(lines) * 0.4:
+            condition = line_heights > min_height * 1.1
+            lines = [value for value, keep in zip(lines, condition) if keep]
+
+    return lines, text_orientation, np.mean(line_heights)
 
 
 def calculate_minimum_enclosing_bbox(bboxes):
@@ -381,6 +405,7 @@ def is_non_breaking_punctuation(char):
         "；",  # 全角分号
         ":",  # 半角冒号
         "：",  # 全角冒号
+        "-",  # 连字符
     }
 
     return char in non_breaking_punctuations
@@ -388,8 +413,11 @@ def is_non_breaking_punctuation(char):
 
 def format_line(
     line: List[List[Union[List[int], str]]],
-    block_right_coordinate: int,
-    last_line_span_limit: int = 10,
+    text_direction: int,
+    block_width: int,
+    block_start_coordinate: int,
+    block_stop_coordinate: int,
+    line_gap_limit: int = 10,
     block_label: str = "text",
 ) -> None:
     """
@@ -397,14 +425,15 @@ def format_line(
 
     Args:
         line (list): A list of spans, where each span is a list containing a bounding box and text.
-        block_left_coordinate (int): The minimum x-coordinate of the layout bounding box.
-        block_right_coordinate (int): The maximum x-coordinate of the layout bounding box.
+        block_left_coordinate (int): The text line directional minimum coordinate of the layout bounding box.
+        block_stop_coordinate (int): The text line directional maximum x-coordinate of the layout bounding box.
         first_line_span_limit (int): The limit for the number of pixels before the first span that should be considered part of the first line. Default is 10.
-        last_line_span_limit (int): The limit for the number of pixels after the last span that should be considered part of the last line. Default is 10.
+        line_gap_limit (int): The limit for the number of pixels after the last span that should be considered part of the last line. Default is 10.
         block_label (str): The label associated with the entire block. Default is 'text'.
     Returns:
         None: The function modifies the line in place.
     """
+    first_span_box = line[0][0]
     last_span_box = line[-1][0]
 
     for span in line:
@@ -414,17 +443,37 @@ def format_line(
             else:
                 span[1] = f"\n${span[1]}$"
 
-    line_text = " ".join([span[1] for span in line])
+    line_text = ""
+    for span in line:
+        _, text, label = span
+        line_text += text
+        if len(text) > 0 and is_english_letter(line_text[-1]) or label == "formula":
+            line_text += " "
+
+    if text_direction == "horizontal":
+        text_start_index = 0
+        text_stop_index = 2
+    else:
+        text_start_index = 1
+        text_stop_index = 3
 
     need_new_line = False
     if (
-        block_right_coordinate - last_span_box[2] > last_line_span_limit
-        and not line_text.endswith("-")
-        and len(line_text) > 0
+        len(line_text) > 0
         and not is_english_letter(line_text[-1])
         and not is_non_breaking_punctuation(line_text[-1])
     ):
-        need_new_line = True
+        if (
+            text_direction == "horizontal"
+            and block_stop_coordinate - last_span_box[text_stop_index] > line_gap_limit
+        ) or (
+            text_direction == "vertical"
+            and (
+                block_stop_coordinate - last_span_box[text_stop_index] > line_gap_limit
+                or first_span_box[1] - block_start_coordinate > line_gap_limit
+            )
+        ):
+            need_new_line = True
 
     if line_text.endswith("-"):
         line_text = line_text[:-1]
@@ -432,6 +481,18 @@ def format_line(
         len(line_text) > 0 and is_english_letter(line_text[-1])
     ) or line_text.endswith("$"):
         line_text += " "
+    else:
+        if (
+            block_stop_coordinate - last_span_box[text_stop_index] > block_width * 0.3
+            and block_label != "formula"
+        ):
+            line_text += "\n"
+        if (
+            first_span_box[text_start_index] - block_start_coordinate
+            > block_width * 0.3
+            and block_label != "formula"
+        ):
+            line_text = "\n" + line_text
 
     return line_text, need_new_line
 
@@ -612,6 +673,7 @@ def remove_overlap_blocks(
     """
     dropped_indexes = set()
     blocks = deepcopy(blocks)
+    overlap_image_blocks = []
     # Iterate over each pair of blocks to find overlaps
     for i, block1 in enumerate(blocks["boxes"]):
         for j in range(i + 1, len(blocks["boxes"])):
@@ -627,20 +689,17 @@ def remove_overlap_blocks(
                 smaller=smaller,
             )
             if overlap_box_index is not None:
-                if block1["label"] == "image" and block2["label"] == "image":
-                    # Determine which block to remove based on overlap_box_index
-                    if overlap_box_index == 1:
-                        drop_index = i
-                    else:
-                        drop_index = j
-                elif block1["label"] == "image" and block2["label"] != "image":
-                    drop_index = i
-                elif block1["label"] != "image" and block2["label"] == "image":
-                    drop_index = j
-                elif overlap_box_index == 1:
-                    drop_index = i
+                is_block1_image = block1["label"] == "image"
+                is_block2_image = block2["label"] == "image"
+
+                if is_block1_image != is_block2_image:
+                    # 如果只有一个块在视觉标签中，删除在视觉标签中的那个块
+                    drop_index = i if is_block1_image else j
+                    overlap_image_blocks.append(blocks["boxes"][drop_index])
                 else:
-                    drop_index = j
+                    # 如果两个块都在或都不在视觉标签中，根据 overlap_box_index 决定删除哪个块
+                    drop_index = i if overlap_box_index == 1 else j
+
                 dropped_indexes.add(drop_index)
 
     # Remove marked blocks from the original list
@@ -815,7 +874,12 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
             (x_min, y_max),
         ]
         ocr_res["dt_polys"].append(poly_points)
-        ocr_res["rec_texts"].append(f"{formula_res['rec_formula']}")
+        formula_res_text: str = formula_res["rec_formula"]
+        if formula_res_text.startswith("$$") and formula_res_text.endswith("$$"):
+            formula_res_text = formula_res_text[2:-2]
+        elif formula_res_text.startswith("$") and formula_res_text.endswith("$"):
+            formula_res_text = formula_res_text[1:-1]
+        ocr_res["rec_texts"].append(formula_res_text)
         if ocr_res["rec_boxes"].size == 0:
             ocr_res["rec_boxes"] = np.array(formula_res["dt_polys"])
         else:

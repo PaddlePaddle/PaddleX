@@ -130,7 +130,12 @@ class TableLabelDecode:
             structure_probs, bbox_preds, img_size, ori_img_size
         )
         structure_str_list = [
-            (["<table>"] + structure + ["</table>"]) for structure in structure_str_list
+            (
+                ["<html>", "<body>", "<table>"]
+                + structure
+                + ["</table>", "</body>", "</html>"]
+            )
+            for structure in structure_str_list
         ]
         return [
             {"bbox": bbox, "structure": structure, "structure_score": structure_score}
