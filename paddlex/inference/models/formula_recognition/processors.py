@@ -904,10 +904,7 @@ class UniMERNetDecode(object):
 
         text = self.remove_chinese_text_wrapping(text)
         text = fix_text(text)
-        print("=" * 100)
-        print(text)
         text = self.normalize(text)
-        print(text)
         return text
 
     def __call__(
