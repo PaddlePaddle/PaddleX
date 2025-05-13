@@ -2011,28 +2011,4 @@ class PretrainedModel(
             merged_config["pp_config"] is not None
             final_config["pp_config"] = merged_config["pp_config"]
 
-        if (
-            "data_sharding_parallel" in auto_dist_degree
-            and auto_dist_degree["data_sharding_parallel"]
-        ):
-            # to avoid a circular import
-            from paddlenlp.trainer.trainer_utils import ShardingOption
-
-            level = 0
-            if (
-                "sharding" in auto_dist_degree
-                and auto_dist_degree["sharding"] is not None
-            ):
-                sharding = auto_dist_degree["sharding"]
-                if ShardingOption.SHARD_OP in sharding:
-                    level = 1
-                if ShardingOption.SHARD_GRAD_OP in sharding:
-                    level = 2
-                if ShardingOption.FULL_SHARD in sharding:
-                    level = 3
-            final_config["dp_config"] = {
-                "sharding_level": level,
-                "sharding_mesh_dim": auto_dist_degree.get("sharding_mesh_dim", None),
-            }
-
         return final_config

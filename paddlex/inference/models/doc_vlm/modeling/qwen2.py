@@ -252,80 +252,64 @@ def scaled_dot_product_attention(
     bsz, q_len, num_heads, head_dim = query_states.shape
     _, kv_seq_len, _, _ = value_states.shape
 
-    if config.use_flash_attention and flash_attention:
-        # Paddle Flash Attention input [ bz, seqlen, nhead, head_dim]
-        # Torch Flash Attention input [ bz, nhead, seqlen, head_dim]
+    #  [ bz, seqlen, nhead, head_dim] -> [bs, nhead, seq_len, head_dim]
+    query_states = paddle.transpose(query_states, [0, 2, 1, 3])
+    # merge with the next transpose
+    key_states = paddle.transpose(key_states, [0, 2, 1, 3])
+    value_states = paddle.transpose(value_states, [0, 2, 1, 3])
 
-        return fusion_ops.fusion_flash_attention(
-            query_states,
-            config,
-            key_states,
-            value_states,
-            attention_mask,
-            output_attentions,
-            attn_mask_startend_row_indices=attn_mask_startend_row_indices,
-            sequence_parallel=sequence_parallel,
-            skip_recompute=skip_recompute,
-        )
+    # Add pre divided factor to fix nan under float16.
+    if paddle.in_dynamic_mode() and query_states.dtype == paddle.float16:
+        pre_divided_factor = 32
     else:
-        #  [ bz, seqlen, nhead, head_dim] -> [bs, nhead, seq_len, head_dim]
-        query_states = paddle.transpose(query_states, [0, 2, 1, 3])
-        # merge with the next transpose
-        key_states = paddle.transpose(key_states, [0, 2, 1, 3])
-        value_states = paddle.transpose(value_states, [0, 2, 1, 3])
+        pre_divided_factor = 1
 
-        # Add pre divided factor to fix nan under float16.
-        if paddle.in_dynamic_mode() and query_states.dtype == paddle.float16:
-            pre_divided_factor = 32
-        else:
-            pre_divided_factor = 1
+    attn_weights = paddle.matmul(
+        query_states / (math.sqrt(head_dim) * pre_divided_factor),
+        key_states.transpose([0, 1, 3, 2]),
+    )
 
-        attn_weights = paddle.matmul(
-            query_states / (math.sqrt(head_dim) * pre_divided_factor),
-            key_states.transpose([0, 1, 3, 2]),
+    if attn_weights.shape != [bsz, num_heads, q_len, kv_seq_len]:
+        raise ValueError(
+            f"Attention weights should be of shape {(bsz, num_heads, q_len, kv_seq_len)}, but is"
+            f" {attn_weights.shape}"
         )
 
-        if attn_weights.shape != [bsz, num_heads, q_len, kv_seq_len]:
-            raise ValueError(
-                f"Attention weights should be of shape {(bsz, num_heads, q_len, kv_seq_len)}, but is"
-                f" {attn_weights.shape}"
-            )
+    if attention_mask is None:
+        attention_mask = get_triangle_upper_mask(attn_weights)
 
-        if attention_mask is None:
-            attention_mask = get_triangle_upper_mask(attn_weights)
+    attention_mask = attention_mask.reshape([bsz, 1, q_len, kv_seq_len])
+    if attention_mask.shape != [bsz, 1, q_len, kv_seq_len]:
+        raise ValueError(
+            f"Attention mask should be of shape {(bsz, 1, q_len, kv_seq_len)}, but is {attention_mask.shape}"
+        )
 
-        attention_mask = attention_mask.reshape([bsz, 1, q_len, kv_seq_len])
-        if attention_mask.shape != [bsz, 1, q_len, kv_seq_len]:
-            raise ValueError(
-                f"Attention mask should be of shape {(bsz, 1, q_len, kv_seq_len)}, but is {attention_mask.shape}"
-            )
+    attn_weights = attn_weights + attention_mask
 
-        attn_weights = attn_weights + attention_mask
-
-        if not paddle.in_dynamic_mode():
+    if not paddle.in_dynamic_mode():
+        attn_weights = F.softmax(
+            attn_weights * pre_divided_factor, axis=-1, dtype="float32"
+        ).astype(query_states.dtype)
+    else:
+        with paddle.amp.auto_cast(False):
             attn_weights = F.softmax(
-                attn_weights * pre_divided_factor, axis=-1, dtype="float32"
+                attn_weights.astype("float32") * pre_divided_factor,
+                axis=-1,
+                dtype="float32",
             ).astype(query_states.dtype)
-        else:
-            with paddle.amp.auto_cast(False):
-                attn_weights = F.softmax(
-                    attn_weights.astype("float32") * pre_divided_factor,
-                    axis=-1,
-                    dtype="float32",
-                ).astype(query_states.dtype)
 
-        attn_weights = F.dropout(
-            attn_weights, p=config.attention_dropout, training=training
-        )
+    attn_weights = F.dropout(
+        attn_weights, p=config.attention_dropout, training=training
+    )
 
-        attn_output = paddle.matmul(attn_weights, value_states)
-        attn_output = attn_output.transpose([0, 2, 1, 3])
+    attn_output = paddle.matmul(attn_weights, value_states)
+    attn_output = attn_output.transpose([0, 2, 1, 3])
 
-        if sequence_parallel:
-            attn_output = attn_output.reshape([bsz * q_len, head_dim * num_heads])
-        else:
-            attn_output = attn_output.reshape([bsz, q_len, head_dim * num_heads])
-        return (attn_output, attn_weights) if output_attentions else attn_output
+    if sequence_parallel:
+        attn_output = attn_output.reshape([bsz * q_len, head_dim * num_heads])
+    else:
+        attn_output = attn_output.reshape([bsz, q_len, head_dim * num_heads])
+    return (attn_output, attn_weights) if output_attentions else attn_output
 
 
 def is_casual_mask(attention_mask):
@@ -943,93 +927,9 @@ class Qwen2PretrainedModel(PretrainedModel):
     _keys_to_ignore_on_load_unexpected = [r"self_attn.rotary_emb.inv_freq"]
 
     @classmethod
-    def _get_tensor_parallel_mappings(cls, config: Qwen2Config, is_split=True):
-
-        from paddlenlp.transformers.conversion_utils import split_or_merge_func
-
-        fn = split_or_merge_func(
-            is_split=is_split,
-            tensor_parallel_degree=config.tensor_parallel_degree,
-            tensor_parallel_rank=config.tensor_parallel_rank,
-            num_attention_heads=config.num_attention_heads,
-        )
-
-        def get_tensor_parallel_split_mappings(num_layers):
-            final_actions = {}
-
-            base_actions = {
-                # Row Linear
-                "embed_tokens.weight": partial(fn, is_column=False),
-                "layers.0.self_attn.o_proj.weight": partial(fn, is_column=False),
-                "layers.0.mlp.down_proj.weight": partial(fn, is_column=False),
-            }
-
-            if config.tie_word_embeddings:
-                base_actions["lm_head.weight"] = partial(fn, is_column=False)
-            else:
-                base_actions["lm_head.weight"] = partial(fn, is_column=True)
-
-            if not config.vocab_size % config.tensor_parallel_degree == 0:
-                base_actions.pop("lm_head.weight")
-                base_actions.pop("embed_tokens.weight")
-            # Column Linear
-            if config.fuse_attention_qkv:
-                base_actions["layers.0.self_attn.qkv_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.self_attn.qkv_proj.bias"] = partial(
-                    fn, is_column=True
-                )
-            else:
-                base_actions["layers.0.self_attn.q_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.self_attn.q_proj.bias"] = partial(
-                    fn, is_column=True
-                )
-                # if we have enough num_key_value_heads to split, then split it.
-                if config.num_key_value_heads % config.tensor_parallel_degree == 0:
-                    base_actions["layers.0.self_attn.k_proj.weight"] = partial(
-                        fn, is_column=True
-                    )
-                    base_actions["layers.0.self_attn.v_proj.weight"] = partial(
-                        fn, is_column=True
-                    )
-                    base_actions["layers.0.self_attn.k_proj.bias"] = partial(
-                        fn, is_column=True
-                    )
-                    base_actions["layers.0.self_attn.v_proj.bias"] = partial(
-                        fn, is_column=True
-                    )
-
-            if config.fuse_attention_ffn:
-                base_actions["layers.0.mlp.gate_up_fused_proj.weight"] = partial(
-                    fn, is_column=True, is_naive_2fuse=True
-                )
-            else:
-                base_actions["layers.0.mlp.gate_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.mlp.up_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-
-            for key, action in base_actions.items():
-                if "layers.0." in key:
-                    for i in range(num_layers):
-                        final_actions[key.replace("layers.0.", f"layers.{i}.")] = action
-                final_actions[key] = action
-
-            return final_actions
-
-        mappings = get_tensor_parallel_split_mappings(config.num_hidden_layers)
-
-        return mappings
-
-    @classmethod
     def _get_fuse_or_split_param_mappings(cls, config: Qwen2Config, is_fuse=False):
         # return parameter fuse utils
-        from paddlenlp.transformers.conversion_utils import split_or_fuse_func
+        from ...common.vlm.conversion_utils import split_or_fuse_func
 
         fn = split_or_fuse_func(is_fuse=is_fuse)
 
