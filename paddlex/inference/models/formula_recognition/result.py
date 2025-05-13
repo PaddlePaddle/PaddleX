@@ -15,6 +15,7 @@
 import copy
 import math
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -126,6 +127,7 @@ def get_align_equation(equation: str) -> str:
     """
     is_align = False
     equation = str(equation) + "\n"
+
     begin_dict = [
         r"begin{align}",
         r"begin{align*}",
@@ -147,6 +149,17 @@ def get_align_equation(equation: str) -> str:
     return equation
 
 
+def add_text_for_zh_formula(formula: str) -> str:
+    pattern = re.compile(r"([^\x00-\x7F]+)")
+
+    def replacer(match):
+        return f"\\text{{{match.group(1)}}}"
+
+    replaced_formula = pattern.sub(replacer, formula)
+
+    return replaced_formula
+
+
 def generate_tex_file(tex_file_path: str, equation: str) -> None:
     """
     Generates a LaTeX file containing a specific equation.
@@ -161,17 +174,19 @@ def generate_tex_file(tex_file_path: str, equation: str) -> None:
     """
     with custom_open(tex_file_path, "w") as fp:
         start_template = (
-            r"\documentclass{article}" + "\n"
+            r"\documentclass[varwidth]{standalone}" + "\n"
             r"\usepackage{cite}" + "\n"
             r"\usepackage{amsmath,amssymb,amsfonts,upgreek}" + "\n"
             r"\usepackage{graphicx}" + "\n"
             r"\usepackage{textcomp}" + "\n"
+            r"\usepackage{xeCJK}" + "\n"
             r"\DeclareMathSizes{14}{14}{9.8}{7}" + "\n"
             r"\pagestyle{empty}" + "\n"
             r"\begin{document}" + "\n"
             r"\begin{large}" + "\n"
         )
         fp.write(start_template)
+        equation = add_text_for_zh_formula(equation)
         equation = get_align_equation(equation)
         fp.write(equation)
         end_template = r"\end{large}" + "\n" r"\end{document}" + "\n"
@@ -197,7 +212,7 @@ def generate_pdf_file(
                         and None if an error occurred during the pdflatex execution.
     """
     if os.path.exists(tex_path):
-        command = "pdflatex -interaction=nonstopmode -halt-on-error -output-directory={} {}".format(
+        command = "xelatex -interaction=nonstopmode -halt-on-error -output-directory={} {}".format(
             pdf_dir, tex_path
         )
         if is_debug:
