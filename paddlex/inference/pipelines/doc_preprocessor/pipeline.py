@@ -177,10 +177,12 @@ class _DocPreprocessorPipeline(BasePipeline):
             else:
                 output_imgs = rot_imgs
 
-            for input_path, page_index, image_array, output_img in zip(
+            for input_path, page_index, image_array, angle, rot_img, output_img in zip(
                 batch_data.input_paths,
                 batch_data.page_indexes,
                 image_arrays,
+                angles,
+                rot_imgs,
                 output_imgs,
             ):
                 single_img_res = {
