@@ -26,11 +26,6 @@ The document visual-language model is a cutting-edge multimodal processing techn
 <td>7.6</td>
 <td>PP-DocBee2 is a multimodal large model independently developed by the PaddlePaddle team, specifically tailored for document understanding. Building upon PP-DocBee, the team has further optimized the foundational model and introduced a new data optimization scheme to enhance data quality. With just a relatively small dataset of 470,000 samples generated using the team's proprietary data synthesis strategy, PP-DocBee2 demonstrates superior performance in Chinese document understanding tasks. In terms of internal business metrics for Chinese-language scenarios, PP-DocBee2 has achieved an approximately 11.4% improvement over PP-DocBee, outperforming both current popular open-source and closed-source models of a similar scale.</td>
 </tr>
-<tr>
-<td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">推理模型</a></td>
-<td>1.4</td>
-<td>PP-Chart2Table is a multimodal model independently developed by the PaddlePaddle team, specializing in chart parsing and exhibiting outstanding performance in both Chinese and English chart parsing tasks. The model has been fine-tuned and optimized using a multimodal dataset of nearly 700,000 chart parsing examples, which encompasses a wide range of common chart types (such as pie charts, bar charts, stacked area charts, etc.) and scenarios. A two-stage training approach has been designed to distill knowledge from large models on Out-Of-Distribution (OOD) data. In internal scenarios involving both Chinese and English, PP-Chart2Table has achieved State-Of-The-Art (SOTA) performance among models of comparable parameter sizes, and it has even attained the accuracy of Vision-Language Models (VLMs) with 7B parameters in key scenarios.</td>
-</tr>
 </table>
 
 ## 3. Quick Integration
@@ -155,7 +150,6 @@ The explanation of related methods and parameters are as follows:
 <td>
 <code>Dict</code>, Since multimodal models have different requirements for input, it needs to be determined based on the specific model. Specifically:
 <li>The input format for the PP-DocBee series is<code>{'image': image_path, 'query': query_text}</code></li>
-<li>The input format for PP-Chart2Table is<code>{'image': image_path}</code></li>
 </td>
 <td>None</td>
 </tr>

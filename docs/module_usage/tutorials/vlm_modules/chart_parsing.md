@@ -2,10 +2,12 @@
 comments: true
 ---
 
-# 文档类视觉语言模型模块使用教程
+# 图表解析模型模块使用教程
 
 ## 一、概述
-文档类视觉语言模型是当前一种前沿的多模态处理技术，旨在解决传统文档处理方法的局限性。传统方法往往局限于处理特定格式或预定义类别的文档信息，而文档类视觉语言模型能够融合视觉与语言信息，理解并处理多样化的文档内容。通过结合计算机视觉与自然语言处理技术，模型可以识别文档中的图像、文本及其相互关系，甚至能理解复杂版面结构中的语义信息。这使得文档处理更加智能化、灵活化，具备更强的泛化能力，在自动化办公、信息提取等领域展现出广阔的应用前景。
+多模态图表解析是一项OCR领域的前沿技术，专注于将各类可视化图表（如柱状图、折线图、饼图等）自动转化为底层数据表，并进行格式化输出。传统方法依赖于图表关键点检测等模型进行复杂串联编排，先验假设较多，鲁棒性较差，该模块中的模型使用最新的VLM技术，数据驱动，从海量的现实数据中学习鲁棒的特征。其应用场景覆盖金融分析、学术研究、商业报告等场景——例如快速提取财报中的增长趋势数据、科研论文中的实验对比数值，或市场调研中的用户分布统计，助力用户从“看图”转向“用数”。
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/chart_parsing/chart_parsing_01.png"/>
 
 ## 二、支持模型列表
 
@@ -17,18 +19,9 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-DocBee-2B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">推理模型</a></td>
-<td>4.2</td>
-<td rowspan="2">PP-DocBee 是飞桨团队自研的一款专注于文档理解的多模态大模型，在中文文档理解任务上具有卓越表现。该模型通过近 500 万条文档理解类多模态数据集进行微调优化，各种数据集包括了通用VQA类、OCR类、图表类、text-rich文档类、数学和复杂推理类、合成数据类、纯文本数据等，并设置了不同训练数据配比。在学术界权威的几个英文文档理解评测榜单上，PP-DocBee基本都达到了同参数量级别模型的SOTA。在内部业务中文场景类的指标上，PP-DocBee也高于目前的热门开源和闭源模型。</td>
-</tr>
-<tr>
-<td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">推理模型</a></td>
-<td>15.8</td>
-</tr>
-<tr>
-<td>PP-DocBee2-3B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">推理模型</a></td>
-<td>7.6</td>
-<td>PP-DocBee2 是飞桨团队自研的一款专注于文档理解的多模态大模型，在PP-DocBee的基础上进一步优化了基础模型，并引入了新的数据优化方案，提高了数据质量，使用自研数据合成策略生成的少量的47万数据便使得PP-DocBee2在中文文档理解任务上表现更佳。在内部业务中文场景类的指标上，PP-DocBee2相较于PP-DocBee提升了约11.4%，同时也高于目前的同规模热门开源和闭源模型。</td>
+<td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">推理模型</a></td>
+<td>1.4</td>
+<td>PP-Chart2Table是飞桨团队自研的一款专注于图表解析的多模态模型，在中英文图表解析任务中展现出卓越性能。团队采用精心设计的数据生成策略，构建了近70万条高质量的图表解析多模态数据集，全面覆盖饼图、柱状图、堆叠面积图等常见图表类型及各类应用场景。同时设计了二阶段训练方法，结合大模型蒸馏实现对海量无标注OOD数据的充分利用。在内部业务的中英文场景测试中，PP-Chart2Table不仅达到同参数量级模型中的SOTA水平，更在关键场景中实现了与7B参数量级VLM模型相当的精度。</td>
 </tr>
 </table>
 
@@ -36,13 +29,13 @@ comments: true
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成whl包的安装后，几行代码即可完成文档类视觉语言模型模块的推理，可以任意切换该模块下的模型，您也可以将开放文档类视觉语言模型模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png)到本地。
+完成whl包的安装后，几行代码即可完成文档类视觉语言模型模块的推理，可以任意切换该模块下的模型，您也可以将开放文档类视觉语言模型模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/chart_parsing_02.png)到本地。
 
 ```python
 from paddlex import create_model
-model = create_model('PP-DocBee-2B')
+model = create_model('PP-Chart2Table')
 results = model.predict(
-    input={"image": "medal_table.png", "query": "识别这份表格的内容"},
+    input={"image": "chart_parsing_02.png"},
     batch_size=1
 )
 for res in results:
@@ -53,39 +46,28 @@ for res in results:
 运行后，得到的结果为：
 
 ```bash
-{'res': {'image': 'medal_table.png', 'query': '识别这份表格的内容', 'result': '| 名次 | 国家/地区 | 金牌 | 银牌 | 铜牌 | 奖牌总数 |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 中国（CHN） | 48 | 22 | 30 | 100 |\n| 2 | 美国（USA） | 36 | 39 | 37 | 112 |\n| 3 | 俄罗斯（RUS） | 24 | 13 | 23 | 60 |\n| 4 | 英国（GBR） | 19 | 13 | 19 | 51 |\n| 5 | 德国（GER） | 16 | 11 | 14 | 41 |\n| 6 | 澳大利亚（AUS） | 14 | 15 | 17 | 46 |\n| 7 | 韩国（KOR） | 13 | 11 | 8 | 32 |\n| 8 | 日本（JPN） | 9 | 8 | 8 | 25 |\n| 9 | 意大利（ITA） | 8 | 9 | 10 | 27 |\n| 10 | 法国（FRA） | 7 | 16 | 20 | 43 |\n| 11 | 荷兰（NED） | 7 | 5 | 4 | 16 |\n| 12 | 乌克兰（UKR） | 7 | 4 | 11 | 22 |\n| 13 | 肯尼亚（KEN） | 6 | 4 | 6 | 16 |\n| 14 | 西班牙（ESP） | 5 | 11 | 3 | 19 |\n| 15 | 牙买加（JAM） | 5 | 4 | 2 | 11 |\n'}}
+{'res': {'image': 'chart_parsing_02.png', 'result': '年份 | 单家五星级旅游饭店年平均营收 (百万元) | 单家五星级旅游饭店年平均利润 (百万元)\n2018 | 104.22 | 9.87\n2019 | 99.11 | 7.47\n2020 | 57.87 | -3.87\n2021 | 68.99 | -2.9\n2022 | 56.29 | -9.48\n2023 | 87.99 | 5.96'}}
 ```
 运行结果参数含义如下：
 - `image`: 表示输入待预测图像的路径
-- `query`: 表述输入待预测的文本信息
 - `result`: 模型预测的结果信息
 
 预测结果打印可视化如下：
 
 ```bash
-| 名次 | 国家/地区 | 金牌 | 银牌 | 铜牌 | 奖牌总数 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 中国（CHN） | 48 | 22 | 30 | 100 |
-| 2 | 美国（USA） | 36 | 39 | 37 | 112 |
-| 3 | 俄罗斯（RUS） | 24 | 13 | 23 | 60 |
-| 4 | 英国（GBR） | 19 | 13 | 19 | 51 |
-| 5 | 德国（GER） | 16 | 11 | 14 | 41 |
-| 6 | 澳大利亚（AUS） | 14 | 15 | 17 | 46 |
-| 7 | 韩国（KOR） | 13 | 11 | 8 | 32 |
-| 8 | 日本（JPN） | 9 | 8 | 8 | 25 |
-| 9 | 意大利（ITA） | 8 | 9 | 10 | 27 |
-| 10 | 法国（FRA） | 7 | 16 | 20 | 43 |
-| 11 | 荷兰（NED） | 7 | 5 | 4 | 16 |
-| 12 | 乌克兰（UKR） | 7 | 4 | 11 | 22 |
-| 13 | 肯尼亚（KEN） | 6 | 4 | 6 | 16 |
-| 14 | 西班牙（ESP） | 5 | 11 | 3 | 19 |
-| 15 | 牙买加（JAM） | 5 | 4 | 2 | 11 |
+年份 | 单家五星级旅游饭店年平均营收 (百万元) | 单家五星级旅游饭店年平均利润 (百万元)
+2018 | 104.22 | 9.87
+2019 | 99.11 | 7.47
+2020 | 57.87 | -3.87
+2021 | 68.99 | -2.9
+2022 | 56.29 | -9.48
+2023 | 87.99 | 5.96
 ```
 
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文档类视觉语言模型（此处以`PP-DocBee-2B`为例），具体说明如下：
+* `create_model`实例化文档类视觉语言模型（此处以`PP-Chart2Table`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -108,7 +90,7 @@ for res in results:
 <td>模型存储路径</td>
 <td><code>str</code></td>
 <td>无</td>
-<td>无</td>
+<td><code>无</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -153,7 +135,7 @@ for res in results:
 <td><code>dict</code></td>
 <td>
 <code>Dict</code>, 由于多模态模型对输入有不同的要求，需要根据具体的模型确定，具体而言:
-<li>PP-DocBee系列的输入形式为<code>{'image': image_path, 'query': query_text}</code></li>
+<li>PP-Chart2Table的输入形式为<code>{'image': image_path}</code></li>
 </td>
 <td>无</td>
 </tr>
