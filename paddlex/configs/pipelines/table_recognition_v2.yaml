@@ -11,6 +11,11 @@ SubModules:
     model_name: PP-DocLayout-L
     model_dir: null
   
+  TableOrientationClassify:
+    module_name: doc_text_orientation
+    model_name: PP-LCNet_x1_0_doc_ori
+    model_dir: null
+  
   TableClassification:
     module_name: table_classification
     model_name: PP-LCNet_x1_0_table_cls
