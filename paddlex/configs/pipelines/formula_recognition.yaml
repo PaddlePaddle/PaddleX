@@ -17,7 +17,7 @@ SubModules:
 
   FormulaRecognition:
     module_name: formula_recognition
-    model_name: PP-FormulaNet-L
+    model_name: PP-FormulaNet_plus-L
     model_dir: null
     batch_size: 5
 

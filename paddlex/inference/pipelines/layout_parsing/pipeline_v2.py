@@ -107,6 +107,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
             "use_formula_recognition",
             True,
         )
+        self.use_chart_recognition = config.get(
+            "use_chart_recognition",
+            False,
+        )
 
         if self.use_doc_preprocessor:
             doc_preprocessor_config = config.get("SubPipelines", {}).get(
@@ -190,6 +194,17 @@ class _LayoutParsingPipelineV2(BasePipeline):
             )
             self.formula_recognition_pipeline = self.create_pipeline(
                 formula_recognition_config,
+            )
+
+        if self.use_chart_recognition:
+            chart_recognition_config = config.get("SubModules", {}).get(
+                "ChartRecognition",
+                {
+                    "model_config_error": "config error for block_region_detection_model!"
+                },
+            )
+            self.chart_recognition_model = self.create_model(
+                chart_recognition_config,
             )
 
         return
@@ -620,38 +635,42 @@ class _LayoutParsingPipelineV2(BasePipeline):
             block.content = ""
             return block
 
-        lines, text_direction = group_boxes_into_lines(
+        lines, text_direction, text_line_height = group_boxes_into_lines(
             ocr_rec_res,
             LINE_SETTINGS.get("line_height_iou_threshold", 0.8),
         )
 
-        if block.label == "reference":
-            rec_boxes = ocr_rec_res["boxes"]
-            block_right_coordinate = max([box[2] for box in rec_boxes])
-        else:
-            block_right_coordinate = block.bbox[2]
-
         # format line
         text_lines = []
         need_new_line_num = 0
-        start_index = 0 if text_direction == "horizontal" else 1
-        secondary_direction_start_index = 1 if text_direction == "horizontal" else 0
-        line_height_list, line_width_list = [], []
+        # words start coordinate and stop coordinate in the line
+        words_start_index = 0 if text_direction == "horizontal" else 1
+        words_stop_index = words_start_index + 2
+        lines_start_index = 1 if text_direction == "horizontal" else 3
+        line_width_list = []
+
+        if block.label == "reference":
+            rec_boxes = ocr_rec_res["boxes"]
+            block_start_coordinate = min([box[words_start_index] for box in rec_boxes])
+            block_stop_coordinate = max([box[words_stop_index] for box in rec_boxes])
+        else:
+            block_start_coordinate = block.bbox[words_start_index]
+            block_stop_coordinate = block.bbox[words_stop_index]
+
         for idx, line in enumerate(lines):
-            line.sort(key=lambda span: span[0][start_index])
+            line.sort(
+                key=lambda span: (
+                    span[0][words_start_index] // 2,
+                    (
+                        span[0][lines_start_index]
+                        if text_direction == "horizontal"
+                        else -span[0][lines_start_index]
+                    ),
+                )
+            )
 
-            text_bboxes_height = [
-                span[0][secondary_direction_start_index + 2]
-                - span[0][secondary_direction_start_index]
-                for span in line
-            ]
-            text_bboxes_width = [
-                span[0][start_index + 2] - span[0][start_index] for span in line
-            ]
-
-            line_height = np.mean(text_bboxes_height)
-            line_height_list.append(line_height)
-            line_width_list.append(np.mean(text_bboxes_width))
+            line_width = line[-1][0][words_stop_index] - line[0][0][words_start_index]
+            line_width_list.append(line_width)
             # merge formula and text
             ocr_labels = [span[2] for span in line]
             if "formula" in ocr_labels:
@@ -661,8 +680,11 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
             line_text, need_new_line = format_line(
                 line,
-                block_right_coordinate,
-                last_line_span_limit=line_height * 1.5,
+                text_direction,
+                np.max(line_width_list),
+                block_start_coordinate,
+                block_stop_coordinate,
+                line_gap_limit=text_line_height * 1.5,
                 block_label=block.label,
             )
             if need_new_line:
@@ -677,12 +699,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         delim = LINE_SETTINGS["delimiter_map"].get(block.label, "")
         if need_new_line_num > len(text_lines) * 0.5 and delim == "":
+            text_lines = [text.replace("\n", "") for text in text_lines]
             delim = "\n"
         content = delim.join(text_lines)
         block.content = content
         block.num_of_lines = len(text_lines)
         block.direction = text_direction
-        block.text_line_height = np.mean(line_height_list)
+        block.text_line_height = text_line_height
         block.text_line_width = np.mean(line_width_list)
 
         return block
@@ -696,6 +719,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         layout_det_res: DetResult,
         table_res_list: list,
         seal_res_list: list,
+        chart_res_list: list,
         text_rec_model: Any,
         text_rec_score_thresh: Union[float, None] = None,
     ) -> list:
@@ -729,6 +753,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         table_index = 0
         seal_index = 0
+        chart_index = 0
         layout_parsing_blocks: List[LayoutParsingBlock] = []
 
         for box_idx, box_info in enumerate(layout_det_res["boxes"]):
@@ -743,8 +768,11 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 block.content = table_res_list[table_index]["pred_html"]
                 table_index += 1
             elif label == "seal" and len(seal_res_list) > 0:
-                block.content = seal_res_list[seal_index]["rec_texts"]
+                block.content = "\n".join(seal_res_list[seal_index]["rec_texts"])
                 seal_index += 1
+            elif label == "chart" and len(chart_res_list) > 0:
+                block.content = chart_res_list[chart_index]
+                chart_index += 1
             else:
                 if label == "formula":
                     _, ocr_idx_list = get_sub_regions_ocr_res(
@@ -771,7 +799,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
 
-            if label in ["chart", "image"]:
+            if label in ["chart", "image", "seal"]:
                 x_min, y_min, x_max, y_max = list(map(int, block_bbox))
                 img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
                 img = Image.fromarray(image[y_min:y_max, x_min:x_max, ::-1])
@@ -789,12 +817,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
             region = LayoutParsingRegion(
                 bbox=region_bbox,
                 blocks=region_blocks,
+                image_shape=image.shape[:2],
             )
             region_list.append(region)
 
         region_list = sorted(
             region_list,
-            key=lambda r: (r.euclidean_distance // 50, r.center_euclidean_distance),
+            key=lambda r: (r.weighted_distance),
         )
 
         return region_list
@@ -807,6 +836,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         overall_ocr_res: OCRResult,
         table_res_list: list,
         seal_res_list: list,
+        chart_res_list: list,
         formula_res_list: list,
         text_rec_score_thresh: Union[float, None] = None,
     ) -> list:
@@ -846,6 +876,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
             seal_res_list=seal_res_list,
+            chart_res_list=chart_res_list,
             text_rec_model=self.general_ocr_pipeline.text_rec_model,
             text_rec_score_thresh=self.general_ocr_pipeline.text_rec_score_thresh,
         )
@@ -872,7 +903,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
-        is_pretty_markdown: Union[bool, None],
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -912,6 +942,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if use_region_detection is None:
             use_region_detection = self.use_region_detection
 
+        if use_chart_recognition is None:
+            use_chart_recognition = self.use_chart_recognition
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_general_ocr=use_general_ocr,
@@ -920,7 +953,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition=use_formula_recognition,
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
-            is_pretty_markdown=is_pretty_markdown,
         )
 
     def predict(
@@ -954,7 +986,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_table_cells_ocr_results: bool = False,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
-        is_pretty_markdown: Union[bool, None] = None,
+        max_new_tokens: int = 1024,
+        no_repeat_ngram_size: int = 20,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -992,6 +1025,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_table_cells_ocr_results (bool): whether to use OCR results with cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
+            max_new_tokens (int): argument for chart to table model, default by 1024.
+            no_repeat_ngram_size (int): argument for chart to table model, default by 20.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -1007,7 +1042,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition,
             use_chart_recognition,
             use_region_detection,
-            is_pretty_markdown,
         )
 
         if not self.check_model_settings_valid(model_settings):
@@ -1236,6 +1270,24 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 formula_res_lists,
                 imgs_in_doc,
             ):
+                chart_res_list = []
+                if model_settings["use_chart_recognition"]:
+                    chart_imgs_list = []
+                    for bbox in layout_det_res["boxes"]:
+                        if bbox["label"] == "chart":
+                            x_min, y_min, x_max, y_max = bbox["coordinate"]
+                            chart_img = doc_preprocessor_image[
+                                int(y_min) : int(y_max), int(x_min) : int(x_max), :
+                            ]
+                            chart_imgs_list.append({"image": chart_img})
+
+                    for chart_res_batch in self.chart_recognition_model(
+                        input=chart_imgs_list,
+                        max_new_tokens=max_new_tokens,
+                        no_repeat_ngram_size=no_repeat_ngram_size,
+                    ):
+                        chart_res_list.append(chart_res_batch["result"])
+
                 parsing_res_list = self.get_layout_parsing_res(
                     doc_preprocessor_image,
                     region_det_res=region_det_res,
@@ -1243,6 +1295,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     overall_ocr_res=overall_ocr_res,
                     table_res_list=table_res_list,
                     seal_res_list=seal_res_list,
+                    chart_res_list=chart_res_list,
                     formula_res_list=formula_res_list,
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
@@ -1262,6 +1315,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     "overall_ocr_res": overall_ocr_res,
                     "table_res_list": table_res_list,
                     "seal_res_list": seal_res_list,
+                    "chart_res_list": chart_res_list,
                     "formula_res_list": formula_res_list,
                     "parsing_res_list": parsing_res_list,
                     "imgs_in_doc": imgs_in_doc_for_img,

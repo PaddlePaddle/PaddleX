@@ -80,7 +80,7 @@ void SortDetectionResult(DetectionResult *result) {
 template <typename T>
 bool LexSortByXYCompare(const std::array<T, 4> &box_a,
                         const std::array<T, 4> &box_b) {
-  // WARN: The status shoule be false if (a==b).
+  // WARN: The status should be false if (a==b).
   // https://blog.csdn.net/xxxwrq/article/details/83080640
   auto is_equal = [](const T &a, const T &b) -> bool {
     return std::abs(a - b) < 1e-6f;

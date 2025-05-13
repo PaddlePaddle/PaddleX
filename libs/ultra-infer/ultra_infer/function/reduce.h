@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace function {
-/** Excute the maximum operation for input FDTensor along given dims.
+/** Execute the maximum operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -29,7 +29,7 @@ ULTRAINFER_DECL void Max(const FDTensor &x, FDTensor *out,
                          const std::vector<int64_t> &dims,
                          bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the minimum operation for input FDTensor along given dims.
+/** Execute the minimum operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -40,7 +40,7 @@ ULTRAINFER_DECL void Min(const FDTensor &x, FDTensor *out,
                          const std::vector<int64_t> &dims,
                          bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the sum operation for input FDTensor along given dims.
+/** Execute the sum operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -51,7 +51,7 @@ ULTRAINFER_DECL void Sum(const FDTensor &x, FDTensor *out,
                          const std::vector<int64_t> &dims,
                          bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the all operation for input FDTensor along given dims.
+/** Execute the all operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -62,7 +62,7 @@ ULTRAINFER_DECL void All(const FDTensor &x, FDTensor *out,
                          const std::vector<int64_t> &dims,
                          bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the any operation for input FDTensor along given dims.
+/** Execute the any operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -73,7 +73,7 @@ ULTRAINFER_DECL void Any(const FDTensor &x, FDTensor *out,
                          const std::vector<int64_t> &dims,
                          bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the mean operation for input FDTensor along given dims.
+/** Execute the mean operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -84,7 +84,7 @@ ULTRAINFER_DECL void Mean(const FDTensor &x, FDTensor *out,
                           const std::vector<int64_t> &dims,
                           bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the product operation for input FDTensor along given dims.
+/** Execute the product operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param dims The vector of axis which will be reduced.
@@ -95,7 +95,7 @@ ULTRAINFER_DECL void Prod(const FDTensor &x, FDTensor *out,
                           const std::vector<int64_t> &dims,
                           bool keep_dim = false, bool reduce_all = false);
 
-/** Excute the argmax operation for input FDTensor along given dims.
+/** Execute the argmax operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param axis The axis which will be reduced.
@@ -109,7 +109,7 @@ ULTRAINFER_DECL void ArgMax(const FDTensor &x, FDTensor *out, int64_t axis,
                             FDDataType output_dtype = FDDataType::INT64,
                             bool keep_dim = false, bool flatten = false);
 
-/** Excute the argmin operation for input FDTensor along given dims.
+/** Execute the argmin operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param axis The axis which will be reduced.

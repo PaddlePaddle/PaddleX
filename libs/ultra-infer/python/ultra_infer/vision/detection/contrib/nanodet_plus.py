@@ -79,7 +79,7 @@ class NanoDetPlus(UltraInferModel):
 
     @property
     def max_wh(self):
-        # for offseting the boxes by classes when using NMS, default 4096
+        # for offsetting the boxes by classes when using NMS, default 4096
         return self._model.max_wh
 
     @property

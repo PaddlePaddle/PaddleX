@@ -109,7 +109,7 @@ class RetinaFace(UltraInferModel):
         ), "The value to set `variance` must be type of tuple or list."
         assert (
             len(value) == 2
-        ), "The value to set `variance` must contatins 2 elements".format(len(value))
+        ), "The value to set `variance` must contains 2 elements".format(len(value))
         self._model.variance = value
 
     @downsample_strides.setter

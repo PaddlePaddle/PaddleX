@@ -52,7 +52,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
-                copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
+                copy.deepcopy(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
             )
             table_draw = ImageDraw.Draw(table_cell_img)
             rectangle_color = (255, 0, 0)

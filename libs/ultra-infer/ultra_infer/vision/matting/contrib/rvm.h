@@ -51,7 +51,7 @@ public:
   /** \brief Predict the matting result for an input image
    *
    * \param[in] im The input image data, comes from cv::imread()
-   * \param[in] result The output matting result will be writen to this
+   * \param[in] result The output matting result will be written to this
    * structure \return true if the prediction successed, otherwise false
    */
   bool Predict(cv::Mat *im, MattingResult *result);
@@ -60,11 +60,11 @@ public:
   std::vector<int> size;
 
   /// Whether to open the video mode, if there are some irrelevant pictures, set
-  /// it to fasle, the default is true // NOLINT
+  /// it to false, the default is true // NOLINT
   bool video_mode;
 
   /// Whether convert to RGB, Set to false if you have converted YUV format
-  /// images to RGB outside the model, dafault true // NOLINT
+  /// images to RGB outside the model, default true // NOLINT
   bool swap_rb;
 
 private:

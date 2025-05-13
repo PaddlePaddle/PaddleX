@@ -61,7 +61,7 @@ class FormulaRecognitionResult(BaseCVResult):
         Returns:
             Dict[str, Image.Image]: An image with detection boxes, texts, and scores blended on it.
         """
-        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
+        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
         res_img_dict = {}
         model_settings = self["model_settings"]
         if model_settings["use_doc_preprocessor"]:

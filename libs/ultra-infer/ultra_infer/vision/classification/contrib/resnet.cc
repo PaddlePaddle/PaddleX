@@ -82,7 +82,7 @@ bool ResNet::Postprocess(FDTensor &infer_result, ClassifyResult *result,
                          int topk) {
   // In this function, the postprocess need be implemented according to the
   // original Repos,
-  // Finally the reslut of postprocess should be saved in ClassifyResult
+  // Finally the result of postprocess should be saved in ClassifyResult
   // variable.
   // 1. Softmax 2. Choose topk labels 3. Put the result into ClassifyResult
   // variable.

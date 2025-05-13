@@ -51,7 +51,7 @@ public:
    *     maybe it's better to run resize on CPU, because the HostToDevice memcpy
    *     is time consuming. Set this true to run the initial resize on CPU.
    *
-   * \param[in] v ture or false
+   * \param[in] v true or false
    */
   void InitialResizeOnCpu(bool v) { initial_resize_on_cpu_ = v; }
 

@@ -49,14 +49,14 @@ void WrapAndResize(Mat *mat, std::vector<int> size, std::vector<float> color,
                    bool keep_ratio = false) {
   // Reference: nanodet/data/transform/warp.py#L139
   // size: tuple of input (width, height)
-  // The default value of `keep_ratio` is `fasle` in
+  // The default value of `keep_ratio` is `false` in
   // `config/nanodet-plus-m-1.5x_320.yml` for both
   // train and val processes. So, we just let this
   // option default `false` according to the official
   // implementation in NanoDet and NanoDet-Plus.
   // Note, this function will apply a normal resize
   // operation to input Mat if the keep_ratio option
-  // is fasle and the behavior will be the same as
+  // is false and the behavior will be the same as
   // yolov5's letterbox if keep_ratio is true.
 
   // with keep_ratio = false (default)

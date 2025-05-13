@@ -74,7 +74,7 @@ class YOLOR(UltraInferModel):
 
     @property
     def is_mini_pad(self):
-        # only pad to the minimum rectange which height and width is times of stride
+        # only pad to the minimum rectangle which height and width is times of stride
         return self._model.is_mini_pad
 
     @property
@@ -89,7 +89,7 @@ class YOLOR(UltraInferModel):
 
     @property
     def max_wh(self):
-        # for offseting the boxes by classes when using NMS
+        # for offsetting the boxes by classes when using NMS
         return self._model.max_wh
 
     @size.setter

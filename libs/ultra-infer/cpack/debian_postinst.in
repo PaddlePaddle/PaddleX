@@ -16,7 +16,7 @@ case "$1" in
             LIBS_DIRECOTRIES[${#LIBS_DIRECOTRIES[@]}]=${SO_FILE%/*}
         done
 
-        # Remove the dumplicate directories
+        # Remove the duplicate directories
         LIBS_DIRECOTRIES=($(awk -v RS=' ' '!a[$1]++' <<< ${LIBS_DIRECOTRIES[@]}))
 
         IMPORT_PATH=""

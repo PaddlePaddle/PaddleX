@@ -17,4 +17,7 @@ MODELS = [
     "UniMERNet",
     "PP-FormulaNet-S",
     "PP-FormulaNet-L",
+    "PP-FormulaNet_plus-S",
+    "PP-FormulaNet_plus-M",
+    "PP-FormulaNet_plus-L",
 ]

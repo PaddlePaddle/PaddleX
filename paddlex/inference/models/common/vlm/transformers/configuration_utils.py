@@ -909,7 +909,7 @@ class PretrainedConfig:
 
     def register_unsavable_keys(self, keys):
         # Save: not save it in any case
-        # Print: show it if non defalut value
+        # Print: show it if non default value
         if isinstance(keys, list) or isinstance(keys, tuple):
             for key in keys:
                 self._unsavable_keys.add(key)

@@ -45,9 +45,9 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output detection result
-   * will be writen to this structure \param[in] conf_threshold confidence
+   * will be written to this structure \param[in] conf_threshold confidence
    * threashold for postprocessing, default is 0.45 \param[in] nms_iou_threshold
-   * iou threashold for NMS, default is 0.25 \return true if the prediction
+   * iou threshold for NMS, default is 0.25 \return true if the prediction
    * successed, otherwise false
    */
   virtual bool Predict(cv::Mat *im, DetectionResult *result,
@@ -64,7 +64,7 @@ public:
   // padding value, size should be the same as channels
 
   std::vector<float> padding_value;
-  // only pad to the minimum rectange which height and width is times of stride
+  // only pad to the minimum rectangle which height and width is times of stride
   bool is_mini_pad;
   // while is_mini_pad = false and is_no_pad = true,
   // will resize the image to the set size
@@ -74,13 +74,13 @@ public:
   bool is_scale_up;
   // padding stride, for is_mini_pad
   int stride;
-  // for offseting the boxes by classes when using NMS
+  // for offsetting the boxes by classes when using NMS
   float max_wh;
   // downsample strides for YOLOv5Lite to generate anchors,
   // will take (8,16,32) as default values, might have stride=64.
   std::vector<int> downsample_strides;
   // anchors parameters, downsample_strides will take (8,16,32),
-  // each stride has three anchors with width and hight
+  // each stride has three anchors with width and height
   std::vector<std::vector<float>> anchor_config;
   /*! @brief
     whether the model_file was exported with decode module. The official
@@ -117,7 +117,7 @@ private:
 
   // the official YOLOv5Lite/export.py will export ONNX file without decode
   // module.
-  // this fuction support the postporocess for ONNX file without decode module.
+  // this function support the postporocess for ONNX file without decode module.
   // set the `is_decode_exported = false`, this function will work.
   bool PostprocessWithDecode(
       FDTensor &infer_result, DetectionResult *result,
@@ -129,7 +129,7 @@ private:
                  bool scale_fill = false, bool scale_up = true,
                  int stride = 32);
 
-  // generate anchors for decodeing when ONNX file without decode module.
+  // generate anchors for decoding when ONNX file without decode module.
   void GenerateAnchors(const std::vector<int> &size,
                        const std::vector<int> &downsample_strides,
                        std::vector<Anchor> *anchors, const int num_anchors = 3);

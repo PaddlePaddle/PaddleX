@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from copy import deepcopy
 from typing import Dict, List, Tuple
 
 import numpy as np
@@ -24,7 +25,6 @@ from .utils import (
     get_cut_blocks,
     get_nearest_edge_distance,
     insert_child_blocks,
-    is_projection_consistent,
     manhattan_insert,
     recursive_xy_cut,
     recursive_yx_cut,
@@ -76,7 +76,10 @@ def pre_process(
         else:
             tolerance_len = block.short_side_length // 10
 
-        block_center = (block.start_coordinate + block.end_coordinate) / 2
+        block_center = (
+            block.bbox[region.direction_start_index]
+            + block.bbox[region.direction_end_index]
+        ) / 2
         center_offset = abs(block_center - region.direction_center_coordinate)
         is_centered = center_offset <= tolerance_len
 
@@ -183,6 +186,7 @@ def update_region_label(
     elif block.label in BLOCK_LABEL_MAP["vision_labels"]:
         block.order_label = "vision"
         block.num_of_lines = 1
+        block.direction = region.direction
         block.update_direction_info()
     elif block.label in BLOCK_LABEL_MAP["footer_labels"]:
         block.order_label = "footer"
@@ -280,19 +284,25 @@ def get_layout_structure(
                         second_ref_block.bbox,
                         region_direction,
                     )
-                    ref_match_projection_iou_ = calculate_projection_overlap_ratio(
-                        ref_block.bbox,
-                        second_ref_block.bbox,
-                        region_secondary_direction,
+                    secondary_direction_ref_match_projection_overlap_ratio = (
+                        calculate_projection_overlap_ratio(
+                            ref_block.bbox,
+                            second_ref_block.bbox,
+                            region_secondary_direction,
+                        )
                     )
                     if (
                         second_match_projection_iou > 0
                         and ref_match_projection_iou == 0
-                        and ref_match_projection_iou_ > 0
+                        and secondary_direction_ref_match_projection_overlap_ratio > 0
                     ):
                         if block.order_label == "vision" or (
                             ref_block.order_label == "normal_text"
                             and second_ref_block.order_label == "normal_text"
+                            and ref_block.text_line_width
+                            > ref_block.text_line_height * 5
+                            and second_ref_block.text_line_width
+                            > second_ref_block.text_line_height * 5
                         ):
                             block.order_label = (
                                 "cross_reference"
@@ -462,60 +472,46 @@ def xycut_enhanced(
             )
             if len(discontinuous) > 1:
                 xy_cut_blocks = [block for block in xy_cut_blocks]
-            # if len(discontinuous) == 1 or max(block_text_lines) == 1 or (not is_projection_consistent(xy_cut_blocks, discontinuous, direction=region.direction) and len(discontinuous) > 2 and max(block_text_lines) - min(block_text_lines) < 3):
+            blocks_to_sort = deepcopy(xy_cut_blocks)
+            if region.direction == "vertical":
+                for block in blocks_to_sort:
+                    block.bbox = np.array(
+                        [-block.bbox[0], block.bbox[1], -block.bbox[2], block.bbox[3]]
+                    )
             if len(discontinuous) == 1 or max(block_text_lines) == 1:
-                xy_cut_blocks.sort(
+                blocks_to_sort.sort(
                     key=lambda x: (
                         x.bbox[region.secondary_direction_start_index]
                         // (region.text_line_height // 2),
                         x.bbox[region.direction_start_index],
                     )
                 )
-                xy_cut_blocks = shrink_overlapping_boxes(
-                    xy_cut_blocks, region.secondary_direction
+                blocks_to_sort = shrink_overlapping_boxes(
+                    blocks_to_sort, region.secondary_direction
                 )
-            if (
-                len(discontinuous) == 1
-                or max(block_text_lines) == 1
-                or (
-                    not is_projection_consistent(
-                        xy_cut_blocks, discontinuous, direction=region.direction
-                    )
-                    and len(discontinuous) > 2
-                    and max(block_text_lines) - min(block_text_lines) < 3
-                )
-            ):
-                xy_cut_blocks.sort(
-                    key=lambda x: (
-                        x.bbox[region.secondary_direction_start_index]
-                        // (region.text_line_height // 2),
-                        x.bbox[region.direction_start_index],
-                    )
-                )
-                xy_cut_blocks = shrink_overlapping_boxes(
-                    xy_cut_blocks, region.secondary_direction
-                )
-                block_bboxes = np.array([block.bbox for block in xy_cut_blocks])
+                block_bboxes = np.array([block.bbox for block in blocks_to_sort])
                 sorted_indexes = sort_by_xycut(
                     block_bboxes, direction=region.secondary_direction, min_gap=1
                 )
             else:
-                xy_cut_blocks.sort(
+                blocks_to_sort.sort(
                     key=lambda x: (
                         x.bbox[region.direction_start_index]
                         // (region.text_line_width // 2),
                         x.bbox[region.secondary_direction_start_index],
                     )
                 )
-                xy_cut_blocks = shrink_overlapping_boxes(
-                    xy_cut_blocks, region.direction
+                blocks_to_sort = shrink_overlapping_boxes(
+                    blocks_to_sort, region.direction
                 )
-                block_bboxes = np.array([block.bbox for block in xy_cut_blocks])
+                block_bboxes = np.array([block.bbox for block in blocks_to_sort])
                 sorted_indexes = sort_by_xycut(
                     block_bboxes, direction=region.direction, min_gap=1
                 )
 
-            sorted_blocks = [xy_cut_blocks[i] for i in sorted_indexes]
+            sorted_blocks = [
+                region.block_map[blocks_to_sort[i].index] for i in sorted_indexes
+            ]
 
         sorted_blocks = match_unsorted_blocks(
             sorted_blocks,

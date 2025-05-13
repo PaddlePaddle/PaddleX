@@ -24,7 +24,7 @@
 namespace ultra_infer {
 namespace vision {
 
-/*! @brief Processor for crop images in center with given type deafault is
+/*! @brief Processor for crop images in center with given type default is
  * float.
  */
 class ULTRAINFER_DECL CenterCrop : public Processor {

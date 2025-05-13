@@ -73,7 +73,7 @@ const void *FDTensor::CpuData() const {
 #else
     FDASSERT(false,
              "The UltraInfer didn't compile under -DWITH_GPU=ON, so this is "
-             "an unexpected problem happend.");
+             "an unexpected problem happened.");
 #endif
   }
   return Data();
@@ -259,7 +259,7 @@ bool FDTensor::ReallocFn(size_t nbytes) {
 #else
     FDASSERT(false, "The UltraInfer FDTensor allocator didn't compile under "
                     "-DWITH_GPU=ON,"
-                    "so this is an unexpected problem happend.");
+                    "so this is an unexpected problem happened.");
 #endif
   } else {
     if (is_pinned_memory) {
@@ -276,7 +276,7 @@ bool FDTensor::ReallocFn(size_t nbytes) {
 #else
       FDASSERT(false, "The UltraInfer FDTensor allocator didn't compile under "
                       "-DWITH_GPU=ON,"
-                      "so this is an unexpected problem happend.");
+                      "so this is an unexpected problem happened.");
 #endif
     }
     buffer_ = realloc(buffer_, nbytes);
@@ -319,7 +319,7 @@ void FDTensor::CopyBuffer(void *dst, const void *src, size_t nbytes,
     FDASSERT(false,
              "The UltraInfer didn't compile under -DWITH_GPU=ON, so copying "
              "gpu buffer is "
-             "an unexpected problem happend.");
+             "an unexpected problem happened.");
 #endif
   } else {
     if (is_pinned_memory) {
@@ -330,7 +330,7 @@ void FDTensor::CopyBuffer(void *dst, const void *src, size_t nbytes,
       FDASSERT(false,
                "The UltraInfer didn't compile under -DWITH_GPU=ON, so copying "
                "gpu buffer is "
-               "an unexpected problem happend.");
+               "an unexpected problem happened.");
 #endif
     } else {
       std::memcpy(dst, src, nbytes);

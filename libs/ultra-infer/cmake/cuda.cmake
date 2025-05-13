@@ -10,7 +10,7 @@ if(BUILD_ON_JETSON)
   set(fd_known_gpu_archs "53 62 72")
   set(fd_known_gpu_archs10 "53 62 72")
 else()
-  message("Using New Release Strategy - All Arches Packge")
+  message("Using New Release Strategy - All Arches Package")
   set(fd_known_gpu_archs "35 50 52 60 61 70 75 80 86")
   set(fd_known_gpu_archs10 "35 50 52 60 61 70 75")
   set(fd_known_gpu_archs11 "50 60 61 70 75 80")
@@ -58,7 +58,7 @@ function(detect_installed_gpus out_variable)
       set(CUDA_gpu_detect_output
           ${nvcc_out}
           CACHE INTERNAL
-                "Returned GPU architetures from detect_installed_gpus tool"
+                "Returned GPU architectures from detect_installed_gpus tool"
                 FORCE)
     endif()
   endif()
@@ -98,7 +98,7 @@ function(select_nvcc_arch_flags out_variable)
   # set CUDA_ARCH_NAME strings (so it will be seen as dropbox in CMake-Gui)
   set(CUDA_ARCH_NAME
       ${archs_name_default}
-      CACHE STRING "Select target NVIDIA GPU achitecture.")
+      CACHE STRING "Select target NVIDIA GPU architecture.")
   set_property(CACHE CUDA_ARCH_NAME PROPERTY STRINGS "" ${archs_names})
   mark_as_advanced(CUDA_ARCH_NAME)
 
@@ -252,7 +252,7 @@ else()
   message(WARNING "Detected custom CMAKE_CUDA_STANDARD is using: ${CMAKE_CUDA_STANDARD}")  
 endif()
 
-# (Note) For windows, if delete /W[1-4], /W1 will be added defaultly and conflic with -w
+# (Note) For windows, if delete /W[1-4], /W1 will be added defaultly and conflict with -w
 # So replace /W[1-4] with /W0
 if(WIN32)
   string(REGEX REPLACE "/W[1-4]" " /W0 " CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS}")

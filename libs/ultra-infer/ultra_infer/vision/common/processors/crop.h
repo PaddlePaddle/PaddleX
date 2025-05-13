@@ -19,7 +19,7 @@
 namespace ultra_infer {
 namespace vision {
 
-/*! @brief Processor for crop images with given paramters.
+/*! @brief Processor for crop images with given parameters.
  */
 class ULTRAINFER_DECL Crop : public Processor {
 public:

@@ -45,8 +45,8 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output face detection
-   * result will be writen to this structure \param[in] conf_threshold
-   * confidence threashold for postprocessing, default is 0.25 \param[in]
+   * result will be written to this structure \param[in] conf_threshold
+   * confidence threshold for postprocessing, default is 0.25 \param[in]
    * nms_iou_threshold iou threashold for NMS, default is 0.5 \return true if
    * the prediction successed, otherwise false
    */
@@ -62,7 +62,7 @@ public:
   // padding value, size should be the same as channels
 
   std::vector<float> padding_value;
-  // only pad to the minimum rectange which height and width is times of stride
+  // only pad to the minimum rectangle which height and width is times of stride
   bool is_mini_pad;
   // while is_mini_pad = false and is_no_pad = true,
   // will resize the image to the set size
@@ -76,7 +76,7 @@ public:
   int stride;
   /*! @brief
     Argument for image postprocessing step, setup the number of landmarks for
-    per face (if have), default 5 in official yolov5face note that, the outupt
+    per face (if have), default 5 in official yolov5face note that, the output
     tensor's shape must be:
     (1,n,4+1+2*landmarks_per_face+1=box+obj+landmarks+cls), default 5
   */

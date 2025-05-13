@@ -44,7 +44,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output face detection
-   * result will be writen to this structure \return true if the prediction
+   * result will be written to this structure \return true if the prediction
    * successed, otherwise false
    */
   virtual bool Predict(cv::Mat *im, FaceAlignmentResult *result);

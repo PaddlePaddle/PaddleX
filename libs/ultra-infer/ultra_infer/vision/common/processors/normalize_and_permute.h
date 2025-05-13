@@ -48,7 +48,7 @@ public:
   // auto norm = Normalize(...)
   // norm(mat)
   // ```
-  // There will be some precomputation in contruct function
+  // There will be some precomputation in construct function
   // and the `norm(mat)` only need to compute result = mat * alpha + beta
   // which will reduce lots of time
   /** \brief Process the input images

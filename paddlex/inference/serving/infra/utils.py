@@ -38,8 +38,8 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("filetype"):
     import filetype
-if is_dep_available("PyMuPDF"):
-    import fitz
+if is_dep_available("pypdfium2"):
+    import pypdfium2 as pdfium
 if is_dep_available("yarl"):
     import yarl
 
@@ -176,31 +176,29 @@ def base64_encode(data: bytes) -> str:
     return base64.b64encode(data).decode("ascii")
 
 
-@function_requires_deps("PyMuPDF", "opencv-contrib-python")
+@function_requires_deps("pypdfium2", "opencv-contrib-python")
 def read_pdf(
     bytes_: bytes, max_num_imgs: Optional[int] = None
 ) -> Tuple[List[np.ndarray], PDFInfo]:
     images: List[np.ndarray] = []
     page_info_list: List[PDFPageInfo] = []
-    with fitz.open("pdf", bytes_) as doc:
-        for page in doc:
-            if max_num_imgs is not None and len(images) >= max_num_imgs:
-                break
-            # TODO: Do not always use zoom=2.0
-            zoom = 2.0
-            deg = 0
-            mat = fitz.Matrix(zoom, zoom).prerotate(deg)
-            pixmap = page.get_pixmap(matrix=mat, alpha=False)
-            image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
-                pixmap.h, pixmap.w, pixmap.n
-            )
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            images.append(image)
-            page_info = PDFPageInfo(
-                width=pixmap.w,
-                height=pixmap.h,
-            )
-            page_info_list.append(page_info)
+    doc = pdfium.PdfDocument(bytes_)
+    for page in doc:
+        if max_num_imgs is not None and len(images) >= max_num_imgs:
+            break
+        # TODO: Do not always use zoom=2.0
+        zoom = 2.0
+        deg = 0
+        image = page.render(scale=zoom, rotation=deg).to_pil()
+        image = image.convert("RGB")
+        image = np.array(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        images.append(image)
+        page_info = PDFPageInfo(
+            width=image.shape[1],
+            height=image.shape[0],
+        )
+        page_info_list.append(page_info)
     pdf_info = PDFInfo(
         numPages=len(page_info_list),
         pages=page_info_list,

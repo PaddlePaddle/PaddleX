@@ -95,7 +95,7 @@ plugins:
             安装PaddleX: PaddleX Install
             产线使用教程: Pipeline Tutorials
             概述: Overview
-            文本图像智能分析: Informatio Extraction
+            文本图像智能分析: Information Extraction
             文档场景信息抽取v3产线: PP-ChatOCRv3-doc
             文档场景信息抽取v4产线: PP-ChatOCRv4-doc
             OCR: OCR
@@ -479,4 +479,4 @@ nav:
        - 用电量长期预测应用实践教程: practical_tutorials/ts_forecast.md
        - 产线部署实践教程: practical_tutorials/deployment_tutorial.md
   - FAQ: FAQ.md
-  - 近期更新: CHANGLOG.md
+  - 近期更新: CHANGELOG.md

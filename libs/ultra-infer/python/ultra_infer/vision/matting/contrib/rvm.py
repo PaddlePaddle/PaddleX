@@ -58,14 +58,14 @@ class RobustVideoMatting(UltraInferModel):
     @property
     def video_mode(self):
         """
-        Whether to open the video mode, if there are some irrelevant pictures, set it to fasle, the default is true
+        Whether to open the video mode, if there are some irrelevant pictures, set it to false, the default is true
         """
         return self._model.video_mode
 
     @property
     def swap_rb(self):
         """
-        Whether convert to RGB, Set to false if you have converted YUV format images to RGB outside the model, dafault true
+        Whether convert to RGB, Set to false if you have converted YUV format images to RGB outside the model, default true
         """
         return self._model.swap_rb
 

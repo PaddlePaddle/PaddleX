@@ -30,7 +30,7 @@ public:
 
   /** \brief Use CUDA to boost the performance of processors
    *
-   * \param[in] enable_cv_cuda ture: use CV-CUDA, false: use CUDA only
+   * \param[in] enable_cv_cuda true: use CV-CUDA, false: use CUDA only
    * \param[in] gpu_id GPU device id
    * \return true if the preprocess successed, otherwise false
    */

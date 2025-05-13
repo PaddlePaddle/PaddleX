@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from operator import itemgetter
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
@@ -171,9 +170,10 @@ class _DocPreprocessorPipeline(BasePipeline):
                 rot_imgs = image_arrays
 
             if model_settings["use_doc_unwarping"]:
-                output_imgs = list(
-                    map(itemgetter("doctr_img"), self.doc_unwarping_model(rot_imgs))
-                )
+                output_imgs = [
+                    item["doctr_img"][:, :, ::-1]
+                    for item in self.doc_unwarping_model(rot_imgs)
+                ]
             else:
                 output_imgs = rot_imgs
 

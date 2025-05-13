@@ -196,3 +196,12 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv5_server_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv5_server_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)

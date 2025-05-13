@@ -23,7 +23,7 @@ namespace function {
    Support float32, float64, int32, int64
     @param x The input tensor.
     @param min The lower bound
-    @param max The uppper bound
+    @param max The upper bound
     @param out The output tensor which stores the result.
 */
 ULTRAINFER_DECL void Clip(const FDTensor &x, double min, double max,

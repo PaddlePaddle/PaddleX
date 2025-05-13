@@ -56,7 +56,7 @@ class YOLOv8Preprocessor:
     @property
     def is_mini_pad(self):
         """
-        is_mini_pad for preprocessing, pad to the minimum rectange which height and width is times of stride, default false
+        is_mini_pad for preprocessing, pad to the minimum rectangle which height and width is times of stride, default false
         """
         return self._preprocessor.is_mini_pad
 

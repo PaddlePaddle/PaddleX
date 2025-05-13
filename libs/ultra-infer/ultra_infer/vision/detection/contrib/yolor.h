@@ -42,7 +42,7 @@ public:
   /** \brief Predict the detection result for an input image
    *
    * \param[in] im The input image data, comes from cv::imread()
-   * \param[in] result The output detection result will be writen to this
+   * \param[in] result The output detection result will be written to this
    * structure \param[in] conf_threshold confidence threashold for
    * postprocessing, default is 0.25 \param[in] nms_iou_threshold iou threashold
    * for NMS, default is 0.5 \return true if the prediction successed, otherwise
@@ -60,7 +60,7 @@ public:
   // padding value, size should be the same as channels
 
   std::vector<float> padding_value;
-  // only pad to the minimum rectange which height and width is times of stride
+  // only pad to the minimum rectangle which height and width is times of stride
   bool is_mini_pad;
   // while is_mini_pad = false and is_no_pad = true,
   // will resize the image to the set size
@@ -70,7 +70,7 @@ public:
   bool is_scale_up;
   // padding stride, for is_mini_pad
   int stride;
-  // for offseting the boxes by classes when using NMS
+  // for offsetting the boxes by classes when using NMS
   float max_wh;
 
 private:
