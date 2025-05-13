@@ -1499,12 +1499,6 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
-<td><code>useGeneralOcr</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>use_general_ocr</code> parameter of the pipeline object's <code>predict</code> method.</td>
-<td>No</td>
-</tr>
-<tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>predict</code> method.</td>

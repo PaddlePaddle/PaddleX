@@ -34,7 +34,6 @@ class InferRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
     useTextlineOrientation: Optional[bool] = None
-    useGeneralOcr: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
