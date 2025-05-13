@@ -123,7 +123,7 @@ bool LiteBackend::Init(const RuntimeOption &runtime_option) {
             config_);
     if (option_.optimized_model_dir != "") {
       FDINFO
-          << "Optimzed model dir is not empty, will save optimized model to: "
+          << "Optimized model dir is not empty, will save optimized model to: "
           << option_.optimized_model_dir << std::endl;
       predictor_->SaveOptimizedModel(
           option_.optimized_model_dir,

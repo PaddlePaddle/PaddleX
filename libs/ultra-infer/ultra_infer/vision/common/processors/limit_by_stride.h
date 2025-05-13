@@ -19,7 +19,7 @@
 namespace ultra_infer {
 namespace vision {
 
-/*! @brief Processor for LimitByStride images with given paramters.
+/*! @brief Processor for LimitByStride images with given parameters.
  */
 class ULTRAINFER_DECL LimitByStride : public Processor {
 public:
@@ -38,8 +38,8 @@ public:
   /** \brief Process the input images
    *
    * \param[in] mat The input image data
-   * \param[in] stride limit image stride, deafult is 32
-   * \param[in] interp interpolation method, deafult is 1
+   * \param[in] stride limit image stride, default is 32
+   * \param[in] interp interpolation method, default is 1
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
    * \return true if the process successed, otherwise false
    */

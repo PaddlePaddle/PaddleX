@@ -161,10 +161,10 @@ evaling!"
 
     @abstractmethod
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         raise NotImplementedError
 
     @abstractmethod
     def get_eval_kwargs(self):
-        """get key-value arguments of model evalution function"""
+        """get key-value arguments of model evaluation function"""
         raise NotImplementedError

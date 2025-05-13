@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .GOT_ocr_2_0 import PPChart2TableInference
 from .qwen2_vl import PPDocBeeInference, Qwen2VLForConditionalGeneration

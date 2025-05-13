@@ -445,6 +445,14 @@
       "onnxruntime",
       "paddle"
     ],
+    "PP-DocLayout_plus-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocBlockLayout": [
+      "onnxruntime",
+      "paddle"
+    ],
     "RT-DETR-H_layout_17cls": [
       "onnxruntime",
       "paddle"

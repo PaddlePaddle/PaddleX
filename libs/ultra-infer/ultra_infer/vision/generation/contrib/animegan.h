@@ -46,7 +46,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output style transfer
-   * result will be writen to this structure \return true if the prediction
+   * result will be written to this structure \return true if the prediction
    * successed, otherwise false
    */
   bool Predict(cv::Mat &img, cv::Mat *result);
@@ -55,7 +55,7 @@ public:
    *
    * \param[in] images The list of input images, each element comes from
    * cv::imread(), is a 3-D array with layout HWC, BGR format \param[in] results
-   * The list of output style transfer results will be writen to this structure
+   * The list of output style transfer results will be written to this structure
    * \return true if the batch prediction successed, otherwise false
    */
   bool BatchPredict(const std::vector<cv::Mat> &images,

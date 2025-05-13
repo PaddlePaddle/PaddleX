@@ -62,7 +62,7 @@ public:
   /// Get det_db_score_mode_ of the detection postprocess
   std::string GetDetDBScoreMode() const { return det_db_score_mode_; }
 
-  /// Set use_dilation for the detection postprocess, default is fasle
+  /// Set use_dilation for the detection postprocess, default is false
   void SetUseDilation(int use_dilation) { use_dilation_ = use_dilation; }
   /// Get use_dilation of the detection postprocess
   int GetUseDilation() const { return use_dilation_; }

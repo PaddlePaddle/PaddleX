@@ -23,7 +23,7 @@ class BEVFusionEvaluator(BaseEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.batch_size is not None:
             self.pdx_config.update_batch_size(self.eval_config.batch_size)
         self.pdx_config.update_dataset(
@@ -35,7 +35,7 @@ class BEVFusionEvaluator(BaseEvaluator):
         self.pdx_config.update_weights(self.eval_config.weight_path)
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

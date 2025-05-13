@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace vision {
-/*! @brief Processor for convert images with given paramters and permute images
+/*! @brief Processor for convert images with given parameters and permute images
  * from HWC to CHW.
  */
 class ULTRAINFER_DECL ConvertAndPermute : public Processor {

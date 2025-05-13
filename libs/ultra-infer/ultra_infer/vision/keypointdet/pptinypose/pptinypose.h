@@ -54,7 +54,7 @@ public:
   /** \brief Predict the keypoint detection result for an input image
    *
    * \param[in] im The input image data, comes from cv::imread()
-   * \param[in] result The output keypoint detection result will be writen to
+   * \param[in] result The output keypoint detection result will be written to
    * this structure \return true if the keypoint prediction successed, otherwise
    * false
    */
@@ -64,8 +64,8 @@ public:
    * for an input image
    *
    * \param[in] im The input image data, comes from cv::imread()
-   * \param[in] result The output keypoint detection result will be writen to
-   * this structure \param[in] detection_result The structure strores pedestrian
+   * \param[in] result The output keypoint detection result will be written to
+   * this structure \param[in] detection_result The structure stores pedestrian
    * detection result, which is used to crop image for multi-persons keypoint
    * detection \return true if the keypoint prediction successed, otherwise
    * false

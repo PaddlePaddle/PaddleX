@@ -12,18 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-layout_order_config = {
-    # 人工配置项
-    "line_height_iou_threshold": 0.4,  # For line segmentation of OCR results
-    "title_area_max_block_threshold": 0.3,  # update paragraph_title -> doc_title
-    "block_label_match_iou_threshold": 0.1,
-    "block_title_match_iou_threshold": 0.1,
+
+XYCUT_SETTINGS = {
+    "child_block_overlap_ratio_threshold": 0.1,
+    "edge_distance_compare_tolerance_len": 2,
+    "distance_weight_map": {
+        "edge_weight": 10**4,
+        "up_edge_weight": 1,
+        "down_edge_weight": 0.0001,
+    },
+}
+
+REGION_SETTINGS = {
+    "match_block_overlap_ratio_threshold": 0.6,
+    "split_block_overlap_ratio_threshold": 0.4,
+}
+
+BLOCK_SETTINGS = {
+    "title_conversion_area_ratio_threshold": 0.3,  # update paragraph_title -> doc_title
+}
+
+LINE_SETTINGS = {
+    "line_height_iou_threshold": 0.6,  # For line segmentation of OCR results
+    "delimiter_map": {
+        "doc_title": " ",
+        "content": "\n",
+    },
+}
+
+BLOCK_LABEL_MAP = {
     "doc_title_labels": ["doc_title"],  # 文档标题
-    "paragraph_title_labels": ["paragraph_title"],  # 段落标题
+    "paragraph_title_labels": [
+        "paragraph_title",
+        "abstract_title",
+        "reference_title",
+        "content_title",
+    ],  # 段落标题
     "vision_labels": [
         "image",
         "table",
         "chart",
+        "flowchart",
         "figure",
     ],  # 图、表、印章、图表、图
     "vision_title_labels": ["table_title", "chart_title", "figure_title"],  # 图表标题
@@ -45,26 +74,8 @@ layout_order_config = {
         "abstract",
         "paragraph_title",
         "doc_title",
-        "table_title",
-        "chart_title",
-        "figure_title",
-        "image",
-        "table",
-        "chart",
-        "figure",
+        "abstract_title",
+        "refer_title",
+        "content_title",
     ],
-    # 自动补全配置项
-    "layout_to_ocr_mapping": {},
-    "all_layout_region_box": [],  # 区域box
-    "doc_title_block_idxes": [],
-    "paragraph_title_block_idxes": [],
-    "text_title_labels": [],  # doc_title_labels+paragraph_title_labels
-    "text_title_block_idxes": [],
-    "vision_block_idxes": [],
-    "vision_title_block_idxes": [],
-    "vision_footnote_block_idxes": [],
-    "text_block_idxes": [],
-    "header_block_idxes": [],
-    "footer_block_idxes": [],
-    "unordered_block_idxes": [],
 }

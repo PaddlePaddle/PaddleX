@@ -24,7 +24,7 @@
 namespace ultra_infer {
 namespace vision {
 
-/*! @brief Processor for cast images with given type deafault is float.
+/*! @brief Processor for cast images with given type default is float.
  */
 class ULTRAINFER_DECL Cast : public Processor {
 public:

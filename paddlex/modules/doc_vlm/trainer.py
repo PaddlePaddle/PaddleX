@@ -18,14 +18,14 @@ from .model_list import MODELS
 
 
 class DocVLMTrainer(BaseTrainer):
-    """Document Vision Languange Model Trainer"""
+    """Document Vision Language Model Trainer"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
         raise UnsupportedAPIError(
-            "Document vision languange models do not support train for now."
+            "Document vision language models do not support train for now."
         )
 
     def update_config(self):

@@ -167,7 +167,9 @@ class DocPreprocessorPipeline(BasePipeline):
                 rot_img = image_array
 
             if model_settings["use_doc_unwarping"]:
-                output_img = next(self.doc_unwarping_model(rot_img))["doctr_img"]
+                output_img = next(self.doc_unwarping_model(rot_img))["doctr_img"][
+                    :, :, ::-1
+                ]
             else:
                 output_img = rot_img
 

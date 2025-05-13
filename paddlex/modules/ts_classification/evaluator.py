@@ -41,11 +41,11 @@ class TSCLSEvaluator(BaseEvaluator):
         return config_path
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         self.pdx_config.update_dataset(self.global_config.dataset_dir, "TSCLSDataset")
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

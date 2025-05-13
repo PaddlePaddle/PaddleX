@@ -44,7 +44,7 @@
 
 ### 2.1.4 更新Predictor Opiton支持的设备列表
 
-PaddleX创建Predictor时会判断设备是否已支持，相关代码位于 [PaddleX Predictor Opiton](../../paddlex/inference/utils/pp_option.py) 中的 `SUPPORT_DEVICE`
+PaddleX创建Predictor时会判断设备是否已支持，相关代码位于 [PaddleX Predictor Option](../../paddlex/inference/utils/pp_option.py) 中的 `SUPPORT_DEVICE`
 
 ### 2.1.5 更新Predictor Opiton支持的设备列表
 

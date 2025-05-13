@@ -67,7 +67,7 @@ public:
    *
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] boxes_result The output of
-   * OCR detection model result will be writen to this structure. \return true
+   * OCR detection model result will be written to this structure. \return true
    * if the prediction is successed, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img,
@@ -78,7 +78,7 @@ public:
    *
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] ocr_result The output of OCR
-   * detection model result will be writen to this structure. \return true if
+   * detection model result will be written to this structure. \return true if
    * the prediction is successed, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img, vision::OCRResult *ocr_result);
@@ -87,7 +87,7 @@ public:
    *
    * \param[in] images The list input of image data, comes from cv::imread(), is
    * a 3-D array with layout HWC, BGR format. \param[in] det_results The output
-   * of OCR detection model result will be writen to this structure. \return
+   * of OCR detection model result will be written to this structure. \return
    * true if the prediction is successed, otherwise false.
    */
   virtual bool
@@ -99,7 +99,7 @@ public:
    *
    * \param[in] images The list input of image data, comes from cv::imread(), is
    * a 3-D array with layout HWC, BGR format. \param[in] ocr_results The output
-   * of OCR detection model result will be writen to this structure. \return
+   * of OCR detection model result will be written to this structure. \return
    * true if the prediction is successed, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,

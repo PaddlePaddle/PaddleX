@@ -21,7 +21,6 @@ import re
 import tempfile
 from dataclasses import dataclass
 
-from tokenizers import Tokenizer as TokenizerFast
 
 from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
@@ -1296,7 +1295,7 @@ class StructureV2Layout(UltraInferModel):
 
 class PPOCRv4(UltraInferModel):
     def __init__(self, det_model=None, cls_model=None, rec_model=None):
-        """Consruct a pipeline with text detector, direction classifier and text recognizer models
+        """Construct a pipeline with text detector, direction classifier and text recognizer models
 
         :param det_model: (UltraInferModel) The detection model object created by ultra_infer.vision.ocr.DBDetector.
         :param cls_model: (UltraInferModel) The classification model object created by ultra_infer.vision.ocr.Classifier.
@@ -1380,7 +1379,7 @@ class PPOCRSystemv4(PPOCRv4):
 
 class PPOCRv3(UltraInferModel):
     def __init__(self, det_model=None, cls_model=None, rec_model=None):
-        """Consruct a pipeline with text detector, direction classifier and text recognizer models
+        """Construct a pipeline with text detector, direction classifier and text recognizer models
 
         :param det_model: (UltraInferModel) The detection model object created by ultra_infer.vision.ocr.DBDetector.
         :param cls_model: (UltraInferModel) The classification model object created by ultra_infer.vision.ocr.Classifier.
@@ -1459,7 +1458,7 @@ class PPOCRSystemv3(PPOCRv3):
 
 class PPOCRv2(UltraInferModel):
     def __init__(self, det_model=None, cls_model=None, rec_model=None):
-        """Consruct a pipeline with text detector, direction classifier and text recognizer models
+        """Construct a pipeline with text detector, direction classifier and text recognizer models
 
         :param det_model: (UltraInferModel) The detection model object created by ultra_infer.vision.ocr.DBDetector.
         :param cls_model: (UltraInferModel) The classification model object created by ultra_infer.vision.ocr.Classifier.
@@ -1540,7 +1539,7 @@ class PPOCRSystemv2(PPOCRv2):
 
 class PPStructureV2Table(UltraInferModel):
     def __init__(self, det_model=None, rec_model=None, table_model=None):
-        """Consruct a pipeline with text detector, text recognizer and table recognizer models
+        """Construct a pipeline with text detector, text recognizer and table recognizer models
 
         :param det_model: (UltraInferModel) The detection model object created by ultra_infer.vision.ocr.DBDetector.
         :param rec_model: (UltraInferModel) The recognition model object created by ultra_infer.vision.ocr.Recognizer.
@@ -1691,7 +1690,7 @@ class StructureV2SERViLayoutXLMModelPostprocessor:
 
     def run(self, preds, batch=None, *args, **kwargs):
         """Run postprocess of  Ser-Vi-LayoutXLM model.
-        :param: preds: (list) results of infering
+        :param: preds: (list) results of inferring
         """
         return self.postprocessor_op(preds, batch, *args, **kwargs)
 
@@ -1736,7 +1735,7 @@ class StructureV2SERViLayoutXLMModel(UltraInferModel):
         self.input_name_3 = self._model.get_input_info(3).name
 
     def predict(self, image):
-        assert isinstance(image, np.ndarray), "predict recives numpy.ndarray(BGR)"
+        assert isinstance(image, np.ndarray), "predict receives numpy.ndarray(BGR)"
 
         data = self.preprocessor.run(image)
         infer_input = {
@@ -1758,7 +1757,7 @@ class StructureV2SERViLayoutXLMModel(UltraInferModel):
     def batch_predict(self, image_list):
         assert isinstance(image_list, list) and isinstance(
             image_list[0], np.ndarray
-        ), "batch_predict recives list of numpy.ndarray(BGR)"
+        ), "batch_predict receives list of numpy.ndarray(BGR)"
 
         # reading and preprocessing images
         datas = None
@@ -1880,6 +1879,8 @@ class _PyOnlyFormulaRecognitionResult(object):
 
 class LaTeXOCRDecode(object):
     def __init__(self, character_list=None):
+        from tokenizers import Tokenizer as TokenizerFast
+
         super().__init__()
         character_list = character_list
         temp_path = tempfile.gettempdir()

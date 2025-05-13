@@ -4,3 +4,4 @@ tqdm
 numpy<2
 # Compatible with paddlex
 opencv-contrib-python
+pyyaml

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# This file refered to github.com/onnx/onnx.git
+# This file referred to github.com/onnx/onnx.git
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -435,7 +435,6 @@ if sys.version_info[0] == 3:
 ################################################################################
 
 extras_require["pyonly"] = [
-    "pyyaml",
     "pillow<10.0.0",
     "pandas>=0.25.0,<=1.3.5",
     "pycocotools",

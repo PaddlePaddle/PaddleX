@@ -81,4 +81,6 @@ MODELS = [
     "PP-DocLayout-L",
     "PP-DocLayout-M",
     "PP-DocLayout-S",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
 ]

@@ -26,8 +26,8 @@ from ....utils.deps import class_requires_deps, is_dep_available
 
 if is_dep_available("opencv-contrib-python"):
     import cv2
-if is_dep_available("PyMuPDF"):
-    import fitz
+if is_dep_available("pypdfium2"):
+    import pypdfium2 as pdfium
 if is_dep_available("soundfile"):
     import soundfile
 
@@ -96,7 +96,7 @@ class _BaseReader(object):
 class PDFReader(_BaseReader):
     """PDFReader"""
 
-    def __init__(self, backend="fitz", **bk_args):
+    def __init__(self, backend="pypdfium2", **bk_args):
         super().__init__(backend, **bk_args)
 
     def read(self, in_path):
@@ -244,19 +244,19 @@ class PILImageReaderBackend(_ImageReaderBackend):
         return ImageOps.exif_transpose(Image.open(in_path))
 
 
-@class_requires_deps("PyMuPDF", "opencv-contrib-python")
+@class_requires_deps("pypdfium2", "opencv-contrib-python")
 class PDFReaderBackend(_BaseReaderBackend):
 
-    def __init__(self, rotate=0, zoom_x=2.0, zoom_y=2.0):
+    def __init__(self, rotate=0, zoom=2.0):
         super().__init__()
-        self.mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
+        self._rotation = rotate
+        self._scale = zoom
 
     def read_file(self, in_path):
-        for page in fitz.open(in_path):
-            pixmap = page.get_pixmap(matrix=self.mat, alpha=False)
-            img_cv = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
-                pixmap.h, pixmap.w, pixmap.n
-            )
+        for page in pdfium.PdfDocument(in_path):
+            image = page.render(scale=self._scale, rotation=self._rotation).to_pil()
+            image = image.convert("RGB")
+            img_cv = np.array(image)
             img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
             yield img_cv
 

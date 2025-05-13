@@ -135,7 +135,7 @@ def vis_matting(
 
     :param im_data: (numpy.ndarray)The input image data, 3-D array with layout HWC, BGR format
     :param matting_result: the result produced by model
-    :param transparent_background: whether visulizing matting result with transparent background
+    :param transparent_background: whether visualizing matting result with transparent background
     :param transparent_threshold: since the alpha value in MattringResult is a float between [0, 1], transparent_threshold is used to filter background pixel
     :param remove_small_connected_area: (bool) if remove_small_connected_area==True, the visualized result will not include the small connected areas
     :return: (numpy.ndarray) image with visualized results

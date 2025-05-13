@@ -48,9 +48,9 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output detection result
-   * will be writen to this structure \param[in] conf_threshold confidence
+   * will be written to this structure \param[in] conf_threshold confidence
    * threashold for postprocessing, default is 0.35 \param[in] nms_iou_threshold
-   * iou threashold for NMS, default is 0.5 \return true if the prediction
+   * iou threshold for NMS, default is 0.5 \return true if the prediction
    * successed, otherwise false
    */
   virtual bool Predict(cv::Mat *im, DetectionResult *result,
@@ -70,7 +70,7 @@ public:
   // downsample strides for NanoDet-Plus to generate anchors,
   // will take (8, 16, 32, 64) as default values
   std::vector<int> downsample_strides;
-  // for offseting the boxes by classes when using NMS, default 4096
+  // for offsetting the boxes by classes when using NMS, default 4096
   float max_wh;
   /*! @brief
   Argument for image postprocessing step, reg_max for GFL regression, default 7
