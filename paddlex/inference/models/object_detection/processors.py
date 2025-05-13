@@ -744,10 +744,35 @@ class DetPostProcess:
             )
 
         if layout_nms:
-            pass
-            ### Layout postprocess for NMS
             selected_indices = nms(boxes, iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
+        
+        filter_large_image = True
+        if filter_large_image and len(boxes) > 1:
+            if img_size[0] > img_size[1]:
+                area_thres = 0.82 
+            else:
+                area_thres = 0.93
+            image_index = (
+                self.labels.index("image") if "image" in self.labels else None
+            )
+            img_area = img_size[0] * img_size[1]
+            filtered_boxes = []
+            for box in boxes:
+                label_index, score, xmin, ymin, xmax, ymax = box
+                if label_index == image_index:
+                    xmin = max(0, xmin)
+                    ymin = max(0, ymin)
+                    xmax = min(img_size[0], xmax)
+                    ymax = min(img_size[1], ymax)
+                    box_area = (xmax - xmin) * (ymax - ymin)
+                    if box_area <= area_thres * img_area:
+                        filtered_boxes.append(box)
+                else:
+                    filtered_boxes.append(box)
+            if len(filtered_boxes) == 0:
+                filtered_boxes = boxes
+            boxes = np.array(filtered_boxes)
 
         if layout_merge_bboxes_mode:
             formula_index = (
