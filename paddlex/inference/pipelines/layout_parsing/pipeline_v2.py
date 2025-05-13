@@ -968,7 +968,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
-        use_table_cells_ocr_results: bool = False,
+        use_wired_table_cells_trans_to_html: bool = False,
+        use_wireless_table_cells_trans_to_html: bool = False,
+        use_table_orientation_classify: bool = True,
+        use_ocr_results_with_table_cells: bool = True,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
         **kwargs,
@@ -1004,7 +1007,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
-            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_table_orientation_classify (bool): Whether to use table orientation classification.
+            use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
             **kwargs (Any): Additional settings to extend functionality.
@@ -1180,7 +1186,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
                         overall_ocr_res=table_contents,
                         layout_det_res=layout_det_results,
                         cell_sort_by_y_projection=True,
-                        use_table_cells_ocr_results=use_table_cells_ocr_results,
+                        use_wired_table_cells_trans_to_html=use_wired_table_cells_trans_to_html,
+                        use_wireless_table_cells_trans_to_html=use_wireless_table_cells_trans_to_html,
+                        use_table_orientation_classify=use_table_orientation_classify,
+                        use_ocr_results_with_table_cells=use_ocr_results_with_table_cells,
                         use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
                         use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
                     ),
@@ -1208,22 +1217,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 seal_res_lists = [item["seal_res_list"] for item in seal_res_all]
             else:
                 seal_res_lists = [[] for _ in doc_preprocessor_images]
-
-            chart_res_list = []
-            if model_settings["use_chart_recognition"]:
-                chart_imgs_list = []
-                for bbox in layout_det_res["boxes"]:
-                    if bbox["label"] == "chart":
-                        x_min, y_min, x_max, y_max = bbox["coordinate"]
-                        chart_img = doc_preprocessor_image[
-                            int(y_min) : int(y_max), int(x_min) : int(x_max), :
-                        ]
-                        chart_imgs_list.append({"image": chart_img})
-
-                for chart_res_batch in self.chart_recognition_model(
-                    input=chart_imgs_list,
-                ):
-                    chart_res_list.append(chart_res_batch["result"])
 
             for (
                 input_path,
@@ -1262,9 +1255,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                             chart_imgs_list.append({"image": chart_img})
 
                     for chart_res_batch in self.chart_recognition_model(
-                        input=chart_imgs_list,
-                        max_new_tokens=max_new_tokens,
-                        no_repeat_ngram_size=no_repeat_ngram_size,
+                        input=chart_imgs_list
                     ):
                         chart_res_list.append(chart_res_batch["result"])
 
