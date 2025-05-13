@@ -421,11 +421,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     original_image_width=original_image_width,
                 )
             )
-            format_table = lambda block: "\n" + format_text_func(block)
         else:
             format_text_func = lambda block: block.content
             format_image_func = format_image_plain_func
-            format_table = lambda block: simplify_table_func("\n" + block.content)
 
         if self["model_settings"].get("use_chart_recognition", False):
             format_chart_func = format_chart2table_func
@@ -438,6 +436,21 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             )
         else:
             format_seal_func = format_image_func
+
+        if self["model_settings"].get("use_table_recognition", False):
+            if pretty:
+                format_table_func = lambda block: "\n" + format_text_func(block)
+            else:
+                format_table_func = lambda block: simplify_table_func(
+                    "\n" + block.content
+                )
+        else:
+            format_table_func = format_image_func
+
+        if self["model_settings"].get("use_formula_recognition", False):
+            format_formula_func = lambda block: f"$${block.content}$$"
+        else:
+            format_formula_func = format_image_func
 
         handle_funcs_dict = {
             "paragraph_title": format_title_func,
@@ -465,8 +478,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             ),
             "image": format_image_func,
             "chart": format_chart_func,
-            "formula": lambda block: f"$${block.content}$$",
-            "table": format_table,
+            "formula": format_formula_func,
+            "table": format_table_func,
             "reference": partial(
                 format_first_line_func,
                 templates=["参考文献", "references"],
