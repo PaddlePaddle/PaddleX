@@ -150,7 +150,7 @@ The visualization image is as follows:
 <b>Note: If you need to visualize the formula recognition pipeline, you need to run the following commands to install the LaTeX rendering environment. Currently, the formula recognition visualization pipeline only supports the Ubuntu environment; other environments are not supported at this time. For complex formulas, the LaTeX results may include some advanced representations that might not be displayed successfully in environments like Markdown:</b>
 ```bash
 sudo apt-get update
-sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
+sudo apt-get install texlive texlive-latex-base texlive-xetex latex-cjk-all texlive-latex-extra -y
 ````
 
 The explanations for the methods, parameters, etc., are as follows:
