@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace vision {
-/*! @brief Processor for Normalize images with given paramters.
+/*! @brief Processor for Normalize images with given parameters.
  */
 class ULTRAINFER_DECL Normalize : public Processor {
 public:
@@ -48,7 +48,7 @@ public:
   // auto norm = Normalize(...)
   // norm(mat)
   // ```
-  // There will be some precomputation in contruct function
+  // There will be some precomputation in construct function
   // and the `norm(mat)` only need to compute result = mat * alpha + beta
   // which will reduce lots of time
   /** \brief Process the input images

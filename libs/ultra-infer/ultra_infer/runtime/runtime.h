@@ -33,7 +33,7 @@ namespace ultra_infer {
  */
 struct ULTRAINFER_DECL Runtime {
 public:
-  /// Intialize a Runtime object with RuntimeOption
+  /// Initialize a Runtime object with RuntimeOption
   bool Init(const RuntimeOption &_option);
 
   /** \brief Inference the model by the input data, and write to the output
@@ -87,7 +87,7 @@ public:
   /** \brief Clone new Runtime when multiple instances of the same model are
    * created
    *
-   * \param[in] stream CUDA Stream, defualt param is nullptr
+   * \param[in] stream CUDA Stream, default param is nullptr
    * \return new Runtime* by this clone
    */
   Runtime *Clone(void *stream = nullptr, int device_id = -1);

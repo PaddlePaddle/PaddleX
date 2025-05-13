@@ -25,7 +25,7 @@
 
 namespace ultra_infer {
 
-/*! @brief FDTensor object used to represend data matrix
+/*! @brief FDTensor object used to represent data matrix
  *
  */
 struct ULTRAINFER_DECL FDTensor {
@@ -125,7 +125,7 @@ struct ULTRAINFER_DECL FDTensor {
   // The internal data will be on CPU
   // Some times, the external data is on the GPU, and we are going to use
   // GPU to inference the model
-  // so we can skip data transfer, which may improve the efficience
+  // so we can skip data transfer, which may improve the efficiency
   Device device = Device::CPU;
   // By default the device id of FDTensor is -1, which means this value is
   // invalid, and FDTensor is using the same device id as Runtime.
@@ -153,7 +153,7 @@ struct ULTRAINFER_DECL FDTensor {
   const void *Data() const;
 
   // Use this data to get the tensor data to process
-  // Since the most senario is process data in CPU
+  // Since the most scenario is process data in CPU
   // this function will return a pointer to cpu memory
   // buffer.
   // If the original data is on other device, the data

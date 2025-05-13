@@ -64,5 +64,26 @@ def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
     return font
 
 
+def create_font_vertical(
+    txt: str, sz: tuple, font_path: str, scale=1.2
+) -> ImageFont.FreeTypeFont:
+    n = len(txt) if len(txt) > 0 else 1
+    base_font_size = int(sz[1] / n * 0.8 * scale)
+    base_font_size = max(base_font_size, 10)
+    font = ImageFont.truetype(font_path, base_font_size, encoding="utf-8")
+
+    if int(PIL.__version__.split(".")[0]) < 10:
+        max_char_width = max([font.getsize(c)[0] for c in txt])
+    else:
+        max_char_width = max([font.getlength(c) for c in txt])
+
+    if max_char_width > sz[0]:
+        new_size = int(base_font_size * sz[0] / max_char_width)
+        new_size = max(new_size, 10)
+        font = ImageFont.truetype(font_path, new_size, encoding="utf-8")
+
+    return font
+
+
 PINGFANG_FONT_FILE_PATH = get_font_file_path("PingFang-SC-Regular.ttf")
 SIMFANG_FONT_FILE_PATH = get_font_file_path("simfang.ttf")

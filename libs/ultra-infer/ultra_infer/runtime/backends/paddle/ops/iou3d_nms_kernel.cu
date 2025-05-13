@@ -133,7 +133,7 @@ __device__ inline void rotate_around_center(const Point &center,
   // float new_y = (p.x - center.x) * angle_sin + (p.y - center.y) * angle_cos +
   // center.y;
   // p.set(new_x, new_y);
-  // Aligh with the implement of mmdet3d
+  // Align with the implement of mmdet3d
   float new_x =
       (p.x - center.x) * angle_cos + (p.y - center.y) * angle_sin + center.x;
   float new_y =

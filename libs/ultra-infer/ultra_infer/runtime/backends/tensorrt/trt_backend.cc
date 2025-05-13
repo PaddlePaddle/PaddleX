@@ -187,7 +187,7 @@ bool TrtBackend::InitFromPaddle(const std::string &model_buffer,
                            verbose, true, true, true, ops.data(), 1, "tensorrt",
                            &calibration_cache_ptr, &calibration_cache_size, "",
                            &save_external_)) {
-    FDERROR << "Error occured while export PaddlePaddle to ONNX format."
+    FDERROR << "Error occurred while export PaddlePaddle to ONNX format."
             << std::endl;
     return false;
   }
@@ -671,7 +671,7 @@ bool TrtBackend::BuildTrtEngine() {
     engine_file.close();
     FDINFO << "TensorRTEngine is serialized to local file "
            << option_.serialize_file
-           << ", we can load this model from the seralized engine "
+           << ", we can load this model from the serialized engine "
               "directly next time."
            << std::endl;
   }

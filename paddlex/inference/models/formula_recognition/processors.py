@@ -365,7 +365,7 @@ class LaTeXOCRDecode(object):
         dec = [self.tokenizer.decode(tok) for tok in tokens]
         dec_str_list = [
             "".join(detok.split(" "))
-            .replace("Ġ", " ")
+            .replace("臓", " ")
             .replace("[EOS]", "")
             .replace("[BOS]", "")
             .replace("[PAD]", "")
@@ -798,7 +798,7 @@ class UniMERNetDecode(object):
             for i in reversed(range(len(toks[b]))):
                 if toks[b][i] is None:
                     toks[b][i] = ""
-                toks[b][i] = toks[b][i].replace("Ġ", " ").strip()
+                toks[b][i] = toks[b][i].replace("臓", " ").strip()
                 if toks[b][i] in (
                     [
                         self.tokenizer.bos_token,
@@ -882,6 +882,15 @@ class UniMERNetDecode(object):
         replaced_formula = pattern.sub(replacer, formula)
         return replaced_formula.replace('"', "")
 
+    def remove_chinese_text_wrapping(self, formula):
+        pattern = re.compile(r"\\text\s*{\s*([^}]*?[\u4e00-\u9fff]+[^}]*?)\s*}")
+
+        def replacer(match):
+            return match.group(1)
+
+        replaced_formula = pattern.sub(replacer, formula)
+        return replaced_formula.replace('"', "")
+
     def post_process(self, text: str) -> str:
         """Post-processes a string by fixing text and normalizing it.
 
@@ -895,7 +904,10 @@ class UniMERNetDecode(object):
 
         text = self.remove_chinese_text_wrapping(text)
         text = fix_text(text)
+        print("=" * 100)
+        print(text)
         text = self.normalize(text)
+        print(text)
         return text
 
     def __call__(

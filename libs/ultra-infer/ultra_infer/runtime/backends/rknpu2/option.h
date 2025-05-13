@@ -25,8 +25,8 @@ typedef enum _rknpu2_cpu_name {
  * RKNN_NPU_CORE_AUTO : Referring to automatic mode, meaning that it will
  * select the idle core inside the NPU.
  * RKNN_NPU_CORE_0 : Running on the NPU0 core.
- * RKNN_NPU_CORE_1: Runing on the NPU1 core.
- * RKNN_NPU_CORE_2: Runing on the NPU2 core.
+ * RKNN_NPU_CORE_1: Running on the NPU1 core.
+ * RKNN_NPU_CORE_2: Running on the NPU2 core.
  * RKNN_NPU_CORE_0_1: Running on both NPU0 and NPU1 core simultaneously.
  * RKNN_NPU_CORE_0_1_2: Running on both NPU0, NPU1 and NPU2 simultaneously.
  */

@@ -121,7 +121,7 @@ class PaddleSegPreprocessor(ProcessorManager):
 
     @property
     def is_vertical_screen(self):
-        """Atrribute of PP-HumanSeg model. Stating Whether the input image is vertical image(height > width), default value is False
+        """Attribute of PP-HumanSeg model. Stating Whether the input image is vertical image(height > width), default value is False
 
         :return: value of is_vertical_screen(bool)
         """
@@ -158,7 +158,7 @@ class PaddleSegPostprocessor:
 
     @property
     def apply_softmax(self):
-        """Atrribute of PaddleSeg model. Stating Whether applying softmax operator in the postprocess, default value is False
+        """Attribute of PaddleSeg model. Stating Whether applying softmax operator in the postprocess, default value is False
 
         :return: value of apply_softmax(bool)
         """
@@ -177,7 +177,7 @@ class PaddleSegPostprocessor:
 
     @property
     def store_score_map(self):
-        """Atrribute of PaddleSeg model. Stating Whether storing score map in the SegmentationResult, default value is False
+        """Attribute of PaddleSeg model. Stating Whether storing score map in the SegmentationResult, default value is False
 
         :return: value of store_score_map(bool)
         """

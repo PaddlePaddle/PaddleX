@@ -195,7 +195,7 @@ bool OrtBackend::InitFromPaddle(const std::string &model_buffer,
           true, verbose, true, true, true, ops.data(), 2, "onnxruntime",
           nullptr, 0, "", &save_external, option.enable_fp16,
           disable_fp16_ops.data(), option.ort_disabled_ops_.size())) {
-    FDERROR << "Error occured while export PaddlePaddle to ONNX format."
+    FDERROR << "Error occurred while export PaddlePaddle to ONNX format."
             << std::endl;
     return false;
   }

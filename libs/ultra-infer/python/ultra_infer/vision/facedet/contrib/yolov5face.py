@@ -74,7 +74,7 @@ class YOLOv5Face(UltraInferModel):
 
     @property
     def is_mini_pad(self):
-        # only pad to the minimum rectange which height and width is times of stride
+        # only pad to the minimum rectangle which height and width is times of stride
         return self._model.is_mini_pad
 
     @property

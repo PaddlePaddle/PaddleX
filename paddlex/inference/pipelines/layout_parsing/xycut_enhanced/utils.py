@@ -68,11 +68,17 @@ def _projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
         A 1D numpy array representing the projection histogram based on bounding box intervals.
     """
     assert axis in [0, 1]
+
     max_length = np.max(boxes[:, axis::2])
+    if max_length < 0:
+        max_length = abs(np.min(boxes[:, axis::2]))
+
     projection = np.zeros(max_length, dtype=int)
 
     # Increment projection histogram over the interval defined by each bounding box
     for start, end in boxes[:, axis::2]:
+        start = abs(start)
+        end = abs(end)
         projection[start:end] += 1
 
     return projection
@@ -170,10 +176,12 @@ def recursive_yx_cut(
             res.extend(x_sorted_indices_chunk)
             continue
 
+        if np.min(x_sorted_boxes_chunk[:, 0]) < 0:
+            x_intervals = np.flip(x_intervals, axis=1)
         # Recursively process each segment defined by X-axis projection
         for x_start, x_end in zip(*x_intervals):
-            x_interval_indices = (x_start <= x_sorted_boxes_chunk[:, 0]) & (
-                x_sorted_boxes_chunk[:, 0] < x_end
+            x_interval_indices = (x_start <= abs(x_sorted_boxes_chunk[:, 0])) & (
+                abs(x_sorted_boxes_chunk[:, 0]) < x_end
             )
             recursive_yx_cut(
                 x_sorted_boxes_chunk[x_interval_indices],
@@ -214,11 +222,13 @@ def recursive_xy_cut(
     if not x_intervals:
         return
 
+    if np.min(x_sorted_boxes[:, 0]) < 0:
+        x_intervals = np.flip(x_intervals, axis=1)
     # Process each segment defined by X-axis projection
     for x_start, x_end in zip(*x_intervals):
         # Select boxes within the current x interval
-        x_interval_indices = (x_start <= x_sorted_boxes[:, 0]) & (
-            x_sorted_boxes[:, 0] < x_end
+        x_interval_indices = (x_start <= abs(x_sorted_boxes[:, 0])) & (
+            abs(x_sorted_boxes[:, 0]) < x_end
         )
         x_boxes_chunk = x_sorted_boxes[x_interval_indices]
         x_indices_chunk = x_sorted_indices[x_interval_indices]
@@ -413,7 +423,7 @@ def insert_child_blocks(
     if block.child_blocks:
         sub_blocks = block.get_child_blocks()
         sub_blocks.append(block)
-        sub_blocks = sort_child_blocks(sub_blocks, block.direction)
+        sub_blocks = sort_child_blocks(sub_blocks, sub_blocks[0].direction)
         sorted_blocks[block_idx] = sub_blocks[0]
         for block in sub_blocks[1:]:
             block_idx += 1
@@ -439,17 +449,15 @@ def sort_child_blocks(blocks, direction="horizontal") -> List[LayoutParsingBlock
                 x.bbox[0],  # x_min
                 x.bbox[1] ** 2 + x.bbox[0] ** 2,  # distance with (0,0)
             ),
-            reverse=False,
         )
     else:
         # from right to left
         blocks.sort(
             key=lambda x: (
-                x.bbox[0],  # x_min
+                -x.bbox[0],  # x_min
                 x.bbox[1],  # y_min
-                x.bbox[1] ** 2 + x.bbox[0] ** 2,  # distance with (0,0)
+                x.bbox[1] ** 2 - x.bbox[0] ** 2,  # distance with (max,0)
             ),
-            reverse=True,
         )
     return blocks
 
@@ -495,28 +503,23 @@ def _manhattan_distance(
     return weight_x * abs(point1[0] - point2[0]) + weight_y * abs(point1[1] - point2[1])
 
 
-def sort_blocks(blocks, median_width=None, reverse=False):
-    """
-    Sort blocks based on their y_min, x_min and distance with (0,0).
-
-    Args:
-        blocks (list): list of blocks to be sorted.
-        median_width (int): the median width of the text blocks.
-        reverse (bool, optional): whether to sort in descending order. Default is False.
-
-    Returns:
-        list: a list of sorted blocks.
-    """
-    if median_width is None:
-        median_width = 1
-    blocks.sort(
-        key=lambda x: (
-            x.bbox[1] // 10,  # y_min
-            x.bbox[0] // median_width,  # x_min
-            x.bbox[1] ** 2 + x.bbox[0] ** 2,  # distance with (0,0)
-        ),
-        reverse=reverse,
-    )
+def sort_normal_blocks(blocks, text_line_height, text_line_width, region_direction):
+    if region_direction == "horizontal":
+        blocks.sort(
+            key=lambda x: (
+                x.bbox[1] // text_line_height,
+                x.bbox[0] // text_line_width,
+                x.bbox[1] ** 2 + x.bbox[0] ** 2,
+            ),
+        )
+    else:
+        blocks.sort(
+            key=lambda x: (
+                -x.bbox[0] // text_line_width,
+                x.bbox[1] // text_line_height,
+                x.bbox[1] ** 2 - x.bbox[2] ** 2,  # distance with (max,0)
+            ),
+        )
     return blocks
 
 
@@ -920,7 +923,10 @@ def update_vision_child_blocks(
             )
             block_center = block.get_centroid()
             ref_block_center = ref_block.get_centroid()
-            if ref_block.label in BLOCK_LABEL_MAP["vision_title_labels"]:
+            if (
+                ref_block.label in BLOCK_LABEL_MAP["vision_title_labels"]
+                and nearest_edge_distance <= ref_block.text_line_height * 2
+            ):
                 has_vision_title = True
                 ref_block.order_label = "vision_title"
                 block.append_child_block(ref_block)
@@ -928,12 +934,17 @@ def update_vision_child_blocks(
             if ref_block.label in BLOCK_LABEL_MAP["text_labels"]:
                 if (
                     not has_vision_footnote
-                    and nearest_edge_distance <= block.text_line_height * 2
-                    and ref_block.short_side_length < block.short_side_length
-                    and ref_block.long_side_length < 0.5 * block.long_side_length
                     and ref_block.direction == block.direction
-                    and (
-                        abs(block_center[0] - ref_block_center[0]) < 10
+                    and ref_block.long_side_length < block.long_side_length
+                ):
+                    if (
+                        (
+                            nearest_edge_distance <= block.text_line_height * 2
+                            and ref_block.short_side_length < block.short_side_length
+                            and ref_block.long_side_length
+                            < 0.5 * block.long_side_length
+                            and abs(block_center[0] - ref_block_center[0]) < 10
+                        )
                         or (
                             block.bbox[0] - ref_block.bbox[0] < 10
                             and ref_block.num_of_lines == 1
@@ -942,12 +953,11 @@ def update_vision_child_blocks(
                             block.bbox[2] - ref_block.bbox[2] < 10
                             and ref_block.num_of_lines == 1
                         )
-                    )
-                ):
-                    has_vision_footnote = True
-                    ref_block.order_label = "vision_footnote"
-                    block.append_child_block(ref_block)
-                    region.normal_text_block_idxes.remove(ref_block.index)
+                    ):
+                        has_vision_footnote = True
+                        ref_block.order_label = "vision_footnote"
+                        block.append_child_block(ref_block)
+                        region.normal_text_block_idxes.remove(ref_block.index)
                 break
         for ref_block in post_blocks:
             if (
@@ -960,7 +970,10 @@ def update_vision_child_blocks(
             )
             block_center = block.get_centroid()
             ref_block_center = ref_block.get_centroid()
-            if ref_block.label in BLOCK_LABEL_MAP["vision_title_labels"]:
+            if (
+                ref_block.label in BLOCK_LABEL_MAP["vision_title_labels"]
+                and nearest_edge_distance <= ref_block.text_line_height * 2
+            ):
                 has_vision_title = True
                 ref_block.order_label = "vision_title"
                 block.append_child_block(ref_block)

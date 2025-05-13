@@ -67,7 +67,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output matting result
-   * will be writen to this structure \return true if the prediction successed,
+   * will be written to this structure \return true if the prediction successed,
    * otherwise false
    */
   bool Predict(cv::Mat *im, MattingResult *result);

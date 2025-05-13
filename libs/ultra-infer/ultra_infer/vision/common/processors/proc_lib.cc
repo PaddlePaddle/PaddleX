@@ -37,7 +37,7 @@ std::ostream &operator<<(std::ostream &out, const ProcLib &p) {
     out << "ProcLib::CVCUDA";
     break;
   default:
-    FDASSERT(false, "Unknow type of ProcLib.");
+    FDASSERT(false, "Unknown type of ProcLib.");
   }
   return out;
 }

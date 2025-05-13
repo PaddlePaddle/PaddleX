@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace function {
-/** Excute the pad operation for input FDTensor along given dims.
+/** Execute the pad operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param pads The size of padding for each dimension, for 3-D tensor, the pads

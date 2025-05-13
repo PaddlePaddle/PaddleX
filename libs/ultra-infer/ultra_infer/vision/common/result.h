@@ -126,7 +126,7 @@ struct ULTRAINFER_DECL DetectionResult : public BaseResult {
   /// The classify label for all the detected objects
   std::vector<int32_t> label_ids;
   /** \brief For instance segmentation model, `masks` is the predict mask for
-   * all the deteced objects
+   * all the detected objects
    */
   std::vector<Mask> masks;
   /// Shows if the DetectionResult has mask
@@ -435,7 +435,7 @@ struct ULTRAINFER_DECL MattingResult : public BaseResult {
   std::vector<float> alpha; // h x w
   /** \brief
   If the model can predict foreground, `foreground` save the predicted
-  foreground image, the shape is [hight,width,channel] generally.
+  foreground image, the shape is [height,width,channel] generally.
   */
   std::vector<float> foreground; // h x w x c (c=3 default)
   /** \brief
