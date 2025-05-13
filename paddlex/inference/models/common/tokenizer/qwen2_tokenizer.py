@@ -18,6 +18,7 @@ import unicodedata
 from functools import lru_cache
 from typing import List, Optional, Tuple
 
+from .....utils import logging
 from .....utils.deps import is_dep_available
 from .tokenizer_utils import PretrainedTokenizer
 from .tokenizer_utils_base import AddedToken, TextInput
@@ -146,7 +147,12 @@ class Qwen2Tokenizer(PretrainedTokenizer):
         split_special_tokens=False,
         **kwargs,
     ):
-        super().__init__(**kwargs)
+        if unk_token is None:
+            logging.info(
+                "The `unk_token` parameter needs to be defined: we use `eos_token` by default."
+            )
+            unk_token = eos_token
+
         # Qwen vocab does not contain control tokens; added tokens need to be special
         bos_token = (
             AddedToken(

@@ -12,20 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from typing import Dict, List, Optional, Union
 
 import numpy as np
 
 from .....utils import logging
 from ....utils.benchmark import benchmark
+from ...common.tokenizer.tokenizer_utils_base import (
+    PreTokenizedInput,
+    TensorType,
+    TextInput,
+    TruncationStrategy,
+)
 from ...common.vision.funcs import resize
 from .common import (
     BatchFeature,
     ChannelDimension,
     ImageInput,
+    PaddingStrategy,
     PILImageResampling,
-    TensorType,
-    TextInput,
     convert_to_rgb,
     fetch_image,
     get_image_size,
@@ -46,6 +52,12 @@ MIN_PIXELS = 4 * 28 * 28
 MAX_PIXELS = 16384 * 28 * 28
 MAX_RATIO = 200
 
+__all__ = [
+    "Qwen2_5_VLProcessor",
+    "Qwen2_5_VLImageProcessor",
+    "PPDocBee2Processor",
+]
+
 
 def is_scaled_image(image: np.ndarray) -> bool:
     """
@@ -54,22 +66,21 @@ def is_scaled_image(image: np.ndarray) -> bool:
     if image.dtype == np.uint8:
         return False
 
-    # It's possible the image has pixel values in [0, 255] but is of floating type
     return np.min(image) >= 0 and np.max(image) <= 1
 
 
-class Qwen2VLProcessor(object):
-    r"""
-    Constructs a Qwen2-VL processor which wraps a Qwen2-VL image processor and a Qwen2 tokenizer into a single processor.
-
-    [`Qwen2VLProcessor`] offers all the functionalities of [`Qwen2VLImageProcessor`] and [`Qwen2TokenizerFast`]. See the
-    [`~Qwen2VLProcessor.__call__`] and [`~Qwen2VLProcessor.decode`] for more information.
-
+class Qwen2_5_VLProcessor(object):
+    """
+    Constructs a Qwen2.5-VL processor which wraps a Qwen2.5-VL image processor and a Qwen2 tokenizer into a single processor.
+    [`Qwen2_5_VLProcessor`] offers all the functionalities of [`Qwen2_5_VLImageProcessor`] and [`Qwen2TokenizerFast`]. See the
+    [`~Qwen2_5_VLProcessor.__call__`] and [`~Qwen2_5_VLProcessor.decode`] for more information.
     Args:
-        image_processor ([`Qwen2VLImageProcessor`], *optional*):
+        image_processor ([`Qwen2_5_VLImageProcessor`], *optional*):
             The image processor is a required input.
-        tokenizer ([`MIXQwen2Tokenizer`], *optional*):
+        tokenizer ([`Qwen2TokenizerFast`], *optional*):
             The tokenizer is a required input.
+        chat_template (`str`, *optional*): A Jinja template which will be used to convert lists of messages
+            in a chat into a tokenizable string.
     """
 
     def __init__(self, image_processor, tokenizer, **kwargs):
@@ -81,50 +92,42 @@ class Qwen2VLProcessor(object):
     def preprocess(
         self,
         images: ImageInput = None,
-        text: Union[TextInput, List[TextInput]] = None,
-        padding: bool = False,
-        truncation: Union[bool, str] = None,
+        text: Union[
+            TextInput, PreTokenizedInput, List[TextInput], List[PreTokenizedInput]
+        ] = None,
+        padding: Union[bool, str, PaddingStrategy] = False,
+        truncation: Union[bool, str, TruncationStrategy] = None,
         max_length: int = None,
         return_tensors: Optional[Union[str, TensorType]] = TensorType.PADDLE,
-    ):
+    ) -> BatchFeature:
         """
         Main method to prepare for the model one or several sequences(s) and image(s). This method forwards the `text`
         and `kwargs` arguments to Qwen2TokenizerFast's [`~Qwen2TokenizerFast.__call__`] if `text` is not `None` to encode
         the text. To prepare the vision inputs, this method forwards the `vision_infos` and `kwrags` arguments to
-        Qwen2VLImageProcessor's [`~Qwen2VLImageProcessor.__call__`] if `vision_infos` is not `None`.
+        Qwen2_5_VLImageProcessor's [`~Qwen2_5_VLImageProcessor.__call__`] if `vision_infos` is not `None`.
 
         Args:
-            images (`PIL.Image.Image`, `np.ndarray`, `paddle.Tensor`, `List[PIL.Image.Image]`, `List[np.ndarray]`, `List[paddle.Tensor]`):
-                The image or batch of images to be prepared. Each image can be a PIL image, NumPy array or Paddle
+            images (`PIL.Image.Image`, `np.ndarray`, `torch.Tensor`, `List[PIL.Image.Image]`, `List[np.ndarray]`, `List[torch.Tensor]`):
+                The image or batch of images to be prepared. Each image can be a PIL image, NumPy array or PyTorch
                 tensor. Both channels-first and channels-last formats are supported.
             text (`str`, `List[str]`, `List[List[str]]`):
                 The sequence or batch of sequences to be encoded. Each sequence can be a string or a list of strings
                 (pretokenized string). If the sequences are provided as list of strings (pretokenized), you must set
                 `is_split_into_words=True` (to lift the ambiguity with a batch of sequences).
-            padding (`bool`, *optional*, defaults to `False`):
-                Select a strategy to pad the returned sequences (according to the model's padding side and padding
-                index) among:
-                - `True` or `'longest'`: Pad to the longest sequence in the batch (or no padding if only a single
-                    sequence if provided).
-                - `'max_length'`: Pad to a maximum length specified with the argument `max_length` or to the maximum
-                    acceptable input length for the model if that argument is not provided.
-                - `False` or `'do_not_pad'` (default): No padding (i.e., can output a batch with sequences of different
-                    lengths).
-            max_length (`int`, *optional*):
-                Maximum length of the returned list and optionally padding length (see above).
-            truncation (`bool`, *optional*):
-                Activates truncation to cut input sequences longer than `max_length` to `max_length`.
             return_tensors (`str` or [`~utils.TensorType`], *optional*):
                 If set, will return tensors of a particular framework. Acceptable values are:
-
-                - `'pd'`: Return Paddle `paddle.Tensor` objects.
+                - `'tf'`: Return TensorFlow `tf.constant` objects.
+                - `'pt'`: Return PyTorch `torch.Tensor` objects.
                 - `'np'`: Return NumPy `np.ndarray` objects.
+                - `'jax'`: Return JAX `jnp.ndarray` objects.
 
         Returns:
+            [`BatchFeature`]: A [`BatchFeature`] with the following fields:
+
             - **input_ids** -- List of token ids to be fed to a model. Returned when `text` is not `None`.
             - **attention_mask** -- List of indices specifying which tokens should be attended to by the model (when
-                `return_attention_mask=True` or if *"attention_mask"* is in `self.model_input_names` and if `text` is not
-                `None`).
+              `return_attention_mask=True` or if *"attention_mask"* is in `self.model_input_names` and if `text` is not
+              `None`).
             - **pixel_values** -- Pixel values to be fed to a model. Returned when `images` is not `None`.
             - **image_grid_thw** -- List of image 3D grid in LLM. Returned when `images` is not `None`.
         """
@@ -139,7 +142,6 @@ class Qwen2VLProcessor(object):
 
         if not isinstance(text, list):
             text = [text]
-
         if image_grid_thw is not None:
             merge_length = self.image_processor.merge_size**2
             index = 0
@@ -149,10 +151,11 @@ class Qwen2VLProcessor(object):
                         "<|image_pad|>",
                         "<|placeholder|>"
                         * int(image_grid_thw[index].prod() // merge_length),
-                        1,  # 单个<|image_pad|>替换成对应的视觉token数量的<|placeholder|>
+                        1,
                     )
                     index += 1
                 text[i] = text[i].replace("<|placeholder|>", "<|image_pad|>")
+
         text_inputs = self.tokenizer(
             text,
             return_tensors=return_tensors,
@@ -161,7 +164,7 @@ class Qwen2VLProcessor(object):
             max_length=max_length,
         )
 
-        return BatchFeature(data={**text_inputs, **image_inputs}).data
+        return BatchFeature(data={**text_inputs, **image_inputs})
 
     def batch_decode(self, *args, **kwargs):
         """
@@ -178,9 +181,9 @@ class Qwen2VLProcessor(object):
         return self.tokenizer.decode(*args, **kwargs)
 
 
-class Qwen2VLImageProcessor(object):
-    r"""
-    Constructs a Qwen2-VL image processor that dynamically resizes images based on the original images.
+class Qwen2_5_VLImageProcessor(object):
+    """
+    Constructs a Qwen2.5-VL image processor that dynamically resizes images based on the original images.
 
     Args:
         do_resize (`bool`, *optional*, defaults to `True`):
@@ -211,12 +214,14 @@ class Qwen2VLImageProcessor(object):
             The merge size of the vision encoder to llm encoder.
     """
 
+    model_input_names = ["pixel_values", "image_grid_thw", "second_per_grid_ts"]
+
     def __init__(
         self,
         do_resize: bool = True,
-        resample=None,
+        resample: PILImageResampling = PILImageResampling.BICUBIC,
         do_rescale: bool = True,
-        rescale_factor: float = 1 / 255.0,
+        rescale_factor: Union[int, float] = 1 / 255,
         do_normalize: bool = True,
         image_mean: Optional[Union[float, List[float]]] = None,
         image_std: Optional[Union[float, List[float]]] = None,
@@ -229,9 +234,6 @@ class Qwen2VLImageProcessor(object):
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
-        import cv2
-
-        resample = cv2.INTER_CUBIC if resample is None else resample
         self.do_resize = do_resize
         self.resample = resample
         self.do_rescale = do_rescale
@@ -252,7 +254,7 @@ class Qwen2VLImageProcessor(object):
 
     def _preprocess(
         self,
-        images,
+        images: Union[ImageInput],
         do_resize: bool = None,
         resample: PILImageResampling = None,
         do_rescale: bool = None,
@@ -308,7 +310,7 @@ class Qwen2VLImageProcessor(object):
         images = [to_numpy_array(image) for image in images]
 
         if is_scaled_image(images[0]) and do_rescale:
-            logging.warning(
+            logging.warning_once(
                 "It looks like you are trying to rescale already rescaled images. If the input"
                 " images have pixel values between 0 and 1, set `do_rescale=False` to avoid rescaling them again."
             )
@@ -386,7 +388,7 @@ class Qwen2VLImageProcessor(object):
 
         return flatten_patches, (grid_t, grid_h, grid_w)
 
-    def preprocess(
+    def __call__(
         self,
         images: ImageInput,
         do_resize: bool = None,
@@ -431,7 +433,7 @@ class Qwen2VLImageProcessor(object):
             return_tensors (`str` or `TensorType`, *optional*):
                 The type of tensors to return. Can be one of:
                 - Unset: Return a list of `np.ndarray`.
-                - `TensorType.PADDLE` or `'pt'`: Return a batch of type `paddle.Tensor`.
+                - `TensorType.PADDLE` or `'pt'`: Return a batch of type `torch.Tensor`.
                 - `TensorType.NUMPY` or `'np'`: Return a batch of type `np.ndarray`.
             data_format (`ChannelDimension` or `str`, *optional*, defaults to `ChannelDimension.FIRST`):
                 The channel dimension format for the output image. Can be one of:
@@ -493,48 +495,51 @@ class Qwen2VLImageProcessor(object):
 
         return BatchFeature(data=data, tensor_type=return_tensors)
 
-    def __call__(self, images, **kwargs):
-        return self.preprocess(images, **kwargs)
 
-
-class PPDocBeeProcessor(Qwen2VLProcessor):
+class PPDocBee2Processor(Qwen2_5_VLProcessor):
     """
     PP-DocBee processor, based on Qwen2VLProcessor
     """
 
     @benchmark.timeit
-    def preprocess(self, input_dicts):
+    def preprocess(self, input_dicts: List[Dict]):
         """
-        PreProcess for PP-DocBee Series
+        PreProcess for PP-DocBee2 Series
         """
-        assert (
-            isinstance(input_dicts, list) and len(input_dicts) == 1
-        ), f"PP-DocBee series only supports batchsize of one, but received {len(input_dicts)} samples."
-        input_dict = input_dicts[0]
-        image = input_dict["image"]
-        query = input_dict["query"]
-        image_inputs = fetch_image(
-            image,
-            size_factor=IMAGE_FACTOR,
-            min_pixels=MIN_PIXELS,
-            max_pixels=MAX_PIXELS,
-            max_ratio=MAX_RATIO,
+        assert (isinstance(input_dict, dict) for input_dict in input_dicts)
+
+        prompt = (
+            "<|im_start|>system\n"
+            "You are a helpful assistant.<|im_end|>\n"
+            "<|im_start|>user\n"
+            "<|vision_start|><|image_pad|><|vision_end|>{query}<|im_end|>\n"
+            "<|im_start|>assistant\n"
         )
-        image_pad_token = "<|vision_start|><|image_pad|><|vision_end|>"
-        text = f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n{image_pad_token}{query}<|im_end|>\n<|im_start|>assistant\n"
-        text = [text]
+        query_inputs = [
+            prompt.format(query=input_dict["query"]) for input_dict in input_dicts
+        ]
+        image_inputs = [
+            fetch_image(
+                input_dict["image"],
+                size_factor=IMAGE_FACTOR,
+                min_pixels=MIN_PIXELS,
+                max_pixels=MAX_PIXELS,
+                max_ratio=MAX_RATIO,
+            )
+            for input_dict in input_dicts
+        ]
 
         rst_inputs = super().preprocess(
-            text=text,
-            images=[image_inputs],
-            padding=False,
+            text=query_inputs,
+            images=image_inputs,
+            padding=True,
             return_tensors="pd",
         )
 
         return rst_inputs
 
     @benchmark.timeit
-    def postprocess(self, model_pred, *args, **kwargs):
+    def postprocess(self, model_pred, *args, **kwargs) -> List[str]:
         """
         Post process adapt for PaddleX
         """
