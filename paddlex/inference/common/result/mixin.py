@@ -609,14 +609,12 @@ class MarkdownMixin:
         self._save_funcs.append(self.save_to_markdown)
 
     @abstractmethod
-    def _to_markdown(
-        self, pretty_markdown=True
-    ) -> Dict[str, Union[str, Dict[str, Any]]]:
+    def _to_markdown(self, pretty=True) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
         Convert the result to markdown format.
 
         Args:
-            pretty_markdown (Optional[bool]): wheather to pretting markdown by HTML, default by True.
+            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
 
         Returns:
             Dict[str, Union[str, Dict[str, Any]]]: A dictionary containing markdown text and image data.
@@ -632,9 +630,7 @@ class MarkdownMixin:
         """
         return self._to_markdown()
 
-    def save_to_markdown(
-        self, save_path, pretty_markdown=True, *args, **kwargs
-    ) -> None:
+    def save_to_markdown(self, save_path, pretty=True, *args, **kwargs) -> None:
         """Save the markdown data to a file.
 
         Args:
@@ -672,7 +668,7 @@ class MarkdownMixin:
             self._markdown_writer.write,
             self._img_writer.write,
             self.save_path,
-            self._to_markdown(pretty_markdown=pretty_markdown),
+            self._to_markdown(pretty=pretty),
             *args,
             **kwargs,
         )

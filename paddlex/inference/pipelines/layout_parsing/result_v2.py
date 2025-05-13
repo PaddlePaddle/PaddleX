@@ -141,13 +141,6 @@ def format_first_line_func(block, templates, format_func, spliter):
     return spliter.join(lines)
 
 
-def compose_funcs(block, funcs):
-    res = ""
-    for func in funcs:
-        res += func(block)
-    return res
-
-
 def get_seg_flag(block: LayoutParsingBlock, prev_block: LayoutParsingBlock):
 
     seg_start_flag = True
