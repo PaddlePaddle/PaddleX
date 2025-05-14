@@ -46,7 +46,6 @@ if is_dep_available("scikit-learn"):
     from sklearn.cluster import KMeans
 
 
-@pipeline_requires_extra("ocr")
 class _TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
 
