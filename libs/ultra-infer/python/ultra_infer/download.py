@@ -135,7 +135,7 @@ def decompress(fname):
 
     # For protecting decompressing interrupted,
     # decompress to fpath_tmp directory firstly, if decompress
-    # successed, move decompress files to fpath and delete
+    # succeeded, move decompress files to fpath and delete
     # fpath_tmp and remove download compress file.
     fpath = osp.split(fname)[0]
     fpath_tmp = osp.join(fpath, "tmp")

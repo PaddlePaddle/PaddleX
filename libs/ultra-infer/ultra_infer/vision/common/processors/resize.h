@@ -57,7 +57,7 @@ public:
    * \param[in] interp interpolation method, default is 1.
    * \param[in] use_scale to define whether to scale the image, default is
    * true. \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, int width, int height, float scale_w = -1.0,
                   float scale_h = -1.0, int interp = 1, bool use_scale = false,

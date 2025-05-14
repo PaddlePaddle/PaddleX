@@ -49,7 +49,7 @@ public:
    * will be written to this structure \param[in] conf_threshold confidence
    * threshold for postprocessing, default is 0.25 \param[in] nms_threshold iou
    * threshold for NMS, default is 0.5 \return true if the prediction
-   * successed, otherwise false
+   * succeeded, otherwise false
    */
   virtual bool Predict(cv::Mat *im, DetectionResult *result,
                        float conf_threshold = 0.25, float nms_threshold = 0.5);
@@ -59,7 +59,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format \param[in] result The output detection
    * result will be written to this structure \return true if the prediction
-   * successed, otherwise false
+   * succeeded, otherwise false
    */
   virtual bool Predict(const cv::Mat &img, DetectionResult *result);
 
@@ -67,7 +67,7 @@ public:
    *
    * \param[in] imgs, The input image list, each element comes from cv::imread()
    * \param[in] results The output detection result list
-   * \return true if the prediction successed, otherwise false
+   * \return true if the prediction succeeded, otherwise false
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &imgs,
                             std::vector<DetectionResult> *results);

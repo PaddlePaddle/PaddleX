@@ -60,7 +60,7 @@ public:
    * \param[in] min min value vector to be in target image
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
    * \param[in] swap_rb to define whether to swap r and b channel order
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, const std::vector<float> &mean,
                   const std::vector<float> &std, bool is_scale = true,

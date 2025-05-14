@@ -46,7 +46,7 @@ public:
    * \param[in] width width of data will be croped to
    * \param[in] height height of data will be croped to
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, const int &width, const int &height,
                   ProcLib lib = ProcLib::DEFAULT);

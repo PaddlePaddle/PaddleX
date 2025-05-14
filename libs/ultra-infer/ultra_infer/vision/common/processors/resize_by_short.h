@@ -53,7 +53,7 @@ public:
    * \param[in] use_scale to define whether to scale the image, default is
    * true. \param[in] max_hw max HW of output image. \param[in] lib to define
    * OpenCV or FlyCV or CVCUDA will be used. \return true if the process
-   * successed, otherwise false
+   * succeeded, otherwise false
    */
   static bool Run(FDMat *mat, int target_size, int interp = 1,
                   bool use_scale = true,

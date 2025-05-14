@@ -34,7 +34,7 @@ public:
    * \param[in] tensors The inference result from runtime
    * \param[in] result The output result of detection
    * \param[in] ims_info The shape info list, record input_shape and
-   * output_shape \return true if the postprocess successed, otherwise false
+   * output_shape \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<DetectionResult> *results);

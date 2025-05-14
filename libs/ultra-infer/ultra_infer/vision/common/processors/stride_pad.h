@@ -48,7 +48,7 @@ public:
    * \param[in] stride stride of the padding.
    * \param[in] value value vector used by padding of the output image.
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, int stride,
                   const std::vector<float> &value = std::vector<float>(),

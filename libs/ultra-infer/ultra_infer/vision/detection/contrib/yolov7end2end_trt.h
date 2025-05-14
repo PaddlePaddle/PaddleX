@@ -48,7 +48,7 @@ public:
    * with layout HWC, BGR format \param[in] result The output detection result
    * will be written to this structure \param[in] conf_threshold confidence
    * threshold for postprocessing, default is 0.25 \return true if the
-   * prediction successed, otherwise false
+   * prediction succeeded, otherwise false
    */
   virtual bool Predict(cv::Mat *im, DetectionResult *result,
                        float conf_threshold = 0.25);

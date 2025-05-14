@@ -33,7 +33,7 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
@@ -52,7 +52,7 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
@@ -71,7 +71,7 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
@@ -90,7 +90,7 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
