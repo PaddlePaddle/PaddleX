@@ -56,7 +56,7 @@ def get_nearest_edge_distance(
     return min_x_distance + min_y_distance
 
 
-def _projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
+def projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
     """
     Generate a 1D projection histogram from bounding boxes along a specified axis.
 
@@ -84,7 +84,7 @@ def _projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
     return projection
 
 
-def _split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: float):
+def split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: float):
     """
     Split the projection profile into segments based on specified thresholds.
 
@@ -144,8 +144,8 @@ def recursive_yx_cut(
     y_sorted_indices = np.array(indices)[y_sorted_indices]
 
     # Perform Y-axis projection
-    y_projection = _projection_by_bboxes(boxes=y_sorted_boxes, axis=1)
-    y_intervals = _split_projection_profile(y_projection, 0, 1)
+    y_projection = projection_by_bboxes(boxes=y_sorted_boxes, axis=1)
+    y_intervals = split_projection_profile(y_projection, 0, 1)
 
     if not y_intervals:
         return
@@ -165,8 +165,8 @@ def recursive_yx_cut(
         x_sorted_indices_chunk = y_indices_chunk[x_sorted_indices]
 
         # Perform X-axis projection
-        x_projection = _projection_by_bboxes(boxes=x_sorted_boxes_chunk, axis=0)
-        x_intervals = _split_projection_profile(x_projection, 0, min_gap)
+        x_projection = projection_by_bboxes(boxes=x_sorted_boxes_chunk, axis=0)
+        x_intervals = split_projection_profile(x_projection, 0, min_gap)
 
         if not x_intervals:
             continue
@@ -216,8 +216,8 @@ def recursive_xy_cut(
     x_sorted_indices = np.array(indices)[x_sorted_indices]
 
     # Perform X-axis projection
-    x_projection = _projection_by_bboxes(boxes=x_sorted_boxes, axis=0)
-    x_intervals = _split_projection_profile(x_projection, 0, 1)
+    x_projection = projection_by_bboxes(boxes=x_sorted_boxes, axis=0)
+    x_intervals = split_projection_profile(x_projection, 0, 1)
 
     if not x_intervals:
         return
@@ -239,8 +239,8 @@ def recursive_xy_cut(
         y_sorted_indices_chunk = x_indices_chunk[y_sorted_indices]
 
         # Perform Y-axis projection
-        y_projection = _projection_by_bboxes(boxes=y_sorted_boxes_chunk, axis=1)
-        y_intervals = _split_projection_profile(y_projection, 0, min_gap)
+        y_projection = projection_by_bboxes(boxes=y_sorted_boxes_chunk, axis=1)
+        y_intervals = split_projection_profile(y_projection, 0, min_gap)
 
         if not y_intervals:
             continue
@@ -543,9 +543,7 @@ def sort_normal_blocks(blocks, text_line_height, text_line_width, region_directi
     return blocks
 
 
-def get_cut_blocks(
-    blocks, cut_direction, cut_coordinates, overall_region_box, mask_labels=[]
-):
+def get_cut_blocks(blocks, cut_direction, cut_coordinates, mask_labels=[]):
     """
     Cut blocks based on the given cut direction and coordinates.
 
@@ -553,7 +551,6 @@ def get_cut_blocks(
         blocks (list): list of blocks to be cut.
         cut_direction (str): cut direction, either "horizontal" or "vertical".
         cut_coordinates (list): list of cut coordinates.
-        overall_region_box (list): the overall region box that contains all blocks.
 
     Returns:
         list: a list of tuples containing the cutted blocks and their corresponding mean width。

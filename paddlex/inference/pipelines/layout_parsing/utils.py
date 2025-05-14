@@ -390,6 +390,10 @@ def is_english_letter(char):
     return bool(re.match(r"^[A-Za-z]$", char))
 
 
+def is_numeric(char):
+    return bool(re.match(r"^[\d.]+$", char))
+
+
 def is_non_breaking_punctuation(char):
     """
     判断一个字符是否是不需要换行的标点符号，包括全角和半角的符号。
@@ -481,16 +485,17 @@ def format_line(
         len(line_text) > 0 and is_english_letter(line_text[-1])
     ) or line_text.endswith("$"):
         line_text += " "
-    else:
-        if (
-            block_stop_coordinate - last_span_box[text_stop_index] > block_width * 0.3
-            and block_label != "formula"
-        ):
+    elif (
+        len(line_text) > 0
+        and not is_english_letter(line_text[-1])
+        and not is_non_breaking_punctuation(line_text[-1])
+        and not is_numeric(line_text[-1])
+    ) or text_direction == "vertical":
+        if block_stop_coordinate - last_span_box[text_stop_index] > block_width * 0.4:
             line_text += "\n"
         if (
             first_span_box[text_start_index] - block_start_coordinate
-            > block_width * 0.3
-            and block_label != "formula"
+            > block_width * 0.4
         ):
             line_text = "\n" + line_text
 

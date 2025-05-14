@@ -17,7 +17,6 @@ import copy
 import math
 import re
 from functools import partial
-from pathlib import Path
 from typing import List
 
 import numpy as np
@@ -203,15 +202,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
-
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def _to_img(self) -> dict[str, np.ndarray]:
         from .utils import get_show_color

@@ -100,7 +100,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self.use_seal_recognition = config.get("use_seal_recognition", True)
         self.use_region_detection = config.get(
             "use_region_detection",
-            False,
+            True,
         )
         self.use_formula_recognition = config.get(
             "use_formula_recognition",
@@ -494,7 +494,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             region_det_res["boxes"] = [
                 {
                     "coordinate": base_region_bbox,
-                    "label": "SupplementaryBlock",
+                    "label": "SupplementaryRegion",
                     "score": 1,
                 }
             ]
@@ -521,7 +521,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     matched_bboxes = [block_bboxes[idx] for idx in matched_idxes]
                     new_region_bbox = calculate_minimum_enclosing_bbox(matched_bboxes)
                     region_det_res["boxes"][region_idx]["coordinate"] = new_region_bbox
-            # Supplement region block when there is no matched block
+            # Supplement region when there is no matched block
             if len(block_idxes_set) > 0:
                 while len(block_idxes_set) > 0:
                     matched_idxes = []
@@ -555,7 +555,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     region_det_res["boxes"].append(
                         {
                             "coordinate": supplement_region_bbox,
-                            "label": "SupplementaryBlock",
+                            "label": "SupplementaryRegion",
                             "score": 1,
                         }
                     )
@@ -950,7 +950,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
-        use_chart_recognition: Union[bool, None] = None,
+        use_chart_recognition: Union[bool, None] = False,
         use_region_detection: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
@@ -1117,9 +1117,19 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 )
 
             if model_settings["use_table_recognition"]:
-                table_contents = []
-                for overall_ocr_res, formula_res_list, imgs_in_doc_for_img in zip(
-                    overall_ocr_results, formula_res_lists, imgs_in_doc
+                table_res_lists = []
+                for (
+                    layout_det_res,
+                    doc_preprocessor_image,
+                    overall_ocr_res,
+                    formula_res_list,
+                    imgs_in_doc_for_img,
+                ) in zip(
+                    layout_det_results,
+                    doc_preprocessor_images,
+                    overall_ocr_results,
+                    formula_res_lists,
+                    imgs_in_doc,
                 ):
                     table_contents_for_img = copy.deepcopy(overall_ocr_res)
                     for formula_res in formula_res_list:
@@ -1174,27 +1184,28 @@ class _LayoutParsingPipelineV2(BasePipeline):
                         table_contents_for_img["rec_polys"].append(poly_points)
                         table_contents_for_img["rec_scores"].append(img["score"])
 
-                    table_contents.append(table_contents_for_img)
-
-                table_res_all = list(
-                    self.table_recognition_pipeline(
-                        doc_preprocessor_images,
-                        use_doc_orientation_classify=False,
-                        use_doc_unwarping=False,
-                        use_layout_detection=False,
-                        use_ocr_model=False,
-                        overall_ocr_res=table_contents,
-                        layout_det_res=layout_det_results,
-                        cell_sort_by_y_projection=True,
-                        use_wired_table_cells_trans_to_html=use_wired_table_cells_trans_to_html,
-                        use_wireless_table_cells_trans_to_html=use_wireless_table_cells_trans_to_html,
-                        use_table_orientation_classify=use_table_orientation_classify,
-                        use_ocr_results_with_table_cells=use_ocr_results_with_table_cells,
-                        use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
-                        use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
-                    ),
-                )
-                table_res_lists = [item["table_res_list"] for item in table_res_all]
+                    table_res_all = list(
+                        self.table_recognition_pipeline(
+                            doc_preprocessor_image,
+                            use_doc_orientation_classify=False,
+                            use_doc_unwarping=False,
+                            use_layout_detection=False,
+                            use_ocr_model=False,
+                            overall_ocr_res=table_contents_for_img,
+                            layout_det_res=layout_det_res,
+                            cell_sort_by_y_projection=True,
+                            use_wired_table_cells_trans_to_html=use_wired_table_cells_trans_to_html,
+                            use_wireless_table_cells_trans_to_html=use_wireless_table_cells_trans_to_html,
+                            use_table_orientation_classify=use_table_orientation_classify,
+                            use_ocr_results_with_table_cells=use_ocr_results_with_table_cells,
+                            use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
+                            use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
+                        ),
+                    )
+                    single_table_res_lists = [
+                        item["table_res_list"] for item in table_res_all
+                    ]
+                    table_res_lists.extend(single_table_res_lists)
             else:
                 table_res_lists = [[] for _ in doc_preprocessor_images]
 

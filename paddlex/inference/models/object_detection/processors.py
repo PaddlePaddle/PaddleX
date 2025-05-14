@@ -746,16 +746,14 @@ class DetPostProcess:
         if layout_nms:
             selected_indices = nms(boxes, iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
-        
+
         filter_large_image = True
         if filter_large_image and len(boxes) > 1:
             if img_size[0] > img_size[1]:
-                area_thres = 0.82 
+                area_thres = 0.82
             else:
                 area_thres = 0.93
-            image_index = (
-                self.labels.index("image") if "image" in self.labels else None
-            )
+            image_index = self.labels.index("image") if "image" in self.labels else None
             img_area = img_size[0] * img_size[1]
             filtered_boxes = []
             for box in boxes:
@@ -823,7 +821,7 @@ class DetPostProcess:
                 boxes = boxes[keep_mask]
 
         if boxes.size == 0:
-            return np.array([])
+            return []
 
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):

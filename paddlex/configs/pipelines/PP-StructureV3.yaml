@@ -8,12 +8,12 @@ use_seal_recognition: True
 use_table_recognition: True
 use_formula_recognition: True
 use_chart_recognition: False
-use_region_detection: False
+use_region_detection: True
 
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PP-DocLayout-L
+    model_name: PP-DocLayout_plus-L
     model_dir: null
     batch_size: 8
     threshold: 
@@ -94,6 +94,12 @@ SubModules:
     model_name: PP-Chart2Table
     model_dir: null
     batch_size: 1 
+  RegionDetection:
+    module_name: layout_detection
+    model_name: PP-DocBlockLayout
+    model_dir: null
+    layout_nms: True
+    layout_merge_bboxes_mode: "small"
 
 SubPipelines:
   DocPreprocessor:
@@ -121,7 +127,7 @@ SubPipelines:
     SubModules:
       TextDetection:
         module_name: text_detection
-        model_name: PP-OCRv4_server_det
+        model_name: PP-OCRv5_server_det
         model_dir: null
         limit_side_len: 736
         limit_type: min
@@ -135,7 +141,7 @@ SubPipelines:
         batch_size: 8
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec_doc
+        model_name: PP-OCRv5_server_rec
         model_dir: null
         batch_size: 8
         score_thresh: 0.0
@@ -171,6 +177,11 @@ SubPipelines:
         module_name: table_cells_detection
         model_name: RT-DETR-L_wireless_table_cell_det
         model_dir: null
+
+      TableOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null
     SubPipelines:
       GeneralOCR:
         pipeline_name: OCR
@@ -180,7 +191,7 @@ SubPipelines:
         SubModules:
           TextDetection:
             module_name: text_detection
-            model_name: PP-OCRv4_server_det
+            model_name: PP-OCRv5_server_det
             model_dir: null
             limit_side_len: 736
             limit_type: min
@@ -194,7 +205,7 @@ SubPipelines:
             batch_size: 8
           TextRecognition:
             module_name: text_recognition
-            model_name: PP-OCRv4_server_rec_doc
+            model_name: PP-OCRv5_server_rec
             model_dir: null
             batch_size: 8
         score_thresh: 0.0
@@ -223,7 +234,7 @@ SubPipelines:
             unclip_ratio: 0.5
           TextRecognition:
             module_name: text_recognition
-            model_name: PP-OCRv4_server_rec
+            model_name: PP-OCRv5_server_rec
             model_dir: null
             batch_size: 8
             score_thresh: 0
@@ -236,6 +247,6 @@ SubPipelines:
     SubModules:
       FormulaRecognition:
         module_name: formula_recognition
-        model_name: PP-FormulaNet-L
+        model_name: PP-FormulaNet_plus-L
         model_dir: null
         batch_size: 8
