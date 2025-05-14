@@ -835,7 +835,7 @@ class HPInfer(StaticInfer):
                     for name, shapes in backend_config.dynamic_shapes.items():
                         ui_option.trt_option.set_shape(name, *shapes)
                 else:
-                    logging.warning(
+                    logging.info(
                         "TensorRT dynamic shapes will be loaded from the file."
                     )
         elif backend == "om":

@@ -249,7 +249,6 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
-        use_general_ocr: Optional[bool] = None,
         use_seal_recognition: Optional[bool] = None,
         use_table_recognition: Optional[bool] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
@@ -280,7 +279,6 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
                                                                         numpy array of an image, or list of numpy arrays.
             use_doc_orientation_classify (bool): Flag to use document orientation classification.
             use_doc_unwarping (bool): Flag to use document unwarping.
-            use_general_ocr (bool): Flag to use general OCR.
             use_seal_recognition (bool): Flag to use seal recognition.
             use_table_recognition (bool): Flag to use table recognition.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
@@ -322,7 +320,6 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             input,
             use_doc_orientation_classify=use_doc_orientation_classify,
             use_doc_unwarping=use_doc_unwarping,
-            use_general_ocr=use_general_ocr,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
             layout_threshold=layout_threshold,

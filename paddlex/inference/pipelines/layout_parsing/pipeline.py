@@ -23,6 +23,7 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..ocr.result import OCRResult
@@ -30,11 +31,8 @@ from .result import LayoutParsingResult
 from .utils import get_sub_regions_ocr_res, sorted_layout_boxes
 
 
-@pipeline_requires_extra("ocr")
-class LayoutParsingPipeline(BasePipeline):
+class _LayoutParsingPipeline(BasePipeline):
     """Layout Parsing Pipeline"""
-
-    entities = ["layout_parsing"]
 
     def __init__(
         self,
@@ -79,7 +77,6 @@ class LayoutParsingPipeline(BasePipeline):
         """
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
-        self.use_general_ocr = config.get("use_general_ocr", True)
         self.use_table_recognition = config.get("use_table_recognition", True)
         self.use_seal_recognition = config.get("use_seal_recognition", True)
         self.use_formula_recognition = config.get("use_formula_recognition", True)
@@ -116,12 +113,11 @@ class LayoutParsingPipeline(BasePipeline):
             layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
         self.layout_det_model = self.create_model(layout_det_config, **layout_kwargs)
 
-        if self.use_general_ocr or self.use_table_recognition:
-            general_ocr_config = config.get("SubPipelines", {}).get(
-                "GeneralOCR",
-                {"pipeline_config_error": "config error for general_ocr_pipeline!"},
-            )
-            self.general_ocr_pipeline = self.create_pipeline(general_ocr_config)
+        general_ocr_config = config.get("SubPipelines", {}).get(
+            "GeneralOCR",
+            {"pipeline_config_error": "config error for general_ocr_pipeline!"},
+        )
+        self.general_ocr_pipeline = self.create_pipeline(general_ocr_config)
 
         if self.use_seal_recognition:
             seal_recognition_config = config.get("SubPipelines", {}).get(
@@ -307,12 +303,6 @@ class LayoutParsingPipeline(BasePipeline):
             )
             return False
 
-        if input_params["use_general_ocr"] and not self.use_general_ocr:
-            logging.error(
-                "Set use_general_ocr, but the models for general OCR are not initialized."
-            )
-            return False
-
         if input_params["use_seal_recognition"] and not self.use_seal_recognition:
             logging.error(
                 "Set use_seal_recognition, but the models for seal recognition are not initialized."
@@ -331,7 +321,6 @@ class LayoutParsingPipeline(BasePipeline):
         self,
         use_doc_orientation_classify: Optional[bool],
         use_doc_unwarping: Optional[bool],
-        use_general_ocr: Optional[bool],
         use_seal_recognition: Optional[bool],
         use_table_recognition: Optional[bool],
         use_formula_recognition: Optional[bool],
@@ -342,7 +331,6 @@ class LayoutParsingPipeline(BasePipeline):
         Args:
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
-            use_general_ocr (Optional[bool]): Whether to use general OCR.
             use_seal_recognition (Optional[bool]): Whether to use seal recognition.
             use_table_recognition (Optional[bool]): Whether to use table recognition.
 
@@ -357,9 +345,6 @@ class LayoutParsingPipeline(BasePipeline):
             else:
                 use_doc_preprocessor = False
 
-        if use_general_ocr is None:
-            use_general_ocr = self.use_general_ocr
-
         if use_seal_recognition is None:
             use_seal_recognition = self.use_seal_recognition
 
@@ -371,7 +356,6 @@ class LayoutParsingPipeline(BasePipeline):
 
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
-            use_general_ocr=use_general_ocr,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
             use_formula_recognition=use_formula_recognition,
@@ -383,7 +367,6 @@ class LayoutParsingPipeline(BasePipeline):
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
         use_textline_orientation: Optional[bool] = None,
-        use_general_ocr: Optional[bool] = None,
         use_seal_recognition: Optional[bool] = None,
         use_table_recognition: Optional[bool] = None,
         use_formula_recognition: Optional[bool] = None,
@@ -413,7 +396,6 @@ class LayoutParsingPipeline(BasePipeline):
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
             use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
-            use_general_ocr (Optional[bool]): Whether to use general OCR.
             use_seal_recognition (Optional[bool]): Whether to use seal recognition.
             use_table_recognition (Optional[bool]): Whether to use table recognition.
             use_formula_recognition (Optional[bool]): Whether to use formula recognition.
@@ -447,7 +429,6 @@ class LayoutParsingPipeline(BasePipeline):
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
             use_doc_unwarping,
-            use_general_ocr,
             use_seal_recognition,
             use_table_recognition,
             use_formula_recognition,
@@ -482,24 +463,18 @@ class LayoutParsingPipeline(BasePipeline):
                 )
             )
 
-            if (
-                model_settings["use_general_ocr"]
-                or model_settings["use_table_recognition"]
-            ):
-                overall_ocr_res = next(
-                    self.general_ocr_pipeline(
-                        doc_preprocessor_image,
-                        use_textline_orientation=use_textline_orientation,
-                        text_det_limit_side_len=text_det_limit_side_len,
-                        text_det_limit_type=text_det_limit_type,
-                        text_det_thresh=text_det_thresh,
-                        text_det_box_thresh=text_det_box_thresh,
-                        text_det_unclip_ratio=text_det_unclip_ratio,
-                        text_rec_score_thresh=text_rec_score_thresh,
-                    )
+            overall_ocr_res = next(
+                self.general_ocr_pipeline(
+                    doc_preprocessor_image,
+                    use_textline_orientation=use_textline_orientation,
+                    text_det_limit_side_len=text_det_limit_side_len,
+                    text_det_limit_type=text_det_limit_type,
+                    text_det_thresh=text_det_thresh,
+                    text_det_box_thresh=text_det_box_thresh,
+                    text_det_unclip_ratio=text_det_unclip_ratio,
+                    text_rec_score_thresh=text_rec_score_thresh,
                 )
-            else:
-                overall_ocr_res = {}
+            )
 
             if model_settings["use_table_recognition"]:
                 table_res_all = next(
@@ -579,3 +554,15 @@ class LayoutParsingPipeline(BasePipeline):
                 "model_settings": model_settings,
             }
             yield LayoutParsingResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class LayoutParsingPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = ["layout_parsing"]
+
+    @property
+    def _pipeline_cls(self):
+        return _LayoutParsingPipeline
+
+    def _get_batch_size(self, config):
+        return 1

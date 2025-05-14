@@ -73,7 +73,7 @@ class YOLOX(UltraInferModel):
         whether the model_file was exported with decode module.
         The official YOLOX/tools/export_onnx.py script will export ONNX file without decode module.
         Please set it 'true' manually if the model file was exported with decode module.
-        Defalut False.
+        Default False.
         """
         return self._model.is_decode_exported
 
@@ -86,7 +86,7 @@ class YOLOX(UltraInferModel):
 
     @property
     def max_wh(self):
-        # for offseting the boxes by classes when using NMS
+        # for offsetting the boxes by classes when using NMS
         return self._model.max_wh
 
     @size.setter

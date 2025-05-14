@@ -53,6 +53,9 @@ class FormulaRecTrainer(BaseTrainer):
             "UniMERNet",
             "PP-FormulaNet-L",
             "PP-FormulaNet-S",
+            "PP-FormulaNet_plus-L",
+            "PP-FormulaNet_plus-M",
+            "PP-FormulaNet_plus-S",
         ):
             self.pdx_config.update_dataset(
                 self.global_config.dataset_dir, "SimpleDataSet"

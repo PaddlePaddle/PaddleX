@@ -1314,12 +1314,6 @@ for res in visual_predict_res:
 <td>否</td>
 </tr>
 <tr>
-<td><code>useGeneralOcr</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_general_ocr</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
@@ -1587,7 +1581,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>vectorInfo</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>向量数据库序列化结果。由<code>buildVectorStore</code>操作提供。</td>
+<td>向量数据库序列化结果。由<code>buildVectorStore</code>操作提供。请注意，反序列化过程需要进行 unpickle 操作，为了防止恶意攻击，请确保使用可信任来源的数据。</td>
 <td>否</td>
 </tr>
 <tr>

@@ -239,7 +239,7 @@ def adapt_stale_fwd_patch(self, name, value):
                     "might be based on an old oversion which missing some "
                     f"arguments compared with the latest, such as {new_args}. "
                     "We automatically add compatibility on the patch for "
-                    "these arguemnts, and maybe the patch should be updated."
+                    "these arguments, and maybe the patch should be updated."
                 )
             else:
                 logging.warning(
@@ -247,7 +247,7 @@ def adapt_stale_fwd_patch(self, name, value):
                     "is patched and the patch might be conflict with patches made "
                     f"by paddlenlp which seems have more arguments such as {new_args}. "
                     "We automatically add compatibility on the patch for "
-                    "these arguemnts, and maybe the patch should be updated."
+                    "these arguments, and maybe the patch should be updated."
                 )
             if isinstance(self, paddle.nn.Layer) and inspect.isfunction(value):
 
@@ -290,8 +290,8 @@ class InitTrackerMeta(type):
 
     def __init__(cls, name, bases, attrs):
         init_func = cls.__init__
-        # If attrs has `__init__`, wrap it using accessable `_pre_init, _post_init`.
-        # Otherwise, no need to wrap again since the super cls has been wraped.
+        # If attrs has `__init__`, wrap it using accessible `_pre_init, _post_init`.
+        # Otherwise, no need to wrap again since the super cls has been wrapped.
         # TODO: remove reduplicated tracker if using super cls `__init__`
         pre_init_func = getattr(cls, "_pre_init", None) if "__init__" in attrs else None
         post_init_func = (
@@ -588,7 +588,7 @@ def _is_control(char):
 
 
 def _is_nonnormalized_char(char):
-    """Check whther `chars` is a non-normalized character."""
+    """Check whether `chars` is a non-normalized character."""
     cp = ord(char)
     if (
         (0xFF00 <= cp <= 0xFFEF)
@@ -847,7 +847,7 @@ class ChatTemplateMixin:
         self, origin_msg: List[Dict[str, str]], split_s: List[str]
     ):
         """Split the entire chat by specified words. Extract the non-learnable parts."""
-        # distingish and replace the special words in original string to an uncompiled form: Like | -> \|
+        # distinguish and replace the special words in original string to an uncompiled form: Like | -> \|
         regex_pattern = "|".join(map(re.escape, split_s))
         # splited by replaced specified words
         non_learnable_parts = re.split(
@@ -1738,7 +1738,7 @@ class PretrainedTokenizer(
                             [0] * len(pair_ids) if pair else []
                         )
                     encoded_inputs["offset_mapping"] = offset_mapping
-                    # Build output dictionnary
+                    # Build output dictionary
                     encoded_inputs["input_ids"] = sequence
                     if return_token_type_ids:
                         encoded_inputs["token_type_ids"] = token_type_ids
@@ -2108,7 +2108,7 @@ def _is_whitespace(char):
     """
     Checks whether `chars` is a whitespace character.
     """
-    # \t, \n, and \r are technically contorl characters but we treat them
+    # \t, \n, and \r are technically control characters but we treat them
     # as whitespace since they are generally considered as such.
     if char == " " or char == "\t" or char == "\n" or char == "\r":
         return True
@@ -2136,7 +2136,7 @@ def convert_to_unicode(text):
 
 def whitespace_tokenize(text):
     """
-    Runs basic whitespace cleaning and splitting on a peice of text.
+    Runs basic whitespace cleaning and splitting on a piece of text.
     Args:
         text (str): Text to be tokenized.
     Returns:

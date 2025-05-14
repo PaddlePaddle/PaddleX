@@ -54,10 +54,11 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_doc_orientation_classify=request.useDocOrientationClassify,
             use_doc_unwarping=request.useDocUnwarping,
             use_textline_orientation=request.useTextlineOrientation,
-            use_general_ocr=request.useGeneralOcr,
             use_seal_recognition=request.useSealRecognition,
             use_table_recognition=request.useTableRecognition,
             use_formula_recognition=request.useFormulaRecognition,
+            use_chart_recognition=request.useChartRecognition,
+            use_region_detection=request.useRegionDetection,
             layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,
             layout_unclip_ratio=request.layoutUnclipRatio,
@@ -74,9 +75,12 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             seal_det_box_thresh=request.sealDetBoxThresh,
             seal_det_unclip_ratio=request.sealDetUnclipRatio,
             seal_rec_score_thresh=request.sealRecScoreThresh,
-            use_table_cells_ocr_results=request.useTableCellsOcrResults,
+            use_ocr_results_with_table_cells=request.useOcrResultsWithTableCells,
             use_e2e_wired_table_rec_model=request.useE2eWiredTableRecModel,
             use_e2e_wireless_table_rec_model=request.useE2eWirelessTableRecModel,
+            use_wired_table_cells_trans_to_html=request.useWiredTableCellsTransToHtml,
+            use_wireless_table_cells_trans_to_html=request.useWirelessTableCellsTransToHtml,
+            use_table_orientation_classify=request.useTableOrientationClassify,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []

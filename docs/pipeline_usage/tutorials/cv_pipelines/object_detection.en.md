@@ -416,7 +416,7 @@ paddlex --pipeline object_detection \
         --device gpu:0
 ```
 
-For the description of parameters and interpretation of results, please refer to the parameter explanation and result interpretation in [2.2.2 Integration via Python Script](#222-integration-via-python-script).
+For the description of parameters and interpretation of results, please refer to the parameter explanation and result interpretation in [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
 
 The visualization results are saved to `save_path`, as shown below:
 
@@ -465,7 +465,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for pipeline inference. It supports specifying the specific card number of GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU as "cpu".</td>
+<td>The device for pipeline inference. It supports specifying the specific card number of GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>

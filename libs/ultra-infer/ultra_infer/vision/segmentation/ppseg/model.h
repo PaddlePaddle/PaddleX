@@ -59,7 +59,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output segmentation
-   * result will be writen to this structure \return true if the segmentation
+   * result will be written to this structure \return true if the segmentation
    * prediction successed, otherwise false
    */
   virtual bool Predict(cv::Mat *im, SegmentationResult *result);
@@ -68,7 +68,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output segmentation
-   * result will be writen to this structure \return true if the segmentation
+   * result will be written to this structure \return true if the segmentation
    * prediction successed, otherwise false
    */
   virtual bool Predict(const cv::Mat &im, SegmentationResult *result);

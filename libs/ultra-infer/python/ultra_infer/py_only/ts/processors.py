@@ -231,7 +231,7 @@ def _load_from_dataframe(
     fillna_window_size: int = 10,
     **kwargs,
 ):
-    dfs = []  # seperate multiple group
+    dfs = []  # separate multiple group
     if group_id is not None:
         group_unique = df[group_id].unique()
         for column in group_unique:

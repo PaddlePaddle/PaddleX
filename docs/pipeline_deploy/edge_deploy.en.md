@@ -190,7 +190,7 @@ This guide applies to 8 models across 6 modules:
     <b>Note</b>:
     - `{Pipeline_Name}` and `{Demo_Name}` are placeholders. Refer to the table at the end of this section for specific values.
     - `download.sh` and `run.sh` support passing in model names to specify models. If not specified, the default model will be used. Refer to the `Model_Name` column in the table at the end of this section for currently supported models.
-    - To use your own trained model, refer to the [Model Conversion Method](https://paddlepaddle.github.io/Paddle-Lite/develop/model_optimize_tool/) to obtain the `.nb` model, place it in the `PaddleX_Lite_Deploy/{Pipeline_Name}/assets/{Model_Name}` directory, where `{Model_Name}` is the model name, e.g., `PaddleX_Lite_Deploy/object_detection/assets/PicoDet-L`.
+    - To use your own trained model, refer to the [Model Conversion Method](https://paddlepaddle.github.io/Paddle-Lite/develop/model_optimize_tool/) to obtain the `.nb` model, place it in the `PaddleX_Lite_Deploy/{Pipeline_Name}/assets/{Model_Name}` directory, where `{Model_Name}` is the model name, e.g., `PaddleX_Lite_Deploy/object_detection/assets/PicoDet-L`. Please note that converting static graph models in `.json` format to `.nb` format is currently not supported. When exporting a static graph model using PaddleX, please set the environment variable `FLAGS_json_format_model` to `0`.
     - Before running the `build.sh` script, change the path specified by `NDK_ROOT` to the actual installed NDK path.
     - Keep ADB connected when running the `build.sh` script.
     - On Windows systems, you can use Git Bash to execute the deployment steps.
@@ -305,6 +305,7 @@ This section describes the deployment steps applicable to the demos listed in th
 </table>
 
 <b>Note</b>
+
 - Currently, there is no demo for deploying the Layout Area Detection module on the edge, so the `picodet_detection` demo is reused to deploy the `PicoDet_layout_1x` model.
 
 ## Reference Materials

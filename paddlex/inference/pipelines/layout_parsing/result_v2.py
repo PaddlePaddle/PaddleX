@@ -16,6 +16,7 @@ from __future__ import annotations
 import copy
 import math
 import re
+from functools import partial
 from pathlib import Path
 from typing import List
 
@@ -33,6 +34,165 @@ from ...common.result import (
 from .setting import BLOCK_LABEL_MAP
 
 
+def compile_title_pattern():
+    # Precompiled regex pattern for matching numbering at the beginning of the title
+    numbering_pattern = (
+        r"(?:" + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|" + r"[\(\（](?:[1-9][0-9]*|["
+        r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
+        r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
+        r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.?" + r")"
+    )
+    return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
+
+
+TITLE_RE_PATTERN = compile_title_pattern()
+
+
+def format_title_func(block):
+    """
+    Normalize chapter title.
+    Add the '#' to indicate the level of the title.
+    If numbering exists, ensure there's exactly one space between it and the title content.
+    If numbering does not exist, return the original title unchanged.
+
+    :param title: Original chapter title string.
+    :return: Normalized chapter title string.
+    """
+    title = block.content
+    match = TITLE_RE_PATTERN.match(title)
+    if match:
+        numbering = match.group(1).strip()
+        title_content = match.group(3).lstrip()
+        # Return numbering and title content separated by one space
+        title = numbering + " " + title_content
+
+    title = title.rstrip(".")
+    level = (
+        title.count(
+            ".",
+        )
+        + 1
+        if "." in title
+        else 1
+    )
+    return f"#{'#' * level} {title}".replace("-\n", "").replace(
+        "\n",
+        " ",
+    )
+
+
+def format_centered_by_html(string):
+    return (
+        f'<div style="text-align: center;">{string}</div>'.replace(
+            "-\n",
+            "",
+        ).replace("\n", " ")
+        + "\n"
+    )
+
+
+def format_text_plain_func(block):
+    return block.content
+
+
+def format_image_scaled_by_html_func(block, original_image_width):
+    img_tags = []
+    image_path = "".join(block.image.keys())
+    image_width = block.image[image_path].width
+    scale = int(image_width / original_image_width * 100)
+    img_tags.append(
+        '<img src="{}" alt="Image" width="{}%" />'.format(
+            image_path.replace("-\n", "").replace("\n", " "), scale
+        ),
+    )
+    return "\n".join(img_tags)
+
+
+def format_image_plain_func(block):
+    img_tags = []
+    image_path = "".join(block.image.keys())
+    img_tags.append("![]({})".format(image_path.replace("-\n", "").replace("\n", " ")))
+    return "\n".join(img_tags)
+
+
+def format_chart2table_func(block):
+    lines_list = block.content.split("\n")
+    column_num = len(lines_list[0].split("|"))
+    lines_list.insert(1, "|".join(["---"] * column_num))
+    lines_list = [f"|{line}|" for line in lines_list]
+    return "\n".join(lines_list)
+
+
+def simplify_table_func(table_code):
+    return "\n" + table_code.replace("<html>", "").replace("</html>", "").replace(
+        "<body>", ""
+    ).replace("</body>", "")
+
+
+def format_first_line_func(block, templates, format_func, spliter):
+    lines = block.content.split(spliter)
+    for idx in range(len(lines)):
+        line = lines[idx]
+        if line.strip() == "":
+            continue
+        if line.lower() in templates:
+            lines[idx] = format_func(line)
+        break
+    return spliter.join(lines)
+
+
+def get_seg_flag(block: LayoutParsingBlock, prev_block: LayoutParsingBlock):
+
+    seg_start_flag = True
+    seg_end_flag = True
+
+    block_box = block.bbox
+    context_left_coordinate = block_box[0]
+    context_right_coordinate = block_box[2]
+    seg_start_coordinate = block.seg_start_coordinate
+    seg_end_coordinate = block.seg_end_coordinate
+
+    if prev_block is not None:
+        prev_block_bbox = prev_block.bbox
+        num_of_prev_lines = prev_block.num_of_lines
+        pre_block_seg_end_coordinate = prev_block.seg_end_coordinate
+        prev_end_space_small = (
+            abs(prev_block_bbox[2] - pre_block_seg_end_coordinate) < 10
+        )
+        prev_lines_more_than_one = num_of_prev_lines > 1
+
+        overlap_blocks = context_left_coordinate < prev_block_bbox[2]
+
+        # update context_left_coordinate and context_right_coordinate
+        if overlap_blocks:
+            context_left_coordinate = min(prev_block_bbox[0], context_left_coordinate)
+            context_right_coordinate = max(prev_block_bbox[2], context_right_coordinate)
+            prev_end_space_small = (
+                abs(context_right_coordinate - pre_block_seg_end_coordinate) < 10
+            )
+            edge_distance = 0
+        else:
+            edge_distance = abs(block_box[0] - prev_block_bbox[2])
+
+        current_start_space_small = seg_start_coordinate - context_left_coordinate < 10
+
+        if (
+            prev_end_space_small
+            and current_start_space_small
+            and prev_lines_more_than_one
+            and edge_distance < max(prev_block.width, block.width)
+        ):
+            seg_start_flag = False
+    else:
+        if seg_start_coordinate - context_left_coordinate < 10:
+            seg_start_flag = False
+
+    if context_right_coordinate - seg_end_coordinate < 10:
+        seg_end_flag = False
+
+    return seg_start_flag, seg_end_flag
+
+
 class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
     """Layout Parsing Result V2"""
 
@@ -43,19 +203,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
-        self.title_pattern = self._build_title_pattern()
-
-    def _build_title_pattern(self):
-        # Precompiled regex pattern for matching numbering at the beginning of the title
-        numbering_pattern = (
-            r"(?:"
-            + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|"
-            + r"[\(\（](?:[1-9][0-9]*|["
-            r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
-            r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
-            r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.?" + r")"
-        )
-        return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
 
     def _get_input_fn(self):
         fn = super()._get_input_fn()
@@ -79,8 +226,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if model_settings["use_region_detection"]:
             res_img_dict["region_det_res"] = self["region_det_res"].img["res"]
 
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
+        res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
@@ -115,8 +261,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         for block in parsing_result:
             bbox = block.bbox
             index = block.order_index
-            label = block.order_label
-            fill_color = get_show_color(label, True)
+            label = block.label
+            fill_color = get_show_color(label, False)
             draw.rectangle(bbox, fill=fill_color)
             if index is not None:
                 text_position = (bbox[2] + 2, bbox[1] - font_size // 2)
@@ -149,8 +295,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["layout_det_res"] = self["layout_det_res"].str["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -201,8 +346,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -255,243 +399,135 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_markdown(self) -> dict:
+    def _to_markdown(self, pretty=True) -> dict:
         """
         Save the parsing result to a Markdown file.
+
+        Args:
+            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
 
         Returns:
             Dict
         """
+        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
 
-        def _format_data(obj):
-
-            def format_title(title):
-                """
-                Normalize chapter title.
-                Add the '#' to indicate the level of the title.
-                If numbering exists, ensure there's exactly one space between it and the title content.
-                If numbering does not exist, return the original title unchanged.
-
-                :param title: Original chapter title string.
-                :return: Normalized chapter title string.
-                """
-                match = self.title_pattern.match(title)
-                if match:
-                    numbering = match.group(1).strip()
-                    title_content = match.group(3).lstrip()
-                    # Return numbering and title content separated by one space
-                    title = numbering + " " + title_content
-
-                title = title.rstrip(".")
-                level = (
-                    title.count(
-                        ".",
-                    )
-                    + 1
-                    if "." in title
-                    else 1
+        if pretty:
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
                 )
-                return f"#{'#' * level} {title}".replace("-\n", "").replace(
-                    "\n",
-                    " ",
-                )
+            )
+        else:
+            format_text_func = lambda block: block.content
+            format_image_func = format_image_plain_func
 
-            def format_text_centered_by_html():
-                return (
-                    f'<div style="text-align: center;">{block.content}</div>'.replace(
-                        "-\n",
-                        "",
-                    ).replace("\n", " ")
-                    + "\n"
-                )
+        if self["model_settings"].get("use_chart_recognition", False):
+            format_chart_func = format_chart2table_func
+        else:
+            format_chart_func = format_image_func
 
-            def format_text_plain():
-                return block.content
+        if self["model_settings"].get("use_seal_recognition", False):
+            format_seal_func = lambda block: "\n".join(
+                [format_image_func(block), format_text_func(block)]
+            )
+        else:
+            format_seal_func = format_image_func
 
-            def format_image_centered_by_html():
-                img_tags = []
-                image_path = "".join(block.image.keys())
-                image_width = block.image[image_path].width
-                scale = int(image_width / original_image_width * 100)
-                img_tags.append(
-                    '<div style="text-align: center;"><img src="{}" alt="Image" width="{}%" /></div>'.format(
-                        image_path.replace("-\n", "").replace("\n", " "), scale
-                    ),
-                )
-                return "\n".join(img_tags)
-
-            def format_image_plain():
-                img_tags = []
-                image_path = "".join(block.image.keys())
-                img_tags.append(
-                    "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
-                )
-                return "\n".join(img_tags)
-
-            def format_chart():
-                if not self["model_settings"].get("use_chart_recognition", False):
-                    return format_image()
-                lines_list = block.content.split("\n")
-                column_num = len(lines_list[0].split("|"))
-                lines_list.insert(1, "|".join(["---"] * column_num))
-                lines_list = [f"|{line}|" for line in lines_list]
-                return "\n".join(lines_list)
-
-            def format_first_line(templates, format_func, spliter):
-                lines = block.content.split(spliter)
-                for idx in range(len(lines)):
-                    line = lines[idx]
-                    if line.strip() == "":
-                        continue
-                    if line.lower() in templates:
-                        lines[idx] = format_func(line)
-                    break
-                return spliter.join(lines)
-
-            def format_table():
-                return "\n" + block.content
-
-            def get_seg_flag(block: LayoutParsingBlock, prev_block: LayoutParsingBlock):
-
-                seg_start_flag = True
-                seg_end_flag = True
-
-                block_box = block.bbox
-                context_left_coordinate = block_box[0]
-                context_right_coordinate = block_box[2]
-                seg_start_coordinate = block.seg_start_coordinate
-                seg_end_coordinate = block.seg_end_coordinate
-
-                if prev_block is not None:
-                    prev_block_bbox = prev_block.bbox
-                    num_of_prev_lines = prev_block.num_of_lines
-                    pre_block_seg_end_coordinate = prev_block.seg_end_coordinate
-                    prev_end_space_small = (
-                        abs(prev_block_bbox[2] - pre_block_seg_end_coordinate) < 10
-                    )
-                    prev_lines_more_than_one = num_of_prev_lines > 1
-
-                    overlap_blocks = context_left_coordinate < prev_block_bbox[2]
-
-                    # update context_left_coordinate and context_right_coordinate
-                    if overlap_blocks:
-                        context_left_coordinate = min(
-                            prev_block_bbox[0], context_left_coordinate
-                        )
-                        context_right_coordinate = max(
-                            prev_block_bbox[2], context_right_coordinate
-                        )
-                        prev_end_space_small = (
-                            abs(context_right_coordinate - pre_block_seg_end_coordinate)
-                            < 10
-                        )
-                        edge_distance = 0
-                    else:
-                        edge_distance = abs(block_box[0] - prev_block_bbox[2])
-
-                    current_start_space_small = (
-                        seg_start_coordinate - context_left_coordinate < 10
-                    )
-
-                    if (
-                        prev_end_space_small
-                        and current_start_space_small
-                        and prev_lines_more_than_one
-                        and edge_distance < max(prev_block.width, block.width)
-                    ):
-                        seg_start_flag = False
-                else:
-                    if seg_start_coordinate - context_left_coordinate < 10:
-                        seg_start_flag = False
-
-                if context_right_coordinate - seg_end_coordinate < 10:
-                    seg_end_flag = False
-
-                return seg_start_flag, seg_end_flag
-
-            if self["model_settings"].get("pretty_markdown", True):
-                format_text = format_text_centered_by_html
-                format_image = format_image_centered_by_html
+        if self["model_settings"].get("use_table_recognition", False):
+            if pretty:
+                format_table_func = lambda block: "\n" + format_text_func(block)
             else:
-                format_text = format_text_plain
-                format_image = format_image_plain
-
-            handlers = {
-                "paragraph_title": lambda: format_title(block.content),
-                "abstract_title": lambda: format_title(block.content),
-                "reference_title": lambda: format_title(block.content),
-                "content_title": lambda: format_title(block.content),
-                "doc_title": lambda: f"# {block.content}".replace(
-                    "-\n",
-                    "",
-                ).replace("\n", " "),
-                "table_title": lambda: format_text(),
-                "figure_title": lambda: format_text(),
-                "chart_title": lambda: format_text(),
-                "text": lambda: block.content.replace("\n\n", "\n").replace(
-                    "\n", "\n\n"
-                ),
-                "abstract": lambda: format_first_line(
-                    ["摘要", "abstract"], lambda l: f"## {l}\n", " "
-                ),
-                "content": lambda: block.content.replace("-\n", "  \n").replace(
-                    "\n", "  \n"
-                ),
-                "image": lambda: format_image(),
-                "chart": lambda: format_chart(),
-                "formula": lambda: f"$${block.content}$$",
-                "table": format_table,
-                "reference": lambda: format_first_line(
-                    ["参考文献", "references"], lambda l: f"## {l}", "\n"
-                ),
-                "algorithm": lambda: block.content.strip("\n"),
-                "seal": lambda: f"Words of Seals:\n{block.content}",
-            }
-            parsing_res_list = obj["parsing_res_list"]
-            markdown_content = ""
-            last_label = None
-            seg_start_flag = None
-            seg_end_flag = None
-            prev_block = None
-            page_first_element_seg_start_flag = None
-            page_last_element_seg_end_flag = None
-            for block in parsing_res_list:
-                seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
-
-                label = block.label
-                page_first_element_seg_start_flag = (
-                    seg_start_flag
-                    if (page_first_element_seg_start_flag is None)
-                    else page_first_element_seg_start_flag
+                format_table_func = lambda block: simplify_table_func(
+                    "\n" + block.content
                 )
-                handler = handlers.get(label)
-                if handler:
-                    prev_block = block
-                    if label == last_label == "text" and seg_start_flag == False:
-                        markdown_content += handler()
-                    else:
-                        markdown_content += (
-                            "\n\n" + handler() if markdown_content else handler()
-                        )
-                    last_label = label
-            page_last_element_seg_end_flag = seg_end_flag
+        else:
+            format_table_func = format_image_func
 
-            return markdown_content, (
-                page_first_element_seg_start_flag,
-                page_last_element_seg_end_flag,
+        if self["model_settings"].get("use_formula_recognition", False):
+            format_formula_func = lambda block: f"$${block.content}$$"
+        else:
+            format_formula_func = format_image_func
+
+        handle_funcs_dict = {
+            "paragraph_title": format_title_func,
+            "abstract_title": format_title_func,
+            "reference_title": format_title_func,
+            "content_title": format_title_func,
+            "doc_title": lambda block: f"# {block.content}".replace(
+                "-\n",
+                "",
+            ).replace("\n", " "),
+            "table_title": format_text_func,
+            "figure_title": format_text_func,
+            "chart_title": format_text_func,
+            "text": lambda block: block.content.replace("\n\n", "\n").replace(
+                "\n", "\n\n"
+            ),
+            "abstract": partial(
+                format_first_line_func,
+                templates=["摘要", "abstract"],
+                format_func=lambda l: f"## {l}\n",
+                spliter=" ",
+            ),
+            "content": lambda block: block.content.replace("-\n", "  \n").replace(
+                "\n", "  \n"
+            ),
+            "image": format_image_func,
+            "chart": format_chart_func,
+            "formula": format_formula_func,
+            "table": format_table_func,
+            "reference": partial(
+                format_first_line_func,
+                templates=["参考文献", "references"],
+                format_func=lambda l: f"## {l}",
+                spliter="\n",
+            ),
+            "algorithm": lambda block: block.content.strip("\n"),
+            "seal": format_seal_func,
+        }
+
+        markdown_content = ""
+        last_label = None
+        seg_start_flag = None
+        seg_end_flag = None
+        prev_block = None
+        page_first_element_seg_start_flag = None
+        page_last_element_seg_end_flag = None
+        for block in self["parsing_res_list"]:
+            seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
+
+            label = block.label
+            page_first_element_seg_start_flag = (
+                seg_start_flag
+                if (page_first_element_seg_start_flag is None)
+                else page_first_element_seg_start_flag
             )
 
-        markdown_info = dict()
-        original_image_width = self["doc_preprocessor_res"]["input_img"].shape[1]
-        markdown_info["markdown_texts"], (
-            page_first_element_seg_start_flag,
-            page_last_element_seg_end_flag,
-        ) = _format_data(self)
-        markdown_info["page_continuation_flags"] = (
-            page_first_element_seg_start_flag,
-            page_last_element_seg_end_flag,
-        )
+            handle_func = handle_funcs_dict.get(label, None)
+            if handle_func:
+                prev_block = block
+                if label == last_label == "text" and seg_start_flag == False:
+                    markdown_content += handle_func(block)
+                else:
+                    markdown_content += (
+                        "\n\n" + handle_func(block)
+                        if markdown_content
+                        else handle_func(block)
+                    )
+                last_label = label
+        page_last_element_seg_end_flag = seg_end_flag
 
+        markdown_info = {
+            "markdown_texts": markdown_content,
+            "page_continuation_flags": (
+                page_first_element_seg_start_flag,
+                page_last_element_seg_end_flag,
+            ),
+        }
         markdown_info["markdown_images"] = {}
         for img in self["imgs_in_doc"]:
             markdown_info["markdown_images"][img["path"]] = img["img"]
@@ -532,8 +568,6 @@ class LayoutParsingBlock:
         return self.__dict__
 
     def update_direction_info(self) -> None:
-        if self.order_label == "vision":
-            self.direction = "horizontal"
         if self.direction == "horizontal":
             self.secondary_direction = "vertical"
             self.short_side_length = self.height
@@ -598,11 +632,13 @@ class LayoutParsingBlock:
 
 class LayoutParsingRegion:
 
-    def __init__(self, bbox, blocks: List[LayoutParsingBlock] = []) -> None:
+    def __init__(
+        self, bbox, blocks: List[LayoutParsingBlock] = [], image_shape=None
+    ) -> None:
         self.bbox = bbox
         self.block_map = {}
         self.direction = "horizontal"
-        self.calculate_bbox_metrics()
+        self.calculate_bbox_metrics(image_shape)
         self.doc_title_block_idxes = []
         self.paragraph_title_block_idxes = []
         self.vision_block_idxes = []
@@ -678,12 +714,17 @@ class LayoutParsingRegion:
             + self.bbox[self.secondary_direction_end_index]
         ) / 2
 
-    def calculate_bbox_metrics(self):
+    def calculate_bbox_metrics(self, image_shape):
         x1, y1, x2, y2 = self.bbox
+        width = x2 - x1
+        image_height, image_width = image_shape
         x_center, y_center = (x1 + x2) / 2, (y1 + y2) / 2
         self.euclidean_distance = math.sqrt(((x1) ** 2 + (y1) ** 2))
         self.center_euclidean_distance = math.sqrt(((x_center) ** 2 + (y_center) ** 2))
         self.angle_rad = math.atan2(y_center, x_center)
+        self.weighted_distance = (
+            y1 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
+        )
 
     def sort_normal_blocks(self, blocks):
         if self.direction == "horizontal":

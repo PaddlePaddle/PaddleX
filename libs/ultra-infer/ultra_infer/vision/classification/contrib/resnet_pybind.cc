@@ -17,7 +17,7 @@
 namespace ultra_infer {
 // the name of Pybind function should be Bind${model_name}
 void BindResNet(pybind11::module &m) {
-  // the constructor and the predict funtion are necessary
+  // the constructor and the predict function are necessary
   // the constructor is used to initialize the python model class.
   // the necessary public functions and variables like `size`, `mean_vals`
   // should also be binded.

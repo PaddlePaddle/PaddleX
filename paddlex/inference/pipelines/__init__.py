@@ -153,15 +153,21 @@ def create_pipeline(
             )
         config = config.copy()
     pipeline_name = config["pipeline_name"]
-    if use_hpip is not None:
-        config["use_hpip"] = use_hpip
-    if hpi_config is not None:
-        config["hpi_config"] = hpi_config
+    if use_hpip is None:
+        use_hpip = config.pop("use_hpip", False)
+    else:
+        config.pop("use_hpip", None)
+    if hpi_config is None:
+        hpi_config = config.pop("hpi_config", None)
+    else:
+        config.pop("hpi_config", None)
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
         pp_option=pp_option,
+        use_hpip=use_hpip,
+        hpi_config=hpi_config,
         *args,
         **kwargs,
     )

@@ -24,6 +24,7 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..doc_preprocessor.result import DocPreprocessorResult
@@ -33,11 +34,8 @@ from .table_recognition_post_processing import get_table_recognition_res
 from .utils import get_neighbor_boxes_idx
 
 
-@pipeline_requires_extra("ocr")
-class TableRecognitionPipeline(BasePipeline):
+class _TableRecognitionPipeline(BasePipeline):
     """Table Recognition Pipeline"""
-
-    entities = ["table_recognition"]
 
     def __init__(
         self,
@@ -476,3 +474,15 @@ class TableRecognitionPipeline(BasePipeline):
                 "model_settings": model_settings,
             }
             yield TableRecognitionResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class TableRecognitionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = ["table_recognition"]
+
+    @property
+    def _pipeline_cls(self):
+        return _TableRecognitionPipeline
+
+    def _get_batch_size(self, config):
+        return 1

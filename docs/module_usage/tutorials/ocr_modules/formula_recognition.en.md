@@ -39,6 +39,28 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>-/-</td>
 <td>535.2 M</td>
 <tr>
+<td>PP-FormulaNet_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-S_pretrained.pdparams">Training Model</a></td>
+<td>-</td>
+<td>-/-</td>
+<td>-/-</td>
+<td>-</td>
+<td rowspan="2">- </td>
+</tr>
+<tr>
+<td>PP-FormulaNet_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-M_pretrained.pdparams">Training Model</a></td>
+<td>-</td>
+<td>-/-</td>
+<td>-/-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>PP-FormulaNet_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-L_pretrained.pdparams">Training Model</a></td>
+<td>-</td>
+<td>-/-</td>
+<td>-/-</td>
+<td>-</td>
+</tr>
+<tr>
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
 <td>71.63</td>
 <td>-/-</td>
@@ -128,7 +150,7 @@ The visualization image is as follows:
 <b>Note: If you need to visualize the formula recognition pipeline, you need to run the following commands to install the LaTeX rendering environment. Currently, the formula recognition visualization pipeline only supports the Ubuntu environment; other environments are not supported at this time. For complex formulas, the LaTeX results may include some advanced representations that might not be displayed successfully in environments like Markdown:</b>
 ```bash
 sudo apt-get update
-sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
+sudo apt-get install texlive texlive-latex-base texlive-xetex latex-cjk-all texlive-latex-extra -y
 ````
 
 The explanations for the methods, parameters, etc., are as follows:

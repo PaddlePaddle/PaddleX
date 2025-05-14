@@ -112,7 +112,7 @@ template <typename T>
 struct DivideFunctor<
     T, typename std::enable_if<std::is_integral<T>::value>::type> {
   inline T operator()(const T a, const T b) const {
-    // For int32/int64, need to check whether the divison is zero.
+    // For int32/int64, need to check whether the division is zero.
     FDASSERT(b != 0, DIV_ERROR_INFO);
     return a / b;
   }

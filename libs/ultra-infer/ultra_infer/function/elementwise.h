@@ -21,14 +21,14 @@ namespace ultra_infer {
 
 namespace function {
 
-/** Excute the add operation for input FDTensors. *out = x + y.
+/** Execute the add operation for input FDTensors. *out = x + y.
     @param x The input tensor.
     @param y The input tensor.
     @param out The output tensor which stores the result.
 */
 ULTRAINFER_DECL void Add(const FDTensor &x, const FDTensor &y, FDTensor *out);
 
-/** Excute the subtract operation for input FDTensors.  *out = x - y.
+/** Execute the subtract operation for input FDTensors.  *out = x - y.
     @param x The input tensor.
     @param y The input tensor.
     @param out The output tensor which stores the result.
@@ -36,7 +36,7 @@ ULTRAINFER_DECL void Add(const FDTensor &x, const FDTensor &y, FDTensor *out);
 ULTRAINFER_DECL void Subtract(const FDTensor &x, const FDTensor &y,
                               FDTensor *out);
 
-/** Excute the multiply operation for input FDTensors.  *out = x * y.
+/** Execute the multiply operation for input FDTensors.  *out = x * y.
     @param x The input tensor.
     @param y The input tensor.
     @param out The output tensor which stores the result.
@@ -44,7 +44,7 @@ ULTRAINFER_DECL void Subtract(const FDTensor &x, const FDTensor &y,
 ULTRAINFER_DECL void Multiply(const FDTensor &x, const FDTensor &y,
                               FDTensor *out);
 
-/** Excute the divide operation for input FDTensors.  *out = x / y.
+/** Execute the divide operation for input FDTensors.  *out = x / y.
     @param x The input tensor.
     @param y The input tensor.
     @param out The output tensor which stores the result.
@@ -52,7 +52,7 @@ ULTRAINFER_DECL void Multiply(const FDTensor &x, const FDTensor &y,
 ULTRAINFER_DECL void Divide(const FDTensor &x, const FDTensor &y,
                             FDTensor *out);
 
-/** Excute the maximum operation for input FDTensors.  *out = max(x, y).
+/** Execute the maximum operation for input FDTensors.  *out = max(x, y).
     @param x The input tensor.
     @param y The input tensor.
     @param out The output tensor which stores the result.

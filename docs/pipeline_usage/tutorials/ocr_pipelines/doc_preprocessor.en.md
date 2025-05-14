@@ -125,7 +125,7 @@ paddlex --pipeline doc_preprocessor \
         --save_path ./output \
         --device gpu:0
 ```
-You can refer to the parameter descriptions in [2.1.2 Python Script Integration](#212-python-script-integration) for related parameter details.
+You can refer to the parameter descriptions in [2.1.2 Python Script Integration](#212-python-script-integration) for related parameter details. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
 
 After running, the results will be printed to the terminal as follows:
 
@@ -182,7 +182,7 @@ In the above Python script, the following steps were executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>Inference device for the pipeline. Supports specifying the GPU card number, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPU as "cpu".</td>
+<td>Inference device for the pipeline. Supports specifying the GPU card number, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPU as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>

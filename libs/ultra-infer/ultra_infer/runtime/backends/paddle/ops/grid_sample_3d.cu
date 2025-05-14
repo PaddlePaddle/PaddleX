@@ -232,7 +232,7 @@ GridSample3DCudaKernel(const index_t nthreads, index_t out_c, index_t out_d,
       index_t iy_nearest = static_cast<index_t>(std::round(iy));
       index_t iz_nearest = static_cast<index_t>(std::round(iz));
 
-      // assign nearest neighor pixel value to output pixel
+      // assign nearest neighbor pixel value to output pixel
       auto inp_ptr_NC = input + n * inp_sN;
       auto out_ptr_NCDHW =
           output + n * out_sN + d * out_sD + h * out_sH + w * out_sW;
@@ -583,7 +583,7 @@ __global__ void GridSample3DCudaBackwardKernel(
       auto iy_nearest = static_cast<index_t>(std::round(iy));
       auto iz_nearest = static_cast<index_t>(std::round(iz));
 
-      // assign nearest neighor pixel value to output pixel
+      // assign nearest neighbor pixel value to output pixel
       index_t gOut_offset =
           n * gOut_sN + d * gOut_sD + h * gOut_sH + w * gOut_sW;
       T *gInp_ptr_NC = grad_input + n * inp_sN;

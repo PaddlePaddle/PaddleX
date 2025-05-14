@@ -156,7 +156,7 @@ cv::Mat PyArrayToCvMat(pybind11::array& pyarray) {
 
 PYBIND11_MODULE(@PY_LIBRARY_NAME@, m) {
   m.doc() =
-      "Make programer easier to deploy deeplearning model, save time to save "
+      "Make programmer easier to deploy deeplearning model, save time to save "
       "the world!";
 
   m.def("set_logger", &SetLogger);
