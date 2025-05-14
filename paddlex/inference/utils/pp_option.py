@@ -56,6 +56,10 @@ class PaddlePredictorOption(object):
     def model_name(self):
         return self._model_name
 
+    @model_name.setter
+    def model_name(self, model_name):
+        self._model_name = model_name
+
     @property
     def changed(self):
         return self._changed
