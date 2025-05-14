@@ -96,8 +96,8 @@ def format_text_plain_func(block):
 
 def format_image_scaled_by_html_func(block, original_image_width):
     img_tags = []
-    image_path = "".join(block.image.keys())
-    image_width = block.image[image_path].width
+    image_path = block.image["path"]
+    image_width = block.image["img"].width
     scale = int(image_width / original_image_width * 100)
     img_tags.append(
         '<img src="{}" alt="Image" width="{}%" />'.format(
@@ -109,7 +109,7 @@ def format_image_scaled_by_html_func(block, original_image_width):
 
 def format_image_plain_func(block):
     img_tags = []
-    image_path = "".join(block.image.keys())
+    image_path = block.image["path"]
     img_tags.append("![]({})".format(image_path.replace("-\n", "").replace("\n", " ")))
     return "\n".join(img_tags)
 
@@ -487,10 +487,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         prev_block = None
         page_first_element_seg_start_flag = None
         page_last_element_seg_end_flag = None
+        markdown_info = {}
+        markdown_info["markdown_images"] = {}
         for block in self["parsing_res_list"]:
             seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
 
             label = block.label
+            if block.image is not None:
+                markdown_info["markdown_images"][block.image["path"]] = block.image[
+                    "img"
+                ]
             page_first_element_seg_start_flag = (
                 seg_start_flag
                 if (page_first_element_seg_start_flag is None)
@@ -511,14 +517,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 last_label = label
         page_last_element_seg_end_flag = seg_end_flag
 
-        markdown_info = {
-            "markdown_texts": markdown_content,
-            "page_continuation_flags": (
-                page_first_element_seg_start_flag,
-                page_last_element_seg_end_flag,
-            ),
-        }
-        markdown_info["markdown_images"] = {}
+        markdown_info["markdown_texts"] = markdown_content
+        markdown_info["page_continuation_flags"] = (
+            page_first_element_seg_start_flag,
+            page_last_element_seg_end_flag,
+        )
         for img in self["imgs_in_doc"]:
             markdown_info["markdown_images"][img["path"]] = img["img"]
 

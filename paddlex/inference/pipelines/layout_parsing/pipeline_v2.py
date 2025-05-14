@@ -791,11 +791,17 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
 
-            if label in ["chart", "image", "seal", "table", "formula"]:
+            if (
+                label
+                in ["seal", "table", "formula", "chart"]
+                + BLOCK_LABEL_MAP["image_labels"]
+            ):
                 x_min, y_min, x_max, y_max = list(map(int, block_bbox))
-                img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                img_path = (
+                    f"imgs/img_in_{block.label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                )
                 img = Image.fromarray(image[y_min:y_max, x_min:x_max, ::-1])
-                block.image = {img_path: img}
+                block.image = {"path": img_path, "img": img}
 
             layout_parsing_blocks.append(block)
 
