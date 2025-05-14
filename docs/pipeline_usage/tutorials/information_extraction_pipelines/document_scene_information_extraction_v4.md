@@ -2264,7 +2264,7 @@ SubModules:
     limit_type: max
     thresh: 0.3
     box_thresh: 0.6
-    unclip_ratio: 2.0
+    unclip_ratio: 1.5
 
     TextRecognition:
     module_name: text_recognition

@@ -39,9 +39,10 @@ SubPipelines:
         model_dir: null
         limit_side_len: 960
         limit_type: max
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.6
-        unclip_ratio: 2.0
+        unclip_ratio: 1.5
         
       TextRecognition:
         module_name: text_recognition
@@ -78,6 +79,7 @@ SubPipelines:
             model_dir: null
             limit_side_len: 736
             limit_type: min
+            max_side_limit: 4000
             thresh: 0.2
             box_thresh: 0.6
             unclip_ratio: 0.5

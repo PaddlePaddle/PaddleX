@@ -125,6 +125,7 @@ SubPipelines:
         model_dir: null
         limit_side_len: 736
         limit_type: min
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 1.5
@@ -184,9 +185,10 @@ SubPipelines:
             model_dir: null
             limit_side_len: 736
             limit_type: min
+            max_side_limit: 4000
             thresh: 0.3
             box_thresh: 0.4
-            unclip_ratio: 2.0
+            unclip_ratio: 1.5
           TextLineOrientation:
             module_name: textline_orientation
             model_name: PP-LCNet_x0_25_textline_ori
@@ -218,6 +220,7 @@ SubPipelines:
             model_dir: null
             limit_side_len: 736
             limit_type: min
+            max_side_limit: 4000
             thresh: 0.2
             box_thresh: 0.6
             unclip_ratio: 0.5

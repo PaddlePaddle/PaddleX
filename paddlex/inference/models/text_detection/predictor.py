@@ -41,6 +41,7 @@ class TextDetPredictor(BasePredictor):
         box_thresh: Union[float, None] = None,
         unclip_ratio: Union[float, None] = None,
         input_shape=None,
+        max_side_limit: int = 4000,
         *args,
         **kwargs
     ):
@@ -52,6 +53,7 @@ class TextDetPredictor(BasePredictor):
         self.box_thresh = box_thresh
         self.unclip_ratio = unclip_ratio
         self.input_shape = input_shape
+        self.max_side_limit = max_side_limit
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -85,6 +87,7 @@ class TextDetPredictor(BasePredictor):
         thresh: Union[float, None] = None,
         box_thresh: Union[float, None] = None,
         unclip_ratio: Union[float, None] = None,
+        max_side_limit: Union[int, None] = None,
     ):
 
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
@@ -92,6 +95,9 @@ class TextDetPredictor(BasePredictor):
             imgs=batch_raw_imgs,
             limit_side_len=limit_side_len or self.limit_side_len,
             limit_type=limit_type or self.limit_type,
+            max_side_limit=(
+                max_side_limit if max_side_limit is not None else self.max_side_limit
+            ),
         )
         batch_imgs = self.pre_tfs["Normalize"](imgs=batch_imgs)
         batch_imgs = self.pre_tfs["ToCHW"](imgs=batch_imgs)

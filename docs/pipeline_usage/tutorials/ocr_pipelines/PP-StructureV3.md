@@ -1838,9 +1838,10 @@ SubPipelines:
         model_dir: null # 替换为微调后的文本测模型权重路径
         limit_side_len: 960
         limit_type: max
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.6
-        unclip_ratio: 2.0
+        unclip_ratio: 1.5
 
       TextRecognition:
         module_name: text_recognition
