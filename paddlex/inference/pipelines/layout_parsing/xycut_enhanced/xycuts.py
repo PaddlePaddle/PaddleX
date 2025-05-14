@@ -23,14 +23,15 @@ from ..utils import calculate_overlap_ratio, calculate_projection_overlap_ratio
 from .utils import (
     calculate_discontinuous_projection,
     get_cut_blocks,
-    get_nearest_edge_distance,
     insert_child_blocks,
     manhattan_insert,
+    projection_by_bboxes,
     recursive_xy_cut,
     recursive_yx_cut,
     reference_insert,
     shrink_overlapping_boxes,
     sort_normal_blocks,
+    split_projection_profile,
     update_doc_title_child_blocks,
     update_paragraph_title_child_blocks,
     update_vision_child_blocks,
@@ -131,27 +132,50 @@ def pre_process(
         current_interval = discontinuous[0]
         for interval in discontinuous[1:]:
             gap_len = interval[0] - current_interval[1]
-            if gap_len >= region.text_line_height * 5:
+            if gap_len >= region.text_line_height * 3:
                 cut_coordinates.append(current_interval[1])
-            elif gap_len > region.text_line_height * 2:
-                x1, _, x2, __ = region.bbox
-                y1 = current_interval[1]
-                y2 = interval[0]
-                bbox = [x1, y1, x2, y2]
-                ref_interval = interval[0] - current_interval[1]
-                ref_bboxes = []
-                for block in blocks:
-                    if get_nearest_edge_distance(bbox, block.bbox) < ref_interval * 2:
-                        ref_bboxes.append(block.bbox)
-                discontinuous = calculate_discontinuous_projection(
-                    ref_bboxes, direction=region.direction
+            elif gap_len > region.text_line_height * 1.8:
+                (pre_blocks, post_blocks) = get_cut_blocks(
+                    list(block_map.values()), cut_direction, [current_interval[1]], []
                 )
-                if len(discontinuous) != 2:
-                    cut_coordinates.append(current_interval[1])
+                pre_bboxes = np.array([block.bbox for block in pre_blocks])
+                post_bboxes = np.array([block.bbox for block in post_blocks])
+                projection_index = 1 if cut_direction == "horizontal" else 0
+                pre_projection = projection_by_bboxes(pre_bboxes, projection_index)
+                post_projection = projection_by_bboxes(post_bboxes, projection_index)
+                pre_projection_min = np.min(pre_projection)
+                post_projection_min = np.min(post_projection)
+                pre_projection_min += 5 if pre_projection_min != 0 else 0
+                post_projection_min += 5 if post_projection_min != 0 else 0
+                pre_intervals = split_projection_profile(
+                    pre_projection, pre_projection_min, 1
+                )
+                post_intervals = split_projection_profile(
+                    post_projection, post_projection_min, 1
+                )
+                pre_gap_boxes = []
+                if pre_intervals is not None:
+                    for start, end in zip(*pre_intervals):
+                        bbox = [0] * 4
+                        bbox[projection_index] = start
+                        bbox[projection_index + 2] = end
+                        pre_gap_boxes.append(bbox)
+                post_gap_boxes = []
+                if post_intervals is not None:
+                    for start, end in zip(*post_intervals):
+                        bbox = [0] * 4
+                        bbox[projection_index] = start
+                        bbox[projection_index + 2] = end
+                        post_gap_boxes.append(bbox)
+                max_gap_boxes_num = max(len(pre_gap_boxes), len(post_gap_boxes))
+                if max_gap_boxes_num > 0:
+                    discontinuous_intervals = calculate_discontinuous_projection(
+                        pre_gap_boxes + post_gap_boxes, direction=region.direction
+                    )
+                    if len(discontinuous_intervals) != max_gap_boxes_num:
+                        cut_coordinates.append(current_interval[1])
             current_interval = interval
-    cut_list = get_cut_blocks(
-        blocks, cut_direction, cut_coordinates, region.bbox, mask_labels
-    )
+    cut_list = get_cut_blocks(blocks, cut_direction, cut_coordinates, mask_labels)
     pre_cut_list.extend(cut_list)
     if region.direction == "vertical":
         pre_cut_list = pre_cut_list[::-1]

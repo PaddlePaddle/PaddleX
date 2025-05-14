@@ -46,7 +46,7 @@ class TextDetRunner(TextRecRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         # `config_path` and `device` unused
         cmd = [self.python, "tools/infer/predict_det.py", *cli_args]

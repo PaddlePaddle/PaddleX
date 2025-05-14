@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import math
+import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -32,6 +33,7 @@ from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..doc_preprocessor.result import DocPreprocessorResult
+from ..layout_parsing.utils import get_sub_regions_ocr_res
 from ..ocr.result import OCRResult
 from .result import SingleTableRecognitionResult, TableRecognitionResult
 from .table_recognition_post_processing import (
@@ -131,6 +133,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
         )
 
         self.use_ocr_model = config.get("use_ocr_model", True)
+        self.general_ocr_pipeline = None
         if self.use_ocr_model:
             general_ocr_config = config.get("SubPipelines", {}).get(
                 "GeneralOCR",
@@ -142,9 +145,13 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 "GeneralOCR", None
             )
 
-        self._crop_by_boxes = CropByBoxes()
+        self.table_orientation_classify_model = None
+        self.table_orientation_classify_config = config.get("SubModules", {}).get(
+            "TableOrientationClassify", None
+        )
 
-        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
+        self._crop_by_boxes = CropByBoxes()
+        self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
 
     def get_model_settings(
@@ -190,7 +197,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
         self,
         model_settings: Dict,
         overall_ocr_res: OCRResult,
-        layout_det_res: Union[DetResult, List[DetResult]],
+        layout_det_res: DetResult,
     ) -> bool:
         """
         Check if the input parameters are valid based on the initialized models.
@@ -199,7 +206,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
             model_settings (Dict): A dictionary containing input parameters.
             overall_ocr_res (OCRResult): Overall OCR result obtained after running the OCR pipeline.
                 The overall OCR result with convert_points_to_boxes information.
-            layout_det_res (Union[DetResult, List[DetResult]]): The layout detection result(s).
+            layout_det_res (DetResult): The layout detection result.
         Returns:
             bool: True if all required models are initialized according to input parameters, False otherwise.
         """
@@ -537,7 +544,177 @@ class _TableRecognitionPipelineV2(BasePipeline):
             final_results = combine_rectangles(ocr_det_results, html_pred_boxes_nums)
         return final_results
 
-    def split_ocr_bboxes_by_table_cells(self, ori_img, cells_bboxes):
+    def split_ocr_bboxes_by_table_cells(
+        self, cells_det_results, overall_ocr_res, ori_img, k=2
+    ):
+        """
+        Split OCR bounding boxes based on table cell boundaries when they span multiple cells horizontally.
+
+        Args:
+            cells_det_results (list): List of cell bounding boxes in format [x1, y1, x2, y2]
+            overall_ocr_res (dict): Dictionary containing OCR results with keys:
+                                - 'rec_boxes': OCR bounding boxes (will be converted to list)
+                                - 'rec_texts': OCR recognized texts
+            ori_img (np.array): Original input image array
+            k (int): Threshold for determining when to split (minimum number of cells spanned)
+
+        Returns:
+            dict: Modified overall_ocr_res with split boxes and texts
+        """
+
+        def calculate_iou(box1, box2):
+            """
+            Calculate Intersection over Union (IoU) between two bounding boxes.
+
+            Args:
+                box1 (list): [x1, y1, x2, y2]
+                box2 (list): [x1, y1, x2, y2]
+
+            Returns:
+                float: IoU value
+            """
+            # Determine intersection coordinates
+            x_left = max(box1[0], box2[0])
+            y_top = max(box1[1], box2[1])
+            x_right = min(box1[2], box2[2])
+            y_bottom = min(box1[3], box2[3])
+            if x_right < x_left or y_bottom < y_top:
+                return 0.0
+            # Calculate areas
+            intersection_area = (x_right - x_left) * (y_bottom - y_top)
+            box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
+            box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
+            # return intersection_area / float(box1_area + box2_area - intersection_area)
+            return intersection_area / box2_area
+
+        def get_overlapping_cells(ocr_box, cells):
+            """
+            Find cells that overlap significantly with the OCR box (IoU > 0.5).
+
+            Args:
+                ocr_box (list): OCR bounding box [x1, y1, x2, y2]
+                cells (list): List of cell bounding boxes
+
+            Returns:
+                list: Indices of overlapping cells, sorted by x-coordinate
+            """
+            overlapping = []
+            for idx, cell in enumerate(cells):
+                if calculate_iou(ocr_box, cell) > 0.5:
+                    overlapping.append(idx)
+            # Sort overlapping cells by their x-coordinate (left to right)
+            overlapping.sort(key=lambda i: cells[i][0])
+            return overlapping
+
+        def split_box_by_cells(ocr_box, cell_indices, cells):
+            """
+            Split OCR box vertically at cell boundaries.
+
+            Args:
+                ocr_box (list): Original OCR box [x1, y1, x2, y2]
+                cell_indices (list): Indices of cells to split by
+                cells (list): All cell bounding boxes
+
+            Returns:
+                list: List of split boxes
+            """
+            if not cell_indices:
+                return [ocr_box]
+            split_boxes = []
+            cells_to_split = [cells[i] for i in cell_indices]
+            if ocr_box[0] < cells_to_split[0][0]:
+                split_boxes.append(
+                    [ocr_box[0], ocr_box[1], cells_to_split[0][0], ocr_box[3]]
+                )
+            for i in range(len(cells_to_split)):
+                current_cell = cells_to_split[i]
+                split_boxes.append(
+                    [
+                        max(ocr_box[0], current_cell[0]),
+                        ocr_box[1],
+                        min(ocr_box[2], current_cell[2]),
+                        ocr_box[3],
+                    ]
+                )
+                if i < len(cells_to_split) - 1:
+                    next_cell = cells_to_split[i + 1]
+                    if current_cell[2] < next_cell[0]:
+                        split_boxes.append(
+                            [current_cell[2], ocr_box[1], next_cell[0], ocr_box[3]]
+                        )
+            last_cell = cells_to_split[-1]
+            if last_cell[2] < ocr_box[2]:
+                split_boxes.append([last_cell[2], ocr_box[1], ocr_box[2], ocr_box[3]])
+            unique_boxes = []
+            seen = set()
+            for box in split_boxes:
+                box_tuple = tuple(box)
+                if box_tuple not in seen:
+                    seen.add(box_tuple)
+                    unique_boxes.append(box)
+
+            return unique_boxes
+
+        # Convert OCR boxes to list if needed
+        if hasattr(overall_ocr_res["rec_boxes"], "tolist"):
+            ocr_det_results = overall_ocr_res["rec_boxes"].tolist()
+        else:
+            ocr_det_results = overall_ocr_res["rec_boxes"]
+        ocr_texts = overall_ocr_res["rec_texts"]
+
+        # Make copies to modify
+        new_boxes = []
+        new_texts = []
+
+        # Process each OCR box
+        i = 0
+        while i < len(ocr_det_results):
+            ocr_box = ocr_det_results[i]
+            text = ocr_texts[i]
+            # Find cells that significantly overlap with this OCR box
+            overlapping_cells = get_overlapping_cells(ocr_box, cells_det_results)
+            # Check if we need to split (spans >= k cells)
+            if len(overlapping_cells) >= k:
+                # Split the box at cell boundaries
+                split_boxes = split_box_by_cells(
+                    ocr_box, overlapping_cells, cells_det_results
+                )
+                # Process each split box
+                split_texts = []
+                for box in split_boxes:
+                    x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
+                    if y2 - y1 > 1 and x2 - x1 > 1:
+                        ocr_result = next(
+                            self.general_ocr_pipeline.text_rec_model(
+                                ori_img[y1:y2, x1:x2, :]
+                            )
+                        )
+                        # Extract the recognized text from the OCR result
+                        if "rec_text" in ocr_result:
+                            result = ocr_result[
+                                "rec_text"
+                            ]  # Assumes "rec_texts" contains a single string
+                        else:
+                            result = ""
+                    else:
+                        result = ""
+                    split_texts.append(result)
+                # Add split boxes and texts to results
+                new_boxes.extend(split_boxes)
+                new_texts.extend(split_texts)
+            else:
+                # Keep original box and text
+                new_boxes.append(ocr_box)
+                new_texts.append(text)
+            i += 1
+
+        # Update the results dictionary
+        overall_ocr_res["rec_boxes"] = new_boxes
+        overall_ocr_res["rec_texts"] = new_texts
+
+        return overall_ocr_res
+
+    def gen_ocr_with_table_cells(self, ori_img, cells_bboxes):
         """
         Splits OCR bounding boxes by table cells and retrieves text.
 
@@ -558,79 +735,300 @@ class _TableRecognitionPipelineV2(BasePipeline):
             # Extract and round up the coordinates of the bounding box.
             x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
             # Perform OCR on the defined region of the image and get the recognized text.
-            rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
-            # Concatenate the texts and append them to the texts_list.
-            texts_list.append("".join(rec_te["rec_texts"]))
+            if y2 - y1 > 1 and x2 - x1 > 1:
+                rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+                # Concatenate the texts and append them to the texts_list.
+                texts_list.append("".join(rec_te["rec_texts"]))
         # Return the list of recognized texts from each cell.
         return texts_list
 
-    def _predict(
-        self,
-        image_arrays: List[np.ndarray],
-        overall_ocr_results: List[OCRResult],
-        table_boxes: List[list],
-        use_table_cells_ocr_results: bool = False,
-        use_e2e_wired_table_rec_model: bool = False,
-        use_e2e_wireless_table_rec_model: bool = False,
-        flag_find_nei_text: bool = True,
-    ) -> List[SingleTableRecognitionResult]:
+    def map_cells_to_original_image(
+        self, detections, table_angle, img_width, img_height
+    ):
         """
-        Predict table recognition results from image arrays, layout detection results, and OCR results.
+        Map bounding boxes from the rotated image back to the original image.
+
+        Parameters:
+        - detections: list of numpy arrays, each containing bounding box coordinates [x1, y1, x2, y2]
+        - table_angle: rotation angle in degrees (90, 180, or 270)
+        - width_orig: width of the original image (img1)
+        - height_orig: height of the original image (img1)
+
+        Returns:
+        - mapped_detections: list of numpy arrays with mapped bounding box coordinates
+        """
+
+        mapped_detections = []
+        for i in range(len(detections)):
+            tbx1, tby1, tbx2, tby2 = (
+                detections[i][0],
+                detections[i][1],
+                detections[i][2],
+                detections[i][3],
+            )
+            if table_angle == "270":
+                new_x1, new_y1 = tby1, img_width - tbx2
+                new_x2, new_y2 = tby2, img_width - tbx1
+            elif table_angle == "180":
+                new_x1, new_y1 = img_width - tbx2, img_height - tby2
+                new_x2, new_y2 = img_width - tbx1, img_height - tby1
+            elif table_angle == "90":
+                new_x1, new_y1 = img_height - tby2, tbx1
+                new_x2, new_y2 = img_height - tby1, tbx2
+            new_box = np.array([new_x1, new_y1, new_x2, new_y2])
+            mapped_detections.append(new_box)
+        return mapped_detections
+
+    def split_string_by_keywords(self, html_string):
+        """
+        Split HTML string by keywords.
 
         Args:
-            image_arrays (List[np.ndarray]): The input image arrays.
-            overall_ocr_results (List[OCRResult]): Overall OCR results obtained after running the OCR pipeline.
-                The overall OCR results contain text recognition information.
-            table_boxes (List[list]): The table box coordinates.
-            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            html_string (str): The HTML string.
+        Returns:
+            split_html (list): The list of html keywords.
+        """
+
+        keywords = [
+            "<thead>",
+            "</thead>",
+            "<tbody>",
+            "</tbody>",
+            "<tr>",
+            "</tr>",
+            "<td>",
+            "<td",
+            ">",
+            "</td>",
+            'colspan="2"',
+            'colspan="3"',
+            'colspan="4"',
+            'colspan="5"',
+            'colspan="6"',
+            'colspan="7"',
+            'colspan="8"',
+            'colspan="9"',
+            'colspan="10"',
+            'colspan="11"',
+            'colspan="12"',
+            'colspan="13"',
+            'colspan="14"',
+            'colspan="15"',
+            'colspan="16"',
+            'colspan="17"',
+            'colspan="18"',
+            'colspan="19"',
+            'colspan="20"',
+            'rowspan="2"',
+            'rowspan="3"',
+            'rowspan="4"',
+            'rowspan="5"',
+            'rowspan="6"',
+            'rowspan="7"',
+            'rowspan="8"',
+            'rowspan="9"',
+            'rowspan="10"',
+            'rowspan="11"',
+            'rowspan="12"',
+            'rowspan="13"',
+            'rowspan="14"',
+            'rowspan="15"',
+            'rowspan="16"',
+            'rowspan="17"',
+            'rowspan="18"',
+            'rowspan="19"',
+            'rowspan="20"',
+        ]
+        regex_pattern = "|".join(re.escape(keyword) for keyword in keywords)
+        split_result = re.split(f"({regex_pattern})", html_string)
+        split_html = [part for part in split_result if part]
+        return split_html
+
+    def cluster_positions(self, positions, tolerance):
+        if not positions:
+            return []
+        positions = sorted(set(positions))
+        clustered = []
+        current_cluster = [positions[0]]
+        for pos in positions[1:]:
+            if abs(pos - current_cluster[-1]) <= tolerance:
+                current_cluster.append(pos)
+            else:
+                clustered.append(sum(current_cluster) / len(current_cluster))
+                current_cluster = [pos]
+        clustered.append(sum(current_cluster) / len(current_cluster))
+        return clustered
+
+    def trans_cells_det_results_to_html(self, cells_det_results):
+        """
+        Trans table cells bboxes to HTML.
+
+        Args:
+            cells_det_results (list): The table cells detection results.
+        Returns:
+            html (list): The list of html keywords.
+        """
+
+        tolerance = 5
+        x_coords = [x for cell in cells_det_results for x in (cell[0], cell[2])]
+        y_coords = [y for cell in cells_det_results for y in (cell[1], cell[3])]
+        x_positions = self.cluster_positions(x_coords, tolerance)
+        y_positions = self.cluster_positions(y_coords, tolerance)
+        x_position_to_index = {x: i for i, x in enumerate(x_positions)}
+        y_position_to_index = {y: i for i, y in enumerate(y_positions)}
+        num_rows = len(y_positions) - 1
+        num_cols = len(x_positions) - 1
+        grid = [[None for _ in range(num_cols)] for _ in range(num_rows)]
+        cells_info = []
+        cell_index = 0
+        cell_map = {}
+        for index, cell in enumerate(cells_det_results):
+            x1, y1, x2, y2 = cell
+            x1_idx = min(
+                range(len(x_positions)), key=lambda i: abs(x_positions[i] - x1)
+            )
+            x2_idx = min(
+                range(len(x_positions)), key=lambda i: abs(x_positions[i] - x2)
+            )
+            y1_idx = min(
+                range(len(y_positions)), key=lambda i: abs(y_positions[i] - y1)
+            )
+            y2_idx = min(
+                range(len(y_positions)), key=lambda i: abs(y_positions[i] - y2)
+            )
+            col_start = min(x1_idx, x2_idx)
+            col_end = max(x1_idx, x2_idx)
+            row_start = min(y1_idx, y2_idx)
+            row_end = max(y1_idx, y2_idx)
+            rowspan = row_end - row_start
+            colspan = col_end - col_start
+            if rowspan == 0:
+                rowspan = 1
+            if colspan == 0:
+                colspan = 1
+            cells_info.append(
+                {
+                    "row_start": row_start,
+                    "col_start": col_start,
+                    "rowspan": rowspan,
+                    "colspan": colspan,
+                    "content": "",
+                }
+            )
+            for r in range(row_start, row_start + rowspan):
+                for c in range(col_start, col_start + colspan):
+                    key = (r, c)
+                    if key in cell_map:
+                        continue
+                    else:
+                        cell_map[key] = index
+        html = "<table><tbody>"
+        for r in range(num_rows):
+            html += "<tr>"
+            c = 0
+            while c < num_cols:
+                key = (r, c)
+                if key in cell_map:
+                    cell_index = cell_map[key]
+                    cell_info = cells_info[cell_index]
+                    if cell_info["row_start"] == r and cell_info["col_start"] == c:
+                        rowspan = cell_info["rowspan"]
+                        colspan = cell_info["colspan"]
+                        rowspan_attr = f' rowspan="{rowspan}"' if rowspan > 1 else ""
+                        colspan_attr = f' colspan="{colspan}"' if colspan > 1 else ""
+                        content = cell_info["content"]
+                        html += f"<td{rowspan_attr}{colspan_attr}>{content}</td>"
+                    c += cell_info["colspan"]
+                else:
+                    html += "<td></td>"
+                    c += 1
+            html += "</tr>"
+        html += "</tbody></table>"
+        html = self.split_string_by_keywords(html)
+        return html
+
+    def predict_single_table_recognition_res(
+        self,
+        image_array: np.ndarray,
+        overall_ocr_res: OCRResult,
+        table_box: list,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = False,
+        use_wired_table_cells_trans_to_html: bool = False,
+        use_wireless_table_cells_trans_to_html: bool = False,
+        use_ocr_results_with_table_cells: bool = True,
+        flag_find_nei_text: bool = True,
+    ) -> SingleTableRecognitionResult:
+        """
+        Predict table recognition results from an image array, layout detection results, and OCR results.
+
+        Args:
+            image_array (np.ndarray): The input image represented as a numpy array.
+            overall_ocr_res (OCRResult): Overall OCR result obtained after running the OCR pipeline.
+                The overall OCR results containing text recognition information.
+            table_box (list): The table box coordinates.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             flag_find_nei_text (bool): Whether to find neighboring text.
         Returns:
-            List[SingleTableRecognitionResult]: Single table recognition results.
+            SingleTableRecognitionResult: single table recognition result.
         """
-        # TODO: Batch inference
 
-        results = []
+        table_cls_pred = next(self.table_cls_model(image_array))
+        table_cls_result = self.extract_results(table_cls_pred, "cls")
+        use_e2e_model = False
+        cells_trans_to_html = False
 
-        for image_array, overall_ocr_res, table_box in zip(
-            image_arrays, overall_ocr_results, table_boxes
-        ):
-            table_cls_pred = next(self.table_cls_model(image_array))
-            table_cls_result = self.extract_results(table_cls_pred, "cls")
-            use_e2e_model = False
-
-            if table_cls_result == "wired_table":
+        if table_cls_result == "wired_table":
+            if use_wired_table_cells_trans_to_html == True:
+                cells_trans_to_html = True
+            else:
                 table_structure_pred = next(self.wired_table_rec_model(image_array))
-                if use_e2e_wired_table_rec_model == True:
-                    use_e2e_model = True
-                else:
-                    table_cells_pred = next(
-                        self.wired_table_cells_detection_model(
-                            image_array, threshold=0.3
-                        )
-                    )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
-                    # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-            elif table_cls_result == "wireless_table":
+            if use_e2e_wired_table_rec_model == True:
+                use_e2e_model = True
+                if cells_trans_to_html == True:
+                    table_structure_pred = next(self.wired_table_rec_model(image_array))
+            else:
+                table_cells_pred = next(
+                    self.wired_table_cells_detection_model(image_array, threshold=0.3)
+                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
+        elif table_cls_result == "wireless_table":
+            if use_wireless_table_cells_trans_to_html == True:
+                cells_trans_to_html = True
+            else:
                 table_structure_pred = next(self.wireless_table_rec_model(image_array))
-                if use_e2e_wireless_table_rec_model == True:
-                    use_e2e_model = True
-                else:
-                    table_cells_pred = next(
-                        self.wireless_table_cells_detection_model(
-                            image_array, threshold=0.3
-                        )
-                    )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
-                    # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-            if use_e2e_model == False:
+            if use_e2e_wireless_table_rec_model == True:
+                use_e2e_model = True
+                if cells_trans_to_html == True:
+                    table_structure_pred = next(
+                        self.wireless_table_rec_model(image_array)
+                    )
+            else:
+                table_cells_pred = next(
+                    self.wireless_table_cells_detection_model(
+                        image_array, threshold=0.3
+                    )
+                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
+
+        if use_e2e_model == False:
+            table_cells_result, table_cells_score = self.extract_results(
+                table_cells_pred, "det"
+            )
+            table_cells_result, table_cells_score = self.cells_det_results_nms(
+                table_cells_result, table_cells_score
+            )
+            if cells_trans_to_html == True:
+                table_structure_result = self.trans_cells_det_results_to_html(
+                    table_cells_result
+                )
+            else:
                 table_structure_result = self.extract_results(
                     table_structure_pred, "table_stru"
-                )
-                table_cells_result, table_cells_score = self.extract_results(
-                    table_cells_pred, "det"
-                )
-                table_cells_result, table_cells_score = self.cells_det_results_nms(
-                    table_cells_result, table_cells_score
                 )
                 ocr_det_boxes = self.get_region_ocr_det_boxes(
                     overall_ocr_res["rec_boxes"].tolist(), table_box
@@ -641,54 +1039,63 @@ class _TableRecognitionPipelineV2(BasePipeline):
                     ocr_det_boxes,
                     len(table_structure_pred["bbox"]),
                 )
-                if use_table_cells_ocr_results == True:
-                    cells_texts_list = self.split_ocr_bboxes_by_table_cells(
+            if use_ocr_results_with_table_cells == True:
+                if self.cells_split_ocr == True:
+                    table_box_copy = np.array([table_box])
+                    table_ocr_pred = get_sub_regions_ocr_res(
+                        overall_ocr_res, table_box_copy
+                    )
+                    table_ocr_pred = self.split_ocr_bboxes_by_table_cells(
+                        table_cells_result, table_ocr_pred, image_array
+                    )
+                    cells_texts_list = []
+                else:
+                    cells_texts_list = self.gen_ocr_with_table_cells(
                         image_array, table_cells_result
                     )
-                else:
-                    cells_texts_list = []
-                single_table_recognition_res = get_table_recognition_res(
-                    table_box,
-                    table_structure_result,
-                    table_cells_result,
-                    overall_ocr_res,
-                    cells_texts_list,
-                    use_table_cells_ocr_results,
-                )
+                    table_ocr_pred = {}
             else:
-                if use_table_cells_ocr_results == True:
-                    table_cells_result_e2e = list(
-                        map(lambda arr: arr.tolist(), table_structure_pred["bbox"])
-                    )
-                    table_cells_result_e2e = [
-                        [rect[0], rect[1], rect[4], rect[5]]
-                        for rect in table_cells_result_e2e
-                    ]
-                    cells_texts_list = self.split_ocr_bboxes_by_table_cells(
-                        image_array, table_cells_result_e2e
-                    )
-                else:
-                    cells_texts_list = []
-                single_table_recognition_res = get_table_recognition_res_e2e(
-                    table_box,
-                    table_structure_pred,
-                    overall_ocr_res,
-                    cells_texts_list,
-                    use_table_cells_ocr_results,
+                table_ocr_pred = {}
+                cells_texts_list = []
+            single_table_recognition_res = get_table_recognition_res(
+                table_box,
+                table_structure_result,
+                table_cells_result,
+                overall_ocr_res,
+                table_ocr_pred,
+                cells_texts_list,
+                use_ocr_results_with_table_cells,
+                self.cells_split_ocr,
+            )
+        else:
+            cells_texts_list = []
+            use_ocr_results_with_table_cells = False
+            table_cells_result_e2e = table_structure_pred["bbox"]
+            table_cells_result_e2e = [
+                [rect[0], rect[1], rect[4], rect[5]] for rect in table_cells_result_e2e
+            ]
+            if cells_trans_to_html == True:
+                table_structure_pred["structure"] = (
+                    self.trans_cells_det_results_to_html(table_cells_result_e2e)
                 )
+            single_table_recognition_res = get_table_recognition_res_e2e(
+                table_box,
+                table_structure_pred,
+                overall_ocr_res,
+                cells_texts_list,
+                use_ocr_results_with_table_cells,
+            )
 
-            neighbor_text = ""
-            if flag_find_nei_text:
-                match_idx_list = get_neighbor_boxes_idx(
-                    overall_ocr_res["rec_boxes"], table_box
-                )
-                if len(match_idx_list) > 0:
-                    for idx in match_idx_list:
-                        neighbor_text += overall_ocr_res["rec_texts"][idx] + "; "
-            single_table_recognition_res["neighbor_texts"] = neighbor_text
-            results.append(single_table_recognition_res)
-
-        return results
+        neighbor_text = ""
+        if flag_find_nei_text:
+            match_idx_list = get_neighbor_boxes_idx(
+                overall_ocr_res["rec_boxes"], table_box
+            )
+            if len(match_idx_list) > 0:
+                for idx in match_idx_list:
+                    neighbor_text += overall_ocr_res["rec_texts"][idx] + "; "
+        single_table_recognition_res["neighbor_texts"] = neighbor_text
+        return single_table_recognition_res
 
     def predict(
         self,
@@ -697,17 +1104,20 @@ class _TableRecognitionPipelineV2(BasePipeline):
         use_doc_unwarping: Optional[bool] = None,
         use_layout_detection: Optional[bool] = None,
         use_ocr_model: Optional[bool] = None,
-        overall_ocr_res: Optional[Union[OCRResult, List[OCRResult]]] = None,
-        layout_det_res: Optional[Union[DetResult, List[DetResult]]] = None,
+        overall_ocr_res: Optional[OCRResult] = None,
+        layout_det_res: Optional[DetResult] = None,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
         text_det_thresh: Optional[float] = None,
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
-        use_table_cells_ocr_results: bool = False,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = False,
+        use_wired_table_cells_trans_to_html: bool = False,
+        use_wireless_table_cells_trans_to_html: bool = False,
+        use_table_orientation_classify: bool = True,
+        use_ocr_results_with_table_cells: bool = True,
         **kwargs,
     ) -> TableRecognitionResult:
         """
@@ -718,19 +1128,31 @@ class _TableRecognitionPipelineV2(BasePipeline):
             use_layout_detection (bool): Whether to use layout detection.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
-            overall_ocr_res (Union[OCRResult, List[OCRResult]]): The overall OCR results with convert_points_to_boxes information.
+            overall_ocr_res (OCRResult): The overall OCR result with convert_points_to_boxes information.
                 It will be used if it is not None and use_ocr_model is False.
-            layout_det_res (Union[DetResult, List[DetResult]]): The layout detection result(s).
+            layout_det_res (DetResult): The layout detection result.
                 It will be used if it is not None and use_layout_detection is False.
-            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
-            flag_find_nei_text (bool): Whether to find neighboring text.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_table_orientation_classify (bool): Whether to use table orientation classification.
+            use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             **kwargs: Additional keyword arguments.
 
         Returns:
             TableRecognitionResult: The predicted table recognition result.
         """
+
+        self.cells_split_ocr = True
+
+        if use_table_orientation_classify == True and (
+            self.table_orientation_classify_model is None
+        ):
+            assert self.table_orientation_classify_config != None
+            self.table_orientation_classify_model = self.create_model(
+                self.table_orientation_classify_config
+            )
 
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
@@ -744,40 +1166,26 @@ class _TableRecognitionPipelineV2(BasePipeline):
         ):
             yield {"error": "the input params for model settings are invalid!"}
 
-        external_overall_ocr_results = overall_ocr_res
-        if external_overall_ocr_results is not None:
-            if not isinstance(external_overall_ocr_results, list):
-                external_overall_ocr_results = [external_overall_ocr_results]
-            external_overall_ocr_results = iter(external_overall_ocr_results)
-
-        external_layout_det_results = layout_det_res
-        if external_layout_det_results is not None:
-            if not isinstance(external_layout_det_results, list):
-                external_layout_det_results = [external_layout_det_results]
-            external_layout_det_results = iter(external_layout_det_results)
-
-        for _, batch_data in enumerate(self.batch_sampler(input)):
-            image_arrays = self.img_reader(batch_data.instances)
+        for img_id, batch_data in enumerate(self.batch_sampler(input)):
+            image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_results = list(
+                doc_preprocessor_res = next(
                     self.doc_preprocessor_pipeline(
-                        image_arrays,
+                        image_array,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
                 )
             else:
-                doc_preprocessor_results = [{"output_img": arr} for arr in image_arrays]
+                doc_preprocessor_res = {"output_img": image_array}
 
-            doc_preprocessor_images = [
-                item["output_img"] for item in doc_preprocessor_results
-            ]
+            doc_preprocessor_image = doc_preprocessor_res["output_img"]
 
             if model_settings["use_ocr_model"]:
-                overall_ocr_results = list(
+                overall_ocr_res = next(
                     self.general_ocr_pipeline(
-                        doc_preprocessor_images,
+                        doc_preprocessor_image,
                         text_det_limit_side_len=text_det_limit_side_len,
                         text_det_limit_type=text_det_limit_type,
                         text_det_thresh=text_det_thresh,
@@ -786,122 +1194,193 @@ class _TableRecognitionPipelineV2(BasePipeline):
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
                 )
-            else:
-                overall_ocr_results = []
-                for _ in doc_preprocessor_images:
-                    try:
-                        overall_ocr_res = next(external_overall_ocr_results)
-                    except StopIteration:
-                        raise ValueError("No more overall OCR results")
-                    overall_ocr_results.append(overall_ocr_res)
-
-                if use_table_cells_ocr_results:
-                    # FIXME: This creates a new pipeline on each call.
-                    assert self.general_ocr_config_bak is not None
-                    self.general_ocr_pipeline = self.create_pipeline(
-                        self.general_ocr_config_bak
-                    )
-
-            if (
-                not model_settings["use_layout_detection"]
-                and external_layout_det_results is None
+            elif self.general_ocr_pipeline is None and (
+                (
+                    use_ocr_results_with_table_cells == True
+                    and self.cells_split_ocr == False
+                )
+                or use_table_orientation_classify == True
             ):
-                layout_det_results = [{} for _ in doc_preprocessor_images]
+                assert self.general_ocr_config_bak != None
+                self.general_ocr_pipeline = self.create_pipeline(
+                    self.general_ocr_config_bak
+                )
 
-                table_boxes = []
-                for img in doc_preprocessor_images:
-                    img_height, img_width = img.shape[:2]
-                    table_box = [0, 0, img_width - 1, img_height - 1]
-                    table_boxes.append(table_box)
+            if use_table_orientation_classify == False:
+                table_angle = "0"
 
-                flat_table_results = self._predict(
-                    doc_preprocessor_images,
-                    overall_ocr_results,
-                    table_boxes,
-                    use_table_cells_ocr_results,
+            table_res_list = []
+            table_region_id = 1
+
+            if not model_settings["use_layout_detection"] and layout_det_res is None:
+                img_height, img_width = doc_preprocessor_image.shape[:2]
+                table_box = [0, 0, img_width - 1, img_height - 1]
+                if use_table_orientation_classify == True:
+                    table_angle = next(
+                        self.table_orientation_classify_model(doc_preprocessor_image)
+                    )["label_names"][0]
+                if table_angle == "90":
+                    doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=1)
+                elif table_angle == "180":
+                    doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=2)
+                elif table_angle == "270":
+                    doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=3)
+                if table_angle in ["90", "180", "270"]:
+                    overall_ocr_res = next(
+                        self.general_ocr_pipeline(
+                            doc_preprocessor_image,
+                            text_det_limit_side_len=text_det_limit_side_len,
+                            text_det_limit_type=text_det_limit_type,
+                            text_det_thresh=text_det_thresh,
+                            text_det_box_thresh=text_det_box_thresh,
+                            text_det_unclip_ratio=text_det_unclip_ratio,
+                            text_rec_score_thresh=text_rec_score_thresh,
+                        )
+                    )
+                    tbx1, tby1, tbx2, tby2 = (
+                        table_box[0],
+                        table_box[1],
+                        table_box[2],
+                        table_box[3],
+                    )
+                    if table_angle == "90":
+                        new_x1, new_y1 = tby1, img_width - tbx2
+                        new_x2, new_y2 = tby2, img_width - tbx1
+                    elif table_angle == "180":
+                        new_x1, new_y1 = img_width - tbx2, img_height - tby2
+                        new_x2, new_y2 = img_width - tbx1, img_height - tby1
+                    elif table_angle == "270":
+                        new_x1, new_y1 = img_height - tby2, tbx1
+                        new_x2, new_y2 = img_height - tby1, tbx2
+                    table_box = [new_x1, new_y1, new_x2, new_y2]
+                layout_det_res = {}
+                single_table_rec_res = self.predict_single_table_recognition_res(
+                    doc_preprocessor_image,
+                    overall_ocr_res,
+                    table_box,
                     use_e2e_wired_table_rec_model,
                     use_e2e_wireless_table_rec_model,
+                    use_wired_table_cells_trans_to_html,
+                    use_wireless_table_cells_trans_to_html,
+                    use_ocr_results_with_table_cells,
                     flag_find_nei_text=False,
                 )
-
-                for table_res in flat_table_results:
-                    table_res["table_region_id"] = 1
-                table_results = [[item] for item in flat_table_results]
+                single_table_rec_res["table_region_id"] = table_region_id
+                if use_table_orientation_classify == True and table_angle != "0":
+                    img_height, img_width = doc_preprocessor_image.shape[:2]
+                    single_table_rec_res["cell_box_list"] = (
+                        self.map_cells_to_original_image(
+                            single_table_rec_res["cell_box_list"],
+                            table_angle,
+                            img_width,
+                            img_height,
+                        )
+                    )
+                table_res_list.append(single_table_rec_res)
+                table_region_id += 1
             else:
                 if model_settings["use_layout_detection"]:
-                    layout_det_results = list(
-                        self.layout_det_model(doc_preprocessor_images)
-                    )
-                else:
-                    layout_det_results = []
-                    for _ in doc_preprocessor_images:
-                        try:
-                            layout_det_res = next(external_layout_det_results)
-                        except StopIteration:
-                            raise ValueError("No more layout det results")
-                        layout_det_results.append(layout_det_res)
-
-                cropped_imgs = []
-                table_boxes = []
-                repeated_overall_ocr_results = []
-                chunk_indices = [0]
-                for image_array, layout_det_res, overall_ocr_res in zip(
-                    image_arrays, layout_det_results, overall_ocr_results
-                ):
-                    for box_info in layout_det_res["boxes"]:
-                        if box_info["label"].lower() in ["table"]:
-                            crop_img_info = self._crop_by_boxes(image_array, [box_info])
-                            crop_img_info = crop_img_info[0]
-                            cropped_imgs.append(crop_img_info["img"])
-                            table_boxes.append(crop_img_info["box"])
-                            repeated_overall_ocr_results.append(overall_ocr_res)
-                    chunk_indices.append(len(cropped_imgs))
-
-                flat_table_results = self._predict(
-                    cropped_imgs,
-                    repeated_overall_ocr_results,
-                    table_boxes,
-                    use_table_cells_ocr_results,
-                    use_e2e_wired_table_rec_model,
-                    use_e2e_wireless_table_rec_model,
-                )
-
-                table_results = [
-                    flat_table_results[i:j]
-                    for i, j in zip(chunk_indices[:-1], chunk_indices[1:])
-                ]
-
-                for table_results_for_img in table_results:
-                    table_region_id = 1
-                    for table_res in table_results_for_img:
-                        table_res["table_region_id"] = table_region_id
+                    layout_det_res = next(self.layout_det_model(doc_preprocessor_image))
+                img_height, img_width = doc_preprocessor_image.shape[:2]
+                for box_info in layout_det_res["boxes"]:
+                    if box_info["label"].lower() in ["table"]:
+                        crop_img_info = self._crop_by_boxes(
+                            doc_preprocessor_image, [box_info]
+                        )
+                        crop_img_info = crop_img_info[0]
+                        table_box = crop_img_info["box"]
+                        if use_table_orientation_classify == True:
+                            doc_preprocessor_image_copy = doc_preprocessor_image.copy()
+                            table_angle = next(
+                                self.table_orientation_classify_model(
+                                    crop_img_info["img"]
+                                )
+                            )["label_names"][0]
+                        if table_angle == "90":
+                            crop_img_info["img"] = np.rot90(crop_img_info["img"], k=1)
+                            doc_preprocessor_image_copy = np.rot90(
+                                doc_preprocessor_image_copy, k=1
+                            )
+                        elif table_angle == "180":
+                            crop_img_info["img"] = np.rot90(crop_img_info["img"], k=2)
+                            doc_preprocessor_image_copy = np.rot90(
+                                doc_preprocessor_image_copy, k=2
+                            )
+                        elif table_angle == "270":
+                            crop_img_info["img"] = np.rot90(crop_img_info["img"], k=3)
+                            doc_preprocessor_image_copy = np.rot90(
+                                doc_preprocessor_image_copy, k=3
+                            )
+                        if table_angle in ["90", "180", "270"]:
+                            overall_ocr_res = next(
+                                self.general_ocr_pipeline(
+                                    doc_preprocessor_image_copy,
+                                    text_det_limit_side_len=text_det_limit_side_len,
+                                    text_det_limit_type=text_det_limit_type,
+                                    text_det_thresh=text_det_thresh,
+                                    text_det_box_thresh=text_det_box_thresh,
+                                    text_det_unclip_ratio=text_det_unclip_ratio,
+                                    text_rec_score_thresh=text_rec_score_thresh,
+                                )
+                            )
+                            tbx1, tby1, tbx2, tby2 = (
+                                table_box[0],
+                                table_box[1],
+                                table_box[2],
+                                table_box[3],
+                            )
+                            if table_angle == "90":
+                                new_x1, new_y1 = tby1, img_width - tbx2
+                                new_x2, new_y2 = tby2, img_width - tbx1
+                            elif table_angle == "180":
+                                new_x1, new_y1 = img_width - tbx2, img_height - tby2
+                                new_x2, new_y2 = img_width - tbx1, img_height - tby1
+                            elif table_angle == "270":
+                                new_x1, new_y1 = img_height - tby2, tbx1
+                                new_x2, new_y2 = img_height - tby1, tbx2
+                            table_box = [new_x1, new_y1, new_x2, new_y2]
+                        single_table_rec_res = (
+                            self.predict_single_table_recognition_res(
+                                crop_img_info["img"],
+                                overall_ocr_res,
+                                table_box,
+                                use_e2e_wired_table_rec_model,
+                                use_e2e_wireless_table_rec_model,
+                                use_wired_table_cells_trans_to_html,
+                                use_wireless_table_cells_trans_to_html,
+                                use_ocr_results_with_table_cells,
+                            )
+                        )
+                        single_table_rec_res["table_region_id"] = table_region_id
+                        if (
+                            use_table_orientation_classify == True
+                            and table_angle != "0"
+                        ):
+                            img_height_copy, img_width_copy = (
+                                doc_preprocessor_image_copy.shape[:2]
+                            )
+                            single_table_rec_res["cell_box_list"] = (
+                                self.map_cells_to_original_image(
+                                    single_table_rec_res["cell_box_list"],
+                                    table_angle,
+                                    img_width_copy,
+                                    img_height_copy,
+                                )
+                            )
+                        table_res_list.append(single_table_rec_res)
                         table_region_id += 1
 
-            for (
-                input_path,
-                page_index,
-                doc_preprocessor_res,
-                layout_det_res,
-                overall_ocr_res,
-                table_results_for_img,
-            ) in zip(
-                batch_data.input_paths,
-                batch_data.page_indexes,
-                doc_preprocessor_results,
-                layout_det_results,
-                overall_ocr_results,
-                table_results,
-            ):
-                single_img_res = {
-                    "input_path": input_path,
-                    "page_index": page_index,
-                    "doc_preprocessor_res": doc_preprocessor_res,
-                    "layout_det_res": layout_det_res,
-                    "overall_ocr_res": overall_ocr_res,
-                    "table_res_list": table_results_for_img,
-                    "model_settings": model_settings,
-                }
-                yield TableRecognitionResult(single_img_res)
+            single_img_res = {
+                "input_path": batch_data.input_paths[0],
+                "page_index": batch_data.page_indexes[0],
+                "doc_preprocessor_res": doc_preprocessor_res,
+                "layout_det_res": layout_det_res,
+                "overall_ocr_res": overall_ocr_res,
+                "table_res_list": table_res_list,
+                "model_settings": model_settings,
+            }
+
+            yield TableRecognitionResult(single_img_res)
 
 
 @pipeline_requires_extra("ocr")
@@ -913,4 +1392,4 @@ class TableRecognitionPipelineV2(AutoParallelImageSimpleInferencePipeline):
         return _TableRecognitionPipelineV2
 
     def _get_batch_size(self, config):
-        return config.get("batch_size", 1)
+        return 1

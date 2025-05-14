@@ -45,7 +45,7 @@ class TableRecRunner(TextRecRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         cmd = [self.python, "ppstructure/table/predict_structure.py", *cli_args]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)

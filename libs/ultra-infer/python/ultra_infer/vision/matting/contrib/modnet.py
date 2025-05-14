@@ -88,7 +88,7 @@ class MODNet(UltraInferModel):
         ), "The value to set `size` must be type of tuple or list."
         assert (
             len(wh) == 2
-        ), "The value to set `size` must contatins 2 elements means [width, height], but now it contains {} elements.".format(
+        ), "The value to set `size` must contains 2 elements means [width, height], but now it contains {} elements.".format(
             len(wh)
         )
         self._model.size = wh
@@ -100,7 +100,7 @@ class MODNet(UltraInferModel):
         ), "The value to set `alpha` must be type of tuple or list."
         assert (
             len(value) == 3
-        ), "The value to set `alpha` must contatins 3 elements for each channels, but now it contains {} elements.".format(
+        ), "The value to set `alpha` must contains 3 elements for each channels, but now it contains {} elements.".format(
             len(value)
         )
         self._model.alpha = value
@@ -112,7 +112,7 @@ class MODNet(UltraInferModel):
         ), "The value to set `beta` must be type of tuple or list."
         assert (
             len(value) == 3
-        ), "The value to set `beta` must contatins 3 elements for each channels, but now it contains {} elements.".format(
+        ), "The value to set `beta` must contains 3 elements for each channels, but now it contains {} elements.".format(
             len(value)
         )
         self._model.beta = value

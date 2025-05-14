@@ -178,7 +178,7 @@ class FaissBuilder:
 
     @classmethod
     def _get_index_type(cls, metric_type, index_type, num=None):
-        # if IVF method, cal ivf number automaticlly
+        # if IVF method, cal ivf number automatically
         if index_type == "IVF":
             index_type = index_type + str(min(int(num // 8), 65536))
             if metric_type in cls.BINARY_METRIC_TYPE:

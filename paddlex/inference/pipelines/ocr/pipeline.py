@@ -91,6 +91,7 @@ class _OCRPipeline(BasePipeline):
         if self.text_type == "general":
             self.text_det_limit_side_len = text_det_config.get("limit_side_len", 960)
             self.text_det_limit_type = text_det_config.get("limit_type", "max")
+            self.text_det_max_side_limit = text_det_config.get("max_side_limit", 4000)
             self.text_det_thresh = text_det_config.get("thresh", 0.3)
             self.text_det_box_thresh = text_det_config.get("box_thresh", 0.6)
             self.input_shape = text_det_config.get("input_shape", None)
@@ -100,6 +101,7 @@ class _OCRPipeline(BasePipeline):
         elif self.text_type == "seal":
             self.text_det_limit_side_len = text_det_config.get("limit_side_len", 736)
             self.text_det_limit_type = text_det_config.get("limit_type", "min")
+            self.text_det_max_side_limit = text_det_config.get("max_side_limit", 4000)
             self.text_det_thresh = text_det_config.get("thresh", 0.2)
             self.text_det_box_thresh = text_det_config.get("box_thresh", 0.6)
             self.text_det_unclip_ratio = text_det_config.get("unclip_ratio", 0.5)
@@ -113,6 +115,7 @@ class _OCRPipeline(BasePipeline):
             text_det_config,
             limit_side_len=self.text_det_limit_side_len,
             limit_type=self.text_det_limit_type,
+            max_side_limit=self.text_det_max_side_limit,
             thresh=self.text_det_thresh,
             box_thresh=self.text_det_box_thresh,
             unclip_ratio=self.text_det_unclip_ratio,
@@ -232,6 +235,7 @@ class _OCRPipeline(BasePipeline):
         self,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
+        text_det_max_side_limit: Optional[int] = None,
         text_det_thresh: Optional[float] = None,
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
@@ -244,6 +248,7 @@ class _OCRPipeline(BasePipeline):
         Args:
             text_det_limit_side_len (Optional[int]): The maximum side length of the text box.
             text_det_limit_type (Optional[str]): The type of limit to apply to the text box.
+            text_det_max_side_limit (Optional[int]): The maximum side length of the text box.
             text_det_thresh (Optional[float]): The threshold for text detection.
             text_det_box_thresh (Optional[float]): The threshold for the bounding box.
             text_det_unclip_ratio (Optional[float]): The ratio for unclipping the text box.
@@ -255,6 +260,8 @@ class _OCRPipeline(BasePipeline):
             text_det_limit_side_len = self.text_det_limit_side_len
         if text_det_limit_type is None:
             text_det_limit_type = self.text_det_limit_type
+        if text_det_max_side_limit is None:
+            text_det_max_side_limit = self.text_det_max_side_limit
         if text_det_thresh is None:
             text_det_thresh = self.text_det_thresh
         if text_det_box_thresh is None:
@@ -265,6 +272,7 @@ class _OCRPipeline(BasePipeline):
             limit_side_len=text_det_limit_side_len,
             limit_type=text_det_limit_type,
             thresh=text_det_thresh,
+            max_side_limit=text_det_max_side_limit,
             box_thresh=text_det_box_thresh,
             unclip_ratio=text_det_unclip_ratio,
         )
@@ -277,6 +285,7 @@ class _OCRPipeline(BasePipeline):
         use_textline_orientation: Optional[bool] = None,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
+        text_det_max_side_limit: Optional[int] = None,
         text_det_thresh: Optional[float] = None,
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
@@ -292,6 +301,7 @@ class _OCRPipeline(BasePipeline):
             use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
             text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
             text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
+            text_det_max_side_limit (Optional[int]): Maximum side length for text detection.
             text_det_thresh (Optional[float]): Threshold for text detection.
             text_det_box_thresh (Optional[float]): Threshold for text detection boxes.
             text_det_unclip_ratio (Optional[float]): Ratio for unclipping text detection boxes.
@@ -310,6 +320,7 @@ class _OCRPipeline(BasePipeline):
         text_det_params = self.get_text_det_params(
             text_det_limit_side_len,
             text_det_limit_type,
+            text_det_max_side_limit,
             text_det_thresh,
             text_det_box_thresh,
             text_det_unclip_ratio,

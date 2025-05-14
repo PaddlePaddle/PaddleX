@@ -288,7 +288,7 @@ class _TableRecognitionPipeline(BasePipeline):
         image_array: np.ndarray,
         overall_ocr_res: OCRResult,
         table_box: list,
-        use_table_cells_ocr_results: bool = False,
+        use_ocr_results_with_table_cells: bool = False,
         flag_find_nei_text: bool = True,
         cell_sort_by_y_projection: bool = False,
     ) -> SingleTableRecognitionResult:
@@ -300,17 +300,15 @@ class _TableRecognitionPipeline(BasePipeline):
             overall_ocr_res (OCRResult): Overall OCR result obtained after running the OCR pipeline.
                 The overall OCR results containing text recognition information.
             table_box (list): The table box coordinates.
-            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_ocr_results_with_table_cells (bool): whether to use OCR results with cells.
             flag_find_nei_text (bool): Whether to find neighboring text.
             cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
         Returns:
             SingleTableRecognitionResult: single table recognition result.
         """
         table_structure_pred = next(self.table_structure_model(image_array))
-        if use_table_cells_ocr_results == True:
-            table_cells_result = list(
-                map(lambda arr: arr.tolist(), table_structure_pred["bbox"])
-            )
+        if use_ocr_results_with_table_cells == True:
+            table_cells_result = table_structure_pred["bbox"]
             table_cells_result = [
                 [rect[0], rect[1], rect[4], rect[5]] for rect in table_cells_result
             ]
@@ -324,7 +322,7 @@ class _TableRecognitionPipeline(BasePipeline):
             table_structure_pred,
             overall_ocr_res,
             cells_texts_list,
-            use_table_cells_ocr_results,
+            use_ocr_results_with_table_cells,
             cell_sort_by_y_projection=cell_sort_by_y_projection,
         )
         neighbor_text = ""
@@ -353,7 +351,7 @@ class _TableRecognitionPipeline(BasePipeline):
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
-        use_table_cells_ocr_results: bool = False,
+        use_ocr_results_with_table_cells: bool = False,
         cell_sort_by_y_projection: Optional[bool] = None,
         **kwargs,
     ) -> TableRecognitionResult:
@@ -369,7 +367,7 @@ class _TableRecognitionPipeline(BasePipeline):
                 It will be used if it is not None and use_ocr_model is False.
             layout_det_res (DetResult): The layout detection result.
                 It will be used if it is not None and use_layout_detection is False.
-            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_ocr_results_with_table_cells (bool): whether to use OCR results with cells.
             cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
             **kwargs: Additional keyword arguments.
 
@@ -419,7 +417,7 @@ class _TableRecognitionPipeline(BasePipeline):
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
                 )
-            elif use_table_cells_ocr_results == True:
+            elif use_ocr_results_with_table_cells == True:
                 assert self.general_ocr_config_bak != None
                 self.general_ocr_pipeline = self.create_pipeline(
                     self.general_ocr_config_bak
@@ -435,7 +433,7 @@ class _TableRecognitionPipeline(BasePipeline):
                     doc_preprocessor_image,
                     overall_ocr_res,
                     table_box,
-                    use_table_cells_ocr_results,
+                    use_ocr_results_with_table_cells,
                     flag_find_nei_text=False,
                     cell_sort_by_y_projection=cell_sort_by_y_projection,
                 )
@@ -456,7 +454,7 @@ class _TableRecognitionPipeline(BasePipeline):
                                 crop_img_info["img"],
                                 overall_ocr_res,
                                 table_box,
-                                use_table_cells_ocr_results,
+                                use_ocr_results_with_table_cells,
                                 cell_sort_by_y_projection=cell_sort_by_y_projection,
                             )
                         )

@@ -56,12 +56,12 @@ class InferRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-    useOcrResultsWithTableCells: bool = False
-    useE2eWiredTableRecModel: bool = False
-    useE2eWirelessTableRecModel: bool = True
     useWiredTableCellsTransToHtml: bool = False
     useWirelessTableCellsTransToHtml: bool = False
     useTableOrientationClassify: bool = True
+    useOcrResultsWithTableCells: bool = True
+    useE2eWiredTableRecModel: bool = False
+    useE2eWirelessTableRecModel: bool = True
 
 
 class MarkdownData(BaseModel):

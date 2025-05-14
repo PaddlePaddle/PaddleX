@@ -413,8 +413,10 @@ def get_table_recognition_res(
     table_structure_result: list,
     table_cells_result: list,
     overall_ocr_res: OCRResult,
+    table_ocr_pred: dict,
     cells_texts_list: list,
     use_table_cells_ocr_results: bool,
+    use_table_cells_split_ocr: bool,
 ) -> SingleTableRecognitionResult:
     """
     Retrieve table recognition result from cropped image info, table structure prediction, and overall OCR result.
@@ -424,6 +426,7 @@ def get_table_recognition_res(
         table_structure_result (list): Predicted table structure.
         table_cells_result (list): Predicted table cells.
         overall_ocr_res (OCRResult): Overall OCR result from the input image.
+        table_ocr_pred (dict): Table OCR result from the input image.
         cells_texts_list (list): OCR results with cells.
         use_table_cells_ocr_results (bool): whether to use OCR results with cells.
 
@@ -432,9 +435,10 @@ def get_table_recognition_res(
     """
 
     table_cells_result = convert_to_four_point_coordinates(table_cells_result)
-
     table_box = np.array([table_box])
-    table_ocr_pred = get_sub_regions_ocr_res(overall_ocr_res, table_box)
+
+    if not (use_table_cells_ocr_results == True and use_table_cells_split_ocr == True):
+        table_ocr_pred = get_sub_regions_ocr_res(overall_ocr_res, table_box)
 
     crop_start_point = [table_box[0][0], table_box[0][1]]
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
@@ -456,7 +460,7 @@ def get_table_recognition_res(
         table_cells_result, crop_start_point, img_shape
     )
 
-    if use_table_cells_ocr_results == True:
+    if use_table_cells_ocr_results == True and use_table_cells_split_ocr == False:
         ocr_dt_boxes = table_cells_result
         ocr_texts_res = cells_texts_list
     else:

@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import copy
-from pathlib import Path
 
 import numpy as np
 
@@ -26,15 +25,6 @@ if is_dep_available("opencv-contrib-python"):
 
 @class_requires_deps("opencv-contrib-python")
 class TextDetResult(BaseCVResult):
-
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def _to_img(self):
         """draw rectangle"""

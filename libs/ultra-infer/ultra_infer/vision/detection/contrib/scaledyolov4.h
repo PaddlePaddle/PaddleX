@@ -46,7 +46,7 @@ public:
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format \param[in] result The output detection result
    * will be written to this structure \param[in] conf_threshold confidence
-   * threashold for postprocessing, default is 0.25 \param[in] nms_iou_threshold
+   * threshold for postprocessing, default is 0.25 \param[in] nms_iou_threshold
    * iou threshold for NMS, default is 0.5 \return true if the prediction
    * successed, otherwise false
    */

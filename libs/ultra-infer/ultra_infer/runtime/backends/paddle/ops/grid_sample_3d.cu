@@ -126,7 +126,7 @@ GridSample3DCudaKernel(const index_t nthreads, index_t out_c, index_t out_d,
     const index_t n = index / (out_d * out_h * out_w);
     const index_t grid_offset =
         n * grid_sN + d * grid_sD + h * grid_sH + w * grid_sW;
-    // get the corresponding input x, y, z co-ordinates from grid
+    // get the corresponding input x, y, z coordinates from grid
     T ix = grid[grid_offset];
     T iy = grid[grid_offset + grid_sCoor];
     T iz = grid[grid_offset + 2 * grid_sCoor];
@@ -427,7 +427,7 @@ __global__ void GridSample3DCudaBackwardKernel(
     const auto grid_offset =
         n * grid_sN + d * grid_sD + h * grid_sH + w * grid_sW;
 
-    // get the corresponding input x, y, z co-ordinates from grid
+    // get the corresponding input x, y, z coordinates from grid
     T ix = grid[grid_offset];
     T iy = grid[grid_offset + grid_sCoor];
     T iz = grid[grid_offset + 2 * grid_sCoor];

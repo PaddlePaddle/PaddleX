@@ -262,9 +262,10 @@ SubModules:
     model_dir: PP-OCRv4_mobile_det_infer_om
     limit_side_len: 960
     limit_type: max
+    max_side_limit: 4000
     thresh: 0.3
     box_thresh: 0.6
-    unclip_ratio: 2.0
+    unclip_ratio: 1.5
     input_shape: [3, 640, 480]
   TextLineOrientation:
     module_name: textline_orientation
@@ -336,9 +337,10 @@ SubModules:
     model_dir: PP-OCRv4_mobile_det_infer_onnx
     limit_side_len: 960
     limit_type: max
+    max_side_limit: 4000
     thresh: 0.3
     box_thresh: 0.6
-    unclip_ratio: 2.0
+    unclip_ratio: 1.5
     hpi_config:
       auto_config: False
       backend: onnxruntime
