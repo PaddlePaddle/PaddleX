@@ -14,11 +14,13 @@ Multimodal chart parsing is a cutting-edge technology in the OCR field, focusing
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
+<th>Model parameter size（B）</th>
 <th>Model Storage Size (GB)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">Inference Model</a></td>
+<td>0.58</td>
 <td>1.4</td>
 <td>PP-Chart2Table is a self-developed multimodal model by the PaddlePaddle team, focusing on chart parsing, demonstrating outstanding performance in both Chinese and English chart parsing tasks. The team adopted a carefully designed data generation strategy, constructing a high-quality multimodal dataset of nearly 700,000 entries covering common chart types like pie charts, bar charts, stacked area charts, and various application scenarios. They also designed a two-stage training method, utilizing large model distillation to fully leverage massive unlabeled OOD data. In internal business tests in both Chinese and English scenarios, PP-Chart2Table not only achieved the SOTA level among models of the same parameter scale but also reached accuracy comparable to 7B parameter scale VLM models in critical scenarios.</td>
 </tr>

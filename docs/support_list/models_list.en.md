@@ -2913,18 +2913,33 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <table>
 <tr>
 <th>Model</th>
+<th>Model Parameter Size（B）</th>
 <th>Model Storage Size（GB）</th>
 <th>Model Download Lin</th>
 </tr>
 <tr>
 <td>PP-DocBee-2B</td>
+<td>2</td>
 <td>4.2</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
 </tr>
 <tr>
 <td>PP-DocBee-7B</td>
+<td>7</td>
 <td>15.8</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
+</tr>
+<tr>
+<td>PP-DocBee2-3B</td>
+<td>3</td>
+<td>7.6</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">Inference Model</a></td>
+</tr>
+<tr>
+<td>PP-Chart2Table</td>
+<td>0.58</td>
+<td>1.4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">Inference Model</a></td>
 </tr>
 </table>
 
