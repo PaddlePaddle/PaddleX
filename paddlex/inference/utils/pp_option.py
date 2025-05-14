@@ -214,7 +214,7 @@ class PaddlePredictorOption(object):
         """set trt config"""
         assert isinstance(
             config, dict
-        ), f"The trt_cfg_setting must be `dict` type, but recived `{type(config)}` type!"
+        ), f"The trt_cfg_setting must be `dict` type, but received `{type(config)}` type!"
         self._update("trt_cfg_setting", config)
 
     @property

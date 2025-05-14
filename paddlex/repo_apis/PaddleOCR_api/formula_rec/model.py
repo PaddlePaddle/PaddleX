@@ -297,7 +297,7 @@ class FormulaRecModel(BaseModel):
             save_dir (str, optional): the directory path to save output. Defaults to None.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         config = self.config.copy()
         cli_args = []

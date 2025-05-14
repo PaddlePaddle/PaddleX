@@ -101,7 +101,7 @@ def setup(
     """setup"""
     if update_repos and use_local_repos:
         logging.error(
-            f"The `--update_repos` and `--use_local_repos` should not be True at the same time. They are global setting for all repos. `--update_repos` means that update all repos to sync with remote, and `--use_local_repos` means that don't update when local repo is exsting."
+            f"The `--update_repos` and `--use_local_repos` should not be True at the same time. They are global setting for all repos. `--update_repos` means that update all repos to sync with remote, and `--use_local_repos` means that don't update when local repo is existing."
         )
         raise Exception()
 
@@ -136,7 +136,7 @@ def setup(
                 except EOFError:
                     logging.warning(
                         "Unable to read from stdin. Please set `--use_local_repos` to \
-                        True or False to apply a global setting for using exsting or re-getting repos."
+                        True or False to apply a global setting for using existing or re-getting repos."
                     )
                     raise
                 remove_existing = remove_existing.lower() in ("y", "yes")

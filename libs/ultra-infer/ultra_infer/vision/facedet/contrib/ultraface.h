@@ -49,7 +49,7 @@ public:
    * with layout HWC, BGR format \param[in] result The output face detection
    * result will be written to this structure \param[in] conf_threshold
    * confidence threshold for postprocessing, default is 0.7 \param[in]
-   * nms_iou_threshold iou threashold for NMS, default is 0.3 \return true if
+   * nms_iou_threshold iou threshold for NMS, default is 0.3 \return true if
    * the prediction successed, otherwise false
    */
   virtual bool Predict(cv::Mat *im, FaceDetectionResult *result,

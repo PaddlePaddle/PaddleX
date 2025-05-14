@@ -49,7 +49,7 @@ PIPELINE: #PIPELINE field
             num_seg: 16
             seg_len: 1
             valid_mode: False
-        transform: #Mandotary, image transfrom operator
+        transform: #Mandotary, image transform operator
             - Scale:
                 short_size: 256
             - MultiScaleCrop:
@@ -61,7 +61,7 @@ PIPELINE: #PIPELINE field
             - Normalization:
                 mean: [0.485, 0.456, 0.406]
                 std: [0.229, 0.224, 0.225]
-    valid: #Mandatory, indicate the pipeline to deal with the validing data. associate to the 'paddlevideo/loader/pipelines/'
+    valid: #Mandatory, indicate the pipeline to deal with the validating data. associate to the 'paddlevideo/loader/pipelines/'
         decode:
             name: "VideoDecoder"
             backend: "decord"
@@ -79,7 +79,7 @@ PIPELINE: #PIPELINE field
             - Normalization:
                 mean: [0.485, 0.456, 0.406]
                 std: [0.229, 0.224, 0.225]
-    test:  #Mandatory, indicate the pipeline to deal with the validing data. associate to the 'paddlevideo/loader/pipelines/'
+    test:  #Mandatory, indicate the pipeline to deal with the validating data. associate to the 'paddlevideo/loader/pipelines/'
         decode:
             name: "VideoDecoder"
             backend: "decord"

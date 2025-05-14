@@ -211,7 +211,7 @@ class DetResizeForTest:
 @benchmark.timeit
 @class_requires_deps("opencv-contrib-python")
 class NormalizeImage:
-    """normalize image such as substract mean, divide std"""
+    """normalize image such as subtract mean, divide std"""
 
     def __init__(self, scale=None, mean=None, std=None, order="chw"):
         super().__init__()

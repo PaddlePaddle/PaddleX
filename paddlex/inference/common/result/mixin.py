@@ -614,7 +614,7 @@ class MarkdownMixin:
         Convert the result to markdown format.
 
         Args:
-            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
 
         Returns:
             Dict[str, Union[str, Dict[str, Any]]]: A dictionary containing markdown text and image data.

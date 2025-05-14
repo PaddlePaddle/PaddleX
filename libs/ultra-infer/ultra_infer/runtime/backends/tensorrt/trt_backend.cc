@@ -32,7 +32,7 @@ FDTrtLogger *FDTrtLogger::logger = nullptr;
 // If the model has dynamic input shape, it will require defined shape
 // information We can set the shape range information by function
 // SetTrtInputShape() But if the shape range is not defined, then the engine
-// cannot build, in this case, The engine will build once there's data feeded,
+// cannot build, in this case, The engine will build once there's data fed,
 // and the shape range will be updated
 bool CanBuildEngine(
     const std::map<std::string, ShapeRangeInfo> &shape_range_info) {

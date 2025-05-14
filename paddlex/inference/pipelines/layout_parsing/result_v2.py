@@ -404,7 +404,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Save the parsing result to a Markdown file.
 
         Args:
-            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
 
         Returns:
             Dict

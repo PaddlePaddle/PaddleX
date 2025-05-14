@@ -462,11 +462,11 @@ def sort_child_blocks(blocks, direction="horizontal") -> List[LayoutParsingBlock
     return blocks
 
 
-def _get_weights(label, dircetion="horizontal"):
+def _get_weights(label, direction="horizontal"):
     """Define weights based on the label and direction."""
     if label == "doc_title":
         return (
-            [1, 0.1, 0.1, 1] if dircetion == "horizontal" else [0.2, 0.1, 1, 1]
+            [1, 0.1, 0.1, 1] if direction == "horizontal" else [0.2, 0.1, 1, 1]
         )  # left-down ,  right-left
     elif label in [
         "paragraph_title",

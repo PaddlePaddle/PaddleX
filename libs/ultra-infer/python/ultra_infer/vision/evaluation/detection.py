@@ -35,7 +35,7 @@ def eval_detection(
     if conf_threshold is not None or nms_iou_threshold is not None:
         assert (
             conf_threshold is not None and nms_iou_threshold is not None
-        ), "The conf_threshold and nms_iou_threshold should be setted at the same time"
+        ), "The conf_threshold and nms_iou_threshold should be set at the same time"
         assert isinstance(
             conf_threshold, (float, int)
         ), "The conf_threshold:{} need to be int or float".format(conf_threshold)

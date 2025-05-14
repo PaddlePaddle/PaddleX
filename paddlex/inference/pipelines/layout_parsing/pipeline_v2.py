@@ -1007,8 +1007,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
-            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
-            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired table cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless table cells trans to HTML.
             use_table_orientation_classify (bool): Whether to use table orientation classification.
             use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
