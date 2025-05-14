@@ -231,10 +231,13 @@ def suggest_inference_backend_and_config(
         pseudo_backend = backend_to_pseudo_backend["paddle"]
         assert pseudo_backend in (
             "paddle",
+            "paddle_fp16",
             "paddle_tensorrt",
             "paddle_tensorrt_fp16",
         ), pseudo_backend
-        if pseudo_backend == "paddle_tensorrt":
+        if pseudo_backend == "paddle_fp16":
+            suggested_backend_config.update({"run_mode": "paddle_fp16"})
+        elif pseudo_backend == "paddle_tensorrt":
             suggested_backend_config.update({"run_mode": "trt_fp32"})
         elif pseudo_backend == "paddle_tensorrt_fp16":
             # TODO: Check if the target device supports FP16.

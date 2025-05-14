@@ -22,6 +22,7 @@ from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import (
     CropByPolys,
@@ -33,11 +34,8 @@ from ..components import (
 from .result import OCRResult
 
 
-@pipeline_requires_extra("ocr")
-class OCRPipeline(BasePipeline):
+class _OCRPipeline(BasePipeline):
     """OCR Pipeline"""
-
-    entities = "OCR"
 
     def __init__(
         self,
@@ -131,7 +129,7 @@ class OCRPipeline(BasePipeline):
             text_rec_config, input_shape=self.input_shape
         )
 
-        self.batch_sampler = ImageBatchSampler(batch_size=1)
+        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
     def rotate_image(
@@ -320,87 +318,135 @@ class OCRPipeline(BasePipeline):
         if text_rec_score_thresh is None:
             text_rec_score_thresh = self.text_rec_score_thresh
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            image_array = self.img_reader(batch_data.instances)[0]
+        for _, batch_data in enumerate(self.batch_sampler(input)):
+            image_arrays = self.img_reader(batch_data.instances)
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_results = list(
                     self.doc_preprocessor_pipeline(
-                        image_array,
+                        image_arrays,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
                 )
             else:
-                doc_preprocessor_res = {"output_img": image_array}
+                doc_preprocessor_results = [{"output_img": arr} for arr in image_arrays]
 
-            doc_preprocessor_image = doc_preprocessor_res["output_img"]
+            doc_preprocessor_images = [
+                item["output_img"] for item in doc_preprocessor_results
+            ]
 
-            det_res = next(
-                self.text_det_model(doc_preprocessor_image, **text_det_params)
+            det_results = list(
+                self.text_det_model(doc_preprocessor_images, **text_det_params)
             )
 
-            dt_polys = det_res["dt_polys"]
-            det_res["dt_scores"]
+            dt_polys_list = [item["dt_polys"] for item in det_results]
 
-            dt_polys = self._sort_boxes(dt_polys)
+            dt_polys_list = [self._sort_boxes(item) for item in dt_polys_list]
 
-            single_img_res = {
-                "input_path": batch_data.input_paths[0],
-                "page_index": batch_data.page_indexes[0],
-                "doc_preprocessor_res": doc_preprocessor_res,
-                "dt_polys": dt_polys,
-                "model_settings": model_settings,
-                "text_det_params": text_det_params,
-                "text_type": self.text_type,
-                "text_rec_score_thresh": text_rec_score_thresh,
-            }
-
-            single_img_res["rec_texts"] = []
-            single_img_res["rec_scores"] = []
-            single_img_res["rec_polys"] = []
-            if len(dt_polys) > 0:
-                all_subs_of_img = list(
-                    self._crop_by_polys(doc_preprocessor_image, dt_polys)
+            results = [
+                {
+                    "input_path": input_path,
+                    "page_index": page_index,
+                    "doc_preprocessor_res": doc_preprocessor_res,
+                    "dt_polys": dt_polys,
+                    "model_settings": model_settings,
+                    "text_det_params": text_det_params,
+                    "text_type": self.text_type,
+                    "text_rec_score_thresh": text_rec_score_thresh,
+                    "rec_texts": [],
+                    "rec_scores": [],
+                    "rec_polys": [],
+                }
+                for input_path, page_index, doc_preprocessor_res, dt_polys in zip(
+                    batch_data.input_paths,
+                    batch_data.page_indexes,
+                    doc_preprocessor_results,
+                    dt_polys_list,
                 )
+            ]
+
+            indices = list(range(len(doc_preprocessor_images)))
+            indices = [idx for idx in indices if len(dt_polys_list[idx]) > 0]
+
+            if indices:
+                all_subs_of_imgs = []
+                chunk_indices = [0]
+                for idx in indices:
+                    all_subs_of_img = list(
+                        self._crop_by_polys(
+                            doc_preprocessor_images[idx], dt_polys_list[idx]
+                        )
+                    )
+                    all_subs_of_imgs.extend(all_subs_of_img)
+                    chunk_indices.append(chunk_indices[-1] + len(all_subs_of_img))
+
                 # use textline orientation model
                 if model_settings["use_textline_orientation"]:
                     angles = [
                         int(textline_angle_info["class_ids"][0])
                         for textline_angle_info in self.textline_orientation_model(
-                            all_subs_of_img
+                            all_subs_of_imgs
                         )
                     ]
-                    all_subs_of_img = self.rotate_image(all_subs_of_img, angles)
+                    all_subs_of_imgs = self.rotate_image(all_subs_of_imgs, angles)
                 else:
-                    angles = [-1] * len(all_subs_of_img)
-                single_img_res["textline_orientation_angles"] = angles
+                    angles = [-1] * len(all_subs_of_imgs)
+                for i, idx in enumerate(indices):
+                    res = results[idx]
+                    res["textline_orientation_angles"] = angles[
+                        chunk_indices[i] : chunk_indices[i + 1]
+                    ]
 
-                sub_img_info_list = [
-                    {
-                        "sub_img_id": img_id,
-                        "sub_img_ratio": sub_img.shape[1] / float(sub_img.shape[0]),
-                    }
-                    for img_id, sub_img in enumerate(all_subs_of_img)
-                ]
-                sorted_subs_info = sorted(
-                    sub_img_info_list, key=lambda x: x["sub_img_ratio"]
-                )
-                sorted_subs_of_img = [
-                    all_subs_of_img[x["sub_img_id"]] for x in sorted_subs_info
-                ]
-                for idx, rec_res in enumerate(self.text_rec_model(sorted_subs_of_img)):
-                    sub_img_id = sorted_subs_info[idx]["sub_img_id"]
-                    sub_img_info_list[sub_img_id]["rec_res"] = rec_res
-                for sno in range(len(sub_img_info_list)):
-                    rec_res = sub_img_info_list[sno]["rec_res"]
-                    if rec_res["rec_score"] >= text_rec_score_thresh:
-                        single_img_res["rec_texts"].append(rec_res["rec_text"])
-                        single_img_res["rec_scores"].append(rec_res["rec_score"])
-                        single_img_res["rec_polys"].append(dt_polys[sno])
-            if self.text_type == "general":
-                rec_boxes = convert_points_to_boxes(single_img_res["rec_polys"])
-                single_img_res["rec_boxes"] = rec_boxes
-            else:
-                single_img_res["rec_boxes"] = np.array([])
-            yield OCRResult(single_img_res)
+                # TODO: Process all sub-images in the batch together
+                for i, idx in enumerate(indices):
+                    all_subs_of_img = all_subs_of_imgs[
+                        chunk_indices[i] : chunk_indices[i + 1]
+                    ]
+                    res = results[idx]
+                    dt_polys = dt_polys_list[idx]
+                    sub_img_info_list = [
+                        {
+                            "sub_img_id": img_id,
+                            "sub_img_ratio": sub_img.shape[1] / float(sub_img.shape[0]),
+                        }
+                        for img_id, sub_img in enumerate(all_subs_of_img)
+                    ]
+                    sorted_subs_info = sorted(
+                        sub_img_info_list, key=lambda x: x["sub_img_ratio"]
+                    )
+                    sorted_subs_of_img = [
+                        all_subs_of_img[x["sub_img_id"]] for x in sorted_subs_info
+                    ]
+                    for i, rec_res in enumerate(
+                        self.text_rec_model(sorted_subs_of_img)
+                    ):
+                        sub_img_id = sorted_subs_info[i]["sub_img_id"]
+                        sub_img_info_list[sub_img_id]["rec_res"] = rec_res
+                    for sno in range(len(sub_img_info_list)):
+                        rec_res = sub_img_info_list[sno]["rec_res"]
+                        if rec_res["rec_score"] >= text_rec_score_thresh:
+                            res["rec_texts"].append(rec_res["rec_text"])
+                            res["rec_scores"].append(rec_res["rec_score"])
+                            res["rec_polys"].append(dt_polys[sno])
+
+            for res in results:
+                if self.text_type == "general":
+                    rec_boxes = convert_points_to_boxes(res["rec_polys"])
+                    res["rec_boxes"] = rec_boxes
+                else:
+                    res["rec_boxes"] = np.array([])
+
+                yield OCRResult(res)
+
+
+@pipeline_requires_extra("ocr")
+class OCRPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "OCR"
+
+    @property
+    def _pipeline_cls(self):
+        return _OCRPipeline
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)

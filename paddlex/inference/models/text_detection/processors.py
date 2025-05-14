@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import math
-import sys
 from typing import Union
 
 import numpy as np
@@ -105,6 +104,8 @@ class DetResizeForTest:
             resize_w = ori_w * resize_h / ori_h
             N = math.ceil(resize_w / 32)
             resize_w = N * 32
+        if resize_h == ori_h and resize_w == ori_w:
+            return img, [1.0, 1.0]
         ratio_h = float(resize_h) / ori_h
         ratio_w = float(resize_w) / ori_w
         img = cv2.resize(img, (int(resize_w), int(resize_h)))
@@ -152,13 +153,17 @@ class DetResizeForTest:
         resize_h = max(int(round(resize_h / 32) * 32), 32)
         resize_w = max(int(round(resize_w / 32) * 32), 32)
 
+        if resize_h == h and resize_w == w:
+            return img, [1.0, 1.0]
+
         try:
             if int(resize_w) <= 0 or int(resize_h) <= 0:
                 return None, (None, None)
             img = cv2.resize(img, (int(resize_w), int(resize_h)))
         except:
             logging.info(img.shape, resize_w, resize_h)
-            sys.exit(0)
+            raise
+
         ratio_h = resize_h / float(h)
         ratio_w = resize_w / float(w)
         return img, [ratio_h, ratio_w]
@@ -181,6 +186,10 @@ class DetResizeForTest:
         max_stride = 128
         resize_h = (resize_h + max_stride - 1) // max_stride * max_stride
         resize_w = (resize_w + max_stride - 1) // max_stride * max_stride
+
+        if resize_h == h and resize_w == w:
+            return img, [1.0, 1.0]
+
         img = cv2.resize(img, (int(resize_w), int(resize_h)))
         ratio_h = resize_h / float(h)
         ratio_w = resize_w / float(w)
@@ -191,6 +200,8 @@ class DetResizeForTest:
         """resize the image"""
         resize_c, resize_h, resize_w = self.input_shape  # (c, h, w)
         ori_h, ori_w = img.shape[:2]  # (h, w, c)
+        if resize_h == ori_h and resize_w == ori_w:
+            return img, [1.0, 1.0]
         ratio_h = float(resize_h) / ori_h
         ratio_w = float(resize_w) / ori_w
         img = cv2.resize(img, (int(resize_w), int(resize_h)))

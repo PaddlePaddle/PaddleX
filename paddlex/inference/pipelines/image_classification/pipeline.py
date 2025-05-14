@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.image_classification.result import TopkResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class ImageClassificationPipeline(BasePipeline):
+class _ImageClassificationPipeline(BasePipeline):
     """Image Classification Pipeline"""
-
-    entities = "image_classification"
 
     def __init__(
         self,
@@ -78,3 +76,15 @@ class ImageClassificationPipeline(BasePipeline):
 
         topk = kwargs.pop("topk", self.topk)
         yield from self.image_classification_model(input, topk=topk)
+
+
+@pipeline_requires_extra("cv")
+class ImageClassificationPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "image_classification"
+
+    @property
+    def _pipeline_cls(self):
+        return _ImageClassificationPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["ImageClassification"].get("batch_size", 1)

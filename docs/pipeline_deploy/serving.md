@@ -76,11 +76,11 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 </tr>
 <tr>
 <td><code>--host</code></td>
-<td>服务器绑定的主机名或 IP 地址。默认为 `0.0.0.0`。</td>
+<td>服务器绑定的主机名或 IP 地址。默认为 <code>0.0.0.0</code>。</td>
 </tr>
 <tr>
 <td><code>--port</code></td>
-<td>服务器监听的端口号。默认为 `8080`。</td>
+<td>服务器监听的端口号。默认为 <code>8080</code>。</td>
 </tr>
 <tr>
 <td><code>--use_hpip</code></td>
@@ -323,8 +323,8 @@ paddlex --serve --pipeline image_classification --use_hpip
 docker run \
     -it \
     -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
-    -v "$(pwd)":/workspace \
-    -w /workspace \
+    -v "$(pwd)":/app \
+    -w /app \
     --rm \
     --gpus all \
     --init \

@@ -226,8 +226,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if model_settings["use_region_detection"]:
             res_img_dict["region_det_res"] = self["region_det_res"].img["res"]
 
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
+        res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
@@ -296,8 +295,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["layout_det_res"] = self["layout_det_res"].str["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -348,8 +346,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -424,11 +421,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     original_image_width=original_image_width,
                 )
             )
-            format_table = lambda block: "\n" + format_text_func(block)
         else:
             format_text_func = lambda block: block.content
             format_image_func = format_image_plain_func
-            format_table = lambda block: simplify_table_func("\n" + block.content)
 
         if self["model_settings"].get("use_chart_recognition", False):
             format_chart_func = format_chart2table_func
@@ -441,6 +436,21 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             )
         else:
             format_seal_func = format_image_func
+
+        if self["model_settings"].get("use_table_recognition", False):
+            if pretty:
+                format_table_func = lambda block: "\n" + format_text_func(block)
+            else:
+                format_table_func = lambda block: simplify_table_func(
+                    "\n" + block.content
+                )
+        else:
+            format_table_func = format_image_func
+
+        if self["model_settings"].get("use_formula_recognition", False):
+            format_formula_func = lambda block: f"$${block.content}$$"
+        else:
+            format_formula_func = format_image_func
 
         handle_funcs_dict = {
             "paragraph_title": format_title_func,
@@ -468,8 +478,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             ),
             "image": format_image_func,
             "chart": format_chart_func,
-            "formula": lambda block: f"$${block.content}$$",
-            "table": format_table,
+            "formula": format_formula_func,
+            "table": format_table_func,
             "reference": partial(
                 format_first_line_func,
                 templates=["参考文献", "references"],

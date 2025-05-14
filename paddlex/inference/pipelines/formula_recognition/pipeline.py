@@ -20,22 +20,17 @@ from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...models.formula_recognition.result import (
-    FormulaRecResult as SingleFormulaRecognitionResult,
-)
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from .result import FormulaRecognitionResult
 
 
-@pipeline_requires_extra("ocr")
-class FormulaRecognitionPipeline(BasePipeline):
+class _FormulaRecognitionPipeline(BasePipeline):
     """Formula Recognition Pipeline"""
-
-    entities = ["formula_recognition"]
 
     def __init__(
         self,
@@ -110,7 +105,7 @@ class FormulaRecognitionPipeline(BasePipeline):
 
         self._crop_by_boxes = CropByBoxes()
 
-        self.batch_sampler = ImageBatchSampler(batch_size=1)
+        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
     def get_model_settings(
@@ -147,14 +142,14 @@ class FormulaRecognitionPipeline(BasePipeline):
         )
 
     def check_model_settings_valid(
-        self, model_settings: Dict, layout_det_res: DetResult
+        self, model_settings: Dict, layout_det_res: Union[DetResult, List[DetResult]]
     ) -> bool:
         """
         Check if the input parameters are valid based on the initialized models.
 
         Args:
             model_settings (Dict): A dictionary containing input parameters.
-            layout_det_res (DetResult): The layout detection result.
+            layout_det_res (Union[DetResult, List[DetResult]]): The layout detection result(s).
         Returns:
             bool: True if all required models are initialized according to input parameters, False otherwise.
         """
@@ -180,32 +175,13 @@ class FormulaRecognitionPipeline(BasePipeline):
 
         return True
 
-    def predict_single_formula_recognition_res(
-        self,
-        image_array: np.ndarray,
-    ) -> SingleFormulaRecognitionResult:
-        """
-        Predict formula recognition results from an image array, layout detection results.
-
-        Args:
-            image_array (np.ndarray): The input image represented as a numpy array.
-            formula_box (list): The formula box coordinates.
-            flag_find_nei_text (bool): Whether to find neighboring text.
-        Returns:
-            SingleFormulaRecognitionResult: single formula recognition result.
-        """
-
-        formula_recognition_pred = next(self.formula_recognition_model(image_array))
-
-        return formula_recognition_pred
-
     def predict(
         self,
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_layout_detection: Optional[bool] = None,
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
-        layout_det_res: Optional[DetResult] = None,
+        layout_det_res: Optional[Union[DetResult, List[DetResult]]] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
@@ -220,14 +196,13 @@ class FormulaRecognitionPipeline(BasePipeline):
             use_layout_detection (Optional[bool]): Whether to use layout detection.
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
-            layout_det_res (Optional[DetResult]): The layout detection result.
+            layout_det_res (Optional[Union[DetResult, List[DetResult]]]): The layout detection result(s).
                 It will be used if it is not None and use_layout_detection is False.
             **kwargs: Additional keyword arguments.
 
         Returns:
             formulaRecognitionResult: The predicted formula recognition result.
         """
-
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
             use_doc_unwarping,
@@ -237,73 +212,136 @@ class FormulaRecognitionPipeline(BasePipeline):
         if not self.check_model_settings_valid(model_settings, layout_det_res):
             yield {"error": "the input params for model settings are invalid!"}
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            image_array = self.img_reader(batch_data.instances)[0]
+        external_layout_det_results = layout_det_res
+        if external_layout_det_results is not None:
+            if not isinstance(external_layout_det_results, list):
+                external_layout_det_results = [external_layout_det_results]
+            external_layout_det_results = iter(external_layout_det_results)
+
+        for _, batch_data in enumerate(self.batch_sampler(input)):
+            image_arrays = self.img_reader(batch_data.instances)
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_results = list(
                     self.doc_preprocessor_pipeline(
-                        image_array,
+                        image_arrays,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
                 )
             else:
-                doc_preprocessor_res = {"output_img": image_array}
+                doc_preprocessor_results = [{"output_img": arr} for arr in image_arrays]
 
-            doc_preprocessor_image = doc_preprocessor_res["output_img"]
+            doc_preprocessor_images = [
+                item["output_img"] for item in doc_preprocessor_results
+            ]
 
-            formula_res_list = []
-            formula_region_id = 1
+            formula_results = []
 
-            if not model_settings["use_layout_detection"] and layout_det_res is None:
-                layout_det_res = {}
-                img_height, img_width = doc_preprocessor_image.shape[:2]
-                single_formula_rec_res = self.predict_single_formula_recognition_res(
-                    doc_preprocessor_image,
+            if (
+                not model_settings["use_layout_detection"]
+                and external_layout_det_results is None
+            ):
+                layout_det_results = [{} for _ in doc_preprocessor_images]
+                formula_rec_results = list(
+                    self.formula_recognition_model(doc_preprocessor_images)
                 )
-                single_formula_rec_res["formula_region_id"] = formula_region_id
-                formula_res_list.append(single_formula_rec_res)
-                formula_region_id += 1
+                for formula_rec_res in formula_rec_results:
+                    formula_results_for_img = []
+                    formula_rec_res["formula_region_id"] = 1
+                    formula_results_for_img.append(formula_rec_res)
+                    formula_results.append(formula_results_for_img)
             else:
                 if model_settings["use_layout_detection"]:
-                    layout_det_res = next(
+                    layout_det_results = list(
                         self.layout_det_model(
-                            doc_preprocessor_image,
+                            doc_preprocessor_images,
                             threshold=layout_threshold,
                             layout_nms=layout_nms,
                             layout_unclip_ratio=layout_unclip_ratio,
                             layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                         )
                     )
-                formula_crop_img = []
-                for box_info in layout_det_res["boxes"]:
-                    if box_info["label"].lower() in ["formula"]:
-                        crop_img_info = self._crop_by_boxes(
-                            doc_preprocessor_image, [box_info]
-                        )
-                        crop_img_info = crop_img_info[0]
-                        formula_crop_img.append(crop_img_info["img"])
-                        single_formula_rec_res = {}
-                        single_formula_rec_res["formula_region_id"] = formula_region_id
-                        single_formula_rec_res["dt_polys"] = box_info["coordinate"]
-                        formula_res_list.append(single_formula_rec_res)
-                        formula_region_id += 1
-                for idx, formula_rec_res in enumerate(
-                    self.formula_recognition_model(formula_crop_img)
-                ):
-                    formula_region_id = formula_res_list[idx]["formula_region_id"]
-                    dt_polys = formula_res_list[idx]["dt_polys"]
-                    formula_rec_res["formula_region_id"] = formula_region_id
-                    formula_rec_res["dt_polys"] = dt_polys
-                    formula_res_list[idx] = formula_rec_res
+                else:
+                    layout_det_results = []
+                    for _ in doc_preprocessor_images:
+                        try:
+                            layout_det_res = next(external_layout_det_results)
+                        except StopIteration:
+                            raise ValueError("No more layout det results")
+                        layout_det_results.append(layout_det_res)
 
-            single_img_res = {
-                "input_path": batch_data.input_paths[0],
-                "page_index": batch_data.page_indexes[0],
-                "layout_det_res": layout_det_res,
-                "doc_preprocessor_res": doc_preprocessor_res,
-                "formula_res_list": formula_res_list,
-                "model_settings": model_settings,
-            }
-            yield FormulaRecognitionResult(single_img_res)
+                formula_crop_imgs = []
+                formula_det_results = []
+                chunk_indices = [0]
+                for doc_preprocessor_image, layout_det_res in zip(
+                    doc_preprocessor_images, layout_det_results
+                ):
+                    formula_region_id = 1
+                    for box_info in layout_det_res["boxes"]:
+                        if box_info["label"].lower() in ["formula"]:
+                            crop_img_info = self._crop_by_boxes(
+                                doc_preprocessor_image, [box_info]
+                            )
+                            crop_img_info = crop_img_info[0]
+                            formula_crop_imgs.append(crop_img_info["img"])
+                            res = {}
+                            res["formula_region_id"] = formula_region_id
+                            res["dt_polys"] = box_info["coordinate"]
+                            formula_det_results.append(res)
+                            formula_region_id += 1
+                    chunk_indices.append(len(formula_crop_imgs))
+
+                formula_rec_results = list(
+                    self.formula_recognition_model(formula_crop_imgs)
+                )
+                for idx in range(len(chunk_indices) - 1):
+                    formula_det_results_for_idx = formula_det_results[
+                        chunk_indices[idx] : chunk_indices[idx + 1]
+                    ]
+                    formula_rec_results_for_idx = formula_rec_results[
+                        chunk_indices[idx] : chunk_indices[idx + 1]
+                    ]
+                    for formula_det_res, formula_rec_res in zip(
+                        formula_det_results_for_idx, formula_rec_results_for_idx
+                    ):
+                        formula_region_id = formula_det_res["formula_region_id"]
+                        dt_polys = formula_det_res["dt_polys"]
+                        formula_rec_res["formula_region_id"] = formula_region_id
+                        formula_rec_res["dt_polys"] = dt_polys
+                    formula_results.append(formula_rec_results_for_idx)
+
+            for (
+                input_path,
+                page_index,
+                layout_det_res,
+                doc_preprocessor_res,
+                formula_results_for_img,
+            ) in zip(
+                batch_data.input_paths,
+                batch_data.page_indexes,
+                layout_det_results,
+                doc_preprocessor_results,
+                formula_results,
+            ):
+                single_img_res = {
+                    "input_path": input_path,
+                    "page_index": page_index,
+                    "layout_det_res": layout_det_res,
+                    "doc_preprocessor_res": doc_preprocessor_res,
+                    "formula_res_list": formula_results_for_img,
+                    "model_settings": model_settings,
+                }
+                yield FormulaRecognitionResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class FormulaRecognitionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = ["formula_recognition"]
+
+    @property
+    def _pipeline_cls(self):
+        return _FormulaRecognitionPipeline
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)

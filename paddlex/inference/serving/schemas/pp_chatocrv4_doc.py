@@ -42,7 +42,6 @@ ANALYZE_IMAGES_ENDPOINT: Final[str] = "/chatocr-visual"
 class AnalyzeImagesRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
-    useGeneralOcr: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     layoutThreshold: Optional[float] = None

@@ -37,7 +37,7 @@ for res in output:
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[4-推理配置](#4-推理配置)；
     * `use_hpip`：`bool | None` 类型，是否启用高性能推理插件（`None` 表示使用配置文件中的配置）；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
-  * 返回值：`BasePredictor`类型。
+  * 返回值：`BasePipeline`类型。
 
 ### 2. 调用预测模型产线对象的`predict()`方法进行推理预测
 

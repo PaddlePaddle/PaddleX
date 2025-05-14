@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.instance_segmentation.result import InstanceSegResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class InstanceSegmentationPipeline(BasePipeline):
+class _InstanceSegmentationPipeline(BasePipeline):
     """Instance Segmentation Pipeline"""
-
-    entities = "instance_segmentation"
 
     def __init__(
         self,
@@ -79,3 +77,15 @@ class InstanceSegmentationPipeline(BasePipeline):
             InstanceSegResult: The predicted instance segmentation results.
         """
         yield from self.instance_segmentation_model(input, threshold=threshold)
+
+
+@pipeline_requires_extra("cv")
+class InstanceSegmentationPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "instance_segmentation"
+
+    @property
+    def _pipeline_cls(self):
+        return _InstanceSegmentationPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["InstanceSegmentation"].get("batch_size", 1)

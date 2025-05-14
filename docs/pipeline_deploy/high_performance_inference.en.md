@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX High-Performance Inference Guide
 
-In real production environments, many applications impose strict performance metrics—especially in response time—on deployment strategies to ensure system efficiency and a smooth user experience. To address this, PaddleX offers a high-performance inference plugin that, through automatic configuration and multi-backend inference capabilities, enables users to significantly accelerate model inference without concerning themselves with complex configurations and low-level details.
+In real production environments, many applications impose strict performance metrics—especially in response time—on deployment strategies to ensure system efficiency and a smooth user experience. To address this, PaddleX offers a high-performance inference plugin that, through automatic configuration and multi-backend inference capabilities, enables users to significantly accelerate model inference without concerning themselves with complex configurations and low-level details. In addition to supporting inference acceleration on pipelines, the PaddleX high-performance inference plugin can also be used to accelerate inference when modules are used standalone.
 
 ## Table of Contents
 
@@ -24,7 +24,7 @@ In real production environments, many applications impose strict performance met
 
 Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
-The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed. **It is recommended to install the Paddle2ONNX plugin first before installing the high-performance inference plugin, so that PaddleX can convert model formats when needed.**
+The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed.
 
 ### 1.1 Installing the High-Performance Inference Plugin
 
@@ -86,11 +86,13 @@ Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obt
   </tbody>
 </table>
 
-In the official PaddleX Docker image, TensorRT is installed by default. The high-performance inference plugin can then accelerate inference using the Paddle Inference TensorRT subgraph engine.
+The official PaddleX Docker images come with the Paddle2ONNX plugin pre-installed, allowing PaddleX to convert model formats on demand. In addition, the GPU version of the image includes TensorRT, so the high-performance inference plugin can leverage the Paddle Inference TensorRT subgraph engine for accelerated inference.
 
 **Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-based-on-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
 
 #### 1.1.2 Installing the High-Performance Inference Plugin Locally
+
+**It is recommended to install the Paddle2ONNX plugin first before installing the high-performance inference plugin, so that PaddleX can convert model formats when needed.**
 
 **To install the CPU version of the high-performance inference plugin:**
 
@@ -322,7 +324,7 @@ The available configuration items for `backend_config` vary for different backen
 
 ### 2.3 Modifying the High-Performance Inference Configuration
 
-Due to the diversity of actual deployment environments and requirements, the default configuration might not meet all needs. In such cases, manual adjustment of the high-performance inference configuration may be necessary. Users can modify the configuration by editing the **pipeline/module configuration file** or by passing the `hpi_config` field in the parameters via **CLI** or **Python API**. **Parameters passed via CLI or Python API will override the settings in the pipeline/module configuration file.** Different levels of configurations in the config file are automatically merged, and the deepest-level settings take the highest priority. The following examples illustrate how to modify the configuration.
+When the model is initialized, the log will, by default, record the high-performance inference configuration that is about to be used. Due to the diversity of actual deployment environments and requirements, the default configuration might not meet all needs. In such cases, manual adjustment of the high-performance inference configuration may be necessary. Users can modify the configuration by editing the pipeline/module configuration file or by passing the `hpi_config` field in the parameters via CLI or Python API. Parameters passed via CLI or Python API will override the settings in the pipeline/module configuration file. Different levels of configurations in the config file are automatically merged, and the deepest-level settings take the highest priority. The following examples illustrate how to modify the configuration.
 
 **For the general OCR pipeline, use the `onnxruntime` backend for all models:**
 
@@ -566,3 +568,11 @@ For the GPU version of the high-performance inference plugin, the official Paddl
 **4. Why does the program freeze during runtime or display some "WARNING" and "ERROR" messages after using the high-performance inference feature? What should be done in such cases?**
 
 When initializing the model, operations such as subgraph optimization may take longer and may generate some "WARNING" and "ERROR" messages. However, as long as the program does not exit automatically, it is recommended to wait patiently, as the program usually continues to run to completion.
+
+**5. When using GPU for inference, enabling the high-performance inference plugin increases memory usage and causes OOM. How can this be resolved?**
+
+Some acceleration methods trade off memory usage to support a broader range of inference scenarios. If memory becomes a bottleneck, consider the following optimization strategies:
+
+* **Adjust pipeline configurations**: Disable unnecessary features to avoid loading redundant models. Appropriately reduce the batch size based on business requirements to balance throughput and memory usage.
+* **Switch inference backends**: Different inference backends have varying memory management strategies. Try benchmarking various backends to compare memory usage and performance.
+* **Optimize dynamic shape configurations**: For modules using TensorRT or Paddle Inference TensorRT subgraph engine, narrow the dynamic shape range based on the actual distribution of input data.

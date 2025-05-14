@@ -13,11 +13,10 @@
 # limitations under the License.
 
 import math
+import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
-import bisect
-import re
 
 from ....utils import logging
 from ....utils.deps import (
@@ -30,12 +29,13 @@ from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..doc_preprocessor.result import DocPreprocessorResult
+from ..layout_parsing.utils import get_sub_regions_ocr_res
 from ..ocr.result import OCRResult
 from .result import SingleTableRecognitionResult, TableRecognitionResult
-from ..layout_parsing.utils import get_sub_regions_ocr_res
 from .table_recognition_post_processing import (
     get_table_recognition_res as get_table_recognition_res_e2e,
 )
@@ -47,10 +47,8 @@ if is_dep_available("scikit-learn"):
 
 
 @pipeline_requires_extra("ocr")
-class TableRecognitionPipelineV2(BasePipeline):
+class _TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
-
-    entities = ["table_recognition_v2"]
 
     def __init__(
         self,
@@ -547,10 +545,12 @@ class TableRecognitionPipelineV2(BasePipeline):
             final_results = combine_rectangles(ocr_det_results, html_pred_boxes_nums)
         return final_results
 
-    def split_ocr_bboxes_by_table_cells(self, cells_det_results, overall_ocr_res, ori_img, k=2):
+    def split_ocr_bboxes_by_table_cells(
+        self, cells_det_results, overall_ocr_res, ori_img, k=2
+    ):
         """
         Split OCR bounding boxes based on table cell boundaries when they span multiple cells horizontally.
-        
+
         Args:
             cells_det_results (list): List of cell bounding boxes in format [x1, y1, x2, y2]
             overall_ocr_res (dict): Dictionary containing OCR results with keys:
@@ -558,19 +558,19 @@ class TableRecognitionPipelineV2(BasePipeline):
                                 - 'rec_texts': OCR recognized texts
             ori_img (np.array): Original input image array
             k (int): Threshold for determining when to split (minimum number of cells spanned)
-        
+
         Returns:
             dict: Modified overall_ocr_res with split boxes and texts
         """
-        
+
         def calculate_iou(box1, box2):
             """
             Calculate Intersection over Union (IoU) between two bounding boxes.
-            
+
             Args:
                 box1 (list): [x1, y1, x2, y2]
                 box2 (list): [x1, y1, x2, y2]
-                
+
             Returns:
                 float: IoU value
             """
@@ -587,15 +587,15 @@ class TableRecognitionPipelineV2(BasePipeline):
             box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
             # return intersection_area / float(box1_area + box2_area - intersection_area)
             return intersection_area / box2_area
-        
+
         def get_overlapping_cells(ocr_box, cells):
             """
             Find cells that overlap significantly with the OCR box (IoU > 0.5).
-            
+
             Args:
                 ocr_box (list): OCR bounding box [x1, y1, x2, y2]
                 cells (list): List of cell bounding boxes
-                
+
             Returns:
                 list: Indices of overlapping cells, sorted by x-coordinate
             """
@@ -606,16 +606,16 @@ class TableRecognitionPipelineV2(BasePipeline):
             # Sort overlapping cells by their x-coordinate (left to right)
             overlapping.sort(key=lambda i: cells[i][0])
             return overlapping
-        
+
         def split_box_by_cells(ocr_box, cell_indices, cells):
             """
             Split OCR box vertically at cell boundaries.
-            
+
             Args:
                 ocr_box (list): Original OCR box [x1, y1, x2, y2]
                 cell_indices (list): Indices of cells to split by
                 cells (list): All cell bounding boxes
-                
+
             Returns:
                 list: List of split boxes
             """
@@ -624,37 +624,28 @@ class TableRecognitionPipelineV2(BasePipeline):
             split_boxes = []
             cells_to_split = [cells[i] for i in cell_indices]
             if ocr_box[0] < cells_to_split[0][0]:
-                split_boxes.append([
-                    ocr_box[0], 
-                    ocr_box[1], 
-                    cells_to_split[0][0], 
-                    ocr_box[3]
-                ])
+                split_boxes.append(
+                    [ocr_box[0], ocr_box[1], cells_to_split[0][0], ocr_box[3]]
+                )
             for i in range(len(cells_to_split)):
                 current_cell = cells_to_split[i]
-                split_boxes.append([
-                    max(ocr_box[0], current_cell[0]),
-                    ocr_box[1],
-                    min(ocr_box[2], current_cell[2]),
-                    ocr_box[3]
-                ])
+                split_boxes.append(
+                    [
+                        max(ocr_box[0], current_cell[0]),
+                        ocr_box[1],
+                        min(ocr_box[2], current_cell[2]),
+                        ocr_box[3],
+                    ]
+                )
                 if i < len(cells_to_split) - 1:
-                    next_cell = cells_to_split[i+1]
+                    next_cell = cells_to_split[i + 1]
                     if current_cell[2] < next_cell[0]:
-                        split_boxes.append([
-                            current_cell[2],
-                            ocr_box[1],
-                            next_cell[0],
-                            ocr_box[3]
-                        ])
+                        split_boxes.append(
+                            [current_cell[2], ocr_box[1], next_cell[0], ocr_box[3]]
+                        )
             last_cell = cells_to_split[-1]
             if last_cell[2] < ocr_box[2]:
-                split_boxes.append([
-                    last_cell[2],
-                    ocr_box[1],
-                    ocr_box[2],
-                    ocr_box[3]
-                ])
+                split_boxes.append([last_cell[2], ocr_box[1], ocr_box[2], ocr_box[3]])
             unique_boxes = []
             seen = set()
             for box in split_boxes:
@@ -662,20 +653,20 @@ class TableRecognitionPipelineV2(BasePipeline):
                 if box_tuple not in seen:
                     seen.add(box_tuple)
                     unique_boxes.append(box)
-            
+
             return unique_boxes
-    
+
         # Convert OCR boxes to list if needed
-        if hasattr(overall_ocr_res['rec_boxes'], 'tolist'):
-            ocr_det_results = overall_ocr_res['rec_boxes'].tolist()
+        if hasattr(overall_ocr_res["rec_boxes"], "tolist"):
+            ocr_det_results = overall_ocr_res["rec_boxes"].tolist()
         else:
-            ocr_det_results = overall_ocr_res['rec_boxes']
-        ocr_texts = overall_ocr_res['rec_texts']
-        
+            ocr_det_results = overall_ocr_res["rec_boxes"]
+        ocr_texts = overall_ocr_res["rec_texts"]
+
         # Make copies to modify
         new_boxes = []
         new_texts = []
-        
+
         # Process each OCR box
         i = 0
         while i < len(ocr_det_results):
@@ -686,20 +677,28 @@ class TableRecognitionPipelineV2(BasePipeline):
             # Check if we need to split (spans >= k cells)
             if len(overlapping_cells) >= k:
                 # Split the box at cell boundaries
-                split_boxes = split_box_by_cells(ocr_box, overlapping_cells, cells_det_results)
+                split_boxes = split_box_by_cells(
+                    ocr_box, overlapping_cells, cells_det_results
+                )
                 # Process each split box
                 split_texts = []
                 for box in split_boxes:
                     x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
-                    if y2-y1>1 and x2-x1>1:
-                        ocr_result = next(self.general_ocr_pipeline.text_rec_model(ori_img[y1:y2, x1:x2, :]))
+                    if y2 - y1 > 1 and x2 - x1 > 1:
+                        ocr_result = next(
+                            self.general_ocr_pipeline.text_rec_model(
+                                ori_img[y1:y2, x1:x2, :]
+                            )
+                        )
                         # Extract the recognized text from the OCR result
                         if "rec_text" in ocr_result:
-                            result = ocr_result["rec_text"]  # Assumes "rec_texts" contains a single string
+                            result = ocr_result[
+                                "rec_text"
+                            ]  # Assumes "rec_texts" contains a single string
                         else:
-                            result = ''
+                            result = ""
                     else:
-                        result = ''
+                        result = ""
                     split_texts.append(result)
                 # Add split boxes and texts to results
                 new_boxes.extend(split_boxes)
@@ -709,10 +708,10 @@ class TableRecognitionPipelineV2(BasePipeline):
                 new_boxes.append(ocr_box)
                 new_texts.append(text)
             i += 1
-        
+
         # Update the results dictionary
-        overall_ocr_res['rec_boxes'] = new_boxes
-        overall_ocr_res['rec_texts'] = new_texts
+        overall_ocr_res["rec_boxes"] = new_boxes
+        overall_ocr_res["rec_texts"] = new_texts
 
         return overall_ocr_res
 
@@ -744,7 +743,9 @@ class TableRecognitionPipelineV2(BasePipeline):
         # Return the list of recognized texts from each cell.
         return texts_list
 
-    def map_cells_to_original_image(self, detections, table_angle, img_width, img_height):
+    def map_cells_to_original_image(
+        self, detections, table_angle, img_width, img_height
+    ):
         """
         Map bounding boxes from the rotated image back to the original image.
 
@@ -761,15 +762,18 @@ class TableRecognitionPipelineV2(BasePipeline):
         mapped_detections = []
         for i in range(len(detections)):
             tbx1, tby1, tbx2, tby2 = (
-                detections[i][0], detections[i][1], detections[i][2], detections[i][3]
+                detections[i][0],
+                detections[i][1],
+                detections[i][2],
+                detections[i][3],
             )
-            if table_angle == '270':
+            if table_angle == "270":
                 new_x1, new_y1 = tby1, img_width - tbx2
                 new_x2, new_y2 = tby2, img_width - tbx1
-            elif table_angle == '180':
+            elif table_angle == "180":
                 new_x1, new_y1 = img_width - tbx2, img_height - tby2
                 new_x2, new_y2 = img_width - tbx1, img_height - tby1
-            elif table_angle == '90':
+            elif table_angle == "90":
                 new_x1, new_y1 = img_height - tby2, tbx1
                 new_x2, new_y2 = img_height - tby1, tbx2
             new_box = np.array([new_x1, new_y1, new_x2, new_y2])
@@ -787,18 +791,57 @@ class TableRecognitionPipelineV2(BasePipeline):
         """
 
         keywords = [
-            '<thead>', '</thead>', '<tbody>', '</tbody>', '<tr>', '</tr>', '<td>', 
-            '<td', '>', '</td>', 'colspan=\"2\"', 'colspan=\"3\"', 'colspan=\"4\"', 'colspan=\"5\"', 
-            'colspan=\"6\"', 'colspan=\"7\"', 'colspan=\"8\"', 'colspan=\"9\"', 'colspan=\"10\"', 
-            'colspan=\"11\"', 'colspan=\"12\"', 'colspan=\"13\"', 'colspan=\"14\"', 'colspan=\"15\"', 
-            'colspan=\"16\"', 'colspan=\"17\"', 'colspan=\"18\"', 'colspan=\"19\"', 'colspan=\"20\"', 
-            'rowspan=\"2\"', 'rowspan=\"3\"', 'rowspan=\"4\"', 'rowspan=\"5\"', 'rowspan=\"6\"', 
-            'rowspan=\"7\"', 'rowspan=\"8\"', 'rowspan=\"9\"', 'rowspan=\"10\"', 'rowspan=\"11\"', 
-            'rowspan=\"12\"', 'rowspan=\"13\"', 'rowspan=\"14\"', 'rowspan=\"15\"', 'rowspan=\"16\"', 
-            'rowspan=\"17\"', 'rowspan=\"18\"', 'rowspan=\"19\"', 'rowspan=\"20\"'
+            "<thead>",
+            "</thead>",
+            "<tbody>",
+            "</tbody>",
+            "<tr>",
+            "</tr>",
+            "<td>",
+            "<td",
+            ">",
+            "</td>",
+            'colspan="2"',
+            'colspan="3"',
+            'colspan="4"',
+            'colspan="5"',
+            'colspan="6"',
+            'colspan="7"',
+            'colspan="8"',
+            'colspan="9"',
+            'colspan="10"',
+            'colspan="11"',
+            'colspan="12"',
+            'colspan="13"',
+            'colspan="14"',
+            'colspan="15"',
+            'colspan="16"',
+            'colspan="17"',
+            'colspan="18"',
+            'colspan="19"',
+            'colspan="20"',
+            'rowspan="2"',
+            'rowspan="3"',
+            'rowspan="4"',
+            'rowspan="5"',
+            'rowspan="6"',
+            'rowspan="7"',
+            'rowspan="8"',
+            'rowspan="9"',
+            'rowspan="10"',
+            'rowspan="11"',
+            'rowspan="12"',
+            'rowspan="13"',
+            'rowspan="14"',
+            'rowspan="15"',
+            'rowspan="16"',
+            'rowspan="17"',
+            'rowspan="18"',
+            'rowspan="19"',
+            'rowspan="20"',
         ]
-        regex_pattern = '|'.join(re.escape(keyword) for keyword in keywords)
-        split_result = re.split(f'({regex_pattern})', html_string)
+        regex_pattern = "|".join(re.escape(keyword) for keyword in keywords)
+        split_result = re.split(f"({regex_pattern})", html_string)
         split_html = [part for part in split_result if part]
         return split_html
 
@@ -834,18 +877,26 @@ class TableRecognitionPipelineV2(BasePipeline):
         y_positions = self.cluster_positions(y_coords, tolerance)
         x_position_to_index = {x: i for i, x in enumerate(x_positions)}
         y_position_to_index = {y: i for i, y in enumerate(y_positions)}
-        num_rows = len(y_positions) -1
-        num_cols = len(x_positions) -1
+        num_rows = len(y_positions) - 1
+        num_cols = len(x_positions) - 1
         grid = [[None for _ in range(num_cols)] for _ in range(num_rows)]
         cells_info = []
         cell_index = 0
         cell_map = {}
         for index, cell in enumerate(cells_det_results):
             x1, y1, x2, y2 = cell
-            x1_idx = min(range(len(x_positions)), key=lambda i: abs(x_positions[i] - x1))
-            x2_idx = min(range(len(x_positions)), key=lambda i: abs(x_positions[i] - x2))
-            y1_idx = min(range(len(y_positions)), key=lambda i: abs(y_positions[i] - y1))
-            y2_idx = min(range(len(y_positions)), key=lambda i: abs(y_positions[i] - y2))
+            x1_idx = min(
+                range(len(x_positions)), key=lambda i: abs(x_positions[i] - x1)
+            )
+            x2_idx = min(
+                range(len(x_positions)), key=lambda i: abs(x_positions[i] - x2)
+            )
+            y1_idx = min(
+                range(len(y_positions)), key=lambda i: abs(y_positions[i] - y1)
+            )
+            y2_idx = min(
+                range(len(y_positions)), key=lambda i: abs(y_positions[i] - y2)
+            )
             col_start = min(x1_idx, x2_idx)
             col_end = max(x1_idx, x2_idx)
             row_start = min(y1_idx, y2_idx)
@@ -856,13 +907,15 @@ class TableRecognitionPipelineV2(BasePipeline):
                 rowspan = 1
             if colspan == 0:
                 colspan = 1
-            cells_info.append({
-                'row_start': row_start,
-                'col_start': col_start,
-                'rowspan': rowspan,
-                'colspan': colspan,
-                'content': ""
-            })
+            cells_info.append(
+                {
+                    "row_start": row_start,
+                    "col_start": col_start,
+                    "rowspan": rowspan,
+                    "colspan": colspan,
+                    "content": "",
+                }
+            )
             for r in range(row_start, row_start + rowspan):
                 for c in range(col_start, col_start + colspan):
                     key = (r, c)
@@ -870,28 +923,28 @@ class TableRecognitionPipelineV2(BasePipeline):
                         continue
                     else:
                         cell_map[key] = index
-        html = '<table><tbody>'
+        html = "<table><tbody>"
         for r in range(num_rows):
-            html += '<tr>'
+            html += "<tr>"
             c = 0
             while c < num_cols:
                 key = (r, c)
                 if key in cell_map:
                     cell_index = cell_map[key]
                     cell_info = cells_info[cell_index]
-                    if cell_info['row_start'] == r and cell_info['col_start'] == c:
-                        rowspan = cell_info['rowspan']
-                        colspan = cell_info['colspan']
-                        rowspan_attr = f' rowspan="{rowspan}"' if rowspan > 1 else ''
-                        colspan_attr = f' colspan="{colspan}"' if colspan > 1 else ''
-                        content = cell_info['content']
-                        html += f'<td{rowspan_attr}{colspan_attr}>{content}</td>'
-                    c += cell_info['colspan']
+                    if cell_info["row_start"] == r and cell_info["col_start"] == c:
+                        rowspan = cell_info["rowspan"]
+                        colspan = cell_info["colspan"]
+                        rowspan_attr = f' rowspan="{rowspan}"' if rowspan > 1 else ""
+                        colspan_attr = f' colspan="{colspan}"' if colspan > 1 else ""
+                        content = cell_info["content"]
+                        html += f"<td{rowspan_attr}{colspan_attr}>{content}</td>"
+                    c += cell_info["colspan"]
                 else:
-                    html += '<td></td>'
-                    c +=1
-            html += '</tr>'
-        html += '</tbody></table>'
+                    html += "<td></td>"
+                    c += 1
+            html += "</tr>"
+        html += "</tbody></table>"
         html = self.split_string_by_keywords(html)
         return html
 
@@ -952,7 +1005,9 @@ class TableRecognitionPipelineV2(BasePipeline):
             if use_e2e_wireless_table_rec_model == True:
                 use_e2e_model = True
                 if cells_trans_to_html == True:
-                    table_structure_pred = next(self.wireless_table_rec_model(image_array))
+                    table_structure_pred = next(
+                        self.wireless_table_rec_model(image_array)
+                    )
             else:
                 table_cells_pred = next(
                     self.wireless_table_cells_detection_model(
@@ -988,11 +1043,13 @@ class TableRecognitionPipelineV2(BasePipeline):
             if use_ocr_results_with_table_cells == True:
                 if self.cells_split_ocr == True:
                     table_box_copy = np.array([table_box])
-                    table_ocr_pred = get_sub_regions_ocr_res(overall_ocr_res, table_box_copy)
+                    table_ocr_pred = get_sub_regions_ocr_res(
+                        overall_ocr_res, table_box_copy
+                    )
                     table_ocr_pred = self.split_ocr_bboxes_by_table_cells(
                         table_cells_result, table_ocr_pred, image_array
                     )
-                    cells_texts_list=[]
+                    cells_texts_list = []
                 else:
                     cells_texts_list = self.gen_ocr_with_table_cells(
                         image_array, table_cells_result
@@ -1016,12 +1073,11 @@ class TableRecognitionPipelineV2(BasePipeline):
             use_ocr_results_with_table_cells = False
             table_cells_result_e2e = table_structure_pred["bbox"]
             table_cells_result_e2e = [
-                [rect[0], rect[1], rect[4], rect[5]]
-                for rect in table_cells_result_e2e
+                [rect[0], rect[1], rect[4], rect[5]] for rect in table_cells_result_e2e
             ]
             if cells_trans_to_html == True:
-                table_structure_pred["structure"] = self.trans_cells_det_results_to_html(
-                   table_cells_result_e2e
+                table_structure_pred["structure"] = (
+                    self.trans_cells_det_results_to_html(table_cells_result_e2e)
                 )
             single_table_recognition_res = get_table_recognition_res_e2e(
                 table_box,
@@ -1092,8 +1148,8 @@ class TableRecognitionPipelineV2(BasePipeline):
         self.cells_split_ocr = True
 
         if use_table_orientation_classify == True and (
-                self.table_orientation_classify_model is None
-            ):
+            self.table_orientation_classify_model is None
+        ):
             assert self.table_orientation_classify_config != None
             self.table_orientation_classify_model = self.create_model(
                 self.table_orientation_classify_config
@@ -1140,8 +1196,11 @@ class TableRecognitionPipelineV2(BasePipeline):
                     )
                 )
             elif self.general_ocr_pipeline is None and (
-                (use_ocr_results_with_table_cells == True and self.cells_split_ocr == False) or
-                use_table_orientation_classify == True
+                (
+                    use_ocr_results_with_table_cells == True
+                    and self.cells_split_ocr == False
+                )
+                or use_table_orientation_classify == True
             ):
                 assert self.general_ocr_config_bak != None
                 self.general_ocr_pipeline = self.create_pipeline(
@@ -1149,8 +1208,8 @@ class TableRecognitionPipelineV2(BasePipeline):
                 )
 
             if use_table_orientation_classify == False:
-                table_angle = '0'
-            
+                table_angle = "0"
+
             table_res_list = []
             table_region_id = 1
 
@@ -1159,14 +1218,15 @@ class TableRecognitionPipelineV2(BasePipeline):
                 table_box = [0, 0, img_width - 1, img_height - 1]
                 if use_table_orientation_classify == True:
                     table_angle = next(
-                        self.table_orientation_classify_model(doc_preprocessor_image))['label_names'][0]
-                if table_angle == '90':
+                        self.table_orientation_classify_model(doc_preprocessor_image)
+                    )["label_names"][0]
+                if table_angle == "90":
                     doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=1)
-                elif table_angle == '180':
+                elif table_angle == "180":
                     doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=2)
-                elif table_angle == '270':
+                elif table_angle == "270":
                     doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=3)
-                if table_angle in ['90', '180', '270']:
+                if table_angle in ["90", "180", "270"]:
                     overall_ocr_res = next(
                         self.general_ocr_pipeline(
                             doc_preprocessor_image,
@@ -1178,14 +1238,19 @@ class TableRecognitionPipelineV2(BasePipeline):
                             text_rec_score_thresh=text_rec_score_thresh,
                         )
                     )
-                    tbx1, tby1, tbx2, tby2 = table_box[0], table_box[1], table_box[2], table_box[3]
-                    if table_angle == '90':
+                    tbx1, tby1, tbx2, tby2 = (
+                        table_box[0],
+                        table_box[1],
+                        table_box[2],
+                        table_box[3],
+                    )
+                    if table_angle == "90":
                         new_x1, new_y1 = tby1, img_width - tbx2
                         new_x2, new_y2 = tby2, img_width - tbx1
-                    elif table_angle == '180':
+                    elif table_angle == "180":
                         new_x1, new_y1 = img_width - tbx2, img_height - tby2
                         new_x2, new_y2 = img_width - tbx1, img_height - tby1
-                    elif table_angle == '270':
+                    elif table_angle == "270":
                         new_x1, new_y1 = img_height - tby2, tbx1
                         new_x2, new_y2 = img_height - tby1, tbx2
                     table_box = [new_x1, new_y1, new_x2, new_y2]
@@ -1202,10 +1267,15 @@ class TableRecognitionPipelineV2(BasePipeline):
                     flag_find_nei_text=False,
                 )
                 single_table_rec_res["table_region_id"] = table_region_id
-                if use_table_orientation_classify == True and table_angle != '0':
+                if use_table_orientation_classify == True and table_angle != "0":
                     img_height, img_width = doc_preprocessor_image.shape[:2]
-                    single_table_rec_res['cell_box_list'] = self.map_cells_to_original_image(
-                        single_table_rec_res['cell_box_list'], table_angle, img_width, img_height
+                    single_table_rec_res["cell_box_list"] = (
+                        self.map_cells_to_original_image(
+                            single_table_rec_res["cell_box_list"],
+                            table_angle,
+                            img_width,
+                            img_height,
+                        )
                     )
                 table_res_list.append(single_table_rec_res)
                 table_region_id += 1
@@ -1215,23 +1285,34 @@ class TableRecognitionPipelineV2(BasePipeline):
                 img_height, img_width = doc_preprocessor_image.shape[:2]
                 for box_info in layout_det_res["boxes"]:
                     if box_info["label"].lower() in ["table"]:
-                        crop_img_info = self._crop_by_boxes(doc_preprocessor_image, [box_info])
+                        crop_img_info = self._crop_by_boxes(
+                            doc_preprocessor_image, [box_info]
+                        )
                         crop_img_info = crop_img_info[0]
                         table_box = crop_img_info["box"]
                         if use_table_orientation_classify == True:
                             doc_preprocessor_image_copy = doc_preprocessor_image.copy()
                             table_angle = next(
-                                self.table_orientation_classify_model(crop_img_info["img"]))['label_names'][0]
-                        if table_angle == '90':
+                                self.table_orientation_classify_model(
+                                    crop_img_info["img"]
+                                )
+                            )["label_names"][0]
+                        if table_angle == "90":
                             crop_img_info["img"] = np.rot90(crop_img_info["img"], k=1)
-                            doc_preprocessor_image_copy = np.rot90(doc_preprocessor_image_copy, k=1)
-                        elif table_angle == '180':
+                            doc_preprocessor_image_copy = np.rot90(
+                                doc_preprocessor_image_copy, k=1
+                            )
+                        elif table_angle == "180":
                             crop_img_info["img"] = np.rot90(crop_img_info["img"], k=2)
-                            doc_preprocessor_image_copy = np.rot90(doc_preprocessor_image_copy, k=2)
-                        elif table_angle == '270':
+                            doc_preprocessor_image_copy = np.rot90(
+                                doc_preprocessor_image_copy, k=2
+                            )
+                        elif table_angle == "270":
                             crop_img_info["img"] = np.rot90(crop_img_info["img"], k=3)
-                            doc_preprocessor_image_copy = np.rot90(doc_preprocessor_image_copy, k=3)
-                        if table_angle in ['90', '180', '270']:
+                            doc_preprocessor_image_copy = np.rot90(
+                                doc_preprocessor_image_copy, k=3
+                            )
+                        if table_angle in ["90", "180", "270"]:
                             overall_ocr_res = next(
                                 self.general_ocr_pipeline(
                                     doc_preprocessor_image_copy,
@@ -1243,18 +1324,24 @@ class TableRecognitionPipelineV2(BasePipeline):
                                     text_rec_score_thresh=text_rec_score_thresh,
                                 )
                             )
-                            tbx1, tby1, tbx2, tby2 = table_box[0], table_box[1], table_box[2], table_box[3]
-                            if table_angle == '90':
+                            tbx1, tby1, tbx2, tby2 = (
+                                table_box[0],
+                                table_box[1],
+                                table_box[2],
+                                table_box[3],
+                            )
+                            if table_angle == "90":
                                 new_x1, new_y1 = tby1, img_width - tbx2
                                 new_x2, new_y2 = tby2, img_width - tbx1
-                            elif table_angle == '180':
+                            elif table_angle == "180":
                                 new_x1, new_y1 = img_width - tbx2, img_height - tby2
                                 new_x2, new_y2 = img_width - tbx1, img_height - tby1
-                            elif table_angle == '270':
+                            elif table_angle == "270":
                                 new_x1, new_y1 = img_height - tby2, tbx1
                                 new_x2, new_y2 = img_height - tby1, tbx2
                             table_box = [new_x1, new_y1, new_x2, new_y2]
-                        single_table_rec_res = self.predict_single_table_recognition_res(
+                        single_table_rec_res = (
+                            self.predict_single_table_recognition_res(
                                 crop_img_info["img"],
                                 overall_ocr_res,
                                 table_box,
@@ -1264,11 +1351,22 @@ class TableRecognitionPipelineV2(BasePipeline):
                                 use_wireless_table_cells_trans_to_html,
                                 use_ocr_results_with_table_cells,
                             )
+                        )
                         single_table_rec_res["table_region_id"] = table_region_id
-                        if use_table_orientation_classify == True and table_angle != '0':
-                            img_height_copy, img_width_copy = doc_preprocessor_image_copy.shape[:2]
-                            single_table_rec_res['cell_box_list'] = self.map_cells_to_original_image(
-                                single_table_rec_res['cell_box_list'], table_angle, img_width_copy, img_height_copy
+                        if (
+                            use_table_orientation_classify == True
+                            and table_angle != "0"
+                        ):
+                            img_height_copy, img_width_copy = (
+                                doc_preprocessor_image_copy.shape[:2]
+                            )
+                            single_table_rec_res["cell_box_list"] = (
+                                self.map_cells_to_original_image(
+                                    single_table_rec_res["cell_box_list"],
+                                    table_angle,
+                                    img_width_copy,
+                                    img_height_copy,
+                                )
                             )
                         table_res_list.append(single_table_rec_res)
                         table_region_id += 1
@@ -1284,3 +1382,15 @@ class TableRecognitionPipelineV2(BasePipeline):
             }
 
             yield TableRecognitionResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class TableRecognitionPipelineV2(AutoParallelImageSimpleInferencePipeline):
+    entities = ["table_recognition_v2"]
+
+    @property
+    def _pipeline_cls(self):
+        return _TableRecognitionPipelineV2
+
+    def _get_batch_size(self, config):
+        return 1

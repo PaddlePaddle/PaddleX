@@ -34,7 +34,7 @@ paddlex --install paddle2onnx
         <tr>
             <td>opset_version</td>
             <td>int</td>
-            <td>The ONNX opset version to use. Defaults to <code>7</code>.</td>
+            <td>The ONNX opset version to use. If a lower-version opset cannot complete the conversion, a higher-version opset will be automatically selected for the conversion. Defaults to <code>7</code>.</td>
         </tr>
     </tbody>
 </table>

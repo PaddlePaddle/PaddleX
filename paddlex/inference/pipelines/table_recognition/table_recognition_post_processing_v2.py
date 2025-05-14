@@ -131,8 +131,8 @@ def compute_inter(rec1, rec2):
     Returns:
         float: Intersection over rec2_area
     """
-    x1_1, y1_1, x2_1, y2_1 = rec1
-    x1_2, y1_2, x2_2, y2_2 = rec2
+    x1_1, y1_1, x2_1, y2_1 = map(float, rec1)
+    x1_2, y1_2, x2_2, y2_2 = map(float, rec2)
     x_left = max(x1_1, x1_2)
     y_top = max(y1_1, y1_2)
     x_right = min(x2_1, x2_2)

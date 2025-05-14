@@ -40,7 +40,6 @@ for res in output:
     * `use_hpip`：`bool` 类型，是否启用高性能推理插件；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
     * _`推理超参数`_：支持常见推理超参数的修改，具体参数说明详见具体模型文档；
-  * 返回值：`BasePredictor` 类型。
 
 ### 2. 调用预测模型对象的`predict()`方法进行推理预测
 
