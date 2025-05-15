@@ -1149,9 +1149,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
                             (x_min, y_max),
                         ]
                         table_contents_for_img["dt_polys"].append(poly_points)
-                        table_contents_for_img["rec_texts"].append(
-                            f"${formula_res['rec_formula']}$"
-                        )
+                        rec_formula = formula_res["rec_formula"]
+                        if not rec_formula.startswith("$") or not rec_formula.endswith(
+                            "$"
+                        ):
+                            rec_formula = f"${rec_formula}$"
+                        table_contents_for_img["rec_texts"].append(f"{rec_formula}")
                         if table_contents_for_img["rec_boxes"].size == 0:
                             table_contents_for_img["rec_boxes"] = np.array(
                                 [formula_res["dt_polys"]]

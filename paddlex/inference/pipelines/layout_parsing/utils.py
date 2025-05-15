@@ -442,10 +442,12 @@ def format_line(
 
     for span in line:
         if span[2] == "formula" and block_label != "formula":
-            if len(line) > 1:
-                span[1] = f"${span[1]}$"
-            else:
-                span[1] = f"\n${span[1]}$"
+            formula_rec = span[1]
+            if not formula_rec.startswith("$") and not formula_rec.endswith("$"):
+                if len(line) > 1:
+                    span[1] = f"${span[1]}$"
+                else:
+                    span[1] = f"\n${span[1]}$"
 
     line_text = ""
     for span in line:
@@ -881,10 +883,6 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
         ]
         ocr_res["dt_polys"].append(poly_points)
         formula_res_text: str = formula_res["rec_formula"]
-        if formula_res_text.startswith("$$") and formula_res_text.endswith("$$"):
-            formula_res_text = formula_res_text[2:-2]
-        elif formula_res_text.startswith("$") and formula_res_text.endswith("$"):
-            formula_res_text = formula_res_text[1:-1]
         ocr_res["rec_texts"].append(formula_res_text)
         if ocr_res["rec_boxes"].size == 0:
             ocr_res["rec_boxes"] = np.array(formula_res["dt_polys"])

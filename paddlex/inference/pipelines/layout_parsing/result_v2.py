@@ -709,14 +709,14 @@ class LayoutParsingRegion:
 
     def calculate_bbox_metrics(self, image_shape):
         x1, y1, x2, y2 = self.bbox
-        width = x2 - x1
         image_height, image_width = image_shape
+        width = x2 - x1
         x_center, y_center = (x1 + x2) / 2, (y1 + y2) / 2
         self.euclidean_distance = math.sqrt(((x1) ** 2 + (y1) ** 2))
         self.center_euclidean_distance = math.sqrt(((x_center) ** 2 + (y_center) ** 2))
         self.angle_rad = math.atan2(y_center, x_center)
         self.weighted_distance = (
-            y1 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
+            y2 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
         )
 
     def sort_normal_blocks(self, blocks):
