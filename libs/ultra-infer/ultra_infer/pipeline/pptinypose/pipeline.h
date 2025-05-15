@@ -48,7 +48,7 @@ public:
   virtual bool Predict(cv::Mat *img,
                        ultra_infer::vision::KeyPointDetectionResult *result);
 
-  /* \brief The score threshold for detectin model to filter bbox before
+  /* \brief The score threshold for detecting model to filter bbox before
    * inputting pptinypose model
    */
   float detection_model_score_threshold = 0;

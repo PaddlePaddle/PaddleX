@@ -137,7 +137,7 @@ bool PaddleClasPreprocessor::Apply(FDMatBatch *image_batch,
       image_batch->proc_lib = ProcLib::OPENCV;
     }
     if (!(*(processors_[j].get()))(image_batch)) {
-      FDERROR << "Failed to processs image in " << processors_[j]->Name() << "."
+      FDERROR << "Failed to process image in " << processors_[j]->Name() << "."
               << std::endl;
       return false;
     }

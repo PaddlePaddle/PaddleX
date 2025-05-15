@@ -496,7 +496,7 @@ class PretrainedConfig:
             if num_labels is not None and len(self.id2label) != num_labels:
                 logging.warning(
                     f"You passed along `num_labels={num_labels}` with an incompatible id to label map: "
-                    f"{self.id2label}. The number of labels wil be overwritten to {self.num_labels}."
+                    f"{self.id2label}. The number of labels will be overwritten to {self.num_labels}."
                 )
             self.id2label = dict(
                 (int(key), value) for key, value in self.id2label.items()
@@ -939,7 +939,7 @@ class PretrainedConfig:
 
             output[key] = value
 
-        # Fix for rewrited from_pretrained method, hasattr
+        # Fix for rewrote from_pretrained method, hasattr
         if saving_file and hasattr(self, "_unsavable_keys"):
             for key in list(output.keys()):
                 if key in self._unsavable_keys:

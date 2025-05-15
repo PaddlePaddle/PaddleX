@@ -167,7 +167,7 @@ bool PaddleDetPreprocessor::Apply(FDMatBatch *image_batch,
     scale_factor_ptr[2 * i + 1] = 1.0;
     for (size_t j = 0; j < processors_.size(); ++j) {
       if (!(*(processors_[j].get()))(mat)) {
-        FDERROR << "Failed to processs image:" << i << " in "
+        FDERROR << "Failed to process image:" << i << " in "
                 << processors_[j]->Name() << "." << std::endl;
         return false;
       }

@@ -83,7 +83,7 @@ bool PetrPreprocessor::Apply(FDMatBatch *image_batch,
     FDMat *mat = &(image_batch->mats->at(i));
     for (size_t j = 0; j < processors_.size(); ++j) {
       if (!(*(processors_[j].get()))(mat)) {
-        FDERROR << "Failed to processs image:" << i << " in "
+        FDERROR << "Failed to process image:" << i << " in "
                 << processors_[j]->Name() << "." << std::endl;
         return false;
       }

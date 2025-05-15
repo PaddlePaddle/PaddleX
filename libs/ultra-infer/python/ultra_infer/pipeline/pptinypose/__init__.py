@@ -40,7 +40,7 @@ class PPTinyPose(object):
 
     @property
     def detection_model_score_threshold(self):
-        """Attribute of PPTinyPose pipeline model. Stating the score threshold for detectin model to filter bbox before inputting pptinypose model
+        """Attribute of PPTinyPose pipeline model. Stating the score threshold for detecting model to filter bbox before inputting pptinypose model
 
         :return: value of detection_model_score_threshold(float)
         """

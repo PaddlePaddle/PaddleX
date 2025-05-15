@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import BaseDatasetChecker, build_dataset_checker
-from .evaluator import BaseEvaluator, build_evaluater
+from .evaluator import BaseEvaluator, build_evaluator
 from .exportor import BaseExportor, build_exportor
 from .trainer import BaseTrainer, build_trainer

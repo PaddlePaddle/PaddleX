@@ -969,8 +969,8 @@ class _TableRecognitionPipelineV2(BasePipeline):
             table_box (list): The table box coordinates.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
-            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
-            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired table cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless table cells trans to HTML.
             use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             flag_find_nei_text (bool): Whether to find neighboring text.
         Returns:
@@ -1134,8 +1134,8 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 It will be used if it is not None and use_layout_detection is False.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
-            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
-            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired table cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless table cells trans to HTML.
             use_table_orientation_classify (bool): Whether to use table orientation classification.
             use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             **kwargs: Additional keyword arguments.

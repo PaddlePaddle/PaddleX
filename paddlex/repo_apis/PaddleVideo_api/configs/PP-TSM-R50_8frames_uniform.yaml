@@ -151,6 +151,6 @@ Infer:
         class_id_map_file: data/k400/Kinetics-400_label_list.txt     
 
 model_name: "ppTSM"
-log_interval: 10 #Optional, the interal of logger, default:10
+log_interval: 10 #Optional, the interval of logger, default:10
 epochs: 80 #Mandatory, total epoch
 log_level: "INFO" #Optional, the logger level. default: "INFO"
