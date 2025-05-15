@@ -748,7 +748,7 @@ class DetPostProcess:
             boxes = np.array(boxes[selected_indices])
 
         filter_large_image = True
-        if filter_large_image and len(boxes) > 1:
+        if filter_large_image and len(boxes) > 1 and boxes.shape[1] == 6:
             if img_size[0] > img_size[1]:
                 area_thres = 0.82
             else:
