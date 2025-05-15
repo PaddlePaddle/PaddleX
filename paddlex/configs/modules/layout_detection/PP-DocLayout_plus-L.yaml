@@ -19,7 +19,7 @@ Train:
   epochs_iters: 100
   batch_size: 1
   learning_rate: 0.0001
-  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrain.pdparams
+  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams
   warmup_steps: 100
   resume_path: null
   log_interval: 10
@@ -30,7 +30,7 @@ Evaluate:
   log_interval: 10
 
 Export:
-  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrain.pdparams
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams
 
 Predict:
   batch_size: 1
