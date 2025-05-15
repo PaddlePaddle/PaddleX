@@ -429,7 +429,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         if self["model_settings"].get("use_table_recognition", False):
             if pretty:
-                format_table_func = lambda block: "\n" + format_text_func(block)
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
             else:
                 format_table_func = lambda block: simplify_table_func(
                     "\n" + block.content

@@ -950,8 +950,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
-        use_doc_orientation_classify: Union[bool, None] = None,
-        use_doc_unwarping: Union[bool, None] = None,
+        use_doc_orientation_classify: Union[bool, None] = False,
+        use_doc_unwarping: Union[bool, None] = False,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
