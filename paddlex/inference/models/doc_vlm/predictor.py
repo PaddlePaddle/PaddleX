@@ -14,6 +14,7 @@
 
 import copy
 import os
+import warnings
 from typing import List
 
 from ....modules.doc_vlm.model_list import MODELS
@@ -87,8 +88,8 @@ class DocVLMPredictor(BasePredictor):
         # build model
         if self.model_name in self.model_group["PP-DocBee"]:
             if kwargs.get("use_hpip", False):
-                raise ValueError(
-                    f"PP-DocBee series do not support `use_hpip=True` for now."
+                warnings.warn(
+                    "The PP-DocBee series does not support `use_hpip=True` for now."
                 )
             with TemporaryDeviceChanger(self.device):
                 model = PPDocBeeInference.from_pretrained(
@@ -96,8 +97,8 @@ class DocVLMPredictor(BasePredictor):
                 )
         elif self.model_name in self.model_group["PP-Chart2Table"]:
             if kwargs.get("use_hpip", False):
-                raise ValueError(
-                    f"PP-Chart2Table series do not support `use_hpip=True` for now."
+                warnings.warn(
+                    "The PP-Chart2Table series does not support `use_hpip=True` for now."
                 )
             with TemporaryDeviceChanger(self.device):
                 model = PPChart2TableInference.from_pretrained(
@@ -107,8 +108,8 @@ class DocVLMPredictor(BasePredictor):
                 )
         elif self.model_name in self.model_group["PP-DocBee2"]:
             if kwargs.get("use_hpip", False):
-                raise ValueError(
-                    f"PP-Chart2Table series do not support `use_hpip=True` for now."
+                warnings.warn(
+                    "The PP-Chart2Table series does not support `use_hpip=True` for now."
                 )
             with TemporaryDeviceChanger(self.device):
                 model = PPDocBee2Inference.from_pretrained(

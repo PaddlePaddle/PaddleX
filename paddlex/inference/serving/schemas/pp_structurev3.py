@@ -32,13 +32,13 @@ INFER_ENDPOINT: Final[str] = "/layout-parsing"
 
 
 class InferRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
+    useDocOrientationClassify: Optional[bool] = False
+    useDocUnwarping: Optional[bool] = False
     useTextlineOrientation: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
-    useChartRecognition: Optional[bool] = None
+    useChartRecognition: Optional[bool] = False
     useRegionDetection: Optional[bool] = None
     layoutThreshold: Optional[float] = None
     layoutNms: Optional[bool] = None
