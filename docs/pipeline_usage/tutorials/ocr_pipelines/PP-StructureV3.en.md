@@ -634,6 +634,8 @@ All the model pipelines provided by PaddleX can be quickly experienced. You can 
 
 Before using the PP-StructureV3 pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ocr`.
 
+> When performing GPU inference, the default configuration may use more than 16 GB of VRAM. Please ensure that your GPU has sufficient memory. To reduce VRAM usage, you can modify the configuration file as described below to disable unnecessary features.
+
 ### 2.1 Experiencing via Command Line
 
 You can quickly experience the PP-StructureV3 pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_structure_v3_demo.png) and replace `--input` with the local path to perform prediction.

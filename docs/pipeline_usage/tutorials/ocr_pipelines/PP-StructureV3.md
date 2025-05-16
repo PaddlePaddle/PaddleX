@@ -594,6 +594,8 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地
 
 在本地使用通用版面解析v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ocr`。
 
+> 在进行 GPU 推理时，默认配置可能会占用超过 16 GB 的显存，请务必确认 GPU 显存容量充足。若需减少显存占用，可参考下文说明修改配置文件，关闭不必要的功能。
+
 ### 2.1 命令行方式体验
 一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_structure_v3_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
