@@ -5,7 +5,7 @@ comments: true
 # 通用版面解析v3产线使用教程
 
 ## 1. 通用版面解析v3(PP-StructureV3)产线介绍
-版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。<b>通用版面解析v3产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。</b>本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。<b>通用版面解析v3产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了图表理解能力和多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。</b>本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <b>通用版面解析v3产线中包含必选的版面区域分析模块、通用OCR子产线，</b>以及可选的文档图像预处理子产线、表格识别子产线、印章识别子产线和公式识别子产线。
 
@@ -68,6 +68,13 @@ comments: true
 </thead>
 <tbody>
 <tr>
+<td>PP-DocLayout_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>83.2</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
+<td>126.01 M</td>
+<td>基于RT-DETR-L在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报、古籍、日文文档、竖版文字文档等场景的自建数据集训练的更高精度版面区域定位模型</td>
+</tr>
 <td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
 <td>90.4</td>
 <td>34.6244 / 10.3945</td>
@@ -539,6 +546,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
                   <li>文档图像方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。</li>
                   <li> 文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。</li>
                   <li>版面区域检测模型：PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。</li>
+                  <li>PP-DocLayout_plus-L：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、报纸、研报、PPT、试卷、课本等 1300 张文档类型图片。</li>
                   <li>表格结构识别模型：PaddleX 内部自建英文表格识别数据集。 </li>
                   <li>文本检测模型：PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。</li>
                   <li> 中文识别模型： PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。</li>
@@ -885,6 +893,30 @@ for item in markdown_images:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>use_chart_recognition</code></td>
+<td>是否使用图表识别子产线</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_region_detection</code></td>
+<td>是否使用文档区域检测产线</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>layout_threshold</code></td>
 <td>版面模型得分阈值</td>
 <td><code>float|dict|None</code></td>
@@ -1063,6 +1095,78 @@ for item in markdown_images:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>是否启用有线表单元格检测结果直转HTML，默认False，启用则直接基于有线表单元格检测结果的几何关系构建HTML。</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
+</ul>
+<td><code>False</code></td>
+</td>
+</tr>
+<tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>是否启用无有线表单元格检测结果直转HTML，默认False，启用则直接基于有线表单元格检测结果的几何关系构建HTML。</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
+</ul>
+<td><code>False</code></td>
+</td>
+</tr>
+<tr>
+<td><code>use_table_orientation_classify</code></td>
+<td>是否启用表格使用表格方向分类，启用时当图像中的表格存在90/180/270度旋转时，能够将方向校正并正确完成表格识别</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>use_ocr_results_with_table_cells</code></td>
+<td>是否启用单元格切分OCR，启用时会基于单元格预测结果对OCR检测结果进行切分和重识别，避免出现文字缺失情况</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>use_e2e_wired_table_rec_model</code></td>
+<td>是否启用有线表端到端表格识别模式，启用则不使用单元格检测模型，只使用表格结构识别模型</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
+</ul>
+</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>use_e2e_wireless_table_rec_model</code></td>
+<td>是否启用无线表端到端表格识别模式，启用则不使用单元格检测模型，只使用表格结构识别模型</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
+</ul>
+</td>
+<td><code>True</code></td>
 </tr>
 </table>
 
