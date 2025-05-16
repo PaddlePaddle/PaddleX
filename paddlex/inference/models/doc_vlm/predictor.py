@@ -47,7 +47,7 @@ class DocVLMPredictor(BasePredictor):
         self.dtype = (
             "bfloat16"
             if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
-            and (self.device is not None and "cpu" not in self.device)
+            and (self.device is None or "cpu" not in self.device)
             else "float32"
         )
 
