@@ -35,7 +35,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format \param[in] result The output detection
    * result will be written to this structure \return true if the prediction
-   * successed, otherwise false
+   * succeeded, otherwise false
    */
   virtual bool Predict(const cv::Mat &img, DetectionResult *result);
 
@@ -43,7 +43,7 @@ public:
    *
    * \param[in] imgs, The input image list, each element comes from cv::imread()
    * \param[in] results The output detection result list
-   * \return true if the prediction successed, otherwise false
+   * \return true if the prediction succeeded, otherwise false
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &imgs,
                             std::vector<DetectionResult> *results);

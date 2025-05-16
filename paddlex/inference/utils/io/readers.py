@@ -361,7 +361,7 @@ class DecordVideoReaderBackend(_VideoReaderBackend):
         self.valid_mode = True
         self._fps = 0
 
-        # XXX(gaotingquan): There is a confict with `paddle` when import `decord` globally.
+        # XXX(gaotingquan): There is a conflict with `paddle` when import `decord` globally.
         try:
             import decord
 

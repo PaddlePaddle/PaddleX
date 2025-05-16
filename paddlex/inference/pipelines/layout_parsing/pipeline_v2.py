@@ -791,11 +791,17 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
 
-            if label in ["chart", "image", "seal", "table", "formula"]:
+            if (
+                label
+                in ["seal", "table", "formula", "chart"]
+                + BLOCK_LABEL_MAP["image_labels"]
+            ):
                 x_min, y_min, x_max, y_max = list(map(int, block_bbox))
-                img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                img_path = (
+                    f"imgs/img_in_{block.label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                )
                 img = Image.fromarray(image[y_min:y_max, x_min:x_max, ::-1])
-                block.image = {img_path: img}
+                block.image = {"path": img_path, "img": img}
 
             layout_parsing_blocks.append(block)
 
@@ -944,8 +950,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
-        use_doc_orientation_classify: Union[bool, None] = None,
-        use_doc_unwarping: Union[bool, None] = None,
+        use_doc_orientation_classify: Union[bool, None] = False,
+        use_doc_unwarping: Union[bool, None] = False,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
@@ -1143,9 +1149,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
                             (x_min, y_max),
                         ]
                         table_contents_for_img["dt_polys"].append(poly_points)
-                        table_contents_for_img["rec_texts"].append(
-                            f"${formula_res['rec_formula']}$"
-                        )
+                        rec_formula = formula_res["rec_formula"]
+                        if not rec_formula.startswith("$") or not rec_formula.endswith(
+                            "$"
+                        ):
+                            rec_formula = f"${rec_formula}$"
+                        table_contents_for_img["rec_texts"].append(f"{rec_formula}")
                         if table_contents_for_img["rec_boxes"].size == 0:
                             table_contents_for_img["rec_boxes"] = np.array(
                                 [formula_res["dt_polys"]]

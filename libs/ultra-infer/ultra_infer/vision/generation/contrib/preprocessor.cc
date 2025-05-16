@@ -25,14 +25,14 @@ bool AnimeGANPreprocessor::Run(std::vector<Mat> &images,
   for (size_t i = 0; i < images.size(); ++i) {
     auto ret = BGR2RGB::Run(&images[i]);
     if (!ret) {
-      FDERROR << "Failed to processs image:" << i << " in "
+      FDERROR << "Failed to process image:" << i << " in "
               << "BGR2RGB"
               << "." << std::endl;
       return false;
     }
     ret = Cast::Run(&images[i], "float");
     if (!ret) {
-      FDERROR << "Failed to processs image:" << i << " in "
+      FDERROR << "Failed to process image:" << i << " in "
               << "Cast"
               << "." << std::endl;
       return false;
@@ -41,7 +41,7 @@ bool AnimeGANPreprocessor::Run(std::vector<Mat> &images,
     std::vector<float> std{-1.f, -1.f, -1.f};
     ret = Convert::Run(&images[i], mean, std);
     if (!ret) {
-      FDERROR << "Failed to processs image:" << i << " in "
+      FDERROR << "Failed to process image:" << i << " in "
               << "Cast"
               << "." << std::endl;
       return false;

@@ -27,7 +27,7 @@ from PIL import Image
 
 from ..components import convert_points_to_boxes
 from ..ocr.result import OCRResult
-from .setting import REGION_SETTINGS
+from .setting import BLOCK_LABEL_MAP, REGION_SETTINGS
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
@@ -442,10 +442,12 @@ def format_line(
 
     for span in line:
         if span[2] == "formula" and block_label != "formula":
-            if len(line) > 1:
-                span[1] = f"${span[1]}$"
-            else:
-                span[1] = f"\n${span[1]}$"
+            formula_rec = span[1]
+            if not formula_rec.startswith("$") and not formula_rec.endswith("$"):
+                if len(line) > 1:
+                    span[1] = f"${span[1]}$"
+                else:
+                    span[1] = f"\n${span[1]}$"
 
     line_text = ""
     for span in line:
@@ -612,9 +614,10 @@ def remove_extra_space(input_text: str) -> str:
 def gather_imgs(original_img, layout_det_objs):
     imgs_in_doc = []
     for det_obj in layout_det_objs:
-        if det_obj["label"] in ("image", "chart", "seal", "formula", "table"):
+        if det_obj["label"] in BLOCK_LABEL_MAP["image_labels"]:
+            label = det_obj["label"]
             x_min, y_min, x_max, y_max = list(map(int, det_obj["coordinate"]))
-            img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+            img_path = f"imgs/img_in_{label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
             img = Image.fromarray(original_img[y_min:y_max, x_min:x_max, ::-1])
             imgs_in_doc.append(
                 {
@@ -880,10 +883,6 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
         ]
         ocr_res["dt_polys"].append(poly_points)
         formula_res_text: str = formula_res["rec_formula"]
-        if formula_res_text.startswith("$$") and formula_res_text.endswith("$$"):
-            formula_res_text = formula_res_text[2:-2]
-        elif formula_res_text.startswith("$") and formula_res_text.endswith("$"):
-            formula_res_text = formula_res_text[1:-1]
         ocr_res["rec_texts"].append(formula_res_text)
         if ocr_res["rec_boxes"].size == 0:
             ocr_res["rec_boxes"] = np.array(formula_res["dt_polys"])

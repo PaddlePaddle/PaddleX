@@ -48,7 +48,7 @@ public:
    * result will be written to this structure \param[in] conf_threshold
    * confidence threshold for postprocessing, default is 0.25 \param[in]
    * nms_iou_threshold iou threshold for NMS, default is 0.5 \return true if
-   * the prediction successed, otherwise false
+   * the prediction succeeded, otherwise false
    */
   virtual bool Predict(cv::Mat *im, FaceDetectionResult *result,
                        float conf_threshold = 0.25,

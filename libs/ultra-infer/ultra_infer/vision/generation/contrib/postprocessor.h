@@ -32,7 +32,7 @@ public:
    *
    * \param[in] infer_results The inference results from runtime
    * \param[in] results The output results of style transfer
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(std::vector<FDTensor> &infer_results, std::vector<cv::Mat> *results);
 };

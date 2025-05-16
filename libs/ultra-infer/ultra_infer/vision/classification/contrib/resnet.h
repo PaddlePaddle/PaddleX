@@ -17,7 +17,7 @@
 #include "ultra_infer/vision/common/processors/transform.h"
 #include "ultra_infer/vision/common/result.h"
 
-// The namespace shoulde be
+// The namespace should be
 // ultra_infer::vision::classification (ultra_infer::vision::${task})
 namespace ultra_infer {
 namespace vision {

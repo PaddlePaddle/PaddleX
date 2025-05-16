@@ -60,7 +60,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread()
    * \param[in] result The output classification result will be written to this
-   * structure \return true if the prediction successed, otherwise false
+   * structure \return true if the prediction succeeded, otherwise false
    */
   virtual bool Predict(cv::Mat *im, ClassifyResult *result, int topk = 1);
 
@@ -68,7 +68,7 @@ public:
    *
    * \param[in] img The input image data, comes from cv::imread()
    * \param[in] result The output classification result
-   * \return true if the prediction successed, otherwise false
+   * \return true if the prediction succeeded, otherwise false
    */
   virtual bool Predict(const cv::Mat &img, ClassifyResult *result);
 
@@ -76,7 +76,7 @@ public:
    *
    * \param[in] imgs, The input image list, each element comes from cv::imread()
    * \param[in] results The output classification result list
-   * \return true if the prediction successed, otherwise false
+   * \return true if the prediction succeeded, otherwise false
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &imgs,
                             std::vector<ClassifyResult> *results);
@@ -85,7 +85,7 @@ public:
    *
    * \param[in] mat The input mat
    * \param[in] result The output classification result
-   * \return true if the prediction successed, otherwise false
+   * \return true if the prediction succeeded, otherwise false
    */
   virtual bool Predict(const FDMat &mat, ClassifyResult *result);
 
@@ -93,7 +93,7 @@ public:
    *
    * \param[in] mats, The input mat list
    * \param[in] results The output classification result list
-   * \return true if the prediction successed, otherwise false
+   * \return true if the prediction succeeded, otherwise false
    */
   virtual bool BatchPredict(const std::vector<FDMat> &mats,
                             std::vector<ClassifyResult> *results);

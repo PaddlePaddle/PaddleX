@@ -30,7 +30,7 @@ public:
    * \param[in] tensors The inference result from runtime
    * \param[in] results The output result of detector
    * \param[in] batch_det_img_info The detector_preprocess result
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<std::vector<std::vector<int>>> *results,

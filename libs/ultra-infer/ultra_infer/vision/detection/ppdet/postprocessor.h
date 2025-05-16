@@ -50,7 +50,7 @@ public:
    *
    * \param[in] tensors The inference result from runtime
    * \param[in] result The output result of detection
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<DetectionResult> *result);

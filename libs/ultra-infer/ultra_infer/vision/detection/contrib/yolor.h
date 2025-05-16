@@ -45,7 +45,7 @@ public:
    * \param[in] result The output detection result will be written to this
    * structure \param[in] conf_threshold confidence threshold for
    * postprocessing, default is 0.25 \param[in] nms_iou_threshold iou threshold
-   * for NMS, default is 0.5 \return true if the prediction successed, otherwise
+   * for NMS, default is 0.5 \return true if the prediction succeeded, otherwise
    * false
    */
   virtual bool Predict(cv::Mat *im, DetectionResult *result,

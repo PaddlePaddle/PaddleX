@@ -41,7 +41,7 @@ public:
    * \param[in] stride limit image stride, default is 32
    * \param[in] interp interpolation method, default is 1
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, int stride = 32, int interp = 1,
                   ProcLib lib = ProcLib::DEFAULT);

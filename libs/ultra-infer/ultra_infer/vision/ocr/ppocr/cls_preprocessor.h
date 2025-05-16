@@ -31,7 +31,7 @@ public:
    *
    * \param[in] images The input data list, all the elements are FDMat
    * \param[in] outputs The output tensors which will be fed into runtime
-   * \return true if the preprocess successed, otherwise false
+   * \return true if the preprocess succeeded, otherwise false
    */
   bool Run(std::vector<FDMat> *images, std::vector<FDTensor> *outputs,
            size_t start_index, size_t end_index);
@@ -42,7 +42,7 @@ public:
    *
    * \param[in] image_batch The input image batch
    * \param[in] outputs The output tensors which will feed in runtime
-   * \return true if the preprocess successed, otherwise false
+   * \return true if the preprocess succeeded, otherwise false
    */
   virtual bool Apply(FDMatBatch *image_batch, std::vector<FDTensor> *outputs);
 

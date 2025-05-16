@@ -3531,7 +3531,7 @@ class PretrainedTokenizerBase(SpecialTokensMixin):
         prefix_offset: int = 0,
         read_offset: int = 0,
     ) -> Tuple[str, int, int]:
-        """tokenizer decoding for the streaming generation use case. This method can be overrided for tokenizer that doesn't follow this API"""
+        """tokenizer decoding for the streaming generation use case. This method can be overridden for tokenizer that doesn't follow this API"""
         prefix_text = self.decode(
             all_input_ids[prefix_offset:read_offset],
             skip_special_tokens=False,

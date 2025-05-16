@@ -27,7 +27,7 @@ class Vocab(object):
     store/load functions.
 
     Args:
-        counter (collections.Counter, optional): A Counter intance describes
+        counter (collections.Counter, optional): A Counter instance describes
             the tokens and their frequencies. Its keys will be indexed according
             to the order of frequency sorting to construct mapping relationship.
             If None, `token_to_idx` must be provided as the mapping relationship.
@@ -480,7 +480,7 @@ class Vocab(object):
         **kwargs
     ):
         """
-        Builds the :class:`Vocab` accoring to given iterator and other
+        Builds the :class:`Vocab` according to given iterator and other
         information. Firstly, iterate over the `iterator` to construct a
         :class:`collections.Counter` and used to init the as  :class:`Vocab`.
 

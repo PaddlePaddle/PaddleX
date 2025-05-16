@@ -47,7 +47,7 @@ public:
    * \param[in] min_short target size of short edge
    * \param[in] interp interpolation method, default is 1
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, int max_short = -1, int min_short = -1,
                   int interp = 1, ProcLib lib = ProcLib::DEFAULT);

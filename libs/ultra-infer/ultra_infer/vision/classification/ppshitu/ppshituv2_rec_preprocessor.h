@@ -38,7 +38,7 @@ public:
    *
    * \param[in] image_batch The input image batch
    * \param[in] outputs The output tensors which will feed in runtime
-   * \return true if the preprocess successed, otherwise false
+   * \return true if the preprocess succeeded, otherwise false
    */
   virtual bool Apply(FDMatBatch *image_batch, std::vector<FDTensor> *outputs);
 

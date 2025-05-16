@@ -38,7 +38,7 @@ public:
    * \param[in] alpha The alpha channel data
    * \param[in] beta The beta channel data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, const std::vector<float> &alpha,
                   const std::vector<float> &beta,

@@ -50,7 +50,7 @@ public:
    * \param[in] height height of the output image.
    * \param[in] value value vector used by padding of the output image.
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, int width, int height,
                   const std::vector<float> &value,

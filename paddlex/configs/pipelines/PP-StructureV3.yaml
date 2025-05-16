@@ -7,7 +7,7 @@ use_doc_preprocessor: True
 use_seal_recognition: True
 use_table_recognition: True
 use_formula_recognition: True
-use_chart_recognition: False
+use_chart_recognition: True
 use_region_detection: True
 
 SubModules:
@@ -19,52 +19,26 @@ SubModules:
     threshold: 
       0: 0.3  # paragraph_title
       1: 0.5  # image
-      2: 0.5  # text
+      2: 0.4  # text
       3: 0.5  # number
       4: 0.5  # abstract
       5: 0.5  # content
-      6: 0.5  # figure_title
+      6: 0.5  # figure_table_chart_title
       7: 0.3  # formula
       8: 0.5  # table
-      9: 0.5  # table_title
-      10: 0.5 # reference
-      11: 0.5 # doc_title
-      12: 0.5 # footnote
-      13: 0.5 # header
-      14: 0.5 # algorithm
-      15: 0.5 # footer
-      16: 0.3 # seal
-      17: 0.5 # chart_title
-      18: 0.5 # chart
-      19: 0.5 # formula_number
-      20: 0.5 # header_image
-      21: 0.5 # footer_image
-      22: 0.5 # aside_text
+      9: 0.5  # reference
+      10: 0.5 # doc_title
+      11: 0.5 # footnote
+      12: 0.5 # header
+      13: 0.5 # algorithm
+      14: 0.5 # footer
+      15: 0.45 # seal
+      16: 0.5 # chart
+      17: 0.5 # formula_number
+      18: 0.5 # aside_text
+      19: 0.5 # reference_content
     layout_nms: True
-    layout_unclip_ratio:
-      0: [1.0, 1.0]  # paragraph_title
-      1: [1.0, 1.0]  # image
-      2: [1.0, 1.0]  # text
-      3: [1.0, 1.0]  # number
-      4: [1.0, 1.0]  # abstract
-      5: [1.0, 1.0]  # content
-      6: [1.0, 1.0]  # figure_title
-      7: [1.0, 1.0]  # formula
-      8: [1.0, 1.0]  # table
-      9: [1.0, 1.0]  # table_title
-      10: [1.0, 1.0] # reference
-      11: [1.0, 1.0] # doc_title
-      12: [1.0, 1.0] # footnote
-      13: [1.0, 1.0] # header
-      14: [1.0, 1.0] # algorithm
-      15: [1.0, 1.0] # footer
-      16: [1.0, 1.0] # seal
-      17: [1.0, 1.0] # chart_title
-      18: [1.0, 1.0] # chart
-      19: [1.0, 1.0] # formula_number
-      20: [1.0, 1.0] # header_image
-      21: [1.0, 1.0] # footer_image
-      22: [1.0, 1.0] # aside_text
+    layout_unclip_ratio: [1.0, 1.0] 
     layout_merge_bboxes_mode: 
       0: "large"  # paragraph_title
       1: "large"  # image
@@ -72,23 +46,20 @@ SubModules:
       3: "union"  # number
       4: "union"  # abstract
       5: "union"  # content
-      6: "union"  # figure_title
+      6: "union"  # figure_table_chart_title
       7: "large"  # formula
       8: "union"  # table
-      9: "union"  # table_title
-      10: "union" # reference
-      11: "union" # doc_title
-      12: "union" # footnote
-      13: "union" # header
-      14: "union" # algorithm
-      15: "union" # footer
-      16: "union" # seal
-      17: "union" # chart_title
-      18: "large" # chart
-      19: "union" # formula_number
-      20: "union" # header_image
-      21: "union" # footer_image
-      22: "union" # aside_text
+      9: "union"  # reference
+      10: "union" # doc_title
+      11: "union" # footnote
+      12: "union" # header
+      13: "union" # algorithm
+      14: "union" # footer
+      15: "union" # seal
+      16: "large" # chart
+      17: "union" # formula_number
+      18: "union" # aside_text
+      19: "union" # reference_content
   ChartRecognition:
     module_name: chart_recognition
     model_name: PP-Chart2Table

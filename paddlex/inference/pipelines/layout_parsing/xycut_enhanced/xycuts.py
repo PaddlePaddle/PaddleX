@@ -134,7 +134,7 @@ def pre_process(
             gap_len = interval[0] - current_interval[1]
             if gap_len >= region.text_line_height * 3:
                 cut_coordinates.append(current_interval[1])
-            elif gap_len > region.text_line_height * 1.8:
+            elif gap_len > region.text_line_height * 1.2:
                 (pre_blocks, post_blocks) = get_cut_blocks(
                     list(block_map.values()), cut_direction, [current_interval[1]], []
                 )
