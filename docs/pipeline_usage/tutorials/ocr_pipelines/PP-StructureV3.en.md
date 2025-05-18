@@ -934,6 +934,30 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>use_chart_recognition</code></td>
+<td>Whether to use the chart recognition sub-production line</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_region_detection</code></td>
+<td>Whether to use the document region detection production line</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>layout_threshold</code></td>
 <td>Layout model score threshold</td>
 <td><code>float|dict|None</code></td>
@@ -1128,6 +1152,78 @@ In the above Python script, the following steps are executed:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>Whether to enable direct conversion of wired table cell detection results to HTML. Default is False. If enabled, HTML will be constructed directly based on the geometric relationship of wired table cell detection results.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
+</ul>
+<td><code>False</code></td>
+</td>
+</tr>
+<tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>Whether to enable direct conversion of wireless table cell detection results to HTML. Default is False. If enabled, HTML will be constructed directly based on the geometric relationship of wireless table cell detection results.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
+</ul>
+<td><code>False</code></td>
+</td>
+</tr>
+<tr>
+<td><code>use_table_orientation_classify</code></td>
+<td>Whether to enable table orientation classification. When enabled, it can correct the orientation and correctly complete table recognition if the table in the image is rotated by 90/180/270 degrees.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
+</ul>
+</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>use_ocr_results_with_table_cells</code></td>
+<td>Whether to enable OCR within cell segmentation. When enabled, OCR detection results will be segmented and re-recognized based on cell prediction results to avoid text loss.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
+</ul>
+</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>use_e2e_wired_table_rec_model</code></td>
+<td>Whether to enable end-to-end wired table recognition mode. If enabled, the cell detection model will not be used, and only the table structure recognition model will be used.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
+</ul>
+</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>use_e2e_wireless_table_rec_model</code></td>
+<td>Whether to enable end-to-end wireless table recognition mode. If enabled, the cell detection model will not be used, and only the table structure recognition model will be used.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
+</ul>
+</td>
+<td><code>True</code></td>
 </tr>
 </table>
 
