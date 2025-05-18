@@ -933,11 +933,11 @@ def update_vision_child_blocks(
                     not has_vision_footnote
                     and ref_block.direction == block.direction
                     and ref_block.long_side_length < block.long_side_length
+                    and nearest_edge_distance <= block.text_line_height * 2
                 ):
                     if (
                         (
-                            nearest_edge_distance <= block.text_line_height * 2
-                            and ref_block.short_side_length < block.short_side_length
+                            ref_block.short_side_length < block.short_side_length
                             and ref_block.long_side_length
                             < 0.5 * block.long_side_length
                             and abs(block_center[0] - ref_block_center[0]) < 10
