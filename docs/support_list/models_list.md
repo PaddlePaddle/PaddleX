@@ -1190,47 +1190,42 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>351.5 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/YOLOX-X.yaml">YOLOX-X.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">训练模型</a></td></tr>
-
-
-
-
-
 <tr>
 <td>Co-Deformable-DETR-R50</td>
 <td>49.7</td>
-<td>- / -</td>
-<td>- / -</td>
+<td></td>
+<td></td>
 <td>184 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-R50.yaml">Co-Deformable-DETR-R50.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">训练模型</a></td></tr>
-
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-R50.yaml">Co-Deformable-DETR-R50.yaml.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">训练模型</a></td>
+</tr>
 <tr>
 <td>Co-Deformable-DETR-Swin-T</td>
-<td>48.0</td>
-<td>- / -</td>
-<td>- / -</td>
-<td>    187 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-Swin-T.yaml">Co-Deformable-DETR-Swin-T.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td></tr>
-
-<tr>
-<td>Co-DINO-Swin-L</td>
-<td>-</td>
-<td>- / -</td>
-<td>- / -</td>
-<td>841 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-Swin-L.yaml">Co-DINO-Swin-L.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">训练模型</a></td></tr>
-
+<td>48.0 (640x640 输入尺寸下)</td>
+<td></td>
+<td></td>
+<td>187 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-Swin-T.yaml">Co-Deformable-Swin-T.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
+</tr>
 <tr>
 <td>Co-DINO-R50</td>
-<td>-</td>
-<td>- / -</td>
-<td>- / -</td>
-<td>187 M </td>
+<td>52.0</td>
+<td></td>
+<td></td>
+<td>186 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-R50.yaml">Co-DINO-R50.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">训练模型</a></td></tr>
-
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">训练模型</a></td>
+</tr>
+<tr>
+<td>Co-DINO-Swin-L</td>
+<td>55.9 (640x640 输入尺寸下)</td>
+<td></td>
+<td></td>
+<td>840 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-Swin-L.yaml">Co-DINO-Swin-L.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">训练模型</a></td>
+</tr>
 </tbody>
 </table>
 <b>注：以上精度指标为 </b>[COCO2017](https://cocodataset.org/#home)<b> 验证集 mAP(0.5:0.95)。</b>
