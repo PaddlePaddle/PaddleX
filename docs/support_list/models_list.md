@@ -2275,7 +2275,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>模型</th>
 <th>En-BLEU(%)</th>
 <th>Zh-BLEU(%)</th>
-<th>OmniDocBench-BLEU(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
@@ -2285,7 +2284,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>UniMERNet</td>
 <td>85.91</td>
 <td>43.50</td>
-<td>67.75</td>
 <td>2266.96/-</td>
 <td>-/-</td>
 <td>1.53 G</td>
@@ -2295,7 +2293,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-FormulaNet-S</td>
 <td>87.00</td>
 <td>45.71</td>
-<td>59.57</td>
 <td>202.25/-</td>
 <td>-/-</td>
 <td>224 M</td>
@@ -2305,7 +2302,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-FormulaNet-L</td>
 <td>90.36</td>
 <td>45.78</td>
-<td>64.81</td>
 <td>1976.52/-</td>
 <td>-/-</td>
 <td>695 M</td>
@@ -2315,7 +2311,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-FormulaNet_plus-S</td>
 <td>88.71</td>
 <td>53.32</td>
-<td>70.54</td>
 <td>191.69/-</td>
 <td>-/-</td>
 <td>248 M</td>
@@ -2326,7 +2321,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-FormulaNet_plus-M</td>
 <td>91.45</td>
 <td>89.76</td>
-<td>72.07</td>
 <td>1301.56/-</td>
 <td>-/-</td>
 <td>592 M</td>
@@ -2337,7 +2331,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-FormulaNet_plus-L</td>
 <td>92.22</td>
 <td>90.64</td>
-<td>72.45</td>
 <td>1745.25/-</td>
 <td>-/-</td>
 <td>698 M</td>
@@ -2348,7 +2341,6 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>LaTeX_OCR_rec</td>
 <td>74.55</td>
 <td>39.96</td>
-<td>47.59</td>
 <td>1244.61/-</td>
 <td>-/-</td>
 <td>99 M</td>

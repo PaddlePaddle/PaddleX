@@ -14,7 +14,6 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>En-BLEU(%)</th>
 <th>Zh-BLEU(%)</th>
-<th>OmniDocBench-BLEU(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
@@ -23,7 +22,6 @@ comments: true
 <td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
 <td>85.91</td>
 <td>43.50</td>
-<td>67.75</td>
 <td>2266.96/-</td>
 <td>-/-</td>
 <td>1.53 G</td>
@@ -32,7 +30,6 @@ comments: true
 <td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
 <td>87.00</td>
 <td>45.71</td>
-<td>59.57</td>
 <td>202.25/-</td>
 <td>-/-</td>
 <td>224 M</td>
@@ -42,7 +39,6 @@ comments: true
 <td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
 <td>90.36</td>
 <td>45.78</td>
-<td>64.81</td>
 <td>1976.52/-</td>
 <td>-/-</td>
 <td>695 M</td>
@@ -50,7 +46,6 @@ comments: true
 <td>PP-FormulaNet_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-S_pretrained.pdparams">训练模型</a></td>
 <td>88.71</td>
 <td>53.32</td>
-<td>70.54</td>
 <td>191.69/-</td>
 <td>-/-</td>
 <td>248 M</td>
@@ -62,7 +57,6 @@ comments: true
 <td>PP-FormulaNet_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-M_pretrained.pdparams">训练模型</a></td>
 <td>91.45</td>
 <td>89.76</td>
-<td>72.07</td>
 <td>1301.56/-</td>
 <td>-/-</td>
 <td>592 M</td>
@@ -71,7 +65,6 @@ comments: true
 <td>PP-FormulaNet_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-L_pretrained.pdparams">训练模型</a></td>
 <td>92.22</td>
 <td>90.64</td>
-<td>72.45</td>
 <td>1745.25/-</td>
 <td>-/-</td>
 <td>698 M</td>
@@ -81,7 +74,6 @@ comments: true
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
 <td>74.55</td>
 <td>39.96</td>
-<td>47.59</td>
 <td>1244.61/-</td>
 <td>-/-</td>
 <td>99 M</td>
@@ -139,7 +131,7 @@ wheel 包的安装后，几行代码即可完成公式识别模块的推理，�
 
 ```python
 from paddlex import create_model
-model = create_model(model_name="PP-FormulaNet-S")
+model = create_model(model_name="PP-FormulaNet_plus-M")
 output = model.predict(input="general_formula_rec_001.png", batch_size=1)
 for res in output:
     res.print()
@@ -148,7 +140,7 @@ for res in output:
 ```
 运行后，得到的结果为：
 ```bash
-{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
+{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}\\breve{\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
 ```
 运行结果参数含义如下：
 - `input_path`：表示输入待预测公式图像的路径
@@ -168,7 +160,7 @@ sudo apt-get install texlive texlive-latex-base texlive-xetex latex-cjk-all texl
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化公式识别模型（此处以`PP-FormulaNet-S`为例），具体说明如下：
+* `create_model`实例化公式识别模型（此处以`PP-FormulaNet_plus-M`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -357,7 +349,7 @@ tar -xf ./dataset/ocr_rec_latexocr_dataset_example.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 ```
@@ -441,13 +433,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 </code></pre>
 <p>数据转换执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.convert.enable=True \
@@ -472,13 +464,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.split.enable=True \
@@ -487,21 +479,21 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处公式识别模型 PP-FormulaNet-S 的训练为例：
+一条命令即可完成模型的训练，以此处公式识别模型 PP-FormulaNet_plus-M 的训练为例：
 
 ```bash
-FLAGS_json_format_model=1 python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml  \
+FLAGS_json_format_model=1 python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet-S.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet_plus-M.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 * 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 * 除 LaTeX_OCR_rec外， 公式识别模型只支持导出json格式的模型，因此训练时需要设置参数`FLAGS_json_format_model=1`。
-* 对于 PP-FormulaNet-S、PP-FormulaNet-L、UniMERNet 模型，在训练还需要安装额外的Linux包，具体命令如下：
+* 对于 PP-FormulaNet-S、PP-FormulaNet-L、PP-FormulaNet_plus-S、PP-FormulaNet_plus-M、PP-FormulaNet_plus-L 和 UniMERNet 模型，在训练还需要安装额外的Linux包，具体命令如下：
 ```bash
 sudo apt-get update
 sudo apt-get install libmagickwand-dev
@@ -530,13 +522,13 @@ python -m pip install Wand
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml  \
+python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet-S.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet_plus-M.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -553,14 +545,14 @@ python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.ya
 
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png)到本地。
 ```bash
-python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="general_formula_rec_001.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet-S.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-FormulaNet_plus-M.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_accuracy/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
