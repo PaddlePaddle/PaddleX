@@ -1984,7 +1984,7 @@ print(result_chat["chatResult"])
 You can choose an appropriate deployment method for your pipeline based on your needs and proceed with subsequent AI application integration.
 
 ## 4. Custom Development
-If the default model weights provided by the Document Scene Information Extraction v4 Pipeline do not meet your expectations in terms of accuracy or speed in your specific scenario, you can try to further **fine-tune** the existing models using **data from your specific domain or application scenario** to enhance the recognition performance of the General Table Recognition Pipeline in your context.
+If the default model weights provided by the Document Scene Information Extraction v4 Pipeline do not meet your expectations in terms of accuracy or speed in your specific scenario, you can try to further **fine-tune** the existing models using **data from your specific domain or application scenario** to enhance the recognition performance in your context.
 
 ### 4.1 Model Fine-Tuning
 Since the Document Scene Information Extraction v4 Pipeline consists of several modules, suboptimal performance may stem from any of these modules. You can analyze cases with poor extraction results, identify which module is problematic through visual image inspection, and refer to the fine-tuning tutorial links in the table below for model fine-tuning.
