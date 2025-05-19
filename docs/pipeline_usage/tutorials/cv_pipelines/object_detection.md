@@ -353,14 +353,28 @@ comments: true
 <td></td>
 <td></td>
 <td>184 M</td>
-<td rowspan="2">Co-DETR是一种先进的端到端目标检测器。它基于DETR架构，通过引入协同混合分配训练策略，将目标检测任务中的传统一对多标签分配与一对一匹配相结合，从而显著提高了检测性能和训练效率</td>
+<td rowspan="4">Co-DETR是一种先进的端到端目标检测器。它基于DETR架构，通过引入协同混合分配训练策略，将目标检测任务中的传统一对多标签分配与一对一匹配相结合，从而显著提高了检测性能和训练效率</td>
 </tr>
 <tr>
 <td>Co-Deformable-DETR-Swin-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
-<td>48.0</td>
+<td>48.0（640x640 输入尺寸下）</td>
 <td></td>
 <td></td>
 <td>187 M</td>
+</tr>
+<tr>
+<td>Co-DINO-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">训练模型</a></td>
+<td>52.0</td>
+<td></td>
+<td></td>
+<td>186 M</td>
+</tr>
+<tr>
+<td>Co-DINO-Swin-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">训练模型</a></td>
+<td>55.9 （640x640 输入尺寸下）</td>
+<td></td>
+<td></td>
+<td>840 M</td>
 </tr>
 </table>
 

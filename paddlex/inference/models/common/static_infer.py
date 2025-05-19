@@ -22,8 +22,7 @@ import numpy as np
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps
-from ....utils.device import constr_device
-from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
+from ....utils.flags import DEBUG, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import (
     HPIConfig,
@@ -40,9 +39,6 @@ from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 CACHE_DIR = ".cache"
 
 INFERENCE_OPERATIONS = [
-    "PaddleCopyToDevice",
-    "PaddleCopyToHost",
-    "PaddleModelInfer",
     "PaddleInferChainLegacy",
     "MultiBackendInfer",
 ]
@@ -233,47 +229,6 @@ def _sort_inputs(inputs, names):
     return inputs
 
 
-def _concatenate(*callables):
-    def _chain(x):
-        for c in callables:
-            x = c(x)
-        return x
-
-    return _chain
-
-
-@benchmark.timeit
-class PaddleCopyToDevice:
-    def __init__(self, device_type, device_id):
-        self.device_type = device_type
-        self.device_id = device_id
-
-    def __call__(self, arrs):
-        import paddle
-
-        device_id = [self.device_id] if self.device_id is not None else self.device_id
-        device = constr_device(self.device_type, device_id)
-        paddle_tensors = [paddle.to_tensor(i, place=device) for i in arrs]
-        return paddle_tensors
-
-
-@benchmark.timeit
-class PaddleCopyToHost:
-    def __call__(self, paddle_tensors):
-        arrs = [i.numpy() for i in paddle_tensors]
-        return arrs
-
-
-@benchmark.timeit
-class PaddleModelInfer:
-    def __init__(self, predictor):
-        super().__init__()
-        self.predictor = predictor
-
-    def __call__(self, x):
-        return self.predictor.run(x)
-
-
 # FIXME: Name might be misleading
 @benchmark.timeit
 class PaddleInferChainLegacy:
@@ -317,15 +272,7 @@ class PaddleInfer(StaticInfer):
         self.model_file_prefix = model_file_prefix
         self._option = option
         self.predictor = self._create()
-        if INFER_BENCHMARK_USE_NEW_INFER_API:
-            device_type = self._option.device_type
-            device_type = "gpu" if device_type == "dcu" else device_type
-            copy_to_device = PaddleCopyToDevice(device_type, self._option.device_id)
-            copy_to_host = PaddleCopyToHost()
-            model_infer = PaddleModelInfer(self.predictor)
-            self.infer = _concatenate(copy_to_device, model_infer, copy_to_host)
-        else:
-            self.infer = PaddleInferChainLegacy(self.predictor)
+        self.infer = PaddleInferChainLegacy(self.predictor)
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
         names = self.predictor.get_input_names()

@@ -1,0 +1,13 @@
+Global:
+  model: PP-Chart2Table
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "/path/to/PP-Chart2Table"
+  input:
+    image: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/chart_parsing_02.png"
+  kernel_option:
+    run_mode: paddle

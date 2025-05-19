@@ -1144,6 +1144,38 @@
     ],
     "YOLO-Worldv2-L": [
       "paddle"
+    ],
+    "PP-OCRv5_server_rec": [
+      "paddle",
+      "openvino",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv5_server_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv5_mobile_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-M": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-S": [
+      "onnxruntime",
+      "paddle"
     ]
   },
   "gpu_cuda118_cudnn89": {
@@ -2254,6 +2286,45 @@
       "paddle"
     ],
     "YOLO-Worldv2-L": [
+      "paddle"
+    ],
+    "PP-DocBlockLayout": [
+      "tensorrt",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-DocLayout_plus-L": [
+      "tensorrt_fp16",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_server_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_server_det": [
+      "tensorrt",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv5_mobile_det": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-FormulaNet_plus-L": [
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-M": [
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-S": [
       "paddle"
     ]
   }

@@ -345,6 +345,35 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>480.14 / 454.35</td>
 <td>351.5 M</td>
 </tr>
+<tr>
+<td>Co-Deformable-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">Training Model</a></td>
+<td>49.7</td>
+<td></td>
+<td></td>
+<td>184 M</td>
+<td rowspan="4">Co-DETR is an advanced end-to-end object detector. It is based on the DETR architecture and significantly enhances detection performance and training efficiency by introducing a collaborative hybrid assignment training strategy that combines traditional one-to-many label assignments with one-to-one matching in object detection tasks.</td>
+</tr>
+<tr>
+<td>Co-Deformable-DETR-Swin-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">Training Model</a></td>
+<td>48.0（@640x640 input shape）</td>
+<td></td>
+<td></td>
+<td>187 M</td>
+</tr>
+<tr>
+<td>Co-DINO-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">Training Model</a></td>
+<td>52.0</td>
+<td></td>
+<td></td>
+<td>186 M</td>
+</tr>
+<tr>
+<td>Co-DINO-Swin-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">Training Model</a></td>
+<td>55.9 （@640x640 input shape）</td>
+<td></td>
+<td></td>
+<td>840 M</td>
+</tr>
 </table>
 
 <strong>Test Environment Description:</strong>
