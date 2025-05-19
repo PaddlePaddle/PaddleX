@@ -2616,7 +2616,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 
 <b>Note: The evaluation set for the accuracy metrics mentioned above is a custom-built layout detection dataset, which includes 1,300 document-type images such as Chinese and English papers, magazines, newspapers, research reports, PPTs, exam papers, and textbooks.</b>
 
-* <b>Layout detection model, including 20 common categories: document title, section title, text, page number, abstract, table of contents, references, footnote, header, footer, algorithm, formula, formula number, image, table, figure and table captions (figure caption, table caption, and chart caption), stamp, chart, sidebar text, and reference content.</b>
+* <b>Layout detection model, including 1 category: block.</b>
 <table>
 <thead>
 <tr>
@@ -2632,17 +2632,17 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tbody>
 <tr>
 <td>PP-DocBlockLayout</td>
-<td>-</td>
-<td>- / -</td>
-<td>- / - </td>
-<td>123.92 </td>
+<td>95.9</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
+<td>123.92 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PP-DocBlockLayout.yaml">PP-DocBlockLayout.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBlockLayout_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocBlockLayout_pretrained.pdparams">Training Model</a></td>
 </tr>
 </tbody>
 </table>
 
-<b>Note: The evaluation set for the accuracy metrics mentioned above is a custom-built layout detection dataset, which includes 1,300 document-type images such as Chinese and English papers, magazines, newspapers, research reports, PPTs, exam papers, and textbooks.</b>
+<b>Note: The evaluation set for the accuracy metrics mentioned above is a custom-built layout block detection dataset, which includes 1,000 document-type images such as Chinese and English papers, magazines, newspapers, research reports, PPTs, exam papers, and textbooks.</b>
 
 
 * <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure caption, table, table caption, seal, figure title, figure, header image, footer image, and sidebar text. </b>
@@ -3001,15 +3001,6 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>320 K</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml">PatchTST_ad.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td></tr>
-
-<tr>
-<td>TimesNet_ad</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>1000 K</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_anomaly_detection/TimesNet_ad.yaml">TimesNet_ad.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_ad_pretrained.pdparams">Training Model</a></td></tr>
 
 </tbody>
 </table>

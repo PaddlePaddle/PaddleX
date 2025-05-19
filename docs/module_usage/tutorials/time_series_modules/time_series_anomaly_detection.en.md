@@ -140,7 +140,7 @@ The meanings of the parameters in the running result are as follows:
 
 Relevant methods, parameters, and explanations are as follows:
 
-* `create_model` instantiates a time-series anomaly detection model (here, `TimesNet_cls` is used as an example). The detailed explanation is as follows:
+* `create_model` instantiates a time-series anomaly detection model (here, `AutoEncoder_ad` is used as an example). The detailed explanation is as follows:
 <table>
 <thead>
 <tr>
