@@ -9,6 +9,6 @@ Predict:
   model_dir: "/path/to/PP-DocBee2-3B"
   input:
     image: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png"
-    query: "识别这份表格的内容"
+    query: "识别这份表格的内容, 以markdown格式输出"
   kernel_option:
     run_mode: paddle

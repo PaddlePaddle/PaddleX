@@ -57,7 +57,7 @@ pipeline = create_pipeline(pipeline="doc_understanding")
 output = pipeline.predict(
     {
         "image": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png",
-        "query": "Identify the contents of this table"
+        "query": "识别这份表格的内容, 以markdown格式输出"
     }
 )
 for res in output:
@@ -255,7 +255,7 @@ pipeline = create_pipeline(pipeline="./my_path/doc_understanding.yaml")
 output = pipeline.predict(
     {
         "image": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png",
-        "query": "Identify the contents of this table"
+        "query": "识别这份表格的内容, 以markdown格式输出"
     }
 )
 for res in output:
