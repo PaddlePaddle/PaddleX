@@ -3051,7 +3051,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-DocBee2-3B</td>
 <td>3</td>
 <td>7.6</td>
-<td></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/doc_vlm/PP-DocBee2-3B.yaml">PP-DocBee2-3B.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">推理模型</a></td>
 </tr>
 </table>
@@ -3070,7 +3070,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>PP-Chart2Table</td>
 <td>0.58</td>
 <td>1.4</td>
-<td></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/chart_parsing/PP-Chart2Table.yaml">PP-Chart2Table.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">推理模型</a></td>
 </tr>
 </table>
