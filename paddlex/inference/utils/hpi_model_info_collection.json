@@ -2289,27 +2289,33 @@
       "paddle"
     ],
     "PP-DocBlockLayout": [
+      "tensorrt",
       "paddle",
       "onnxruntime"
     ],
     "PP-DocLayout_plus-L": [
+      "tensorrt_fp16",
       "paddle",
       "onnxruntime"
     ],
     "PP-OCRv5_server_rec": [
       "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
       "onnxruntime"
     ],
     "PP-OCRv5_mobile_rec": [
       "paddle_tensorrt_fp16",
+      "tensorrt",
       "onnxruntime"
     ],
     "PP-OCRv5_server_det": [
+      "tensorrt",
       "onnxruntime",
       "paddle"
     ],
     "PP-OCRv5_mobile_det": [
       "paddle_tensorrt",
+      "tensorrt",
       "onnxruntime"
     ],
     "PP-FormulaNet_plus-L": [
