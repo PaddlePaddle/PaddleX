@@ -645,7 +645,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>960</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>736</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -657,7 +657,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, while <code>max</code> ensures that the longest side is not greater than <code>limit_side_len</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>max</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>min</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
