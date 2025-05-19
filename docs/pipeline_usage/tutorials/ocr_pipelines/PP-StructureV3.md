@@ -1929,7 +1929,7 @@ for i, res in enumerate(result["layoutParsingResults"]):
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PP-DocLayout-L
+    model_name: PP-DocLayout_plus-L
     model_dir: null # 替换为微调后的版面区域检测模型权重路径
 ......
 SubPipelines:
@@ -1941,7 +1941,7 @@ SubPipelines:
     SubModules:
       TextDetection:
         module_name: text_detection
-        model_name: PP-OCRv4_server_det
+        model_name: PP-OCRv5_server_det
         model_dir: null # 替换为微调后的文本测模型权重路径
         limit_side_len: 960
         limit_type: max
@@ -1952,7 +1952,7 @@ SubPipelines:
 
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec_doc
+        model_name: PP-OCRv5_server_rec
         model_dir: null # 替换为微调后的文本识别模型权重路径
         batch_size: 1
         score_thresh: 0

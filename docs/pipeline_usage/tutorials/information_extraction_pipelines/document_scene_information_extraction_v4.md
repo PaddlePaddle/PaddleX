@@ -635,7 +635,7 @@ retriever_config = {
 
 mllm_chat_bot_config = {
     "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
+    "model_name": "PP-DocBee2",
     "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
     "api_type": "openai",
     "api_key": "api_key",  # your api_key
@@ -2258,7 +2258,7 @@ print(result_chat["chatResult"])
 SubModules:
     TextDetection:
     module_name: text_detection
-    model_name: PP-OCRv4_server_det
+    model_name: PP-OCRv5_server_det
     model_dir: null # 替换为微调后的文本检测模型权重路径
     limit_side_len: 960
     limit_type: max
@@ -2268,7 +2268,7 @@ SubModules:
 
     TextRecognition:
     module_name: text_recognition
-    model_name: PP-OCRv4_server_rec
+    model_name: PP-OCRv5_server_rec
     model_dir: null # 替换为微调后的文本检测模型权重路径
     batch_size: 1
             score_thresh: 0

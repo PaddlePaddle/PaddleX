@@ -1906,8 +1906,6 @@ You can choose the appropriate deployment method based on your needs to integrat
 If the default model weights provided by the PP-StructureV3 pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the PP-StructureV3 pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the PP-StructureV3 pipeline consists of 7 modules, the unsatisfactory performance of the pipeline may originate from any one of these modules.
-
 Since the PP-StructureV3 pipeline includes several modules, the unsatisfactory performance of the pipeline may originate from any one of these modules. You can analyze the cases with poor extraction results, identify which module is problematic through visualizing the images, and refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model.
 
 <table>
@@ -1977,7 +1975,7 @@ If you need to use the fine-tuned model weights, simply modify the production co
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PP-DocLayout-L
+    model_name: PP-DocLayout_plus-L
     model_dir: null
 ......
 SubPipelines:
@@ -1989,7 +1987,7 @@ SubPipelines:
     SubModules:
       TextDetection:
         module_name: text_detection
-        model_name: PP-OCRv4_server_rec_doc
+        model_name: PP-OCRv5_server_rec
         model_dir: null
         limit_side_len: 960
         limit_type: max
@@ -2000,7 +1998,7 @@ SubPipelines:
 
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec
+        model_name: PP-OCRv5_server_rec
         model_dir: null
         batch_size: 1
         score_thresh: 0

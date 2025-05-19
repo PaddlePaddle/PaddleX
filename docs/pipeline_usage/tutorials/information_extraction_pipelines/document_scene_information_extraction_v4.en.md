@@ -464,7 +464,7 @@ retriever_config = {
 
 mllm_chat_bot_config = {
     "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
+    "model_name": "PP-DocBee2",
     "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
     "api_type": "openai",
     "api_key": "api_key",  # your api_key
@@ -2051,7 +2051,7 @@ To use the fine-tuned model weights, you only need to modify the pipeline config
 SubModules:
     TextDetection:
     module_name: text_detection
-    model_name: PP-OCRv4_server_det
+    model_name: PP-OCRv5_server_det
     model_dir: null # Replace with the path to the fine-tuned text detection model weights
     limit_side_len: 960
     limit_type: max
@@ -2062,7 +2062,7 @@ SubModules:
 
     TextRecognition:
     module_name: text_recognition
-    model_name: PP-OCRv4_server_rec
+    model_name: PP-OCRv5_server_rec
     model_dir: null # Replace with the path to the fine-tuned text recognition model weights
     batch_size: 1
     score_thresh: 0
