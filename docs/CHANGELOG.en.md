@@ -6,6 +6,22 @@ comments: true
 
 ## Latest Version Information
 
+### PaddleX v3.0.0(5.20/2025) 
+
+Core upgrades are as follows:
+
+- **Major Capability Releases:**
+  - **Launch of the groundbreaking text recognition model PP-OCRv5**: Achieves a 13% improvement in OCR accuracy across all scenarios. A single model now supports 5 types of text (Simplified Chinese, Traditional Chinese, Chinese Pinyin, English, and Japanese), with significant enhancements in recognizing handwritten fonts, vertical text, and rare characters in both Chinese and English. You can experience it immediately in the [online demo](https://aistudio.baidu.com/community/app/91660/webUI?source=appCenter).
+  
+  - **Launch of the groundbreaking document parsing solution PP-StructureV3**: Enhanced capabilities in layout area detection, table recognition, Chinese and English formula recognition, and restoration of multi-column reading order, with added abilities for chart understanding. PP-StructureV3 achieves state-of-the-art (SOTA) levels in both Chinese and English editing distances on the OmniDocBench leaderboard. Experience it in the [online demo](https://aistudio.baidu.com/community/app/518494/webUI?source=appCenter).
+  
+  - **Optimization of PP-ChatOCRv4**: Supports the Ernie 4.5T. Combined with PP-DocBee2, it shows a 15.7 percentage point improvement in key information extraction accuracy compared to the previous generation. Experience it in the [online demo](https://aistudio.baidu.com/community/app/518493/webUI?source=appCenter).
+
+- **Inference Capability Optimization:**
+  - The general OCR, PP-StructureV3, formula recognition, seal text recognition, and document image preprocessing pipelines support setting batch size >1, allowing multiple pages to be processed at once.
+  
+  - 17 pipelines, including general OCR and PP-StructureV3, now support multi-GPU parallel inference. Sample code for multi-process parallel inference has been added.
+
 ### PaddleX v3.0.0rc1(4.22/2025)
 
 This version fully adapts to PaddlePaddle 3.0.0, with the following core upgrades:

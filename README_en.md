@@ -574,9 +574,7 @@ python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/pac
 * **Installing PaddleX**
 
 ```bash
-pip install paddlex==3.0.0[base]
-# You can also install the sub-package for specific pipeline, such as:
-# pip install paddlex==3.0.0[ocr]
+pip install paddlex[base]==3.0.0
 ```
 
 > ❗For more installation methods, refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/en/installation/installation.html).

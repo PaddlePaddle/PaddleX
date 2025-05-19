@@ -57,44 +57,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
         }
 </style>
 
-<table class="img-table">
-        <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_classification.html"><strong>Image Classification</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html"><strong>Multi-label Image Classification</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/object_detection.html"><strong>Object Detection</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html"><strong>Instance Segmentation</strong></a></th>
-        </tr>
-        <tr>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39"></td>
-            <td><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/multilabel_cls.png"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182"></td>
-        </tr>
-        <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html"><strong>Semantic Segmentation</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html"><strong>Image Anomaly Detection</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/OCR.html"><strong>OCR</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html"><strong>Table Recognition</strong></a></th>
-        </tr>
-        <tr>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c"></td>
-            <td><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/image_anomaly_detection.png"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa"></td>
-        </tr>
-        <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html"><strong>PP-ChatOCRv3-doc</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"><strong>Time Series Forecasting</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"><strong>Time Series Anomaly Detection</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"><strong>Time Series Classification</strong></a></th>
-        </tr>
-        <tr>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e"></td>
-        </tr>
-    </table>
+![PaddleX](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/PaddleX_en.png)
 
 ## 🛠️ Installation
 
@@ -124,7 +87,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ### Installing PaddleX
 
 ```bash
-pip install paddlex==3.0.0rc1
+pip install paddlex[base]==3.0.0
 ```
 
 > ❗ For more installation methods, please refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
