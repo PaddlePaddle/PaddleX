@@ -16,15 +16,21 @@ Multimodal chart parsing is a cutting-edge technology in the OCR field, focusing
 <th>Model</th><th>Model Download Link</th>
 <th>Model parameter size（B）</th>
 <th>Model Storage Size (GB)</th>
+<th>Model Score </th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">Inference Model</a></td>
 <td>0.58</td>
 <td>1.4</td>
+<th>75.98</th>
 <td>PP-Chart2Table is a self-developed multimodal model by the PaddlePaddle team, focusing on chart parsing, demonstrating outstanding performance in both Chinese and English chart parsing tasks. The team adopted a carefully designed data generation strategy, constructing a high-quality multimodal dataset of nearly 700,000 entries covering common chart types like pie charts, bar charts, stacked area charts, and various application scenarios. They also designed a two-stage training method, utilizing large model distillation to fully leverage massive unlabeled OOD data. In internal business tests in both Chinese and English scenarios, PP-Chart2Table not only achieved the SOTA level among models of the same parameter scale but also reached accuracy comparable to 7B parameter scale VLM models in critical scenarios.</td>
 </tr>
 </table>
+
+<b>Note: The above model scores are the results of internal evaluation set model testing, with a total of 1801 data points, including various chart types such as bar charts, line charts, and pie charts for testing samples under various scenarios such as financial reports, laws and regulations, contracts, etc. There are currently no plans to make them public.</b>
+
+
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, please refer to [PaddleX Local Installation Tutorial](../../../installation/installation.md)

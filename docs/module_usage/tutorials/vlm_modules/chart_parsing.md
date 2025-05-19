@@ -17,15 +17,20 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>模型参数规模（B）</th>
 <th>模型存储大小（GB）</th>
+<th>模型分数 </th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">推理模型</a></td>
 <td>0.58</td>
 <td>1.4</td>
+<th>75.98</th>
 <td>PP-Chart2Table是飞桨团队自研的一款专注于图表解析的多模态模型，在中英文图表解析任务中展现出卓越性能。团队采用精心设计的数据生成策略，构建了近70万条高质量的图表解析多模态数据集，全面覆盖饼图、柱状图、堆叠面积图等常见图表类型及各类应用场景。同时设计了二阶段训练方法，结合大模型蒸馏实现对海量无标注OOD数据的充分利用。在内部业务的中英文场景测试中，PP-Chart2Table不仅达到同参数量级模型中的SOTA水平，更在关键场景中实现了与7B参数量级VLM模型相当的精度。</td>
 </tr>
 </table>
+
+<b>注：以上模型分数为内部评估集模型测试结果，共1801条数据，包括了各个场景（财报、法律法规、合同等）下的各种图表类型（柱状图、折线图、饼图等）的测试样本，暂时未有计划公开。</b>
+
 
 
 ## 三、快速集成

@@ -10,23 +10,29 @@ The document visual-language model is a cutting-edge multimodal processing techn
 <tr>
 <th>Model</th><th>Download Link</th>
 <th>Storage Size (GB)</th>
+<th>Model Score</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-DocBee-2B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
 <td>4.2</td>
+<td>765</td>
 <td rowspan="2">PP-DocBee is a multimodal large model developed by the PaddlePaddle team, focused on document understanding with excellent performance on Chinese document understanding tasks. The model is fine-tuned and optimized using nearly 5 million multimodal datasets for document understanding, including general VQA, OCR, table, text-rich, math and complex reasoning, synthetic, and pure text data, with different training data ratios. On several authoritative English document understanding evaluation leaderboards in academia, PP-DocBee has generally achieved SOTA at the same parameter level. In internal business Chinese scenarios, PP-DocBee also exceeds current popular open-source and closed-source models.</td>
 </tr>
 <tr>
 <td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
 <td>15.8</td>
+<td>-</td>
 </tr>
 <tr>
-<td>PP-DocBee2-3B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">推理模型</a></td>
+<td>PP-DocBee2-3B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">Inference Model</a></td>
 <td>7.6</td>
+<td>852</td>
 <td>PP-DocBee2 is a multimodal large model independently developed by the PaddlePaddle team, specifically tailored for document understanding. Building upon PP-DocBee, the team has further optimized the foundational model and introduced a new data optimization scheme to enhance data quality. With just a relatively small dataset of 470,000 samples generated using the team's proprietary data synthesis strategy, PP-DocBee2 demonstrates superior performance in Chinese document understanding tasks. In terms of internal business metrics for Chinese-language scenarios, PP-DocBee2 has achieved an approximately 11.4% improvement over PP-DocBee, outperforming both current popular open-source and closed-source models of a similar scale.</td>
 </tr>
 </table>
+
+<b>Note: The total scores of the above models are based on the test results from the internal evaluation set. All images in the internal evaluation set have a resolution (height, width) of (1680, 1204), with a total of 1,196 data entries. These entries cover various scenarios such as financial reports, laws and regulations, science and engineering papers, instruction manuals, liberal arts papers, contracts, research reports, etc. There are currently no plans to make this dataset publicly available.</b>
 
 ## 3. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to [PaddleX Local Installation Guide](../../../installation/installation.md).
