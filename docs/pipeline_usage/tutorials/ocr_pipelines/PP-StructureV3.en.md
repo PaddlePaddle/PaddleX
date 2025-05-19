@@ -646,6 +646,7 @@ paddlex --pipeline PP-StructureV3 \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
+        --use_e2e_wireless_table_rec_model True \
         --save_path ./output \
         --device gpu:0
 ```
@@ -2019,6 +2020,7 @@ paddlex --pipeline PP-StructureV3 \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
+        --use_e2e_wireless_table_rec_model True \
         --save_path ./output \
         --device npu:0
 ```
