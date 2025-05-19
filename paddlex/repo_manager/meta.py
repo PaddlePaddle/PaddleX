@@ -165,6 +165,10 @@ REPO_META = {
     },
 }
 
+REPO_DIST_NAMES = {
+    item["dist_name"] for item in REPO_META.values() if "dist_name" in item
+}
+
 
 def get_repo_meta(repo_name):
     """get_repo_meta"""

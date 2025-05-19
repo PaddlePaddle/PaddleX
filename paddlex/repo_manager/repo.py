@@ -28,7 +28,7 @@ from ..utils.install import (
     install_packages_from_requirements_file,
     uninstall_packages,
 )
-from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
+from .meta import REPO_DIST_NAMES, REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
     fetch_repo_using_git,
     install_external_deps,
@@ -362,9 +362,6 @@ class RepositoryGroupInstaller(object):
         return sorted_repos
 
     def _normalize_deps(self, deps, headline=None):
-        repo_pkgs = set(
-            repo.dist_name for repo in self.repos if repo.dist_name is not None
-        )
         lines = []
         if headline is not None:
             lines.append(headline)
@@ -380,7 +377,7 @@ class RepositoryGroupInstaller(object):
             # If `line` is not an empty line or a comment, it must be a requirement specifier.
             # Other forms may cause a parse error.
             req = Requirement(line_s)
-            if req.name in repo_pkgs:
+            if req.name in REPO_DIST_NAMES:
                 # Skip repo packages
                 continue
             elif req.name.replace("_", "-") in (
