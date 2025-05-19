@@ -28,7 +28,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 * 下载安装 wheel 安装包
 ```bash
 # 注意需要先安装飞桨 cpu 版本
-python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddlepaddle==3.0.0.dev20250430 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
 python -m pip install paddle-custom-npu -i https://www.paddlepaddle.org.cn/packages/nightly/npu
 ```
 * CANN-8.0.RC2 对 numpy 和 opencv 部分版本不支持，建议安装指定版本
