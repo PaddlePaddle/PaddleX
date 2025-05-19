@@ -89,6 +89,7 @@ Train:
           out_box_format: *box_format
       - ResizeTableImage:
           max_len: 488
+          resize_bboxes: True
       - NormalizeImage:
           scale: 1./255.
           mean: [0.485, 0.456, 0.406]
@@ -125,6 +126,7 @@ Eval:
           out_box_format: *box_format
       - ResizeTableImage:
           max_len: 488
+          resize_bboxes: True
       - NormalizeImage:
           scale: 1./255.
           mean: [0.485, 0.456, 0.406]
