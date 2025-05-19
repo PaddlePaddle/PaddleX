@@ -70,3 +70,30 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-FormulaNet_plus-S",
+        "suite": "FormulaRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet_plus-S.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-FormulaNet_plus-M",
+        "suite": "FormulaRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet_plus-M.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-FormulaNet_plus-L",
+        "suite": "FormulaRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet_plus-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+    }
+)

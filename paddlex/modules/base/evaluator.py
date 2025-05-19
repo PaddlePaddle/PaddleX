@@ -27,14 +27,14 @@ from ...utils.misc import AutoRegisterABCMetaClass
 from .build_model import build_model
 
 
-def build_evaluater(config: AttrDict) -> "BaseEvaluator":
-    """build model evaluater
+def build_evaluator(config: AttrDict) -> "BaseEvaluator":
+    """build model evaluator
 
     Args:
         config (AttrDict): PaddleX pipeline config, which is loaded from pipeline yaml file.
 
     Returns:
-        BaseEvaluator: the evaluater, which is subclass of BaseEvaluator.
+        BaseEvaluator: the evaluator, which is subclass of BaseEvaluator.
     """
     model_name = config.Global.model
     try:
@@ -161,10 +161,10 @@ evaling!"
 
     @abstractmethod
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         raise NotImplementedError
 
     @abstractmethod
     def get_eval_kwargs(self):
-        """get key-value arguments of model evalution function"""
+        """get key-value arguments of model evaluation function"""
         raise NotImplementedError

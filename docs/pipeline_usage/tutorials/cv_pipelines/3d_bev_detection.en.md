@@ -109,7 +109,7 @@ Parameter description:
 ```
 --pipeline: The name of the pipeline, here it is the 3D multi-modal fusion detection pipeline.
 
---input: The input path to the .tar file containing image and lidar data to be processed. 3D multi-modal fusion detection pipeline is a multi-input pipeline depending on images, pointclouds and transition matrix information. Tar file contains "samples" directory with all images and pointclouds data, "sweeps" directories with pointclouds data of relative frames and nuscnes_infos_val.pkl file containing relataive data path from "samples" and "sweeps" directories and transition matrix infomation.
+--input: The input path to the .tar file containing image and lidar data to be processed. 3D multi-modal fusion detection pipeline is a multi-input pipeline depending on images, pointclouds and transition matrix information. Tar file contains "samples" directory with all images and pointclouds data, "sweeps" directories with pointclouds data of relative frames and nuscnes_infos_val.pkl file containing relative data path from "samples" and "sweeps" directories and transition matrix information.
 
 --device: The GPU index to be used (e.g., gpu:0 means using the 0th GPU, gpu:1,2 means using the 1st and 2nd GPUs), or you can choose to use CPU (--device cpu).
 ```

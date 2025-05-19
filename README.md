@@ -903,22 +903,26 @@ for res in output:
   <summary> <b> 📦 3D </b></summary>
 
   * [📦 3D多模态融合检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)
+  </details>
 
 * <details open>
   <summary> <b> 🎤 语音识别 </b></summary>
 
   * [🌐 多语种语音识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/speech_modules/multilingual_speech_recognition.html)
+  </details>
 
 * <details open>
   <summary> <b> 🎥 视频识别 </b></summary>
 
   * [📈 视频分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 视频检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)
+  </details>
 
 * <details open>
   <summary> <b> 🌐 多模态视觉语言模型 </b></summary>
 
   * [📝 文档类视觉语言模型模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/doc_vlm.html)
+  * [📈 图表解析模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/chart_parsing.html)
   </details>
 
 * <details>

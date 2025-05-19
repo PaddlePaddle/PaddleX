@@ -471,7 +471,7 @@ class RuntimeOption:
 
         :param tensor_name: (str)Name of input which has dynamic shape
         :param min_shape: (list of int)Minimum shape of the input, e.g [1, 3, 224, 224]
-        :param opt_shape: (list of int)Optimize shape of the input, this offten set as the most common input shape, if set to None, it will keep same with min_shape
+        :param opt_shape: (list of int)Optimize shape of the input, this often set as the most common input shape, if set to None, it will keep same with min_shape
         :param max_shape: (list of int)Maximum shape of the input, e.g [8, 3, 224, 224], if set to None, it will keep same with the min_shape
         """
         logging.warning(
@@ -539,7 +539,7 @@ class RuntimeOption:
         self._option.trt_option.enable_fp16 = False
 
     def enable_pinned_memory(self):
-        """Enable pinned memory. Pinned memory can be utilized to speedup the data transfer between CPU and GPU. Currently it's only suppurted in TRT backend and Paddle Inference backend."""
+        """Enable pinned memory. Pinned memory can be utilized to speedup the data transfer between CPU and GPU. Currently it's only supported in TRT backend and Paddle Inference backend."""
         return self._option.enable_pinned_memory()
 
     def disable_pinned_memory(self):

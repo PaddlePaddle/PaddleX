@@ -267,8 +267,8 @@ def voc_get_label_anno(root_dir, anno_path):
     Read VOC format annotation file.
 
     Args:
-        root_dir (str): The directoty of VOC annotation file.
-        anno_path (str): The annoation file path.
+        root_dir (str): The directory of VOC annotation file.
+        anno_path (str): The annotation file path.
 
     Returns:
         tuple: A tuple of two elements, the first of which is of type dict, representing the mapping between tag names
@@ -295,7 +295,7 @@ def voc_get_label_anno(root_dir, anno_path):
 
 def voc_get_image_info(annotation_root, img_indexer):
     """
-    Get the iamge info from VOC annotation file.
+    Get the image info from VOC annotation file.
 
     Args:
         annotation_root: The annotation root.
@@ -425,7 +425,7 @@ def voc_xmls_to_cocojson(
         output_json_dict["images"].append(img_info)
 
         for obj in ann_root.findall("object"):
-            if obj.find("bndbox") is None:  # Skip the ojbect wihtout bndbox
+            if obj.find("bndbox") is None:  # Skip the object without bndbox
                 continue
             ann = voc_get_coco_annotation(obj=obj, label_indexer=label_indexer)
             ann.update({"image_id": img_info["id"], "id": bnd_id})

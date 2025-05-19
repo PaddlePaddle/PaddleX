@@ -70,7 +70,7 @@ class CachedProperty(object):
     https://github.com/pydanny/cached-property/blob/master/cached_property.py .
 
     Note that this implementation does NOT work in multi-thread or coroutine
-    senarios.
+    scenarios.
     """
 
     def __init__(self, func):

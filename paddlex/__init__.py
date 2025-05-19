@@ -24,7 +24,7 @@ for mod in _SPECIAL_MODS:
 from . import version
 from .inference import create_pipeline, create_predictor
 from .model import create_model
-from .modules import build_dataset_checker, build_evaluater, build_trainer
+from .modules import build_dataset_checker, build_evaluator, build_trainer
 
 
 def _initialize():

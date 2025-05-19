@@ -32,7 +32,7 @@ public:
    *
    * \param[in] images The input image data list, all the elements are returned
    * wrapped by FDMat. \param[in] output The output tensors which will feed in
-   * runtime \return true if the preprocess successed, otherwise false
+   * runtime \return true if the preprocess succeeded, otherwise false
    */
   bool Run(std::vector<Mat> &images, std::vector<FDTensor> *output);
 };

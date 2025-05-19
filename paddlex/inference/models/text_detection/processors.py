@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import math
-import sys
 from typing import Union
 
 import numpy as np
@@ -33,8 +32,7 @@ if is_dep_available("pyclipper"):
 class DetResizeForTest:
     """DetResizeForTest"""
 
-    def __init__(self, input_shape=None, **kwargs):
-        super().__init__()
+    def __init__(self, input_shape=None, max_side_limit=4000, **kwargs):
         self.resize_type = 0
         self.keep_ratio = False
         if input_shape is not None:
@@ -55,22 +53,34 @@ class DetResizeForTest:
             self.limit_side_len = 736
             self.limit_type = "min"
 
+        self.max_side_limit = max_side_limit
+
     def __call__(
         self,
         imgs,
         limit_side_len: Union[int, None] = None,
         limit_type: Union[str, None] = None,
+        max_side_limit: Union[int, None] = None,
     ):
         """apply"""
+        max_side_limit = (
+            max_side_limit if max_side_limit is not None else self.max_side_limit
+        )
         resize_imgs, img_shapes = [], []
         for ori_img in imgs:
-            img, shape = self.resize(ori_img, limit_side_len, limit_type)
+            img, shape = self.resize(
+                ori_img, limit_side_len, limit_type, max_side_limit
+            )
             resize_imgs.append(img)
             img_shapes.append(shape)
         return resize_imgs, img_shapes
 
     def resize(
-        self, img, limit_side_len: Union[int, None], limit_type: Union[str, None]
+        self,
+        img,
+        limit_side_len: Union[int, None],
+        limit_type: Union[str, None],
+        max_side_limit: Union[int, None] = None,
     ):
         src_h, src_w, _ = img.shape
         if sum([src_h, src_w]) < 64:
@@ -79,7 +89,7 @@ class DetResizeForTest:
         if self.resize_type == 0:
             # img, shape = self.resize_image_type0(img)
             img, [ratio_h, ratio_w] = self.resize_image_type0(
-                img, limit_side_len, limit_type
+                img, limit_side_len, limit_type, max_side_limit
             )
         elif self.resize_type == 2:
             img, [ratio_h, ratio_w] = self.resize_image_type2(img)
@@ -105,6 +115,8 @@ class DetResizeForTest:
             resize_w = ori_w * resize_h / ori_h
             N = math.ceil(resize_w / 32)
             resize_w = N * 32
+        if resize_h == ori_h and resize_w == ori_w:
+            return img, [1.0, 1.0]
         ratio_h = float(resize_h) / ori_h
         ratio_w = float(resize_w) / ori_w
         img = cv2.resize(img, (int(resize_w), int(resize_h)))
@@ -112,7 +124,11 @@ class DetResizeForTest:
         return img, [ratio_h, ratio_w]
 
     def resize_image_type0(
-        self, img, limit_side_len: Union[int, None], limit_type: Union[str, None]
+        self,
+        img,
+        limit_side_len: Union[int, None],
+        limit_type: Union[str, None],
+        max_side_limit: Union[int, None] = None,
     ):
         """
         resize image to a size multiple of 32 which is required by the network
@@ -149,8 +165,19 @@ class DetResizeForTest:
         resize_h = int(h * ratio)
         resize_w = int(w * ratio)
 
+        if max(resize_h, resize_w) > max_side_limit:
+            logging.warning(
+                f"Resized image size ({resize_h}x{resize_w}) exceeds max_side_limit of {max_side_limit}. "
+                f"Resizing to fit within limit."
+            )
+            ratio = float(max_side_limit) / max(resize_h, resize_w)
+            resize_h, resize_w = int(resize_h * ratio), int(resize_w * ratio)
+
         resize_h = max(int(round(resize_h / 32) * 32), 32)
         resize_w = max(int(round(resize_w / 32) * 32), 32)
+
+        if resize_h == h and resize_w == w:
+            return img, [1.0, 1.0]
 
         try:
             if int(resize_w) <= 0 or int(resize_h) <= 0:
@@ -158,7 +185,8 @@ class DetResizeForTest:
             img = cv2.resize(img, (int(resize_w), int(resize_h)))
         except:
             logging.info(img.shape, resize_w, resize_h)
-            sys.exit(0)
+            raise
+
         ratio_h = resize_h / float(h)
         ratio_w = resize_w / float(w)
         return img, [ratio_h, ratio_w]
@@ -181,6 +209,10 @@ class DetResizeForTest:
         max_stride = 128
         resize_h = (resize_h + max_stride - 1) // max_stride * max_stride
         resize_w = (resize_w + max_stride - 1) // max_stride * max_stride
+
+        if resize_h == h and resize_w == w:
+            return img, [1.0, 1.0]
+
         img = cv2.resize(img, (int(resize_w), int(resize_h)))
         ratio_h = resize_h / float(h)
         ratio_w = resize_w / float(w)
@@ -191,6 +223,8 @@ class DetResizeForTest:
         """resize the image"""
         resize_c, resize_h, resize_w = self.input_shape  # (c, h, w)
         ori_h, ori_w = img.shape[:2]  # (h, w, c)
+        if resize_h == ori_h and resize_w == ori_w:
+            return img, [1.0, 1.0]
         ratio_h = float(resize_h) / ori_h
         ratio_w = float(resize_w) / ori_w
         img = cv2.resize(img, (int(resize_w), int(resize_h)))
@@ -200,7 +234,7 @@ class DetResizeForTest:
 @benchmark.timeit
 @class_requires_deps("opencv-contrib-python")
 class NormalizeImage:
-    """normalize image such as substract mean, divide std"""
+    """normalize image such as subtract mean, divide std"""
 
     def __init__(self, scale=None, mean=None, std=None, order="chw"):
         super().__init__()
@@ -253,7 +287,7 @@ class DBPostProcess:
         use_dilation=False,
         score_mode="fast",
         box_type="quad",
-        **kwargs
+        **kwargs,
     ):
         super().__init__()
         self.thresh = thresh

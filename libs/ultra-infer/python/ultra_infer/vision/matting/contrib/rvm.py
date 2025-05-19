@@ -58,14 +58,14 @@ class RobustVideoMatting(UltraInferModel):
     @property
     def video_mode(self):
         """
-        Whether to open the video mode, if there are some irrelevant pictures, set it to fasle, the default is true
+        Whether to open the video mode, if there are some irrelevant pictures, set it to false, the default is true
         """
         return self._model.video_mode
 
     @property
     def swap_rb(self):
         """
-        Whether convert to RGB, Set to false if you have converted YUV format images to RGB outside the model, dafault true
+        Whether convert to RGB, Set to false if you have converted YUV format images to RGB outside the model, default true
         """
         return self._model.swap_rb
 
@@ -79,7 +79,7 @@ class RobustVideoMatting(UltraInferModel):
         ), "The value to set `size` must be type of tuple or list."
         assert (
             len(wh) == 2
-        ), "The value to set `size` must contatins 2 elements means [width, height], but now it contains {} elements.".format(
+        ), "The value to set `size` must contains 2 elements means [width, height], but now it contains {} elements.".format(
             len(wh)
         )
         self._model.size = wh

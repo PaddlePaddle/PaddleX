@@ -513,7 +513,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The image feature module can be integrated into the <b>General Image Recognition Pipeline</b> (comming soon) of PaddleX. Simply replace the model path to update the image feature module of the relevant pipeline. In pipeline integration, you can use serving deployment to deploy your trained model.
+The image feature module can be integrated into the <b>General Image Recognition Pipeline</b> (coming soon) of PaddleX. Simply replace the model path to update the image feature module of the relevant pipeline. In pipeline integration, you can use serving deployment to deploy your trained model.
 
 2.<b>Module Integration</b>
 

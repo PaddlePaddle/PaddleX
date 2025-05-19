@@ -138,7 +138,7 @@ class InstanceSegRunner(BaseRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         # `device` unused
         cmd = [self.python, "deploy/python/infer.py", "--use_fd_format", *cli_args]

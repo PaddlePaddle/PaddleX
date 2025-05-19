@@ -331,7 +331,7 @@ class RepositoryGroupInstaller(object):
 
     def _sort_repos(self, repos, check_missing=False):
         # We sort the repos to ensure that the dependencies precede the
-        # dependant in the list.
+        # dependent in the list.
         name_meta_pairs = []
         for repo in repos:
             name_meta_pairs.append((repo.name, repo.meta))

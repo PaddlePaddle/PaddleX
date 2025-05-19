@@ -143,7 +143,7 @@ std::vector<paddle::Tensor> nms_gpu(const paddle::Tensor &boxes,
   cudaFree(mask_data);
 
   // WARN(qiuyanjun): codes below will throw a compile error on windows with
-  // msvc. Thus, we choosed to use std::vectored to store the result instead.
+  // msvc. Thus, we chose to use std::vectored to store the result instead.
   // unsigned long long remv_cpu[col_blocks];
   // memset(remv_cpu, 0, col_blocks * sizeof(unsigned long long));
   std::vector<unsigned long long> remv_cpu(col_blocks, 0);
@@ -210,7 +210,7 @@ int nms_normal_gpu(paddle::Tensor boxes, paddle::Tensor keep,
   cudaFree(mask_data);
 
   // WARN(qiuyanjun): codes below will throw a compile error on windows with
-  // msvc. Thus, we choosed to use std::vectored to store the result instead.
+  // msvc. Thus, we chose to use std::vectored to store the result instead.
   // unsigned long long remv_cpu[col_blocks];
   // memset(remv_cpu, 0, col_blocks * sizeof(unsigned long long));
   std::vector<unsigned long long> remv_cpu(col_blocks, 0);

@@ -12,13 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
+import math
 from collections import UserDict
+from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import paddle
 import PIL.Image
+import requests
 from packaging import version
+from PIL import Image
 
 from ...common.tokenizer.tokenizer_utils_base import ExplicitEnum
 
@@ -370,3 +375,187 @@ class BatchFeature(UserDict):
                 )
 
         return self
+
+
+class PaddingStrategy(ExplicitEnum):
+    """
+    Possible values for the `padding` argument in [`PretrainedTokenizerBase.__call__`]. Useful for tab-completion in an
+    IDE.
+    """
+
+    LONGEST = "longest"
+    MAX_LENGTH = "max_length"
+    DO_NOT_PAD = "do_not_pad"
+
+
+def extract_vision_info(
+    conversations: Union[List[dict], List[List[dict]]]
+) -> List[dict]:
+    vision_infos = []
+    if isinstance(conversations[0], dict):
+        conversations = [conversations]
+    for conversation in conversations:
+        for message in conversation:
+            if isinstance(message["content"], list):
+                for ele in message["content"]:
+                    if (
+                        "image" in ele
+                        or "image_url" in ele
+                        or ele["type"] in ("image", "image_url")
+                    ):
+                        vision_infos.append(ele)
+    return vision_infos
+
+
+def process_vision_info(
+    conversations: Union[List[dict], List[List[dict]]],
+) -> Tuple[
+    Union[List[Image.Image], None, List[Union[paddle.Tensor, List[Image.Image]]], None]
+]:
+    vision_infos = extract_vision_info(conversations)
+    image_inputs = []
+    for vision_info in vision_infos:
+        if "image" in vision_info or "image_url" in vision_info:
+            image_inputs.append(fetch_image(vision_info))
+        else:
+            raise ValueError("image, image_url should in content.")
+    if len(image_inputs) == 0:
+        image_inputs = None
+    return image_inputs
+
+
+def fetch_image(
+    ele: Dict[str, Union[str, Image.Image]],
+    size_factor: int,
+    min_pixels: int,
+    max_pixels: int,
+    max_ratio: float,
+) -> Image.Image:
+    if not isinstance(ele, dict):
+        ele = {"image": ele}
+    if "image" in ele:
+        image = ele["image"]
+    else:
+        image = ele["image_url"]
+    image_obj = None
+    if isinstance(image, Image.Image):
+        image_obj = image
+    elif isinstance(image, np.ndarray):
+        image_obj = Image.fromarray(image)
+    elif image.startswith("http://") or image.startswith("https://"):
+        image_obj = Image.open(requests.get(image, stream=True).raw)
+    elif image.startswith("file://"):
+        image_obj = Image.open(image[7:])
+    elif image.startswith("data:image"):
+        data = image.split(";", 1)[1]
+        if data.startswith("base64,"):
+            data = base64.b64decode(data[7:])
+            image_obj = Image.open(BytesIO(data))
+    else:
+        image_obj = Image.open(image)
+    if image_obj is None:
+        raise ValueError(
+            f"Unrecognized image input, support local path, http url, base64 and PIL.Image, got {image}"
+        )
+    image = image_obj.convert("RGB")
+    # resize
+    if "resized_height" in ele and "resized_width" in ele:
+        resized_height, resized_width = smart_resize(
+            ele["resized_height"],
+            ele["resized_width"],
+            factor=size_factor,
+            min_pixels=min_pixels,
+            max_pixels=max_pixels,
+            max_ratio=max_ratio,
+        )
+    else:
+        width, height = image.size  # Image, not tensor
+        min_pixels = ele.get("min_pixels", min_pixels)
+        max_pixels = ele.get("max_pixels", max_pixels)
+        resized_height, resized_width = smart_resize(
+            height,
+            width,
+            factor=size_factor,
+            min_pixels=min_pixels,
+            max_pixels=max_pixels,
+            max_ratio=max_ratio,
+        )
+    image = image.resize((resized_width, resized_height))
+
+    return image
+
+
+def round_by_factor(number: int, factor: int) -> int:
+    """Returns the closest integer to 'number' that is divisible by 'factor'."""
+    return round(number / factor) * factor
+
+
+def ceil_by_factor(number: int, factor: int) -> int:
+    """Returns the smallest integer greater than or equal to 'number' that is divisible by 'factor'."""
+    return math.ceil(number / factor) * factor
+
+
+def floor_by_factor(number: int, factor: int) -> int:
+    """Returns the largest integer less than or equal to 'number' that is divisible by 'factor'."""
+    return math.floor(number / factor) * factor
+
+
+def smart_resize(
+    height: int,
+    width: int,
+    factor: int,
+    min_pixels: int,
+    max_pixels: int,
+    max_ratio: float,
+) -> Tuple[int, int]:
+    """
+    Rescales the image so that the following conditions are met:
+
+    1. Both dimensions (height and width) are divisible by 'factor'.
+
+    2. The total number of pixels is within the range ['min_pixels', 'max_pixels'].
+
+    3. The aspect ratio of the image is maintained as closely as possible.
+    """
+    if max(height, width) / min(height, width) > max_ratio:
+        raise ValueError(
+            f"absolute aspect ratio must be smaller than {max_ratio}, got {max(height, width) / min(height, width)}"
+        )
+    h_bar = max(factor, round_by_factor(height, factor))
+    w_bar = max(factor, round_by_factor(width, factor))
+    if h_bar * w_bar > max_pixels:
+        beta = math.sqrt((height * width) / max_pixels)
+        h_bar = floor_by_factor(height / beta, factor)
+        w_bar = floor_by_factor(width / beta, factor)
+    elif h_bar * w_bar < min_pixels:
+        beta = math.sqrt(min_pixels / (height * width))
+        h_bar = ceil_by_factor(height * beta, factor)
+        w_bar = ceil_by_factor(width * beta, factor)
+    return h_bar, w_bar
+
+
+def make_batched_images(images) -> List[List[ImageInput]]:
+    """
+    Accepts images in list or nested list format, and makes a list of images for preprocessing.
+
+    Args:
+        images (`Union[List[List[ImageInput]], List[ImageInput], ImageInput]`):
+            The input image.
+
+    Returns:
+        list: A list of images.
+    """
+    if (
+        isinstance(images, (list, tuple))
+        and isinstance(images[0], (list, tuple))
+        and is_valid_image(images[0][0])
+    ):
+        return [img for img_list in images for img in img_list]
+
+    elif isinstance(images, (list, tuple)) and is_valid_image(images[0]):
+        return images
+
+    elif is_valid_image(images):
+        return [images]
+
+    raise ValueError(f"Could not make batched images from {images}")

@@ -18,12 +18,12 @@ from .model_list import MODELS
 
 
 class DocVLMEvaluator(BaseEvaluator):
-    """Document Vision Languange Model Evaluator"""
+    """Document Vision Language Model Evaluator"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
         raise UnsupportedAPIError(
-            "document vision languange models do not support evaluate for now."
+            "document vision language models do not support evaluate for now."
         )

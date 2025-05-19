@@ -86,7 +86,7 @@ Note: Due to network issues, the above URL could not be successfully parsed. If 
 paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0  --save_path ./output
 ```
 
-The relevant parameter descriptions can be found in the [2.1.2 Python Script Integration](#212-python脚本方式集成) section.
+The relevant parameter descriptions can be found in the [2.1.2 Python Script Integration](#212-python脚本方式集成) section. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
 
 After running, the results will be printed to the terminal as follows:
 
@@ -141,7 +141,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>

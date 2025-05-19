@@ -123,7 +123,7 @@ private:
   // the output order of tensorrt may not be same
   // with the original onnx model
   // So this parameter will record to origin outputs
-  // order, to help recover the rigt order
+  // order, to help recover the right order
   std::map<std::string, int> outputs_order_;
 
   // temporary store onnx model content
@@ -131,7 +131,7 @@ private:
   // it will be released
   std::string onnx_model_buffer_;
   // Stores shape information of the loaded model
-  // For dynmaic shape will record its range information
+  // For dynamic shape will record its range information
   // Also will update the range information while inferencing
   std::map<std::string, ShapeRangeInfo> shape_range_info_;
 

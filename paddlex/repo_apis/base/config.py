@@ -106,7 +106,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
     """
     Abstract base class of Config.
 
-    Config provides the funtionality to load, parse, or dump to a configuration
+    Config provides the functionality to load, parse, or dump to a configuration
     file with a specific format. Also, it provides APIs to update configurations
     of several important hyperparameters and model components.
     """

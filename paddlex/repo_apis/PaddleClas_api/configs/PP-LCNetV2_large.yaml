@@ -79,7 +79,7 @@ DataLoader:
       name: MultiScaleSampler
       scales: [160, 192, 224, 288, 320]
       # first_bs: batch size for the first image resolution in the scales list
-      # divide_factor: to ensure the width and height dimensions can be devided by downsampling multiple
+      # divide_factor: to ensure the width and height dimensions can be divided by downsampling multiple
       first_bs: 250
       divided_factor: 32
       is_training: True

@@ -47,8 +47,8 @@ class UltraFace(UltraInferModel):
         """Detect the location and key points of human faces from an input image
 
         :param input_image: (numpy.ndarray)The input image data, 3-D array with layout HWC, BGR format
-        :param conf_threshold: confidence threashold for postprocessing, default is 0.7
-        :param nms_iou_threshold: iou threashold for NMS, default is 0.3
+        :param conf_threshold: confidence threshold for postprocessing, default is 0.7
+        :param nms_iou_threshold: iou threshold for NMS, default is 0.3
         :return: FaceDetectionResult
         """
         return self._model.predict(input_image, conf_threshold, nms_iou_threshold)
@@ -69,7 +69,7 @@ class UltraFace(UltraInferModel):
         ), "The value to set `size` must be type of tuple or list."
         assert (
             len(wh) == 2
-        ), "The value to set `size` must contatins 2 elements means [width, height], but now it contains {} elements.".format(
+        ), "The value to set `size` must contains 2 elements means [width, height], but now it contains {} elements.".format(
             len(wh)
         )
         self._model.size = wh

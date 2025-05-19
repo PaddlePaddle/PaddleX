@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.anomaly_detection.result import UadResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class AnomalyDetectionPipeline(BasePipeline):
+class _AnomalyDetectionPipeline(BasePipeline):
     """Image AnomalyDetectionPipeline Pipeline"""
-
-    entities = "anomaly_detection"
 
     def __init__(
         self,
@@ -70,3 +68,15 @@ class AnomalyDetectionPipeline(BasePipeline):
             UadResult: The predicted anomaly results.
         """
         yield from self.anomaly_detetion_model(input)
+
+
+@pipeline_requires_extra("cv")
+class AnomalyDetectionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "anomaly_detection"
+
+    @property
+    def _pipeline_cls(self):
+        return _AnomalyDetectionPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["AnomalyDetection"].get("batch_size", 1)

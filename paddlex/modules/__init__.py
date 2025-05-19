@@ -14,7 +14,7 @@
 from importlib import import_module
 
 from .anomaly_detection import UadDatasetChecker, UadEvaluator, UadExportor, UadTrainer
-from .base import build_dataset_checker, build_evaluater, build_exportor, build_trainer
+from .base import build_dataset_checker, build_evaluator, build_exportor, build_trainer
 from .face_recognition import (
     FaceRecDatasetChecker,
     FaceRecEvaluator,

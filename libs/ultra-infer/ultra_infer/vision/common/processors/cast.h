@@ -24,7 +24,7 @@
 namespace ultra_infer {
 namespace vision {
 
-/*! @brief Processor for cast images with given type deafault is float.
+/*! @brief Processor for cast images with given type default is float.
  */
 class ULTRAINFER_DECL Cast : public Processor {
 public:
@@ -42,7 +42,7 @@ public:
    * \param[in] mat The input image data
    * \param[in] dtype type of data will be casted to
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, const std::string &dtype,
                   ProcLib lib = ProcLib::DEFAULT);

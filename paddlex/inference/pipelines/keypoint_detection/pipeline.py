@@ -20,16 +20,14 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.keypoint_detection.result import KptResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 Number = Union[int, float]
 
 
-@pipeline_requires_extra("cv")
-class KeypointDetectionPipeline(BasePipeline):
+class _KeypointDetectionPipeline(BasePipeline):
     """Keypoint Detection pipeline"""
-
-    entities = "human_keypoint_detection"
 
     def __init__(
         self,
@@ -146,3 +144,15 @@ class KeypointDetectionPipeline(BasePipeline):
                     }
                 )
             yield KptResult(single_img_res)
+
+
+@pipeline_requires_extra("cv")
+class KeypointDetectionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "human_keypoint_detection"
+
+    @property
+    def _pipeline_cls(self):
+        return _KeypointDetectionPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["ObjectDetection"].get("batch_size", 1)

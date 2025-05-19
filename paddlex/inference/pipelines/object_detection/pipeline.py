@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class ObjectDetectionPipeline(BasePipeline):
+class _ObjectDetectionPipeline(BasePipeline):
     """Object Detection Pipeline"""
-
-    entities = "object_detection"
 
     def __init__(
         self,
@@ -103,3 +101,15 @@ class ObjectDetectionPipeline(BasePipeline):
             layout_merge_bboxes_mode=layout_merge_bboxes_mode,
             **kwargs,
         )
+
+
+@pipeline_requires_extra("cv")
+class ObjectDetectionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "object_detection"
+
+    @property
+    def _pipeline_cls(self):
+        return _ObjectDetectionPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["ObjectDetection"].get("batch_size", 1)

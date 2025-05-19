@@ -40,7 +40,6 @@ for res in output:
     * `use_hpip`：`bool` 类型，是否启用高性能推理插件；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
     * _`推理超参数`_：支持常见推理超参数的修改，具体参数说明详见具体模型文档；
-  * 返回值：`BasePredictor` 类型。
 
 ### 2. 调用预测模型对象的`predict()`方法进行推理预测
 
@@ -103,7 +102,7 @@ PaddleX 支持通过`PaddlePredictorOption`修改推理配置，相关API如下�
 
 #### 属性：
 
-* `deivce`：推理设备；
+* `device`：推理设备；
   * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 “gpu”、“cpu”、“npu”、“xpu”、“mlu”、“dcu”，当使用加速卡时，支持指定卡号，如使用 0 号 GPU：`gpu:0`，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
   * 返回值：`str`类型，当前设置的推理设备。
 * `run_mode`：运行模式；

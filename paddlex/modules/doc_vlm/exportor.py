@@ -18,12 +18,12 @@ from .model_list import MODELS
 
 
 class DocVLMExportor(BaseExportor):
-    """Document Vision Languange Model Exportor"""
+    """Document Vision Language Model Exportor"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
         raise UnsupportedAPIError(
-            "document vision languange models do not support export for now."
+            "document vision language models do not support export for now."
         )

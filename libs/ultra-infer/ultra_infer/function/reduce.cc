@@ -260,7 +260,7 @@ template <typename T, typename Tout, ArgMinMaxType EnumArgMinMaxValue>
 void ArgMinMaxKernel(const FDTensor &x, FDTensor *out, int64_t axis,
                      bool keepdims, bool flatten) {
   bool new_keepdims = keepdims | flatten;
-  // if flatten, will construct the new dims for the cacluate
+  // if flatten, will construct the new dims for the calculate
   std::vector<int64_t> x_dims;
   int new_axis = axis;
   if (flatten) {

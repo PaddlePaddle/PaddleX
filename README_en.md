@@ -738,7 +738,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 * [📑 PaddleX Pipeline Usage Overview](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/pipeline_develop_guide.html)
 
 * <details open>
-    <summary> <b> 📝 Information Extracion</b></summary>
+    <summary> <b> 📝 Information Extraction</b></summary>
 
    * [📄 PP-ChatOCRv3 Pipeline Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html)
   </details>
@@ -902,22 +902,26 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
   <summary> <b> 📦 3D  </b></summary>
 
   * [📦 3D Multimodal Fusion Detection Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html)
+  </details>
 
 * <details open>
   <summary> <b> 🎤 Speech Recognition </b></summary>
 
   * [🌐 Multilingual Speech Recognition Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/speech_modules/multilingual_speech_recognition.html)
+  </details>
 
 * <details open>
   <summary> <b> 🎥 Video Recognition </b></summary>
 
   * [📈 Video Classification Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 Video Detection Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html)
+  </details>
 
 * <details open>
   <summary> <b> 🌐 Multimodal Vision-Language Model </b></summary>
 
-  * [📝 Document Vision-Language Model Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/doc_vlm.html)
+  * [📝 Document Vision-Language Model Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/vlm_modules/doc_vlm.html)
+  * [📈 Chart Parsing Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/vlm_modules/chart_parsing.html)
   </details>
 
 * <details open>

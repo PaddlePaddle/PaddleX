@@ -14,6 +14,7 @@
 
 import copy
 import os
+import warnings
 from typing import List
 
 from ....modules.doc_vlm.model_list import MODELS
@@ -27,6 +28,11 @@ from .result import DocVLMResult
 class DocVLMPredictor(BasePredictor):
 
     entities = MODELS
+    model_group = {
+        "PP-DocBee": {"PP-DocBee-2B", "PP-DocBee-7B"},
+        "PP-DocBee2": {"PP-DocBee2-3B"},
+        "PP-Chart2Table": {"PP-Chart2Table"},
+    }
 
     def __init__(self, *args, **kwargs):
         """Initializes DocVLMPredictor.
@@ -34,8 +40,17 @@ class DocVLMPredictor(BasePredictor):
             *args: Arbitrary positional arguments passed to the superclass.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
+        import paddle
+
         super().__init__(*args, **kwargs)
         self.device = kwargs.get("device", None)
+        self.dtype = (
+            "bfloat16"
+            if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
+            and (self.device is None or "cpu" not in self.device)
+            else "float32"
+        )
+
         self.infer, self.processor = self._build(**kwargs)
 
     def _build_batch_sampler(self):
@@ -44,7 +59,7 @@ class DocVLMPredictor(BasePredictor):
         Returns:
             DocVLMBatchSampler: An instance of DocVLMBatchSampler.
         """
-        return DocVLMBatchSampler()
+        return DocVLMBatchSampler(self.model_name)
 
     def _get_result_class(self):
         """Returns the result class, DocVLMResult.
@@ -61,28 +76,49 @@ class DocVLMPredictor(BasePredictor):
             model: An instance of Paddle model, could be either a dynamic model or a static model.
             processor: The correspounding processor for the model.
         """
-        import paddle
-
-        from .modeling import PPDocBeeInference
-
-        # build model
-        if "PP-DocBee" in self.model_name:
-            if kwargs.get("use_hpip", False):
-                raise ValueError(
-                    f"PP-DocBee series do not support `use_hpip=True` for now."
-                )
-            dtype = (
-                "bfloat16"
-                if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
-                else "float32"
-            )
-            with TemporaryDeviceChanger(self.device):
-                model = PPDocBeeInference.from_pretrained(self.model_dir, dtype=dtype)
-        else:
-            raise NotImplementedError(f"Model {self.model_name} is not supported.")
+        from .modeling import (
+            PPChart2TableInference,
+            PPDocBee2Inference,
+            PPDocBeeInference,
+        )
 
         # build processor
         processor = self.build_processor()
+
+        # build model
+        if self.model_name in self.model_group["PP-DocBee"]:
+            if kwargs.get("use_hpip", False):
+                warnings.warn(
+                    "The PP-DocBee series does not support `use_hpip=True` for now."
+                )
+            with TemporaryDeviceChanger(self.device):
+                model = PPDocBeeInference.from_pretrained(
+                    self.model_dir, dtype=self.dtype
+                )
+        elif self.model_name in self.model_group["PP-Chart2Table"]:
+            if kwargs.get("use_hpip", False):
+                warnings.warn(
+                    "The PP-Chart2Table series does not support `use_hpip=True` for now."
+                )
+            with TemporaryDeviceChanger(self.device):
+                model = PPChart2TableInference.from_pretrained(
+                    self.model_dir,
+                    dtype=self.dtype,
+                    pad_token_id=processor.tokenizer.eos_token_id,
+                )
+        elif self.model_name in self.model_group["PP-DocBee2"]:
+            if kwargs.get("use_hpip", False):
+                warnings.warn(
+                    "The PP-Chart2Table series does not support `use_hpip=True` for now."
+                )
+            with TemporaryDeviceChanger(self.device):
+                model = PPDocBee2Inference.from_pretrained(
+                    self.model_dir,
+                    dtype=self.dtype,
+                )
+        else:
+            raise NotImplementedError(f"Model {self.model_name} is not supported.")
+
         return model, processor
 
     def process(self, data: List[dict], **kwargs):
@@ -96,15 +132,11 @@ class DocVLMPredictor(BasePredictor):
         Returns:
             dict: A dictionary containing the raw sample information and prediction results for every instance of the batch.
         """
-        assert (
-            isinstance(data, List) and len(data) == 1
-        ), "data must be a list of length 1"
-        assert isinstance(data[0], dict)
+        assert all(isinstance(i, dict) for i in data)
 
-        data = data[0]
         src_data = copy.copy(data)
         # preprocess
-        data = self.processor.preprocess(**data)
+        data = self.processor.preprocess(data)
         data = self._switch_inputs_to_device(data)
 
         # do infer
@@ -118,13 +150,36 @@ class DocVLMPredictor(BasePredictor):
         return result_dict
 
     def build_processor(self, **kwargs):
-        from ..common.tokenizer import MIXQwen2Tokenizer
-        from .processors import PPDocBeeProcessor, Qwen2VLImageProcessor
+        from ..common.tokenizer import (
+            MIXQwen2_5_Tokenizer,
+            MIXQwen2Tokenizer,
+            QWenTokenizer,
+        )
+        from .processors import (
+            GOTImageProcessor,
+            PPChart2TableProcessor,
+            PPDocBee2Processor,
+            PPDocBeeProcessor,
+            Qwen2_5_VLImageProcessor,
+            Qwen2VLImageProcessor,
+        )
 
-        if "PP-DocBee" in self.model_name:
+        if self.model_name in self.model_group["PP-DocBee"]:
             image_processor = Qwen2VLImageProcessor()
             tokenizer = MIXQwen2Tokenizer.from_pretrained(self.model_dir)
             return PPDocBeeProcessor(
+                image_processor=image_processor, tokenizer=tokenizer
+            )
+        elif self.model_name in self.model_group["PP-Chart2Table"]:
+            image_processor = GOTImageProcessor(1024)
+            tokenizer = QWenTokenizer.from_pretrained(self.model_dir)
+            return PPChart2TableProcessor(
+                image_processor=image_processor, tokenizer=tokenizer, dtype=self.dtype
+            )
+        elif self.model_name in self.model_group["PP-DocBee2"]:
+            image_processor = Qwen2_5_VLImageProcessor()
+            tokenizer = MIXQwen2_5_Tokenizer.from_pretrained(self.model_dir)
+            return PPDocBee2Processor(
                 image_processor=image_processor, tokenizer=tokenizer
             )
         else:

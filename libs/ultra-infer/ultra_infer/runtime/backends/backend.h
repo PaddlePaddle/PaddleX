@@ -142,7 +142,7 @@ public:
  *
  * @endcode In this case, 'poros_outputs' inside a function
  * are wrapped by BEGIN and END, which may be required for
- * subsequent tasks. So, we set 'base_loop' as 0 and lanuch
+ * subsequent tasks. So, we set 'base_loop' as 0 and launch
  * another infer to get the valid outputs beyond the scope
  * of 'BEGIN ~ END' for subsequent tasks.
  */

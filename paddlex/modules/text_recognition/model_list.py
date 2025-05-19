@@ -31,4 +31,6 @@ MODELS = [
     "PP-OCRv4_server_rec_doc",
     "ch_SVTRv2_rec",
     "ch_RepSVTR_rec",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
 ]

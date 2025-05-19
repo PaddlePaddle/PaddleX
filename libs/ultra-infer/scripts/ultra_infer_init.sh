@@ -31,7 +31,7 @@ for DYLIB_FILE in $ALL_DYLIB_FILES;do
     LIBS_DIRECTORIES+=(${DYLIB_FILE%/*})
 done
 
-# Remove the dumplicate directories
+# Remove the duplicate directories
 LIBS_DIRECTORIES=($(awk -v RS=' ' '!a[$1]++' <<< ${LIBS_DIRECTORIES[@]}))
 
 # Print the dynamic library location and output the configuration file

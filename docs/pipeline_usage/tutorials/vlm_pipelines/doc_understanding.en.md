@@ -27,6 +27,11 @@ The Document Understanding Pipeline is an advanced document processing technolog
 <td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
 <td>15.8</td>
 </tr>
+<tr>
+<td>PP-DocBee2-3B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">Inference Model</a></td>
+<td>7.6</td>
+<td>PP-DocBee2 is a multimodal large model developed by the PaddlePaddle team, specifically designed for document understanding. Building upon PP-DocBee, the team has further optimized the foundational model and introduced a new data optimization scheme to enhance data quality. With just a relatively small dataset of 470,000 samples generated using the team's proprietary data synthesis strategy, PP-DocBee2 demonstrates superior performance in Chinese document understanding tasks. In terms of internal business metrics for Chinese language scenarios, PP-DocBee2 has achieved an approximately 11.4% improvement over PP-DocBee, and it also outperforms current popular open-source and closed-source models of a similar scale.</td>
+</tr>
 </table>
 
 ## 2. Quick Start

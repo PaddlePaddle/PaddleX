@@ -60,7 +60,7 @@ class PPTinyPose(UltraInferModel):
 
     @property
     def use_dark(self):
-        """Atrribute of PPTinyPose model. Stating whether using Distribution-Aware Coordinate Representation for Human Pose Estimation(DARK for short) in postprocess, default is True
+        """Attribute of PPTinyPose model. Stating whether using Distribution-Aware Coordinate Representation for Human Pose Estimation(DARK for short) in postprocess, default is True
 
         :return: value of use_dark(bool)
         """

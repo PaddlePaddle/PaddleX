@@ -38,7 +38,7 @@ public:
    *
    * \param[in] image_batch The input image batch
    * \param[in] outputs The output tensors which will feed in runtime
-   * \return true if the preprocess successed, otherwise false
+   * \return true if the preprocess succeeded, otherwise false
    */
   virtual bool Apply(FDMatBatch *image_batch, std::vector<FDTensor> *outputs);
 
@@ -51,7 +51,7 @@ public:
    *     maybe it's better to run resize on CPU, because the HostToDevice memcpy
    *     is time consuming. Set this true to run the initial resize on CPU.
    *
-   * \param[in] v ture or false
+   * \param[in] v true or false
    */
   void InitialResizeOnCpu(bool v) { initial_resize_on_cpu_ = v; }
 

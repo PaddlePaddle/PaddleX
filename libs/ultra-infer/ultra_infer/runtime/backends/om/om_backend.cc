@@ -392,7 +392,7 @@ bool OmBackend::CreateInput() {
 
 bool OmBackend::CreateOutput() {
   if (modelDesc_ == nullptr) {
-    FDERROR << "no model description, create ouput failed";
+    FDERROR << "no model description, create output failed";
     return false;
   }
 

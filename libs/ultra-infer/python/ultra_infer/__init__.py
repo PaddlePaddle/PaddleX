@@ -41,7 +41,7 @@ if os.name != "nt" and os.path.exists(trt_directory):
                 logging.warning(
                     f"Failed to create a symbolic link pointing to {src} by an unprivileged user. "
                     "It may failed when you use Paddle TensorRT backend. "
-                    "Please use administator privilege to import ultra_infer at first time."
+                    "Please use administrator privilege to import ultra_infer at first time."
                 )
                 break
 
@@ -55,7 +55,7 @@ from .code_version import version, git_version, extra_version_info
 from .code_version import enable_trt_backend, enable_paddle_backend, with_gpu
 
 # Note(zhoushunjie): Fix the import order of paddle and ultra_infer library.
-# This solution will be removed it when the confilct of paddle and
+# This solution will be removed it when the conflict of paddle and
 # ultra_infer is fixed.
 
 # Note(qiuyanjun): Add backward compatible for paddle 2.4.x

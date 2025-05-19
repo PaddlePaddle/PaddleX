@@ -33,7 +33,7 @@ public:
    * \param[in] images The input image data list, all the elements are returned
    * by cv::imread() \param[in] outputs The output tensors which will feed in
    * runtime \param[in] ims_info The shape info list, record input_shape and
-   * output_shape \return true if the preprocess successed, otherwise false
+   * output_shape \return true if the preprocess succeeded, otherwise false
    */
   bool Run(std::vector<FDMat> *images, std::vector<FDTensor> *outputs,
            std::vector<std::map<std::string, std::array<float, 2>>> *ims_info);
@@ -71,7 +71,7 @@ protected:
   // padding value, size should be the same as channels
   std::vector<float> padding_value_;
 
-  // only pad to the minimum rectange which height and width is times of stride
+  // only pad to the minimum rectangle which height and width is times of stride
   bool is_mini_pad_;
 
   // while is_mini_pad = false and is_no_pad = true,
@@ -85,7 +85,7 @@ protected:
   // padding stride, for is_mini_pad
   int stride_;
 
-  // for offseting the boxes by classes when using NMS
+  // for offsetting the boxes by classes when using NMS
   float max_wh_;
 };
 

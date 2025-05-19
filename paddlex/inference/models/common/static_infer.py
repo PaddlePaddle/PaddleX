@@ -423,6 +423,8 @@ class PaddleInfer(StaticInfer):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
+                config.delete_pass("conv2d_bn_xpu_fuse_pass")
+                config.delete_pass("transfer_layout_pass")
             elif self._option.device_type == "mlu":
                 config.enable_custom_device("mlu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
@@ -835,7 +837,7 @@ class HPInfer(StaticInfer):
                     for name, shapes in backend_config.dynamic_shapes.items():
                         ui_option.trt_option.set_shape(name, *shapes)
                 else:
-                    logging.warning(
+                    logging.info(
                         "TensorRT dynamic shapes will be loaded from the file."
                     )
         elif backend == "om":

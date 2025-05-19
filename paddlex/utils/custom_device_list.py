@@ -135,8 +135,6 @@ NPU_BLACKLIST = [
     "whisper_base",
     "whisper_tiny",
     "UniMERNet",
-    "PP-FormulaNet-L",
-    "PP-FormulaNet-S",
 ]
 
 XPU_WHITELIST = [
@@ -191,6 +189,32 @@ XPU_WHITELIST = [
     "RLinear",
     "NLinear",
     "PicoDet_LCNet_x2_5_face",
+    "PP-LCNet_x1_0_doc_ori",
+    "UVDoc",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout-S",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "PP-LCNet_x1_0_table_cls",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-OCRv4_server_seal_det",
+    "PP-OCRv4_mobile_seal_det",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
+    "PPDocBee-2B",
+    "PPDocBee-7B",
+    "PP-FormulaNet-S",
+    "PP-FormulaNet-L",
+    "PP-FormulaNet-M",
+    "PP-FormulaNet_plus-M",
+    "PP-FormulaNet_plus-L",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_mobile_det",
+    "PP-Chart2Table",
 ]
 
 GCU_WHITELIST = [

@@ -15,7 +15,6 @@
 import math
 import os
 from dataclasses import dataclass
-from functools import partial
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import paddle
@@ -1983,74 +1982,6 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
     def get_decoder(self):
         return self.model
 
-    @classmethod
-    def _get_tensor_parallel_mappings(cls, config: Qwen2VLConfig, is_split=True):
-
-        logging.info("Qwen2 inference model _get_tensor_parallel_mappings")
-
-        from paddlenlp.transformers.conversion_utils import split_or_merge_func
-
-        fn = split_or_merge_func(
-            is_split=is_split,
-            tensor_parallel_degree=config.tensor_parallel_degree,
-            tensor_parallel_rank=config.tensor_parallel_rank,
-            num_attention_heads=config.num_attention_heads,
-        )
-
-        def get_tensor_parallel_split_mappings(num_layers):
-            final_actions = {}
-
-            base_actions = {
-                "lm_head.weight": partial(fn, is_column=True),
-                # Row Linear
-                "embed_tokens.weight": partial(fn, is_column=False),
-                "layers.0.self_attn.o_proj.weight": partial(fn, is_column=False),
-                "layers.0.mlp.down_proj.weight": partial(fn, is_column=False),
-            }
-
-            base_actions["layers.0.self_attn.q_proj.weight"] = partial(
-                fn, is_column=True
-            )
-            base_actions["layers.0.self_attn.q_proj.bias"] = partial(fn, is_column=True)
-            # if we have enough num_key_value_heads to split, then split it.
-            if config.num_key_value_heads % config.tensor_parallel_degree == 0:
-                base_actions["layers.0.self_attn.k_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.self_attn.v_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.self_attn.k_proj.bias"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.self_attn.v_proj.bias"] = partial(
-                    fn, is_column=True
-                )
-
-            if config.fuse_attention_ffn:
-                base_actions["layers.0.mlp.gate_up_fused_proj.weight"] = partial(
-                    fn, is_column=True, is_naive_2fuse=True
-                )
-            else:
-                base_actions["layers.0.mlp.gate_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-                base_actions["layers.0.mlp.up_proj.weight"] = partial(
-                    fn, is_column=True
-                )
-
-            for key, action in base_actions.items():
-                if "layers.0." in key:
-                    for i in range(num_layers):
-                        final_actions[key.replace("layers.0.", f"layers.{i}.")] = action
-                final_actions[key] = action
-
-            return final_actions
-
-        mappings = get_tensor_parallel_split_mappings(config.num_hidden_layers)
-
-        return mappings
-
     @staticmethod
     def get_rope_index(
         spatial_merge_size,
@@ -2275,42 +2206,6 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             model_kwargs["rope_deltas"] = outputs.rope_deltas
 
         return model_kwargs
-
-    def vision_forward(
-        self,
-        input_ids: paddle.Tensor,
-        inputs_embeds: Optional[paddle.Tensor] = None,
-        attention_mask: Optional[paddle.Tensor] = None,
-        position_ids: Optional[paddle.Tensor] = None,
-        pixel_values: Optional[paddle.Tensor] = None,
-        pixel_values_videos: Optional[paddle.Tensor] = None,
-        image_grid_thw: Optional[paddle.Tensor] = None,
-        video_grid_thw: Optional[paddle.Tensor] = None,
-        rope_deltas: Optional[paddle.Tensor] = None,
-    ):
-
-        if inputs_embeds is None:
-            from paddlenlp.experimental.transformers.qwen2.modeling import (
-                Qwen2VLForConditionalGenerationBlockInferenceModel,
-            )
-
-            assert isinstance(
-                self.model, Qwen2VLForConditionalGenerationBlockInferenceModel
-            ), "model is not an instance of Qwen2VLForConditionalGenerationBlockInferenceModel"
-
-            inputs_embeds = self.model.qwen2.embed_tokens(input_ids)
-            if pixel_values is not None:
-                pixel_values = paddle.cast(pixel_values, paddle.bfloat16)
-                image_embeds = self.visual(pixel_values, grid_thw=image_grid_thw)
-                image_mask = input_ids == self.config.image_token_id
-
-                inputs_embeds[image_mask] = image_embeds
-            if pixel_values_videos is not None:
-                pixel_values_videos = paddle.cast(pixel_values_videos, paddle.bfloat16)
-                video_embeds = self.visual(pixel_values_videos, grid_thw=video_grid_thw)
-                video_mask = input_ids == self.config.video_token_id
-                inputs_embeds[video_mask] = video_embeds
-        return inputs_embeds
 
     def forward(
         self,

@@ -682,7 +682,7 @@ paddlex --pipeline table_recognition_v2 \
         --device gpu:0
 ```
 
-相关的参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的参数说明。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
 
 <details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
 
@@ -775,7 +775,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。支持同时指定多个设备以进行并行推理，详情请参考 <a href="../../instructions/parallel_inference.md#指定多个推理设备">产线并行推理</a>。</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
@@ -1371,12 +1371,6 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
-<td><code>useTableCellsOcrResults</code></td>
-<td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_cells_ocr_results</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
 <td><code>useE2eWiredTableRecModel</code></td>
 <td><code>boolean</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wired_table_rec_model</code> 参数相关说明。</td>
@@ -1386,6 +1380,30 @@ for res in output:
 <td><code>useE2eWirelessTableRecModel</code></td>
 <td><code>boolean</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wireless_table_rec_model</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useWiredTableCellsTransToHtml</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_wired_table_cells_trans_to_html</code> 参数相关说明。</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useWirelessTableCellsTransToHtml</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_wireless_table_cells_trans_to_html</code> 参数相关说明。</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableOrientationClassify</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_orientation_classify</code> 参数相关说明。</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrResultsWithTableCells</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_ocr_results_with_table_cells</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1598,9 +1616,10 @@ SubPipelines:
         model_dir: null # 替换为微调后的文本检测模型权重路径
         limit_side_len: 960
         limit_type: max
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.4
-        unclip_ratio: 2.0
+        unclip_ratio: 1.5
 
       TextRecognition:
         module_name: text_recognition

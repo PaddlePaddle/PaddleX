@@ -31,7 +31,7 @@ public:
    * \param[in] results The output result of layout detection
    * \param[in] batch_layout_img_info The image info of input images,
    *            {{image width, image height, resize width, resize height},...}
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<DetectionResult> *results,

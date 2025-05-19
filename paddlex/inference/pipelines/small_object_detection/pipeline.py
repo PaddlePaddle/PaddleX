@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.object_detection.result import DetResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class SmallObjectDetectionPipeline(BasePipeline):
+class _SmallObjectDetectionPipeline(BasePipeline):
     """Small Object Detection Pipeline"""
-
-    entities = "small_object_detection"
 
     def __init__(
         self,
@@ -83,3 +81,15 @@ class SmallObjectDetectionPipeline(BasePipeline):
             DetResult: The predicted small object detection results.
         """
         yield from self.small_object_detection_model(input, threshold=threshold)
+
+
+@pipeline_requires_extra("cv")
+class SmallObjectDetectionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "small_object_detection"
+
+    @property
+    def _pipeline_cls(self):
+        return _SmallObjectDetectionPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["SmallObjectDetection"].get("batch_size", 1)

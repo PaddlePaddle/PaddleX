@@ -190,7 +190,7 @@ comments: true
     <b>注意：</b>
     - `Pipeline_Name` 和 `Demo_Name` 为占位符，具体值可参考本节最后的表格。
     - `download.sh` 和 `run.sh` 支持传入模型名来指定模型，若不指定则使用默认模型。目前适配的模型可参考本节最后表格的 `Model_Name` 列。
-    - 若想使用自己训练的模型，参考 [模型转换方法](https://paddlepaddle.github.io/Paddle-Lite/develop/model_optimize_tool/) 得到 `.nb` 模型，放到`PaddleX_Lite_Deploy/{Pipeline_Name}/assets/{Model_Name}`目录下，  `Model_Name`为模型名，例如 `PaddleX_Lite_Deploy/object_detection/assets/PicoDet-L`。
+    - 若想使用自己训练的模型，参考 [模型转换方法](https://paddlepaddle.github.io/Paddle-Lite/develop/model_optimize_tool/) 得到 `.nb` 模型，放到`PaddleX_Lite_Deploy/{Pipeline_Name}/assets/{Model_Name}`目录下，  `Model_Name`为模型名，例如 `PaddleX_Lite_Deploy/object_detection/assets/PicoDet-L`。请注意，目前暂不支持将 `.json` 格式的静态图模型转换为 `.nb` 格式。在使用 PaddleX 导出静态图模型时，请设置环境变量 `FLAGS_json_format_model` 为 `0`。
     - 在运行 `build.sh` 脚本前，需要更改 `NDK_ROOT` 指定的路径为实际安装的 NDK 路径。
     - 在运行 `build.sh` 脚本时需保持 ADB 连接。
     - 在 Windows 系统上可以使用 Git Bash 执行部署步骤。
@@ -307,7 +307,8 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
 </table>
 
 <b>备注</b>
-- 目前没有版面区域检测模块的端侧部署 demo，因此复用 `picodet_detection`demo 来部署`PicoDet_layout_1x`模型。
+
+- 目前没有版面区域检测模块的端侧部署 demo，因此复用 `picodet_detection` demo 来部署 `PicoDet_layout_1x` 模型。
 
 ## 参考资料
 

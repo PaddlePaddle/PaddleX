@@ -55,7 +55,7 @@ def split_dataset(root_dir, train_rate, val_rate, group_id="group_id"):
     df = df.drop_duplicates(keep="first")
 
     group_unique = df[group_id].unique()
-    dfs = []  # seperate multiple group
+    dfs = []  # separate multiple group
     for column in group_unique:
         df_one = df[df[group_id].isin([column])]
         df_one = df_one.drop_duplicates(subset=["time"], keep="first")

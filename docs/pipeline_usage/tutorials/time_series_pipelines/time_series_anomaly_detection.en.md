@@ -50,13 +50,6 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>94.57</td>
 <td>320K</td>
 </tr>
-<tr>
-<td>TimesNet_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_ad_pretrained.pdparams">Training Model</a></td>
-<td>98.37</td>
-<td>94.80</td>
-<td>96.56</td>
-<td>1.3M</td>
-</tr>
 </tbody>
 </table>
 
