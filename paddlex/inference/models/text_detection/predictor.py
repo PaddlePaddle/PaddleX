@@ -133,6 +133,8 @@ class TextDetPredictor(BasePredictor):
         # TODO: align to PaddleOCR
 
         if self.model_name in (
+            "PP-OCRv5_server_det",
+            "PP-OCRv5_mobile_det",
             "PP-OCRv4_server_det",
             "PP-OCRv4_mobile_det",
             "PP-OCRv3_server_det",
