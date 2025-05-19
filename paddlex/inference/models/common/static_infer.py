@@ -317,7 +317,8 @@ class PaddleInfer(StaticInfer):
         self.model_file_prefix = model_file_prefix
         self._option = option
         self.predictor = self._create()
-        if INFER_BENCHMARK_USE_NEW_INFER_API:
+        # TODO: use INFER_BENCHMARK_USE_NEW_INFER_API
+        if False and INFER_BENCHMARK_USE_NEW_INFER_API:
             device_type = self._option.device_type
             device_type = "gpu" if device_type == "dcu" else device_type
             copy_to_device = PaddleCopyToDevice(device_type, self._option.device_id)
