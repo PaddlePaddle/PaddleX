@@ -50,6 +50,11 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x86_64.whl
 ```
 
+若您在安装后发现无法安装PyYAML,可通过如下命令修复：
+```bash
+python -m pip install --ignore-installed PyYAML
+```
+
 ## 基于 pip 安装飞桨
 <b>若您通过 pip 安装</b>，请参考下述命令，用 pip 在当前环境中安装飞桨 PaddlePaddle：
 

@@ -49,6 +49,10 @@ To use [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.
 python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x86_64.whl
 ```
 
+If you find that PyYAML cannot be installed after installation, you can fix it with the following command：
+```bash
+python -m pip install --ignore-installed PyYAML
+```
 ## Installing PaddlePaddle via pip
 <b>If you choose to install via pip</b>, please refer to the following commands to install PaddlePaddle in your current environment using pip:
 
