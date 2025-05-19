@@ -37,6 +37,24 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 ## 📣 Recent Updates
 
+
+🔥🔥 **2025.5.20: PaddleX v3.0.0 Released**
+
+Core upgrades are as follows:
+
+- **Major Capability Releases:**
+  - **Launch of the groundbreaking text recognition model PP-OCRv5**: Achieves a 13% improvement in OCR accuracy across all scenarios. A single model now supports 5 types of text (Simplified Chinese, Traditional Chinese, Chinese Pinyin, English, and Japanese), with significant enhancements in recognizing handwritten fonts, vertical text, and rare characters in both Chinese and English. You can experience it immediately in the [online demo](https://aistudio.baidu.com/community/app/91660/webUI?source=appCenter).
+  
+  - **Launch of the groundbreaking document parsing solution PP-StructureV3**: Enhanced capabilities in layout area detection, table recognition, Chinese and English formula recognition, and restoration of multi-column reading order, with added abilities for chart understanding. PP-StructureV3 achieves state-of-the-art (SOTA) levels in both Chinese and English editing distances on the OmniDocBench leaderboard. Experience it in the [online demo](https://aistudio.baidu.com/community/app/518494/webUI?source=appCenter).
+  
+  - **Optimization of PP-ChatOCRv4**: Supports the Ernie 4.5T. Combined with PP-DocBee2, it shows a 15.7 percentage point improvement in key information extraction accuracy compared to the previous generation. Experience it in the [online demo](https://aistudio.baidu.com/community/app/518493/webUI?source=appCenter).
+
+- **Inference Capability Optimization:**
+  - The general OCR, PP-StructureV3, formula recognition, seal text recognition, and document image preprocessing pipelines support setting batch size >1, allowing multiple pages to be processed at once.
+  
+  - 17 pipelines, including general OCR and PP-StructureV3, now support multi-GPU parallel inference. Sample code for multi-process parallel inference has been added.
+
+
 🔥 **2025.4.22, PaddleX v3.0.0rc1 major upgrade.** This version fully adapts to PaddlePaddle 3.0.0, with the following core upgrades:
 
 - **Adapts to New Features of PaddlePaddle 3.0**: Supports compiler training, which can be enabled by appending `-o Global.dy2st=True` to the training command. On GPUs, the training speed of most models can be improved by over 10%, and for a few models, the improvement can exceed 30%. For inference, the models are fully adapted to PaddlePaddle 3.0's Intermediate Representation (PIR) technology, offering more flexible extensibility and compatibility. The file names for inference model have been changed from `xxx.pdmodel` to `xxx.json`.
@@ -51,29 +69,6 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
   - **NPU: The number of models fully validated on Ascend NPU has increased to 200. Additionally, common pipelines such as general OCR, image classification, and object detection support OM model format inference, with inference speed improvements ranging from 113.8% to 226.4%. Inference deployment is supported on Atlas 200 and Atlas 300 series products.**
   - **GCU: Enflame has been officially integrated into the PaddlePaddle regular release system, completing the adaptation of the PaddleX ecosystem. Supports the training and inference of 90 models.**
 
-🔥 **2025.2.14, PaddleX v3.0.0rc0 major upgrade.** This version fully adapts to PaddlePaddle 3.0.0rc and above, with the following core upgrades:
-
-- **Added 12 high-value pipelines, launching self-developed [PP-StructureV3 Pipeline](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html), [PP-ChatOCRv4-doc Pipeline](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html), [Table Recognition v2 Pipeline](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html)**. Additionally, new pipelines for document processing, rotated box detection, open vocabulary detection/segmentation, video analysis, multilingual speech recognition, 3D, and other scenarios have been added.
-
-- **Expanded 48 cutting-edge models, including the major releases in the OCR field such as Document Layout Detection Model [PP-DocLayout](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html), Formula Recognition Model [PP-FormulaNet](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/formula_recognition.html), Table Structure Recognition Model [SLANeXt](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html), text Recognition Model [PP-OCRv4_server_rec_doc](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html)**. In the CV field, models for 3D detection, human keypoints, open vocabulary detection/segmentation, and in the speech recognition field, models from the Whisper series, among others.
-
-- **Optimized and upgraded the inference APIs for models and pipelines**, supporting more parameter configurations to enhance the flexibility of model and pipeline inference. [Details](docs/API_change_log/v3.0.0rc.en.md).
-
-- **Expanded hardware support:** added support for Suoyuan GCU (90+ models), and significantly increased the number of models for Ascend NPU/Kunlunxin XPU/Cambricon MLU/Hygon DCU.
-
-- **Upgraded full-scenario deployment capabilities:**
-  - High-performance inference supports one-click installation, Windows systems, and 220+ models, with the core library ultra-infer open-sourced;
-  - Serving deployment added a highly stable solution, supporting dynamic configuration optimization.
-
-- **Enhanced system compatibility:** adapted to Windows training/inference, fully supporting Python 3.11/3.12.
-
-🔥🔥 **11.15, 2024**, PaddleX 3.0 Beta2 open source version is officially released, PaddleX 3.0 Beta2 is fully compatible with the PaddlePaddle 3.0b2 version. <b>This update introduces new pipelines for general image recognition, face recognition, vehicle attribute recognition, and pedestrian attribute recognition. We have also developed 42 new models to fully support the Ascend 910B, with extensive documentation available on [GitHub Pages](https://paddlepaddle.github.io/PaddleX/latest/en/index.html).</b>
-
-🔥🔥 **9.30, 2024**, PaddleX 3.0 Beta1 open source version is officially released, providing **more than 200 models** that can be called with a simple Python API; achieve model full-process development based on unified commands, and open source the basic capabilities of the **PP-ChatOCRv3** pipeline; support **more than 100 models for high-performance inference and serving** (iterating continuously), **more than 7 key visual models for edge-deployment**; **more than 70 models have been adapted for the full development process of Ascend 910B**, **more than 15 models have been adapted for the full development process of Kunlun chips and Cambricon**
-
-🔥 **6.27, 2024**, PaddleX 3.0 Beta open source version is officially released, supporting the use of various mainstream hardware for pipeline and model development in a low-code manner on the local side.
-
-🔥 **3.25, 2024**, PaddleX 3.0 cloud release, supporting the creation of pipelines in the AI Studio  Community in a zero-code manner.
 
 ## 🔠 Explanation of Pipeline
 PaddleX is dedicated to achieving pipeline-level model training, inference, and deployment. A pipeline refers to a series of predefined development processes for specific AI tasks, which includes a combination of single models (single-function modules) capable of independently completing a certain type of task.
@@ -107,8 +102,18 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">PP-ChatOCRv3</a></td>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">PP-ChatOCRv3</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Link</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html">PP-ChatOCRv4</a></td>
+        <td><a href="https://aistudio.baidu.com/community/app/518493/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -318,13 +323,13 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">Table Recognition v2</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/518495/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">Layout Parsing</a></td>
@@ -338,13 +343,13 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">PP-StructureV3</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/518494/webUI?source=appCente">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">Document Image Preprocessing</a></td>
@@ -419,7 +424,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 </table>
 
-> ❗Note: The above capabilities are implemented based on GPU/CPU. PaddleX can also perform local inference and custom development on mainstream hardware such as Kunlunxin, Ascend, Cambricon, and Haiguang. The table below details the support status of the pipelines. For specific supported model lists, please refer to the [Model List (Kunlunxin XPU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_xpu.html)/[Model List (Ascend NPU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_npu.html)/[Model List (Cambricon MLU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_mlu.html)/[Model List (Haiguang DCU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_dcu.html). We are continuously adapting more models and promoting the implementation of high-performance and serving on mainstream hardware.
+> ❗Note: The above capabilities are implemented based on GPU/CPU. PaddleX can also perform local inference and custom development on mainstream hardware such as Kunlunxin, Ascend, Cambricon, and HYGON. The table below details the support status of the pipelines. For specific supported model lists, please refer to the [Model List (Kunlunxin XPU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_xpu.html)/[Model List (Ascend NPU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_npu.html)/[Model List (Cambricon MLU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_mlu.html)/[Model List (HYGON DCU)](https://paddlepaddle.github.io/PaddleX/latest/en/support_list/model_list_dcu.html). We are continuously adapting more models and promoting the implementation of high-performance and serving on mainstream hardware.
 
 🔥🔥 **Support for Domestic Hardware Capabilities**
 
@@ -429,7 +434,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <th>Ascend 910B</th>
     <th>Kunlunxin R200/R300</th>
     <th>Cambricon MLU370X8</th>
-    <th>Haiguang Z100</th>
+    <th>HYGON Z100</th>
   </tr>
   <tr>
     <td>OCR</td>
@@ -569,7 +574,9 @@ python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/pac
 * **Installing PaddleX**
 
 ```bash
-pip install paddlex==3.0.0rc1
+pip install paddlex==3.0.0[base]
+# You can also install the sub-package for specific pipeline, such as:
+# pip install paddlex==3.0.0[ocr]
 ```
 
 > ❗For more installation methods, refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/en/installation/installation.html).

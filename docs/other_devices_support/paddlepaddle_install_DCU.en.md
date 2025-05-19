@@ -4,7 +4,7 @@ comments: true
 
 # Hygon DCU PaddlePaddle Installation Tutorial
 
-Currently, PaddleX supports Haiguang Z100 series chips. Considering environmental differences, we recommend using the <b>officially released Haiguang DCU development image by PaddlePaddle</b>, which is pre-installed with the Haiguang DCU basic runtime library (DTK).
+Currently, PaddleX supports HYGON Z100 series chips. Considering environmental differences, we recommend using the <b>officially released HYGON DCU development image by PaddlePaddle</b>, which is pre-installed with the HYGON DCU basic runtime library (DTK).
 
 ## 1. Docker Environment Preparation
 Pull the image. Note that this image is only for development environments and does not include pre-compiled PaddlePaddle installation packages.

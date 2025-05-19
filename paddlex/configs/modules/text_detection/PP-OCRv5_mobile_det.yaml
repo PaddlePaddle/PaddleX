@@ -19,7 +19,7 @@ Train:
   epochs_iters: 100
   batch_size: 4
   learning_rate: 0.001
-  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams
+  pretrain_weight_path: "PP-OCRv5_mobile_det_pretrained.pdparams"
   resume_path: null
   log_interval: 10
   eval_interval: 1

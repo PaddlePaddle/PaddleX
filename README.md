@@ -35,6 +35,15 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 
 ## 📣 近期更新
 
+🔥🔥 **2025.5.20，发布 PaddleX v3.0.0**，核心升级如下：
+- **重要能力发布：**
+  - **重磅发布文字识别模型 PP-OCRv5**：全场景 OCR 识别精度跃升13%，单模型同时支持 5 种文字类型(简体中文、繁体中文、中文拼音、英文和日文)，在中英文手写字体、竖直文本、生僻字等提升非常明显。可在 [在线Demo](https://aistudio.baidu.com/community/app/91660/webUI?source=appCenter) 中立即体验。
+  - **重磅发布文档解析方案 PP-StructureV3**：强化了版面区域检测、表格识别、中英文公式识别、多栏阅读顺序的恢复能力，增加了图表理解能力，在 OmniDocBench 榜单上，PP-StructureV3 的整体中文和英文的编辑距离均达到 SOTA 水平。可在 [在线Demo](https://aistudio.baidu.com/community/app/518494/webUI?source=appCenter) 中立即体验。
+  - **优化PP-ChatOCRv4**：原生支持文心大模型4.5T，结合PP-DocBee2，关键信息抽取精度相比上一代提升15.7个百分点。可在 [在线Demo](https://aistudio.baidu.com/community/app/518493/webUI?source=appCenter) 中立即体验。
+- **推理能力优化：**
+  - 通用OCR、通用版面解析v3、公式识别、印章文本识别、文档图像预处理产线支持设置batch size>1，一次处理多个页面。
+  - 通用OCR、通用版面解析v3等17条产线支持多卡并行推理；新增产线多进程并行推理示例代码。
+
 🔥🔥 **2025.4.22，发布 PaddleX v3.0.0rc1 。** 本次版本全面适配 PaddlePaddle 3.0正式版，核心升级如下：
 
 - **全面适配飞桨框架3.0新特性**：支持编译器训练，训练命令通过追加 `-o Global.dy2st=True` 即可开启编译器训练，在 GPU 上，多数模型训练速度可提升 10% 以上，少部分模型训练速度可以提升 30% 以上。推理方面，模型整体适配飞桨 3.0 中间表示技术（PIR），拥有更加灵活的扩展能力和兼容性，静态图模型存储文件名由 `xxx.pdmodel` 改为 `xxx.json`。
@@ -111,8 +120,18 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">文档场景信息抽取v3</a></td>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">文档场景信息抽取v3</a></td>
         <td><a href = "https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">链接</a></td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html">文档场景信息抽取v4</a></td>
+        <td><a href = "https://aistudio.baidu.com/community/app/518493/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -322,13 +341,13 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">通用表格识别v2</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/518495/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">通用版面解析</a></td>
@@ -342,13 +361,13 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">通用版面解析v3</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/518494/webUI?source=appCente">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">文档图像预处理</a></td>

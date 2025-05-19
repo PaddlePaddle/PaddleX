@@ -189,7 +189,7 @@ plugins:
             多硬件使用: Multi-Device Usage
             多硬件使用指南: Multi-Device Usage Guide
             飞桨多硬件安装: PaddlePaddle Installation on Multiple Devices
-            海光 DCU 飞桨安装教程: Haiguang DCU PaddlePaddle Installation Guide
+            海光 DCU 飞桨安装教程: HYGON DCU PaddlePaddle Installation Guide
             寒武纪 MLU 飞桨安装教程: Cambricon MLU PaddlePaddle Installation Guide
             昇腾 NPU 飞桨安装教程: Ascend NPU PaddlePaddle Installation Guide
             昆仑 XPU 飞桨安装教程: Kunlun XPU PaddlePaddle Installation Guide
