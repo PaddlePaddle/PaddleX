@@ -21,20 +21,52 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv5_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">Training Model</a></td>
+<td>83.8</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>101</td>
+<td>PP-OCRv5 server-side text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>79.0</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>4.7</td>
+<td>PP-OCRv5 mobile-side text detection model with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
-<td>82.69</td>
+<td>69.2</td>
 <td>83.34 / 80.91</td>
 <td>442.58 / 442.58</td>
 <td>109</td>
-<td>The server-side text detection model of PP-OCRv4, featuring higher accuracy and suitable for deployment on high-performance servers</td>
+<td>PP-OCRv4 server-side text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
-<td>77.79</td>
+<td>63.8</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
 <td>4.7</td>
-<td>The mobile text detection model of PP-OCRv4, optimized for efficiency and suitable for deployment on edge devices</td>
+<td>PP-OCRv4 mobile-side text detection model with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
+<td>PP-OCRv3_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>Accuracy comparable to PP-OCRv4_mobile_det</td>
+<td>8.44 / 2.91</td>
+<td>27.87 / 27.87</td>
+<td>2.1</td>
+<td>PP-OCRv3 mobile text detection model with higher efficiency, suitable for edge device deployment</td>
+</tr>
+<tr>
+<td>PP-OCRv3_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">Training Model</a></td>
+<td>Accuracy comparable to PP-OCRv4_server_det</td>
+<td>65.41 / 13.67</td>
+<td>305.07 / 305.07</td>
+<td>102.1</td>
+<td>PP-OCRv3 server text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 </tbody>
 </table>
@@ -44,7 +76,7 @@ The text detection module is a crucial component in OCR (Optical Character Recog
   <ul>
       <li><b>Performance Test Environment</b>
           <ul>
-           <li><strong>Test Dataset：</strong> PaddleOCR’s self-built Chinese and English dataset covers multiple scenarios including street views, web images, documents, and handwriting. The Chinese text detection dataset contains 593 images.</li>
+           <li><strong>Test Dataset：</strong>PaddleOCR3.0 newly constructed multilingual dataset (including Chinese, Traditional Chinese, English, Japanese), covering street scenes, web images, documents, handwriting, blur, rotation, distortion, etc., totaling 2677 images.</li>
               <li><strong>Hardware Configuration：</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
@@ -89,7 +121,7 @@ Just a few lines of code can complete the inference of the text detection module
 
 ```python
 from paddlex import create_model
-model = create_model(model_name="PP-OCRv4_mobile_det")
+model = create_model(model_name="PP-OCRv5_mobile_det")
 output = model.predict("general_ocr_001.png", batch_size=1)
 for res in output:
     res.print()
@@ -100,7 +132,15 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': {'input_path': 'general_ocr_001.png', "page_index": None, 'dt_polys': [[[73, 552], [453, 542], [454, 575], [74, 585]], [[17, 506], [515, 486], [517, 535], [19, 555]], [[189, 457], [398, 449], [399, 482], [190, 490]], [[41, 412], [484, 387], [486, 433], [43, 457]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
+{'res': {'input_path': 'general_ocr_001.png', 'page_index': None, 'dt_polys': array([[[ 75, 549],
+        ...,
+        [ 77, 586]],
+
+       ...,
+
+       [[ 37, 408],
+        ...,
+        [ 39, 453]]], dtype=int16), 'dt_scores': [0.832930755107492, 0.8186143846140158, 0.8591595100376676, 0.8718863959111733]}}
 ```
 
 The meanings of the running result parameters are as follows:
@@ -117,7 +157,7 @@ Note: Due to network issues, the above URL may not be successfully parsed. If yo
 
 Relevant methods, parameters, and explanations are as follows:
 
-* `create_model` instantiates a text detection model (here using `PP-OCRv4_mobile_det` as an example). The specific explanation is as follows:
+* `create_model` instantiates a text detection model (here using `PP-OCRv5_mobile_det` as an example). The specific explanation is as follows:
 <table>
 <thead>
 <tr>
@@ -420,7 +460,7 @@ tar -xf ./dataset/ocr_det_dataset_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
@@ -488,13 +528,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -503,16 +543,16 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 Model Training
-Model training can be completed with a single command. Here's an example of training the PP-OCRv4 mobile text detection model (`PP-OCRv4_mobile_det`):
+Model training can be completed with a single command. Here's an example of training the PP-OCRv5 mobile text detection model (`PP-OCRv5_mobile_det`):
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
 The steps required are:
 
-* Specify the path to the model's `.yaml` configuration file (here it's `PP-OCRv4_mobile_det.yaml`. When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
+* Specify the path to the model's `.yaml` configuration file (here it's `PP-OCRv5_mobile_det.yaml`. When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
 * Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters Documentation](../../../module_usage/instructions/config_parameters_common.en.md).
@@ -539,14 +579,14 @@ The steps required are:
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
 
 Similar to model training, the following steps are required:
 
-* Specify the path to the model's `.yaml` configuration file (in this case, `PP-OCRv4_mobile_det.yaml`)
+* Specify the path to the model's `.yaml` configuration file (in this case, `PP-OCRv5_mobile_det.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
 
@@ -563,14 +603,14 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference predictions via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="general_ocr_001.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 
-* Specify the `.yaml` configuration file path of the model (here it's `PP-OCRv4_mobile_det.yaml`)
+* Specify the `.yaml` configuration file path of the model (here it's `PP-OCRv5_mobile_det.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_accuracy/inference"`
 * Specify the input data path: `-o Predict.input="..."`

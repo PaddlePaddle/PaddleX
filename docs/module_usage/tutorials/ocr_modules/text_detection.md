@@ -23,8 +23,24 @@ comments: true
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv5_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">训练模型</a></td>
+<td>83.8</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>101</td>
+<td>PP-OCRv5 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">训练模型</a></td>
+<td>79.0</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>4.7</td>
+<td>PP-OCRv5 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
+</tr>
+<tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">训练模型</a></td>
-<td>82.56</td>
+<td>69.2</td>
 <td>83.34 / 80.91</td>
 <td>442.58 / 442.58</td>
 <td>109</td>
@@ -32,7 +48,7 @@ comments: true
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td>
-<td>77.35</td>
+<td>63.8</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
 <td>4.7</td>
@@ -40,7 +56,7 @@ comments: true
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">训练模型</a></td>
-<td>78.68</td>
+<td>精度接近 PP-OCRv4_mobile_det</td>
 <td>8.44 / 2.91</td>
 <td>27.87 / 27.87</td>
 <td>2.1</td>
@@ -48,7 +64,7 @@ comments: true
 </tr>
 <tr>
 <td>PP-OCRv3_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">训练模型</a></td>
-<td>80.11</td>
+<td>精度接近 PP-OCRv4_server_det</td>
 <td>65.41 / 13.67</td>
 <td>305.07 / 305.07</td>
 <td>102.1</td>
@@ -62,7 +78,7 @@ comments: true
   <ul>
       <li><b>性能测试环境</b>
           <ul>
-              <li><strong>测试数据集：</strong>PaddleOCR 自建的中英文数据集，覆盖街景、网图、文档、手写多个场景，其中文本检测包含 593 张图片。</li>
+              <li><strong>测试数据集：</strong>PaddleOCR3.0 全新构建多语种（包含中、繁、英、日），覆盖街景、网图、文档、手写、模糊、旋转、扭曲等多个场景的文本检测数据集，包含2677 张图片。</li>
               <li><strong>硬件配置：</strong>
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
@@ -107,7 +123,7 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model(model_name="PP-OCRv4_mobile_det")
+model = create_model(model_name="PP-OCRv5_mobile_det")
 output = model.predict("general_ocr_001.png", batch_size=1)
 for res in output:
     res.print()
@@ -118,7 +134,15 @@ for res in output:
 运行后，得到的结果为：
 
 ```bash
-{'res': {'input_path': 'general_ocr_001.png', "page_index": None, 'dt_polys': [[[73, 552], [453, 542], [454, 575], [74, 585]], [[17, 506], [515, 486], [517, 535], [19, 555]], [[189, 457], [398, 449], [399, 482], [190, 490]], [[41, 412], [484, 387], [486, 433], [43, 457]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
+{'res': {'input_path': 'general_ocr_001.png', 'page_index': None, 'dt_polys': array([[[ 75, 549],
+        ...,
+        [ 77, 586]],
+
+       ...,
+
+       [[ 37, 408],
+        ...,
+        [ 39, 453]]], dtype=int16), 'dt_scores': [0.832930755107492, 0.8186143846140158, 0.8591595100376676, 0.8718863959111733]}}
 ```
 
 运行结果参数含义如下：
@@ -133,7 +157,7 @@ for res in output:
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文本检测模型（此处以`PP-OCRv4_mobile_det`为例），具体说明如下：
+* `create_model`实例化文本检测模型（此处以`PP-OCRv5_mobile_det`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -436,7 +460,7 @@ tar -xf ./dataset/ocr_det_dataset_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
@@ -503,13 +527,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -518,16 +542,16 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处 PP-OCRv4 移动端文本检测模型（`PP-OCRv4_mobile_det`）的训练为例：
+一条命令即可完成模型的训练，以此处 PP-OCRv5 移动端文本检测模型（`PP-OCRv5_mobile_det`）的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv4_mobile_det.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv5_mobile_det.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 * 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
@@ -553,13 +577,13 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv4_mobile_det.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv5_mobile_det.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
@@ -576,14 +600,14 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png)到本地。
 
 ```bash
-python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="general_ocr_001.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv4_mobile_det.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv5_mobile_det.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_accuracy/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
