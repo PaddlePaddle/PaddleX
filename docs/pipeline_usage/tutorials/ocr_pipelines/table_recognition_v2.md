@@ -933,16 +933,16 @@ for res in output:
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
 </tr>
-<td><code>use_table_cells_ocr_results</code></td>
-<td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至HTML表格，启用时逐个单元格做OCR并填充至HTML表格（会增加耗时）。二者在不同场景下性能不同，请根据实际情况选择。</td>
+<td><code>use_ocr_results_with_table_cells</code></td>
+<td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至HTML表格，启用时基于单元格预测结果，对全局OCR结果基于单元格进行切分和重识别，避免出现文字跨单元格连接或缺失的情况。此模式会略微增加推理耗时，并且在不同场景下效果可能不同，请根据实际情况选择。</td>
 <td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>
-<td><code>False</code></td>
+<td><code>True</code></td>
 </tr>
 <td><code>use_e2e_wired_table_rec_model</code></td>
-<td>是否启用有线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下性能不同，请根据实际情况选择。</td>
+<td>是否启用有线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下效果不同，请根据实际情况选择。</td>
 <td><code>bool</code></td>
 <td>
 <ul>
@@ -950,14 +950,38 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <td><code>use_e2e_wireless_table_rec_model</code></td>
-<td>是否启用无线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下性能不同，请根据实际情况选择。</td>
+<td>是否启用无线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下效果不同，请根据实际情况选择。</td>
 <td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>
 <td><code>False</code></td>
-
-</tr></table>
+</tr>
+<td><code>use_table_orientation_classify</code></td>
+<td>是否启用表格方向分类模式，不启用时直接基于传入图像进行表格识别，启用时会检测图像中的表格是否存在旋转，能够将表格方向进行90/180/270度的方向校正后再进行表格识别。此模式会略微增加推理耗时，请根据实际情况选择。</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>
+<td><code>True</code></td>
+</tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>是否启用有线表单元格直转HTML模式，不启用时正常通过表格结构识别模块预测得到表格的HTML结构，启用时直接基于有线表单元格检测模型预测的各单元格位置排布与几何关系构建HTML结构。此模式在不同场景下效果不同，请根据实际情况选择。一般来说，建议在有线表单元格检测非常准确的场景下开启此模式，以获得更加准确的端到端表格识别结果。</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_wireless_table_cells_trans_to_html</code></td>
+<td>是否启用无线表单元格直转HTML模式，不启用时正常通过表格结构识别模块预测得到表格的HTML结构，启用时直接基于无线表单元格检测模型预测的各单元格位置排布与几何关系构建HTML结构。此模式在不同场景下效果不同，请根据实际情况选择。一般来说，建议在无线表单元格检测非常准确的场景下开启此模式，以获得更加准确的端到端表格识别结果。</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>
+<td><code>False</code></td>
+</tr>
+</table>
 
 <b>如果您需要使用端到端表格结构识别模型，只需在产线配置文件中将对应的表格结构识别模型替换为端到端表格结构识别模型，然后直接加载修改后的配置文件并修改对应的`predict()` 方法参数即可</b>。例如，如果您需要使用 SLANet_plus 对无线表格做端到端表格识别，只需将配置文件中 `WirelessTableStructureRecognition` 中的 `model_name` 替换为 SLANet_plus（如下所示），并在预测时指定 `use_e2e_wireless_table_rec_model=True` 即可，其余部分无需修改，此时无线表单元格检测模型将不会生效，而是直接使用 SLANet_plus 进行端到端表格识别。
 
@@ -1616,9 +1640,10 @@ SubPipelines:
         model_dir: null # 替换为微调后的文本检测模型权重路径
         limit_side_len: 960
         limit_type: max
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.4
-        unclip_ratio: 2.0
+        unclip_ratio: 1.5
 
       TextRecognition:
         module_name: text_recognition

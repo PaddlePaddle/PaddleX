@@ -56,6 +56,10 @@ class PaddlePredictorOption(object):
     def model_name(self):
         return self._model_name
 
+    @model_name.setter
+    def model_name(self, model_name):
+        self._model_name = model_name
+
     @property
     def changed(self):
         return self._changed
@@ -214,7 +218,7 @@ class PaddlePredictorOption(object):
         """set trt config"""
         assert isinstance(
             config, dict
-        ), f"The trt_cfg_setting must be `dict` type, but recived `{type(config)}` type!"
+        ), f"The trt_cfg_setting must be `dict` type, but received `{type(config)}` type!"
         self._update("trt_cfg_setting", config)
 
     @property

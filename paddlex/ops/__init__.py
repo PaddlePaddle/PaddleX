@@ -114,7 +114,7 @@ class PaddleXCustomOperatorModule(ModuleType):
             with filelock.FileLock(lockfile):
                 return paddle_jit_load(name=self.modulename, sources=sources, **args)
         except:
-            logging.error("{} builded fail!".format(self.modulename))
+            logging.error("{} built fail!".format(self.modulename))
             raise
 
     def _load_module(self):
@@ -126,7 +126,7 @@ class PaddleXCustomOperatorModule(ModuleType):
                     "No custom op {} found, try JIT build".format(self.modulename)
                 )
                 self.module = self.jit_build()
-                logging.info("{} builded success!".format(self.modulename))
+                logging.info("{} built success!".format(self.modulename))
 
             # refresh
             sys.modules[self.fullname] = self.module

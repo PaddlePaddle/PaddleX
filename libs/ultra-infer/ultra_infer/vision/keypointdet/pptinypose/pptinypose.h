@@ -55,7 +55,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread()
    * \param[in] result The output keypoint detection result will be written to
-   * this structure \return true if the keypoint prediction successed, otherwise
+   * this structure \return true if the keypoint prediction succeeded, otherwise
    * false
    */
   bool Predict(cv::Mat *im, KeyPointDetectionResult *result);
@@ -67,7 +67,7 @@ public:
    * \param[in] result The output keypoint detection result will be written to
    * this structure \param[in] detection_result The structure stores pedestrian
    * detection result, which is used to crop image for multi-persons keypoint
-   * detection \return true if the keypoint prediction successed, otherwise
+   * detection \return true if the keypoint prediction succeeded, otherwise
    * false
    */
   bool Predict(cv::Mat *im, KeyPointDetectionResult *result,

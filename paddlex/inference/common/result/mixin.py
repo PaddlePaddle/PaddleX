@@ -614,7 +614,7 @@ class MarkdownMixin:
         Convert the result to markdown format.
 
         Args:
-            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
 
         Returns:
             Dict[str, Union[str, Dict[str, Any]]]: A dictionary containing markdown text and image data.
@@ -701,5 +701,9 @@ class MarkdownMixin:
             if isinstance(value, dict):
                 base_save_path = save_path.parent
                 for img_path, img_data in value.items():
-                    save_path = base_save_path / img_path
-                    save_img_func(save_path.as_posix(), img_data, *args, **kwargs)
+                    save_img_func(
+                        (base_save_path / img_path).as_posix(),
+                        img_data,
+                        *args,
+                        **kwargs,
+                    )

@@ -413,6 +413,7 @@ nav:
          - BEV融合3D检测模块: module_usage/tutorials/cv_modules/3d_bev_detection.md
        - 多模态视觉语言模型:
          - 文档类视觉语言模型模块: module_usage/tutorials/vlm_modules/doc_vlm.md
+         - 图表解析模块: module_usage/tutorials/vlm_modules/chart_parsing.md
        - 说明文件:
          - PaddleX单模型Python脚本使用说明: module_usage/instructions/model_python_API.md
          - PaddleX通用模型配置文件参数说明: module_usage/instructions/config_parameters_common.md

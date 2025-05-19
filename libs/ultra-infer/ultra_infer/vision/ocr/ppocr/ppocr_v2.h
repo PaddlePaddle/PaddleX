@@ -69,7 +69,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread(), is a 3-D array
    * with layout HWC, BGR format. \param[in] result The output OCR result will
-   * be written to this structure. \return true if the prediction successed,
+   * be written to this structure. \return true if the prediction succeeded,
    * otherwise false.
    */
   virtual bool Predict(cv::Mat *img, ultra_infer::vision::OCRResult *result);
@@ -80,7 +80,7 @@ public:
    * \param[in] images The list of input image data, comes from cv::imread(), is
    * a 3-D array with layout HWC, BGR format. \param[in] batch_result The output
    * list of OCR result will be written to this structure. \return true if the
-   * prediction successed, otherwise false.
+   * prediction succeeded, otherwise false.
    */
   virtual bool
   BatchPredict(const std::vector<cv::Mat> &images,

@@ -15,6 +15,7 @@
 from .bert_tokenizer import BertTokenizer
 from .clip_tokenizer import CLIPTokenizer
 from .gpt_tokenizer import GPTTokenizer
+from .qwen2_5_tokenizer import MIXQwen2_5_Tokenizer
 from .qwen2_tokenizer import MIXQwen2Tokenizer, Qwen2Tokenizer
 from .qwen_tokenizer import QWenTokenizer
 from .tokenizer_utils import PretrainedTokenizer

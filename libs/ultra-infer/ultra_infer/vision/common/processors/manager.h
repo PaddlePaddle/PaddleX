@@ -32,7 +32,7 @@ public:
    *
    * \param[in] enable_cv_cuda true: use CV-CUDA, false: use CUDA only
    * \param[in] gpu_id GPU device id
-   * \return true if the preprocess successed, otherwise false
+   * \return true if the preprocess succeeded, otherwise false
    */
   void UseCuda(bool enable_cv_cuda = false, int gpu_id = -1);
 
@@ -67,7 +67,7 @@ public:
    *
    * \param[in] images The input image data list, all the elements are returned
    * by cv::imread() \param[in] outputs The output tensors which will feed in
-   * runtime \return true if the preprocess successed, otherwise false
+   * runtime \return true if the preprocess succeeded, otherwise false
    */
   bool Run(std::vector<FDMat> *images, std::vector<FDTensor> *outputs);
 
@@ -76,7 +76,7 @@ public:
    *
    * \param[in] image_batch The input image batch
    * \param[in] outputs The output tensors which will feed in runtime
-   * \return true if the preprocess successed, otherwise false
+   * \return true if the preprocess succeeded, otherwise false
    */
   virtual bool Apply(FDMatBatch *image_batch,
                      std::vector<FDTensor> *outputs) = 0;

@@ -56,7 +56,9 @@ class ImageBatchSampler(BaseBatchSampler):
 
     def _get_files_list(self, fp):
         if fp is None or not os.path.exists(fp):
-            raise Exception(f"Not found any image files or pdf files in path: {fp}")
+            raise Exception(f"Not found any files in path: {fp}")
+        if os.path.isfile(fp):
+            return [fp]
 
         file_list = []
         if os.path.isdir(fp):

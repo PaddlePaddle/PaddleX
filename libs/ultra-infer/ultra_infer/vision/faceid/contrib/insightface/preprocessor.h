@@ -33,7 +33,7 @@ public:
    *
    * \param[in] images The input image data list, all the elements are returned
    * by cv::imread() \param[in] outputs The output tensors which will feed in
-   * runtime \return true if the preprocess successed, otherwise false
+   * runtime \return true if the preprocess succeeded, otherwise false
    */
   bool Run(std::vector<FDMat> *images, std::vector<FDTensor> *outputs);
 

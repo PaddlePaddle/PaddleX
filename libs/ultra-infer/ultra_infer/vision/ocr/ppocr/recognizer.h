@@ -65,7 +65,7 @@ public:
    * array with layout HWC, BGR format. \param[in] text The text result of rec
    * model will be written into this parameter. \param[in] rec_score The sccore
    * result of rec model will be written into this parameter. \return true if
-   * the prediction is successed, otherwise false.
+   * the prediction is succeeded, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img, std::string *text, float *rec_score);
 
@@ -74,7 +74,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] ocr_result The output of OCR
    * recognition model result will be written to this structure. \return true if
-   * the prediction is successed, otherwise false.
+   * the prediction is succeeded, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img, vision::OCRResult *ocr_result);
 
@@ -83,7 +83,7 @@ public:
    * \param[in] images The list of input image data, comes from cv::imread(), is
    * a 3-D array with layout HWC, BGR format. \param[in] ocr_result The output
    * of OCR recognition model result will be written to this structure. \return
-   * true if the prediction is successed, otherwise false.
+   * true if the prediction is succeeded, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,
                             vision::OCRResult *ocr_result);
@@ -94,7 +94,7 @@ public:
    * a 3-D array with layout HWC, BGR format. \param[in] texts The list of text
    * results of rec model will be written into this vector. \param[in]
    * rec_scores The list of sccore result of rec model will be written into this
-   * vector. \return true if the prediction is successed, otherwise false.
+   * vector. \return true if the prediction is succeeded, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,
                             std::vector<std::string> *texts,

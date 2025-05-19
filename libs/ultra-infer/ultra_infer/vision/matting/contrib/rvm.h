@@ -52,7 +52,7 @@ public:
    *
    * \param[in] im The input image data, comes from cv::imread()
    * \param[in] result The output matting result will be written to this
-   * structure \return true if the prediction successed, otherwise false
+   * structure \return true if the prediction succeeded, otherwise false
    */
   bool Predict(cv::Mat *im, MattingResult *result);
 

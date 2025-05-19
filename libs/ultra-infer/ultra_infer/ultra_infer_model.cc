@@ -206,7 +206,7 @@ bool UltraInferModel::InitRuntimeWithSpecifiedDevice() {
 
 bool UltraInferModel::InitRuntime() {
   if (runtime_initialized_) {
-    FDERROR << "The model is already initialized, cannot be initliazed again."
+    FDERROR << "The model is already initialized, cannot be initialized again."
             << std::endl;
     return false;
   }

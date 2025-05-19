@@ -55,7 +55,12 @@ BLOCK_LABEL_MAP = {
         "flowchart",
         "figure",
     ],  # 图、表、印章、图表、图
-    "vision_title_labels": ["table_title", "chart_title", "figure_title"],  # 图表标题
+    "vision_title_labels": [
+        "table_title",
+        "chart_title",
+        "figure_title",
+        "figure_table_chart_title",
+    ],  # 图表标题
     "unordered_labels": [
         "aside_text",
         "seal",
@@ -78,4 +83,5 @@ BLOCK_LABEL_MAP = {
         "refer_title",
         "content_title",
     ],
+    "image_labels": ["image", "figure"],
 }

@@ -66,7 +66,7 @@ public:
    * \param[in] im The input image data which is consecutive frame, comes from
    * imread() or videoCapture.read() \param[in] result The output tracking
    * result will be written to this structure \return true if the prediction
-   * successed, otherwise false
+   * succeeded, otherwise false
    */
   virtual bool Predict(cv::Mat *img, MOTResult *result);
   /** \brief bind tracking trail struct

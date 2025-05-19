@@ -45,7 +45,7 @@ public:
    * \param[in] width The width of the output image.
    * \param[in] height The height of the output image.
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(Mat *mat, int offset_w, int offset_h, int width, int height,
                   ProcLib lib = ProcLib::DEFAULT);

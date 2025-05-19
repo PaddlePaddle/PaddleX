@@ -65,7 +65,7 @@ public:
   /*! @brief operator `()` for calling processor in this way: `processor(mat)`
    *
    * \param[in] mat: The input mat
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   virtual bool operator()(FDMat *mat);
 
@@ -76,7 +76,7 @@ public:
    *
    * \param[in] mat: The input mat
    * \param[in] lib: The processing library, opencv, cv-cuda, flycv, etc.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   virtual bool operator()(FDMat *mat, ProcLib lib);
 
@@ -84,7 +84,7 @@ public:
    * `processor(mat_batch)`
    *
    * \param[in] mat_batch: The input mat batch
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   virtual bool operator()(FDMatBatch *mat_batch);
 };

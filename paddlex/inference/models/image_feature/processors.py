@@ -23,10 +23,9 @@ class NormalizeFeatures:
 
     def _normalize(self, preds):
         """normalize"""
-        feas_norm = np.sqrt(np.sum(np.square(preds[0]), axis=0, keepdims=True))
-        features = np.divide(preds[0], feas_norm)
+        feas_norm = np.sqrt(np.sum(np.square(preds), axis=1, keepdims=True))
+        features = np.divide(preds, feas_norm)
         return features
 
     def __call__(self, preds):
-        normalized_features = [self._normalize(feature) for feature in preds]
-        return normalized_features
+        return self._normalize(preds[0])

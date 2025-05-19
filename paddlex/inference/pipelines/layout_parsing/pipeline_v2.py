@@ -100,7 +100,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self.use_seal_recognition = config.get("use_seal_recognition", True)
         self.use_region_detection = config.get(
             "use_region_detection",
-            False,
+            True,
         )
         self.use_formula_recognition = config.get(
             "use_formula_recognition",
@@ -494,7 +494,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             region_det_res["boxes"] = [
                 {
                     "coordinate": base_region_bbox,
-                    "label": "SupplementaryBlock",
+                    "label": "SupplementaryRegion",
                     "score": 1,
                 }
             ]
@@ -521,7 +521,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     matched_bboxes = [block_bboxes[idx] for idx in matched_idxes]
                     new_region_bbox = calculate_minimum_enclosing_bbox(matched_bboxes)
                     region_det_res["boxes"][region_idx]["coordinate"] = new_region_bbox
-            # Supplement region block when there is no matched block
+            # Supplement region when there is no matched block
             if len(block_idxes_set) > 0:
                 while len(block_idxes_set) > 0:
                     matched_idxes = []
@@ -555,7 +555,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     region_det_res["boxes"].append(
                         {
                             "coordinate": supplement_region_bbox,
-                            "label": "SupplementaryBlock",
+                            "label": "SupplementaryRegion",
                             "score": 1,
                         }
                     )
@@ -791,11 +791,17 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
 
-            if label in ["chart", "image", "seal", "table", "formula"]:
+            if (
+                label
+                in ["seal", "table", "formula", "chart"]
+                + BLOCK_LABEL_MAP["image_labels"]
+            ):
                 x_min, y_min, x_max, y_max = list(map(int, block_bbox))
-                img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                img_path = (
+                    f"imgs/img_in_{block.label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                )
                 img = Image.fromarray(image[y_min:y_max, x_min:x_max, ::-1])
-                block.image = {img_path: img}
+                block.image = {"path": img_path, "img": img}
 
             layout_parsing_blocks.append(block)
 
@@ -944,13 +950,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
-        use_doc_orientation_classify: Union[bool, None] = None,
-        use_doc_unwarping: Union[bool, None] = None,
+        use_doc_orientation_classify: Union[bool, None] = False,
+        use_doc_unwarping: Union[bool, None] = False,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
-        use_chart_recognition: Union[bool, None] = None,
+        use_chart_recognition: Union[bool, None] = False,
         use_region_detection: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
@@ -1007,8 +1013,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
-            use_wired_table_cells_trans_to_html (bool): Whether to use wired tabel cells trans to HTML.
-            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless tabel cells trans to HTML.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired table cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless table cells trans to HTML.
             use_table_orientation_classify (bool): Whether to use table orientation classification.
             use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
@@ -1117,9 +1123,19 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 )
 
             if model_settings["use_table_recognition"]:
-                table_contents = []
-                for overall_ocr_res, formula_res_list, imgs_in_doc_for_img in zip(
-                    overall_ocr_results, formula_res_lists, imgs_in_doc
+                table_res_lists = []
+                for (
+                    layout_det_res,
+                    doc_preprocessor_image,
+                    overall_ocr_res,
+                    formula_res_list,
+                    imgs_in_doc_for_img,
+                ) in zip(
+                    layout_det_results,
+                    doc_preprocessor_images,
+                    overall_ocr_results,
+                    formula_res_lists,
+                    imgs_in_doc,
                 ):
                     table_contents_for_img = copy.deepcopy(overall_ocr_res)
                     for formula_res in formula_res_list:
@@ -1133,9 +1149,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
                             (x_min, y_max),
                         ]
                         table_contents_for_img["dt_polys"].append(poly_points)
-                        table_contents_for_img["rec_texts"].append(
-                            f"${formula_res['rec_formula']}$"
-                        )
+                        rec_formula = formula_res["rec_formula"]
+                        if not rec_formula.startswith("$") or not rec_formula.endswith(
+                            "$"
+                        ):
+                            rec_formula = f"${rec_formula}$"
+                        table_contents_for_img["rec_texts"].append(f"{rec_formula}")
                         if table_contents_for_img["rec_boxes"].size == 0:
                             table_contents_for_img["rec_boxes"] = np.array(
                                 [formula_res["dt_polys"]]
@@ -1174,27 +1193,28 @@ class _LayoutParsingPipelineV2(BasePipeline):
                         table_contents_for_img["rec_polys"].append(poly_points)
                         table_contents_for_img["rec_scores"].append(img["score"])
 
-                    table_contents.append(table_contents_for_img)
-
-                table_res_all = list(
-                    self.table_recognition_pipeline(
-                        doc_preprocessor_images,
-                        use_doc_orientation_classify=False,
-                        use_doc_unwarping=False,
-                        use_layout_detection=False,
-                        use_ocr_model=False,
-                        overall_ocr_res=table_contents,
-                        layout_det_res=layout_det_results,
-                        cell_sort_by_y_projection=True,
-                        use_wired_table_cells_trans_to_html=use_wired_table_cells_trans_to_html,
-                        use_wireless_table_cells_trans_to_html=use_wireless_table_cells_trans_to_html,
-                        use_table_orientation_classify=use_table_orientation_classify,
-                        use_ocr_results_with_table_cells=use_ocr_results_with_table_cells,
-                        use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
-                        use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
-                    ),
-                )
-                table_res_lists = [item["table_res_list"] for item in table_res_all]
+                    table_res_all = list(
+                        self.table_recognition_pipeline(
+                            doc_preprocessor_image,
+                            use_doc_orientation_classify=False,
+                            use_doc_unwarping=False,
+                            use_layout_detection=False,
+                            use_ocr_model=False,
+                            overall_ocr_res=table_contents_for_img,
+                            layout_det_res=layout_det_res,
+                            cell_sort_by_y_projection=True,
+                            use_wired_table_cells_trans_to_html=use_wired_table_cells_trans_to_html,
+                            use_wireless_table_cells_trans_to_html=use_wireless_table_cells_trans_to_html,
+                            use_table_orientation_classify=use_table_orientation_classify,
+                            use_ocr_results_with_table_cells=use_ocr_results_with_table_cells,
+                            use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
+                            use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
+                        ),
+                    )
+                    single_table_res_lists = [
+                        item["table_res_list"] for item in table_res_all
+                    ]
+                    table_res_lists.extend(single_table_res_lists)
             else:
                 table_res_lists = [[] for _ in doc_preprocessor_images]
 

@@ -876,30 +876,6 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 </table>
 <b>Note: The above accuracy metrics are based on the AliProducts recall@1.</b>
 
-## [Document Orientation Classification Module](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md)
-<table>
-<thead>
-<tr>
-<th>Model Name</th>
-<th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
-<th>yaml File</th>
-<th>Model Download Link</th></tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-LCNet_x1_0_doc_ori</td>
-<td>99.06</td>
-<td>2.31 / 0.43</td>
-<td>3.37 / 1.27</td>
-<td>7</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml">PP-LCNet_x1_0_doc_ori.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td></tr>
-</tbody>
-</table>
-<b>Note: The above accuracy metrics are based on the Top-1 Acc of the internal dataset of PaddleX.</b>
 
 ## [Face Feature Module](../module_usage/tutorials/cv_modules/face_feature.en.md)
 <table>
@@ -1301,6 +1277,47 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>351.5 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/YOLOX-X.yaml">YOLOX-X.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">Training Model</a></td></tr>
+
+
+
+
+
+<tr>
+<td>Co-Deformable-DETR-R50</td>
+<td>49.7</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>184 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-R50.yaml">Co-Deformable-DETR-R50.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">Training Model</a></td></tr>
+
+<tr>
+<td>Co-Deformable-DETR-Swin-T</td>
+<td>48.0</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>    187 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-Swin-T.yaml">Co-Deformable-DETR-Swin-T.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">Training Model</a></td></tr>
+
+<tr>
+<td>Co-DINO-Swin-L</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>841 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-Swin-L.yaml">Co-DINO-Swin-L.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">Training Model</a></td></tr>
+
+<tr>
+<td>Co-DINO-R50</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>187 M </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-R50.yaml">Co-DINO-R50.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">Training Model</a></td></tr>
+
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are based on the COCO2017 validation set mAP(0.5:0.95).</b>
@@ -1327,7 +1344,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml">PP-YOLOE_plus_SOD-S.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
-</table>
+
 <tr>
 <td>PP-YOLOE_plus_SOD-L</td>
 <td>31.9</td>
@@ -1346,7 +1363,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml">PP-YOLOE_plus_SOD-largesize-L.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
 </tr>
-
+</table>
 
 <b>Note: The above accuracy metrics are based on the validation set mAP(0.5:0.95) of </b>[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)<b>.</b>
 
@@ -1360,6 +1377,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
+<th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
 <tr>
@@ -1369,6 +1387,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>253.72</td>
 <td>1807.4</td>
 <td>658.3</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/open_vocabulary_detection/GroundingDINO-T.yaml">GroundingDINO-T.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">Inference Model</a></td>
 </tr>
 <tr>
@@ -1378,6 +1397,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>24.32</td>
 <td>374.89</td>
 <td>421.4</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/open_vocabulary_detection/YOLO-Worldv2-L.yaml">YOLO-Worldv2-L.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">Inference Model</a></td>
 </tr>
 </table>
@@ -1391,6 +1411,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
+<th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
 <tr>
@@ -1398,6 +1419,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/open_vocabulary_segmentation/SAM-H_box.yaml">SAM-H_box.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_box_infer.tar">Inference Model</a></td>
 </tr>
 <tr>
@@ -1405,6 +1427,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/open_vocabulary_segmentation/SAM-H_point.yaml">SAM-H_point.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_point_infer.tar">Inference Model</a></td>
 </tr>
 </table>
@@ -1427,7 +1450,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>20.7039</td>
 <td>157.942</td>
 <td>211.0 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml">PP-YOLOE-R.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml">PP-YOLOE-R-L.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 </tr>
 </table>
@@ -1542,7 +1565,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>22.54 / 8.33</td>
 <td>138.67 / 138.67</td>
 <td>26.5 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/face_detection/PP-YOLOE_plus-S_face.yaml">PP-YOLOE_plus-S_face</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/face_detection/PP-YOLOE_plus-S_face.yaml">PP-YOLOE_plus-S_face.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>
@@ -1574,6 +1597,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 </table>
 <b>Note: The above precision metrics are the average anomaly scores on the validation set of </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b>.</b>
 
+## [ Human Keypoint Detection Module](../module_usage/tutorials//cv_modules/human_keypoint_detection.en.md)
 
 <table>
 <tr>
@@ -1771,6 +1795,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>229.7 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/semantic_segmentation/SegFormer-B5.yaml">SegFormer-B5.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B5 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">Training Model</a></td></tr>
+
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are based on the </b>[Cityscapes](https://www.cityscapes-dataset.com/)<b> dataset mIoU.</b>
@@ -1818,6 +1843,26 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>6.1M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/semantic_segmentation/SeaFormer_tiny.yaml">SeaFormer_tiny.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Training Model</a></td></tr>
+
+
+<tr>
+<td>MaskFormer_small</td>
+<td>49.70</td>
+<td>69.856</td>
+<td>-</td>
+<td>242.5 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/semantic_segmentation/MaskFormer_small.yaml">MaskFormer_small.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskFormer_small_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_small_pretrained.pdparams">Training Model</a></td></tr>
+
+<tr>
+<td>MaskFormer_tiny</td>
+<td>46.69</td>
+<td>50.157</td>
+<td>-</td>
+<td>160.5 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/semantic_segmentation/MaskFormer_tiny.yaml">MaskFormer_tiny.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskFormer_tiny_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_tiny_pretrained.pdparams">Training Model</a></td></tr>
+
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are based on the </b>[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)<b> dataset. "Slice" indicates that the input images have been cropped.</b>
@@ -1987,6 +2032,26 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 </tr>
 </thead>
 <tbody>
+
+<tr>
+<td>PP-OCRv5_server_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>101</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_detection/PP-OCRv5_server_det.yaml">PP-OCRv5_server_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>20</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml">PP-OCRv5_mobile_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">Training Model</a></td>
+</tr>
+
 <tr>
 <td>PP-OCRv4_server_det</td>
 <td>82.56</td>
@@ -2073,6 +2138,26 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
+
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>206 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv5_server_rec.yaml">PP-OCRv5_server_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>137 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv5_mobile_rec.yaml">PP-OCRv5_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+
 <tr>
 <td>PP-OCRv4_server_rec_doc</td>
 <td>81.53</td>
@@ -2295,7 +2380,8 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <table>
 <tr>
 <th>Model</th>
-<th>Avg-BLEU(%)</th>
+<th>En-BLEU(%)</th>
+<th>Zh-BLEU(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
@@ -2303,34 +2389,68 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Model Download Link</th>
 </tr>
 <td>UniMERNet</td>
-<td>86.13</td>
+<td>85.91</td>
+<td>43.50</td>
 <td>2266.96/-</td>
 <td>-/-</td>
-<td>1.4 G</td>
+<td>1.53 G</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/UniMERNet.yaml">UniMERNet.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UniMERNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">Training Model</a></td>
 <tr>
 <td>PP-FormulaNet-S</td>
-<td>87.12</td>
+<td>87.00</td>
+<td>45.71</td>
 <td>202.25/-</td>
 <td>-/-</td>
-<td>167.9 M</td>
+<td>224 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml">PP-FormulaNet-S.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">Training Model</a></td>
 </tr>
 <td>PP-FormulaNet-L</td>
-<td>92.13</td>
+<td>90.36</td>
+<td>45.78</td>
 <td>1976.52/-</td>
 <td>-/-</td>
-<td>535.2 M</td>
+<td>695 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet-L.yaml">PP-FormulaNet-L.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">Training Model</a></td>
 <tr>
+<td>PP-FormulaNet_plus-S</td>
+<td>88.71</td>
+<td>53.32</td>
+<td>191.69/-</td>
+<td>-/-</td>
+<td>248 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-S.yaml">PP-FormulaNet_plus-S.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-S_pretrained.pdparams">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-FormulaNet_plus-M</td>
+<td>91.45</td>
+<td>89.76</td>
+<td>1301.56/-</td>
+<td>-/-</td>
+<td>592 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml">PP-FormulaNet_plus-M.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-M_pretrained.pdparams">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-FormulaNet_plus-L</td>
+<td>92.22</td>
+<td>90.64</td>
+<td>1745.25/-</td>
+<td>-/-</td>
+<td>698 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-L.yaml">PP-FormulaNet_plus-L.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-L_pretrained.pdparams">Training Model</a></td>
+</tr>
+<tr>
 <td>LaTeX_OCR_rec</td>
-<td>71.63</td>
+<td>74.55</td>
+<td>39.96</td>
+<td>1244.61/-</td>
 <td>-/-</td>
-<td>-/-</td>
-<td>89.7 M</td>
+<td>99 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/LaTeX_OCR_rec.yaml">LaTeX_OCR_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
 </tr>
@@ -2388,25 +2508,28 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 
 <table>
 <tr>
-<th>Model</th><th>Model Download Link</th>
+<th>Model</th>
 <th>mAP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
-<th>Introduction</th>
+<th>yaml File</th>
+<th>Model Download Link</th>
 </tr>
 <tr>
 <td>RT-DETR-L_wired_table_cell_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
+
 <td rowspan="2">82.7</td>
 <td rowspan="2">35.00 / 10.45</td>
 <td rowspan="2">495.51 / 495.51</td>
 <td rowspan="2">124M</td>
-<td rowspan="2">RT-DETR is the first real-time end-to-end object detection model. The Baidu PaddlePaddle Vision Team, based on RT-DETR-L as the base model, has completed pretraining on a self-built table cell detection dataset, achieving good performance for both wired and wireless table cell detection.
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_table_cell_det.yaml">RT-DETR-L_wired_table_cell_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </td>
 </tr>
 <tr>
 <td>RT-DETR-L_wireless_table_cell_det</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_cells_detection/RT-DETR-L_wireless_table_cell_det.yaml">RT-DETR-L_wireless_table_cell_det.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
@@ -2426,10 +2549,10 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_table_cls</td>
-<td>--</td>
-<td>--</td>
-<td>--</td>
-<td>--</td>
+<td>94.2</td>
+<td>2.35 / 0.47</td>
+<td>4.03 / 1.35</td>
+<td>6.6M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_classification/PP-LCNet_x1_0_table_cls.yaml">PP-LCNet_x1_0_table_cls.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">Training Model</a></td>
 </tr>
@@ -2464,6 +2587,110 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <b>Note: The above accuracy metrics are measured from the image unwarping dataset built by PaddleX.</b>
 
 ## [Layout Detection Module](../module_usage/tutorials/ocr_modules/layout_detection.en.md)
+
+* <b>Layout detection model, including 20 common categories: document title, section title, text, page number, abstract, table of contents, references, footnote, header, footer, algorithm, formula, formula number, image, table, figure and table captions (figure caption, table caption, and chart caption), stamp, chart, sidebar text, and reference content.</b>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size</th>
+<th>yaml File</th>
+<th>Model Download Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout_plus-L</td>
+<td>83.2</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
+<td>126.01 </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PP-DocLayout_plus-L.yaml">PP-DocLayout_plus-L.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams">Training Model</a></td>
+</tr>
+</tbody>
+</table>
+
+<b>Note: The evaluation set for the accuracy metrics mentioned above is a custom-built layout detection dataset, which includes 1,300 document-type images such as Chinese and English papers, magazines, newspapers, research reports, PPTs, exam papers, and textbooks.</b>
+
+* <b>Layout detection model, including 1 category: block.</b>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size</th>
+<th>yaml File</th>
+<th>Model Download Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocBlockLayout</td>
+<td>95.9</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
+<td>123.92 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PP-DocBlockLayout.yaml">PP-DocBlockLayout.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBlockLayout_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocBlockLayout_pretrained.pdparams">Training Model</a></td>
+</tr>
+</tbody>
+</table>
+
+<b>Note: The evaluation set for the accuracy metrics mentioned above is a custom-built layout block detection dataset, which includes 1,000 document-type images such as Chinese and English papers, magazines, newspapers, research reports, PPTs, exam papers, and textbooks.</b>
+
+
+* <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure caption, table, table caption, seal, figure title, figure, header image, footer image, and sidebar text. </b>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size</th>
+<th>yaml File</th>
+<th>Model Download Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td>
+<td>90.4</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
+<td>123.76 </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml">PP-DocLayout-L.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td>
+<td>75.2</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
+<td>22.578</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PP-DocLayout-M.yaml">PP-DocLayout-M.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td>
+<td>70.9</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
+<td>4.834</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PP-DocLayout-S.yaml">PP-DocLayout-S.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
+</tr>
+</tbody>
+</table>
+
+<b>Note: The evaluation set for the accuracy metrics mentioned above is a custom-built layout region detection dataset, which includes 500 common document-type images such as Chinese and English papers, magazines, and research reports.</b>
+
 
 * <b>Table Layout Detection Model</b>
 <table>
@@ -2583,7 +2810,6 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/PicoDet-S_layout_17cls.yaml">PicoDet-S_layout_17cls.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
 </tr>
-</tbody></table>
 <tr>
 <td>PicoDet-L_layout_17cls</td>
 <td>89.0</td>
@@ -2602,7 +2828,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/layout_detection/RT-DETR-H_layout_17cls.yaml">RT-DETR-H_layout_17cls.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
 </tr>
-
+</table>
 
 <b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset built by PaddleOCR, which includes 892 images of common document types such as Chinese and English papers, magazines, and research reports. </b>
 
@@ -2775,6 +3001,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>320 K</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml">PatchTST_ad.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td></tr>
+
 </tbody>
 </table>
 <b>Note: The above precision metrics are measured from the </b>[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)<b> dataset.</b>
@@ -2849,7 +3076,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>680kh</td>
 <td>145M</td>
 <td>-</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_small.yaml">whisper_small.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_tiny.yaml">whisper_tiny.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">Inference Model</a></td>
 </tr>
 </table>
@@ -2913,18 +3140,51 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <table>
 <tr>
 <th>Model</th>
+<th>Model Parameter Size（B）</th>
 <th>Model Storage Size（GB）</th>
+<th>yaml File</th>
 <th>Model Download Lin</th>
 </tr>
 <tr>
 <td>PP-DocBee-2B</td>
+<td>2</td>
 <td>4.2</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/doc_vlm/PP-DocBee-2B.yaml">PP-DocBee-2B.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
 </tr>
 <tr>
 <td>PP-DocBee-7B</td>
+<td>7</td>
 <td>15.8</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/doc_vlm/PP-DocBee-7B.yaml">PP-DocBee-7B.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
+</tr>
+<tr>
+<td>PP-DocBee2-3B</td>
+<td>3</td>
+<td>7.6</td>
+<td></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">Inference Model</a></td>
+</tr>
+</table>
+
+
+## [Chart Parsing Model Module](../module_usage/tutorials/vlm_modules/chart_parsing.en.md)
+
+<table>
+<tr>
+<th>Model</th>
+<th>Model Parameter Size（B）</th>
+<th>Model Storage Size（GB）</th>
+<th>yaml File</th>
+<th>Model Download Lin</th>
+</tr>
+<tr>
+<td>PP-Chart2Table</td>
+<td>0.58</td>
+<td>1.4</td>
+<td></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">Inference Model</a></td>
 </tr>
 </table>
 

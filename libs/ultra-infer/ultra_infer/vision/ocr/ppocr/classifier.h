@@ -64,7 +64,7 @@ public:
    * array with layout HWC, BGR format. \param[in] cls_label The label result of
    * cls model will be written in to this param. \param[in] cls_score The score
    * result of cls model will be written in to this param. \return true if the
-   * prediction is successed, otherwise false.
+   * prediction is succeeded, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img, int32_t *cls_label,
                        float *cls_score);
@@ -74,7 +74,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] ocr_result The output of OCR
    * recognition model result will be written to this structure. \return true if
-   * the prediction is successed, otherwise false.
+   * the prediction is succeeded, otherwise false.
    */
   virtual bool Predict(const cv::Mat &img, vision::OCRResult *ocr_result);
 
@@ -84,7 +84,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] ocr_result The output of OCR
    * classification model result will be written to this structure. \return true
-   * if the prediction is successed, otherwise false.
+   * if the prediction is succeeded, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,
                             vision::OCRResult *ocr_result);
@@ -96,7 +96,7 @@ public:
    * a 3-D array with layout HWC, BGR format. \param[in] cls_labels The label
    * results of cls model will be written in to this vector. \param[in]
    * cls_scores The score results of cls model will be written in to this
-   * vector. \return true if the prediction is successed, otherwise false.
+   * vector. \return true if the prediction is succeeded, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,
                             std::vector<int32_t> *cls_labels,

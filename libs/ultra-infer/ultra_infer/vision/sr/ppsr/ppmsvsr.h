@@ -40,7 +40,7 @@ public:
    * get super resolution frame sequence
    * @param[in] imgs origin frame sequences
    * @param[in] results super resolution frame sequence
-   * @return true if the prediction successed, otherwise false
+   * @return true if the prediction succeeded, otherwise false
    */
   virtual bool Predict(std::vector<cv::Mat> &imgs,
                        std::vector<cv::Mat> &results);

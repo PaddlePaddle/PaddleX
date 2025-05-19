@@ -882,15 +882,6 @@ class UniMERNetDecode(object):
         replaced_formula = pattern.sub(replacer, formula)
         return replaced_formula.replace('"', "")
 
-    def remove_chinese_text_wrapping(self, formula):
-        pattern = re.compile(r"\\text\s*{\s*([^}]*?[\u4e00-\u9fff]+[^}]*?)\s*}")
-
-        def replacer(match):
-            return match.group(1)
-
-        replaced_formula = pattern.sub(replacer, formula)
-        return replaced_formula.replace('"', "")
-
     def post_process(self, text: str) -> str:
         """Post-processes a string by fixing text and normalizing it.
 

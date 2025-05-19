@@ -40,7 +40,7 @@ public:
    *
    * \param[in] input_tensors Notice the FDTensor::name should keep same with
    * the model's input \param[in] output_tensors Inference results \return true
-   * if the inference successed, otherwise false
+   * if the inference succeeded, otherwise false
    */
   bool Infer(std::vector<FDTensor> &input_tensors,
              std::vector<FDTensor> *output_tensors);
@@ -99,7 +99,7 @@ public:
   /** \brief Compile TorchScript Module, only for Poros backend
    *
    * \param[in] prewarm_tensors Prewarm datas for compile
-   * \return true if compile successed, otherwise false
+   * \return true if compile succeeded, otherwise false
    */
   bool Compile(std::vector<std::vector<FDTensor>> &prewarm_tensors);
   /** \brief Get profile time of Runtime after the profile process is done.

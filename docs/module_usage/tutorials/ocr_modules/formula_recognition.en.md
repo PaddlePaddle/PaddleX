@@ -13,59 +13,67 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
-<th>Avg-BLEU(%)</th>
+<th>En-BLEU(%)</th>
+<th>Zh-BLEU(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UniMERNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">Training Model</a></td>
-<td>86.13</td>
+<td>85.91</td>
+<td>43.50</td>
 <td>2266.96/-</td>
 <td>-/-</td>
-<td>1.4 G</td>
+<td>1.53 G</td>
 <td>UniMERNet is a formula recognition model developed by Shanghai AI Lab. It uses Donut Swin as the encoder and MBartDecoder as the decoder. The model is trained on a dataset of one million samples, including simple formulas, complex formulas, scanned formulas, and handwritten formulas, significantly improving the recognition accuracy of real-world formulas.</td>
 <tr>
 <td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">Training Model</a></td>
-<td>87.12</td>
+<td>87.00</td>
+<td>45.71</td>
 <td>202.25/-</td>
 <td>-/-</td>
-<td>167.9 M</td>
+<td>224 M</td>
 <td rowspan="2">PP-FormulaNet is an advanced formula recognition model developed by the Baidu PaddlePaddle Vision Team. The PP-FormulaNet-S version uses PP-HGNetV2-B4 as its backbone network. Through parallel masking and model distillation techniques, it significantly improves inference speed while maintaining high recognition accuracy, making it suitable for applications requiring fast inference. The PP-FormulaNet-L version, on the other hand, uses Vary_VIT_B as its backbone network and is trained on a large-scale formula dataset, showing significant improvements in recognizing complex formulas compared to PP-FormulaNet-S.</td>
 </tr>
 <td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">Training Model</a></td>
-<td>92.13</td>
+<td>90.36</td>
+<td>45.78</td>
 <td>1976.52/-</td>
 <td>-/-</td>
-<td>535.2 M</td>
+<td>695 M</td>
 <tr>
 <td>PP-FormulaNet_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-S_pretrained.pdparams">Training Model</a></td>
-<td>-</td>
+<td>88.71</td>
+<td>53.32</td>
+<td>191.69/-</td>
 <td>-/-</td>
-<td>-/-</td>
-<td>-</td>
-<td rowspan="2">- </td>
+<td>248 M</td>
+<td rowspan="3">PP-FormulaNet_plus is an enhanced version of the formula recognition model developed by the Baidu PaddlePaddle Vision Team, building upon the original PP-FormulaNet. Compared to the original version, PP-FormulaNet_plus utilizes a more diverse formula dataset during training, including sources such as Chinese dissertations, professional books, textbooks, exam papers, and mathematics journals. This expansion significantly improves the model’s recognition capabilities. Among the models, PP-FormulaNet_plus-M and PP-FormulaNet_plus-L have added support for Chinese formulas and increased the maximum number of predicted tokens for formulas from 1,024 to 2,560, greatly enhancing the recognition performance for complex formulas. Meanwhile, the PP-FormulaNet_plus-S model focuses on improving the recognition of English formulas. With these improvements, the PP-FormulaNet_plus series models perform exceptionally well in handling complex and diverse formula recognition tasks. </td>
 </tr>
 <tr>
 <td>PP-FormulaNet_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-M_pretrained.pdparams">Training Model</a></td>
-<td>-</td>
+<td>91.45</td>
+<td>89.76</td>
+<td>1301.56/-</td>
 <td>-/-</td>
-<td>-/-</td>
-<td>-</td>
+<td>592 M</td>
 </tr>
 <tr>
 <td>PP-FormulaNet_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-L_pretrained.pdparams">Training Model</a></td>
-<td>-</td>
+<td>92.22</td>
+<td>90.64</td>
+<td>1745.25/-</td>
 <td>-/-</td>
-<td>-/-</td>
-<td>-</td>
+<td>698 M</td>
 </tr>
 <tr>
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
-<td>71.63</td>
+<td>74.55</td>
+<td>39.96</td>
+<td>1244.61/-</td>
 <td>-/-</td>
-<td>-/-</td>
-<td>89.7 M</td>
+<td>99 M</td>
 <td>LaTeX-OCR is a formula recognition algorithm based on an autoregressive large model. It uses Hybrid ViT as the backbone network and a transformer as the decoder, significantly improving the accuracy of formula recognition.</td>
 </tr>
 </table>
@@ -124,7 +132,7 @@ After installing the wheel package, you can complete the inference of the formul
 
 ```python
 from paddlex import create_model
-model = create_model(model_name="PP-FormulaNet-S")
+model = create_model(model_name="PP-FormulaNet_plus-M")
 output = model.predict(input="general_formula_rec_001.png", batch_size=1)
 for res in output:
     res.print()
@@ -135,7 +143,7 @@ for res in output:
 After running, the result obtained is:
 
 ````
-{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
+{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}\\breve{\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
 ````
 
 The meanings of the running results parameters are as follows:
@@ -155,7 +163,7 @@ sudo apt-get install texlive texlive-latex-base texlive-xetex latex-cjk-all texl
 
 The explanations for the methods, parameters, etc., are as follows:
 
-* The `create_model` method instantiates the formula recognition model (here, `PP-FormulaNet-S` is used as an example), and the specific explanations are as follows:
+* The `create_model` method instantiates the formula recognition model (here, `PP-FormulaNet_plus-M` is used as an example), and the specific explanations are as follows:
 <table>
 <thead>
 <tr>
@@ -343,7 +351,7 @@ tar -xf ./dataset/ocr_rec_latexocr_dataset_example.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 ```
@@ -426,13 +434,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 </code></pre>
 <p>After the data conversion is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.convert.enable=True \
@@ -457,13 +465,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.split.enable=True \
@@ -472,21 +480,21 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 Model Training
-Model training can be completed with a single command, taking the training of the formula recognition model PP-FormulaNet-S as an example:
+Model training can be completed with a single command, taking the training of the formula recognition model PP-FormulaNet_plus-M as an example:
 
 ```bash
-FLAGS_json_format_model=1 python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml  \
+FLAGS_json_format_model=1 python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 ```
 The following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-FormulaNet-S.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
+* Specify the `.yaml` configuration file path for the model (here it is `PP-FormulaNet_plus-M.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`.
 * Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common.en.md).
 *  Except for LaTeX_OCR_rec, the formula recognition models only support exporting models in JSON format. Therefore, during training, you need to set the parameter `FLAGS_json_format_model=1`.
-*  For the PP-FormulaNet-S, PP-FormulaNet-L, and UniMERNet models, additional Linux packages need to be installed during training. The specific command is as follows:
+*  For the PP-FormulaNet-S, PP-FormulaNet-L, PP-FormulaNet_plus-S、PP-FormulaNet_plus-M、PP-FormulaNet_plus-L and UniMERNet models, additional Linux packages need to be installed during training. The specific command is as follows:
 * New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 ```bash
@@ -518,13 +526,13 @@ python -m pip install Wand
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml  \
+python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example
 ```
 Similar to model training, the following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-FormulaNet-S.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-FormulaNet_plus-M.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file, detailed instructions can be found in [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common.en.md).
@@ -542,14 +550,14 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png) to your local machine.
 ```bash
-python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml \
+python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet_plus-M.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="general_formula_rec_001.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-FormulaNet-S.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-FormulaNet_plus-M.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_accuracy/inference"`
 * Specify the input data path: `-o Predict.input="..."`.

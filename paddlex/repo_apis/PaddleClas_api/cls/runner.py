@@ -135,7 +135,7 @@ class ClsRunner(BaseRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         # `device` unused
         cmd = [self.python, "python/predict_cls.py", "-c", config_path, *cli_args]

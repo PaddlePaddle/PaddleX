@@ -14,7 +14,7 @@
 
 // The code is based on:
 // https://github.com/gatagat/lap/blob/master/lap/lapjv.cpp
-// Ths copyright of gatagat/lap is as follows:
+// The copyright of gatagat/lap is as follows:
 // MIT License
 
 #include <stdio.h>

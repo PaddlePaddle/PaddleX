@@ -33,7 +33,7 @@ public:
    *
    * \param[in] tensors The inference result from runtime
    * \param[in] result The output result of FaceRecognitionResult
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(std::vector<FDTensor> &infer_result,
            std::vector<FaceRecognitionResult> *results);

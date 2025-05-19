@@ -423,7 +423,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
 
         Args:
             config (dict): the original config.
-            update_dict (dict): to be updated paramenters and its values
+            update_dict (dict): to be updated parameters and its values
 
         Example:
             self._recursively_set(self.HybridEncoder, {'encoder_layer': {'dim_feedforward': 2048}})

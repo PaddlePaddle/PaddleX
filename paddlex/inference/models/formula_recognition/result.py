@@ -18,7 +18,6 @@ import os
 import re
 import subprocess
 import tempfile
-from pathlib import Path
 from typing import List, Optional
 
 import numpy as np
@@ -38,14 +37,6 @@ if is_dep_available("pypdfium2"):
 
 
 class FormulaRecResult(BaseCVResult):
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)

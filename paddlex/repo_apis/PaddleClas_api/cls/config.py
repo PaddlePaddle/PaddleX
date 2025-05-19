@@ -464,7 +464,7 @@ indicating that no pretrained model to be used."
         """update directory that save predicting output
 
         Args:
-            save_dir (str): the dicrectory path that save predicting output.
+            save_dir (str): the directory path that save predicting output.
         """
         self.update([f"Infer.save_dir={save_dir}"])
 

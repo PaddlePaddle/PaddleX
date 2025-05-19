@@ -928,13 +928,13 @@ In the above Python script, the following steps are executed:
 </td>
 <td><code>None</code></td>
 </tr>
-<td><code>use_table_cells_ocr_results</code></td>
-<td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to HTML table, when enabled, do OCR cell by cell and fill to HTML table (it will increase the time consuming). Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
+<td><code>use_ocr_results_with_table_cells</code></td>
+<td>Whether to enable cell OCR mode, when not enabled, the global OCR results are used to populate the HTML table, when enabled, based on the cell prediction results, the global OCR results are sliced and re-recognized based on the cell, to avoid the situation that the text is connected across the cell or missing. This mode will slightly increase the inference time consuming, and the effect may be different in different scenarios, please choose according to the actual situation.</td>
 <td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> or <code>False</code>
-<td><code>False</code></td>
+<td><code>True</code></td>
 </tr>
 <td><code>use_e2e_wired_table_rec_model</code></td>
 <td>Whether to enable the wired table end-to-end prediction mode, when not enabled, using the table cells detection model prediction results filled to the HTML table, when enabled, using the end-to-end table structure recognition model cell prediction results filled to the HTML table. Both of them have different performance in different scenarios, please choose according to the actual situation.</td>
@@ -951,6 +951,31 @@ In the above Python script, the following steps are executed:
 <ul>
 <li><b>bool</b>：<code>True</code> or <code>False</code>
 <td><code>False</code></td>
+</tr>
+<td><code>use_table_orientation_classify</code></td>
+<td>Whether to enable the table orientation classification mode, when it is not enabled, the table will be recognized directly based on the incoming image, when it is enabled, it will detect whether the table in the image is rotated or not, and be able to correct the orientation of the table by 90/180/270 degrees before recognizing the table. This mode will slightly increase the inference time, please choose according to the actual situation.</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>True</code></td>
+</tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>Whether to enable the wired table cell direct to HTML mode, when it is not enabled, the HTML structure of the table is normally predicted by the table structure recognition module, when it is enabled, the HTML structure is constructed directly based on the positional arrangement and geometric relationship of the cells predicted by the wired table cell detection model. The effect of this model is different in different scenarios, please choose according to the actual situation. Generally speaking, it is recommended to enable this mode in scenarios where the wired table cell detection is very accurate, in order to obtain more accurate end-to-end table recognition results.</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_wireless_table_cells_trans_to_html</code></td>
+<td>Whether to enable the wireless table cell direct to HTML mode, when it is not enabled, the HTML structure of the table is normally predicted by the table structure recognition module, when it is enabled, the HTML structure is constructed directly based on the positional arrangement and geometrical relationship of the cells predicted by the wireless table cell detection model. The effect of this model is different in different scenarios, please choose according to the actual situation. Generally speaking, it is recommended to enable this mode in scenarios where the wireless table cell detection is very accurate, in order to obtain more accurate end-to-end table recognition results.</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
+</tr>
 </table>
 
 <b>If you need to use the end-to-end table structure recognition model, just replace the corresponding table structure recognition model with the end-to-end table structure recognition model in the pipeline config file, and then load the modified config file and modify the corresponding `predict()` method parameter</b>. For example, if you need to use SLANet_plus to do end-to-end table recognition for wireless tables, just replace `model_name` with SLANet_plus in `WirelessTableStructureRecognition` in the config file (as shown below) and specify `use_e2e_ wireless_table_rec_model=True` in the prediction, the rest of the parts do not need to be modified, at this time the wireless table cells detection model will not take effect, but directly use SLANet_plus for end-to-end table recognition.
@@ -1611,9 +1636,10 @@ SubPipelines:
         model_dir: null
         limit_side_len: 960
         limit_type: max
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.4
-        unclip_ratio: 2.0
+        unclip_ratio: 1.5
 
       TextRecognition:
         module_name: text_recognition

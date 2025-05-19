@@ -323,12 +323,12 @@ class InitTrackerMeta(type):
 
         @functools.wraps(init_func)
         def __impl__(self, *args, **kwargs):
-            # registed helper by `pre_init_func`
+            # registered helper by `pre_init_func`
             if pre_init_func:
                 pre_init_func(self, init_func, *args, **kwargs)
             # keep full configuration
             init_func(self, *args, **kwargs)
-            # registed helper by `post_init_func`
+            # registered helper by `post_init_func`
             if post_init_func:
                 post_init_func(self, init_func, *args, **kwargs)
             self.init_config = kwargs
@@ -688,7 +688,7 @@ class ChatTemplateMixin:
             conversation = [[conversation]]
         elif isinstance(conversation, list) and isinstance(conversation[0], str):
             raise ValueError(
-                "apply_chat_template do not support appling batch conversations, "
+                "apply_chat_template do not support applying batch conversations, "
                 "so you should apply the conversation one by one."
             )
 
@@ -710,7 +710,7 @@ class ChatTemplateMixin:
                 conversations = conversation
             else:
                 raise ValueError(
-                    "apply_chat_template do not support appling batch conversations, "
+                    "apply_chat_template do not support applying batch conversations, "
                     "so you should apply the conversation one by one."
                 )
         query = self.chat_template.render(

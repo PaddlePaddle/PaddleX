@@ -17,7 +17,6 @@ import copy
 import math
 import re
 from functools import partial
-from pathlib import Path
 from typing import List
 
 import numpy as np
@@ -97,8 +96,8 @@ def format_text_plain_func(block):
 
 def format_image_scaled_by_html_func(block, original_image_width):
     img_tags = []
-    image_path = "".join(block.image.keys())
-    image_width = block.image[image_path].width
+    image_path = block.image["path"]
+    image_width = block.image["img"].width
     scale = int(image_width / original_image_width * 100)
     img_tags.append(
         '<img src="{}" alt="Image" width="{}%" />'.format(
@@ -110,7 +109,7 @@ def format_image_scaled_by_html_func(block, original_image_width):
 
 def format_image_plain_func(block):
     img_tags = []
-    image_path = "".join(block.image.keys())
+    image_path = block.image["path"]
     img_tags.append("![]({})".format(image_path.replace("-\n", "").replace("\n", " ")))
     return "\n".join(img_tags)
 
@@ -203,15 +202,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
-
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def _to_img(self) -> dict[str, np.ndarray]:
         from .utils import get_show_color
@@ -404,7 +394,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Save the parsing result to a Markdown file.
 
         Args:
-            pretty (Optional[bool]): wheather to pretty markdown by HTML, default by True.
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
 
         Returns:
             Dict
@@ -439,7 +429,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         if self["model_settings"].get("use_table_recognition", False):
             if pretty:
-                format_table_func = lambda block: "\n" + format_text_func(block)
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
             else:
                 format_table_func = lambda block: simplify_table_func(
                     "\n" + block.content
@@ -497,10 +489,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         prev_block = None
         page_first_element_seg_start_flag = None
         page_last_element_seg_end_flag = None
+        markdown_info = {}
+        markdown_info["markdown_images"] = {}
         for block in self["parsing_res_list"]:
             seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
 
             label = block.label
+            if block.image is not None:
+                markdown_info["markdown_images"][block.image["path"]] = block.image[
+                    "img"
+                ]
             page_first_element_seg_start_flag = (
                 seg_start_flag
                 if (page_first_element_seg_start_flag is None)
@@ -521,14 +519,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 last_label = label
         page_last_element_seg_end_flag = seg_end_flag
 
-        markdown_info = {
-            "markdown_texts": markdown_content,
-            "page_continuation_flags": (
-                page_first_element_seg_start_flag,
-                page_last_element_seg_end_flag,
-            ),
-        }
-        markdown_info["markdown_images"] = {}
+        markdown_info["markdown_texts"] = markdown_content
+        markdown_info["page_continuation_flags"] = (
+            page_first_element_seg_start_flag,
+            page_last_element_seg_end_flag,
+        )
         for img in self["imgs_in_doc"]:
             markdown_info["markdown_images"][img["path"]] = img["img"]
 
@@ -716,14 +711,14 @@ class LayoutParsingRegion:
 
     def calculate_bbox_metrics(self, image_shape):
         x1, y1, x2, y2 = self.bbox
-        width = x2 - x1
         image_height, image_width = image_shape
+        width = x2 - x1
         x_center, y_center = (x1 + x2) / 2, (y1 + y2) / 2
         self.euclidean_distance = math.sqrt(((x1) ** 2 + (y1) ** 2))
         self.center_euclidean_distance = math.sqrt(((x_center) ** 2 + (y_center) ** 2))
         self.angle_rad = math.atan2(y_center, x_center)
         self.weighted_distance = (
-            y1 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
+            y2 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
         )
 
     def sort_normal_blocks(self, blocks):

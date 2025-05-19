@@ -63,7 +63,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] result The output of OCR
    * detection model result will be written to this structure. \return true if
-   * the prediction is successed, otherwise false.
+   * the prediction is succeeded, otherwise false.
    */
 
   virtual bool Predict(cv::Mat *img, FDTensor *result);
@@ -75,7 +75,7 @@ public:
    * \param[in] img The input image data, comes from cv::imread(), is a 3-D
    * array with layout HWC, BGR format. \param[in] result The output of OCR
    * detection model result will be written to this structure. \return true if
-   * the prediction is successed, otherwise false.
+   * the prediction is succeeded, otherwise false.
    */
   virtual bool BatchPredict(const std::vector<cv::Mat> &images,
                             std::vector<FDTensor> *results);
@@ -85,7 +85,7 @@ public:
    * \param[in] images The list input of image data, comes from cv::imread(), is
    * a 3-D array with layout HWC, BGR format. \param[in] results The output of
    * OCR detection model result will be written to this structure. \return true
-   * if the prediction is successed, otherwise false.
+   * if the prediction is succeeded, otherwise false.
    */
   /// Get preprocessor reference of UVDocWarpperPreprocessor
   virtual UVDocPreprocessor &GetPreprocessor() { return preprocessor_; }
