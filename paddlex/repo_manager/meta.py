@@ -74,7 +74,7 @@ REPO_META = {
         "pdx_pkg_name": "PaddleOCR_api",
         "extra_pkgs": [
             "ppstructure/kie/requirements.txt",
-            "docs/algorithm/formula_recognition/requirements.txt",
+            "docs/version2.x/algorithm/formula_recognition/requirements.txt",
         ],
         "path_env": "PADDLE_PDX_PADDLEOCR_PATH",
         "requires": ["PaddleNLP"],
