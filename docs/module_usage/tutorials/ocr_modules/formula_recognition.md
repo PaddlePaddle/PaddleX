@@ -150,7 +150,7 @@ for res in output:
 
 可视化图片如下，左侧是待预测的公式图像，右边是预测的结果渲染后的公式图像：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/formula_recog/general_formula_rec_001_res.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/formula_recog/general_formula_rec_001_res_paddleocr3.png">
 
 <b> 注：如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装。目前公式识别产线可视化只支持Ubuntu环境，其他环境暂不支持。对于复杂公式，LaTeX 结果可能包含部分高级的表示，Markdown等环境中未必可以成功显示：</b>
 ```bash
