@@ -2326,7 +2326,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../../../../pipline_usage/instructions/parallel_inference.md" class="md-nav__link">
+      <a href="../../instructions/parallel_inference.html" class="md-nav__link">
         
   
   
@@ -6119,7 +6119,7 @@ You're not viewing the latest version.
 <p>You can quickly experience the pedestrian attribute recognition pipeline with a single command. Use <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_002.jpg">the test image</a> and replace <code>--input</code> with your local path for prediction.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>pedestrian_attribute_recognition<span class="w"> </span>--input<span class="w"> </span>pedestrian_attribute_002.jpg<span class="w"> </span>--device<span class="w"> </span>gpu:0<span class="w"> </span>--save_path<span class="w"> </span>./output/
 </span></code></pre></div>
-<p>The relevant parameter descriptions can be found in the parameter explanation section of <a href="#222-python脚本方式集成">2.2.2 Python Script Integration</a>. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.html#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</p>
+<p>The relevant parameter descriptions can be found in the parameter explanation section of <a href="#222-python脚本方式集成">2.2.2 Python Script Integration</a>. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.</p>
 <p>After running, the result will be printed to the terminal, as shown below:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;pedestrian_attribute_002.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;labels&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;Trousers(长裤)&#39;</span>,<span class="w"> </span><span class="s1">&#39;Age18-60(年龄在18-60岁之间)&#39;</span>,<span class="w"> </span><span class="s1">&#39;LongCoat(长外套)&#39;</span>,<span class="w"> </span><span class="s1">&#39;Side(侧面)&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;cls_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99965,<span class="w"> </span><span class="m">0</span>.99963,<span class="w"> </span><span class="m">0</span>.98866,<span class="w"> </span><span class="m">0</span>.9624<span class="w"> </span><span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;det_score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9795178771018982,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">87</span>.24581,<span class="w"> </span><span class="m">322</span>.5872,<span class="w"> </span><span class="m">546</span>.2697,<span class="w"> </span><span class="m">1039</span>.9852<span class="o">]}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;labels&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;Trousers(长裤)&#39;</span>,<span class="w"> </span><span class="s1">&#39;LongCoat(长外套)&#39;</span>,<span class="w"> </span><span class="s1">&#39;Front(面朝前)&#39;</span>,<span class="w"> </span><span class="s1">&#39;Age18-60(年龄在18-60岁之间)&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;cls_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99996,<span class="w"> </span><span class="m">0</span>.99872,<span class="w"> </span><span class="m">0</span>.93379,<span class="w"> </span><span class="m">0</span>.71614<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;det_score&#39;</span>:<span class="w"> </span><span class="m">0</span>.967143177986145,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">737</span>.91626,<span class="w"> </span><span class="m">306</span>.287,<span class="w"> </span><span class="m">1150</span>.5961,<span class="w"> </span><span class="m">1034</span>.2979<span class="o">]}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;labels&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;Trousers(长裤)&#39;</span>,<span class="w"> </span><span class="s1">&#39;LongCoat(长外套)&#39;</span>,<span class="w"> </span><span class="s1">&#39;Age18-60(年龄在18-60岁之间)&#39;</span>,<span class="w"> </span><span class="s1">&#39;Side(侧面)&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;cls_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99996,<span class="w"> </span><span class="m">0</span>.99514,<span class="w"> </span><span class="m">0</span>.98726,<span class="w"> </span><span class="m">0</span>.96224<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;det_score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9645745754241943,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">399</span>.45944,<span class="w"> </span><span class="m">281</span>.9107,<span class="w"> </span><span class="m">869</span>.5312,<span class="w"> </span><span class="m">1038</span>.9962<span class="o">]}]}}</span>
 </span></code></pre></div>
@@ -6674,7 +6674,7 @@ For example, if you are using Ascend NPU for inference in the pedestrian attribu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 05:54:57">May 20, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 06:01:07">May 20, 2025</span>
   </span>
 
     
@@ -6684,7 +6684,7 @@ For example, if you are using Ascend NPU for inference in the pedestrian attribu
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 05:54:57">May 20, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 06:01:07">May 20, 2025</span>
   </span>
 
     
@@ -6699,7 +6699,7 @@ For example, if you are using Ascend NPU for inference in the pedestrian attribu
     </span>
     <nav>
       
-        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 

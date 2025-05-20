@@ -2326,7 +2326,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../../../../pipline_usage/instructions/parallel_inference.md" class="md-nav__link">
+      <a href="../../instructions/parallel_inference.html" class="md-nav__link">
         
   
   
@@ -6120,7 +6120,7 @@ You're not viewing the latest version.
 Parameter Description:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;vehicle_attribute_002.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;labels&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;red(红色)&#39;</span>,<span class="w"> </span><span class="s1">&#39;sedan(轿车)&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;cls_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.96375,<span class="w"> </span><span class="m">0</span>.94025<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;det_score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9774094820022583,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">196</span>.32553,<span class="w"> </span><span class="m">302</span>.3847,<span class="w"> </span><span class="m">639</span>.3131,<span class="w"> </span><span class="m">655</span>.57904<span class="o">]}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;labels&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;suv(SUV)&#39;</span>,<span class="w"> </span><span class="s1">&#39;brown(棕色)&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;cls_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99968,<span class="w"> </span><span class="m">0</span>.99317<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;det_score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9705657958984375,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">769</span>.4419,<span class="w"> </span><span class="m">278</span>.8417,<span class="w"> </span><span class="m">1401</span>.0217,<span class="w"> </span><span class="m">641</span>.3569<span class="o">]}]}}</span>
 </span></code></pre></div>
-<p>For the explanation of the running result parameters, you can refer to the result interpretation in <a href="#222-integration-via-python-script">Section 2.2.2 Integration via Python Script</a>. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.html#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</p>
+<p>For the explanation of the running result parameters, you can refer to the result interpretation in <a href="#222-integration-via-python-script">Section 2.2.2 Integration via Python Script</a>. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.</p>
 <p>The visualization results are saved under <code>save_path</code>, and the visualization result is as follows:</p>
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg"/></p>
 <h4 id="222-integration-via-python-script">2.2.2 Integration via Python Script<a class="headerlink" href="#222-integration-via-python-script" title="Permanent link">&para;</a></h4>
@@ -6666,7 +6666,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 05:54:57">May 20, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 06:01:07">May 20, 2025</span>
   </span>
 
     
@@ -6676,7 +6676,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 05:54:57">May 20, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2025 06:01:07">May 20, 2025</span>
   </span>
 
     
@@ -6691,7 +6691,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     </span>
     <nav>
       
-        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
