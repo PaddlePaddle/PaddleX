@@ -648,7 +648,7 @@ paddlex --pipeline table_recognition \
         --device gpu:0
 ```
 
-The content of the parameters can refer to the parameter description in [2.2 Python Script Method](#22-python-script-method-integration). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+The content of the parameters can refer to the parameter description in [2.2 Python Script Method](#22-python-script-method-integration). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the result will be printed to the terminal, as follows:
 

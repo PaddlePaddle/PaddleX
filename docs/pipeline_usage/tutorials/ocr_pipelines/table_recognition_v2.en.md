@@ -702,7 +702,7 @@ paddlex --pipeline table_recognition_v2 \
        [1046, ...,  573]], dtype=int16)}}]}}
 ```
 
-The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 
 The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
