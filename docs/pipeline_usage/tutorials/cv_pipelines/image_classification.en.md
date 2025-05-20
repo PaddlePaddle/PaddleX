@@ -751,7 +751,7 @@ You can quickly experience the image classification pipeline with a single comma
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0 --save_path ./output/
 ```
 
-The relevant parameter descriptions can be found in the parameter explanation section of [2.2.2 Python Script Integration](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+The relevant parameter descriptions can be found in the parameter explanation section of [2.2.2 Python Script Integration](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 ```bash
 {'res': {'input_path': 'general_image_classification_001.jpg', 'page_index': None, 'class_ids': array([296, 170, 356, 258, 248], dtype=int32), 'scores': array([0.62736, 0.03752, 0.03256, 0.0323 , 0.03194], dtype=float32), 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}}
