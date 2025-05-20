@@ -1401,7 +1401,7 @@ SubPipelines:
         ...
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec
+        model_name: PP-OCRv5_server_rec
         model_dir: null # 修改此处为微调后的文本识别模型权重的本地路径
         ...
 ```

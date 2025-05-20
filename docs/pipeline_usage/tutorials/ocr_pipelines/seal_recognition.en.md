@@ -1383,7 +1383,7 @@ SubPipelines:
         ...
         TextRecognition:
           module_name: text_recognition
-          model_name: PP-OCRv4_server_rec
+          model_name: PP-OCRv5_server_rec
           model_dir: null # Modify this to the local path of the fine-tuned text recognition model weights
         ...
 ```
