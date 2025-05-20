@@ -134,7 +134,7 @@ You can quickly experience the pedestrian attribute recognition pipeline with a 
 paddlex --pipeline pedestrian_attribute_recognition --input pedestrian_attribute_002.jpg --device gpu:0 --save_path ./output/
 ```
 
-The relevant parameter descriptions can be found in the parameter explanation section of [2.2.2 Python Script Integration](#222-python脚本方式集成). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+The relevant parameter descriptions can be found in the parameter explanation section of [2.2.2 Python Script Integration](#222-python脚本方式集成). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the result will be printed to the terminal, as shown below:
 

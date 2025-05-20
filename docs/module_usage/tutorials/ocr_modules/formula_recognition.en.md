@@ -153,7 +153,7 @@ The meanings of the running results parameters are as follows:
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/formula_recog/general_formula_rec_001_res.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/formula_recog/general_formula_rec_001_res_paddleocr3.png">
 
 <b>Note: If you need to visualize the formula recognition pipeline, you need to run the following commands to install the LaTeX rendering environment. Currently, the formula recognition visualization pipeline only supports the Ubuntu environment; other environments are not supported at this time. For complex formulas, the LaTeX results may include some advanced representations that might not be displayed successfully in environments like Markdown:</b>
 ```bash

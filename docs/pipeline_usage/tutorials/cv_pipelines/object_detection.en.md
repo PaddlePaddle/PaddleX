@@ -445,7 +445,7 @@ paddlex --pipeline object_detection \
         --device gpu:0
 ```
 
-For the description of parameters and interpretation of results, please refer to the parameter explanation and result interpretation in [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+For the description of parameters and interpretation of results, please refer to the parameter explanation and result interpretation in [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 The visualization results are saved to `save_path`, as shown below:
 

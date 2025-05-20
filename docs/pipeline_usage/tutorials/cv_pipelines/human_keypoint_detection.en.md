@@ -152,7 +152,7 @@ paddlex --pipeline human_keypoint_detection \
         --device gpu:0
 ```
 
-The relevant parameter descriptions and results explanations can be referred to in the parameter explanations and results explanations of [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+The relevant parameter descriptions and results explanations can be referred to in the parameter explanations and results explanations of [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 The visualization results are saved to `save_path`, as shown below:
 
