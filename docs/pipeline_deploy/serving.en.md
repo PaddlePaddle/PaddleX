@@ -72,7 +72,7 @@ The command-line options related to serving are as follows:
 </tr>
 <tr>
 <td><code>--device</code></td>
-<td>Device for pipeline deployment. By default the GPU will be used if it is available; otherwise, the CPU will be used.</td>
+<td>Device for pipeline deployment. By default the GPU will be used when it is available; otherwise, the CPU will be used.</td>
 </tr>
 <tr>
 <td><code>--host</code></td>
