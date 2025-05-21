@@ -33,7 +33,7 @@ for res in output:
 * `create_pipeline`：实例化预测模型产线对象；
   * 参数：
     * `pipeline`：`str` 类型，产线名或是本地产线配置文件路径，如“image_classification”、“/path/to/image_classification.yaml”；
-    * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
+    * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如有可用 GPU 设置则使用编号最小的 GPU，否则使用 CPU；
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[4-推理配置](#4-推理配置)；
     * `use_hpip`：`bool | None` 类型，是否启用高性能推理插件（`None` 表示使用配置文件中的配置）；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
@@ -101,7 +101,7 @@ PaddleX 支持通过`PaddlePredictorOption`修改推理配置，相关API如下�
 #### 属性：
 
 * `device`：推理设备；
-  * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 “gpu”、“cpu”、“npu”、“xpu”、“mlu”、“dcu”，当使用加速卡时，支持指定卡号，如使用 0 号 GPU：`gpu:0`，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
+  * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 “gpu”、“cpu”、“npu”、“xpu”、“mlu”、“dcu”，当使用加速卡时，支持指定卡号，如使用 0 号 GPU：`gpu:0`，默认情况下，如有可用 GPU 设置则使用编号最小的 GPU，否则使用 CPU；
   * 返回值：`str`类型，当前设置的推理设备。
 * `run_mode`：运行模式；
   * 支持设置 `str` 类型的运行模式，支持可选 'paddle'，'trt_fp32'，'trt_fp16'，'trt_int8'，'mkldnn'，'mkldnn_bf16'，其中 'trt_fp32' 和' trt_fp16' 分别对应使用 TensorRT 子图引擎进行 FP32 和 FP16 精度的推理，仅当推理设备使用 GPU 时可选，'mkldnn' 仅当推理设备使用 CPU 时可选，默认为 'paddle'；

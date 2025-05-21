@@ -23,7 +23,7 @@ This single step completes the inference prediction and saves the prediction res
 
 * `pipeline`: The name of the pipeline or the local path to the pipeline configuration file, such as the pipeline name "image_classification", or the path to the pipeline configuration file "path/to/image_classification.yaml";
 * `input`: The path to the data file to be predicted, supporting local file paths, local directories containing data files to be predicted, and file URL links;
-* `device`: Used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, using 0 id GPU if available, otherwise CPU;
+* `device`: Used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, if a GPU is available, the one with the smallest ID number will be used; otherwise, the CPU will be used;
 * `save_path`: The save path for prediction results. By default, the prediction results will not be saved;
 * `use_hpip`: Enable the high-performance inference plugin;
 * `hpi_config`: The high-performance inference configuration;

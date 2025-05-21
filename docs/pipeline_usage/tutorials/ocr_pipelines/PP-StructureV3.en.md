@@ -851,23 +851,6 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>Production inference device</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: <code>cpu</code> indicates using CPU for inference;</li>
-<li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
-<li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
-<li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
-<li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
-<li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used;</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>use_doc_orientation_classify</code></td>
 <td>Whether to use the document orientation classification module</td>
 <td><code>bool|None</code></td>

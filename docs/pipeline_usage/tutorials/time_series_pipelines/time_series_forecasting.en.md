@@ -254,23 +254,6 @@ In the above Python script, the following steps are executed:
 </td>
 <td><code>None</code></td>
 </tr>
-<tr>
-<td><code>device</code></td>
-<td>The device for pipeline inference.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Use CPU for inference (e.g., <code>cpu</code>).</li>
-  <li><b>GPU</b>: Use the specified GPU for inference (e.g., <code>gpu:0</code> for the first GPU).</li>
-  <li><b>NPU</b>: Use the specified NPU for inference (e.g., <code>npu:0</code> for the first NPU).</li>
-  <li><b>XPU</b>: Use the specified XPU for inference (e.g., <code>xpu:0</code> for the first XPU).</li>
-  <li><b>MLU</b>: Use the specified MLU for inference (e.g., <code>mlu:0</code> for the first MLU).</li>
-  <li><b>DCU</b>: Use the specified DCU for inference (e.g., <code>dcu:0</code> for the first DCU).</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value used during pipeline initialization will be applied. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
 </tbody>
 </table>
 

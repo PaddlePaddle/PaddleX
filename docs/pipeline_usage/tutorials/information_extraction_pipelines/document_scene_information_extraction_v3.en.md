@@ -517,23 +517,6 @@ The following are the parameters and their descriptions for the `visual_predict(
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>The device for pipeline inference.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: Such as <code>cpu</code> to use CPU for inference;</li>
-<li><b>GPU</b>: Such as <code>gpu:0</code> to use the first GPU for inference;</li>
-<li><b>NPU</b>: Such as <code>npu:0</code> to use the first NPU for inference;</li>
-<li><b>XPU</b>: Such as <code>xpu:0</code> to use the first XPU for inference;</li>
-<li><b>MLU</b>: Such as <code>mlu:0</code> to use the first MLU for inference;</li>
-<li><b>DCU</b>: Such as <code>dcu:0</code> to use the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline. During initialization, it will prioritize using the local GPU 0 device, and if not available, it will use the CPU device;</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>use_doc_orientation_classify</code></td>
 <td>Whether to use the document orientation classification module.</td>
 <td><code>bool|None</code></td>
