@@ -28,6 +28,43 @@ A：星河零代码产线是PaddleX 的云端载体，底层代码与PaddleX保�
 
 
 
+## <b>Q：有没有适用于低配设备的小模型？</b>
+
+A：可以使用模型裁剪功能，参考 [模型裁剪教程](https://github.com/PaddlePaddle/PaddleX/blob/278994a3631d44a15bdc3139cebc9fd326141d4c/docs/tutorials/compress/slim/prune.md) 调整裁剪参数。实验表明，在 VOC 检测任务中使用 YOLOv3-MobileNet，裁剪后模型大小显著减小，精度基本不变。
+
+
+
+## <b>Q：如何从之前训练的模型继续训练？</b>
+
+A：在调用 `train` 接口时，将 `pretrain_weights` 参数设置为之前保存的模型路径即可继续训练。
+
+
+
+## <b>Q：PaddleX保存的几种模型有什么区别？如何区分？</b>
+
+A：不同类型的模型用途如下：
+
+1. **正常训练保存模型**：可用于加载预测、作为预训练模型、导出部署模型；
+2. **裁剪训练保存模型**：仅用于预测和部署，不可作为预训练模型；
+3. **导出部署模型**：用于服务端部署，不可用于预训练；
+4. **量化保存模型**：用于加速预测，不可用于预训练。
+
+区分方法：查看模型目录下的 `model.yml` 文件中的 `status` 字段：
+- `Normal`: 正常模型
+- `Prune`: 裁剪模型
+- `Infer`: 部署模型
+- `Quant`: 量化模型
+
+
+
+## <b>Q：每次训练都需要重新下载预训练模型，能否只下载一次？</b>
+
+A：可以：
+1. 参考上述方式手动管理模型；
+2. 设置全局预训练模型缓存路径，例如：`paddlex.pretrain_dir='/usrname/paddlex'`，已下载模型将不会重复下载。
+
+
+
 ## <b>Q：当我在使用PaddleX的过程中遇到问题，应该怎样反馈呢？</b>
 
 A：欢迎来[讨论区](https://github.com/PaddlePaddle/PaddleX/discussions)与海量开发者一起交流！若您发现了PaddleX的错误或不足，也欢迎向我们[提出issue](https://github.com/PaddlePaddle/PaddleX/issues)，值班同学将尽快为您解答问题。

@@ -717,12 +717,11 @@ for res in output:
 
 
 ## 📖 文档
-<details>
+<details open>
   <summary> <b> ⬇️ 安装 </b></summary>
 
   * [📦 PaddlePaddle 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/paddlepaddle_install.html)
   * [📦 PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
-
 
 </details>
 
@@ -734,74 +733,112 @@ for res in output:
 * <details open>
     <summary> <b> 📝 文本图像智能分析 </b></summary>
 
-   * [📄 文档场景信息抽取v3产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html)
-  </details>
+   * [📄 文档场景信息抽取v3产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html)
+
+   * [📄 文档场景信息抽取v4产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html)
+
+</details>
 
 * <details open>
     <summary> <b> 🔍 OCR </b></summary>
 
   * [📜 通用 OCR 产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/OCR.html )
+
   * [📊 通用表格识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html )
+
   * [🗂️ 通用表格识别v2产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html)
+
   * [📰 通用版面解析产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html)
+
   * [🗞️ 通用版面解析产线v3使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html)
   * [📐 公式识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html)
-  * [🖋️ 印章文本识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html)
+  * [📝 印章文本识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html)
   * [🖌️ 文档图像预处理产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html)
+
 </details>
 
 * <details open>
     <summary> <b> 🎥 计算机视觉 </b></summary>
 
    * [🖼️ 通用图像分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_classification.html)
-   * [🎯 通用目标检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/object_detection.html)
-   * [📋 通用实例分割产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html)
-   * [🗣️ 通用语义分割产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html)
-   * [🏷️ 图像多标签分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html)
-   * [🔍 小目标检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html)
-   * [🖼️ 图像异常检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html)
-   * [🔍 人体关键点检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html)
-   * [📚 开放词汇检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html)
-   * [🎨 开放词汇分割产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html)
-   * [🔄 旋转目标检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html)
-   * [🌐 3D多模态融合检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html)
-   * [🖼️ 通用图像识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html)
-   * [🆔人脸识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/face_recognition.html)
-   * [🚗 车辆属性识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html)
-   * [🚶‍♀️ 行人属性识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html)
 
+    * [🎯 通用目标检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/object_detection.html)
+
+   * [📋 通用实例分割产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html)
+
+    * [🗣️ 通用语义分割产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html)
+
+   * [🏷️ 图像多标签分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html)
+
+    * [🔍 小目标检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html)
+
+   * [🖼️ 图像异常检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html)
+
+    * [🌐 3D多模态融合检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html)
+
+   * [🔍 人体关键点检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html)
+
+    * [📚 开放词汇检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html)
+
+   * [🎨 开放词汇分割产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html)
+
+    * [🔄 旋转目标检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html)
+
+   * [🖼️ 通用图像识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html)
+
+    * [🚶‍♀️ 行人属性识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html)
+
+   * [🚗 车辆属性识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html)
+
+    * [🆔人脸识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/face_recognition.html)
+
+</details>
 
 * <details open>
     <summary> <b> ⏱️ 时序分析</b> </summary>
 
    * [📈 时序预测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html)
+
    * [📉 时序异常检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html)
-   * [🕒 时序分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html)
-  </details>
+
+    * [🕒 时序分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html)
+
+</details>
 
 * <details open>
     <summary> <b> 🎤 语音识别</b> </summary>
 
     * [🌐 多语种语音识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html)
 
+</details>
+
 * <details open>
     <summary> <b> 🎥 视频识别</b> </summary>
 
     * [📈 通用视频分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html)
+
     * [🔍 通用视频检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html)
+
+
+</details>
 
 * <details open>
     <summary> <b> 🌐 多模态视觉语言模型</b> </summary>
 
    * [📝 文档理解产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html)
-  </details>
 
-* <details>
+</details>
+
+* <details open>
     <summary> <b>🔧 相关说明文件</b> </summary>
 
    * [🖥️ PaddleX 产线命令行使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/instructions/pipeline_CLI_usage.html)
-   * [📝 PaddleX 产线 Python 脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/instructions/pipeline_python_API.html)
-  </details>
+
+  * [📝 PaddleX 产线 Python 脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/instructions/pipeline_python_API.html)
+
+  * [🔎 产线并行推理](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/instructions/parallel_inference.html)
+
+</details>
 
 </details>
 
@@ -812,116 +849,135 @@ for res in output:
   <summary> <b> 🔍 OCR </b></summary>
 
   * [📝 文本检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_detection.html)
+
   * [🔖 印章文本检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/seal_text_detection.html)
+
   * [🔠 文本识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_recognition.html)
+
   * [🗺️ 版面区域检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/layout_detection.html)
+
   * [📊 表格结构识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/table_structure_recognition.html)
-  * [📄 文档图像方向分类使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html)
-  * [🔧 文本图像矫正模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_image_unwarping.html)
-  * [📐 公式识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/formula_recognition.html)
+
   * [📊 表格单元格检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/table_cells_detection.html)
+
   * [📈 表格分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/table_classification.html)
+
+  * [📄 文档图像方向分类使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html)
+
+  * [🔧 文本图像矫正模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_image_unwarping.html)
+
   * [📝 文本行方向分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/textline_orientation_classification.html)
 
-  </details>
+  * [📐 公式识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/formula_recognition.html)
+
+
+</details>
+
 
 * <details open>
   <summary> <b> 🖼️ 图像分类 </b></summary>
 
   * [📂 图像分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/image_classification.html)
+
   * [🏷️ 图像多标签分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/image_multilabel_classification.html)
+
   * [👤 行人属性识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html)
+
   * [🚗 车辆属性识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html)
 
-  </details>
+
+</details>
 
 * <details open>
   <summary> <b> 🏞️ 图像特征 </b></summary>
 
     * [🔗 图像特征模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/image_feature.html)
+
     * [😁 人脸特征模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/face_feature.html)
-  </details>
+
+</details>
 
 * <details open>
   <summary> <b> 🎯 目标检测 </b></summary>
 
   * [🎯 目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/object_detection.html)
+
   * [📏 小目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/small_object_detection.html)
+
   * [🧑‍🤝‍🧑 人脸检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/face_detection.html)
+
   * [🔍 主体检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/mainbody_detection.html)
+
   * [🚶 行人检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_detection.html)
-  * [🚗 车辆检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/vehicle_detection.html)
-  * [🔄 旋转目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/rotated_object_detection.html)
-
-* <details open>
-  <summary> <b> 🌐 开放词汇目标检测 </b></summary>
-
-  * [🌐 开放词汇目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/open_vocabulary_detection.html)
-  </details>
-
-* <details open>
-  <summary> <b> 🎯 关键点检测 </b></summary>
 
   * [🚶‍♂️ 人体关键点检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_keypoint_detection.html)
-  </details>
 
+  * [🌐 开放词汇目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/open_vocabulary_detection.html)
+
+</details>
 
 * <details open>
   <summary> <b> 🖼️ 图像分割 </b></summary>
 
   * [🗺️ 语义分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/semantic_segmentation.html)
-  * [🔍 实例分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/instance_segmentation.html)
-  * [🚨 图像异常检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/anomaly_detection.html)
-  </details>
 
-* <details open>
-  <summary> <b> 🌐 开放词汇分割 </b></summary>
+  * [🔍 实例分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/instance_segmentation.html)
+
+  * [🚨 图像异常检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/anomaly_detection.html)
 
   * [🌐 开放词汇分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/open_vocabulary_segmentation.html)
-  </details>
+
+</details>
 
 * <details open>
   <summary> <b> ⏱️ 时序分析 </b></summary>
 
   * [📈 时序预测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_forecasting.html)
+
   * [🚨 时序异常检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html)
+
   * [🕒 时序分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_classification.html)
-  </details>
 
-* <details open>
-  <summary> <b> 📦 3D </b></summary>
-
-  * [📦 3D多模态融合检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)
-  </details>
+</details>
 
 * <details open>
   <summary> <b> 🎤 语音识别 </b></summary>
 
   * [🌐 多语种语音识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/speech_modules/multilingual_speech_recognition.html)
-  </details>
+
+</details>
 
 * <details open>
-  <summary> <b> 🎥 视频识别 </b></summary>
+  <summary> <b> 📦 3D </b></summary>
 
-  * [📈 视频分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
-  * [🔍 视频检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)
-  </details>
+  * [📦 3D多模态融合检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)
+
+</details>
 
 * <details open>
   <summary> <b> 🌐 多模态视觉语言模型 </b></summary>
 
   * [📝 文档类视觉语言模型模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/doc_vlm.html)
-  * [📈 图表解析模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/chart_parsing.html)
-  </details>
 
-* <details>
+  * [📈 图表解析模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/chart_parsing.html)
+
+</details>
+
+
+* <details open>
   <summary> <b> 📄 相关说明文件 </b></summary>
 
   * [📝 PaddleX 单模型 Python 脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/model_python_API.html)
+
   * [📝 PaddleX 通用模型配置文件参数说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/config_parameters_common.html)
+
   * [📝 PaddleX 时序任务模型配置文件参数说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/config_parameters_time_series.html)
+
   * [📝 PaddleX 3d任务模型配置文件参数说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/config_parameters_3d.html)
-  </details>
+
+  * [📝 模型推理 Benchmark](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/benchmark.html)
+
+</details>
 
 </details>
 
@@ -931,8 +987,10 @@ for res in output:
   * [🚀 PaddleX 高性能推理指南](https://paddlepaddle.github.io/PaddleX/latest/pipeline_deploy/high_performance_inference.html)
   * [🖥️ PaddleX 服务化部署指南](https://paddlepaddle.github.io/PaddleX/latest/pipeline_deploy/serving.html)
   * [📱 PaddleX 端侧部署指南](https://paddlepaddle.github.io/PaddleX/latest/pipeline_deploy/edge_deploy.html)
+  * [🌐 获取 ONNX 模型](https://paddlepaddle.github.io/PaddleX/latest/pipeline_deploy/paddle2onnx.html)
 
 </details>
+
 <details open>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
 
@@ -941,26 +999,113 @@ for res in output:
   * [🔲 寒武纪 MLU 飞桨安装教程](https://paddlepaddle.github.io/PaddleX/latest/other_devices_support/paddlepaddle_install_MLU.html)
   * [💻 昇腾 NPU 飞桨安装教程](https://paddlepaddle.github.io/PaddleX/latest/other_devices_support/paddlepaddle_install_NPU.html)
   * [🔌 昆仑 XPU 飞桨安装教程](https://paddlepaddle.github.io/PaddleX/latest/other_devices_support/paddlepaddle_install_XPU.html)
+  * [📱 燧原 GCU 飞桨安装教程](https://paddlepaddle.github.io/PaddleX/latest/other_devices_support/paddlepaddle_install_GCU.html)
 
 </details>
 
-<details>
+<details open>
+<summary> <b> 📊 数据标注教程 </b></summary>
+
+- <details open>
+  <summary> <b> 💻 计算机视觉 </b></summary>
+
+  - [📂 图像分类任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/cv_modules/image_classification.html)
+
+  - [📂 图像特征任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/cv_modules/image_feature.html)
+
+  - [📂 实例分割任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/cv_modules/instance_segmentation.html)
+
+  - [📂 图像多标签分类模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/cv_modules/ml_classification.html)
+
+  - [📂 目标检测任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/cv_modules/object_detection.html)
+
+  - [📂 语义分割任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/cv_modules/semantic_segmentation.html)
+
+</details>
+
+- <details open>
+  <summary> <b> 🔍 OCR </b></summary>
+
+  - [📊 表格识别任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/ocr_modules/table_recognition.html)
+
+  - [📰 文本检测/识别任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/ocr_modules/text_detection_recognition.html)
+
+</details>
+
+- <details open>
+  <summary> <b> 📉 时序分析 </b></summary>
+
+  - [📈 时序异常检测任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/time_series_modules/time_series_anomaly_detection.html)
+
+  - [📉时序分类任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/time_series_modules/time_series_classification.html)
+
+  - [🕜 时序预测任务模块](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/time_series_modules/time_series_forecasting.html)
+
+</details>
+
+</details>
+
+<details open>
+  <summary> <b> 📑 产线列表 </b></summary>
+
+  * [🖲️ PaddleX产线列表(CPU/GPU)](https://paddlepaddle.github.io/PaddleX/latest/support_list/pipelines_list.html)
+  * [🔲 PaddleX产线列表(DCU)](https://paddlepaddle.github.io/PaddleX/latest/support_list/pipelines_list_dcu.html)
+  * [💻 PaddleX产线列表(MLU)](https://paddlepaddle.github.io/PaddleX/latest/support_list/pipelines_list_mlu.html)
+  * [🔌 PaddleX产线列表(NPU)](https://paddlepaddle.github.io/PaddleX/latest/support_list/pipelines_list_npu.html)
+  * [📱 PaddleX产线列表(XPU)](https://paddlepaddle.github.io/PaddleX/latest/support_list/pipelines_list_xpu.html)
+
+</details>
+
+<details open>
+  <summary> <b> 📄 模型列表 </b></summary>
+
+  * [🖲️ PaddleX模型列表（CPU/GPU）](https://paddlepaddle.github.io/PaddleX/latest/support_list/models_list.html)
+  * [🔲 PaddleX模型列表（海光 DCU）](https://paddlepaddle.github.io/PaddleX/latest/support_list/model_list_dcu.html)
+  * [💻 PaddleX模型列表（寒武纪 MLU）](https://paddlepaddle.github.io/PaddleX/latest/support_list/model_list_mlu.html)
+  * [🔌 PaddleX模型列表（昇腾 NPU）](https://paddlepaddle.github.io/PaddleX/latest/support_list/model_list_npu.html)
+  * [📱 PaddleX模型列表（昆仑 XPU）](https://paddlepaddle.github.io/PaddleX/latest/support_list/model_list_xpu.html)
+  * [📺 PaddleX模型列表（燧原 GCU）](https://paddlepaddle.github.io/PaddleX/latest/support_list/model_list_gcu.html)
+
+</details>
+
+<details open>
   <summary> <b> 📝 产业实践教程&范例 </b></summary>
 
-* [📑 文档场景信息抽取v3模型产线———论文文献信息抽取应用教程](./docs/practical_tutorials/document_scene_information_extraction(layout_detection)_tutorial.md)
-* [📑 文档场景信息抽取v3模型产线———印章信息抽取应用教程](./docs/practical_tutorials/document_scene_information_extraction(seal_recognition)_tutorial.md)
-* [🖼️ 通用图像分类模型产线———垃圾分类教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/image_classification_garbage_tutorial.html)
-* [🧩 通用实例分割模型产线———遥感图像实例分割教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html)
-* [👥 通用目标检测模型产线———行人跌倒检测教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/object_detection_fall_tutorial.html)
-* [👗 通用目标检测模型产线———服装时尚元素检测教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/object_detection_fashion_pedia_tutorial.html)
+* [📑 文档场景信息抽取v3模型产线———论文文献信息抽取应用教程](https://paddlepaddle.github.io/PaddleX/3.0/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html)
+
+* [📑 文档场景信息抽取v3模型产线———印章信息抽取应用教程](https://paddlepaddle.github.io/PaddleX/3.0/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html)
+
+* [📑 文档场景信息抽取v3模型产线———DeepSeek 篇](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/document_scene_information_extraction(deepseek)_tutorial.html)
+
 * [🚗 通用 OCR 模型产线———车牌识别教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/ocr_det_license_tutorial.html)
+
 * [✍️ 通用 OCR 模型产线———手写中文识别教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/ocr_rec_chinese_tutorial.html)
+
+* [🔍 公式识别模型产线实践教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/formula_recognition_tutorial.html)
+
+* [💻 版面区域检测模型使用实践教程———大模型训练数据构建教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/layout_detection.html)
+
+* [😊 人脸识别之卡通人脸识别实践教程———卡通人脸识别教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/face_recognition_tutorial.html)
+
+* [🖼️ 通用图像分类模型产线———垃圾分类教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/image_classification_garbage_tutorial.html)
+
+* [🧩 通用实例分割模型产线———遥感图像实例分割教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html)
+
+* [👥 通用目标检测模型产线———行人跌倒检测教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/object_detection_fall_tutorial.html)
+
+* [👗 通用目标检测模型产线———服装时尚元素检测教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/object_detection_fashion_pedia_tutorial.html)
+
 * [🗣️ 通用语义分割模型产线———车道线分割教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/semantic_segmentation_road_tutorial.html)
+
 * [🛠️ 时序异常检测模型产线———设备异常检测应用教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/ts_anomaly_detection.html)
+
 * [🎢 时序分类模型产线———心跳监测时序数据分类应用教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/ts_classification.html)
+
 * [🔋 时序预测模型产线———用电量长期预测应用教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/ts_forecast.html)
 
-  </details>
+* [🔧 产线部署实践教程](https://paddlepaddle.github.io/PaddleX/latest/practical_tutorials/deployment_tutorial.html)
+
+</details>
 
 ## 🤔 FAQ
 
