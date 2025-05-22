@@ -130,11 +130,11 @@ def main():
             "Please specify at least two devices for performing parallel inference.",
             file=sys.stderr,
         )
-        sys.exit(2)
+        return 2
 
     if args.batch_size <= 0:
         print("Batch size must be greater than 0.", file=sys.stderr)
-        sys.exit(2)
+        return 2
 
     manager = Manager()
     task_queue = manager.Queue()
