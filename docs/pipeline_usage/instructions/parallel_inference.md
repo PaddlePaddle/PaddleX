@@ -136,30 +136,30 @@ def main():
         print("Batch size must be greater than 0.", file=sys.stderr)
         return 2
 
-    manager = Manager()
-    task_queue = manager.Queue()
-    for img_path in input_dir.glob(args.input_glob_pattern):
-        task_queue.put(str(img_path))
+    with Manager() as manager:
+        task_queue = manager.Queue()
+        for img_path in input_dir.glob(args.input_glob_pattern):
+            task_queue.put(str(img_path))
 
-    processes = []
-    for device_id in device_ids:
-        for _ in range(args.instances_per_device):
-            device = constr_device(device_type, [device_id])
-            p = Process(
-                target=worker,
-                args=(
-                    args.pipeline,
-                    device,
-                    task_queue,
-                    args.batch_size,
-                    str(output_dir),
-                ),
-            )
-            p.start()
-            processes.append(p)
+        processes = []
+        for device_id in device_ids:
+            for _ in range(args.instances_per_device):
+                device = constr_device(device_type, [device_id])
+                p = Process(
+                    target=worker,
+                    args=(
+                        args.pipeline,
+                        device,
+                        task_queue,
+                        args.batch_size,
+                        str(output_dir),
+                    ),
+                )
+                p.start()
+                processes.append(p)
 
-    for p in processes:
-        p.join()
+        for p in processes:
+            p.join()
 
     print("All done")
 
