@@ -20,10 +20,6 @@ A: If your application scenario in using PaddleX mainly focuses on model inferen
 
 A: Baidu AIStudio Community's Zero-Code Pipeline is the cloud-based carrier of PaddleX, with its underlying code consistent with PaddleX, and can be considered as a cloud-based PaddleX. The design philosophy of Baidu AIStudio Community's Zero-Code Pipeline is to enable users to quickly build and deploy model applications without needing to delve deeply into programming and algorithm knowledge. On this basis, Baidu AIStudio Community's Zero-Code Pipeline also provides many special pipelines, such as training high-precision models with a small number of samples and solving complex time-series problems using multi-model fusion schemes. PaddleX, on the other hand, is a local development tool that provides users with powerful functions supporting more in-depth secondary development. This means developers can flexibly adjust and expand based on PaddleX to create solutions that better fit specific application scenarios. Additionally, PaddleX offers a rich set of model interfaces, supporting users in freely combining models for use.
 
-## <b>Q: Is there a smaller model suitable for devices with lower specifications?</b>
-
-A: Yes, you can utilize the model pruning feature. Refer to the [Model Pruning Tutorial](https://github.com/PaddlePaddle/PaddleX/blob/278994a3631d44a15bdc3139cebc9fd326141d4c/docs/tutorials/compress/slim/prune.md) to adjust pruning parameters. Experiments show that using YOLOv3-MobileNet in VOC detection tasks results in a significantly reduced model size after pruning, with minimal impact on accuracy.
-
 ## <b>Q: How to continue training from a previously trained model?</b>
 
 A: To resume training from a saved checkpoint, set the `pretrain_weights` parameter to the path of the previously saved model when calling the `train` interface.
@@ -35,13 +31,11 @@ A: The purposes of different types of models are as follows:
 1. **Normally Trained Saved Model**: Suitable for loading predictions, serving as pre-training weights, or exporting deployment models.
 2. **Pruned Training Saved Model**: Can be used for prediction and deployment but cannot serve as pre-training weights.
 3. **Exported Deployment Model**: Designed for server-side deployment and cannot be used as pre-training weights.
-4. **Quantized Saved Model**: Optimized for faster prediction speeds and cannot be used as pre-training weights.
 
 To distinguish between these models, check the `status` field in the `model.yml` file within the model directory:
 - `Normal`: Normally trained model
 - `Prune`: Pruned model
 - `Infer`: Deployment model
-- `Quant`: Quantized model
 
 ## <b>Q: Every time I start a new training session, it tries to re-download the pretrained models. Can this be avoided?</b>
 

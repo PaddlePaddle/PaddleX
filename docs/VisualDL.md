@@ -1,23 +1,9 @@
  [**English**](./VisualDL.en.md)
 
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/PaddlePaddle/VisualDL/develop/frontend/packages/core/public/images/logo-visualdl.svg?sanitize=true" width="70%"/>
-</p>
 
 
-<p align="center">
-<a href="https://pypi.org/project/visualdl/"><img src="https://img.shields.io/pypi/v/visualdl?style=flat-square" alt="PyPI" /></a>
-<a href="https://pypi.org/project/visualdl/#files"><img src="https://img.shields.io/pypi/dm/visualdl?style=flat-square" alt="Downloads" /></a>
-<a href="https://github.com/PaddlePaddle/VisualDL/blob/develop/LICENSE"><img src="https://img.shields.io/github/license/paddlepaddle/visualdl?style=flat-square" alt="License" /></a>
-</p>
-
-
-<p align="center">
-<a href="https://jq.qq.com/?_wv=1027&k=TyzyVT4C" target="_blank" rel="noreferrer"><img src="https://img.shields.io/badge/QQ_Group-1045783368-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20" alt="QQ Group" /></a>
-</p>
-
-## 介绍
+## VisualDL 介绍
 VisualDL是飞桨可视化分析工具，以丰富的图表呈现训练参数变化趋势、模型结构、数据样本、高维数据分布等。可帮助用户更清晰直观地理解深度学习模型训练过程及模型结构，进而实现高效的模型优化。
 
 VisualDL提供丰富的可视化功能，支持标量、图结构、数据样本可视化、直方图、PR曲线及高维数据降维呈现等诸多功能，同时VisualDL提供可视化结果保存服务，通过VDL.service生成链接，保存并分享可视化结果。具体功能使用方式，请参见 [**VisualDL使用指南**](https://www.paddlepaddle.org.cn/documentation/docs/zh/2.2/guides/03_VisualDL/visualdl_usage_cn.html)。项目正处于高速迭代中，敬请期待新组件的加入。
@@ -356,20 +342,9 @@ VisualDL可视化结果保存服务，以链接形式将可视化结果保存下
 
 ## 五、开源贡献
 
-VisualDL 是由 [PaddlePaddle](https://www.paddlepaddle.org/) 和 [ECharts](https://echarts.apache.org/) 合作推出的开源项目。
-Graph 相关功能由 [Netron](https://github.com/lutzroeder/netron) 提供技术支持。
-欢迎所有人使用，提意见以及贡献代码。
+VisualDL 是由 [PaddlePaddle](https://www.paddlepaddle.org/) 和 [ECharts](https://echarts.apache.org/) 合作推出的开源项目。 Graph 相关功能由 [Netron](https://github.com/lutzroeder/netron) 提供技术支持。 欢迎所有人使用，提意见以及贡献代码。
 
 
 ## 六、更多细节
 
 想了解更多关于VisualDL可视化功能的使用详情介绍，请查看[**VisualDL使用指南**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/README_CN.md)，[**使用VisualDL做性能分析**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/profiler/README_CN.md)，[**使用VisualDL进行Serving可视化部署**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/fastdeploy_server/README_CN.md)，[**使用VisualDL作为fastdeployserver服务的客户端**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/fastdeploy_client/README_CN.md)。
-
-
-## 七、技术交流
-
-欢迎您加入VisualDL官方QQ群：1045783368 与飞桨团队以及其他用户共同针对VisualDL进行讨论与交流。
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/48054808/82522691-c2758680-9b5c-11ea-9aee-fca994aba175.png" width="20%"/>
-</p>

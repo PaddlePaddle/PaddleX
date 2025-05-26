@@ -1,22 +1,9 @@
 [**中文**](./VisualDL.md)
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/PaddlePaddle/VisualDL/develop/frontend/packages/core/public/images/logo-visualdl.svg?sanitize=true" width="70%"/>
-</p>
 
 
-<p align="center">
-<a href="https://pypi.org/project/visualdl/"><img src="https://img.shields.io/pypi/v/visualdl?style=flat-square" alt="PyPI" /></a>
-<a href="https://pypi.org/project/visualdl/#files"><img src="https://img.shields.io/pypi/dm/visualdl?style=flat-square" alt="Downloads" /></a>
-<a href="https://github.com/PaddlePaddle/VisualDL/blob/develop/LICENSE"><img src="https://img.shields.io/github/license/paddlepaddle/visualdl?style=flat-square" alt="License" /></a>
-</p>
+## Introduction to VisualDL
 
-
-<p align="center">
-<a href="javascript:void(0)"><img src="https://img.shields.io/badge/QQ_Group-1045783368-52B6EF?style=social&logo=tencent-qq&logoColor=000&logoWidth=20" alt="QQ Group" /></a>
-</p>
-
-## Introduction
 VisualDL, a visualization analysis tool of PaddlePaddle, provides a variety of charts to show the trends of parameters, and visualizes model structures, data samples, histograms of tensors, pr curves and high-dimensional data distributions. It enables users to understand the training process and the model structure more clearly and intuitively so as to optimize models efficiently.
 
 VisualDL provides various visualization functions, including tracking metrics in real-time, visualizing the model structure, displaying the data sample, presenting the changes of distributions of tensors, showing the pr curves, projecting high-dimensional data to a lower dimensional space and more. Additionally, VisualDL provides VDL.service, which enables developers easily to save, track and share visualization results of experiments. For specific guidelines of each function, please refer to  [**VisualDL User Guide**](https://www.paddlepaddle.org.cn/documentation/docs/en/2.2/guides/03_VisualDL/visualdl_usage_en.html). Currently, VisualDL iterates rapidly and new functions will be continously added.
@@ -343,11 +330,3 @@ VisualDL, in which Graph is powered by [Netron](https://github.com/lutzroeder/ne
 ## More Details
 
 For more details related to the use of VisualDL, please refer to [**VisualDL User Guide**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/README.md), [**VisualDL Profiler Guide**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/profiler/README.md), [**Use VisualDL for fastdeploy serving deployment visualization**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/fastdeploy_server/README.md), [**Use VisualDL as fastdeploy client for request visualization**](https://github.com/PaddlePaddle/VisualDL/blob/develop/docs/components/fastdeploy_client/README.md).
-
-## Technical Communication
-
-Welcome to join the official QQ group 104578336 to communicate with PaddlePaddle team and other developers.
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/48054808/82522691-c2758680-9b5c-11ea-9aee-fca994aba175.png" width="20%"/>
-</p>
