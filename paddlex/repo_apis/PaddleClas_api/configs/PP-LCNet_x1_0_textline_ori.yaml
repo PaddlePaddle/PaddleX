@@ -20,7 +20,7 @@ Global:
 
 # model architecture
 Arch:
-  name: PPLCNet_x0_25
+  name: PPLCNet_x1_0
   class_num: 2
   pretrained: False
   use_ssld: False
