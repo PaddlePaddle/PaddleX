@@ -41,18 +41,21 @@ def constr_device(device_type, device_ids):
 
 
 def get_default_device():
-    avail_gpus = GPUtil.getAvailable()
-    if not avail_gpus:
-        # maybe edge devices like Jetson
+    try:
+        has_gpus = GPUtil.getGPUs()
+    except Exception as e:
+        logging.warning("Failed to query GPU devices: {}".format(e))
+        has_gpus = False
+    if not has_gpus:
+        # HACK
         if os.path.exists("/etc/nv_tegra_release"):
-            avail_gpus = [0]
-            logging.info(
-                "Detected that the current device is a Jetson edge device. The default behavior will be to use GPU: 0"
+            logging.debug(
+                "The current device appears to be an NVIDIA Jetson. GPU 0 will be used as the default device."
             )
-    if not avail_gpus:
+    if not has_gpus:
         return "cpu"
     else:
-        return constr_device("gpu", [avail_gpus[0]])
+        return constr_device("gpu", [0])
 
 
 def parse_device(device):

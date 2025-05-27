@@ -24,7 +24,7 @@ paddlex --pipeline image_classification \
 
 * `pipeline`：模型产线名称或是模型产线配置文件的本地路径，如模型产线名 “image_classification”，或模型产线配置文件路径 “path/to/image_classification.yaml”；
 * `input`：待预测数据文件路径，支持本地文件路径、包含待预测数据文件的本地目录、文件URL链接；
-* `device`：用于设置模型推理设备，如为 GPU 则可以指定卡号，如 “cpu”、“gpu:2”，默认情况下，如有可用 GPU 设置则使用编号最小的 GPU，否则使用 CPU；
+* `device`：用于设置模型推理设备，如为GPU则可以指定卡号，如 “cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
 * `save_path`：预测结果的保存路径，默认情况下，不保存预测结果；
 * `use_hpip`：启用高性能推理插件；
 * `hpi_config`：高性能推理配置；

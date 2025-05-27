@@ -35,7 +35,7 @@ for res in output:
     * `model_name`：`str` 类型，模型名，如“PP-LCNet_x1_0”；
     * `model_dir`：`str` 类型，本地 inference 模型文件目录路径，如“/path/to/PP-LCNet_x1_0_infer/”，默认为 `None`，表示使用`model_name`指定的官方推理模型；
     * `batch_size`：`int` 类型，默认为 `1`；
-    * `device`：`str` 类型，用于设置模型推理设备，如为GPU设置则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如有可用 GPU 设置则使用编号最小的 GPU，否则使用 CPU；
+    * `device`：`str` 类型，用于设置模型推理设备，如为GPU设置则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[4-推理配置](#4-推理配置)；
     * `use_hpip`：`bool` 类型，是否启用高性能推理插件；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
