@@ -42,10 +42,14 @@ def constr_device(device_type, device_ids):
 
 def get_default_device():
     try:
-        has_gpus = GPUtil.getGPUs()
-    except Exception as e:
-        logging.warning("Failed to query GPU devices: {}".format(e))
+        gpu_list = GPUtil.getGPUs()
+    except Exception:
+        logging.debug(
+            "Failed to query GPU devices. Falling back to CPU.", exc_info=True
+        )
         has_gpus = False
+    else:
+        has_gpus = bool(gpu_list)
     if not has_gpus:
         # HACK
         if os.path.exists("/etc/nv_tegra_release"):
