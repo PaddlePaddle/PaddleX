@@ -29,12 +29,10 @@ A: To resume training from a saved checkpoint, set the `pretrain_weights` parame
 A: The purposes of different types of models are as follows:
 
 1. **Normally Trained Saved Model**: Suitable for loading predictions, serving as pre-training weights, or exporting deployment models.
-2. **Pruned Training Saved Model**: Can be used for prediction and deployment but cannot serve as pre-training weights.
 3. **Exported Deployment Model**: Designed for server-side deployment and cannot be used as pre-training weights.
 
 To distinguish between these models, check the `status` field in the `model.yml` file within the model directory:
 - `Normal`: Normally trained model
-- `Prune`: Pruned model
 - `Infer`: Deployment model
 
 ## <b>Q: Every time I start a new training session, it tries to re-download the pretrained models. Can this be avoided?</b>
