@@ -18,6 +18,7 @@ import PIL
 from PIL import ImageFont
 
 from .. import logging
+from ..cache import CACHE_DIR
 from ..download import download
 from ..flags import LOCAL_FONT_FILE_PATH
 
@@ -29,7 +30,7 @@ def get_font_file_path(file_name: str) -> str:
     Returns:
     str: The path to the font file.
     """
-    font_path = (Path(__file__).parent / file_name).resolve().as_posix()
+    font_path = (Path(CACHE_DIR) / "fonts" / file_name).resolve().as_posix()
     if not Path(font_path).is_file():
         download(
             url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{file_name}",
