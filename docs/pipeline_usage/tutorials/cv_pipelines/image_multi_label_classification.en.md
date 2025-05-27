@@ -116,7 +116,7 @@ You can quickly experience the image multi-label classification pipeline effect 
 paddlex --pipeline image_multilabel_classification --input general_image_classification_001.jpg --device gpu:0
 ```
 
-The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration]().
+The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration](). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the result will be printed to the terminal as follows:
 
@@ -176,7 +176,7 @@ In the above Python script, the following steps are performed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
@@ -218,23 +218,6 @@ In the above Python script, the following steps are performed:
   <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
   <li><b>str</b>: Local path of an image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code></li>
   <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>Pipeline inference device</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Such as <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: Such as <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: Such as <code>npu:0</code> indicates using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: Such as <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: Such as <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: Such as <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU 0 device, if not available, the CPU device will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>

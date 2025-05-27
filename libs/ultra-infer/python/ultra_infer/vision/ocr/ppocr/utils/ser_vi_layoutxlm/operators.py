@@ -53,7 +53,7 @@ class Resize(object):
 
 
 class NormalizeImage(object):
-    """normalize image such as substract mean, divide std"""
+    """normalize image such as subtract mean, divide std"""
 
     def __init__(self, scale=None, mean=None, std=None, order="chw", **kwargs):
         if isinstance(scale, str):

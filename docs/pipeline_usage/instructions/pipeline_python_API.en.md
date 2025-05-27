@@ -36,7 +36,7 @@ In short, there are only three steps:
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). Please refer to [4-Inference Configuration](#4-inference-configuration) for more details;
     * `use_hpip`：`bool | None` type, whether to enable the high-performance inference plugin (`None` for using the setting from the configuration file);
     * `hpi_config`：`dict | None` type, high-performance inference configuration;
-  * Return Value: `BasePredictor` type.
+  * Return Value: `BasePipeline` type.
 
 ### 2. Perform Inference by Calling the `predict()` Method of the Prediction Model Pipeline Object
 
@@ -100,7 +100,7 @@ PaddleX supports modifying the inference configuration through `PaddlePredictorO
 #### Attributes:
 
 * `device`: Inference device.
-  * Supports setting the device type and card number represented by `str`. Device types include 'gpu', 'cpu', 'npu', 'xpu', 'mlu', 'dcu'. When using an accelerator card, you can specify the card number, e.g., 'gpu:0' for GPU 0. By default, using 0 id GPU if available, otherwise CPU.
+  * Supports setting the device type and card number represented by `str`. Device types include 'gpu', 'cpu', 'npu', 'xpu', 'mlu', 'dcu'. When using an accelerator card, you can specify the card number, e.g., 'gpu:0' for GPU 0. By default, if a GPU is available, the one with the smallest ID number will be used; otherwise, the CPU will be used.
   * Return value: `str` type, the currently set inference device.
 * `run_mode`: Operating mode.
   * Supports setting the operating mode as a `str` type, options include 'paddle', 'trt_fp32', 'trt_fp16', 'trt_int8', 'mkldnn', 'mkldnn_bf16'. Note that 'trt_fp32' and 'trt_fp16' correspond to using the TensorRT subgraph engine for inference with FP32 and FP16 precision respectively; these options are only available when the inference device is a GPU. Additionally, 'mkldnn' is only available when the inference device is a CPU. The default value is 'paddle'.

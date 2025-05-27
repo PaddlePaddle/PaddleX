@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from copy import deepcopy
 from typing import Dict, List
 
 from ...utils import logging
@@ -55,6 +56,10 @@ class PaddlePredictorOption(object):
     def model_name(self):
         return self._model_name
 
+    @model_name.setter
+    def model_name(self, model_name):
+        self._model_name = model_name
+
     @property
     def changed(self):
         return self._changed
@@ -63,6 +68,13 @@ class PaddlePredictorOption(object):
     def changed(self, v):
         assert isinstance(v, bool)
         self._changed = v
+
+    def copy(self):
+        obj = type(self)(self._model_name)
+        obj._cfg = deepcopy(self._cfg)
+        if hasattr(self, "trt_cfg_setting"):
+            obj.trt_cfg_setting = self.trt_cfg_setting
+        return obj
 
     def _init_option(self, **kwargs):
         for k, v in kwargs.items():
@@ -206,7 +218,7 @@ class PaddlePredictorOption(object):
         """set trt config"""
         assert isinstance(
             config, dict
-        ), f"The trt_cfg_setting must be `dict` type, but recived `{type(config)}` type!"
+        ), f"The trt_cfg_setting must be `dict` type, but received `{type(config)}` type!"
         self._update("trt_cfg_setting", config)
 
     @property

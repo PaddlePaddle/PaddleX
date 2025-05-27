@@ -211,23 +211,6 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>The inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: For example, <code>cpu</code> indicates using the CPU for inference;</li>
-  <li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the value initialized for the pipeline will be used by default. During initialization, the local GPU 0 will be prioritized. If it is not available, the CPU will be used.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>topk</code></td>
 <td>The top <code>topk</code> classes and their corresponding classification probabilities in the prediction results.</td>
 <td><code>int|None</code></td>
@@ -456,7 +439,7 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> mehod.</td>
+<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

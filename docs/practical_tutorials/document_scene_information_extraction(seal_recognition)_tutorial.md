@@ -409,6 +409,7 @@ SubPipelines:
                 model_dir: output/best_accuracy/inference # 修改为微调后的模型路径
                 limit_side_len: 736
                 limit_type: min
+                max_side_limit: 4000
                 thresh: 0.2
                 box_thresh: 0.6
                 unclip_ratio: 0.5

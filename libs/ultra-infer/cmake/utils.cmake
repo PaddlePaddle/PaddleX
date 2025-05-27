@@ -152,7 +152,7 @@ function(bundle_static_library tgt_name bundled_tgt_name fake_target)
 
   list(REMOVE_DUPLICATES static_libs)
   list(REMOVE_ITEM static_libs ${REDUNDANT_STATIC_LIBS})
-  message(STATUS "WITH_STATIC_LIB=${WITH_STATIC_LIB}, Found all needed static libs from dependecy tree: ${static_libs}")
+  message(STATUS "WITH_STATIC_LIB=${WITH_STATIC_LIB}, Found all needed static libs from dependency tree: ${static_libs}")
   message(STATUS "Exclude some redundant static libs: ${REDUNDANT_STATIC_LIBS}")
 
   set(bundled_tgt_full_name

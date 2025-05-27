@@ -99,20 +99,36 @@ The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve t
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
-<td>82.69</td>
-<td>83.34 / 80.91</td>
-<td>442.58 / 442.58</td>
-<td>109</td>
-<td>The server-side text detection model of PP-OCRv4, with higher precision, suitable for deployment on high-performance servers.</td>
+<td>PP-OCRv5_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">Training Model</a></td>
+<td>83.8</td>
+<td>89.55 / 70.19</td>
+<td>371.65 / 371.65</td>
+<td>84.3</td>
+<td>PP-OCRv5 server-side text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
-<td>77.79</td>
+<td>PP-OCRv5_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>79.0</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
 <td>4.7</td>
-<td>The mobile text detection model of PP-OCRv4, with higher efficiency, suitable for deployment on edge devices.</td>
+<td>PP-OCRv5 mobile-side text detection model with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
+<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
+<td>69.2</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
+<td>109</td>
+<td>PP-OCRv4 server-side text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
+</tr>
+<tr>
+<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>63.8</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
+<td>4.7</td>
+<td>PP-OCRv4 mobile-side text detection model with higher efficiency, suitable for deployment on edge devices</td>
 </tr>
 </tbody>
 </table>
@@ -126,6 +142,23 @@ The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve t
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
+</tr>
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>86.38</td>
+<td>8.45/2.36</td>
+<td>122.69/122.69</td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model is dedicated to efficiently and accurately supporting four major languages—Simplified Chinese, Traditional Chinese, English, and Japanese—with a single model. It supports complex text scenarios, including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it also balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.29</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>16 M</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
@@ -165,6 +198,45 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Model List Details</summary>
+
+* <b>PP-OCRv5 Multi-Scenario Model</b>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Chinese Recognition Avg Accuracy (%)</th>
+<th>English Recognition Avg Accuracy (%)</th>
+<th>Traditional Chinese Recognition Avg Accuracy (%)</th>
+<th>Japanese Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>86.38</td>
+<td>64.70</td>
+<td>93.29</td>
+<td>60.35</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model efficiently and accurately supports four major languages with a single model: Simplified Chinese, Traditional Chinese, English, and Japanese. It recognizes complex text scenarios including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.29</td>
+<td>66.00</td>
+<td>83.55</td>
+<td>54.65</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>16 M</td>
+</tr>
+</table>
 
 * <b>Chinese Recognition Model</b>
 <table>
@@ -702,7 +774,7 @@ paddlex --pipeline table_recognition_v2 \
        [1046, ...,  573]], dtype=int16)}}]}}
 ```
 
-The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
+The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 
 The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
@@ -761,7 +833,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the pipeline. It supports specifying specific GPU card numbers, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", and CPU like "cpu".</td>
+<td>The inference device for the pipeline. It supports specifying specific GPU card numbers, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", and CPU like "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
@@ -804,23 +876,6 @@ In the above Python script, the following steps are executed:
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
 <li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
 <li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[“/root/data/img1.jpg”, “/root/data/img2.jpg”]</code>, <code>[“/root/data1”, “/root/data2”]</code>.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>Inference device.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code>.</li>
-<li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code>.</li>
-<li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code>.</li>
-<li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code>.</li>
-<li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code>.</li>
-<li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -928,13 +983,13 @@ In the above Python script, the following steps are executed:
 </td>
 <td><code>None</code></td>
 </tr>
-<td><code>use_table_cells_ocr_results</code></td>
-<td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to HTML table, when enabled, do OCR cell by cell and fill to HTML table (it will increase the time consuming). Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
+<td><code>use_ocr_results_with_table_cells</code></td>
+<td>Whether to enable cell OCR mode, when not enabled, the global OCR results are used to populate the HTML table, when enabled, based on the cell prediction results, the global OCR results are sliced and re-recognized based on the cell, to avoid the situation that the text is connected across the cell or missing. This mode will slightly increase the inference time consuming, and the effect may be different in different scenarios, please choose according to the actual situation.</td>
 <td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> or <code>False</code>
-<td><code>False</code></td>
+<td><code>True</code></td>
 </tr>
 <td><code>use_e2e_wired_table_rec_model</code></td>
 <td>Whether to enable the wired table end-to-end prediction mode, when not enabled, using the table cells detection model prediction results filled to the HTML table, when enabled, using the end-to-end table structure recognition model cell prediction results filled to the HTML table. Both of them have different performance in different scenarios, please choose according to the actual situation.</td>
@@ -951,6 +1006,31 @@ In the above Python script, the following steps are executed:
 <ul>
 <li><b>bool</b>：<code>True</code> or <code>False</code>
 <td><code>False</code></td>
+</tr>
+<td><code>use_table_orientation_classify</code></td>
+<td>Whether to enable the table orientation classification mode, when it is not enabled, the table will be recognized directly based on the incoming image, when it is enabled, it will detect whether the table in the image is rotated or not, and be able to correct the orientation of the table by 90/180/270 degrees before recognizing the table. This mode will slightly increase the inference time, please choose according to the actual situation.</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>True</code></td>
+</tr>
+<td><code>use_wired_table_cells_trans_to_html</code></td>
+<td>Whether to enable the wired table cell direct to HTML mode, when it is not enabled, the HTML structure of the table is normally predicted by the table structure recognition module, when it is enabled, the HTML structure is constructed directly based on the positional arrangement and geometric relationship of the cells predicted by the wired table cell detection model. The effect of this model is different in different scenarios, please choose according to the actual situation. Generally speaking, it is recommended to enable this mode in scenarios where the wired table cell detection is very accurate, in order to obtain more accurate end-to-end table recognition results.</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_wireless_table_cells_trans_to_html</code></td>
+<td>Whether to enable the wireless table cell direct to HTML mode, when it is not enabled, the HTML structure of the table is normally predicted by the table structure recognition module, when it is enabled, the HTML structure is constructed directly based on the positional arrangement and geometrical relationship of the cells predicted by the wireless table cell detection model. The effect of this model is different in different scenarios, please choose according to the actual situation. Generally speaking, it is recommended to enable this mode in scenarios where the wireless table cell detection is very accurate, in order to obtain more accurate end-to-end table recognition results.</td>
+<td><code>bool</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
+</tr>
 </table>
 
 <b>If you need to use the end-to-end table structure recognition model, just replace the corresponding table structure recognition model with the end-to-end table structure recognition model in the pipeline config file, and then load the modified config file and modify the corresponding `predict()` method parameter</b>. For example, if you need to use SLANet_plus to do end-to-end table recognition for wireless tables, just replace `model_name` with SLANet_plus in `WirelessTableStructureRecognition` in the config file (as shown below) and specify `use_e2e_ wireless_table_rec_model=True` in the prediction, the rest of the parts do not need to be modified, at this time the wireless table cells detection model will not take effect, but directly use SLANet_plus for end-to-end table recognition.
@@ -1365,12 +1445,6 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
-<td><code>useTableCellsOcrResults</code></td>
-<td><code>boolean</code></td>
-<td>Please refer to the description of the <code>use_table_cells_ocr_results</code> parameter of the pipeline object's <code>predict</code> method.</td>
-<td>No</td>
-</tr>
-<tr>
 <td><code>useE2eWiredTableRecModel</code></td>
 <td><code>boolean</code></td>
 <td>Please refer to the description of the <code>use_e2e_wired_table_rec_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
@@ -1380,6 +1454,30 @@ To remove the page limit, please add the following configuration to the pipeline
 <td><code>useE2eWirelessTableRecModel</code></td>
 <td><code>boolean</code></td>
 <td>Please refer to the description of the <code>use_e2e_wireless_table_rec_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useWiredTableCellsTransToHtml</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_wired_table_cells_trans_to_html</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useWirelessTableCellsTransToHtml</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_wireless_table_cells_trans_to_html</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableOrientationClassify</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_table_orientation_classify</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrResultsWithTableCells</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_ocr_results_with_table_cells</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1589,17 +1687,18 @@ SubPipelines:
     SubModules:
       TextDetection:
         module_name: text_detection
-        model_name: PP-OCRv4_server_det
+        model_name: PP-OCRv5_server_det
         model_dir: null
         limit_side_len: 960
         limit_type: max
+        max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.4
-        unclip_ratio: 2.0
+        unclip_ratio: 1.5
 
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec
+        model_name: PP-OCRv5_server_rec
         model_dir: null
         batch_size: 1
         score_thresh: 0

@@ -37,7 +37,7 @@ public:
    * \param[in] tensors The inference result from runtime
    * \param[in] texts The output text results of recognizer
    * \param[in] rec_scores The output score results of recognizer
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<std::string> *texts, std::vector<float> *rec_scores);

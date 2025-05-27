@@ -151,7 +151,7 @@ public:
     return *this;
   }
 
-// Conversion opertors
+// Conversion operators
 #ifdef FD_WITH_NATIVE_FP16
   HOSTDEVICE inline explicit operator float16_t() const {
     return *reinterpret_cast<const float16_t *>(this);

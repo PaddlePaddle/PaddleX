@@ -258,7 +258,7 @@ class VideoDetModel(BaseModel):
             dict_path (str, optional): the label dict file path. Defaults to None.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         model_dir = abspath(model_dir)
         input_path = abspath(input_path)

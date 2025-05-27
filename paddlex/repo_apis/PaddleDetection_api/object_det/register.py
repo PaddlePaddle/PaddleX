@@ -1103,3 +1103,33 @@ register_model_info(
         },
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout_plus-L",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout_plus-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocBlockLayout",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocBlockLayout.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)

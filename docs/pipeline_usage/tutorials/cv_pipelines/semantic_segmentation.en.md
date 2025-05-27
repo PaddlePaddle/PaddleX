@@ -262,7 +262,7 @@ paddlex --pipeline semantic_segmentation \
         --device gpu:0 \
 ```
 
-The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration]().
+The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration](). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the result will be printed to the terminal, as follows:
 
@@ -317,7 +317,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
@@ -359,23 +359,6 @@ In the above Python script, the following steps are executed:
 <li><b>Python Var</b>: For example, image data represented by <code>numpy.ndarray</code></li>
 <li><b>str</b>: For example, the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>For URL links</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">Example</a>; <b>For local directories</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to a specific file path)</li>
 <li><b>List</b>: List elements need to be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>Pipeline inference device</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: For example, <code>cpu</code> indicates using CPU for inference;</li>
-<li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-<li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-<li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-<li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-<li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, it will use the parameter value initialized by the pipeline by default. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
 </ul>
 </td>
 <td><code>None</code></td>

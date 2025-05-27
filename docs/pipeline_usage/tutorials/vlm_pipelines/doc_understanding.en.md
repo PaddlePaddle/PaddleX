@@ -14,20 +14,32 @@ The Document Understanding Pipeline is an advanced document processing technolog
 
 <table>
 <tr>
-<th>Model</th><th>Model Download Link</th>
-<th>Model Storage Size (GB)</th>
+<th>Model</th><th>Download Link</th>
+<th>Storage Size (GB)</th>
+<th>Model Score</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-DocBee-2B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
 <td>4.2</td>
-<td rowspan="2">PP-DocBee is a self-developed multimodal large model by the PaddlePaddle team, focusing on document understanding with excellent performance on Chinese document understanding tasks. The model is fine-tuned with nearly 5 million multimodal datasets for document understanding, including general VQA, OCR, chart, text-rich documents, mathematics and complex reasoning, synthetic data, and pure text data, with different training data ratios. On several authoritative English document understanding evaluation benchmarks in academia, PP-DocBee has achieved SOTA for models of the same parameter scale. In internal business Chinese scenarios, PP-DocBee also outperforms current popular open and closed-source models.</td>
+<td>765</td>
+<td rowspan="2">PP-DocBee is a multimodal large model developed by the PaddlePaddle team, focused on document understanding with excellent performance on Chinese document understanding tasks. The model is fine-tuned and optimized using nearly 5 million multimodal datasets for document understanding, including general VQA, OCR, table, text-rich, math and complex reasoning, synthetic, and pure text data, with different training data ratios. On several authoritative English document understanding evaluation leaderboards in academia, PP-DocBee has generally achieved SOTA at the same parameter level. In internal business Chinese scenarios, PP-DocBee also exceeds current popular open-source and closed-source models.</td>
 </tr>
 <tr>
 <td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
 <td>15.8</td>
+<td>-</td>
+</tr>
+<tr>
+<td>PP-DocBee2-3B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar">Inference Model</a></td>
+<td>7.6</td>
+<td>852</td>
+<td>PP-DocBee2 is a multimodal large model independently developed by the PaddlePaddle team, specifically tailored for document understanding. Building upon PP-DocBee, the team has further optimized the foundational model and introduced a new data optimization scheme to enhance data quality. With just a relatively small dataset of 470,000 samples generated using the team's proprietary data synthesis strategy, PP-DocBee2 demonstrates superior performance in Chinese document understanding tasks. In terms of internal business metrics for Chinese-language scenarios, PP-DocBee2 has achieved an approximately 11.4% improvement over PP-DocBee, outperforming both current popular open-source and closed-source models of a similar scale.</td>
 </tr>
 </table>
+
+<b>Note: The total scores of the above models are based on the test results from the internal evaluation set. All images in the internal evaluation set have a resolution (height, width) of (1680, 1204), with a total of 1,196 data entries. These entries cover various scenarios such as financial reports, laws and regulations, science and engineering papers, instruction manuals, liberal arts papers, contracts, research reports, etc. There are currently no plans to make this dataset publicly available.</b>
+
 
 ## 2. Quick Start
 
@@ -45,7 +57,7 @@ pipeline = create_pipeline(pipeline="doc_understanding")
 output = pipeline.predict(
     {
         "image": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png",
-        "query": "Identify the contents of this table"
+        "query": "识别这份表格的内容, 以markdown格式输出"
     }
 )
 for res in output:
@@ -125,22 +137,6 @@ In the above Python script, the following steps are performed:
 </td>
 <td><code>None</code></td>
 </tr>
-<tr>
-<td><code>device</code></td>
-<td>Inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: e.g., <code>cpu</code> for CPU inference;</li>
-  <li><b>GPU</b>: e.g., <code>gpu:0</code> for inference on the first GPU;</li>
-  <li><b>NPU</b>: e.g., <code>npu:0</code> for inference on the first NPU;</li>
-  <li><b>XPU</b>: e.g., <code>xpu:0</code> for inference on the first XPU;</li>
-  <li><b>MLU</b>: e.g., <code>mlu:0</code> for inference on the first MLU;</li>
-  <li><b>DCU</b>: e.g., <code>dcu:0</code> for inference on the first DCU;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value of this parameter initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU 0 device if available, otherwise the CPU device will be used;</li>
-</ul>
-</td>
-<td><code>None</code></td>
 </table>
 
 3. Process the prediction results. The prediction result for each sample is a corresponding Result object, and supports operations such as printing and saving as a `json` file:
@@ -243,7 +239,7 @@ pipeline = create_pipeline(pipeline="./my_path/doc_understanding.yaml")
 output = pipeline.predict(
     {
         "image": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/medal_table.png",
-        "query": "Identify the contents of this table"
+        "query": "识别这份表格的内容, 以markdown格式输出"
     }
 )
 for res in output:

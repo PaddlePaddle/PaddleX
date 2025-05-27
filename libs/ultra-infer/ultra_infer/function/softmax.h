@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace function {
-/** Excute the softmax operation for input FDTensor along given dims.
+/** Execute the softmax operation for input FDTensor along given dims.
     @param x The input tensor.
     @param out The output tensor which stores the result.
     @param axis The axis to be computed softmax value.

@@ -30,7 +30,7 @@ public:
    * \param[in] tensors The inference result from runtime
    * \param[in] cls_labels The output label results of classification model
    * \param[in] cls_scores The output score results of classification model
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<int32_t> *cls_labels, std::vector<float> *cls_scores);

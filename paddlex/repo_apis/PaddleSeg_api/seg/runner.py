@@ -151,7 +151,7 @@ class SegRunner(BaseRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         # `device` unused
         cli_args = self._gather_opts_args(cli_args)

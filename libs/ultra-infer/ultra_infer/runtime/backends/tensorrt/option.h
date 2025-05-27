@@ -33,8 +33,8 @@ struct TrtBackendOption {
   /// Enable log while converting onnx model to tensorrt
   bool enable_log_info = false;
 
-  /// Enable half precison inference, on some device not support half precision,
-  /// it will fallback to float32 mode
+  /// Enable half precision inference, on some device not support half
+  /// precision, it will fallback to float32 mode
   bool enable_fp16 = false;
 
   /** \brief Set shape range of input tensor for the model that contain dynamic

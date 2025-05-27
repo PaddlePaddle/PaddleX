@@ -49,7 +49,7 @@ PIPELINE: #PIPELINE field
             num_seg: 16
             seg_len: 1
             valid_mode: False
-        transform: #Mandotary, image transfrom operator
+        transform: #Mandotary, image transform operator
             - Scale:
                 short_size: 256
             - MultiScaleCrop:
@@ -61,7 +61,7 @@ PIPELINE: #PIPELINE field
             - Normalization:
                 mean: [0.485, 0.456, 0.406]
                 std: [0.229, 0.224, 0.225]
-    valid: #Mandatory, indicate the pipeline to deal with the validing data. associate to the 'paddlevideo/loader/pipelines/'
+    valid: #Mandatory, indicate the pipeline to deal with the validating data. associate to the 'paddlevideo/loader/pipelines/'
         decode:
             name: "VideoDecoder"
             backend: "decord"
@@ -79,7 +79,7 @@ PIPELINE: #PIPELINE field
             - Normalization:
                 mean: [0.485, 0.456, 0.406]
                 std: [0.229, 0.224, 0.225]
-    test:  #Mandatory, indicate the pipeline to deal with the validing data. associate to the 'paddlevideo/loader/pipelines/'
+    test:  #Mandatory, indicate the pipeline to deal with the validating data. associate to the 'paddlevideo/loader/pipelines/'
         decode:
             name: "VideoDecoder"
             backend: "decord"
@@ -146,6 +146,6 @@ Infer:
         class_id_map_file: data/k400/Kinetics-400_label_list.txt      
 
 model_name: "ppTSMv2"
-log_interval: 10 #Optional, the interal of logger, default:10
+log_interval: 10 #Optional, the interval of logger, default:10
 epochs: 120  #Mandatory, total epoch
 log_level: "INFO" #Optional, the logger level. default: "INFO"

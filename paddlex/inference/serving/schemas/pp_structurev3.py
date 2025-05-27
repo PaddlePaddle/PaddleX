@@ -32,13 +32,14 @@ INFER_ENDPOINT: Final[str] = "/layout-parsing"
 
 
 class InferRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
+    useDocOrientationClassify: Optional[bool] = False
+    useDocUnwarping: Optional[bool] = False
     useTextlineOrientation: Optional[bool] = None
-    useGeneralOcr: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
+    useChartRecognition: Optional[bool] = False
+    useRegionDetection: Optional[bool] = None
     layoutThreshold: Optional[float] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
@@ -55,9 +56,12 @@ class InferRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-    useTableCellsOcrResults: bool = False
+    useWiredTableCellsTransToHtml: bool = False
+    useWirelessTableCellsTransToHtml: bool = False
+    useTableOrientationClassify: bool = True
+    useOcrResultsWithTableCells: bool = True
     useE2eWiredTableRecModel: bool = False
-    useE2eWirelessTableRecModel: bool = False
+    useE2eWirelessTableRecModel: bool = True
 
 
 class MarkdownData(BaseModel):

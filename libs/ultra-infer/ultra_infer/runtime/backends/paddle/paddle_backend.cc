@@ -205,7 +205,7 @@ bool PaddleBackend::Init(const RuntimeOption &runtime_option) {
   option.paddle_infer_option.trt_option.gpu_id = runtime_option.device_id;
   // Note(qiuyanjun): For Ipu option and XPU option, please check the
   // details of RuntimeOption::UseIpu() and RuntimeOption::UseKunlunXin().
-  // Futhermore, please check paddle_infer_option.SetIpuConfig() and
+  // Furthermore, please check paddle_infer_option.SetIpuConfig() and
   // paddle_infer_option.SetXpuConfig() for more details of extra configs.
   return InitFromPaddle(option.model_file, option.params_file,
                         option.model_from_memory_, option.paddle_infer_option);

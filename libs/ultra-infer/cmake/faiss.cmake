@@ -113,7 +113,7 @@ else() # Linux
   list(APPEND FAISS_LIBRARIES ${LAPACK_LIBRARIES})
 endif()
 
-# Add OpenMP (REQUIRED), OpenMP must be avaliable.
+# Add OpenMP (REQUIRED), OpenMP must be available.
 find_package(OpenMP REQUIRED)
 list(APPEND FAISS_LIBRARIES OpenMP::OpenMP_CXX)
 

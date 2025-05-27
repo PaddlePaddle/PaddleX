@@ -22,7 +22,7 @@ class MLClsEvaluator(BaseEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         if self.pdx_config["Arch"]["name"] == "DistillationModel":
@@ -32,7 +32,7 @@ class MLClsEvaluator(BaseEvaluator):
         self.pdx_config.update_pretrained_weights(self.eval_config.weight_path)
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

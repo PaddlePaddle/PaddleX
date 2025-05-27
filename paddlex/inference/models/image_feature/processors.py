@@ -14,7 +14,6 @@
 
 import numpy as np
 
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -24,10 +23,9 @@ class NormalizeFeatures:
 
     def _normalize(self, preds):
         """normalize"""
-        feas_norm = np.sqrt(np.sum(np.square(preds[0]), axis=0, keepdims=True))
-        features = np.divide(preds[0], feas_norm)
+        feas_norm = np.sqrt(np.sum(np.square(preds), axis=1, keepdims=True))
+        features = np.divide(preds, feas_norm)
         return features
 
     def __call__(self, preds):
-        normalized_features = maybe_parallelize(self._normalize, preds)
-        return normalized_features
+        return self._normalize(preds[0])

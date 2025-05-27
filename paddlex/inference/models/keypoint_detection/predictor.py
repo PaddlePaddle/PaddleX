@@ -26,6 +26,9 @@ from .result import KptResult
 
 
 class KptBatchSampler(ImageBatchSampler):
+    # don't support to pass pdf file as input
+    PDF_SUFFIX = []
+
     def sample(self, inputs):
         if not isinstance(inputs, list):
             inputs = [inputs]

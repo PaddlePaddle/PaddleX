@@ -67,7 +67,7 @@ class Pad(Processor):
 
 class NormalizeAndPermute(Processor):
     def __init__(self, mean=[], std=[], is_scale=True, min=[], max=[], swap_rb=False):
-        """Creae a Normalize and a Permute operation with the given parameters.
+        """Create a Normalize and a Permute operation with the given parameters.
 
         :param mean: A list containing the mean of each channel
         :param std: A list containing the standard deviation of each channel
@@ -100,7 +100,7 @@ class HWC2CHW(Processor):
 
 class Normalize(Processor):
     def __init__(self, mean, std, is_scale=True, min=[], max=[], swap_rb=False):
-        """Creat a new normalize opereator with given paremeters.
+        """Creat a new normalize opereator with given parameters.
 
         :param mean: A list containing the mean of each channel
         :param std: A list containing the standard deviation of each channel

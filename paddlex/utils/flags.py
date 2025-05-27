@@ -24,7 +24,6 @@ __all__ = [
     "INFER_BENCHMARK_ITERS",
     "INFER_BENCHMARK_WARMUP",
     "INFER_BENCHMARK_OUTPUT_DIR",
-    "INFER_BENCHMARK_USE_NEW_INFER_API",
     "FLAGS_json_format_model",
     "USE_PIR_TRT",
     "DISABLE_DEV_MODEL_WL",
@@ -53,6 +52,8 @@ FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", True)
 USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", True)
 DISABLE_DEV_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_DEV_MODEL_WL", False)
 DISABLE_CINN_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_CINN_MODEL_WL", False)
+LOCAL_FONT_FILE_PATH = get_flag_from_env_var("PADDLE_PDX_LOCAL_FONT_FILE_PATH", None)
+
 
 # Inference Benchmark
 INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)
@@ -67,9 +68,6 @@ INFER_BENCHMARK_ITERS = get_flag_from_env_var(
 )
 INFER_BENCHMARK_USE_CACHE_FOR_READ = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ", False
-)
-INFER_BENCHMARK_USE_NEW_INFER_API = get_flag_from_env_var(
-    "PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API", False
 )
 
 EXP_USE_PARALLEL_COMPUTING = get_flag_from_env_var(

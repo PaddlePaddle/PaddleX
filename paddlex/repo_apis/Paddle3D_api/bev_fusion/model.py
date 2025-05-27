@@ -54,7 +54,7 @@ class BEVFusionModel(BaseModel):
             raise ValueError(f"`dy2st`={dy2st} is not supported.")
         if device in ("cpu", "gpu"):
             logging.warning(
-                f"The device type to use will be automatically determined, which may differ from the sepcified type: {repr(device)}."
+                f"The device type to use will be automatically determined, which may differ from the specified type: {repr(device)}."
             )
 
         # Update YAML config file
@@ -134,7 +134,7 @@ class BEVFusionModel(BaseModel):
 
         if device in ("cpu", "gpu"):
             logging.warning(
-                f"The device type to use will be automatically determined, which may differ from the sepcified type: {repr(device)}."
+                f"The device type to use will be automatically determined, which may differ from the specified type: {repr(device)}."
             )
 
         # Update YAML config file

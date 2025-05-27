@@ -97,7 +97,7 @@ bool AutoSelectBackend(RuntimeOption &option) {
   }
 
   if (candidates.size() == 0) {
-    FDERROR << "Cannot found availabel inference backends by model format: "
+    FDERROR << "Cannot found available inference backends by model format: "
             << option.model_format << " with device: " << option.device
             << std::endl;
     return false;
@@ -112,7 +112,7 @@ bool AutoSelectBackend(RuntimeOption &option) {
     }
   }
   std::string debug_message = Str(candidates);
-  FDERROR << "The candiate backends for " << option.model_format << " & "
+  FDERROR << "The candidate backends for " << option.model_format << " & "
           << option.device << " are " << debug_message
           << ", but both of them have not been compiled with current "
              "UltraInfer yet."
@@ -428,7 +428,7 @@ bool Runtime::Compile(std::vector<std::vector<FDTensor>> &prewarm_tensors) {
   FDASSERT(
       casted_backend->Compile(option.model_file, prewarm_tensors,
                               option.poros_option),
-      "Load model from Torchscript failed while initliazing PorosBackend.");
+      "Load model from Torchscript failed while initializing PorosBackend.");
 #else
   FDASSERT(false, "PorosBackend is not available, please compiled with "
                   "ENABLE_POROS_BACKEND=ON.");

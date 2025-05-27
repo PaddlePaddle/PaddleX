@@ -49,7 +49,7 @@ comments: true
     <td>-</td>
   </tr>
   <tr>
-    <td>whisper_small</td>
+    <td>whisper_tiny</td>
     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">whisper_tiny</a></td>
     <td>680kh</td>
     <td>145M</td>

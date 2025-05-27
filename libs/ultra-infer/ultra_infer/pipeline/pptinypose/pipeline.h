@@ -42,13 +42,13 @@ public:
   /** \brief Predict the keypoint detection result for an input image
    *
    * \param[in] img The input image data, comes from cv::imread()
-   * \param[in] result The output keypoint detection result will be writen to
-   * this structure \return true if the prediction successed, otherwise false
+   * \param[in] result The output keypoint detection result will be written to
+   * this structure \return true if the prediction succeeded, otherwise false
    */
   virtual bool Predict(cv::Mat *img,
                        ultra_infer::vision::KeyPointDetectionResult *result);
 
-  /* \brief The score threshold for detectin model to filter bbox before
+  /* \brief The score threshold for detecting model to filter bbox before
    * inputting pptinypose model
    */
   float detection_model_score_threshold = 0;

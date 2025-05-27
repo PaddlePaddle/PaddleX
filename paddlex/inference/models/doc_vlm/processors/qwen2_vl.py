@@ -12,15 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import base64
-import math
-from io import BytesIO
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
-import paddle
-import requests
-from PIL import Image
 
 from .....utils import logging
 from ....utils.benchmark import benchmark
@@ -33,10 +27,12 @@ from .common import (
     TensorType,
     TextInput,
     convert_to_rgb,
+    fetch_image,
     get_image_size,
     infer_channel_dimension_format,
-    is_valid_image,
+    make_batched_images,
     make_list_of_images,
+    smart_resize,
     to_channel_dimension_format,
     to_numpy_array,
     valid_images,
@@ -82,7 +78,7 @@ class Qwen2VLProcessor(object):
         self.image_processor.min_pixels = kwargs.get("min_pixels", 3136)
         self.image_processor.max_pixels = kwargs.get("max_pixels", 12845056)
 
-    def _preprocess(
+    def preprocess(
         self,
         images: ImageInput = None,
         text: Union[TextInput, List[TextInput]] = None,
@@ -180,33 +176,6 @@ class Qwen2VLProcessor(object):
         the docstring of this method for more information.
         """
         return self.tokenizer.decode(*args, **kwargs)
-
-
-def make_batched_images(images) -> List[List[ImageInput]]:
-    """
-    Accepts images in list or nested list format, and makes a list of images for preprocessing.
-
-    Args:
-        images (`Union[List[List[ImageInput]], List[ImageInput], ImageInput]`):
-            The input image.
-
-    Returns:
-        list: A list of images.
-    """
-    if (
-        isinstance(images, (list, tuple))
-        and isinstance(images[0], (list, tuple))
-        and is_valid_image(images[0][0])
-    ):
-        return [img for img_list in images for img in img_list]
-
-    elif isinstance(images, (list, tuple)) and is_valid_image(images[0]):
-        return images
-
-    elif is_valid_image(images):
-        return [images]
-
-    raise ValueError(f"Could not make batched images from {images}")
 
 
 class Qwen2VLImageProcessor(object):
@@ -360,6 +329,7 @@ class Qwen2VLImageProcessor(object):
                     factor=self.patch_size * self.merge_size,
                     min_pixels=self.min_pixels,
                     max_pixels=self.max_pixels,
+                    max_ratio=MAX_RATIO,
                 )
                 image = image.astype("uint8")
                 image = resize(
@@ -527,159 +497,34 @@ class Qwen2VLImageProcessor(object):
         return self.preprocess(images, **kwargs)
 
 
-def round_by_factor(number: int, factor: int) -> int:
-    """Returns the closest integer to 'number' that is divisible by 'factor'."""
-    return round(number / factor) * factor
-
-
-def ceil_by_factor(number: int, factor: int) -> int:
-    """Returns the smallest integer greater than or equal to 'number' that is divisible by 'factor'."""
-    return math.ceil(number / factor) * factor
-
-
-def floor_by_factor(number: int, factor: int) -> int:
-    """Returns the largest integer less than or equal to 'number' that is divisible by 'factor'."""
-    return math.floor(number / factor) * factor
-
-
-def smart_resize(
-    height: int,
-    width: int,
-    factor: int = IMAGE_FACTOR,
-    min_pixels: int = MIN_PIXELS,
-    max_pixels: int = MAX_PIXELS,
-) -> Tuple[int, int]:
-    """
-    Rescales the image so that the following conditions are met:
-
-    1. Both dimensions (height and width) are divisible by 'factor'.
-
-    2. The total number of pixels is within the range ['min_pixels', 'max_pixels'].
-
-    3. The aspect ratio of the image is maintained as closely as possible.
-    """
-    if max(height, width) / min(height, width) > MAX_RATIO:
-        raise ValueError(
-            f"absolute aspect ratio must be smaller than {MAX_RATIO}, got {max(height, width) / min(height, width)}"
-        )
-    h_bar = max(factor, round_by_factor(height, factor))
-    w_bar = max(factor, round_by_factor(width, factor))
-    if h_bar * w_bar > max_pixels:
-        beta = math.sqrt((height * width) / max_pixels)
-        h_bar = floor_by_factor(height / beta, factor)
-        w_bar = floor_by_factor(width / beta, factor)
-    elif h_bar * w_bar < min_pixels:
-        beta = math.sqrt(min_pixels / (height * width))
-        h_bar = ceil_by_factor(height * beta, factor)
-        w_bar = ceil_by_factor(width * beta, factor)
-    return h_bar, w_bar
-
-
-def fetch_image(
-    ele: Dict[str, Union[str, Image.Image]], size_factor: int = IMAGE_FACTOR
-) -> Image.Image:
-    if not isinstance(ele, dict):
-        ele = {"image": ele}
-    if "image" in ele:
-        image = ele["image"]
-    else:
-        image = ele["image_url"]
-    image_obj = None
-    if isinstance(image, Image.Image):
-        image_obj = image
-    elif isinstance(image, np.ndarray):
-        image_obj = Image.fromarray(image)
-    elif image.startswith("http://") or image.startswith("https://"):
-        image_obj = Image.open(requests.get(image, stream=True).raw)
-    elif image.startswith("file://"):
-        image_obj = Image.open(image[7:])
-    elif image.startswith("data:image"):
-        data = image.split(";", 1)[1]
-        if data.startswith("base64,"):
-            data = base64.b64decode(data[7:])
-            image_obj = Image.open(BytesIO(data))
-    else:
-        image_obj = Image.open(image)
-    if image_obj is None:
-        raise ValueError(
-            f"Unrecognized image input, support local path, http url, base64 and PIL.Image, got {image}"
-        )
-    image = image_obj.convert("RGB")
-    # resize
-    if "resized_height" in ele and "resized_width" in ele:
-        resized_height, resized_width = smart_resize(
-            ele["resized_height"],
-            ele["resized_width"],
-            factor=size_factor,
-        )
-    else:
-        width, height = image.size  # Image, not tensor
-        min_pixels = ele.get("min_pixels", MIN_PIXELS)
-        max_pixels = ele.get("max_pixels", MAX_PIXELS)
-        resized_height, resized_width = smart_resize(
-            height,
-            width,
-            factor=size_factor,
-            min_pixels=min_pixels,
-            max_pixels=max_pixels,
-        )
-    image = image.resize((resized_width, resized_height))
-
-    return image
-
-
-def extract_vision_info(
-    conversations: Union[List[dict], List[List[dict]]]
-) -> List[dict]:
-    vision_infos = []
-    if isinstance(conversations[0], dict):
-        conversations = [conversations]
-    for conversation in conversations:
-        for message in conversation:
-            if isinstance(message["content"], list):
-                for ele in message["content"]:
-                    if (
-                        "image" in ele
-                        or "image_url" in ele
-                        or ele["type"] in ("image", "image_url")
-                    ):
-                        vision_infos.append(ele)
-    return vision_infos
-
-
-def process_vision_info(
-    conversations: Union[List[dict], List[List[dict]]],
-) -> Tuple[
-    Union[List[Image.Image], None, List[Union[paddle.Tensor, List[Image.Image]]], None]
-]:
-    vision_infos = extract_vision_info(conversations)
-    image_inputs = []
-    for vision_info in vision_infos:
-        if "image" in vision_info or "image_url" in vision_info:
-            image_inputs.append(fetch_image(vision_info))
-        else:
-            raise ValueError("image, image_url should in content.")
-    if len(image_inputs) == 0:
-        image_inputs = None
-    return image_inputs
-
-
 class PPDocBeeProcessor(Qwen2VLProcessor):
     """
     PP-DocBee processor, based on Qwen2VLProcessor
     """
 
     @benchmark.timeit
-    def preprocess(self, image: Union[str, Image.Image, np.ndarray], query: str):
+    def preprocess(self, input_dicts):
         """
         PreProcess for PP-DocBee Series
         """
-        image_inputs = fetch_image(image)
+        assert (
+            isinstance(input_dicts, list) and len(input_dicts) == 1
+        ), f"PP-DocBee series only supports batchsize of one, but received {len(input_dicts)} samples."
+        input_dict = input_dicts[0]
+        image = input_dict["image"]
+        query = input_dict["query"]
+        image_inputs = fetch_image(
+            image,
+            size_factor=IMAGE_FACTOR,
+            min_pixels=MIN_PIXELS,
+            max_pixels=MAX_PIXELS,
+            max_ratio=MAX_RATIO,
+        )
         image_pad_token = "<|vision_start|><|image_pad|><|vision_end|>"
         text = f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n{image_pad_token}{query}<|im_end|>\n<|im_start|>assistant\n"
         text = [text]
 
-        rst_inputs = self._preprocess(
+        rst_inputs = super().preprocess(
             text=text,
             images=[image_inputs],
             padding=False,

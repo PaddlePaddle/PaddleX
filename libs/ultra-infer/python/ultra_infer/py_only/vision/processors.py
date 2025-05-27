@@ -16,7 +16,6 @@ import math
 
 import numpy as np
 import cv2
-from PIL import Image
 
 from ..base import PyOnlyProcessor
 
@@ -375,6 +374,8 @@ class LaTeXOCRReisizeNormImg(PyOnlyProcessor):
         self.rec_image_shape = rec_image_shape
 
     def pad_(self, img, divable=32):
+        from PIL import Image
+
         threshold = 128
         data = np.array(img.convert("LA"))
         if data[..., -1].var() == 0:
@@ -407,6 +408,8 @@ class LaTeXOCRReisizeNormImg(PyOnlyProcessor):
         max_dimensions,
         min_dimensions,
     ):
+        from PIL import Image
+
         if max_dimensions is not None:
             ratios = [a / b for a, b in zip(img.size, max_dimensions)]
             if any([r > 1 for r in ratios]):
@@ -426,6 +429,8 @@ class LaTeXOCRReisizeNormImg(PyOnlyProcessor):
 
     def norm_img_latexocr(self, img):
         # CAN only predict gray scale image
+        from PIL import Image
+
         shape = (1, 1, 3)
         mean = [0.7931, 0.7931, 0.7931]
         std = [0.1738, 0.1738, 0.1738]

@@ -46,7 +46,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -
 To use [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.cn/documentation/docs/en/install/pip/linux-pip_en.html#gpu), install TensorRT by executing the following instructions in the 'paddlex' container that has just been started
 
 ```bash
-python -m pip install /usr/local/TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
+python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x86_64.whl
 ```
 
 ## Installing PaddlePaddle via pip
@@ -94,7 +94,7 @@ tar xvf TensorRT-8.6.1.6.Linux.x86_64-gnu.cuda-11.8.tar.gz
 # Install TensorRT wheel package
 python -m pip install TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
 # Add the absolute path of TensorRT's `lib` directory to LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:TensorRT-8.6.1.6/lib
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:TensorRT-8.6.1.6/lib"
 ```
 
 > ❗ <b>Note</b>: If you encounter any issues during the installation process, feel free to [submit an issue](https://github.com/PaddlePaddle/Paddle/issues) in the Paddle repository.

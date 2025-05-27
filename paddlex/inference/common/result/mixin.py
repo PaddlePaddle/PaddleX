@@ -161,7 +161,7 @@ class JsonMixin:
         else:
             if len(json_data) > 1:
                 logging.warning(
-                    f"The result has multiple json files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple json files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             self._json_writer.write(
                 save_path,
@@ -264,7 +264,7 @@ class Base64Mixin:
         else:
             if len(base64) > 1:
                 logging.warning(
-                    f"The result has multiple base64 files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple base64 files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             self._base64_writer.write(
                 save_path, base64[list(base64.keys())[0]], *args, **kwargs
@@ -328,7 +328,7 @@ class ImgMixin:
         else:
             if len(img) > 1:
                 logging.warning(
-                    f"The result has multiple img files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple img files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             self._img_writer.write(save_path, img[list(img.keys())[0]], *args, **kwargs)
 
@@ -392,7 +392,7 @@ class CSVMixin:
         else:
             if len(csv) > 1:
                 logging.warning(
-                    f"The result has multiple csv files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple csv files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             self._csv_writer.write(save_path, csv[list(csv.keys())[0]], *args, **kwargs)
 
@@ -455,7 +455,7 @@ class HtmlMixin:
         else:
             if len(html) > 1:
                 logging.warning(
-                    f"The result has multiple html files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple html files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             self._html_writer.write(
                 save_path, html[list(html.keys())[0]], *args, **kwargs
@@ -524,7 +524,7 @@ class XlsxMixin:
         else:
             if len(xlsx) > 1:
                 logging.warning(
-                    f"The result has multiple xlsx files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple xlsx files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             self._xlsx_writer.write(
                 save_path, xlsx[list(xlsx.keys())[0]], *args, **kwargs
@@ -589,7 +589,7 @@ class VideoMixin:
         else:
             if len(video) > 1:
                 logging.warning(
-                    f"The result has multiple video files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
+                    f"The result has multiple video files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             video_writer.write(save_path, video[list(video.keys())[0]], *args, **kwargs)
 
@@ -609,9 +609,12 @@ class MarkdownMixin:
         self._save_funcs.append(self.save_to_markdown)
 
     @abstractmethod
-    def _to_markdown(self) -> Dict[str, Union[str, Dict[str, Any]]]:
+    def _to_markdown(self, pretty=True) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
         Convert the result to markdown format.
+
+        Args:
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
 
         Returns:
             Dict[str, Union[str, Dict[str, Any]]]: A dictionary containing markdown text and image data.
@@ -627,7 +630,7 @@ class MarkdownMixin:
         """
         return self._to_markdown()
 
-    def save_to_markdown(self, save_path, *args, **kwargs) -> None:
+    def save_to_markdown(self, save_path, pretty=True, *args, **kwargs) -> None:
         """Save the markdown data to a file.
 
         Args:
@@ -665,7 +668,7 @@ class MarkdownMixin:
             self._markdown_writer.write,
             self._img_writer.write,
             self.save_path,
-            self._to_markdown(),
+            self._to_markdown(pretty=pretty),
             *args,
             **kwargs,
         )
@@ -698,5 +701,9 @@ class MarkdownMixin:
             if isinstance(value, dict):
                 base_save_path = save_path.parent
                 for img_path, img_data in value.items():
-                    save_path = base_save_path / img_path
-                    save_img_func(save_path.as_posix(), img_data, *args, **kwargs)
+                    save_img_func(
+                        (base_save_path / img_path).as_posix(),
+                        img_data,
+                        *args,
+                        **kwargs,
+                    )

@@ -20,14 +20,12 @@ from ....utils.deps import pipeline_requires_extra
 from ...models.image_multilabel_classification.result import MLClassResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
-@pipeline_requires_extra("cv")
-class ImageMultiLabelClassificationPipeline(BasePipeline):
+class _ImageMultiLabelClassificationPipeline(BasePipeline):
     """Image Multi Label Classification Pipeline"""
-
-    entities = "image_multilabel_classification"
 
     def __init__(
         self,
@@ -85,3 +83,15 @@ class ImageMultiLabelClassificationPipeline(BasePipeline):
             input=input,
             threshold=self.threshold if threshold is None else threshold,
         )
+
+
+@pipeline_requires_extra("cv")
+class ImageMultiLabelClassificationPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "image_multilabel_classification"
+
+    @property
+    def _pipeline_cls(self):
+        return _ImageMultiLabelClassificationPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["ImageMultiLabelClassification"]["batch_size"]

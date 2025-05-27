@@ -50,13 +50,6 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>94.57</td>
 <td>320K</td>
 </tr>
-<tr>
-<td>TimesNet_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_ad_pretrained.pdparams">Training Model</a></td>
-<td>98.37</td>
-<td>94.80</td>
-<td>96.56</td>
-<td>1.3M</td>
-</tr>
 </tbody>
 </table>
 
@@ -234,23 +227,6 @@ In the above Python script, the following steps are performed:
   <li><b>Python Var</b>: Time series data represented by <code>pandas.DataFrame</code>.</li>
   <li><b>str</b>: Local path of the time series file, such as <code>/root/data/ts.csv</code>; <b>URL link</b>, such as the network URL of the time series file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv">Example</a>; <b>Local directory</b>, which must contain the time series to be predicted, such as the local path: <code>/root/data/</code>.</li>
   <li><b>List</b>: The elements of the list must be of the above types, such as <code>[pandas.DataFrame, pandas.DataFrame]</code>, <code>["/root/data/ts1.csv", "/root/data/ts2.csv"]</code>, <code>["/root/data1", "/root/data2"]</code>.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>The inference device for the pipeline.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: <code>cpu</code> indicates using the CPU for inference;</li>
-  <li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the value initialized for the pipeline will be used by default. During initialization, the local GPU device 0 will be prioritized. If not available, the CPU device will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>

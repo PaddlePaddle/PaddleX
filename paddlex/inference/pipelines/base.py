@@ -101,7 +101,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             model_dir=model_dir,
             device=self.device,
             batch_size=config.get("batch_size", 1),
-            pp_option=self.pp_option,
+            pp_option=(
+                self.pp_option.copy() if self.pp_option is not None else self.pp_option
+            ),
             use_hpip=use_hpip,
             hpi_config=hpi_config,
             **kwargs,
@@ -132,7 +134,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         pipeline = create_pipeline(
             config=config,
             device=self.device,
-            pp_option=self.pp_option,
+            pp_option=(
+                self.pp_option.copy() if self.pp_option is not None else self.pp_option
+            ),
             use_hpip=use_hpip,
             hpi_config=hpi_config,
         )

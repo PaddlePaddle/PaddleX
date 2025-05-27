@@ -30,7 +30,7 @@ public:
    * \param[in] tensors The inference result from runtime
    * \param[in] results The output result of detector
    * \param[in] batch_det_img_info The detector_preprocess result
-   * \return true if the postprocess successed, otherwise false
+   * \return true if the postprocess succeeded, otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,
            std::vector<std::vector<std::array<int, 8>>> *results,
@@ -62,7 +62,7 @@ public:
   /// Get det_db_score_mode_ of the detection postprocess
   std::string GetDetDBScoreMode() const { return det_db_score_mode_; }
 
-  /// Set use_dilation for the detection postprocess, default is fasle
+  /// Set use_dilation for the detection postprocess, default is false
   void SetUseDilation(int use_dilation) { use_dilation_ = use_dilation; }
   /// Get use_dilation of the detection postprocess
   int GetUseDilation() const { return use_dilation_; }

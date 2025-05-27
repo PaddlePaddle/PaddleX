@@ -111,7 +111,7 @@ bool CropImageByBox(Mat &src_im, Mat *dst_im, const std::vector<float> &box,
  * px: px = int(coords[ch * 2] + 0.5) , refer to API
  * detection::GetFinalPredictions py: px = int(coords[ch * 2 + 1] + 0.5), refer
  * to API detection::GetFinalPredictions index: index information of heatmap
- * pixels ch: channel Paper reference: DARK postpocessing, Zhang et al.
+ * pixels ch: channel Paper reference: DARK postprocessing, Zhang et al.
  * Distribution-Aware Coordinate Representation for Human Pose Estimation (CVPR
  * 2020).
  */

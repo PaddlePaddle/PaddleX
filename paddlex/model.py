@@ -17,7 +17,7 @@ from copy import deepcopy
 from .inference import PaddlePredictorOption, create_predictor
 from .modules import (
     build_dataset_checker,
-    build_evaluater,
+    build_evaluator,
     build_exportor,
     build_trainer,
 )
@@ -119,7 +119,7 @@ class _ModelBasedConfig(_BaseModel):
         trainer.train()
 
     def evaluate(self):
-        evaluator = build_evaluater(self._config)
+        evaluator = build_evaluator(self._config)
         return evaluator.evaluate()
 
     def export(self):

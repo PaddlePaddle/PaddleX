@@ -316,6 +316,8 @@ class DetPredictor(BasePredictor):
             "BlazeFace",
             "BlazeFace-FPN-SSH",
             "PP-DocLayout-L",
+            "PP-DocLayout_plus-L",
+            "PP-DocBlockLayout",
         ]
         if any(name in self.model_name for name in models_required_imgsize):
             ordered_required_keys = (

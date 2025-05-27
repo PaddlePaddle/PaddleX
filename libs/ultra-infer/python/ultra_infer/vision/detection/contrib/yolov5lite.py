@@ -47,8 +47,8 @@ class YOLOv5Lite(UltraInferModel):
         """Detect an input image
 
         :param input_image: (numpy.ndarray)The input image data, 3-D array with layout HWC, BGR format
-        :param conf_threshold: confidence threashold for postprocessing, default is 0.25
-        :param nms_iou_threshold: iou threashold for NMS, default is 0.5
+        :param conf_threshold: confidence threshold for postprocessing, default is 0.25
+        :param nms_iou_threshold: iou threshold for NMS, default is 0.5
         :return: DetectionResult
         """
         return self._model.predict(input_image, conf_threshold, nms_iou_threshold)
@@ -74,7 +74,7 @@ class YOLOv5Lite(UltraInferModel):
 
     @property
     def is_mini_pad(self):
-        # only pad to the minimum rectange which height and width is times of stride
+        # only pad to the minimum rectangle which height and width is times of stride
         return self._model.is_mini_pad
 
     @property
@@ -89,7 +89,7 @@ class YOLOv5Lite(UltraInferModel):
 
     @property
     def max_wh(self):
-        # for offseting the boxes by classes when using NMS
+        # for offsetting the boxes by classes when using NMS
         return self._model.max_wh
 
     @property
@@ -121,7 +121,7 @@ class YOLOv5Lite(UltraInferModel):
         ), "The value to set `size` must be type of tuple or list."
         assert (
             len(wh) == 2
-        ), "The value to set `size` must contatins 2 elements means [width, height], but now it contains {} elements.".format(
+        ), "The value to set `size` must contains 2 elements means [width, height], but now it contains {} elements.".format(
             len(wh)
         )
         self._model.size = wh

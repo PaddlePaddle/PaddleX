@@ -66,7 +66,7 @@ bool BlazeFacePreprocessor::Run(
 
     for (size_t j = 0; j < processors_.size(); ++j) {
       if (!(*(processors_[j].get()))(&((*images)[i]))) {
-        FDERROR << "Failed to processs image:" << i << " in "
+        FDERROR << "Failed to process image:" << i << " in "
                 << processors_[i]->Name() << "." << std::endl;
         return false;
       }

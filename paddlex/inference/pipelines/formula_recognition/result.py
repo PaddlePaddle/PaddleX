@@ -17,7 +17,6 @@ import os
 import random
 import subprocess
 import tempfile
-from pathlib import Path
 from typing import Dict, Tuple
 
 import numpy as np
@@ -45,15 +44,6 @@ if is_dep_available("opencv-contrib-python"):
 class FormulaRecognitionResult(BaseCVResult):
     """Formula Recognition Result"""
 
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
-
     def _to_img(self) -> Dict[str, Image.Image]:
         """
         Converts the internal data to a PIL Image with detection and recognition results.
@@ -61,7 +51,7 @@ class FormulaRecognitionResult(BaseCVResult):
         Returns:
             Dict[str, Image.Image]: An image with detection boxes, texts, and scores blended on it.
         """
-        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
+        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
         res_img_dict = {}
         model_settings = self["model_settings"]
         if model_settings["use_doc_preprocessor"]:
