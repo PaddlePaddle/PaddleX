@@ -349,6 +349,7 @@ class PaddleInfer(StaticInfer):
                     if self._option.run_mode == "paddle_fp16"
                     else PrecisionType.Float32
                 )
+                config.disable_mkldnn()
                 config.enable_use_gpu(100, self._option.device_id, precision)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
