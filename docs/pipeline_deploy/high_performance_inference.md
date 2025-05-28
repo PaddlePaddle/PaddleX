@@ -299,7 +299,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>paddle</code></td>
-    <td>参考 <a href="../module_usage/instructions/model_python_API.md#4-推理配置">PaddleX单模型Python脚本使用说明</a>。可通过键值对配置 <code>PaddlePredictorOption</code> 对象的属性，例如 <code>run_mode</code>。</td>
+    <td>参考PaddleX单模型Python脚本使用说明。可通过键值对配置 <code>PaddlePredictorOption</code> 对象的属性，例如 <code>run_mode</code>。</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>
