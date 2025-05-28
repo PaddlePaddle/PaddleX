@@ -37,7 +37,7 @@ class InferRequest(ocr.BaseInferRequest):
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
+    layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float]]] = None
     layoutMergeBboxesMode: Optional[str] = None
