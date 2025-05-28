@@ -96,14 +96,20 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
 
         logging.info("Creating model: %s", (config["model_name"], model_dir))
 
+        # TODO(gaotingquan): support to specify pp_option by model in pipeline
+        if self.pp_option is not None:
+            pp_option = self.pp_option.copy()
+            pp_option.model_name = config["model_name"]
+            pp_option.run_mode = self.pp_option.run_mode
+        else:
+            pp_option = None
+
         model = create_predictor(
             model_name=config["model_name"],
             model_dir=model_dir,
             device=self.device,
             batch_size=config.get("batch_size", 1),
-            pp_option=(
-                self.pp_option.copy() if self.pp_option is not None else self.pp_option
-            ),
+            pp_option=pp_option,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
             **kwargs,
