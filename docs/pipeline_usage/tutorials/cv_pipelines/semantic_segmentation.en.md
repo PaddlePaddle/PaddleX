@@ -363,23 +363,6 @@ In the above Python script, the following steps are executed:
 </td>
 <td><code>None</code></td>
 </tr>
-<tr>
-<td><code>device</code></td>
-<td>Pipeline inference device</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: For example, <code>cpu</code> indicates using CPU for inference;</li>
-<li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-<li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-<li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-<li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-<li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, it will use the parameter value initialized by the pipeline by default. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
 <td><code>target_size</code></td>
 <td>Image resolution actually used during model inference</td>
 <td><code>int|-1|None|tuple[int,int]</code></td>

@@ -197,23 +197,6 @@ In the above Python script, the following steps were executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>The device used for pipeline inference</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: e.g., <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: e.g., <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: e.g., <code>npu:0</code> indicates using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: e.g., <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: e.g., <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: e.g., <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used;</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>threshold</code></td>
 <td>Filtering threshold for low-confidence object</td>
 <td><code>None|float|dict[int, float]</code></td>

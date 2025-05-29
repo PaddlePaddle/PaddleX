@@ -144,6 +144,23 @@ The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve t
 <th>Introduction</th>
 </tr>
 <tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>86.38</td>
+<td>8.45/2.36</td>
+<td>122.69/122.69</td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model is dedicated to efficiently and accurately supporting four major languages—Simplified Chinese, Traditional Chinese, English, and Japanese—with a single model. It supports complex text scenarios, including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it also balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.29</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>16 M</td>
+</tr>
+<tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>81.53</td>
 <td>6.65 / 2.38</td>
@@ -181,6 +198,45 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Model List Details</summary>
+
+* <b>PP-OCRv5 Multi-Scenario Model</b>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Chinese Recognition Avg Accuracy (%)</th>
+<th>English Recognition Avg Accuracy (%)</th>
+<th>Traditional Chinese Recognition Avg Accuracy (%)</th>
+<th>Japanese Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>86.38</td>
+<td>64.70</td>
+<td>93.29</td>
+<td>60.35</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model efficiently and accurately supports four major languages with a single model: Simplified Chinese, Traditional Chinese, English, and Japanese. It recognizes complex text scenarios including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.29</td>
+<td>66.00</td>
+<td>83.55</td>
+<td>54.65</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>16 M</td>
+</tr>
+</table>
 
 * <b>Chinese Recognition Model</b>
 <table>
@@ -825,23 +881,6 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>Inference device.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code>.</li>
-<li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code>.</li>
-<li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code>.</li>
-<li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code>.</li>
-<li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code>.</li>
-<li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>use_doc_orientation_classify</code></td>
 <td>Whether to use the document orientation classification module.</td>
 <td><code>bool|None</code></td>
@@ -1343,12 +1382,6 @@ To remove the page limit, please add the following configuration to the pipeline
 <td><code>useOcrModel</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>use_ocr_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>layoutThreshold</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>

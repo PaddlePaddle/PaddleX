@@ -91,13 +91,14 @@ class OCRResult(BaseCVResult):
                 box = np.array(box)
                 if len(box) > 4:
                     pts = [(x, y) for x, y in box.tolist()]
-                    draw_left.polygon(pts, outline=color, width=8)
+                    draw_left.polygon(pts, outline=color, width=8, fill=color)
                     box = self.get_minarea_rect(box)
                     height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
                     box[:2, 1] = np.mean(box[:, 1])
                     box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
-                box_pts = [(int(x), int(y)) for x, y in box.tolist()]
-                draw_left.polygon(box_pts, fill=color)
+                else:
+                    box_pts = [(int(x), int(y)) for x, y in box.tolist()]
+                    draw_left.polygon(box_pts, fill=color)
 
                 img_right_text = draw_box_txt_fine(
                     (w, h), box, txt, SIMFANG_FONT_FILE_PATH

@@ -23,14 +23,24 @@ The text line orientation classification module primarily distinguishes the orie
 <tbody>
 <tr>
 <td>PP-LCNet_x0_25_textline_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">Training Model</a></td>
-<td>95.54</td>
+<td>98.85</td>
 <td>-</td>
 <td>-</td>
 <td>0.32</td>
 <td>Text line classification model based on PP-LCNet_x0_25, with two classes: 0 degrees and 180 degrees</td>
 </tr>
+<tr>
+<td>PP-LCNet_x1_0_textline_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_textline_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_textline_ori_pretrained.pdparams">Training Model</a></td>
+<td>99.42</td>
+<td>-</td>
+<td>-</td>
+<td>6.5</td>
+<td>Text line classification model based on PP-LCNet_x1_0, with two classes: 0 degrees and 180 degrees</td>
+</tr>
 </tbody>
 </table>
+
+> ❗ **Note**: The text line orientation classification model has been recently upgraded, and `PP-LCNet_x1_0_textline_ori` has been added. If you need to use the pre-upgrade model weights, please click the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.bak.tar">download link</a>.
 
 <strong>Test Environment Description:</strong>
 
@@ -94,22 +104,23 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': {'input_path': 'test_imgs/textline_rot180_demo.jpg', 'class_ids': [1], 'scores': [1.0], 'label_names': ['180_degree']}}
+{'res': {'input_path': 'textline_rot180_demo.jpg', 'page_index': None, 'class_ids': array([1], dtype=int32), 'scores': array([0.99864], dtype=float32), 'label_names': ['180_degree']}}
 ```
 
 The meanings of the running results parameters are as follows:
 
 - `input_path`：Indicates the path of the input image.
+- `page_index`：If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
 - `class_ids`：Indicates the class ID of the prediction result.
 - `scores`：Indicates the confidence score of the prediction result.
 - `label_names`：Indicates the class name of the prediction result.
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_classification/general_image_classification_001_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/textline_ori_classification/textline_rot180_demo_res.jpg">
 
 The explanations for the methods, parameters, etc., are as follows:
 
-* `create_model` instantiates a text recognition model (here, `PP-LCNet_x0_25_textline_ori` is used as an example), and the specific explanations are as follows:
+* `create_model` instantiates a textline classification model (here, `PP-LCNet_x0_25_textline_ori` is used as an example), and the specific explanations are as follows:
 
 <table>
 <thead>

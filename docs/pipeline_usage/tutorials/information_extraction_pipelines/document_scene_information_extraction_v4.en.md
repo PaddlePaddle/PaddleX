@@ -610,23 +610,6 @@ The following are the parameters and descriptions of the `visual_predict()` meth
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>The device for pipeline inference.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Such as <code>cpu</code> to use CPU for inference;</li>
-  <li><b>GPU</b>: Such as <code>gpu:0</code> to use the first GPU for inference;</li>
-  <li><b>NPU</b>: Such as <code>npu:0</code> to use the first NPU for inference;</li>
-  <li><b>XPU</b>: Such as <code>xpu:0</code> to use the first XPU for inference;</li>
-  <li><b>MLU</b>: Such as <code>mlu:0</code> to use the first MLU for inference;</li>
-  <li><b>DCU</b>: Such as <code>dcu:0</code> to use the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline. During initialization, it will prioritize using the local GPU 0 device, and if not available, it will use the CPU device;</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>use_doc_orientation_classify</code></td>
 <td>Whether to use the document orientation classification module.</td>
 <td><code>bool|None</code></td>
@@ -1462,6 +1445,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_textline_orientation</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
@@ -1475,7 +1464,7 @@ To remove the page limit, please add the following configuration to the pipeline
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
-<td><code>number</code> | <code>null</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
 <td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>

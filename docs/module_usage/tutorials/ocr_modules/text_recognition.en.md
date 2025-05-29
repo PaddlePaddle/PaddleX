@@ -19,6 +19,23 @@ The text recognition module is the core component of an OCR (Optical Character R
 <th>Introduction</th>
 </tr>
 <tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>86.38</td>
+<td>8.45/2.36</td>
+<td>122.69/122.69</td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model is dedicated to efficiently and accurately supporting four major languages—Simplified Chinese, Traditional Chinese, English, and Japanese—with a single model. It supports complex text scenarios, including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it also balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.29</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>16 M</td>
+</tr>
+<tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>81.53</td>
 <td>6.65 / 2.38</td>
@@ -56,6 +73,45 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Model List Details</summary>
+
+* <b>PP-OCRv5 Multi-Scenario Model</b>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Chinese Recognition Avg Accuracy (%)</th>
+<th>English Recognition Avg Accuracy (%)</th>
+<th>Traditional Chinese Recognition Avg Accuracy (%)</th>
+<th>Japanese Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>86.38</td>
+<td>64.70</td>
+<td>93.29</td>
+<td>60.35</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model efficiently and accurately supports four major languages with a single model: Simplified Chinese, Traditional Chinese, English, and Japanese. It recognizes complex text scenarios including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.29</td>
+<td>66.00</td>
+<td>83.55</td>
+<td>54.65</td>
+<td>1.46/5.43</td>
+<td>5.32/91.79</td>
+<td>16 M</td>
+</tr>
+</table>
 
 * <b>Chinese Recognition Model</b>
 <table>
@@ -322,18 +378,18 @@ Before running the following code, please download the [demo image](https://padd
 
 ```python
 from paddlex import create_model
-model = create_model("PP-OCRv4_mobile_rec")
-output = model.predict("general_ocr_rec_001.png", batch_size=1)
+model = create_model(model_name="PP-OCRv5_server_rec")
+output = model.predict(input="general_ocr_rec_001.png", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
 For more information on using PaddleX's single-model inference APIs, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 After running, the result obtained is:
 ```bash
-{'res': {'input_path': 'general_ocr_rec_001.png', 'page_index': None, 'rec_text': '绿洲仕格维花园公寓', 'rec_score': 0.9875497817993164}}
+{'res': {'input_path': 'general_ocr_rec_001.png', 'page_index': None, 'rec_text': '绿洲仕格维花园公寓', 'rec_score': 0.9823867082595825}}
 ````
 The meanings of the running results parameters are as follows:
 - `input_path`：Represents the path to the image of the text line to be predicted.

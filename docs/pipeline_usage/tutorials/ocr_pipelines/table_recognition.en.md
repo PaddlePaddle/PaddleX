@@ -804,23 +804,6 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>Inference device.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code>.</li>
-<li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code>.</li>
-<li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code>.</li>
-<li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code>.</li>
-<li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code>.</li>
-<li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>use_doc_orientation_classify</code></td>
 <td>Whether to use the document orientation classification module.</td>
 <td><code>bool|None</code></td>
@@ -1250,7 +1233,7 @@ To remove the page limit, please add the following configuration to the pipeline
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
-<td><code>number</code> | <code>null</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
 <td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>

@@ -298,7 +298,7 @@ The available configuration items for `backend_config` vary for different backen
   </tr>
   <tr>
     <td><code>paddle</code></td>
-    <td>Refer to <a href="../module_usage/instructions/model_python_API.en.md#4-inference-configuration">PaddleX Single Model Python Usage Instructions</a>. The attributes of the <code>PaddlePredictorOption</code> object can be configured via key-value pairs.</td>
+    <td>Refer to PaddleX Single Model Python Usage Instructions. The attributes of the <code>PaddlePredictorOption</code> object can be configured via key-value pairs.</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>

@@ -545,12 +545,13 @@ def xycut_enhanced(
 
         sorted_blocks_by_pre_cuts.extend(sorted_blocks)
 
-    final_order_res_list = match_unsorted_blocks(
+    final_sorted_blocks = match_unsorted_blocks(
         sorted_blocks_by_pre_cuts,
         unsorted_blocks,
         region=region,
     )
 
+    final_order_res_list.extend(final_sorted_blocks)
     final_order_res_list.extend(footer_blocks)
     final_order_res_list.extend(unordered_blocks)
 

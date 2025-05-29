@@ -264,6 +264,23 @@ Layout parsing is a technology that extracts structured information from documen
 <th>Introduction</th>
 </tr>
 <tr>
+<td>PP-OCRv5_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv5_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>86.38</td>
+<td> 8.45/2.36 </td>
+<td> 122.69/122.69 </td>
+<td>81 M</td>
+<td rowspan="2">PP-OCRv5_rec 是新一代文本识别模型。该模型致力于以单一模型高效、精准地支持简体中文、繁体中文、英文、日文四种主要语言，以及手写、竖版、拼音、生僻字等复杂文本场景的识别。在保持识别效果的同时，兼顾推理速度和模型鲁棒性，为各种场景下的文档理解提供高效、精准的技术支撑。</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>81.29</td>
+<td> 1.46/5.43 </td>
+<td> 5.32/91.79 </td>
+<td>16 M</td>
+</tr>
+<tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>81.53</td>
 <td>6.65 / 2.38</td>
@@ -845,23 +862,6 @@ In the above Python script, the following steps are executed:
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
 <li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the web URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">example</a>; <b>Local directory</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with an exact file path)</li>
 <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>Production inference device</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: <code>cpu</code> indicates using CPU for inference;</li>
-<li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
-<li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
-<li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
-<li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
-<li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1645,7 +1645,7 @@ To remove the page limit, please add the following configuration to the pipeline
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
-<td><code>number</code> | <code>null</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
 <td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>

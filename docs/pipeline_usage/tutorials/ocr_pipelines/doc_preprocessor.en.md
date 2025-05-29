@@ -231,23 +231,6 @@ In the above Python script, the following steps were executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>Inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Like <code>cpu</code>, indicating inference using CPU;</li>
-  <li><b>GPU</b>: Like <code>gpu:0</code>, indicating inference using the first GPU;</li>
-  <li><b>NPU</b>: Like <code>npu:0</code>, indicating inference using the first NPU;</li>
-  <li><b>XPU</b>: Like <code>xpu:0</code>, indicating inference using the first XPU;</li>
-  <li><b>MLU</b>: Like <code>mlu:0</code>, indicating inference using the first MLU;</li>
-  <li><b>DCU</b>: Like <code>dcu:0</code>, indicating inference using the first DCU;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU device 0, if none, then the CPU device;</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>use_doc_orientation_classify</code></td>
 <td>Whether to use the document orientation classification module</td>
 <td><code>bool|None</code></td>

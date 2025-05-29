@@ -241,23 +241,6 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>The device used for pipeline inference.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>: Use CPU for inference, such as <code>cpu</code>.</li>
-<li><b>GPU</b>: Use the specified GPU for inference, such as <code>gpu:0</code> for the first GPU.</li>
-<li><b>NPU</b>: Use the specified NPU for inference, such as <code>npu:0</code> for the first NPU.</li>
-<li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
-<li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
-<li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>det_threshold</code></td>
 <td>Threshold for pedestrian detection visualization.</td>
 <td><code>float | None</code></td>

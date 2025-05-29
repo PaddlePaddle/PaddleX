@@ -199,23 +199,6 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
-<td><code>device</code></td>
-<td>The inference device for the pipeline.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: For example, <code>cpu</code> indicates using the CPU for inference;</li>
-  <li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the parameter value initialized by the pipeline will be used by default. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
 <td><code>prompt_type</code></td>
 <td>The type of prompt used during model inference.</td>
 <td><code>str</code></td>
