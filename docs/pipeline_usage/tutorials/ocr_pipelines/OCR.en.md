@@ -712,7 +712,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>736</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>64</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
