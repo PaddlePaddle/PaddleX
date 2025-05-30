@@ -62,7 +62,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 🛠️ Installation
 
 !!! warning
-    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc1 version depends on PaddlePaddle version <b>3.0.0</b> and above.
+    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0 version depends on PaddlePaddle version <b>3.0.0</b> and above.
 
 ### Installing PaddlePaddle
 
@@ -87,7 +87,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ### Installing PaddleX
 
 ```bash
-pip install paddlex[base]==3.0.0
+pip install paddlex[base]==3.0.1
 ```
 
 > ❗ For more installation methods, please refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)

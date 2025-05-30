@@ -26,13 +26,13 @@ You can install the optional dependencies as needed using the following method (
 Install all dependencies required for PaddleX "basic features":
 
 ```bash
-pip install "paddlex[base]==3.0.0"
+pip install "paddlex[base]==3.0.1"
 ```
 
 Only install the dependencies required for a specific feature:
 
 ```bash
-pip install "paddlex[ocr]==3.0.0"
+pip install "paddlex[ocr]==3.0.1"
 ```
 
 ### 1.2 Plugin Installation Mode

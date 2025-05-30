@@ -28,12 +28,12 @@ pip install paddlex==3.0.0
 安装 PaddleX “基础功能”需要的全部依赖：
 
 ```bash
-pip install "paddlex[base]==3.0.0"
+pip install "paddlex[base]==3.0.1"
 ```
 
 仅安装某项功能所需依赖：
 ```bash
-pip install "paddlex[ocr]==3.0.0"
+pip install "paddlex[ocr]==3.0.1"
 ```
 
 ### 1.2 插件安装模式
