@@ -34,6 +34,7 @@ DEP_SPECS = {
     "filetype": ">= 1.2",
     "ftfy": "",
     "GPUtil": ">= 1.4",
+    "huggingface_hub": "",
     "imagesize": "",
     "Jinja2": "",
     "joblib": "",
@@ -80,6 +81,7 @@ REQUIRED_DEPS = [
     "colorlog",
     "filelock",
     "GPUtil",
+    "huggingface_hub",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
