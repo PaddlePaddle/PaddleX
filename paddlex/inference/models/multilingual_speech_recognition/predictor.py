@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
 import numpy as np
 
-from ....utils.func_register import FuncRegister
-from ...common.batch_sampler import AudioBatchSampler
-
-from ..base import BasicPredictor
-from .result import WhisperResult
-from ...utils.io import AudioReader
 from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
+from ...common.batch_sampler import AudioBatchSampler
+from ...utils.io import AudioReader
+from ..base import BasePredictor
+from .result import WhisperResult
 
 
-class WhisperPredictor(BasicPredictor):
+class WhisperPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -62,12 +59,9 @@ class WhisperPredictor(BasicPredictor):
         Returns:
             AudioReader: An instance of AudioReader.
         """
-        from .processors import (
-            ModelDimensions,
-            Whisper,
-            LANGUAGES,
-            TO_LANGUAGE_CODE,
-        )
+        import paddle
+
+        from .processors import ModelDimensions, Whisper
 
         # build model
         model_file = (self.model_dir / f"{self.MODEL_FILE_PREFIX}.pdparams").as_posix()
@@ -91,6 +85,8 @@ class WhisperPredictor(BasicPredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include 'text', 'segments' and 'language'.
         """
+        import paddle
+
         from .processors import log_mel_spectrogram
 
         # load mel_filters from resource_dir and extract feature for audio

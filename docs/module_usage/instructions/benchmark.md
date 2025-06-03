@@ -17,7 +17,8 @@ Benchmark 功能会统计模型在端到端推理过程中，所有操作的每�
 * `PADDLE_PDX_INFER_BENCHMARK`：设置为 `True` 时则开启 benchmark 功能，默认为 `False`；
 * `PADDLE_PDX_INFER_BENCHMARK_WARMUP`：测试前的预热次数，默认为 `0`；
 * `PADDLE_PDX_INFER_BENCHMARK_ITERS`：测试的循环次数，默认为 `0`；
-* `PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR`：保存指标的目录，如 `./benchmark`，默认为 `None`，表示不保存 benchmark 指标。
+* `PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR`：保存指标的目录，如 `./benchmark`，默认为 `None`，表示不保存 benchmark 指标；
+* `PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ`：设置为 `True` 时则对读取输入数据操作应用缓存机制，避免重复I/O开销，并且数据读取及缓存消耗的时间不记录到核心耗时中。默认为 `False`；
 
 **注意**：
 
@@ -112,7 +113,7 @@ python test_infer.py
             <li>模型推理耗时（<code>Inference</code>）</li>
             <li>后处理耗时（<code>Postprocessing</code>）</li>
             <li>核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）</li>
-            <li>其他耗时（<code>Other</code>）</li>
+            <li>其他耗时（<code>Other</code>，例如运行用于编排操作的代码所花费的时间以及由基准测试功能引入的额外开销）</li>
             <li>端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）</li>
             </ul>
             </td>
@@ -131,7 +132,7 @@ python test_infer.py
 运行第2节的示例程序所得到的 benchmark 结果如下：
 
 ```
-                                               WarmUp Data
+                                               Warmup Data
 +-------+------------+-----------+----------------+------------------------+----------------------------+
 | Iters | Batch Size | Instances |      Type      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
@@ -142,6 +143,20 @@ python test_infer.py
 |   5   |     2      |     10    |     Other      |       3.41097047       |         1.70548523         |
 |   5   |     2      |     10    |   End-to-End   |      168.21285784      |        84.10642892         |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
+                                           Operation Info
++--------------------+----------------------------------------------------------------------+
+|     Operation      |                         Source Code Location                         |
++--------------------+----------------------------------------------------------------------+
+|     ReadImage      | /PaddleX/paddlex/inference/models/object_detection/processors.py:34  |
+|       Resize       | /PaddleX/paddlex/inference/models/object_detection/processors.py:99  |
+|     Normalize      | /PaddleX/paddlex/inference/models/object_detection/processors.py:145 |
+|     ToCHWImage     | /PaddleX/paddlex/inference/models/object_detection/processors.py:158 |
+|      ToBatch       | /PaddleX/paddlex/inference/models/object_detection/processors.py:216 |
+| PaddleCopyToDevice |     /PaddleX/paddlex/inference/models/common/static_infer.py:214     |
+|  PaddleModelInfer  |     /PaddleX/paddlex/inference/models/common/static_infer.py:234     |
+|  PaddleCopyToHost  |     /PaddleX/paddlex/inference/models/common/static_infer.py:223     |
+|   DetPostProcess   | /PaddleX/paddlex/inference/models/object_detection/processors.py:773 |
++--------------------+----------------------------------------------------------------------+
                                                  Detail Data
 +-------+------------+-----------+--------------------+------------------------+----------------------------+
 | Iters | Batch Size | Instances |     Operation      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |

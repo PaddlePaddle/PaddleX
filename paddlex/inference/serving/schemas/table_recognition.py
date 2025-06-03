@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional, Union
+from typing import Dict, Final, List, Optional
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -36,18 +35,13 @@ class InferRequest(ocr.BaseInferRequest):
     useDocUnwarping: Optional[bool] = None
     useLayoutDetection: Optional[bool] = None
     useOcrModel: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
-    layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[
-        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
-    ] = None
-    layoutMergeBboxesMode: Optional[str] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
+    useOcrResultsWithTableCells: bool = False
 
 
 class TableRecResult(BaseModel):

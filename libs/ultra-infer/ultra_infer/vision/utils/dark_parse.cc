@@ -21,7 +21,7 @@ namespace utils {
 void DarkParse(const std::vector<float> &heatmap, const std::vector<int> &dim,
                std::vector<float> *coords, const int px, const int py,
                const int index, const int ch) {
-  /*DARK postpocessing, Zhang et al. Distribution-Aware Coordinate
+  /*DARK postprocessing, Zhang et al. Distribution-Aware Coordinate
   Representation for Human Pose Estimation (CVPR 2020).
   1) offset = - hassian.inv() * derivative
   2) dx = (heatmap[x+1] - heatmap[x-1])/2.

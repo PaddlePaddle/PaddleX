@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,14 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# This file refered to github.com/onnx/onnx.git
+# This file referred to github.com/onnx/onnx.git
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-import shutil
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
+import shutil
 
 TOP_DIR = os.path.realpath(os.path.dirname(__file__))
 TOP_DIR = os.path.split(TOP_DIR)[0]
@@ -28,22 +26,22 @@ wheel_name = os.getenv("WHEEL_NAME", "ultra-infer-python")
 if not os.path.exists(PACKAGE_NAME):
     shutil.copytree("ultra_infer", PACKAGE_NAME)
 
-from distutils.spawn import find_executable
-from distutils import sysconfig, log
-import setuptools
-import setuptools.command.build_py
-import setuptools.command.develop
-import setuptools.command.build_ext
-
-from collections import namedtuple
-from contextlib import contextmanager
 import glob
+import multiprocessing
+import platform
 import shlex
 import subprocess
 import sys
-import platform
+from collections import namedtuple
+from contextlib import contextmanager
+from distutils import log, sysconfig
+from distutils.spawn import find_executable
 from textwrap import dedent
-import multiprocessing
+
+import setuptools
+import setuptools.command.build_ext
+import setuptools.command.build_py
+import setuptools.command.develop
 
 with open(os.path.join(TOP_DIR, "python", "requirements.txt")) as fin:
     REQUIRED_PACKAGES = fin.read()
@@ -69,6 +67,7 @@ setup_configs["ENABLE_PADDLE_BACKEND"] = os.getenv("ENABLE_PADDLE_BACKEND", "OFF
 setup_configs["ENABLE_POROS_BACKEND"] = os.getenv("ENABLE_POROS_BACKEND", "OFF")
 setup_configs["ENABLE_TRT_BACKEND"] = os.getenv("ENABLE_TRT_BACKEND", "OFF")
 setup_configs["ENABLE_LITE_BACKEND"] = os.getenv("ENABLE_LITE_BACKEND", "OFF")
+setup_configs["ENABLE_OM_BACKEND"] = os.getenv("ENABLE_OM_BACKEND", "OFF")
 setup_configs["ENABLE_PADDLE2ONNX"] = os.getenv("ENABLE_PADDLE2ONNX", "OFF")
 setup_configs["ENABLE_VISION"] = os.getenv("ENABLE_VISION", "OFF")
 setup_configs["ENABLE_FLYCV"] = os.getenv("ENABLE_FLYCV", "OFF")
@@ -84,6 +83,7 @@ setup_configs["WITH_DIRECTML"] = os.getenv("WITH_DIRECTML", "OFF")
 setup_configs["WITH_ASCEND"] = os.getenv("WITH_ASCEND", "OFF")
 setup_configs["WITH_KUNLUNXIN"] = os.getenv("WITH_KUNLUNXIN", "OFF")
 setup_configs["RKNN2_TARGET_SOC"] = os.getenv("RKNN2_TARGET_SOC", "")
+setup_configs["DEVICE_TYPE"] = os.getenv("DEVICE_TYPE", "")
 # Custom deps settings
 setup_configs["TRT_DIRECTORY"] = os.getenv("TRT_DIRECTORY", "UNDEFINED")
 setup_configs["CUDA_DIRECTORY"] = os.getenv("CUDA_DIRECTORY", "/usr/local/cuda")
@@ -116,13 +116,25 @@ setup_configs["BUILD_ON_JETSON"] = os.getenv("BUILD_ON_JETSON", "OFF")
 setup_configs["BUILD_PADDLE2ONNX"] = os.getenv("BUILD_PADDLE2ONNX", "OFF")
 
 if setup_configs["RKNN2_TARGET_SOC"] != "" or setup_configs["BUILD_ON_JETSON"] != "OFF":
-    REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-python", "")
+    REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-contrib-python", "")
 
 if wheel_name == "ultra-infer-python":
-    if setup_configs["WITH_GPU"] == "ON" or setup_configs["BUILD_ON_JETSON"] == "ON":
-        wheel_name = "ultra-infer-gpu-python"
-    elif setup_configs["WITH_IPU"] == "ON":
-        wheel_name = "ultra-infer-ipu-python"
+    device_type = setup_configs["DEVICE_TYPE"]
+    if device_type:
+        if device_type not in ["GPU", "IPU", "NPU"]:
+            sys.exit(
+                f"Invalid DEVICE_TYPE: '{device_type}'. Supported values are: GPU, IPU, NPU. "
+                "Please update the DEVICE_TYPE environment variable accordingly."
+            )
+        wheel_name = f"ultra-infer-{device_type.lower()}-python"
+    else:
+        if (
+            setup_configs["WITH_GPU"] == "ON"
+            or setup_configs["BUILD_ON_JETSON"] == "ON"
+        ):
+            wheel_name = "ultra-infer-gpu-python"
+        elif setup_configs["WITH_IPU"] == "ON":
+            wheel_name = "ultra-infer-ipu-python"
 
 if os.getenv("CMAKE_CXX_COMPILER", None) is not None:
     setup_configs["CMAKE_CXX_COMPILER"] = os.getenv("CMAKE_CXX_COMPILER")
@@ -417,6 +429,22 @@ else:
 if sys.version_info[0] == 3:
     # Mypy doesn't work with Python 2
     extras_require["mypy"] = ["mypy==0.600"]
+
+################################################################################
+# Pyonly
+################################################################################
+
+extras_require["pyonly"] = [
+    "pillow<10.0.0",
+    "pandas>=0.25.0,<=1.3.5",
+    "pycocotools",
+    "matplotlib",
+    "chinese_calendar",
+    "joblib",
+    "scikit-image",
+    "scikit-learn>=1.3.2",
+    "tokenizers",
+]
 
 ################################################################################
 # Final

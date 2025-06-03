@@ -2,14 +2,6 @@ wheel
 requests
 tqdm
 numpy<2
-opencv-python
+# Compatible with paddlex
+opencv-contrib-python
 pyyaml
-pillow<10.0.0
-pandas>=0.25.0,<=1.3.5
-pycocotools
-matplotlib
-chinese_calendar
-joblib
-scikit-image
-scikit-learn>=1.3.2
-tokenizers

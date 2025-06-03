@@ -30,7 +30,7 @@ public:
    *
    * \param[in] tensors The inference result from runtime
    * \param[in] result The output result of feature vector (see
-   * ClassifyResult.feature member) \return true if the postprocess successed,
+   * ClassifyResult.feature member) \return true if the postprocess succeeded,
    * otherwise false
    */
   bool Run(const std::vector<FDTensor> &tensors,

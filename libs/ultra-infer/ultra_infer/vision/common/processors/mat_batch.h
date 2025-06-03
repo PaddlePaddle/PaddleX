@@ -28,7 +28,7 @@ enum FDMatBatchLayout { NHWC, NCHW };
 struct ULTRAINFER_DECL FDMatBatch {
   FDMatBatch() = default;
 
-  // MatBatch is intialized with a list of mats,
+  // MatBatch is initialized with a list of mats,
   // the data is stored in the mats separately.
   // Call Tensor() function to get a batched 4-dimension tensor.
   explicit FDMatBatch(std::vector<FDMat> *_mats) {

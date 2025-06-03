@@ -57,64 +57,27 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
         }
 </style>
 
-<table class="img-table">
-        <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_classification.html"><strong>通用图像分类</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html"><strong>图像多标签分类</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/object_detection.html"><strong>通用目标检测</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html"><strong>通用实例分割</strong></a></th>
-        </tr>
-        <tr>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39"></td>
-            <td><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/multilabel_cls.png"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182"></td>
-        </tr>
-        <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html"><strong>通用语义分割</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html"><strong>图像异常检测</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/OCR.html"><strong>通用OCR</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html"><strong>通用表格识别</strong></a></th>
-        </tr>
-        <tr>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c"></td>
-            <td><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/image_anomaly_detection.png"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa"></td>
-        </tr>
-        <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html"><strong>文本图像智能分析</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"><strong>时序预测</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"><strong>时序异常检测</strong></a></th>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"><strong>时序分类</strong></a></th>
-        </tr>
-        <tr>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6"></td>
-            <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e"></td>
-        </tr>
-    </table>
+![PaddleX](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/PaddleX_ch.png)
 
 
 ## 🛠️ 安装
 
 !!! warning
-    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.8 至 Python 3.12</b>）。PaddleX 3.0-rc0 版本依赖的 PaddlePaddle 版本为 <b>3.0.0rc0</b>。
+    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.8 至 Python 3.12</b>）。PaddleX 3.0 版本依赖的 PaddlePaddle 版本为 <b>3.0.0以上版本</b>。
 
 ### 安装 PaddlePaddle
 
 === "CPU 版本"
     ```bash
-    python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+     python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
-=== "GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）"
+=== "GPU 版本，需显卡驱动程序版本 ≥550.54.14（Linux）或 ≥550.54.14（Windows）"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+    python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
     ```
 
 !!!tip
@@ -125,7 +88,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ### 安装PaddleX
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex[base]==3.0.1
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
@@ -150,12 +113,12 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline OCR \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --use_textline_orientation False \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --use_textline_orientation False \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -172,146 +135,47 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline table_recognition \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg \
-        --save_path ./output \
-        --device gpu:0
+                --use_doc_orientation_classify=False \
+                --use_doc_unwarping=False \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
             === "输出结果"
                 ```bash
-                {'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': True, 'use_layout_detection': True, 'use_ocr_model': True}, 'doc_preprocessor_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9196816086769104, 'coordinate': [0, 8.614925, 550.9877, 132]}]}, 'overall_ocr_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[232,   0],
-                    [318,   1],
-                    [318,  24],
-                    [232,  21]], dtype=int16), array([[32, 38],
-                    [67, 38],
-                    [67, 55],
-                    [32, 55]], dtype=int16), array([[119,  34],
-                    [196,  34],
-                    [196,  57],
-                    [119,  57]], dtype=int16), array([[222,  29],
-                    [396,  31],
-                    [396,  60],
-                    [222,  58]], dtype=int16), array([[420,  30],
-                    [542,  32],
-                    [542,  61],
-                    [419,  59]], dtype=int16), array([[29, 71],
-                    [72, 71],
-                    [72, 92],
-                    [29, 92]], dtype=int16), array([[287,  72],
-                    [329,  72],
-                    [329,  93],
-                    [287,  93]], dtype=int16), array([[458,  68],
-                    [501,  71],
-                    [499,  94],
-                    [456,  91]], dtype=int16), array([[  9, 101],
-                    [ 89, 103],
-                    [ 89, 130],
-                    [  8, 128]], dtype=int16), array([[139, 105],
-                    [172, 105],
-                    [172, 126],
-                    [139, 126]], dtype=int16), array([[274, 103],
-                    [339, 101],
-                    [340, 128],
-                    [275, 130]], dtype=int16), array([[451, 103],
-                    [508, 103],
-                    [508, 126],
-                    [451, 126]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_polys': [array([[232,   0],
-                    [318,   1],
-                    [318,  24],
-                    [232,  21]], dtype=int16), array([[32, 38],
-                    [67, 38],
-                    [67, 55],
-                    [32, 55]], dtype=int16), array([[119,  34],
-                    [196,  34],
-                    [196,  57],
-                    [119,  57]], dtype=int16), array([[222,  29],
-                    [396,  31],
-                    [396,  60],
-                    [222,  58]], dtype=int16), array([[420,  30],
-                    [542,  32],
-                    [542,  61],
-                    [419,  59]], dtype=int16), array([[29, 71],
-                    [72, 71],
-                    [72, 92],
-                    [29, 92]], dtype=int16), array([[287,  72],
-                    [329,  72],
-                    [329,  93],
-                    [287,  93]], dtype=int16), array([[458,  68],
-                    [501,  71],
-                    [499,  94],
-                    [456,  91]], dtype=int16), array([[  9, 101],
-                    [ 89, 103],
-                    [ 89, 130],
-                    [  8, 128]], dtype=int16), array([[139, 105],
-                    [172, 105],
-                    [172, 126],
-                    [139, 126]], dtype=int16), array([[274, 103],
-                    [339, 101],
-                    [340, 128],
-                    [275, 130]], dtype=int16), array([[451, 103],
-                    [508, 103],
-                    [508, 126],
-                    [451, 126]], dtype=int16)], 'rec_boxes': array([[232,   0, 318,  24],
-                    [ 32,  38,  67,  55],
-                    [119,  34, 196,  57],
-                    [222,  29, 396,  60],
-                    [419,  30, 542,  61],
-                    [ 29,  71,  72,  92],
-                    [287,  72, 329,  93],
-                    [456,  68, 501,  94],
-                    [  8, 101,  89, 130],
-                    [139, 105, 172, 126],
-                    [274, 101, 340, 130],
-                    [451, 103, 508, 126]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  8.        ,   9.61492538, 532.        ,  26.61492538],
-                    [  3.        ,  27.61492538, 104.        ,  65.61492538],
-                    [109.        ,  28.61492538, 215.        ,  66.61492538],
-                    [219.        ,  28.61492538, 396.        ,  64.61492538],
-                    [396.        ,  29.61492538, 546.        ,  66.61492538],
-                    [  1.        ,  65.61492538, 110.        ,  93.61492538],
-                    [111.        ,  65.61492538, 215.        ,  94.61492538],
-                    [220.        ,  66.61492538, 397.        ,  94.61492538],
-                    [398.        ,  67.61492538, 544.        ,  94.61492538],
-                    [  2.        ,  98.61492538, 111.        , 131.61492538],
-                    [113.        ,  98.61492538, 216.        , 131.61492538],
-                    [219.        ,  98.61492538, 400.        , 131.61492538],
-                    [403.        ,  99.61492538, 545.        , 130.61492538]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上，没想</td><td>江、江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[232,   0],
-                    [318,   1],
-                    [318,  24],
-                    [232,  21]], dtype=int16), array([[32, 38],
-                    [67, 38],
-                    [67, 55],
-                    [32, 55]], dtype=int16), array([[119,  34],
-                    [196,  34],
-                    [196,  57],
-                    [119,  57]], dtype=int16), array([[222,  29],
-                    [396,  31],
-                    [396,  60],
-                    [222,  58]], dtype=int16), array([[420,  30],
-                    [542,  32],
-                    [542,  61],
-                    [419,  59]], dtype=int16), array([[29, 71],
-                    [72, 71],
-                    [72, 92],
-                    [29, 92]], dtype=int16), array([[287,  72],
-                    [329,  72],
-                    [329,  93],
-                    [287,  93]], dtype=int16), array([[458,  68],
-                    [501,  71],
-                    [499,  94],
-                    [456,  91]], dtype=int16), array([[  9, 101],
-                    [ 89, 103],
-                    [ 89, 130],
-                    [  8, 128]], dtype=int16), array([[139, 105],
-                    [172, 105],
-                    [172, 126],
-                    [139, 126]], dtype=int16), array([[274, 103],
-                    [339, 101],
-                    [340, 128],
-                    [275, 130]], dtype=int16), array([[451, 103],
-                    [508, 103],
-                    [508, 126],
-                    [451, 126]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_boxes': [array([232,   0, 318,  24], dtype=int16), array([32, 38, 67, 55], dtype=int16), array([119,  34, 196,  57], dtype=int16), array([222,  29, 396,  60], dtype=int16), array([419,  30, 542,  61], dtype=int16), array([29, 71, 72, 92], dtype=int16), array([287,  72, 329,  93], dtype=int16), array([456,  68, 501,  94], dtype=int16), array([  8, 101,  89, 130], dtype=int16), array([139, 105, 172, 126], dtype=int16), array([274, 101, 340, 130], dtype=int16), array([451, 103, 508, 126], dtype=int16)]}}]}}
+                {'res': {'input_path': '/root/.paddlex/predict_input/table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.9730289578437805, 'coordinate': [0.77032924, 0.0992564, 550.78864, 127.53717]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+                        ...,
+                        [234,  25]],
+
+                    ...,
+
+                    [[448, 101],
+                        ...,
+                        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99612021, ..., 0.99815977]), 'rec_polys': array([[[234,   6],
+                        ...,
+                        [234,  25]],
+
+                    ...,
+
+                    [[448, 101],
+                        ...,
+                        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+                    ...,
+                    [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  3.77032924, ...,  27.0992564 ],
+                    ...,
+                    [403.77032924, ..., 125.0992564 ]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+                        ...,
+                        [234,  25]],
+
+                    ...,
+
+                    [[448, 101],
+                        ...,
+                        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99612021, ..., 0.99815977]), 'rec_boxes': array([[234, ...,  25],
+                    ...,
+                    [448, ..., 121]], dtype=int16)}}]}}
                 ```
 
             === "可视化图片"
@@ -321,190 +185,91 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline table_recognition_v2 \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg \
-        --save_path ./output \
-        --device gpu:0
+                --use_doc_orientation_classify=False \
+                --use_doc_unwarping=False \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
             === "输出结果"
                 ```bash
-                {'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[234,   6],
-                    [316,   6],
-                    [316,  25],
-                    [234,  25]], dtype=int16), array([[38, 39],
-                    [73, 39],
-                    [73, 57],
-                    [38, 57]], dtype=int16), array([[122,  32],
-                    [201,  32],
-                    [201,  58],
-                    [122,  58]], dtype=int16), array([[227,  34],
-                    [346,  34],
-                    [346,  57],
-                    [227,  57]], dtype=int16), array([[351,  34],
-                    [391,  34],
-                    [391,  58],
-                    [351,  58]], dtype=int16), array([[417,  35],
-                    [534,  35],
-                    [534,  58],
-                    [417,  58]], dtype=int16), array([[34, 70],
-                    [78, 70],
-                    [78, 90],
-                    [34, 90]], dtype=int16), array([[287,  70],
-                    [328,  70],
-                    [328,  90],
-                    [287,  90]], dtype=int16), array([[454,  69],
-                    [496,  69],
-                    [496,  90],
-                    [454,  90]], dtype=int16), array([[ 17, 101],
-                    [ 95, 101],
-                    [ 95, 124],
-                    [ 17, 124]], dtype=int16), array([[144, 101],
-                    [178, 101],
-                    [178, 122],
-                    [144, 122]], dtype=int16), array([[278, 101],
-                    [338, 101],
-                    [338, 124],
-                    [278, 124]], dtype=int16), array([[448, 101],
-                    [503, 101],
-                    [503, 121],
-                    [448, 121]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_polys': [array([[234,   6],
-                    [316,   6],
-                    [316,  25],
-                    [234,  25]], dtype=int16), array([[38, 39],
-                    [73, 39],
-                    [73, 57],
-                    [38, 57]], dtype=int16), array([[122,  32],
-                    [201,  32],
-                    [201,  58],
-                    [122,  58]], dtype=int16), array([[227,  34],
-                    [346,  34],
-                    [346,  57],
-                    [227,  57]], dtype=int16), array([[351,  34],
-                    [391,  34],
-                    [391,  58],
-                    [351,  58]], dtype=int16), array([[417,  35],
-                    [534,  35],
-                    [534,  58],
-                    [417,  58]], dtype=int16), array([[34, 70],
-                    [78, 70],
-                    [78, 90],
-                    [34, 90]], dtype=int16), array([[287,  70],
-                    [328,  70],
-                    [328,  90],
-                    [287,  90]], dtype=int16), array([[454,  69],
-                    [496,  69],
-                    [496,  90],
-                    [454,  90]], dtype=int16), array([[ 17, 101],
-                    [ 95, 101],
-                    [ 95, 124],
-                    [ 17, 124]], dtype=int16), array([[144, 101],
-                    [178, 101],
-                    [178, 122],
-                    [144, 122]], dtype=int16), array([[278, 101],
-                    [338, 101],
-                    [338, 124],
-                    [278, 124]], dtype=int16), array([[448, 101],
-                    [503, 101],
-                    [503, 121],
-                    [448, 121]], dtype=int16)], 'rec_boxes': array([[234,   6, 316,  25],
-                    [ 38,  39,  73,  57],
-                    [122,  32, 201,  58],
-                    [227,  34, 346,  57],
-                    [351,  34, 391,  58],
-                    [417,  35, 534,  58],
-                    [ 34,  70,  78,  90],
-                    [287,  70, 328,  90],
-                    [454,  69, 496,  90],
-                    [ 17, 101,  95, 124],
-                    [144, 101, 178, 122],
-                    [278, 101, 338, 124],
-                    [448, 101, 503, 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([3.18822289e+00, 1.46489874e-01, 5.46996138e+02, 3.08782365e+01]), array([  3.21032453,  31.1510637 , 110.20750237,  65.14108063]), array([110.18174553,  31.13076188, 213.00813103,  65.02860047]), array([212.96108818,  31.09959008, 404.19618034,  64.99535157]), array([404.08112907,  31.18304802, 547.00864983,  65.0847223 ]), array([  3.21772957,  65.0738733 , 110.33685875,  96.07921387]), array([110.23703575,  65.02486207, 213.08839226,  96.01378419]), array([213.06095695,  64.96230103, 404.28425407,  95.97141816]), array([404.23704338,  65.04879548, 547.01273918,  96.03654267]), array([  3.22793937,  96.08334137, 110.38572502, 127.08698823]), array([110.40586662,  96.10539795, 213.19943047, 127.07002045]), array([213.12627983,  96.0539148 , 404.42686272, 127.02842499]), array([404.33042717,  96.07251526, 547.01273918, 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[234,   6],
-                    [316,   6],
-                    [316,  25],
-                    [234,  25]], dtype=int16), array([[38, 39],
-                    [73, 39],
-                    [73, 57],
-                    [38, 57]], dtype=int16), array([[122,  32],
-                    [201,  32],
-                    [201,  58],
-                    [122,  58]], dtype=int16), array([[227,  34],
-                    [346,  34],
-                    [346,  57],
-                    [227,  57]], dtype=int16), array([[351,  34],
-                    [391,  34],
-                    [391,  58],
-                    [351,  58]], dtype=int16), array([[417,  35],
-                    [534,  35],
-                    [534,  58],
-                    [417,  58]], dtype=int16), array([[34, 70],
-                    [78, 70],
-                    [78, 90],
-                    [34, 90]], dtype=int16), array([[287,  70],
-                    [328,  70],
-                    [328,  90],
-                    [287,  90]], dtype=int16), array([[454,  69],
-                    [496,  69],
-                    [496,  90],
-                    [454,  90]], dtype=int16), array([[ 17, 101],
-                    [ 95, 101],
-                    [ 95, 124],
-                    [ 17, 124]], dtype=int16), array([[144, 101],
-                    [178, 101],
-                    [178, 122],
-                    [144, 122]], dtype=int16), array([[278, 101],
-                    [338, 101],
-                    [338, 124],
-                    [278, 124]], dtype=int16), array([[448, 101],
-                    [503, 101],
-                    [503, 121],
-                    [448, 121]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_boxes': [array([234,   6, 316,  25], dtype=int16), array([38, 39, 73, 57], dtype=int16), array([122,  32, 201,  58], dtype=int16), array([227,  34, 346,  57], dtype=int16), array([351,  34, 391,  58], dtype=int16), array([417,  35, 534,  58], dtype=int16), array([34, 70, 78, 90], dtype=int16), array([287,  70, 328,  90], dtype=int16), array([454,  69, 496,  90], dtype=int16), array([ 17, 101,  95, 124], dtype=int16), array([144, 101, 178, 122], dtype=int16), array([278, 101, 338, 124], dtype=int16), array([448, 101, 503, 121], dtype=int16)]}}]}}
+                {'res': {'input_path': 'table_recognition_v2.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.86655592918396, 'coordinate': [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[   9,   21],
+                        ...,
+                        [   9,   59]],
+
+                    ...,
+
+                    [[1046,  536],
+                        ...,
+                        [1046,  573]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_polys': array([[[   9,   21],
+                        ...,
+                        [   9,   59]],
+
+                    ...,
+
+                    [[1046,  536],
+                        ...,
+                        [1046,  573]]], dtype=int16), 'rec_boxes': array([[   9, ...,   59],
+                    ...,
+                    [1046, ...,  573]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], 'pred_html': '<html><body><table><tbody><tr><td>部门</td><td></td><td>报销人</td><td></td><td>报销事由</td><td></td><td colspan="2">批准人：</td></tr><tr><td colspan="6" rowspan="8"></td><td colspan="2">单据 张</td></tr><tr><td colspan="2">合计金额 元</td></tr><tr><td rowspan="6">其 中</td><td>车费票</td></tr><tr><td>火车费票</td></tr><tr><td>飞机票</td></tr><tr><td>旅住宿费</td></tr><tr><td>其他</td></tr><tr><td>补贴</td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[   9,   21],
+                        ...,
+                        [   9,   59]],
+
+                    ...,
+
+                    [[1046,  536],
+                        ...,
+                        [1046,  573]]], dtype=int16), 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_boxes': array([[   9, ...,   59],
+                    ...,
+                    [1046, ...,  573]], dtype=int16)}}]}}
                 ```
 
             === "可视化图片"
-                <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png"></p>
+                <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/02.jpg"></p>
 
 
     === "通用版面解析"
 
         ```bash
         paddlex --pipeline layout_parsing \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --use_textline_orientation False \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_demo.png \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --use_textline_orientation False \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
             === "输出结果"
             ```bash
-            {'res': {'input_path': 'layout_parsing_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': False}, 'parsing_res_list': [{'block_bbox': [133.37144, 40.12515, 1383.7618, 123.51433], 'block_label': 'text', 'block_content': '助力双方交往\n搭建友谊桥梁'}, {'block_bbox': [587.43024, 160.58405, 927.63995, 179.2846], 'block_label': 'figure_title', 'block_content': '本报记者沈小晓任彦黄培昭'}, {'block_bbox': [773.798, 200.63779, 1505.5233, 687.11847], 'block_label': 'image', 'block_content': ''}, {'block_bbox': [390.42462, 201.87276, 741.41675, 292.5969], 'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开\n设了中国语言课程和中国文化课程，注册学\n生2万余人次。10余年来，厄特孔院已成为\n当地民众了解中国的一扇窗口。'}, {'block_bbox': [9.70394, 202.7036, 359.6133, 340.30905], 'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青\n年依次登台表演中国民族舞、现代舞、扇子舞\n等，曼妙的舞姿赢得现场观众阵阵掌声。这\n是日前厄立特里亚高等教育与研究院孔子学\n院(以下简称"厄特孔院"举办“喜迎新年"中国\n歌舞比赛的场景。'}, {'block_bbox': [390.74887, 298.432, 740.7994, 436.79953], 'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益\n增多，阿斯马拉大学教学点已难以满足教学\n需要。2024年4月，由中企蜀道集团所属四\n川路桥承建的孔院教学楼项目在阿斯马拉开\n工建设，预计今年上半年峻工，建成后将为厄\n特孔院提供全新的办学场地。'}, {'block_bbox': [10.5880165, 346.2769, 359.125, 436.1819], 'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年\n来,在高质量共建“一带一路"框架下，中厄两\n国人文交流不断深化，互利合作的民意基础\n日益深厚。'}, {'block_bbox': [410.5304, 457.0797, 722.77606, 516.7847], 'block_label': 'text', 'block_content': '“在中国学习的经历\n让我看到更广阔的世界”'}, {'block_bbox': [30.340591, 457.54282, 341.95337, 516.82825], 'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的\n未来不是梦"'}, {'block_bbox': [390.90765, 538.18097, 742.19904, 604.67365], 'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和\n培训人员积极投身国家建设，成为助力该国\n发展的人才和厄中友好的见证者和推动者。'}, {'block_bbox': [9.953403, 538.3851, 359.45145, 652.02905], 'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你\n心中的每一个角落……"厄立特里亚阿斯马拉\n大学综合楼二层，一阵优美的歌声在走廊里回\n响。循着熟悉的旋律轻轻推开一间教室的门，\n学生们正跟着老师学唱中文歌曲《同一首歌》。'}, {'block_bbox': [390.89615, 610.6184, 741.1807, 747.9165], 'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰\n娜·特韦尔德·凯莱塔就是其中一位。她曾在\n中华女子学院攻读硕士学位，研究方向是女\n性领导力与社会发展。其间，她实地走访中国\n多个地区，获得了观察中国社会发展的第一\n手资料。'}, {'block_bbox': [10.181939, 658.8049, 359.41302, 771.31146], 'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一\n节中文歌曲课。为了让学生们更好地理解歌\n词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐\n字翻译和解释歌词。随着伴奏声响起，学生们\n边唱边随着节拍摇动身体，现场气氛热烈。'}, {'block_bbox': [809.68475, 705.4048, 1485.5435, 747.4364], 'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。\n中国驻厄立特里亚大使馆供图'}, {'block_bbox': [389.63492, 753.45245, 742.05634, 890.96497], 'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹\n新：“中国的发展在当今世界是独一无二的。\n沿着中国特色社会主义道路坚定前行，中国\n创造了发展奇迹，这一切都离不开中国共产党\n的领导。中国的发展经验值得许多国家学习\n借鉴。”'}, {'block_bbox': [9.884867, 777.39636, 360.3998, 843.4287], 'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学\n生大部分来自首都阿斯马拉的中小学，年龄\n最小的仅有6岁。"尤斯拉告诉记者。'}, {'block_bbox': [9.801341, 850.1048, 359.61642, 1059.8444], 'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立\n学校的艺术老师。她12岁开始在厄特孔院学\n习中文，在2017年第十届"汉语桥"世界中学生\n中文比赛中获得厄立特里亚赛区第一名，并和\n同伴代表厄立特里亚前往中国参加决赛，获得\n团体优胜奖。2022年起，尤斯拉开始在厄特孔\n院兼职教授中文歌曲，每周末两个课时。“中国\n文化博大精深，我希望我的学生们能够通过中\n文歌曲更好地理解中国文化。"她说。'}, {'block_bbox': [772.0007, 777.06, 1124.396, 1059.2354], 'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约\n好了在一起，我们欢迎你…"在一场中厄青\n年联谊活动上，四川路桥中方员工同当地大\n学生合唱《北京欢迎你》。厄立特里亚技术学\n院计算机科学与工程专业学生鲁夫塔·谢拉\n是其中一名演唱者，她很早便在孔院学习中\n文，一直在为去中国留学作准备。“这句歌词\n是我们两国人民友谊的生动写照。无论是投\n身于厄立特里亚基础设施建设的中企员工，\n还是在中国留学的厄立特里亚学子，两国人\n民携手努力，必将推动两国关系不断向前发\n展。"鲁夫塔说。'}, {'block_bbox': [1155.9297, 777.71344, 1331.4728, 795.6411], 'block_label': 'text', 'block_content': '瓦的北红海省博物馆。'}, {'block_bbox': [1153.7091, 801.56256, 1504.5591, 987.63544], 'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利\n斯古城的中国古代陶制酒器，罐身上写着\n“万”“和"“禅"“山"等汉字。“这件文物证\n明，很早以前我们就通过海上丝绸之路进行\n贸易往来与文化交流。这也是厄立特里亚\n与中国友好交往历史的有力证明。"北红海\n省博物馆研究与文献部负责人伊萨亚斯·特\n斯法兹吉说。'}, {'block_bbox': [390.203, 897.60095, 742.03674, 1035.7938], 'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生\n穆卢盖塔·泽穆伊对中国怀有深厚感情。8\n盖塔在社交媒体上写下这样一段话：“这是我\n人生的重要一步，自此我拥有了一双坚固的\n鞋子，赋予我穿越荆棘的力量。"'}, {'block_bbox': [1154.4471, 993.4835, 1503.8441, 1107.7363], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学\n研究员菲尔蒙·特韦尔德十分喜爱中国文\n化。他表示：“学习彼此的语言和文化，将帮\n助厄中两国人民更好地理解彼此，助力双方\n交往，搭建友谊桥梁。"'}, {'block_bbox': [391.17816, 1041.2622, 740.8725, 1131.4589], 'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教\n育等领域的发展，“中国在科研等方面的实力\n与日俱增。在中国学习的经历让我看到更广\n阔的世界，从中受益匪浅。”'}, {'block_bbox': [9.486691, 1065.2955, 360.2089, 1180.0446], 'block_label': 'text', 'block_content': '“姐姐，你想去中国吗？"“非常想！我想\n去看故宫、爬长城。"尤斯拉的学生中有一对\n能歌善舞的姐妹，姐姐露娅今年15岁，妹妹\n莉娅14岁，两人都已在厄特孔院学习多年，\n中文说得格外流利。'}, {'block_bbox': [771.51514, 1065.1091, 1123.4568, 1179.5624], 'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨\n马瑞表示：“每年我们都会组织学生到中国访\n问学习，目前有超过5000名厄立特里亚学生\n在中国留学。学习中国的教育经验，有助于\n提升厄立特里亚的教育水平。"'}, {'block_bbox': [1153.9272, 1114.0178, 1503.9585, 1347.0802], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努\n里达姆·优素福曾多次访问中国，对中华文明\n的传承与创新、现代化博物馆的建设与发展\n印象深刻。“中国博物馆不仅有许多保存完好\n的文物，还充分运用先进科技手段进行展示，\n帮助人们更好理解中华文明。"塔吉丁说，“厄\n立特里亚与中国都拥有悠久的文明，始终相\n互理解、相互尊重。我希望未来与中国同行\n加强合作，共同向世界展示非洲和亚洲的灿\n烂文明。”'}, {'block_bbox': [390.8594, 1137.4973, 741.0567, 1346.7653], 'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特\n孔院学习3年，在中国书法、中国画等方面表\n现十分优秀，在2024年厄立特里亚赛区的\n“汉语桥"比赛中获得一等奖。莉迪亚说：“学\n习中国书法让我的内心变得安宁和纯粹。我\n也喜欢中国的服饰，希望未来能去中国学习，\n把中国不同民族元素融入服装设计中，创作\n出更多精美作品，也把厄特文化分享给更多\n的中国朋友。”'}, {'block_bbox': [8.70449, 1186.1178, 359.8176, 1299.481], 'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文\n和中国文化的热爱，我们姐妹俩始终相互鼓\n励，一起学习。我们的中文一天比一天好，还\n学会了中文歌和中国舞。我们一定要到中国\n去。学好中文，我们的未来不是梦！”'}, {'block_bbox': [9.666538, 1305.0905, 359.62704, 1347.939], 'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所\n孔院成立于2013年3月，由贵州财经大学和'}, {'block_bbox': [791.9397, 1201.0502, 1104.4906, 1260.1833], 'block_label': 'text', 'block_content': '“共同向世界展示非\n洲和亚洲的灿烂文明”'}, {'block_bbox': [772.51917, 1281.01, 1123.4009, 1348.0028], 'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜓曲折的盘山\n公路一路向东寻找丝路印迹。驱车两个小\n时，记者来到位于厄立特里亚港口城市马萨'}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9853348731994629, 'coordinate': [773.798, 200.63779, 1505.5233, 687.11847]}, {'cls_id': 2, 'label': 'text', 'score': 0.9780634045600891, 'coordinate': [772.0007, 777.06, 1124.396, 1059.2354]}, {'cls_id': 2, 'label': 'text', 'score': 0.9771724343299866, 'coordinate': [1153.9272, 1114.0178, 1503.9585, 1347.0802]}, {'cls_id': 2, 'label': 'text', 'score': 0.9763692021369934, 'coordinate': [390.74887, 298.432, 740.7994, 436.79953]}, {'cls_id': 2, 'label': 'text', 'score': 0.9752321839332581, 'coordinate': [9.70394, 202.7036, 359.6133, 340.30905]}, {'cls_id': 2, 'label': 'text', 'score': 0.9751048684120178, 'coordinate': [1153.7091, 801.56256, 1504.5591, 987.63544]}, {'cls_id': 2, 'label': 'text', 'score': 0.9741119742393494, 'coordinate': [9.801341, 850.1048, 359.61642, 1059.8444]}, {'cls_id': 2, 'label': 'text', 'score': 0.9722761511802673, 'coordinate': [390.42462, 201.87276, 741.41675, 292.5969]}, {'cls_id': 2, 'label': 'text', 'score': 0.9718317985534668, 'coordinate': [390.8594, 1137.4973, 741.0567, 1346.7653]}, {'cls_id': 2, 'label': 'text', 'score': 0.9703624844551086, 'coordinate': [390.89615, 610.6184, 741.1807, 747.9165]}, {'cls_id': 2, 'label': 'text', 'score': 0.9677473306655884, 'coordinate': [8.70449, 1186.1178, 359.8176, 1299.481]}, {'cls_id': 2, 'label': 'text', 'score': 0.9674075841903687, 'coordinate': [390.203, 897.60095, 742.03674, 1035.7938]}, {'cls_id': 2, 'label': 'text', 'score': 0.9671176075935364, 'coordinate': [389.63492, 753.45245, 742.05634, 890.96497]}, {'cls_id': 2, 'label': 'text', 'score': 0.9656032919883728, 'coordinate': [10.5880165, 346.2769, 359.125, 436.1819]}, {'cls_id': 2, 'label': 'text', 'score': 0.9655402898788452, 'coordinate': [771.51514, 1065.1091, 1123.4568, 1179.5624]}, {'cls_id': 2, 'label': 'text', 'score': 0.96494060754776, 'coordinate': [1154.4471, 993.4835, 1503.8441, 1107.7363]}, {'cls_id': 2, 'label': 'text', 'score': 0.9630844593048096, 'coordinate': [772.51917, 1281.01, 1123.4009, 1348.0028]}, {'cls_id': 2, 'label': 'text', 'score': 0.9615732431411743, 'coordinate': [9.486691, 1065.2955, 360.2089, 1180.0446]}, {'cls_id': 2, 'label': 'text', 'score': 0.9598038792610168, 'coordinate': [10.181939, 658.8049, 359.41302, 771.31146]}, {'cls_id': 2, 'label': 'text', 'score': 0.9591749310493469, 'coordinate': [391.17816, 1041.2622, 740.8725, 1131.4589]}, {'cls_id': 2, 'label': 'text', 'score': 0.9563097953796387, 'coordinate': [9.953403, 538.3851, 359.45145, 652.02905]}, {'cls_id': 2, 'label': 'text', 'score': 0.95261549949646, 'coordinate': [390.90765, 538.18097, 742.19904, 604.67365]}, {'cls_id': 2, 'label': 'text', 'score': 0.9493226408958435, 'coordinate': [9.884867, 777.39636, 360.3998, 843.4287]}, {'cls_id': 2, 'label': 'text', 'score': 0.9399433135986328, 'coordinate': [9.666538, 1305.0905, 359.62704, 1347.939]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9254537224769592, 'coordinate': [809.68475, 705.4048, 1485.5435, 747.4364]}, {'cls_id': 2, 'label': 'text', 'score': 0.9046457409858704, 'coordinate': [1155.9297, 777.71344, 1331.4728, 795.6411]}, {'cls_id': 2, 'label': 'text', 'score': 0.8674532771110535, 'coordinate': [410.5304, 457.0797, 722.77606, 516.7847]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.7949447631835938, 'coordinate': [30.340591, 457.54282, 341.95337, 516.82825]}, {'cls_id': 2, 'label': 'text', 'score': 0.7313820719718933, 'coordinate': [791.9397, 1201.0502, 1104.4906, 1260.1833]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6073322892189026, 'coordinate': [587.43024, 160.58405, 927.63995, 179.2846]}, {'cls_id': 2, 'label': 'text', 'score': 0.5846534967422485, 'coordinate': [133.37144, 40.12515, 1383.7618, 123.51433]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 122,   28],
-            ...,
-            [ 122,  135]],
+            {'res': {'input_path': 'layout_parsing_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': False}, 'parsing_res_list': [{'block_bbox': [133.36868, 40.128025, 1383.7496, 123.51852], 'block_label': 'text', 'block_content': '助力双方交往\n搭建友谊桥梁'}, {'block_bbox': [587.4096, 160.58267, 927.6319, 179.2817], 'block_label': 'figure_title', 'block_content': '本报记者沈小晓任彦黄培昭'}, {'block_bbox': [773.8337, 200.6484, 1505.5646, 687.1228], 'block_label': 'image', 'block_content': ''}, {'block_bbox': [390.39642, 201.85085, 741.43414, 292.60092], 'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开\n设了中国语言课程和中国文化课程，注册学\n生2万余人次。10余年来，厄特孔院已成为\n当地民众了解中国的一扇窗口。'}, {'block_bbox': [9.714512, 202.68811, 359.62323, 340.3127], 'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青\n年依次登台表演中国民族舞、现代舞、扇子舞\n等，曼妙的舞姿赢得现场观众阵阵掌声。这\n是日前厄立特里亚高等教育与研究院孔子学\n院(以下简称"厄特孔院"举办“喜迎新年"中国\n歌舞比赛的场景。'}, {'block_bbox': [390.74124, 298.42255, 740.8009, 436.79193], 'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益\n增多，阿斯马拉大学教学点已难以满足教学\n需要。2024年4月，由中企蜀道集团所属四\n川路桥承建的孔院教学楼项目在阿斯马拉开\n工建设，预计今年上半年峻工，建成后将为厄\n特孔院提供全新的办学场地。'}, {'block_bbox': [10.579921, 346.26508, 359.13733, 436.17682], 'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年\n来,在高质量共建“一带一路"框架下，中厄两\n国人文交流不断深化，互利合作的民意基础\n日益深厚。'}, {'block_bbox': [410.51892, 457.0816, 722.768, 516.78217], 'block_label': 'text', 'block_content': '“在中国学习的经历\n让我看到更广阔的世界”'}, {'block_bbox': [30.334734, 457.53757, 341.92758, 516.81995], 'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的\n未来不是梦"'}, {'block_bbox': [390.89084, 538.1777, 742.1934, 604.6777], 'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和\n培训人员积极投身国家建设，成为助力该国\n发展的人才和厄中友好的见证者和推动者。'}, {'block_bbox': [9.884378, 538.3683, 359.43878, 652.03644], 'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你\n心中的每一个角落……"厄立特里亚阿斯马拉\n大学综合楼二层，一阵优美的歌声在走廊里回\n响。循着熟悉的旋律轻轻推开一间教室的门，\n学生们正跟着老师学唱中文歌曲《同一首歌》。'}, {'block_bbox': [390.88583, 610.61304, 741.1856, 747.91656], 'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰\n娜·特韦尔德·凯莱塔就是其中一位。她曾在\n中华女子学院攻读硕士学位，研究方向是女\n性领导力与社会发展。其间，她实地走访中国\n多个地区，获得了观察中国社会发展的第一\n手资料。'}, {'block_bbox': [10.115321, 658.7913, 359.40344, 771.3188], 'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一\n节中文歌曲课。为了让学生们更好地理解歌\n词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐\n字翻译和解释歌词。随着伴奏声响起，学生们\n边唱边随着节拍摇动身体，现场气氛热烈。'}, {'block_bbox': [809.6597, 705.4076, 1485.5686, 747.42346], 'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。\n中国驻厄立特里亚大使馆供图'}, {'block_bbox': [389.62894, 753.4464, 742.0593, 890.9599], 'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹\n新：“中国的发展在当今世界是独一无二的。\n沿着中国特色社会主义道路坚定前行，中国\n创造了发展奇迹，这一切都离不开中国共产党\n的领导。中国的发展经验值得许多国家学习\n借鉴。”'}, {'block_bbox': [9.867948, 777.38995, 360.40143, 843.43], 'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学\n生大部分来自首都阿斯马拉的中小学，年龄\n最小的仅有6岁。"尤斯拉告诉记者。'}, {'block_bbox': [9.780596, 850.09344, 359.62875, 1059.8483], 'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立\n学校的艺术老师。她12岁开始在厄特孔院学\n习中文，在2017年第十届"汉语桥"世界中学生\n中文比赛中获得厄立特里亚赛区第一名，并和\n同伴代表厄立特里亚前往中国参加决赛，获得\n团体优胜奖。2022年起，尤斯拉开始在厄特孔\n院兼职教授中文歌曲，每周末两个课时。“中国\n文化博大精深，我希望我的学生们能够通过中\n文歌曲更好地理解中国文化。"她说。'}, {'block_bbox': [771.98157, 777.02783, 1124.4025, 1059.2194], 'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约\n好了在一起，我们欢迎你…"在一场中厄青\n年联谊活动上，四川路桥中方员工同当地大\n学生合唱《北京欢迎你》。厄立特里亚技术学\n院计算机科学与工程专业学生鲁夫塔·谢拉\n是其中一名演唱者，她很早便在孔院学习中\n文，一直在为去中国留学作准备。“这句歌词\n是我们两国人民友谊的生动写照。无论是投\n身于厄立特里亚基础设施建设的中企员工，\n还是在中国留学的厄立特里亚学子，两国人\n民携手努力，必将推动两国关系不断向前发\n展。"鲁夫塔说。'}, {'block_bbox': [1155.9126, 777.7057, 1331.4768, 795.6466], 'block_label': 'text', 'block_content': '瓦的北红海省博物馆。'}, {'block_bbox': [1153.6993, 801.5608, 1504.5693, 987.6245], 'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利\n斯古城的中国古代陶制酒器，罐身上写着\n“万”“和"“禅"“山"等汉字。“这件文物证\n明，很早以前我们就通过海上丝绸之路进行\n贸易往来与文化交流。这也是厄立特里亚\n与中国友好交往历史的有力证明。"北红海\n省博物馆研究与文献部负责人伊萨亚斯·特\n斯法兹吉说。'}, {'block_bbox': [390.19556, 897.58984, 742.03076, 1035.8021], 'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生\n穆卢盖塔·泽穆伊对中国怀有深厚感情。8\n盖塔在社交媒体上写下这样一段话：“这是我\n人生的重要一步，自此我拥有了一双坚固的\n鞋子，赋予我穿越荆棘的力量。"'}, {'block_bbox': [1154.4485, 993.47705, 1503.8442, 1107.7343], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学\n研究员菲尔蒙·特韦尔德十分喜爱中国文\n化。他表示：“学习彼此的语言和文化，将帮\n助厄中两国人民更好地理解彼此，助力双方\n交往，搭建友谊桥梁。"'}, {'block_bbox': [391.1788, 1041.2518, 740.86304, 1131.4594], 'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教\n育等领域的发展，“中国在科研等方面的实力\n与日俱增。在中国学习的经历让我看到更广\n阔的世界，从中受益匪浅。”'}, {'block_bbox': [9.44888, 1065.2853, 360.20395, 1180.0414], 'block_label': 'text', 'block_content': '“姐姐，你想去中国吗？"“非常想！我想\n去看故宫、爬长城。"尤斯拉的学生中有一对\n能歌善舞的姐妹，姐姐露娅今年15岁，妹妹\n莉娅14岁，两人都已在厄特孔院学习多年，\n中文说得格外流利。'}, {'block_bbox': [771.5103, 1065.0969, 1123.4521, 1179.5637], 'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨\n马瑞表示：“每年我们都会组织学生到中国访\n问学习，目前有超过5000名厄立特里亚学生\n在中国留学。学习中国的教育经验，有助于\n提升厄立特里亚的教育水平。"'}, {'block_bbox': [1153.9072, 1114.012, 1503.9468, 1347.0771], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努\n里达姆·优素福曾多次访问中国，对中华文明\n的传承与创新、现代化博物馆的建设与发展\n印象深刻。“中国博物馆不仅有许多保存完好\n的文物，还充分运用先进科技手段进行展示，\n帮助人们更好理解中华文明。"塔吉丁说，“厄\n立特里亚与中国都拥有悠久的文明，始终相\n互理解、相互尊重。我希望未来与中国同行\n加强合作，共同向世界展示非洲和亚洲的灿\n烂文明。”'}, {'block_bbox': [390.84042, 1137.481, 741.0446, 1346.7771], 'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特\n孔院学习3年，在中国书法、中国画等方面表\n现十分优秀，在2024年厄立特里亚赛区的\n“汉语桥"比赛中获得一等奖。莉迪亚说：“学\n习中国书法让我的内心变得安宁和纯粹。我\n也喜欢中国的服饰，希望未来能去中国学习，\n把中国不同民族元素融入服装设计中，创作\n出更多精美作品，也把厄特文化分享给更多\n的中国朋友。”'}, {'block_bbox': [8.636964, 1186.1119, 359.81888, 1299.478], 'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文\n和中国文化的热爱，我们姐妹俩始终相互鼓\n励，一起学习。我们的中文一天比一天好，还\n学会了中文歌和中国舞。我们一定要到中国\n去。学好中文，我们的未来不是梦！”'}, {'block_bbox': [9.65557, 1305.0817, 359.62732, 1347.9409], 'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所\n孔院成立于2013年3月，由贵州财经大学和'}, {'block_bbox': [791.91876, 1201.0499, 1104.4822, 1260.1809], 'block_label': 'text', 'block_content': '“共同向世界展示非\n洲和亚洲的灿烂文明”'}, {'block_bbox': [772.4803, 1281.0001, 1123.4064, 1348.0051], 'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜓曲折的盘山\n公路一路向东寻找丝路印迹。驱车两个小\n时，记者来到位于厄立特里亚港口城市马萨'}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.985334038734436, 'coordinate': [773.8337, 200.6484, 1505.5646, 687.1228]}, {'cls_id': 2, 'label': 'text', 'score': 0.9781306385993958, 'coordinate': [771.98157, 777.02783, 1124.4025, 1059.2194]}, {'cls_id': 2, 'label': 'text', 'score': 0.9772591590881348, 'coordinate': [1153.9072, 1114.012, 1503.9468, 1347.0771]}, {'cls_id': 2, 'label': 'text', 'score': 0.9764459133148193, 'coordinate': [390.74124, 298.42255, 740.8009, 436.79193]}, {'cls_id': 2, 'label': 'text', 'score': 0.9752683639526367, 'coordinate': [9.714512, 202.68811, 359.62323, 340.3127]}, {'cls_id': 2, 'label': 'text', 'score': 0.9751600027084351, 'coordinate': [1153.6993, 801.5608, 1504.5693, 987.6245]}, {'cls_id': 2, 'label': 'text', 'score': 0.9741775989532471, 'coordinate': [9.780596, 850.09344, 359.62875, 1059.8483]}, {'cls_id': 2, 'label': 'text', 'score': 0.9723023772239685, 'coordinate': [390.39642, 201.85085, 741.43414, 292.60092]}, {'cls_id': 2, 'label': 'text', 'score': 0.9717830419540405, 'coordinate': [390.84042, 1137.481, 741.0446, 1346.7771]}, {'cls_id': 2, 'label': 'text', 'score': 0.970496654510498, 'coordinate': [390.88583, 610.61304, 741.1856, 747.91656]}, {'cls_id': 2, 'label': 'text', 'score': 0.967951774597168, 'coordinate': [8.636964, 1186.1119, 359.81888, 1299.478]}, {'cls_id': 2, 'label': 'text', 'score': 0.9675101637840271, 'coordinate': [390.19556, 897.58984, 742.03076, 1035.8021]}, {'cls_id': 2, 'label': 'text', 'score': 0.9672409296035767, 'coordinate': [389.62894, 753.4464, 742.0593, 890.9599]}, {'cls_id': 2, 'label': 'text', 'score': 0.9657630324363708, 'coordinate': [10.579921, 346.26508, 359.13733, 436.17682]}, {'cls_id': 2, 'label': 'text', 'score': 0.9655840396881104, 'coordinate': [771.5103, 1065.0969, 1123.4521, 1179.5637]}, {'cls_id': 2, 'label': 'text', 'score': 0.9651231169700623, 'coordinate': [1154.4485, 993.47705, 1503.8442, 1107.7343]}, {'cls_id': 2, 'label': 'text', 'score': 0.9631907343864441, 'coordinate': [772.4803, 1281.0001, 1123.4064, 1348.0051]}, {'cls_id': 2, 'label': 'text', 'score': 0.9616568684577942, 'coordinate': [9.44888, 1065.2853, 360.20395, 1180.0414]}, {'cls_id': 2, 'label': 'text', 'score': 0.9596402645111084, 'coordinate': [10.115321, 658.7913, 359.40344, 771.3188]}, {'cls_id': 2, 'label': 'text', 'score': 0.9591165781021118, 'coordinate': [391.1788, 1041.2518, 740.86304, 1131.4594]}, {'cls_id': 2, 'label': 'text', 'score': 0.9564457535743713, 'coordinate': [9.884378, 538.3683, 359.43878, 652.03644]}, {'cls_id': 2, 'label': 'text', 'score': 0.9525545835494995, 'coordinate': [390.89084, 538.1777, 742.1934, 604.6777]}, {'cls_id': 2, 'label': 'text', 'score': 0.9493281245231628, 'coordinate': [9.867948, 777.38995, 360.40143, 843.43]}, {'cls_id': 2, 'label': 'text', 'score': 0.9400925040245056, 'coordinate': [9.65557, 1305.0817, 359.62732, 1347.9409]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9255779385566711, 'coordinate': [809.6597, 705.4076, 1485.5686, 747.42346]}, {'cls_id': 2, 'label': 'text', 'score': 0.9046083688735962, 'coordinate': [1155.9126, 777.7057, 1331.4768, 795.6466]}, {'cls_id': 2, 'label': 'text', 'score': 0.8666954040527344, 'coordinate': [410.51892, 457.0816, 722.768, 516.78217]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.7959974408149719, 'coordinate': [30.334734, 457.53757, 341.92758, 516.81995]}, {'cls_id': 2, 'label': 'text', 'score': 0.7298153042793274, 'coordinate': [791.91876, 1201.0499, 1104.4822, 1260.1809]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6074362397193909, 'coordinate': [587.4096, 160.58267, 927.6319, 179.2817]}, {'cls_id': 2, 'label': 'text', 'score': 0.584621012210846, 'coordinate': [133.36868, 40.128025, 1383.7496, 123.51852]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 122,   28],
+                    ...,
+                    [ 122,  135]],
 
-        ...,
+                ...,
 
-        [[1156, 1330],
-            ...,
-            [1156, 1351]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '西', '本报记者沈小晓任彦黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等，曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院"举办“喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建“一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦"', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落……"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新：“中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起，我们欢迎你………"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和”“禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明，很早以前我们就通过海上丝绸之路进行', '习中文，在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话：“这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。"', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。”', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。"', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '印象深刻。“中国博物馆不仅有许多保存完好', '“共同向世界展示非', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，“厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰，希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！”', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99982363, ..., 0.93620157]), 'rec_polys': array([[[ 122,   28],
-            ...,
-            [ 122,  135]],
+                [[1156, 1330],
+                    ...,
+                    [1156, 1351]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '西', '本报记者沈小晓任彦黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等，曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院"举办“喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建“一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦"', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落……"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新：“中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起，我们欢迎你………"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和”“禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明，很早以前我们就通过海上丝绸之路进行', '习中文，在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话：“这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。"', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。”', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。"', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '印象深刻。“中国博物馆不仅有许多保存完好', '“共同向世界展示非', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，“厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰，希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！”', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99982357, ..., 0.93637466]), 'rec_polys': array([[[ 122,   28],
+                    ...,
+                    [ 122,  135]],
 
-        ...,
+                ...,
 
-        [[1156, 1330],
-            ...,
-            [1156, 1351]]], dtype=int16), 'rec_boxes': array([[ 122, ...,  135],
-        ...,
-        [1156, ..., 1351]], dtype=int16)}}}
+                [[1156, 1330],
+                    ...,
+                    [1156, 1351]]], dtype=int16), 'rec_boxes': array([[ 122, ...,  135],
+                ...,
+                [1156, ..., 1351]], dtype=int16)}}}
             ```
-    === "通用版面解析v2"
+    === "通用版面解析v3"
 
         ```bash
-        paddlex --pipeline layout_parsing_v2 \
-                --input layout_parsing_v2_demo.png \
+        paddlex --pipeline PP-StructureV3 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_structure_v3_demo.png \
                 --use_doc_orientation_classify False \
                 --use_doc_unwarping False \
                 --use_textline_orientation False \
@@ -516,52 +281,41 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
             === "输出结果"
 
             ```bash
-            {'res': {'input_path': 'layout_parsing_v2_demo.png', 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9853514432907104, 'coordinate': [770.9531, 776.6814, 1122.6057, 1058.7322]}, {'cls_id': 1, 'label': 'image', 'score': 0.9848673939704895, 'coordinate': [775.7434, 202.27979, 1502.8113, 686.02136]}, {'cls_id': 2, 'label': 'text', 'score': 0.983731746673584, 'coordinate': [1152.3197, 1113.3275, 1503.3029, 1346.586]}, {'cls_id': 2, 'label': 'text', 'score': 0.9832221865653992, 'coordinate': [1152.5602, 801.431, 1503.8436, 986.3563]}, {'cls_id': 2, 'label': 'text', 'score': 0.9829439520835876, 'coordinate': [9.549545, 849.5713, 359.1173, 1058.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9811657667160034, 'coordinate': [389.58298, 1137.2659, 740.66235, 1346.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9775941371917725, 'coordinate': [9.1302185, 201.85, 359.0409, 339.05692]}, {'cls_id': 2, 'label': 'text', 'score': 0.9750366806983948, 'coordinate': [389.71454, 752.96924, 740.544, 889.92456]}, {'cls_id': 2, 'label': 'text', 'score': 0.9738152027130127, 'coordinate': [389.94565, 298.55988, 740.5585, 435.5124]}, {'cls_id': 2, 'label': 'text', 'score': 0.9737328290939331, 'coordinate': [771.50256, 1065.4697, 1122.2582, 1178.7324]}, {'cls_id': 2, 'label': 'text', 'score': 0.9728517532348633, 'coordinate': [1152.5154, 993.3312, 1503.2349, 1106.327]}, {'cls_id': 2, 'label': 'text', 'score': 0.9725610017776489, 'coordinate': [9.372787, 1185.823, 359.31738, 1298.7227]}, {'cls_id': 2, 'label': 'text', 'score': 0.9724331498146057, 'coordinate': [389.62848, 610.7389, 740.83234, 746.2377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9720287322998047, 'coordinate': [389.29898, 897.0936, 741.41516, 1034.6616]}, {'cls_id': 2, 'label': 'text', 'score': 0.9713053703308105, 'coordinate': [10.323685, 1065.4663, 359.6786, 1178.8872]}, {'cls_id': 2, 'label': 'text', 'score': 0.9689728021621704, 'coordinate': [9.336395, 537.6609, 359.2901, 652.1881]}, {'cls_id': 2, 'label': 'text', 'score': 0.9684857130050659, 'coordinate': [10.7608185, 345.95068, 358.93616, 434.64087]}, {'cls_id': 2, 'label': 'text', 'score': 0.9681928753852844, 'coordinate': [9.674866, 658.89075, 359.56528, 770.4319]}, {'cls_id': 2, 'label': 'text', 'score': 0.9634978175163269, 'coordinate': [770.9464, 1281.1785, 1122.6522, 1346.7156]}, {'cls_id': 2, 'label': 'text', 'score': 0.96304851770401, 'coordinate': [390.0113, 201.28055, 740.1684, 291.53073]}, {'cls_id': 2, 'label': 'text', 'score': 0.962053120136261, 'coordinate': [391.21393, 1040.952, 740.5046, 1130.32]}, {'cls_id': 2, 'label': 'text', 'score': 0.9565253853797913, 'coordinate': [10.113251, 777.1482, 359.439, 842.437]}, {'cls_id': 2, 'label': 'text', 'score': 0.9497362375259399, 'coordinate': [390.31357, 537.86285, 740.47595, 603.9285]}, {'cls_id': 2, 'label': 'text', 'score': 0.9371236562728882, 'coordinate': [10.2034, 1305.9753, 359.5958, 1346.7295]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9338151216506958, 'coordinate': [791.6062, 1200.8479, 1103.3257, 1259.9324]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9326773285865784, 'coordinate': [408.0737, 457.37024, 718.9509, 516.63464]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9274250864982605, 'coordinate': [29.448685, 456.6762, 340.99194, 515.6999]}, {'cls_id': 2, 'label': 'text', 'score': 0.8742568492889404, 'coordinate': [1154.7095, 777.3624, 1330.3086, 794.5853]}, {'cls_id': 2, 'label': 'text', 'score': 0.8442489504814148, 'coordinate': [586.49316, 160.15454, 927.468, 179.64203]}, {'cls_id': 11, 'label': 'doc_title', 'score': 0.8332607746124268, 'coordinate': [133.80017, 37.41908, 1380.8601, 124.1429]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6770150661468506, 'coordinate': [812.1718, 705.1199, 1484.6973, 747.1692]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 133,   35],
+            {'res': {'input_path': 'pp_structure_v3_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9853514432907104, 'coordinate': [770.9531, 776.6814, 1122.6057, 1058.7322]}, {'cls_id': 1, 'label': 'image', 'score': 0.9848673939704895, 'coordinate': [775.7434, 202.27979, 1502.8113, 686.02136]}, {'cls_id': 2, 'label': 'text', 'score': 0.983731746673584, 'coordinate': [1152.3197, 1113.3275, 1503.3029, 1346.586]}, {'cls_id': 2, 'label': 'text', 'score': 0.9832221865653992, 'coordinate': [1152.5602, 801.431, 1503.8436, 986.3563]}, {'cls_id': 2, 'label': 'text', 'score': 0.9829439520835876, 'coordinate': [9.549545, 849.5713, 359.1173, 1058.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9811657667160034, 'coordinate': [389.58298, 1137.2659, 740.66235, 1346.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9775941371917725, 'coordinate': [9.1302185, 201.85, 359.0409, 339.05692]}, {'cls_id': 2, 'label': 'text', 'score': 0.9750366806983948, 'coordinate': [389.71454, 752.96924, 740.544, 889.92456]}, {'cls_id': 2, 'label': 'text', 'score': 0.9738152027130127, 'coordinate': [389.94565, 298.55988, 740.5585, 435.5124]}, {'cls_id': 2, 'label': 'text', 'score': 0.9737328290939331, 'coordinate': [771.50256, 1065.4697, 1122.2582, 1178.7324]}, {'cls_id': 2, 'label': 'text', 'score': 0.9728517532348633, 'coordinate': [1152.5154, 993.3312, 1503.2349, 1106.327]}, {'cls_id': 2, 'label': 'text', 'score': 0.9725610017776489, 'coordinate': [9.372787, 1185.823, 359.31738, 1298.7227]}, {'cls_id': 2, 'label': 'text', 'score': 0.9724331498146057, 'coordinate': [389.62848, 610.7389, 740.83234, 746.2377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9720287322998047, 'coordinate': [389.29898, 897.0936, 741.41516, 1034.6616]}, {'cls_id': 2, 'label': 'text', 'score': 0.9713053703308105, 'coordinate': [10.323685, 1065.4663, 359.6786, 1178.8872]}, {'cls_id': 2, 'label': 'text', 'score': 0.9689728021621704, 'coordinate': [9.336395, 537.6609, 359.2901, 652.1881]}, {'cls_id': 2, 'label': 'text', 'score': 0.9684857130050659, 'coordinate': [10.7608185, 345.95068, 358.93616, 434.64087]}, {'cls_id': 2, 'label': 'text', 'score': 0.9681928753852844, 'coordinate': [9.674866, 658.89075, 359.56528, 770.4319]}, {'cls_id': 2, 'label': 'text', 'score': 0.9634978175163269, 'coordinate': [770.9464, 1281.1785, 1122.6522, 1346.7156]}, {'cls_id': 2, 'label': 'text', 'score': 0.96304851770401, 'coordinate': [390.0113, 201.28055, 740.1684, 291.53073]}, {'cls_id': 2, 'label': 'text', 'score': 0.962053120136261, 'coordinate': [391.21393, 1040.952, 740.5046, 1130.32]}, {'cls_id': 2, 'label': 'text', 'score': 0.9565253853797913, 'coordinate': [10.113251, 777.1482, 359.439, 842.437]}, {'cls_id': 2, 'label': 'text', 'score': 0.9497362375259399, 'coordinate': [390.31357, 537.86285, 740.47595, 603.9285]}, {'cls_id': 2, 'label': 'text', 'score': 0.9371236562728882, 'coordinate': [10.2034, 1305.9753, 359.5958, 1346.7295]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9338151216506958, 'coordinate': [791.6062, 1200.8479, 1103.3257, 1259.9324]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9326773285865784, 'coordinate': [408.0737, 457.37024, 718.9509, 516.63464]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9274250864982605, 'coordinate': [29.448685, 456.6762, 340.99194, 515.6999]}, {'cls_id': 2, 'label': 'text', 'score': 0.8742568492889404, 'coordinate': [1154.7095, 777.3624, 1330.3086, 794.5853]}, {'cls_id': 2, 'label': 'text', 'score': 0.8442489504814148, 'coordinate': [586.49316, 160.15454, 927.468, 179.64203]}, {'cls_id': 11, 'label': 'doc_title', 'score': 0.8332607746124268, 'coordinate': [133.80017, 37.41908, 1380.8601, 124.1429]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6770150661468506, 'coordinate': [812.1718, 705.1199, 1484.6973, 747.1692]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[133,  35],
                     ...,
-                    [ 133,  131]],
+                    [133, 131]],
 
                 ...,
 
-                [[1154, 1323],
+                [[ 13, 754],
                     ...,
-                    [1152, 1355]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0.0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '本报记者', '沈小晓', '任', '彦', '黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等,曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院")举办"喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建"一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦”', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落…"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新："中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起我们欢迎你"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。”尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万""和""禅"“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明,很早以前我们就通过海上丝绸之路进行', '习中文,在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。"这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '年前，在北京师范大学获得硕士学位后，穆卢', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话："这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。”', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？""非常想！我想', '育等领域的发展，中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示："每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。”', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说："这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '“共同向世界展示非', '印象深刻。“中国博物馆不仅有许多保存完好', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说："学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，"厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰,希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！"', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99943757, ..., 0.98181838]), 'rec_polys': array([[[ 133,   35],
+                    [ 13, 777]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0.0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '本报记者', '沈小晓', '任', '彦', '黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等,曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院")举办"喜迎新年"中国', '黄鸣飞表示,随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建"一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设,预计今年上半年竣工,建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦”', '让我看到更广阔的世界”', '多年来,厄立特里亚广大赴华留学生和', '培训人员积极投身国家建设,成为助力该国', '发展的人才和厄中友好的见证者和推动者。', '在厄立特里亚全国妇女联盟工作的约翰', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '中华女子学院攻读硕士学位,研究方向是女', '性领导力与社会发展。其间，她实地走访中国', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '手资料。', '中国驻厄立特里亚大使馆供图', '“这是中文歌曲初级班，共有32人。学', '“不管远近都是客人，请不用客气;相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '好了在一起,我们欢迎你"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '年联谊活动上,四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器,罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和""禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明,很早以前我们就通过海上丝绸之路进行', '习中文,在2017年第十届"汉语桥"世界中学生', '是其中一名演唱者,她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名,并和', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛,获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲,每周末两个课时。中国', '还是在中国留学的厄立特里亚学子,两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深,我希望我的学生们能够通过中', '民携手努力,必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐,你想去中国吗?"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往,搭建友谊桥梁。"', '能歌善舞的姐妹,姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验,有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。”', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来,怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '“共同向世界展示非', '印象深刻。“中国博物馆不仅有许多保存完好', '和中国文化的热爱,我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物,还充分运用先进科技手段进行展示，', '励,一起学习。我们的中文一天比一天好,还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰,希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明,始终相', '去。学好中文,我们的未来不是梦!"', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发,沿着蜿蜒曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍,这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作,共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时,记者来到位于厄立特里亚港口城市马萨', '烂文明。”', '谈起在中国求学的经历,约翰娜记忆犹', '新：“中国的发展在当今世界是独一无二的。', '沿着中国特色社会主义道路坚定前行，中国', '创造了发展奇迹,这一切都离不开中国共产党', '的领导。中国的发展经验值得许多国家学习', '借鉴，”', '正在西南大学学习的厄立特里亚博士生', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '年前，在北京师范大学获得硕士学位后，穆卢', '盖塔在社交媒体上写下这样一段话：“这是我', '人生的重要一步，自此我拥有了一双坚固的', '鞋子.赋予我穿越荆棘的力量。”', '“鲜花曾告诉我你怎样走过，大地知道你', '心中的每一个角落"厄立特里亚阿斯马拉', '大学综合楼二层，一阵优美的歌声在走廊里回', '响。循着熟悉的旋律轻轻推开一间教室的门，', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '这是厄特孔院阿斯马拉大学教学点的一', '节中文歌曲课。为了让学生们更好地理解歌', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '字翻译和解释歌词。随着伴奏声响起，学生们', '边唱边随着节拍摇动身体，现场气氛热烈。'], 'rec_scores': array([0.99972075, ..., 0.96241361]), 'rec_polys': array([[[133,  35],
                     ...,
-                    [ 133,  131]],
+                    [133, 131]],
 
                 ...,
 
-                [[1154, 1323],
+                [[ 13, 754],
                     ...,
-                    [1152, 1355]]], dtype=int16), 'rec_boxes': array([[ 133, ...,  131],
+                    [ 13, 777]]], dtype=int16), 'rec_boxes': array([[133, ..., 131],
                 ...,
-                [1152, ..., 1359]], dtype=int16)}, 'text_paragraphs_ocr_res': {'rec_polys': array([[[ 133,   35],
-                    ...,
-                    [ 133,  131]],
-
-                ...,
-
-                [[1154, 1323],
-                    ...,
-                    [1152, 1355]]], dtype=int16), 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '本报记者', '沈小晓', '任', '彦', '黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等,曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院")举办"喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建"一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦”', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落…"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新："中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起我们欢迎你"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。”尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万""和""禅"“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明,很早以前我们就通过海上丝绸之路进行', '习中文,在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。"这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '年前，在北京师范大学获得硕士学位后，穆卢', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话："这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。”', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？""非常想！我想', '育等领域的发展，中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示："每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。”', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说："这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '“共同向世界展示非', '印象深刻。“中国博物馆不仅有许多保存完好', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说："学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，"厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰,希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！"', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99943757, ..., 0.98181838]), 'rec_boxes': array([[ 133, ...,  131],
-                ...,
-                [1152, ..., 1359]], dtype=int16)}}}
-       ```
-
+                [ 13, ..., 777]], dtype=int16)}}}
+            ```
 
     === "公式识别"
 
         ```bash
         paddlex --pipeline formula_recognition \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png \
-        --use_layout_detection True \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --layout_threshold 0.5 \
-        --layout_nms True \
-        --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode large \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png \
+                --use_layout_detection True \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --layout_threshold 0.5 \
+                --layout_nms True \
+                --layout_unclip_ratio  1.0 \
+                --layout_merge_bboxes_mode "'large'"\
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -578,265 +332,53 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline seal_recognition \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --device gpu:0 \
-        --save_path ./output
+            --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png \
+            --use_doc_orientation_classify False \
+            --use_doc_unwarping False \
+            --device gpu:0 \
+            --save_path ./output
         ```
 
         ??? question "查看运行结果"
             === "输出结果"
                 ```bash
-                        {'res': {'input_path': 'seal_text_det.png', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 16, 'label': 'seal', 'score': 0.975529670715332, 'coordinate': [6.191284, 0.16680908, 634.39325, 628.85345]}]}, 'seal_res_list': [{'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[320,  38],
-                            [479,  92],
-                            [483,  94],
-                            [486,  97],
-                            [579, 226],
-                            [582, 230],
-                            [582, 235],
-                            [584, 383],
-                            [584, 388],
-                            [582, 392],
-                            [578, 396],
-                            [573, 398],
-                            [566, 398],
-                            [502, 380],
-                            [497, 377],
-                            [494, 374],
-                            [491, 369],
-                            [491, 366],
-                            [488, 259],
-                            [424, 172],
-                            [318, 136],
-                            [251, 154],
-                            [200, 174],
-                            [137, 260],
-                            [133, 366],
-                            [132, 370],
-                            [130, 375],
-                            [126, 378],
-                            [123, 380],
-                            [ 60, 398],
-                            [ 55, 398],
-                            [ 49, 397],
-                            [ 45, 394],
-                            [ 43, 390],
-                            [ 41, 383],
-                            [ 43, 236],
-                            [ 44, 230],
-                            [ 45, 227],
-                            [141,  96],
-                            [144,  93],
-                            [148,  90],
-                            [311,  38],
-                            [315,  38]]), array([[461, 347],
-                            [465, 350],
-                            [468, 354],
-                            [470, 360],
-                            [470, 425],
-                            [469, 429],
-                            [467, 433],
-                            [462, 437],
-                            [456, 439],
-                            [169, 439],
-                            [165, 439],
-                            [160, 436],
-                            [157, 432],
-                            [155, 426],
-                            [154, 360],
-                            [155, 356],
-                            [158, 352],
-                            [161, 348],
-                            [168, 346],
-                            [456, 346]]), array([[439, 445],
-                            [441, 447],
-                            [443, 451],
-                            [444, 453],
-                            [444, 497],
-                            [443, 502],
-                            [440, 504],
-                            [437, 506],
-                            [434, 507],
-                            [189, 505],
-                            [184, 504],
-                            [182, 502],
-                            [180, 498],
-                            [179, 496],
-                            [181, 453],
-                            [182, 449],
-                            [184, 446],
-                            [188, 444],
-                            [434, 444]]), array([[158, 468],
-                            [199, 502],
-                            [242, 522],
-                            [299, 534],
-                            [339, 532],
-                            [373, 526],
-                            [417, 508],
-                            [459, 475],
-                            [462, 474],
-                            [467, 474],
-                            [472, 476],
-                            [502, 507],
-                            [503, 510],
-                            [504, 515],
-                            [503, 518],
-                            [501, 521],
-                            [452, 559],
-                            [450, 560],
-                            [391, 584],
-                            [390, 584],
-                            [372, 590],
-                            [370, 590],
-                            [305, 596],
-                            [302, 596],
-                            [224, 581],
-                            [221, 580],
-                            [164, 553],
-                            [162, 551],
-                            [114, 509],
-                            [112, 507],
-                            [111, 503],
-                            [112, 498],
-                            [114, 496],
-                            [146, 468],
-                            [149, 466],
-                            [154, 466]])], 'text_det_params': {'limit_side_len': 736, 'limit_type': 'min', 'thresh': 0.2, 'box_thresh': 0.6, 'unclip_ratio': 0.5}, 'text_type': 'seal', 'textline_orientation_angles': [-1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['天津君和缘商贸有限公司', '发票专用章', '吗繁物', '5263647368706'], 'rec_scores': [0.9934046268463135, 0.9999403953552246, 0.998250424861908, 0.9913849234580994], 'rec_polys': [array([[320,  38],
-                            [479,  92],
-                            [483,  94],
-                            [486,  97],
-                            [579, 226],
-                            [582, 230],
-                            [582, 235],
-                            [584, 383],
-                            [584, 388],
-                            [582, 392],
-                            [578, 396],
-                            [573, 398],
-                            [566, 398],
-                            [502, 380],
-                            [497, 377],
-                            [494, 374],
-                            [491, 369],
-                            [491, 366],
-                            [488, 259],
-                            [424, 172],
-                            [318, 136],
-                            [251, 154],
-                            [200, 174],
-                            [137, 260],
-                            [133, 366],
-                            [132, 370],
-                            [130, 375],
-                            [126, 378],
-                            [123, 380],
-                            [ 60, 398],
-                            [ 55, 398],
-                            [ 49, 397],
-                            [ 45, 394],
-                            [ 43, 390],
-                            [ 41, 383],
-                            [ 43, 236],
-                            [ 44, 230],
-                            [ 45, 227],
-                            [141,  96],
-                            [144,  93],
-                            [148,  90],
-                            [311,  38],
-                            [315,  38]]), array([[461, 347],
-                            [465, 350],
-                            [468, 354],
-                            [470, 360],
-                            [470, 425],
-                            [469, 429],
-                            [467, 433],
-                            [462, 437],
-                            [456, 439],
-                            [169, 439],
-                            [165, 439],
-                            [160, 436],
-                            [157, 432],
-                            [155, 426],
-                            [154, 360],
-                            [155, 356],
-                            [158, 352],
-                            [161, 348],
-                            [168, 346],
-                            [456, 346]]), array([[439, 445],
-                            [441, 447],
-                            [443, 451],
-                            [444, 453],
-                            [444, 497],
-                            [443, 502],
-                            [440, 504],
-                            [437, 506],
-                            [434, 507],
-                            [189, 505],
-                            [184, 504],
-                            [182, 502],
-                            [180, 498],
-                            [179, 496],
-                            [181, 453],
-                            [182, 449],
-                            [184, 446],
-                            [188, 444],
-                            [434, 444]]), array([[158, 468],
-                            [199, 502],
-                            [242, 522],
-                            [299, 534],
-                            [339, 532],
-                            [373, 526],
-                            [417, 508],
-                            [459, 475],
-                            [462, 474],
-                            [467, 474],
-                            [472, 476],
-                            [502, 507],
-                            [503, 510],
-                            [504, 515],
-                            [503, 518],
-                            [501, 521],
-                            [452, 559],
-                            [450, 560],
-                            [391, 584],
-                            [390, 584],
-                            [372, 590],
-                            [370, 590],
-                            [305, 596],
-                            [302, 596],
-                            [224, 581],
-                            [221, 580],
-                            [164, 553],
-                            [162, 551],
-                            [114, 509],
-                            [112, 507],
-                            [111, 503],
-                            [112, 498],
-                            [114, 496],
-                            [146, 468],
-                            [149, 466],
-                            [154, 466]])], 'rec_boxes': array([], dtype=float64)}]}}
+                {'res': {'input_path': 'seal_text_det.png', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 16, 'label': 'seal', 'score': 0.975531280040741, 'coordinate': [6.195526, 0.1579895, 634.3982, 628.84595]}]}, 'seal_res_list': [{'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[320,  38],
+                    ...,
+                    [315,  38]]), array([[461, 347],
+                    ...,
+                    [456, 346]]), array([[439, 445],
+                    ...,
+                    [434, 444]]), array([[158, 468],
+                    ...,
+                    [154, 466]])], 'text_det_params': {'limit_side_len': 736, 'limit_type': 'min', 'thresh': 0.2, 'box_thresh': 0.6, 'unclip_ratio': 0.5}, 'text_type': 'seal', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['天津君和缘商贸有限公司', '发票专用章', '吗繁物', '5263647368706'], 'rec_scores': array([0.9934051 , ..., 0.99139398]), 'rec_polys': [array([[320,  38],
+                    ...,
+                    [315,  38]]), array([[461, 347],
+                    ...,
+                    [456, 346]]), array([[439, 445],
+                    ...,
+                    [434, 444]]), array([[158, 468],
+                    ...,
+                    [154, 466]])], 'rec_boxes': array([], dtype=float64)}]}}
                 ```
 
             === "可视化图片"
 
                 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/03.png"></p>
 
-    === "文档预处理"
+    === "文档图像预处理"
 
         ```bash
         paddlex --pipeline doc_preprocessor \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg \
-        --use_doc_orientation_classify True \
-        --use_doc_unwarping True \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg \
+                --use_doc_orientation_classify True \
+                --use_doc_unwarping True \
+                --save_path ./output \
+                --device gpu:0
         ```
         ??? question "查看运行结果"
             === "输出结果"
                 ```bash
-                {'res': {'input_path': 'doc_test_rotated.jpg', 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 180}}
+                {'res': {'input_path': 'doc_test_rotated.jpg', 'page_index': None, 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 180}}
                 ```
 
             === "可视化图片"
@@ -866,10 +408,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline object_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png \
-        --threshold 0.5 \
-        --save_path ./output/ \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png \
+                --threshold 0.5 \
+                --save_path ./output/ \
+                --device gpu:0
         ```
         ??? question "查看运行结果"
             === "输出结果"
@@ -885,10 +427,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline instance_segmentation \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png \
+                --threshold 0.5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -905,10 +447,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline semantic_segmentation \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png \
-        --target_size -1 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png \
+                --target_size -1 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -941,10 +483,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline small_object_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg \
+                --threshold 0.5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -983,10 +525,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline human_keypoint_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_001.jpg \
-        --det_threshold 0.5 \
-        --save_path ./output/ \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_001.jpg \
+                --det_threshold 0.5 \
+                --save_path ./output/ \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -1163,11 +705,11 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline open_vocabulary_segmentation \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg \
-        --prompt_type box \
-        --prompt "[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]" \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg \
+                --prompt_type box \
+                --prompt "[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]" \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -1184,11 +726,11 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline open_vocabulary_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg \
-        --prompt "bus . walking man . rearview mirror ." \
-        --thresholds "{'text_threshold': 0.25, 'box_threshold': 0.3}" \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg \
+                --prompt "bus . walking man . rearview mirror ." \
+                --thresholds "{'text_threshold': 0.25, 'box_threshold': 0.3}" \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -1237,10 +779,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline rotated_object_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png \
+                --threshold 0.5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -1324,9 +866,9 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline multilingual_speech_recognition \
-        --input https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -1341,10 +883,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
 
         ```bash
         paddlex --pipeline video_classification \
-            --input https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4 \
-            --topk 5 \
-            --save_path ./output \
-            --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4 \
+                --topk 5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "查看运行结果"
@@ -1389,7 +931,7 @@ for res in output:
 执行了如下几个步骤：
 
 * `create_pipeline()` 实例化产线对象
-* 传入图片并调用产线对象的 `predict` 方法进行推理预测
+* 传入图片并调用产线对象的 `predict()` 方法进行推理预测
 * 对预测结果进行处理
 
 !!! example "OCR相关产线Python脚本使用"
@@ -1444,7 +986,7 @@ for res in output:
         pipeline = create_pipeline(pipeline="table_recognition_v2")
 
         output = pipeline.predict(
-            input="table_recognition.jpg",
+            input="table_recognition_v2.jpg",
             use_doc_orientation_classify=False,
             use_doc_unwarping=False,
         )
@@ -1479,15 +1021,15 @@ for res in output:
 
         ```
 
-    === "通用版面解析v2"
+    === "通用版面解析v3"
 
         ```python
         from paddlex import create_pipeline
 
-        pipeline = create_pipeline(pipeline="layout_parsing_v2")
+        pipeline = create_pipeline(pipeline="PP-StructureV3")
 
         output = pipeline.predict(
-            input="./layout_parsing_v2_demo.png",
+            input="./pp_structure_v3_demo.png",
             use_doc_orientation_classify=False,
             use_doc_unwarping=False,
             use_textline_orientation=False,
@@ -1545,7 +1087,7 @@ for res in output:
 
         ```python
         from paddlex import create_pipeline
-        pipeline = create_pipeline(pipeline="./my_path/doc_preprocessor.yaml")
+        pipeline = create_pipeline(pipeline="doc_preprocessor")
         output = pipeline.predict(
             input="doc_test_rotated.jpg"
             use_doc_orientation_classify=True,
@@ -1557,7 +1099,7 @@ for res in output:
             res.save_to_json("./output/")
         ```
 
-!!! example "计算机视觉相关产线命令行使用"
+!!! example "计算机视觉相关产线Python脚本使用"
 
     === "通用图像分类"
 
@@ -1604,7 +1146,7 @@ for res in output:
         ```python
         from paddlex import create_pipeline
         pipeline = create_pipeline(pipeline_name="semantic_segmentation")
-        output = pipeline.predict(input="general_semantic_segmentation_002.png", target_size = -1)
+        output = pipeline.predict(input="general_semantic_segmentation_002.png", target_size=-1)
         for res in output:
             res.print()
             res.save_to_img(save_path="./output/")
@@ -1741,7 +1283,7 @@ for res in output:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "时序分析相关产线命令行使用"
+!!! example "时序分析相关产线Python脚本使用"
 
     === "时序预测"
 
@@ -1783,7 +1325,7 @@ for res in output:
             res.save_to_json(save_path="./output/") ## 保存json格式结果
         ```
 
-!!! example "语音相关产线命令行使用"
+!!! example "语音相关产线Python脚本使用"
 
     === "多语种语音识别"
 
@@ -1798,7 +1340,7 @@ for res in output:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "视频相关产线命令行使用"
+!!! example "视频相关产线Python脚本使用"
 
     === "通用视频分类"
 
@@ -1827,6 +1369,24 @@ for res in output:
             res.save_to_json(save_path="./output/") ## 保存预测的结构化输出
         ```
 
+!!! example "多模态视觉语言模型相关产线Python脚本使用"
+
+    === "文档理解"
+
+        ```python
+        from paddlex import create_pipeline
+        pipeline = create_pipeline(pipeline="doc_understanding")
+        output = pipeline.predict(
+            {
+                "image": "medal_table.png",
+                "query": "识别这份表格的内容"
+            }
+        )
+        for res in output:
+            res.print() ## 打印预测的结构化输出
+            res.save_to_json("./output/") ## 保存预测的结构化输出
+        ```
+
 ## 🚀 详细教程
 
 <div class="grid cards" markdown>
@@ -1847,13 +1407,13 @@ for res in output:
 
     [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/OCR.md)
 
-- **通用版面解析v2**
+- **通用版面解析v3**
 
     ---
 
-    通用版面解析v2产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。
+    通用版面解析v3产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.md)
 
 - **通用表格识别产线v2**
 

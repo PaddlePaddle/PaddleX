@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,30 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
-import numpy as np
-import pandas as pd
 import os
+from typing import Any, Dict, List, Tuple, Union
+
+import pandas as pd
 
 from ....modules.ts_anomaly_detection.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
+from ..base import BasePredictor
 from ..common import (
-    TSCutOff,
     BuildTSDataset,
-    TSNormalize,
     TimeFeature,
+    TSCutOff,
+    TSNormalize,
     TStoArray,
     TStoBatch,
-    StaticInfer,
 )
 from .processors import GetAnomaly
-from ..base import BasicPredictor
 from .result import TSAdResult
 
 
-class TSAdPredictor(BasicPredictor):
-    """TSAdPredictor that inherits from BasicPredictor."""
+class TSAdPredictor(BasePredictor):
+    """TSAdPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -94,11 +93,7 @@ class TSAdPredictor(BasicPredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["GetAnomaly"] = GetAnomaly(
             self.config["model_threshold"], self.config["info_params"]
@@ -116,7 +111,7 @@ class TSAdPredictor(BasicPredictor):
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names for every instance of the batch. Keys include 'input_path', 'input_img', 'class_ids', 'scores', and 'label_names'.
         """
 
-        batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data)
+        batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data.instances)
         batch_cutoff_ts = self.preprocessors["TSCutOff"](ts_list=batch_raw_ts)
 
         if "TSNormalize" in self.preprocessors:
@@ -140,7 +135,7 @@ class TSAdPredictor(BasicPredictor):
             ori_ts_list=batch_input_ts, pred_list=batch_preds
         )
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
             "input_ts": batch_raw_ts,
             "anomaly": batch_ts_preds,
         }

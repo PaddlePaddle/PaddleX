@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
+import math
 import os
 import os.path as osp
 import shutil
-import random
-import math
+
 import pandas as pd
-from tqdm import tqdm
+
 from .....utils.logging import info
 
 
@@ -55,7 +55,7 @@ def split_dataset(root_dir, train_rate, val_rate, group_id="group_id"):
     df = df.drop_duplicates(keep="first")
 
     group_unique = df[group_id].unique()
-    dfs = []  # seperate multiple group
+    dfs = []  # separate multiple group
     for column in group_unique:
         df_one = df[df[group_id].isin([column])]
         df_one = df_one.drop_duplicates(subset=["time"], keep="first")

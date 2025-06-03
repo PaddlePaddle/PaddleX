@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ import os.path as osp
 
 from ...base.register import register_model_info, register_suite_info
 from ..ts_base.model import TSModel
-from .runner import TSCLSRunner
 from .config import TSClassifyConfig
+from .runner import TSCLSRunner
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLETS_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))

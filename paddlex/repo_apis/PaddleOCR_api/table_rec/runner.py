@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-from ..text_rec.runner import TextRecRunner
 from ...base.utils.subprocess import CompletedProcess
+from ..text_rec.runner import TextRecRunner
 
 
 class TableRecRunner(TextRecRunner):
@@ -45,7 +45,7 @@ class TableRecRunner(TextRecRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         cmd = [self.python, "ppstructure/table/predict_structure.py", *cli_args]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)

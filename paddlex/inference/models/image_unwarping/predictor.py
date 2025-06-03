@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
+
 import numpy as np
 
 from ....modules.image_unwarping.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    Normalize,
-    ToCHWImage,
-    ToBatch,
-    StaticInfer,
-)
-from ..base import BasicPredictor
+from ..base import BasePredictor
+from ..common import Normalize, ToBatch, ToCHWImage
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 
 
-class WarpPredictor(BasicPredictor):
-    """WarpPredictor that inherits from BasicPredictor."""
+class WarpPredictor(BasePredictor):
+    """WarpPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -66,16 +62,12 @@ class WarpPredictor(BasicPredictor):
         Returns:
             tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
         """
-        preprocessors = {"Read": ReadImage(format="RGB")}
+        preprocessors = {"Read": ReadImage(format="BGR")}
         preprocessors["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
         return preprocessors, infer, postprocessors

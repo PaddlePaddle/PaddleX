@@ -22,10 +22,9 @@ Global:
 Arch:
   name: PPLCNet_x0_25
   class_num: 2
-  pretrained: True
-  use_ssld: True
-  use_last_conv: False
-  stride_list: [[1, 2], [2, 1], [2, 1], [2, 1], [2, 1]]
+  pretrained: False
+  use_ssld: False
+  stride_list: [2, [2, 1], [2, 1], [2, 1], [2, 1]]
  
 # loss function config for traing/eval process
 Loss:
@@ -46,7 +45,7 @@ Optimizer:
     warmup_epoch: 5
   regularizer:
     name: 'L2'
-    coeff: 0.00004
+    coeff: 0.00001
 
 
 # data loader for train and eval

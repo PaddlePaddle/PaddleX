@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List
+from typing import Final, List, Tuple
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel
 
 from ..infra.models import PrimaryOperations
 
@@ -35,7 +34,7 @@ class InferRequest(BaseModel):
 
 
 class DetectedObject(BaseModel):
-    bbox: Annotated[List[float], Field(min_length=9, max_length=9)]
+    bbox: Tuple[float, float, float, float, float, float, float, float, float]
     categoryId: int
     score: float
 

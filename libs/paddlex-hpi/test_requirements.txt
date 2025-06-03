@@ -1,2 +1,0 @@
-pytest >= 8
-shapely >= 2

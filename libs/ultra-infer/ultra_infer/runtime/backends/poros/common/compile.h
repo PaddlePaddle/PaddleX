@@ -84,7 +84,7 @@ private:
                        std::shared_ptr<torch::jit::Graph> &graph);
 
   /**
-   * @brief segement this calculation graph
+   * @brief segment this calculation graph
    *
    * @param [in/out] graph
    * @return  int
@@ -136,7 +136,7 @@ private:
   IEngine *select_engine(const torch::jit::Node *n);
 
   /**
-   * @brief destory
+   * @brief destroy
    *
    * @return  void
    **/

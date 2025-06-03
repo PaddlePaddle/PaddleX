@@ -25,7 +25,7 @@ Rotated object detection is a variant of the object detection module, specifical
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
+<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 <td>78.14</td>
 <td>20.7039</td>
 <td>157.942</td>
@@ -34,26 +34,53 @@ Rotated object detection is a variant of the object detection module, specifical
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+               <li><strong>Test Dataset：</strong> <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
 
 ### 2.1 Local Experience
-> ❗ Before using the rotated object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the rotated object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 #### 2.1.1 Command Line Experience
 * You can quickly experience the rotated object detection pipeline with a single command. Use the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png) and replace `--input` with your local path for prediction.
@@ -68,7 +95,7 @@ paddlex --pipeline rotated_object_detection \
         --device gpu:0 \
 ```
 
-The relevant parameter descriptions can be referred to in the parameter explanations of [2.2.2 Integration via Python Script](#222-integration-via-python-script).
+The relevant parameter descriptions can be referred to in the parameter explanations of [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the results will be printed to the terminal, as follows:
 
@@ -123,15 +150,23 @@ In the above Python script, the following steps were executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for pipeline inference. It supports specifying the specific card number of the GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying the specific card number of the GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, which is only available if the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -157,23 +192,6 @@ In the above Python script, the following steps were executed:
   <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
   <li><b>str</b>: Local path of image or PDF file, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, e.g., network URL of image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., local path: <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with a specific file path)</li>
   <li><b>List</b>: Elements of the list must be of the above types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>The device used for pipeline inference</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: e.g., <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: e.g., <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: e.g., <code>npu:0</code> indicates using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: e.g., <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: e.g., <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: e.g., <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -899,7 +917,6 @@ print_r($result["detectedObjects"]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
-
 ## 4. Custom Development
 If the default model weights provided by the Rotated Object Detection Pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the detection performance in your scenario.
 
@@ -919,73 +936,7 @@ Since the Rotated Object Detection Pipeline includes a rotated object detection 
     <tr>
       <td>Prediction results are not satisfactory</td>
       <td>Rotated Object Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/rotated_object_detection.en.md">Link</a></td>
-    </tr>
-  </tbody>
-</table>
-
-### 4.2 Model Application
-After fine-tuning with your private dataset, you will obtain the local model weight file.
-
-To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the path of the fine-tuned model weights with the corresponding location in the pipeline configuration file:
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = "http://localhost:8080/small-object-detection"; // Service URL
-$image_path = "./demo.jpg";
-$output_image_path = "./out.jpg";
-
-// Encode the local image in Base64
-$image_data = base64_encode(file_get_contents($image_path));
-$payload = array("image" => $image_data); // Base64-encoded file content or image URL
-
-// Call the API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// Process the response data from the API
-$result = json_decode($response, true)["result"];
-file_put_contents($output_image_path, base64_decode($result["image"]));
-echo "Output image saved at " . $output_image_path . "\n";
-echo "\nDetected objects:\n";
-print_r($result["detectedObjects"]);
-
-?&gt;
-</code></pre></details>
-</details>
-<br/>
-
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
-
-
-## 4. Custom Development
-If the default model weights provided by the Rotated Object Detection Pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the detection performance in your scenario.
-
-### 4.1 Model Fine-Tuning
-Since the Rotated Object Detection Pipeline includes a rotated object detection module, if the pipeline's performance is not satisfactory, you can analyze the poorly detected images and refer to the fine-tuning tutorial links in the table below for model fine-tuning.
-
-
-<table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Fine-Tuning Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Prediction results are not satisfactory</td>
-      <td>Rotated Object Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/rotated_object_detection.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/rotated_object_detection.html">Link</a></td>
     </tr>
   </tbody>
 </table>

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import copy
-from pathlib import Path
-from PIL import Image, ImageDraw
 from typing import Dict
-import copy
+
 import numpy as np
-from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, JsonMixin
+from PIL import Image, ImageDraw
+
+from ...common.result import BaseCVResult, HtmlMixin, JsonMixin, XlsxMixin
 
 
 class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
@@ -30,15 +30,6 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         HtmlMixin.__init__(self)
         XlsxMixin.__init__(self)
 
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
-
     def _to_img(self) -> Dict[str, np.ndarray]:
         res_img_dict = {}
         model_settings = self["model_settings"]
@@ -46,12 +37,11 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
             res_img_dict.update(**self["doc_preprocessor_res"].img)
         res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
+        res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
-                copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
+                copy.deepcopy(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
             )
             table_draw = ImageDraw.Draw(table_cell_img)
             rectangle_color = (255, 0, 0)
@@ -105,8 +95,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["layout_det_res"] = self["layout_det_res"].str["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -148,8 +137,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
-        if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
+        data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):

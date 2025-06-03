@@ -1,0 +1,2331 @@
+{
+  "cpu_x64": {
+    "PP-LCNet_x1_0_doc_ori": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet_LCNet_x2_5_face": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileFaceNet": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet50_face": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "CLIP_vit_base_patch16_224": [
+      "openvino",
+      "paddle"
+    ],
+    "CLIP_vit_large_patch14_224": [
+      "openvino",
+      "paddle"
+    ],
+    "ConvNeXt_base_224": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ConvNeXt_base_384": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ConvNeXt_large_224": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ConvNeXt_large_384": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ConvNeXt_small": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ConvNeXt_tiny": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "FasterNet-L": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "FasterNet-M": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "FasterNet-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "FasterNet-T0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "FasterNet-T1": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "FasterNet-T2": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV1_x0_25": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV1_x0_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV1_x0_75": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV1_x1_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV2_x0_25": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV2_x0_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV2_x1_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV2_x1_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV2_x2_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_large_x0_35": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_large_x0_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_large_x0_75": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_large_x1_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_large_x1_25": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_small_x0_35": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_small_x0_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_small_x0_75": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_small_x1_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV3_small_x1_25": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV4_conv_large": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV4_conv_medium": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV4_conv_small": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV4_hybrid_large": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "MobileNetV4_hybrid_medium": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B1": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B2": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B3": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B4": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B6": [
+      "openvino",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-HGNet_base": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNet_small": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNet_tiny": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNetV2_base": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNetV2_large": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNetV2_small": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x0_25": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x0_35": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x0_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x0_75": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x1_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x1_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x2_0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x2_5": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet101": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet101_vd": [
+      "openvino",
+      "paddle",
+      "onnxruntime"
+    ],
+    "ResNet152": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet152_vd": [
+      "openvino",
+      "paddle",
+      "onnxruntime"
+    ],
+    "ResNet18": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet18_vd": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet200_vd": [
+      "openvino",
+      "paddle",
+      "onnxruntime"
+    ],
+    "ResNet34": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet34_vd": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet50": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet50_vd": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "StarNet-S1": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "StarNet-S2": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "StarNet-S3": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "StarNet-S4": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-ShiTuV2_rec_CLIP_vit_base": [
+      "paddle"
+    ],
+    "PP-ShiTuV2_rec_CLIP_vit_large": [
+      "paddle"
+    ],
+    "PP-ShiTuV2_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "CLIP_vit_base_patch16_448_ML": [
+      "openvino",
+      "paddle"
+    ],
+    "PP-HGNetV2-B0_ML": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B4_ML": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-HGNetV2-B6_ML": [
+      "openvino",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x1_0_ML": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ResNet50_ML": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "UVDoc": [
+      "paddle"
+    ],
+    "PP-TinyPose_128x96": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-TinyPose_256x192": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocLayout-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocLayout_plus-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocBlockLayout": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-H_layout_17cls": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-H_layout_3cls": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-ShiTuV2_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-H": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-R18": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-R50": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-X": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x1_0_pedestrian_attribute": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv4_mobile_seal_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv4_server_seal_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "Deeplabv3-R101": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "Deeplabv3-R50": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "Deeplabv3_Plus-R101": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "Deeplabv3_Plus-R50": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "OCRNet_HRNet-W18": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "OCRNet_HRNet-W48": [
+      "openvino",
+      "onnxruntime"
+    ],
+    "SeaFormer_base": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SeaFormer_large": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SeaFormer_small": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SeaFormer_tiny": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-L_wired_table_cell_det": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "RT-DETR-L_wireless_table_cell_det": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x1_0_table_cls": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv3_mobile_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv3_server_det": [
+      "openvino",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_mobile_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv4_server_det": [
+      "paddle",
+      "openvino",
+      "onnxruntime"
+    ],
+    "PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv4_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv4_server_rec_doc": [
+      "paddle",
+      "openvino",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_server_rec": [
+      "paddle",
+      "openvino",
+      "onnxruntime"
+    ],
+    "arabic_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ch_RepSVTR_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ch_SVTRv2_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "chinese_cht_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "cyrillic_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "devanagari_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "en_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "en_PP-OCRv4_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "japan_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ka_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "korean_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "latin_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "ta_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "te_PP-OCRv3_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-LCNet_x0_25_textline_ori": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "AutoEncoder_ad": [
+      "onnxruntime",
+      "openvino",
+      "paddle"
+    ],
+    "DLinear_ad": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "DLinear": [
+      "onnxruntime",
+      "openvino",
+      "paddle"
+    ],
+    "NLinear": [
+      "onnxruntime",
+      "openvino",
+      "paddle"
+    ],
+    "RLinear": [
+      "onnxruntime",
+      "openvino",
+      "paddle"
+    ],
+    "PP-LCNet_x1_0_vehicle_attribute": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-TSM-R50_8frames_uniform": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-TSMv2-LCNetV2_16frames_uniform": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-TSMv2-LCNetV2_8frames_uniform": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "DETR-R50": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "BlazeFace-FPN-SSH": [
+      "paddle"
+    ],
+    "BlazeFace": [
+      "paddle"
+    ],
+    "PP-YOLOE_plus-S_face": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet-S": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE-L_human": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE-S_human": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "STFPM": [
+      "paddle"
+    ],
+    "SwinTransformer_base_patch4_window12_384": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SwinTransformer_base_patch4_window7_224": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SwinTransformer_large_patch4_window12_384": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SwinTransformer_large_patch4_window7_224": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SwinTransformer_small_patch4_window7_224": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SwinTransformer_tiny_patch4_window7_224": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "Cascade-MaskRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNeXt101-vd-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet101-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet101-vd-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet50-vd-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet50": [
+      "paddle"
+    ],
+    "PP-YOLOE_seg-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SOLOv2": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocLayout-M": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocLayout-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-L_layout_17cls": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-L_layout_3cls": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-S_layout_17cls": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-S_layout_3cls": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet_layout_1x_table": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet_layout_1x": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "Cascade-FasterRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "CenterNet-DLA-34": [
+      "paddle"
+    ],
+    "CenterNet-ResNet50": [
+      "paddle"
+    ],
+    "FCOS-ResNet50": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNeXt101-vd-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet101-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet101": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet34-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50-vd-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50": [
+      "paddle"
+    ],
+    "FasterRCNN-Swin-Tiny-FPN": [
+      "paddle"
+    ],
+    "PP-YOLOE_plus-L": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE_plus-M": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE_plus-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE_plus-X": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-L": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-M": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PicoDet-XS": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOX-L": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOX-M": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOX-N": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOX-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOX-T": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOX-X": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "YOLOv3-DarkNet53": [
+      "openvino",
+      "paddle"
+    ],
+    "YOLOv3-MobileNetV3": [
+      "openvino",
+      "paddle"
+    ],
+    "YOLOv3-ResNet50_vd_DCN": [
+      "paddle"
+    ],
+    "PP-YOLOE-R-L": [
+      "paddle"
+    ],
+    "PP-LiteSeg-B": [
+      "paddle"
+    ],
+    "PP-LiteSeg-T": [
+      "paddle"
+    ],
+    "SegFormer-B0": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SegFormer-B1": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SegFormer-B2": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SegFormer-B3": [
+      "openvino",
+      "onnxruntime"
+    ],
+    "SegFormer-B4": [
+      "openvino",
+      "onnxruntime"
+    ],
+    "SegFormer-B5": [
+      "openvino",
+      "onnxruntime"
+    ],
+    "PP-YOLOE_plus_SOD-L": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE_plus_SOD-S": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "SLANeXt_wired": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SLANeXt_wireless": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SLANet_plus": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "SLANet": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "Nonstationary_ad": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PatchTST_ad": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "TimesNet_ad": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "TimesNet_cls": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "Nonstationary": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PatchTST": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "TimesNet": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE-L_vehicle": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE-S_vehicle": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-YOLOE_plus_SOD-largesize-L": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "LaTeX_OCR_rec": [],
+    "UniMERNet": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "Mask-RT-DETR-H": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-L": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-M": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-S": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-X": [
+      "paddle"
+    ],
+    "Co-DINO-R50": [
+      "paddle"
+    ],
+    "Co-DINO-Swin-L": [
+      "paddle"
+    ],
+    "Co-Deformable-DETR-R50": [
+      "paddle"
+    ],
+    "Co-Deformable-DETR-Swin-T": [
+      "paddle"
+    ],
+    "MaskFormer_small": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "MaskFormer_tiny": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "TiDE": [
+      "onnxruntime",
+      "openvino",
+      "paddle"
+    ],
+    "YOWO": [
+      "paddle"
+    ],
+    "BEVFusion": [],
+    "SAM-H_point": [
+      "paddle"
+    ],
+    "SAM-H_box": [
+      "paddle"
+    ],
+    "GroundingDINO-T": [
+      "paddle"
+    ],
+    "YOLO-Worldv2-L": [
+      "paddle"
+    ],
+    "PP-OCRv5_server_rec": [
+      "paddle",
+      "openvino",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_mobile_rec": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv5_server_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv5_mobile_det": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-M": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-S": [
+      "onnxruntime",
+      "paddle"
+    ]
+  },
+  "gpu_cuda118_cudnn89": {
+    "PP-LCNet_x1_0_doc_ori": [
+      "tensorrt_fp16",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet_LCNet_x2_5_face": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileFaceNet": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "ResNet50_face": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "CLIP_vit_base_patch16_224": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16"
+    ],
+    "CLIP_vit_large_patch14_224": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16"
+    ],
+    "ConvNeXt_base_224": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime",
+      "tensorrt"
+    ],
+    "ConvNeXt_base_384": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime",
+      "tensorrt"
+    ],
+    "ConvNeXt_large_224": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime",
+      "tensorrt"
+    ],
+    "ConvNeXt_large_384": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime",
+      "tensorrt"
+    ],
+    "ConvNeXt_small": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime",
+      "tensorrt"
+    ],
+    "ConvNeXt_tiny": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime",
+      "tensorrt"
+    ],
+    "FasterNet-L": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "FasterNet-M": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "FasterNet-S": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "FasterNet-T0": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "FasterNet-T1": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "FasterNet-T2": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV1_x0_25": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV1_x0_5": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV1_x0_75": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV1_x1_0": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV2_x0_25": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV2_x0_5": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV2_x1_0": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV2_x1_5": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV2_x2_0": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV3_large_x0_35": [
+      "tensorrt_fp16",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV3_large_x0_5": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV3_large_x0_75": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV3_large_x1_0": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV3_large_x1_25": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV3_small_x0_35": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV3_small_x0_5": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV3_small_x0_75": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV3_small_x1_0": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV3_small_x1_25": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV4_conv_large": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV4_conv_medium": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "MobileNetV4_conv_small": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV4_hybrid_large": [
+      "tensorrt_fp16",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "MobileNetV4_hybrid_medium": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16"
+    ],
+    "PP-HGNetV2-B0": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B1": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B2": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B3": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B4": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B5": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B6": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNet_base": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNet_small": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNet_tiny": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-LCNetV2_base": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-LCNetV2_large": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-LCNetV2_small": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x0_25": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x0_35": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x0_5": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x0_75": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x1_0": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x1_5": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x2_0": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x2_5": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "ResNet101": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet101_vd": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet152": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet152_vd": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet18": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "ResNet18_vd": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "ResNet200_vd": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet34": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet34_vd": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ResNet50": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "ResNet50_vd": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "StarNet-S1": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "StarNet-S2": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "StarNet-S3": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "StarNet-S4": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-ShiTuV2_rec_CLIP_vit_base": [
+      "tensorrt",
+      "paddle_tensorrt"
+    ],
+    "PP-ShiTuV2_rec_CLIP_vit_large": [
+      "paddle",
+      "tensorrt"
+    ],
+    "PP-ShiTuV2_rec": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "CLIP_vit_base_patch16_448_ML": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16"
+    ],
+    "PP-HGNetV2-B0_ML": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B4_ML": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-HGNetV2-B6_ML": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x1_0_ML": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "ResNet50_ML": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "UVDoc": [
+      "paddle"
+    ],
+    "PP-TinyPose_128x96": [
+      "tensorrt",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-TinyPose_256x192": [
+      "tensorrt",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-DocLayout-L": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "RT-DETR-H_layout_17cls": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "RT-DETR-H_layout_3cls": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-ShiTuV2_det": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "RT-DETR-H": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "RT-DETR-L": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "RT-DETR-R18": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "RT-DETR-R50": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "RT-DETR-X": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x1_0_pedestrian_attribute": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_mobile_seal_det": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_server_seal_det": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "Deeplabv3-R101": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "Deeplabv3-R50": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "Deeplabv3_Plus-R101": [
+      "tensorrt_fp16",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "Deeplabv3_Plus-R50": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "OCRNet_HRNet-W18": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "OCRNet_HRNet-W48": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "SeaFormer_base": [
+      "onnxruntime",
+      "paddle",
+      "tensorrt"
+    ],
+    "SeaFormer_large": [
+      "onnxruntime",
+      "paddle",
+      "tensorrt"
+    ],
+    "SeaFormer_small": [
+      "onnxruntime",
+      "paddle",
+      "tensorrt"
+    ],
+    "SeaFormer_tiny": [
+      "onnxruntime",
+      "paddle",
+      "tensorrt"
+    ],
+    "RT-DETR-L_wired_table_cell_det": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "RT-DETR-L_wireless_table_cell_det": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x1_0_table_cls": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv3_mobile_det": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-OCRv3_server_det": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_mobile_det": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_server_det": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv3_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_server_rec_doc": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-OCRv4_server_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "arabic_PP-OCRv3_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ch_RepSVTR_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ch_SVTRv2_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "chinese_cht_PP-OCRv3_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "cyrillic_PP-OCRv3_mobile_rec": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "devanagari_PP-OCRv3_mobile_rec": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "en_PP-OCRv3_mobile_rec": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "en_PP-OCRv4_mobile_rec": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "japan_PP-OCRv3_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "ka_PP-OCRv3_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "korean_PP-OCRv3_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "latin_PP-OCRv3_mobile_rec": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "ta_PP-OCRv3_mobile_rec": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "te_PP-OCRv3_mobile_rec": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-LCNet_x0_25_textline_ori": [
+      "tensorrt",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "AutoEncoder_ad": [
+      "tensorrt",
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "DLinear_ad": [
+      "tensorrt_fp16",
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "DLinear": [
+      "tensorrt_fp16",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "NLinear": [
+      "tensorrt",
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "RLinear": [
+      "tensorrt_fp16",
+      "onnxruntime",
+      "paddle_tensorrt_fp16"
+    ],
+    "PP-LCNet_x1_0_vehicle_attribute": [
+      "tensorrt",
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-TSM-R50_8frames_uniform": [
+      "tensorrt",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-TSMv2-LCNetV2_16frames_uniform": [
+      "tensorrt_fp16",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-TSMv2-LCNetV2_8frames_uniform": [
+      "tensorrt_fp16",
+      "paddle",
+      "onnxruntime"
+    ],
+    "DETR-R50": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "BlazeFace-FPN-SSH": [
+      "paddle_tensorrt_fp16"
+    ],
+    "BlazeFace": [
+      "paddle_tensorrt"
+    ],
+    "PP-YOLOE_plus-S_face": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-FormulaNet-S": [
+      "paddle"
+    ],
+    "PP-YOLOE-L_human": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-YOLOE-S_human": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "STFPM": [
+      "paddle_tensorrt_fp16"
+    ],
+    "SwinTransformer_base_patch4_window12_384": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "SwinTransformer_base_patch4_window7_224": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "SwinTransformer_large_patch4_window12_384": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "SwinTransformer_large_patch4_window7_224": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "SwinTransformer_small_patch4_window7_224": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "SwinTransformer_tiny_patch4_window7_224": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "Cascade-MaskRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNeXt101-vd-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet101-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet101-vd-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet50-vd-FPN": [
+      "paddle"
+    ],
+    "MaskRCNN-ResNet50": [
+      "paddle"
+    ],
+    "PP-YOLOE_seg-S": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "SOLOv2": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-DocLayout-M": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-DocLayout-S": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-L_layout_17cls": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-L_layout_3cls": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-S_layout_17cls": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-S_layout_3cls": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet_layout_1x_table": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet_layout_1x": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "Cascade-FasterRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "CenterNet-DLA-34": [
+      "paddle"
+    ],
+    "CenterNet-ResNet50": [
+      "paddle"
+    ],
+    "FCOS-ResNet50": [
+      "paddle_tensorrt_fp16"
+    ],
+    "FasterRCNN-ResNeXt101-vd-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet101-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet101": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet34-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50-vd-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50-vd-SSLDv2-FPN": [
+      "paddle"
+    ],
+    "FasterRCNN-ResNet50": [
+      "paddle"
+    ],
+    "FasterRCNN-Swin-Tiny-FPN": [
+      "paddle"
+    ],
+    "PP-YOLOE_plus-L": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-YOLOE_plus-M": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-YOLOE_plus-S": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-YOLOE_plus-X": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-L": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-M": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-S": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PicoDet-XS": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "YOLOX-L": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "YOLOX-M": [
+      "paddle_tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "YOLOX-N": [
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "YOLOX-S": [
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "YOLOX-T": [
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "YOLOX-X": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "YOLOv3-DarkNet53": [
+      "paddle_tensorrt"
+    ],
+    "YOLOv3-MobileNetV3": [
+      "paddle_tensorrt_fp16"
+    ],
+    "YOLOv3-ResNet50_vd_DCN": [
+      "paddle_tensorrt"
+    ],
+    "PP-YOLOE-R-L": [
+      "paddle_tensorrt"
+    ],
+    "PP-LiteSeg-B": [
+      "paddle"
+    ],
+    "PP-LiteSeg-T": [
+      "paddle_tensorrt"
+    ],
+    "SegFormer-B0": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SegFormer-B1": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SegFormer-B2": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SegFormer-B3": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SegFormer-B4": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SegFormer-B5": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-YOLOE_plus_SOD-L": [
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "PP-YOLOE_plus_SOD-S": [
+      "onnxruntime",
+      "paddle_tensorrt_fp16"
+    ],
+    "SLANeXt_wired": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SLANeXt_wireless": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "SLANet_plus": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "SLANet": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "Nonstationary_ad": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "PatchTST_ad": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "TimesNet_ad": [
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "TimesNet_cls": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "Nonstationary": [
+      "onnxruntime",
+      "paddle_tensorrt"
+    ],
+    "PatchTST": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "TimesNet": [
+      "onnxruntime",
+      "paddle_tensorrt_fp16"
+    ],
+    "PP-YOLOE-L_vehicle": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-YOLOE-S_vehicle": [
+      "paddle_tensorrt",
+      "onnxruntime"
+    ],
+    "PP-FormulaNet-L": [
+      "paddle"
+    ],
+    "PP-YOLOE_plus_SOD-largesize-L": [
+      "onnxruntime",
+      "paddle"
+    ],
+    "LaTeX_OCR_rec": [
+      "paddle"
+    ],
+    "UniMERNet": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-H": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-L": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-M": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-S": [
+      "paddle"
+    ],
+    "Mask-RT-DETR-X": [
+      "paddle"
+    ],
+    "Co-DINO-R50": [
+      "paddle"
+    ],
+    "Co-DINO-Swin-L": [
+      "paddle"
+    ],
+    "Co-Deformable-DETR-R50": [
+      "paddle"
+    ],
+    "Co-Deformable-DETR-Swin-T": [
+      "paddle"
+    ],
+    "MaskFormer_small": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "MaskFormer_tiny": [
+      "paddle",
+      "onnxruntime"
+    ],
+    "TiDE": [
+      "paddle"
+    ],
+    "YOWO": [
+      "paddle"
+    ],
+    "BEVFusion": [
+      "paddle"
+    ],
+    "SAM-H_point": [
+      "paddle"
+    ],
+    "SAM-H_box": [
+      "paddle"
+    ],
+    "GroundingDINO-T": [
+      "paddle"
+    ],
+    "YOLO-Worldv2-L": [
+      "paddle"
+    ],
+    "PP-DocBlockLayout": [
+      "tensorrt",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-DocLayout_plus-L": [
+      "tensorrt_fp16",
+      "paddle",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_server_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt_fp16",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_mobile_rec": [
+      "paddle_tensorrt_fp16",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-OCRv5_server_det": [
+      "tensorrt",
+      "onnxruntime",
+      "paddle"
+    ],
+    "PP-OCRv5_mobile_det": [
+      "paddle_tensorrt",
+      "tensorrt",
+      "onnxruntime"
+    ],
+    "PP-FormulaNet_plus-L": [
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-M": [
+      "paddle"
+    ],
+    "PP-FormulaNet_plus-S": [
+      "paddle"
+    ]
+  }
+}

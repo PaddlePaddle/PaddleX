@@ -19,7 +19,7 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
    </tr>
    <tr>
      <td>whisper_large</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_large.tar">whisper_large</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_large.tar">whisper_large</a></td>
      <td>680kh</td>
      <td>5.8G</td>
      <td>2.7 (Librispeech)</td>
@@ -27,28 +27,28 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
    </tr>
    <tr>
      <td>whisper_medium</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_medium.tar">whisper_medium</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_medium.tar">whisper_medium</a></td>
      <td>680kh</td>
      <td>2.9G</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_small.tar">whisper_small</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_small.tar">whisper_small</a></td>
      <td>680kh</td>
      <td>923M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_base</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_base.tar">whisper_base</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_base.tar">whisper_base</a></td>
      <td>680kh</td>
      <td>277M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_tiny</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_tiny.tar">whisper_tiny</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">whisper_tiny</a></td>
      <td>680kh</td>
      <td>145M</td>
      <td>-</td>
@@ -58,7 +58,7 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
 ## 2. Quick Start
 PaddleX supports experiencing the multilingual speech recognition pipeline locally using the command line or Python.
 
-Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `speech`.
 
 ### 2.1 Local Experience
 
@@ -123,6 +123,20 @@ In the above Python script, the following steps are executed:
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used. Not supported for now.</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration. Not supported for now.</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -147,23 +161,6 @@ In the above Python script, the following steps are executed:
   <li><b>File path</b>, such as the local path of an audio file: <code>/root/data/audio.wav</code></li>
   <li><b>URL link</b>, such as the network URL of an audio file: <a href="https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav">Example</a></li>
   <li><b>File type</b>, support wav and pcm audio type.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>The inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: such as <code>cpu</code> indicates using the CPU for inference;</li>
-  <li><b>GPU</b>: such as <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: such as <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: such as <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: such as <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: such as <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for the pipeline will be used. During initialization, the local GPU device 0 will be prioritized. If it is not available, the CPU device will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -568,7 +565,7 @@ Since the general video classification pipeline only includes a video classifica
     <tr>
       <td>Inaccurate video classification</td>
       <td>Video Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/video_modules/video_classification.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_classification.html">Link</a></td>
     </tr>
 
   </tbody>

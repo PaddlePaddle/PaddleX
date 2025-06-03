@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,11 @@
 # limitations under the License.
 
 import os
-import json
-import time
-from pathlib import Path
 import tarfile
+from pathlib import Path
 
+from ...utils.flags import FLAGS_json_format_model
 from ..base import BaseTrainer
-from ...utils.config import AttrDict
 from .model_list import MODELS
 
 
@@ -35,9 +33,9 @@ class TSADTrainer(BaseTrainer):
         self.update_config()
         self.dump_config()
         train_args = self.get_train_kwargs()
-        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
-            "FLAGS_json_format_model"
-        ) in ["1", "True"]
+        export_with_pir = (
+            self.global_config.get("export_with_pir", False) or FLAGS_json_format_model
+        )
         train_args.update(
             {
                 "uniform_output_enabled": self.train_config.get(
@@ -110,4 +108,6 @@ training!"
         train_args = {"device": self.get_device(using_device_number=1)}
         if self.global_config.output is not None:
             train_args["save_dir"] = self.global_config.output
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         return train_args

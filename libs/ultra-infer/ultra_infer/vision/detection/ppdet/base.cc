@@ -83,7 +83,7 @@ bool PPDetBase::BatchPredict(const std::vector<cv::Mat> &imgs,
 }
 
 bool PPDetBase::CheckArch() {
-  // Add "PicoDet" arch for backward compability with the
+  // Add "PicoDet" arch for backward compatibility with the
   // old ppdet model, such as picodet from PaddleClas
   // PP-ShiTuV2 pipeline.
   std::vector<std::string> archs = {

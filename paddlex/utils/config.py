@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import copy
 import argparse
+import copy
+import os
+
 import yaml
+
 from . import logging
-from .errors import raise_key_not_found_error
 from .file_interface import custom_open
 
 __all__ = ["get_config"]
@@ -30,7 +31,7 @@ class AttrDict(dict):
         if key in self:
             return self[key]
         else:
-            raise raise_key_not_found_error(key, self)
+            raise AttributeError(key)
 
     def __setattr__(self, key, value):
         if key in self.__dict__:
@@ -71,7 +72,7 @@ def parse_config(cfg_file):
 def print_dict(d, delimiter=0):
     """
     Recursively visualize a dict and
-    indenting acrrording by the relationship of keys.
+    indenting according by the relationship of keys.
     """
     placeholder = "-" * 60
     for k, v in sorted(d.items()):
@@ -125,7 +126,7 @@ def override(dl, ks, v):
             return s
 
     assert isinstance(dl, (list, dict)), "{} should be a list or a dict"
-    assert len(ks) > 0, "lenght of keys should larger than 0"
+    assert len(ks) > 0, "length of keys should larger than 0"
     if isinstance(dl, list):
         k = parse_str(ks[0])
         if len(ks) == 1:

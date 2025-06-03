@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
-from scipy.ndimage import rotate
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
-from ..base import BasePipeline
-from .result import DocPreprocessorResult
+
 from ....utils import logging
-from ...common.reader import ReadImage
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
+from ..base import BasePipeline
+from ..components import rotate_image
+from .result import DocPreprocessorResult
 
 
-class DocPreprocessorPipeline(BasePipeline):
+class _DocPreprocessorPipeline(BasePipeline):
     """Doc Preprocessor Pipeline"""
-
-    entities = "doc_preprocessor"
 
     def __init__(
         self,
@@ -34,6 +37,7 @@ class DocPreprocessorPipeline(BasePipeline):
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the doc preprocessor pipeline.
 
@@ -41,10 +45,16 @@ class DocPreprocessorPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_orientation_classify = config.get(
             "use_doc_orientation_classify", True
@@ -64,27 +74,8 @@ class DocPreprocessorPipeline(BasePipeline):
             )
             self.doc_unwarping_model = self.create_model(doc_unwarping_config)
 
-        self.batch_sampler = ImageBatchSampler(batch_size=1)
+        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
-
-    def rotate_image(self, image_array: np.ndarray, rotate_angle: float) -> np.ndarray:
-        """
-        Rotate the given image array by the specified angle.
-
-        Args:
-            image_array (np.ndarray): The input image array to be rotated.
-            rotate_angle (float): The angle in degrees by which to rotate the image.
-
-        Returns:
-            np.ndarray: The rotated image array.
-
-        Raises:
-            AssertionError: If rotate_angle is not in the range [0, 360).
-        """
-        assert (
-            rotate_angle >= 0 and rotate_angle < 360
-        ), "rotate_angle must in [0-360), but get {rotate_angle}."
-        return rotate(image_array, rotate_angle, reshape=True)
 
     def check_model_settings_valid(self, model_settings: Dict) -> bool:
         """
@@ -162,29 +153,57 @@ class DocPreprocessorPipeline(BasePipeline):
         if not self.check_model_settings_valid(model_settings):
             yield {"error": "the input params for model settings are invalid!"}
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            image_array = self.img_reader(batch_data.instances)[0]
+        for _, batch_data in enumerate(self.batch_sampler(input)):
+            image_arrays = self.img_reader(batch_data.instances)
 
             if model_settings["use_doc_orientation_classify"]:
-                pred = next(self.doc_ori_classify_model(image_array))
-                angle = int(pred["label_names"][0])
-                rot_img = self.rotate_image(image_array, angle)
+                preds = list(self.doc_ori_classify_model(image_arrays))
+                angles = []
+                rot_imgs = []
+                for img, pred in zip(image_arrays, preds):
+                    angle = int(pred["label_names"][0])
+                    angles.append(angle)
+                    rot_img = rotate_image(img, angle)
+                    rot_imgs.append(rot_img)
             else:
-                angle = -1
-                rot_img = image_array
+                angles = [-1 for _ in range(len(image_arrays))]
+                rot_imgs = image_arrays
 
             if model_settings["use_doc_unwarping"]:
-                output_img = next(self.doc_unwarping_model(rot_img))["doctr_img"]
+                output_imgs = [
+                    item["doctr_img"][:, :, ::-1]
+                    for item in self.doc_unwarping_model(rot_imgs)
+                ]
             else:
-                output_img = rot_img
+                output_imgs = rot_imgs
 
-            single_img_res = {
-                "input_path": batch_data.input_paths[0],
-                "page_index": batch_data.page_indexes[0],
-                "input_img": image_array,
-                "model_settings": model_settings,
-                "angle": angle,
-                "rot_img": rot_img,
-                "output_img": output_img,
-            }
-            yield DocPreprocessorResult(single_img_res)
+            for input_path, page_index, image_array, angle, rot_img, output_img in zip(
+                batch_data.input_paths,
+                batch_data.page_indexes,
+                image_arrays,
+                angles,
+                rot_imgs,
+                output_imgs,
+            ):
+                single_img_res = {
+                    "input_path": input_path,
+                    "page_index": page_index,
+                    "input_img": image_array,
+                    "model_settings": model_settings,
+                    "angle": angle,
+                    "rot_img": rot_img,
+                    "output_img": output_img,
+                }
+                yield DocPreprocessorResult(single_img_res)
+
+
+@pipeline_requires_extra("ocr")
+class DocPreprocessorPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "doc_preprocessor"
+
+    @property
+    def _pipeline_cls(self):
+        return _DocPreprocessorPipeline
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)

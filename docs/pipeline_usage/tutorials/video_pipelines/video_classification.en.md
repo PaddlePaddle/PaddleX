@@ -21,7 +21,7 @@ The general video classification pipeline is used to solve video classification 
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Training Model</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -30,34 +30,61 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 </tr>
 
 <tr>
-<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Training Model</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2 is a lightweight video classification model optimized based on the CPU-oriented model PP-LCNetV2. It undergoes model tuning in seven aspects: backbone network and pre-trained model selection, data augmentation, TSM module tuning, input frame number optimization, decoding speed optimization, DML distillation, and LTA module. Under the center crop evaluation method, it achieves an accuracy of 75.16%, with an inference speed of only 456ms on the CPU for a 10-second video input.</td>
 </tr>
 <tr>
-<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Training Model</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
 
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/en/dataset/k400.md">K400</a> validation set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong><a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/en/dataset/k400.md">K400</a> validation set.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
@@ -65,7 +92,7 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 PaddleX supports experiencing the pipeline's effects locally using command line or Python.
 
-Before using the general video classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the PaddleX Local Installation Guide.
+Before using the general video classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the PaddleX Local Installation Guide. If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `video`.
 
 #### 2.1 Command Line Experience
 You can quickly experience the video classification pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4) and replace `--input` with your local path for prediction.
@@ -143,9 +170,17 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, which is only available when the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -171,23 +206,6 @@ In the above Python script, the following steps are executed:
 <ul>
   <li><b>str</b>: The local path of the video file, such as <code>/root/data/video.mp4</code>; <b>URL link</b>, such as the network URL of the video file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">Example</a>; <b>Local directory</b>, the directory must contain the videos to be predicted, such as the local path: <code>/root/data/</code></li></url>
   <li><b>List</b>: The elements of the list must be of the above types, such as <code>[\"/root/data/video1.mp4\", \"/root/data/video2.mp4\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>The inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: For example, <code>cpu</code> indicates using the CPU for inference;</li>
-  <li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the value initialized for the pipeline will be used by default. During initialization, the local GPU 0 will be prioritized. If it is not available, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -421,7 +439,7 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> mehod.</td>
+<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -813,7 +831,7 @@ Since the general video classification pipeline only includes a video classifica
     <tr>
       <td>Inaccurate video classification</td>
       <td>Video Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/video_modules/video_classification.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_classification.html">Link</a></td>
     </tr>
 
   </tbody>

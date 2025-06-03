@@ -22,33 +22,60 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 </thead>
 <tbody>
 <tr>
-<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td>
+<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td>
 <td>96.2</td>
 <td>21.5 M</td>
 </tr>
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: The above accuracy metrics are the average anomaly scores on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> validation set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong>The above accuracy metrics are the average anomaly scores on the <b><a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a></b> validation set.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
 PaddleX provides pre-trained models for the anomaly detection pipeline, allowing for quick experience of its effects. You can use the command line or Python to experience the image anomaly detection pipeline locally.
 
-Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 ### 2.1 Command-Line Experience
 You can quickly experience the image anomaly detection pipeline with just one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png), and replace `--input` with the local path for prediction.
@@ -59,7 +86,7 @@ Note: Due to network issues, the above URL could not be successfully parsed. If 
 paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0  --save_path ./output
 ```
 
-The relevant parameter descriptions can be found in the [2.1.2 Python Script Integration](#212-python脚本方式集成) section.
+The relevant parameter descriptions can be found in the [2.1.2 Python Script Integration](#212-python脚本方式集成) section. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the results will be printed to the terminal as follows:
 
@@ -114,15 +141,23 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available when the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -149,23 +184,6 @@ In the above Python script, the following steps are executed:
   <li><b>Python Var</b>: Such as <code>numpy.ndarray</code> representing image data</li>
   <li><b>str</b>: Such as the local path of the image file: <code>/root/data/img.jpg</code>; <b>such as URL link</b>, such as the network URL of the image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png">Example</a>; <b>such as local directory</b>, the directory must contain the images to be predicted, such as the local path: <code>/root/data/</code></li>
   <li><b>List</b>: The list elements must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>Pipeline inference device</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Such as <code>cpu</code> indicating using CPU for inference;</li>
-  <li><b>GPU</b>: Such as <code>gpu:0</code> indicating using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: Such as <code>npu:0</code> indicating using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: Such as <code>xpu:0</code> indicating using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: Such as <code>mlu:0</code> indicating using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: Such as <code>dcu:0</code> indicating using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -798,7 +816,7 @@ You can choose the appropriate deployment method based on your needs to integrat
 If the default model weights provided by the image anomaly detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>further fine-tune the existing models using your own domain-specific or application-specific data</b> to improve the recognition performance of the image anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the pipeline's performance does not meet expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/anomaly_detection.en.md) section in the [Unsupervised Anomaly Detection Module Development Guide](../../../module_usage/tutorials/cv_modules/anomaly_detection.en.md) and use your private dataset to fine-tune the image anomaly detection model.
+Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the pipeline's performance does not meet expectations, you need to refer to the <b>Custom Development</b> section in the [Unsupervised Anomaly Detection Module Development Guide](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/anomaly_detection.html) and use your private dataset to fine-tune the image anomaly detection model.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain the local model weight file.

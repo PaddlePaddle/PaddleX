@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,10 @@
 # limitations under the License.
 
 
-import os
 import shutil
 from pathlib import Path
 
 from ..base import BaseTrainer
-from ...utils.config import AttrDict
 from .model_list import MODELS
 
 
@@ -103,4 +101,5 @@ class TextRecTrainer(BaseTrainer):
         return {
             "device": self.get_device(),
             "dy2st": self.train_config.get("dy2st", False),
+            "amp": self.train_config.get("amp", "OFF"),  # amp support 'O1', 'O2', 'OFF'
         }

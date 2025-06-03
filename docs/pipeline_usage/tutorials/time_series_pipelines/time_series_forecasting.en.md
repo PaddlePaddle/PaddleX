@@ -22,43 +22,43 @@ Time series forecasting is a technique that utilizes historical data to predict 
 </thead>
 <tbody>
 <tr>
-<td>DLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
+<td>DLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.382</td>
 <td>0.394</td>
 <td>72K</td>
 </tr>
 <tr>
-<td>NLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td>
+<td>NLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.386</td>
 <td>0.392</td>
 <td>40K</td>
 </tr>
 <tr>
-<td>Nonstationary</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
+<td>Nonstationary</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
 <td>0.600</td>
 <td>0.515</td>
 <td>55.5 M</td>
 </tr>
 <tr>
-<td>PatchTST</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
+<td>PatchTST</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
 <td>0.385</td>
 <td>0.397</td>
 <td>2.0M</td>
 </tr>
 <tr>
-<td>RLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
+<td>RLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.384</td>
 <td>0.392</td>
 <td>40K</td>
 </tr>
 <tr>
-<td>TiDE</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
+<td>TiDE</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
 <td>0.405</td>
 <td>0.412</td>
 <td>31.7M</td>
 </tr>
 <tr>
-<td>TimesNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
+<td>TimesNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
 <td>0.417</td>
 <td>0.431</td>
 <td>4.9M</td>
@@ -66,21 +66,48 @@ Time series forecasting is a technique that utilizes historical data to predict 
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a>.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                  <li><strong>Test Dataset：</strong><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a>.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
 The pre-trained model pipelines provided by PaddleX allow for quick experience of their effects. You can experience the effects of the General Time Series Forecasting Pipeline online or locally using command line or Python.
@@ -96,7 +123,7 @@ Note: Due to the close relationship between time series data and scenarios, the 
 
 ### 2.2 Local Experience
 
-Before using the general time-series forecasting pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the general time-series forecasting pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ts`.
 
 #### 2.2.1 Command Line Experience
 You can quickly experience the time-series forecasting pipeline with a single command. Use [the test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv) and replace `--input` with your local path for prediction.
@@ -186,9 +213,17 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available when the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -215,23 +250,6 @@ In the above Python script, the following steps are executed:
   <li><b>Python Var</b>: Time-series data represented by <code>pandas.DataFrame</code>.</li>
   <li><b>str</b>: Local path to the time-series file (e.g., <code>/root/data/ts.csv</code>); <b>URL link</b>, such as the network URL of the time-series file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv">Example</a>; <b>Local directory</b>, which should contain the time-series to be predicted (e.g., <code>/root/data/</code>).</li>
   <li><b>List</b>: Elements of the list must be of the above types, such as <code>[pandas.DataFrame, pandas.DataFrame]</code>, <code>["/root/data/ts1.csv", "/root/data/ts2.csv"]</code>, <code>["/root/data1", "/root/data2"]</code>.</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>The device for pipeline inference.</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Use CPU for inference (e.g., <code>cpu</code>).</li>
-  <li><b>GPU</b>: Use the specified GPU for inference (e.g., <code>gpu:0</code> for the first GPU).</li>
-  <li><b>NPU</b>: Use the specified NPU for inference (e.g., <code>npu:0</code> for the first NPU).</li>
-  <li><b>XPU</b>: Use the specified XPU for inference (e.g., <code>xpu:0</code> for the first XPU).</li>
-  <li><b>MLU</b>: Use the specified MLU for inference (e.g., <code>mlu:0</code> for the first MLU).</li>
-  <li><b>DCU</b>: Use the specified DCU for inference (e.g., <code>dcu:0</code> for the first DCU).</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value used during pipeline initialization will be applied. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -477,6 +495,11 @@ Below are the API references for basic serving deployment and examples of multi-
 </thead>
 <tbody>
 <tr>
+<td><code>image</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The image of time series forecasting result. The image is in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
 <td><code>csv</code></td>
 <td><code>string</code></td>
 <td>The time-series forecasting result in CSV format. Encoded in UTF-8+Base64.</td>
@@ -485,7 +508,8 @@ Below are the API references for basic serving deployment and examples of multi-
 </table>
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
-&quot;csv&quot;: &quot;xxxxxx&quot;
+"csv": "xxxxxx",
+"image": "xxxxxx"
 }
 </code></pre></details>
 
@@ -499,6 +523,7 @@ import requests
 
 API_URL = "http://localhost:8080/time-series-forecasting"  # Service URL
 csv_path = "./test.csv"
+output_image_path = "./out.jpg"
 output_csv_path = "./out.csv"
 
 # Encode the local CSV file using Base64
@@ -514,6 +539,9 @@ response = requests.post(API_URL, json=payload)
 # Process the returned data
 assert response.status_code == 200
 result = response.json()["result"]
+with open(output_image_path, "wb") as f:
+    f.write(base64.b64decode(result["image"]))
+print(f"Output image saved at  {output_image_path}")
 with open(output_csv_path, "wb") as f:
     f.write(base64.b64decode(result["csv"]))
 print(f"Output time-series data saved at {output_csv_path}")
@@ -529,6 +557,7 @@ print(f"Output time-series data saved at {output_csv_path}")
 int main() {
     httplib::Client client("localhost:8080");
     const std::string csvPath = "./test.csv";
+    const std::string outputImagePath = "./out.jpg";
     const std::string outputCsvPath = "./out.csv";
 
     httplib::Headers headers = {
@@ -560,6 +589,18 @@ int main() {
         auto result = jsonResponse["result"];
 
         // Save the data
+        std::string encodedImage = result["image"];
+        std::string decodedString = base64::from_base64(encodedImage);
+        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
+        if (outputImage.is_open()) {
+            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
+            outputImage.close();
+            std::cout << "Output image data saved at " << outputImagePath << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
+        }
+
         std::string decodedString;
         encodedCsv = result["csv"];
         decodedString = base64::from_base64(encodedCsv);
@@ -596,9 +637,10 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/time-series-forecasting&quot;;
-        String csvPath = &quot;./test.csv&quot;;
-        String outputCsvPath = &quot;./out.csv&quot;;
+        String API_URL = "http://localhost:8080/time-series-forecasting";
+        String csvPath = "./test.csv";
+        String outputImagePath = "./out.jpg";
+        String outputCsvPath = "./out.csv";
 
         // Encode the local CSV file using Base64
         File file = new File(csvPath);
@@ -607,11 +649,11 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;csv&quot;, csvData);
+        params.put("csv", csvData);
 
         // Create an OkHttpClient instance
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
+        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
         Request request = new Request.Builder()
                 .url(API_URL)
@@ -623,17 +665,24 @@ public class Main {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
+                JsonNode result = resultNode.get("result");
 
                 // Save the returned data
-                String base64Csv = result.get(&quot;csv&quot;).asText();
+                String base64Image = result.get("image").asText();
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
+                    fos.write(imageBytes);
+                }
+                System.out.println("Output image data saved at " + outputImagePath);
+
+                String base64Csv = result.get("csv").asText();
                 byte[] csvBytes = Base64.getDecoder().decode(base64Csv);
                 try (FileOutputStream fos = new FileOutputStream(outputCsvPath)) {
                     fos.write(csvBytes);
                 }
-                System.out.println(&quot;Output time-series data saved at &quot; + outputCsvPath);
+                System.out.println("Output time-series data saved at " + outputCsvPath);
             } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
+                System.err.println("Request failed with code: " + response.code());
             }
         }
     }
@@ -645,45 +694,46 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/time-series-forecasting&quot;
-    csvPath := &quot;./test.csv&quot;;
-    outputCsvPath := &quot;./out.csv&quot;;
+    API_URL := "http://localhost:8080/time-series-forecasting"
+    csvPath := "./test.csv";
+    outputImagePath := "./out.jpg";
+    outputCsvPath := "./out.csv";
 
     // Read the csv file and encode it in Base64
     csvBytes, err := ioutil.ReadFile(csvPath)
     if err != nil {
-        fmt.Println(&quot;Error reading csv file:&quot;, err)
+        fmt.Println("Error reading csv file:", err)
         return
     }
     csvData := base64.StdEncoding.EncodeToString(csvBytes)
 
-    payload := map[string]string{&quot;csv&quot;: csvData} // Base64-encoded file content
+    payload := map[string]string{"csv": csvData} // Base64-encoded file content
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
     // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
@@ -691,33 +741,46 @@ func main() {
     // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Csv string `json:&quot;csv&quot;`
-        } `json:&quot;result&quot;`
+            Csv string `json:"csv"`
+            Image string `json:"image"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     // Decode the Base64-encoded csv data and save it as a file
+    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
+    if err != nil {
+        fmt.Println("Error decoding Base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
+    fmt.Printf("Output image data saved at %s.jpg", outputImagePath)
+
     outputCsvData, err := base64.StdEncoding.DecodeString(respData.Result.Csv)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 csv data:&quot;, err)
+        fmt.Println("Error decoding base64 csv data:", err)
         return
     }
     err = ioutil.WriteFile(outputCsvPath, outputCsvData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing csv to file:&quot;, err)
+        fmt.Println("Error writing csv to file:", err)
         return
     }
-    fmt.Printf(&quot;Output time-series data saved at %s.csv&quot;, outputCsvPath)
+    fmt.Printf("Output time-series data saved at %s.csv", outputCsvPath)
 }
 </code></pre></details>
 
@@ -735,6 +798,7 @@ class Program
 {
     static readonly string API_URL = "http://localhost:8080/time-series-forecasting";
     static readonly string csvPath = "./test.csv";
+    static readonly string outputImagePath = "./out.jpg";
     static readonly string outputCsvPath = "./out.csv";
 
     static async Task Main(string[] args)
@@ -756,6 +820,12 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
+        // Save the image file
+        string base64Image = jsonResponse["result"]["image"].ToString();
+        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
+        File.WriteAllBytes(outputImagePath, outputImageBytes);
+        Console.WriteLine($"Output image data saved at {outputImagePath}");
+
         // Save the CSV file
         string base64Csv = jsonResponse["result"]["csv"].ToString();
         byte[] outputCsvBytes = Convert.FromBase64String(base64Csv);
@@ -771,8 +841,9 @@ class Program
 const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/time-series-forecasting';
-const csvPath = &quot;./test.csv&quot;;
-const outputCsvPath = &quot;./out.csv&quot;;
+const csvPath = "./test.csv";
+const outputImagePath = "./out.jpg";
+const outputCsvPath = "./out.csv";
 
 let config = {
    method: 'POST',
@@ -791,10 +862,17 @@ function encodeFileToBase64(filePath) {
 
 axios.request(config)
 .then((response) =&gt; {
-    const result = response.data[&quot;result&quot;];
+    const result = response.data["result"];
+
+    // Save the image file
+    const imageBuffer = Buffer.from(result["image"], 'base64');
+    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
+      if (err) throw err;
+      console.log(`Output image data saved at ${outputImagePath}`);
+    });
 
     // Save the CSV file
-    const csvBuffer = Buffer.from(result[&quot;csv&quot;], 'base64');
+    const csvBuffer = Buffer.from(result["csv"], 'base64');
     fs.writeFile(outputCsvPath, csvBuffer, (err) =&gt; {
       if (err) throw err;
       console.log(`Output time-series data saved at ${outputCsvPath}`);
@@ -809,13 +887,14 @@ axios.request(config)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/time-series-forecasting&quot;; // Service URL
-$csv_path = &quot;./test.csv&quot;;
-$output_csv_path = &quot;./out.csv&quot;;
+$API_URL = "http://localhost:8080/time-series-forecasting"; // Service URL
+$csv_path = "./test.csv";
+$output_image_path = "./out.jpg";
+$output_csv_path = "./out.csv";
 
 // Encode the local CSV file in Base64
 $csv_data = base64_encode(file_get_contents($csv_path));
-$payload = array(&quot;csv&quot; =&gt; $csv_data); // Base64-encoded file content
+$payload = array("csv" =&gt; $csv_data); // Base64-encoded file content
 
 // Call the API
 $ch = curl_init($API_URL);
@@ -827,10 +906,13 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 // Process the response data
-$result = json_decode($response, true)[&quot;result&quot;];
+$result = json_decode($response, true)["result"];
 
-file_put_contents($output_csv_path, base64_decode($result[&quot;csv&quot;]));
-echo &quot;Output time-series data saved at &quot; . $output_csv_path . &quot;\n&quot;;
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image data saved at " . $output_image_path . "\n";
+
+file_put_contents($output_csv_path, base64_decode($result["csv"]));
+echo "Output time-series data saved at " . $output_csv_path . "\n";
 
 ?&gt;
 </code></pre></details>
@@ -843,7 +925,7 @@ echo &quot;Output time-series data saved at &quot; . $output_csv_path . &quot;\n
 If the default model weights provided by the time-series forecasting pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the performance of the time-series forecasting pipeline in your scenario.
 
 #### 4.1 Model Fine-Tuning
-Since the general time-series forecasting pipeline includes a time-series forecasting module, if the pipeline's performance does not meet expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/time_series_modules/time_series_forecasting.en.md#four-custom-development) section in the [Time-Series Forecasting Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_forecasting.en.md) to fine-tune the time-series forecasting model using your private dataset.
+Since the general time-series forecasting pipeline includes a time-series forecasting module, if the pipeline's performance does not meet expectations, you need to refer to the <b>Custom Development</b> section in the [Time-Series Forecasting Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html) to fine-tune the time-series forecasting model using your private dataset.
 
 #### 4.2 Model Application
 After completing fine-tuning with your private dataset, you will obtain the local model weight file.

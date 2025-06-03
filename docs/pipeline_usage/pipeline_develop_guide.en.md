@@ -117,8 +117,9 @@ The following steps are executed:
 
 > ❗ The results obtained from running the Python script are the same as those from the command line method.
 
-If the pre-trained model pipeline meets your expectations, you can proceed directly to [development integration/deployment](#6-development-integration-and-deployment). If not, optimize the pipeline effects according to the following steps.
+If you’d like to perform parallel inference, please refer to [Pipeline Parallel Inference](../pipeline_usage/instructions/parallel_inference.en.md).
 
+If the pre-trained model pipeline meets your expectations, you can proceed directly to [development integration/deployment](#6-development-integration-and-deployment). If not, optimize the pipeline effects according to the following steps.
 
 ## 3. Model Selection (Optional)
 
@@ -269,8 +270,8 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">Layout Parsing Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
-<td>Layout Parsing v2</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html">Layout Parsing v2 Pipeline Usage Tutorial</a></td>
+<td>Layout Parsing v3</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">Layout Parsing v3 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Formula Recognition</td>

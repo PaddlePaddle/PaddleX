@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class PPTinyPose(object):
 
     @property
     def detection_model_score_threshold(self):
-        """Atrribute of PPTinyPose pipeline model. Stating the score threshold for detectin model to filter bbox before inputting pptinypose model
+        """Attribute of PPTinyPose pipeline model. Stating the score threshold for detecting model to filter bbox before inputting pptinypose model
 
         :return: value of detection_model_score_threshold(float)
         """

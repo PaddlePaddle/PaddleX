@@ -30,7 +30,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
 <td>2.31 / 0.43</td>
 <td>3.37 / 1.27</td>
@@ -52,7 +52,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
 <td>0.179</td>
 <td>30.3 M</td>
 <td>高精度文本图像矫正模型</td>
@@ -60,6 +60,9 @@ comments: true
 </tbody>
 </table>
 <p><b>版面区域检测模块（可选）：</b></p>
+
+
+* <b>版面检测模型，包含20个常见的类别：文档标题、段落标题、文本、页码、摘要、目录、参考文献、脚注、页眉、页脚、算法、公式、公式编号、图像、表格、图和表标题（图标题、表格标题和图表标题）、印章、图表、侧栏文本和参考文献内容</b>
 <table>
 <thead>
 <tr>
@@ -73,76 +76,16 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
-<td>90.4</td>
+<td>PP-DocLayout_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>83.2</td>
 <td>34.6244 / 10.3945</td>
-<td>510.57 / -</td>
-<td>123.76 M</td>
-<td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
+<td>510.57 / - </td>
+<td>126.01 M</td>
+<td>基于RT-DETR-L在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报、古籍、日文文档、竖版文字文档等场景的自建数据集训练的更高精度版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
-<td>75.2</td>
-<td>13.3259 / 4.8685</td>
-<td>44.0680 / 44.0680</td>
-<td>22.578</td>
-<td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
-</tr>
-<tr>
-<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
-<td>70.9</td>
-<td>8.3008 / 2.3794</td>
-<td>10.0623 / 9.9296</td>
-<td>4.834</td>
-<td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
-</tr>
 </tbody>
 </table>
-
->❗ 以上列出的是文本识别模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>6个全量模型</b>，包含多个预定义了不同类别的模型，完整的模型列表如下：
-
-<details><summary> 👉模型列表详情</summary>
-
-* <b>17类区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
-<table>
-<thead>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M）</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>87.4</td>
-<td>13.6</td>
-<td>46.2</td>
-<td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>89.0</td>
-<td>17.2</td>
-<td>160.2</td>
-<td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>98.3</td>
-<td>115.1</td>
-<td>3827.2</td>
-<td>470.2</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
-</tr>
-</tbody>
-</table>
-
 
 * <b>版面检测模型，包含23个常见的类别：文档标题、段落标题、文本、页码、摘要、目录、参考文献、脚注、页眉、页脚、算法、公式、公式编号、图像、图表标题、表格、表格标题、印章、图表标题、图表、页眉图像、页脚图像、侧栏文本</b>
 <table>
@@ -158,7 +101,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
 <td>90.4</td>
 <td>34.6244 / 10.3945</td>
 <td>510.57 / -</td>
@@ -166,7 +109,7 @@ comments: true
 <td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
 <td>75.2</td>
 <td>13.3259 / 4.8685</td>
 <td>44.0680 / 44.0680</td>
@@ -174,7 +117,7 @@ comments: true
 <td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
 <td>70.9</td>
 <td>8.3008 / 2.3794</td>
 <td>10.0623 / 9.9296</td>
@@ -184,68 +127,242 @@ comments: true
 </tbody>
 </table>
 
+>❗ 以上列出的是版面区域检测模块重点支持的<b>4个核心模型</b>，该模块总共支持<b>7个全量模型</b>，包含多个预定义了不同类别的模型，完整的模型列表如下：
+
+<details><summary> 👉模型列表详情</summary>
+
+* <b>17类版面区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>87.4</td>
+<td>13.6</td>
+<td>46.2</td>
+<td>4.8</td>
+<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>89.0</td>
+<td>17.2</td>
+<td>160.2</td>
+<td>22.6</td>
+<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>98.3</td>
+<td>115.1</td>
+<td>3827.2</td>
+<td>470.2</td>
+<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
+</tr>
+</tbody>
+</table>
+
+
+* <b>23类版面区域检测模型，包含23个常见的类别：文档标题、段落标题、文本、页码、摘要、目录、参考文献、脚注、页眉、页脚、算法、公式、公式编号、图像、图表标题、表格、表格标题、印章、图表标题、图表、页眉图像、页脚图像、侧栏文本</b>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
+<td>90.4</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / -</td>
+<td>123.76 M</td>
+<td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
+<td>75.2</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
+<td>22.578</td>
+<td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
+<td>70.9</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
+<td>4.834</td>
+<td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
+</tr>
+</tbody>
+</table>
+
+* <b>版面检测模型，包含20个常见的类别：文档标题、段落标题、文本、页码、摘要、目录、参考文献、脚注、页眉、页脚、算法、公式、公式编号、图像、表格、图和表标题（图标题、表格标题和图表标题）、印章、图表、侧栏文本和参考文献内容</b>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>83.2</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
+<td>126.01 M</td>
+<td>基于RT-DETR-L在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报、古籍、日文文档、竖版文字文档等场景的自建数据集训练的更高精度版面区域定位模型</td>
+</tr>
+<tr>
+</tbody>
+</table>
+
 </details>
 
 <p><b>公式识别模块：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>Avg-BLEU(%)</th>
+<th>En-BLEU(%)</th>
+<th>Zh-BLEU(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
-<td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
-<td>86.13</td>
+<td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
+<td>85.91</td>
+<td>43.50</td>
 <td>2266.96/-</td>
 <td>-/-</td>
-<td>1.4 G</td>
+<td>1.53 G</td>
 <td>UniMERNet是由上海AI Lab研发的一款公式识别模型。该模型采用Donut Swin作为编码器，MBartDecoder作为解码器，并通过在包含简单公式、复杂公式、扫描捕捉公式和手写公式在内的一百万数据集上进行训练，大幅提升了模型对真实场景公式的识别准确率</td>
 <tr>
-<td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
-<td>87.12</td>
+<td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
+<td>87.00</td>
+<td>45.71</td>
 <td>202.25/-</td>
 <td>-/-</td>
-<td>167.9 M</td>
+<td>224 M</td>
 <td rowspan="2">PP-FormulaNet 是由百度飞桨视觉团队开发的一款先进的公式识别模型，支持5万个常见LateX源码词汇的识别。PP-FormulaNet-S 版本采用了 PP-HGNetV2-B4 作为其骨干网络，通过并行掩码和模型蒸馏等技术，大幅提升了模型的推理速度，同时保持了较高的识别精度，适用于简单印刷公式、跨行简单印刷公式等场景。而 PP-FormulaNet-L 版本则基于 Vary_VIT_B 作为骨干网络，并在大规模公式数据集上进行了深入训练，在复杂公式的识别方面，相较于PP-FormulaNet-S表现出显著的提升，适用于简单印刷公式、复杂印刷公式、手写公式等场景。 </td>
 
 </tr>
-<td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
-<td>92.13</td>
+<td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
+<td>90.36</td>
+<td>45.78</td>
 <td>1976.52/-</td>
 <td>-/-</td>
-<td>535.2 M</td>
+<td>695 M</td>
 <tr>
-<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
-<td>71.63</td>
+<td>PP-FormulaNet_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-S_pretrained.pdparams">训练模型</a></td>
+<td>88.71</td>
+<td>53.32</td>
+<td>191.69/-</td>
 <td>-/-</td>
+<td>248 M</td>
+<td rowspan="3">PP-FormulaNet_plus 是百度飞桨视觉团队在 PP-FormulaNet 的基础上开发的增强版公式识别模型。与原版相比，PP-FormulaNet_plus 在训练中使用了更为丰富的公式数据集，包括中文学位论文、专业书籍、教材试卷以及数学期刊等多种来源。这一扩展显著提升了模型的识别能力。
+
+其中，PP-FormulaNet_plus-M 和 PP-FormulaNet_plus-L 模型新增了对中文公式的支持，并将公式的最大预测 token 数从 1024 扩大至 2560，大幅提升了对复杂公式的识别性能。同时，PP-FormulaNet_plus-S 模型则专注于增强英文公式的识别能力。通过这些改进，PP-FormulaNet_plus 系列模型在处理复杂多样的公式识别任务时表现更加出色。 </td>
+</tr>
+<tr>
+<td>PP-FormulaNet_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-M_pretrained.pdparams">训练模型</a></td>
+<td>91.45</td>
+<td>89.76</td>
+<td>1301.56/-</td>
 <td>-/-</td>
-<td>89.7 M</td>
+<td>592 M</td>
+</tr>
+<tr>
+<td>PP-FormulaNet_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-FormulaNet_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>92.22</td>
+<td>90.64</td>
+<td>1745.25/-</td>
+<td>-/-</td>
+<td>698 M</td>
+</tr>
+
+<tr>
+<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
+<td>74.55</td>
+<td>39.96</td>
+<td>1244.61/-</td>
+<td>-/-</td>
+<td>99 M</td>
 <td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性。</td>
 </tr>
 </table>
 
-**测试环境说明：**
+<strong>测试环境说明:</strong>
 
-- **性能测试环境**
-  - **测试数据集**：
-    - 文档图像方向分类模型：PaddleX自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。
-    - 文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。
-    - 版面区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。
-    - 17类区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。
-    - 公式识别模型：PaddleX 内部自建公式识别测试集。
-  - **硬件配置**：
-    - GPU：NVIDIA Tesla T4
-    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
-    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+            <li><strong>测试数据集：
+             </strong>
+                <ul>
+                  <li>文档图像方向分类模型：PaddleX自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。</li>
+                  <li> 文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。</li>
+                  <li>版面区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。</li>
+                  <li>17类区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。</li>
+                  <li>公式识别模型：PaddleX 内部自建公式识别测试集。</li>
+                </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- **推理模式说明**
-
-| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
-|-------------|----------------------------------|------------------|---------------------------------------------|
-| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
-| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 
 
@@ -260,7 +377,7 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河
 如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
 
 ### 2.2 本地体验
-❗ 在本地使用公式识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+❗ 在本地使用公式识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ocr`。
 
 #### 2.2.1 命令行方式体验
 一行命令即可快速体验公式识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png)，并将 `--input` 替换为本地路径，进行预测
@@ -274,29 +391,29 @@ paddlex --pipeline formula_recognition \
         --layout_threshold 0.5 \
         --layout_nms True \
         --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode large \
+        --layout_merge_bboxes_mode "'large'"\
         --save_path ./output \
         --device gpu:0
 ```
-相关的参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的参数说明。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
 
 运行后，会将结果打印到终端上，结果如下：
 
 ```bash
-{'res': {'input_path': 'general_formula_recognition.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False,'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9778407216072083, 'coordinate': [271.257, 648.50824, 1040.2291, 774.8482]}, ...]}, 'formula_res_list': [{'rec_formula': '\\small\\begin{aligned}{p(\\mathbf{x})=c(\\mathbf{u})\\prod_{i}p(x_{i}).}\\\\ \\end{aligned}', 'formula_region_id': 1, 'dt_polys': ([553.0718, 802.0996, 758.75635, 853.093],)}, ...]}}
+{'res': {'input_path': 'general_formula_recognition_001.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9849682450294495, 'coordinate': [112.44934, 1074.9535, 663.01184, 1527.8729]}, {'cls_id': 2, 'label': 'text', 'score': 0.9809818267822266, 'coordinate': [112.761505, 160.65752, 662.4872, 414.6153]}, {'cls_id': 2, 'label': 'text', 'score': 0.9776389002799988, 'coordinate': [697.2594, 597.79034, 1246.6486, 746.98676]}, {'cls_id': 2, 'label': 'text', 'score': 0.9713516235351562, 'coordinate': [696.8539, 751.34827, 1246.7255, 875.0985]}, {'cls_id': 2, 'label': 'text', 'score': 0.9704778790473938, 'coordinate': [696.94653, 118.34517, 1247.156, 215.88304]}, {'cls_id': 2, 'label': 'text', 'score': 0.9666076898574829, 'coordinate': [113.78964, 795.92883, 662.4155, 893.1124]}, {'cls_id': 2, 'label': 'text', 'score': 0.9665274620056152, 'coordinate': [697.57666, 310.11346, 1247.8262, 408.27625]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9658663272857666, 'coordinate': [725.58777, 454.7463, 1183.6041, 577.70825]}, {'cls_id': 2, 'label': 'text', 'score': 0.9638860821723938, 'coordinate': [697.0996, 1481.4896, 1246.7573, 1606.951]}, {'cls_id': 2, 'label': 'text', 'score': 0.9625014066696167, 'coordinate': [698.0481, 945.31726, 1246.6857, 1017.86316]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9616876244544983, 'coordinate': [723.08606, 1304.9329, 1221.5212, 1433.7351]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9603673219680786, 'coordinate': [171.7144, 915.73035, 606.7387, 1026.4806]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9600085020065308, 'coordinate': [803.9297, 1040.9861, 1142.0847, 1099.2834]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9595950245857239, 'coordinate': [767.97546, 236.60234, 1180.0568, 291.77338]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9594774842262268, 'coordinate': [753.474, 1189.0759, 1154.2972, 1242.22]}, {'cls_id': 2, 'label': 'text', 'score': 0.9578917622566223, 'coordinate': [112.63562, 1532.9048, 663.50165, 1606.6626]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9559630155563354, 'coordinate': [179.8501, 566.4032, 599.8784, 620.08655]}, {'cls_id': 2, 'label': 'text', 'score': 0.953528642654419, 'coordinate': [113.30719, 490.1695, 662.4507, 546.1473]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9524251222610474, 'coordinate': [133.87987, 713.4751, 617.22253, 772.76074]}, {'cls_id': 2, 'label': 'text', 'score': 0.9439663290977478, 'coordinate': [114.23682, 642.90356, 662.42474, 692.64404]}, {'cls_id': 2, 'label': 'text', 'score': 0.9418545961380005, 'coordinate': [696.9155, 1120.0913, 1246.4368, 1168.2529]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9261635541915894, 'coordinate': [208.07648, 440.37366, 569.06274, 464.80005]}, {'cls_id': 7, 'label': 'formula', 'score': 0.920579731464386, 'coordinate': [843.95044, 899.7913, 1102.5901, 922.502]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.9113483428955078, 'coordinate': [1208.2693, 1061.5608, 1245.5154, 1085.906]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.910507321357727, 'coordinate': [1208.536, 1204.4053, 1245.2667, 1228.9385]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.909659206867218, 'coordinate': [1207.9521, 899.5998, 1245.6323, 923.64777]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.9072737097740173, 'coordinate': [1208.1934, 505.28503, 1245.4221, 529.67957]}, {'cls_id': 2, 'label': 'text', 'score': 0.9037376046180725, 'coordinate': [698.28625, 1262.6298, 1059.2609, 1285.3319]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9015905857086182, 'coordinate': [183.00662, 161.18907, 512.1726, 185.87654]}, {'cls_id': 2, 'label': 'text', 'score': 0.9007592797279358, 'coordinate': [721.2688, 412.6385, 1216.6045, 436.58807]}, {'cls_id': 2, 'label': 'text', 'score': 0.896611750125885, 'coordinate': [113.65086, 1048.154, 451.65906, 1070.5525]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.8945134878158569, 'coordinate': [1208.4277, 1436.2947, 1245.581, 1459.6746]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.892361044883728, 'coordinate': [1220.0835, 251.3541, 1245.6968, 275.61313]}, {'cls_id': 7, 'label': 'formula', 'score': 0.8889164924621582, 'coordinate': [116.8533, 265.05603, 307.09003, 289.93555]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.8836347460746765, 'coordinate': [635.03656, 441.60486, 660.72943, 465.45752]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.8798341751098633, 'coordinate': [635.3544, 928.30615, 660.801, 952.7964]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.8789814710617065, 'coordinate': [635.7049, 582.2196, 660.6303, 606.67004]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.878730833530426, 'coordinate': [635.7882, 987.47, 660.4442, 1011.64307]}, {'cls_id': 17, 'label': 'formula_number', 'score': 0.8710389137268066, 'coordinate': [635.75195, 731.1045, 660.3816, 754.42114]}, {'cls_id': 7, 'label': 'formula', 'score': 0.8667231798171997, 'coordinate': [540.2363, 489.12628, 661.61475, 517.5715]}, {'cls_id': 7, 'label': 'formula', 'score': 0.8634350299835205, 'coordinate': [117.003365, 1302.1862, 277.30377, 1326.8046]}, {'cls_id': 7, 'label': 'formula', 'score': 0.8547449707984924, 'coordinate': [1072.7319, 1558.7657, 1242.1775, 1581.1473]}, {'cls_id': 7, 'label': 'formula', 'score': 0.8485350608825684, 'coordinate': [373.27258, 290.88776, 518.7126, 316.89764]}, {'cls_id': 3, 'label': 'number', 'score': 0.8004439473152161, 'coordinate': [1236.0953, 62.784798, 1247.5856, 79.25625]}, {'cls_id': 7, 'label': 'formula', 'score': 0.7683551907539368, 'coordinate': [258.48035, 189.60883, 325.27173, 213.70544]}, {'cls_id': 7, 'label': 'formula', 'score': 0.7660759091377258, 'coordinate': [909.1803, 1584.3768, 999.6908, 1606.9323]}, {'cls_id': 7, 'label': 'formula', 'score': 0.7568713426589966, 'coordinate': [701.779, 1532.1399, 891.00665, 1556.2966]}, {'cls_id': 7, 'label': 'formula', 'score': 0.7310451865196228, 'coordinate': [701.32715, 1583.2532, 857.19336, 1605.7214]}, {'cls_id': 7, 'label': 'formula', 'score': 0.7173376083374023, 'coordinate': [116.34981, 518.7822, 268.02765, 544.4822]}, {'cls_id': 7, 'label': 'formula', 'score': 0.6384682059288025, 'coordinate': [768.198, 601.2766, 793.38574, 622.52]}, {'cls_id': 7, 'label': 'formula', 'score': 0.6290246248245239, 'coordinate': [583.8933, 1253.2761, 609.42676, 1276.0557]}, {'cls_id': 7, 'label': 'formula', 'score': 0.6267108917236328, 'coordinate': [1095.0366, 1533.7931, 1163.5054, 1555.3956]}, {'cls_id': 7, 'label': 'formula', 'score': 0.6116171479225159, 'coordinate': [1214.5708, 337.85333, 1244.5303, 359.7912]}, {'cls_id': 7, 'label': 'formula', 'score': 0.5208110809326172, 'coordinate': [701.8009, 336.1151, 729.7782, 357.85132]}, {'cls_id': 7, 'label': 'formula', 'score': 0.5141622424125671, 'coordinate': [189.37997, 368.27167, 253.99014, 393.74164]}, {'cls_id': 7, 'label': 'formula', 'score': 0.5111705660820007, 'coordinate': [778.9128, 365.22208, 801.6574, 385.84518]}, {'cls_id': 7, 'label': 'formula', 'score': 0.5065054893493652, 'coordinate': [267.81232, 341.93176, 336.70538, 366.84973]}]}, 'formula_res_list': [{'rec_formula': '\\begin{aligned}{\\psi_{0}(M)-\\psi(M,z)=}&{{}\\frac{(1-\\epsilon_{r})}{\\epsilon_{r}}\\frac{\\lambda^{2}c^{2}}{t_{\\operatorname{E}}^{2}\\operatorname{l n}(10)}\\times}\\\\ {}&{{}\\left.\\int_{0}^{z}d z^{\\prime}\\frac{d t}{d z^{\\prime}}\\;\\frac{\\partial\\phi}{\\partial L}\\right|_{L=\\lambda M c^{2}/t_{\\operatorname{E}}},}\\\\ \\end{aligned}', 'formula_region_id': 1, 'dt_polys': ([725.58777, 454.7463, 1183.6041, 577.70825],)}, {'rec_formula': '\\begin{aligned}{p(\\operatorname{l o g}_{10}}&{{}M|\\operatorname{l o g}_{10}\\sigma)=\\frac{1}{\\sqrt{2\\pi}\\epsilon_{0}}}\\\\ {}&{{}\\times\\operatorname{e x p}\\left[-\\frac{1}{2}\\left(\\frac{\\operatorname{l o g}_{10}M-a_{\\bullet}-b_{\\bullet}\\operatorname{l o g}_{10}\\sigma}{\\epsilon_{0}}\\right)^{2}\\right].}\\\\ \\end{aligned}', 'formula_region_id': 2, 'dt_polys': ([723.08606, 1304.9329, 1221.5212, 1433.7351],)}, {'rec_formula': '\\begin{aligned}{\\rho_{\\operatorname{B H}}}&{{}=\\int d M\\psi(M)M}\\\\ {}&{{}=\\frac{1-\\epsilon_{r}}{\\epsilon_{r}c^{2}}\\int_{0}^{\\infty}d z\\frac{d t}{d z}\\int d\\operatorname{l o g}_{10}L\\phi(L,z)L,}\\\\ \\end{aligned}', 'formula_region_id': 3, 'dt_polys': ([171.7144, 915.73035, 606.7387, 1026.4806],)}, {'rec_formula': '\\frac{d n}{d\\sigma}d\\sigma=\\psi_{*}\\left(\\frac{\\sigma}{\\sigma_{*}}\\right)^{\\alpha}\\frac{e^{-(\\sigma/\\sigma_{*})^{\\beta}}}{\\Gamma(\\alpha/\\beta)}\\beta\\frac{d\\sigma}{\\sigma}.', 'formula_region_id': 4, 'dt_polys': ([803.9297, 1040.9861, 1142.0847, 1099.2834],)}, {'rec_formula': '\\phi(L)\\equiv\\frac{d n}{d\\log_{10}L}=\\frac{\\phi_{*}}{(L/L_{*})^{\\gamma_{1}}+(L/L_{*})^{\\gamma_{2}}}.', 'formula_region_id': 5, 'dt_polys': ([767.97546, 236.60234, 1180.0568, 291.77338],)}, {'rec_formula': '\\psi_{0}(M)=\\int d\\sigma\\frac{p(\\log_{10}M|\\log_{10}\\sigma)}{M\\log(10)}\\frac{d n}{d\\sigma}(\\sigma),', 'formula_region_id': 6, 'dt_polys': ([753.474, 1189.0759, 1154.2972, 1242.22],)}, {'rec_formula': '\\langle\\dot{M}(M,t)\\rangle\\psi(M,t)=\\frac{(1-\\epsilon_{r})}{\\epsilon_{r}c^{2}\\operatorname{l n}(10)}\\phi(L,t)\\frac{d L}{d M}.', 'formula_region_id': 7, 'dt_polys': ([179.8501, 566.4032, 599.8784, 620.08655],)}, {'rec_formula': '\\frac{\\partial\\psi}{\\partial t}(M,t)+\\frac{(1-\\epsilon_{r})}{\\epsilon_{r}}\\frac{\\lambda^{2}c^{2}}{t_{\\operatorname{E}}^{2}\\operatorname{l n}(10)}\\left.\\frac{\\partial\\phi}{\\partial L}\\right|_{L=\\lambda M c^{2}/t_{\\operatorname{E}}}=0,', 'formula_region_id': 8, 'dt_polys': ([133.87987, 713.4751, 617.22253, 772.76074],)}, {'rec_formula': '\\phi(L,t)d\\log_{10}L=\\delta(M,t)\\psi(M,t)d M.', 'formula_region_id': 9, 'dt_polys': ([208.07648, 440.37366, 569.06274, 464.80005],)}, {'rec_formula': '\\log_{10}M=a_{\\bullet}+b_{\\bullet}\\log_{10}X.', 'formula_region_id': 10, 'dt_polys': ([843.95044, 899.7913, 1102.5901, 922.502],)}, {'rec_formula': 't_{E}=\\sigma_{T}c/4\\pi G m_{p}=4.5\\times10^{8}\\mathrm{y r}', 'formula_region_id': 11, 'dt_polys': ([183.00662, 161.18907, 512.1726, 185.87654],)}, {'rec_formula': '\\dot{M}\\:=\\:(1\\:-\\:\\epsilon_{r})\\dot{M}_{\\mathrm{a c c}}', 'formula_region_id': 12, 'dt_polys': ([116.8533, 265.05603, 307.09003, 289.93555],)}, {'rec_formula': '\\langle\\dot{M}(M,t)\\rangle=', 'formula_region_id': 13, 'dt_polys': ([540.2363, 489.12628, 661.61475, 517.5715],)}, {'rec_formula': 'M_{*}=L_{*}t_{E}/\\lambda c^{2}', 'formula_region_id': 14, 'dt_polys': ([117.003365, 1302.1862, 277.30377, 1326.8046],)}, {'rec_formula': 'a_{\\bullet}=8.32\\pm0.05', 'formula_region_id': 15, 'dt_polys': ([1072.7319, 1558.7657, 1242.1775, 1581.1473],)}, {'rec_formula': '\\phi(L,t)d\\operatorname{l o g}_{10}L', 'formula_region_id': 16, 'dt_polys': ([373.27258, 290.88776, 518.7126, 316.89764],)}, {'rec_formula': '\\epsilon_{r}\\dot{M}_{\\mathrm{a c c}}', 'formula_region_id': 17, 'dt_polys': ([258.48035, 189.60883, 325.27173, 213.70544],)}, {'rec_formula': '\\epsilon_{0}=0.38', 'formula_region_id': 18, 'dt_polys': ([909.1803, 1584.3768, 999.6908, 1606.9323],)}, {'rec_formula': 'X=\\sigma/200\\mathrm{k m}\\mathrm{s}^{-1}', 'formula_region_id': 19, 'dt_polys': ([701.779, 1532.1399, 891.00665, 1556.2966],)}, {'rec_formula': 'b_{\\bullet}=5.64\\pm\\widetilde{0.32}', 'formula_region_id': 20, 'dt_polys': ([701.32715, 1583.2532, 857.19336, 1605.7214],)}, {'rec_formula': '\\delta(M,t)\\dot{M}(M,t)', 'formula_region_id': 21, 'dt_polys': ([116.34981, 518.7822, 268.02765, 544.4822],)}, {'rec_formula': '\\psi_{0}', 'formula_region_id': 22, 'dt_polys': ([768.198, 601.2766, 793.38574, 622.52],)}, {'rec_formula': 'L_{*}', 'formula_region_id': 23, 'dt_polys': ([583.8933, 1253.2761, 609.42676, 1276.0557],)}, {'rec_formula': 'M-\\sigma', 'formula_region_id': 24, 'dt_polys': ([1095.0366, 1533.7931, 1163.5054, 1555.3956],)}, {'rec_formula': 'L_{*}', 'formula_region_id': 25, 'dt_polys': ([1214.5708, 337.85333, 1244.5303, 359.7912],)}, {'rec_formula': '\\mathrm{A^{\\prime\\prime}}', 'formula_region_id': 26, 'dt_polys': ([701.8009, 336.1151, 729.7782, 357.85132],)}, {'rec_formula': '\\phi(L,t)', 'formula_region_id': 27, 'dt_polys': ([189.37997, 368.27167, 253.99014, 393.74164],)}, {'rec_formula': '\\gamma_{2}', 'formula_region_id': 28, 'dt_polys': ([778.9128, 365.22208, 801.6574, 385.84518],)}, {'rec_formula': '\\delta(\\bar{M,t})', 'formula_region_id': 29, 'dt_polys': ([267.81232, 341.93176, 336.70538, 366.84973],)}]}}
 ```
 运行结果参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的结果解释。
 
 
 可视化结果保存在`save_path`下，其中公式识别的可视化结果如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04.png" style="width: 70%"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04_paddleocr3.png" style="width: 70%"/>
 
 <b> 如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装。目前公式识别产线可视化只支持Ubuntu环境，其他环境暂不支持。对于复杂公式，LaTeX 结果可能包含部分高级的表示，Markdown等环境中未必可以成功显示：</b>
 
 ```bash
 sudo apt-get update
-sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
+sudo apt-get install texlive texlive-latex-base texlive-xetex latex-cjk-all texlive-latex-extra -y
 ```
 <b>备注</b>： 由于公式识别可视化过程中需要对每张公式图片进行渲染，因此耗时较长，请您耐心等待。
 
@@ -353,15 +470,23 @@ for res in output:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。支持同时指定多个设备以进行并行推理，详情请参考产线并行推理文档。</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件或 <code>config</code> 中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -390,23 +515,6 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
-<tr>
-<td><code>device</code></td>
-<td>产线推理设备</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-<li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
-<li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
-<li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
-<li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
-<li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
-<li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
-<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
 <tr>
 <td><code>use_layout_detection</code></td>
 <td>是否使用文档区域检测模块</td>
@@ -747,7 +855,12 @@ for res in output:
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。</td>
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认对于超过10页的PDF文件，只有前10页的内容会被处理。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: null
+</code></pre>
+</td>
 <td>是</td>
 </tr>
 <tr>
@@ -776,7 +889,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
-<td><code>number</code> | <code>null</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_threshold</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
@@ -815,7 +928,7 @@ for res in output:
 <tr>
 <td><code>formulaRecResults</code></td>
 <td><code>object</code></td>
-<td>公式识别结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+<td>公式识别结果。数组长度为1（对于图像输入）或实际处理的文档页数（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中实际处理的每一页的结果。</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -837,7 +950,7 @@ for res in output:
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
+<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 和 <code>page_index</code> 字段。</td>
 </tr>
 <tr>
 <td><code>outputImages</code></td>
@@ -906,17 +1019,17 @@ for i, res in enumerate(result["formulaRecResults"]):
 <tr>
 <td>公式存在漏检</td>
 <td>版面区域检测模块</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/layout_detection.html">链接</a></td>
 </tr>
 <tr>
 <td>公式内容不准</td>
 <td>公式识别模块</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/formula_recognition.md">链接</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/formula_recognition.html">链接</a></td>
 </tr>
 <tr>
 <td>整图旋转矫正不准</td>
 <td>文档图像方向分类模块</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md">链接</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">链接</a></td>
 </tr>
 <tr>
 <td>图像扭曲矫正不准</td>
@@ -976,7 +1089,7 @@ paddlex --pipeline formula_recognition \
         --layout_threshold 0.5 \
         --layout_nms True \
         --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode large \
+        --layout_merge_bboxes_mode "'large'"\
         --save_path ./output \
         --device npu:0
 

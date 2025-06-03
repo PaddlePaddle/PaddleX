@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,26 +13,19 @@
 # limitations under the License.
 
 import copy
-import cv2
+
 import numpy as np
-from pathlib import Path
-import PIL
-from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ....utils.deps import class_requires_deps, is_dep_available
+from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@class_requires_deps("opencv-contrib-python")
 class TableRecResult(BaseCVResult):
     """SaveTableResults"""
-
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def _to_img(self):
         image = self["input_img"]

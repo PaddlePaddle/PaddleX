@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,24 +16,32 @@ import asyncio
 import base64
 import io
 import mimetypes
+import re
 import tempfile
 import uuid
 from functools import partial
 from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, overload
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
-import aiohttp
-import cv2
-import filetype
-import fitz
 import numpy as np
 import pandas as pd
 import requests
-import yarl
 from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from .models import ImageInfo, PDFInfo, PDFPageInfo
+
+if is_dep_available("aiohttp"):
+    import aiohttp
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("filetype"):
+    import filetype
+if is_dep_available("pypdfium2"):
+    import pypdfium2 as pdfium
+if is_dep_available("yarl"):
+    import yarl
 
 __all__ = [
     "FileType",
@@ -89,7 +97,22 @@ def infer_file_type(url: str) -> Optional[FileType]:
     file_type = mimetypes.guess_type(filename)[0]
 
     if file_type is None:
-        return None
+        # HACK: The support for BOS URLs with query params is implementation-based,
+        # not interface-based.
+        is_bos_url = re.fullmatch(r"\w+\.bcebos\.com", url_parts.netloc) is not None
+        if is_bos_url and url_parts.query:
+            params = parse_qs(url_parts.query)
+            if (
+                "responseContentDisposition" in params
+                and len(params["responseContentDisposition"]) == 1
+            ):
+                match_ = re.match(
+                    r"attachment;filename=(.*)", params["responseContentDisposition"][0]
+                )
+                if match_:
+                    file_type = mimetypes.guess_type(match_.group(1))[0]
+        if file_type is None:
+            return None
 
     if file_type.startswith("image/"):
         return "IMAGE"
@@ -103,6 +126,7 @@ def infer_file_type(url: str) -> Optional[FileType]:
         return None
 
 
+@function_requires_deps("filetype")
 def infer_file_ext(file: str) -> Optional[str]:
     if is_url(file):
         url_parts = urlparse(file)
@@ -116,6 +140,7 @@ def infer_file_ext(file: str) -> Optional[str]:
         return "." + filetype.guess_extension(bytes_)
 
 
+@function_requires_deps("opencv-contrib-python")
 def image_bytes_to_array(data: bytes) -> np.ndarray:
     return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
 
@@ -131,6 +156,7 @@ def image_to_bytes(image: Image.Image, format: str = "JPEG") -> bytes:
     return img_bytes
 
 
+@function_requires_deps("opencv-contrib-python")
 def image_array_to_bytes(image: np.ndarray, ext: str = ".jpg") -> bytes:
     image = cv2.imencode(ext, image)[1]
     return image.tobytes()
@@ -150,30 +176,29 @@ def base64_encode(data: bytes) -> str:
     return base64.b64encode(data).decode("ascii")
 
 
+@function_requires_deps("pypdfium2", "opencv-contrib-python")
 def read_pdf(
     bytes_: bytes, max_num_imgs: Optional[int] = None
 ) -> Tuple[List[np.ndarray], PDFInfo]:
     images: List[np.ndarray] = []
     page_info_list: List[PDFPageInfo] = []
-    with fitz.open("pdf", bytes_) as doc:
-        for page in doc:
-            if max_num_imgs is not None and len(images) >= max_num_imgs:
-                break
-            # TODO: Do not always use zoom=2.0
-            zoom = 2.0
-            deg = 0
-            mat = fitz.Matrix(zoom, zoom).prerotate(deg)
-            pixmap = page.get_pixmap(matrix=mat, alpha=False)
-            image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
-                pixmap.h, pixmap.w, pixmap.n
-            )
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            images.append(image)
-            page_info = PDFPageInfo(
-                width=pixmap.w,
-                height=pixmap.h,
-            )
-            page_info_list.append(page_info)
+    doc = pdfium.PdfDocument(bytes_)
+    for page in doc:
+        if max_num_imgs is not None and len(images) >= max_num_imgs:
+            break
+        # TODO: Do not always use zoom=2.0
+        zoom = 2.0
+        deg = 0
+        image = page.render(scale=zoom, rotation=deg).to_pil()
+        image = image.convert("RGB")
+        image = np.array(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        images.append(image)
+        page_info = PDFPageInfo(
+            width=image.shape[1],
+            height=image.shape[0],
+        )
+        page_info_list.append(page_info)
     pdf_info = PDFInfo(
         numPages=len(page_info_list),
         pages=page_info_list,
@@ -243,7 +268,8 @@ def get_raw_bytes(file: str) -> bytes:
         return base64.b64decode(file)
 
 
-async def get_raw_bytes_async(file: str, session: aiohttp.ClientSession) -> bytes:
+@function_requires_deps("aiohttp", "yarl")
+async def get_raw_bytes_async(file: str, session: "aiohttp.ClientSession") -> bytes:
     if is_url(file):
         async with session.get(yarl.URL(file, encoded=True)) as resp:
             return await resp.read()

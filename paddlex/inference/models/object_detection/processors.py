@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,22 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Sequence, Tuple, Union, Optional
+from typing import List, Optional, Sequence, Tuple, Union
 
-import cv2
 import numpy as np
 from numpy import ndarray
 
-from ..common import Resize as CommonResize
-from ..common import Normalize as CommonNormalize
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ...common.reader import ReadImage as CommonReadImage
 from ...utils.benchmark import benchmark
+from ..common import Normalize as CommonNormalize
+from ..common import Resize as CommonResize
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 Boxes = List[dict]
 Number = Union[int, float]
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
+@class_requires_deps("opencv-contrib-python")
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
@@ -71,7 +75,7 @@ class ReadImage(CommonReadImage):
         if isinstance(img, np.ndarray):
             ori_img = img
             if self.format == "RGB":
-                img = img[:, :, ::-1]
+                img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
             return img, ori_img
         elif isinstance(img, str):
             blob = self._img_reader.read(img)
@@ -83,7 +87,7 @@ class ReadImage(CommonReadImage):
                 if blob.ndim != 3:
                     raise RuntimeError("Array is not 3-dimensional.")
                 # BGR to RGB
-                blob = blob[..., ::-1]
+                blob = cv2.cvtColor(blob, cv2.COLOR_BGR2RGB)
             return blob, ori_img
         else:
             raise TypeError(
@@ -127,27 +131,12 @@ class Resize(CommonResize):
 
 @benchmark.timeit
 class Normalize(CommonNormalize):
-    """Normalizes images in a list of dictionaries containing image data"""
-
-    def apply(self, img: ndarray) -> ndarray:
-        """Applies normalization to a single image."""
-        old_type = img.dtype
-        # XXX: If `old_type` has higher precision than float32,
-        # we will lose some precision.
-        img = img.astype("float32", copy=False)
-        img *= self.scale
-        img -= self.mean
-        img /= self.std
-        if self.preserve_dtype:
-            img = img.astype(old_type, copy=False)
-        return img
-
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
         """
         for data in datas:
-            data["img"] = self.apply(data["img"])
+            data["img"] = self.norm(data["img"])
         return datas
 
 
@@ -326,6 +315,7 @@ def _get_3rd_point(a: ndarray, b: ndarray) -> ndarray:
     return third_pt
 
 
+@function_requires_deps("opencv-contrib-python")
 def get_affine_transform(
     center: ndarray,
     input_size: Union[Number, Tuple[Number, Number], ndarray],
@@ -383,6 +373,7 @@ def get_affine_transform(
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class WarpAffine:
     """Apply warp affine transformation to the image based on the given parameters.
 
@@ -443,7 +434,7 @@ class WarpAffine:
         if not self.keep_res:
             out_h = input_h // self.down_ratio
             out_w = input_w // self.down_ratio
-            trans_output = get_affine_transform(c, s, 0, [out_w, out_h])
+            get_affine_transform(c, s, 0, [out_w, out_h])
 
         return inp
 
@@ -483,6 +474,8 @@ def restructured_boxes(
         ymin = max(0, ymin)
         xmax = min(w, xmax)
         ymax = min(h, ymax)
+        if xmax <= xmin or ymax <= ymin:
+            continue
         box_list.append(
             {
                 "cls_id": int(box[0]),
@@ -549,23 +542,48 @@ def unclip_boxes(boxes, unclip_ratio=None):
     if unclip_ratio is None:
         return boxes
 
-    widths = boxes[:, 4] - boxes[:, 2]
-    heights = boxes[:, 5] - boxes[:, 3]
+    if isinstance(unclip_ratio, dict):
+        expanded_boxes = []
+        for box in boxes:
+            class_id, score, x1, y1, x2, y2 = box
+            if class_id in unclip_ratio:
+                width_ratio, height_ratio = unclip_ratio[class_id]
 
-    new_w = widths * unclip_ratio[0]
-    new_h = heights * unclip_ratio[1]
-    center_x = boxes[:, 2] + widths / 2
-    center_y = boxes[:, 3] + heights / 2
+                width = x2 - x1
+                height = y2 - y1
 
-    new_x1 = center_x - new_w / 2
-    new_y1 = center_y - new_h / 2
-    new_x2 = center_x + new_w / 2
-    new_y2 = center_y + new_h / 2
-    expanded_boxes = np.column_stack(
-        (boxes[:, 0], boxes[:, 1], new_x1, new_y1, new_x2, new_y2)
-    )
+                new_w = width * width_ratio
+                new_h = height * height_ratio
+                center_x = x1 + width / 2
+                center_y = y1 + height / 2
 
-    return expanded_boxes
+                new_x1 = center_x - new_w / 2
+                new_y1 = center_y - new_h / 2
+                new_x2 = center_x + new_w / 2
+                new_y2 = center_y + new_h / 2
+
+                expanded_boxes.append([class_id, score, new_x1, new_y1, new_x2, new_y2])
+            else:
+                expanded_boxes.append(box)
+        return np.array(expanded_boxes)
+
+    else:
+        widths = boxes[:, 4] - boxes[:, 2]
+        heights = boxes[:, 5] - boxes[:, 3]
+
+        new_w = widths * unclip_ratio[0]
+        new_h = heights * unclip_ratio[1]
+        center_x = boxes[:, 2] + widths / 2
+        center_y = boxes[:, 3] + heights / 2
+
+        new_x1 = center_x - new_w / 2
+        new_y1 = center_y - new_h / 2
+        new_x2 = center_x + new_w / 2
+        new_y2 = center_y + new_h / 2
+        expanded_boxes = np.column_stack(
+            (boxes[:, 0], boxes[:, 1], new_x1, new_y1, new_x2, new_y2)
+        )
+        return expanded_boxes
 
 
 def iou(box1, box2):
@@ -605,7 +623,7 @@ def nms(boxes, iou_same=0.6, iou_diff=0.95):
         current = indices[0]
         current_box = boxes[current]
         current_class = current_box[0]
-        current_score = current_box[1]
+        current_box[1]
         current_coords = current_box[2:]
 
         selected_boxes.append(current)
@@ -642,7 +660,7 @@ def is_contained(box1, box2):
     return iou >= 0.9
 
 
-def check_containment(boxes, formula_index=None):
+def check_containment(boxes, formula_index=None, category_index=None, mode=None):
     """Check containment relationships among boxes."""
     n = len(boxes)
     contains_other = np.zeros(n, dtype=int)
@@ -655,9 +673,19 @@ def check_containment(boxes, formula_index=None):
             if formula_index is not None:
                 if boxes[i][0] == formula_index and boxes[j][0] != formula_index:
                     continue
-            if is_contained(boxes[i], boxes[j]):
-                contained_by_other[i] = 1
-                contains_other[j] = 1
+            if category_index is not None and mode is not None:
+                if mode == "large" and boxes[j][0] == category_index:
+                    if is_contained(boxes[i], boxes[j]):
+                        contained_by_other[i] = 1
+                        contains_other[j] = 1
+                if mode == "small" and boxes[i][0] == category_index:
+                    if is_contained(boxes[i], boxes[j]):
+                        contained_by_other[i] = 1
+                        contains_other[j] = 1
+            else:
+                if is_contained(boxes[i], boxes[j]):
+                    contained_by_other[i] = 1
+                    contains_other[j] = 1
     return contains_other, contained_by_other
 
 
@@ -687,8 +715,8 @@ class DetPostProcess:
         img_size: Tuple[int, int],
         threshold: Union[float, dict],
         layout_nms: Optional[bool],
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]],
-        layout_merge_bboxes_mode: Optional[str],
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]],
+        layout_merge_bboxes_mode: Optional[Union[str, dict]],
     ) -> Boxes:
         """Apply post-processing to the detection boxes.
 
@@ -718,31 +746,84 @@ class DetPostProcess:
             )
 
         if layout_nms:
-            filtered_boxes = []
-            ### Layout postprocess for NMS
             selected_indices = nms(boxes, iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
 
-        if layout_merge_bboxes_mode:
-            assert layout_merge_bboxes_mode in [
-                "union",
-                "large",
-                "small",
-            ], f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'], but got {layout_merge_bboxes_mode}"
-
-            if layout_merge_bboxes_mode == "union":
-                pass
+        filter_large_image = True
+        if filter_large_image and len(boxes) > 1 and boxes.shape[1] == 6:
+            if img_size[0] > img_size[1]:
+                area_thres = 0.82
             else:
-                formula_index = (
-                    self.labels.index("formula") if "formula" in self.labels else None
-                )
-                contains_other, contained_by_other = check_containment(
-                    boxes, formula_index
-                )
-                if layout_merge_bboxes_mode == "large":
-                    boxes = boxes[contained_by_other == 0]
-                elif layout_merge_bboxes_mode == "small":
-                    boxes = boxes[(contains_other == 0) | (contained_by_other == 1)]
+                area_thres = 0.93
+            image_index = self.labels.index("image") if "image" in self.labels else None
+            img_area = img_size[0] * img_size[1]
+            filtered_boxes = []
+            for box in boxes:
+                label_index, score, xmin, ymin, xmax, ymax = box
+                if label_index == image_index:
+                    xmin = max(0, xmin)
+                    ymin = max(0, ymin)
+                    xmax = min(img_size[0], xmax)
+                    ymax = min(img_size[1], ymax)
+                    box_area = (xmax - xmin) * (ymax - ymin)
+                    if box_area <= area_thres * img_area:
+                        filtered_boxes.append(box)
+                else:
+                    filtered_boxes.append(box)
+            if len(filtered_boxes) == 0:
+                filtered_boxes = boxes
+            boxes = np.array(filtered_boxes)
+
+        if layout_merge_bboxes_mode:
+            formula_index = (
+                self.labels.index("formula") if "formula" in self.labels else None
+            )
+            if isinstance(layout_merge_bboxes_mode, str):
+                assert layout_merge_bboxes_mode in [
+                    "union",
+                    "large",
+                    "small",
+                ], f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'], but got {layout_merge_bboxes_mode}"
+
+                if layout_merge_bboxes_mode == "union":
+                    pass
+                else:
+                    contains_other, contained_by_other = check_containment(
+                        boxes, formula_index
+                    )
+                    if layout_merge_bboxes_mode == "large":
+                        boxes = boxes[contained_by_other == 0]
+                    elif layout_merge_bboxes_mode == "small":
+                        boxes = boxes[(contains_other == 0) | (contained_by_other == 1)]
+            elif isinstance(layout_merge_bboxes_mode, dict):
+                keep_mask = np.ones(len(boxes), dtype=bool)
+                for category_index, layout_mode in layout_merge_bboxes_mode.items():
+                    assert layout_mode in [
+                        "union",
+                        "large",
+                        "small",
+                    ], f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'], but got {layout_mode}"
+                    if layout_mode == "union":
+                        pass
+                    else:
+                        if layout_mode == "large":
+                            contains_other, contained_by_other = check_containment(
+                                boxes, formula_index, category_index, mode=layout_mode
+                            )
+                            # Remove boxes that are contained by other boxes
+                            keep_mask &= contained_by_other == 0
+                        elif layout_mode == "small":
+                            contains_other, contained_by_other = check_containment(
+                                boxes, formula_index, category_index, mode=layout_mode
+                            )
+                            # Keep boxes that do not contain others or are contained by others
+                            keep_mask &= (contains_other == 0) | (
+                                contained_by_other == 1
+                            )
+                boxes = boxes[keep_mask]
+
+        if boxes.size == 0:
+            return []
 
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):
@@ -751,9 +832,11 @@ class DetPostProcess:
                 assert (
                     len(layout_unclip_ratio) == 2
                 ), f"The length of `layout_unclip_ratio` should be 2."
+            elif isinstance(layout_unclip_ratio, dict):
+                pass
             else:
                 raise ValueError(
-                    f"The type of `layout_unclip_ratio` must be float or Tuple[float, float], but got {type(layout_unclip_ratio)}."
+                    f"The type of `layout_unclip_ratio` must be float, Tuple[float, float] or  Dict[int, Tuple[float, float]], but got {type(layout_unclip_ratio)}."
                 )
             boxes = unclip_boxes(boxes, layout_unclip_ratio)
 

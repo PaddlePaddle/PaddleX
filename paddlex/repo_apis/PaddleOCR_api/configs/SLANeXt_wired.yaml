@@ -21,6 +21,7 @@ Global:
   infer_mode: false
   use_sync_bn: true
   save_res_path: output/infer
+  d2s_train_image_shape: [3, 512, 512]
 
 Optimizer:
   name: AdamW
@@ -93,7 +94,7 @@ Train:
         out_box_format: xyxyxyxy
     - ResizeTableImage:
         max_len: 512
-        resize_bboxes: true
+        resize_bboxes: True
     - NormalizeImage:
         scale: 1./255.
         mean:
@@ -145,7 +146,7 @@ Eval:
         out_box_format: xyxyxyxy
     - ResizeTableImage:
         max_len: 512
-        resize_bboxes: true
+        resize_bboxes: True
     - NormalizeImage:
         scale: 1./255.
         mean:

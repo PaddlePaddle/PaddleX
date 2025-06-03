@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,16 +15,19 @@
 import os
 from typing import Dict, Optional, Tuple, Union
 
-import cv2
 import numpy as np
 from PIL.Image import Image
 
+from ......utils.deps import function_requires_deps, is_dep_available
 from ....infra import utils as serving_utils
 from ....infra.storage import Storage, SupportsGetURL
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+
 
 def prune_result(result: dict) -> dict:
-    KEYS_TO_REMOVE = ["input_path"]
+    KEYS_TO_REMOVE = ["input_path", "page_index"]
 
     def _process_obj(obj):
         if isinstance(obj, dict):
@@ -39,6 +42,7 @@ def prune_result(result: dict) -> dict:
     return _process_obj(result)
 
 
+@function_requires_deps("opencv-contrib-python")
 def postprocess_image(
     image: np.ndarray,
     log_id: str,
@@ -86,7 +90,11 @@ def postprocess_images(
     output_images: Dict[str, str] = {}
     for key, img in images.items():
         output_images[key] = postprocess_image(
-            np.array(img) if isinstance(img, Image) else img,
+            (
+                cv2.cvtColor(np.array(img.convert("RGB")), cv2.COLOR_RGB2BGR)
+                if isinstance(img, Image)
+                else img
+            ),
             log_id=log_id,
             filename=filename_template.format(key=key),
             file_storage=file_storage,

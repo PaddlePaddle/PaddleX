@@ -143,7 +143,7 @@ pybind11::capsule FDTensorToDLPack(FDTensor &fd_tensor) {
   pybind11::handle tensor_handle = pybind11::cast(&fd_tensor);
 
   // Increase the reference count by one to make sure that the DLPack
-  // represenation doesn't become invalid when the tensor object goes out of
+  // representation doesn't become invalid when the tensor object goes out of
   // scope.
   tensor_handle.inc_ref();
 

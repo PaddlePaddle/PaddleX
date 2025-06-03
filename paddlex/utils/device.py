@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
 # limitations under the License.
 
 import os
+from contextlib import ContextDecorator
+
 import GPUtil
 
-import lazy_paddle as paddle
 from . import logging
-from .flags import DISABLE_DEV_MODEL_WL
-from .errors import raise_unsupported_device_error
-from .custom_device_whitelist import (
+from .custom_device_list import (
     DCU_WHITELIST,
-    MLU_WHITELIST,
-    NPU_WHITELIST,
-    XPU_WHITELIST,
     GCU_WHITELIST,
+    MLU_WHITELIST,
+    NPU_BLACKLIST,
+    XPU_WHITELIST,
 )
+from .flags import DISABLE_DEV_MODEL_WL
 
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 
 
 def constr_device(device_type, device_ids):
+    if device_type == "cpu" and device_ids is not None:
+        raise ValueError("`device_ids` must be None for CPUs")
     if device_ids:
         device_ids = ",".join(map(str, device_ids))
         return f"{device_type}:{device_ids}"
@@ -39,18 +41,25 @@ def constr_device(device_type, device_ids):
 
 
 def get_default_device():
-    avail_gpus = GPUtil.getAvailable()
-    if not avail_gpus:
-        # maybe edge devices like Jetson
+    try:
+        gpu_list = GPUtil.getGPUs()
+    except Exception:
+        logging.debug(
+            "Failed to query GPU devices. Falling back to CPU.", exc_info=True
+        )
+        has_gpus = False
+    else:
+        has_gpus = bool(gpu_list)
+    if not has_gpus:
+        # HACK
         if os.path.exists("/etc/nv_tegra_release"):
-            avail_gpus = [0]
-            logging.info(
-                "Detected that the current device is a Jetson edge device. The default behavior will be to use GPU: 0"
+            logging.debug(
+                "The current device appears to be an NVIDIA Jetson. GPU 0 will be used as the default device."
             )
-    if not avail_gpus:
+    if not has_gpus:
         return "cpu"
     else:
-        return constr_device("gpu", [avail_gpus[0]])
+        return constr_device("gpu", [0])
 
 
 def parse_device(device):
@@ -73,6 +82,8 @@ def parse_device(device):
     device_type = device_type.lower()
     # raise_unsupported_device_error(device_type, SUPPORTED_DEVICE_TYPE)
     assert device_type.lower() in SUPPORTED_DEVICE_TYPE
+    if device_type == "cpu" and device_ids is not None:
+        raise ValueError("No Device ID should be specified for CPUs")
     return device_type, device_ids
 
 
@@ -86,12 +97,18 @@ def update_device_num(device, num):
 
 
 def set_env_for_device(device):
+    device_type, _ = parse_device(device)
+    return set_env_for_device_type(device_type)
+
+
+def set_env_for_device_type(device_type):
+    import paddle
+
     def _set(envs):
         for key, val in envs.items():
             os.environ[key] = val
             logging.debug(f"{key} has been set to {val}.")
 
-    device_type, device_ids = parse_device(device)
     # XXX: is_compiled_with_rocm() must be True on dcu platform ?
     if device_type.lower() == "dcu" and paddle.is_compiled_with_rocm():
         envs = {"FLAGS_conv_workspace_size_limit": "2000"}
@@ -122,34 +139,64 @@ def set_env_for_device(device):
         _set(envs)
 
 
-def check_supported_device(device, model_name):
+def check_supported_device_type(device_type, model_name):
     if DISABLE_DEV_MODEL_WL:
         logging.warning(
             "Skip checking if model is supported on device because the flag `PADDLE_PDX_DISABLE_DEV_MODEL_WL` has been set."
         )
         return
-    device_type, device_ids = parse_device(device)
+    tips = "You could set env `PADDLE_PDX_DISABLE_DEV_MODEL_WL` to `true` to disable this checking."
+    if device_type == "dcu":
+        assert model_name in DCU_WHITELIST, (
+            f"The DCU device does not yet support `{model_name}` model!" + tips
+        )
+    elif device_type == "mlu":
+        assert model_name in MLU_WHITELIST, (
+            f"The MLU device does not yet support `{model_name}` model!" + tips
+        )
+    elif device_type == "npu":
+        assert model_name not in NPU_BLACKLIST, (
+            f"The NPU device does not yet support `{model_name}` model!" + tips
+        )
+    elif device_type == "xpu":
+        assert model_name in XPU_WHITELIST, (
+            f"The XPU device does not yet support `{model_name}` model!" + tips
+        )
+    elif device_type == "gcu":
+        assert model_name in GCU_WHITELIST, (
+            f"The GCU device does not yet support `{model_name}` model!" + tips
+        )
+
+
+def check_supported_device(device, model_name):
+    device_type, _ = parse_device(device)
     return check_supported_device_type(device_type, model_name)
 
 
-def check_supported_device_type(device_type, model_name):
-    if device_type == "dcu":
-        assert (
-            model_name in DCU_WHITELIST
-        ), f"The DCU device does not yet support `{model_name}` model!"
-    elif device_type == "mlu":
-        assert (
-            model_name in MLU_WHITELIST
-        ), f"The MLU device does not yet support `{model_name}` model!"
-    elif device_type == "npu":
-        assert (
-            model_name in NPU_WHITELIST
-        ), f"The NPU device does not yet support `{model_name}` model!"
-    elif device_type == "xpu":
-        assert (
-            model_name in XPU_WHITELIST
-        ), f"The XPU device does not yet support `{model_name}` model!"
-    elif device_type == "gcu":
-        assert (
-            model_name in GCU_WHITELIST
-        ), f"The GCU device does not yet support `{model_name}` model!"
+class TemporaryDeviceChanger(ContextDecorator):
+    """
+    A context manager to temporarily change global device
+    """
+
+    def __init__(self, new_device):
+        # if new_device is None, nothing changed
+        import paddle
+
+        self.new_device = new_device
+        self.original_device = paddle.device.get_device()
+
+    def __enter__(self):
+        import paddle
+
+        if self.new_device is None:
+            return self
+        paddle.device.set_device(self.new_device)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import paddle
+
+        if self.new_device is None:
+            return False
+        paddle.device.set_device(self.original_device)
+        return False

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, Tuple, List
-import numpy as np
-from ...utils.pp_option import PaddlePredictorOption
-from ..base import BasePipeline
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+import numpy as np
+
+from ....utils.deps import pipeline_requires_extra
 from ...models.keypoint_detection.result import KptResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
+from ..base import BasePipeline
 
 Number = Union[int, float]
 
 
-class KeypointDetectionPipeline(BasePipeline):
+class _KeypointDetectionPipeline(BasePipeline):
     """Keypoint Detection pipeline"""
-
-    entities = "human_keypoint_detection"
 
     def __init__(
         self,
@@ -33,6 +35,7 @@ class KeypointDetectionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -41,9 +44,15 @@ class KeypointDetectionPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing model and other parameters.
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
-            use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         # create object detection model
         model_cfg = config["SubModules"]["ObjectDetection"]
@@ -135,3 +144,15 @@ class KeypointDetectionPipeline(BasePipeline):
                     }
                 )
             yield KptResult(single_img_res)
+
+
+@pipeline_requires_extra("cv")
+class KeypointDetectionPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "human_keypoint_detection"
+
+    @property
+    def _pipeline_cls(self):
+        return _KeypointDetectionPipeline
+
+    def _get_batch_size(self, config):
+        return config["SubModules"]["ObjectDetection"].get("batch_size", 1)

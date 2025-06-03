@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
+from typing import Union
 
 import yaml
-from typing import Union
-from ...base import BaseConfig
+
 from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_utils import load_config, merge_config
 
 
@@ -419,11 +420,11 @@ class FormulaRecConfig(BaseConfig):
         self._update_save_interval(save_interval)
 
     def _update_infer_img(self, infer_img: str, infer_list: str = None):
-        """update image list to be infered
+        """update image list to be inferred
 
         Args:
-            infer_img (str): path to the image file to be infered. It would be ignored when `infer_list` is be set.
-            infer_list (str, optional): path to the .txt file containing the paths to image to be infered.
+            infer_img (str): path to the image file to be inferred. It would be ignored when `infer_list` is be set.
+            infer_list (str, optional): path to the .txt file containing the paths to image to be inferred.
                 Defaults to None.
         """
         if infer_list:

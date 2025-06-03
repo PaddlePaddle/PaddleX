@@ -38,7 +38,7 @@ public:
    * \param[in] result The output result of detection
    * \param[in] imgs_info The original input images shape info map, key is
    * "shape_info", value is vector<array<int, 2>> a{{height, width}} \return
-   * true if the postprocess successed, otherwise false
+   * true if the postprocess succeeded, otherwise false
    */
   virtual bool
   Run(const std::vector<FDTensor> &infer_results,

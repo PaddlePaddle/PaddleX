@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,19 @@
 # limitations under the License.
 
 
-from typing import Any, Callable, List, Optional, Sequence, Tuple, Union, Dict
-import os
+from typing import Callable, Dict, List, Optional, Union
+
 import numpy as np
 import pandas as pd
-import chinese_calendar
-from pandas.tseries.offsets import DateOffset, Easter, Day
 from pandas.tseries import holiday as hd
-from sklearn.preprocessing import StandardScaler
+from pandas.tseries.offsets import DateOffset, Day, Easter
 
+from .....utils.deps import function_requires_deps, is_dep_available
+
+if is_dep_available("chinese-calendar"):
+    import chinese_calendar
+if is_dep_available("scikit-learn"):
+    from sklearn.preprocessing import StandardScaler
 
 MAX_WINDOW = 183 + 17
 EasterSunday = hd.Holiday("Easter Sunday", month=1, day=1, offset=[Easter(), Day(0)])
@@ -135,12 +139,14 @@ def _cal_weekofyear(
     return x.weekofyear / 51.0 - 0.5
 
 
+@function_requires_deps("chinese-calendar")
 def _cal_holiday(
     x: np.datetime64,
 ):
     return float(chinese_calendar.is_holiday(x))
 
 
+@function_requires_deps("chinese-calendar")
 def _cal_workday(
     x: np.datetime64,
 ):
@@ -444,6 +450,7 @@ def _distance_to_holiday(holiday) -> Callable[[pd.Timestamp], float]:
     return _distance_to_day
 
 
+@function_requires_deps("scikit-learn")
 def time_feature(
     dataset: Dict,
     freq: Optional[Union[str, int]],

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ import sys
 from types import ModuleType
 
 import filelock
-from paddle.utils.cpp_extension import load as paddle_jit_load
+
 from ..utils import logging
+from ..utils.deps import class_requires_deps
 
 
 def get_user_home() -> str:
@@ -97,6 +98,8 @@ class PaddleXCustomOperatorModule(ModuleType):
         super().__init__(modulename)
 
     def jit_build(self):
+        from paddle.utils.cpp_extension import load as paddle_jit_load
+
         try:
             lockfile = "paddlex.ops.{}".format(self.modulename)
             lockfile = os.path.join(TMP_HOME, lockfile)
@@ -111,7 +114,7 @@ class PaddleXCustomOperatorModule(ModuleType):
             with filelock.FileLock(lockfile):
                 return paddle_jit_load(name=self.modulename, sources=sources, **args)
         except:
-            logging.error("{} builded fail!".format(self.modulename))
+            logging.error("{} built fail!".format(self.modulename))
             raise
 
     def _load_module(self):
@@ -123,7 +126,7 @@ class PaddleXCustomOperatorModule(ModuleType):
                     "No custom op {} found, try JIT build".format(self.modulename)
                 )
                 self.module = self.jit_build()
-                logging.info("{} builded success!".format(self.modulename))
+                logging.info("{} built success!".format(self.modulename))
 
             # refresh
             sys.modules[self.fullname] = self.module

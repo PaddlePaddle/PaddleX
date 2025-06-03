@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,25 +13,26 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-
-import re
-import numpy as np
-from PIL import Image, ImageOps, ImageDraw
-import cv2
-import math
 import json
-import tempfile
-from tokenizers import Tokenizer as TokenizerFast
-from tokenizers import AddedToken
-from typing import List, Tuple, Optional, Any, Dict, Union
+import math
+import re
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from ....utils import logging
+import numpy as np
+from PIL import Image, ImageOps
+
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("tokenizers"):
+    from tokenizers import AddedToken
+    from tokenizers import Tokenizer as TokenizerFast
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class MinMaxResize:
     """Class for resizing images to be within specified minimum and maximum dimensions, with padding and normalization."""
 
@@ -157,6 +158,7 @@ class MinMaxResize:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class LatexTestTransform:
     """
     A transform class for processing images according to Latex test requirements.
@@ -309,6 +311,7 @@ class ToBatch(object):
 
 
 @benchmark.timeit
+@class_requires_deps("tokenizers")
 class LaTeXOCRDecode(object):
     """Class for decoding LaTeX OCR tokens based on a provided character list."""
 
@@ -319,17 +322,10 @@ class LaTeXOCRDecode(object):
             character_list (list): The list of characters to use for tokenization.
             **kwargs: Additional keyword arguments for initialization.
         """
-        from tokenizers import Tokenizer as TokenizerFast
-
         super(LaTeXOCRDecode, self).__init__()
-        temp_path = tempfile.gettempdir()
-        rec_char_dict_path = os.path.join(temp_path, "latexocr_tokenizer.json")
-        try:
-            with open(rec_char_dict_path, "w") as f:
-                json.dump(character_list, f)
-        except Exception as e:
-            print(f"创建 latexocr_tokenizer.json 文件失败, 原因{str(e)}")
-        self.tokenizer = TokenizerFast.from_file(rec_char_dict_path)
+        fast_tokenizer_str = json.dumps(character_list)
+        fast_tokenizer_buffer = fast_tokenizer_str.encode("utf-8")
+        self.tokenizer = TokenizerFast.from_buffer(fast_tokenizer_buffer)
 
     def post_process(self, s: str) -> str:
         """Post-processes the decoded LaTeX string.
@@ -369,7 +365,7 @@ class LaTeXOCRDecode(object):
         dec = [self.tokenizer.decode(tok) for tok in tokens]
         dec_str_list = [
             "".join(detok.split(" "))
-            .replace("Ġ", " ")
+            .replace("臓", " ")
             .replace("[EOS]", "")
             .replace("[BOS]", "")
             .replace("[PAD]", "")
@@ -410,6 +406,7 @@ class LaTeXOCRDecode(object):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class UniMERNetImgDecode(object):
     """Class for decoding images for UniMERNet, including cropping margins, resizing, and padding."""
 
@@ -563,6 +560,7 @@ class UniMERNetImgDecode(object):
 
 
 @benchmark.timeit
+@class_requires_deps("tokenizers")
 class UniMERNetDecode(object):
     """Class for decoding tokenized inputs using UniMERNet tokenizer.
 
@@ -626,78 +624,69 @@ class UniMERNetDecode(object):
         self.pad_token_type_id = 0
         self.pad_to_multiple_of = None
 
-        temp_path = tempfile.gettempdir()
-        fast_tokenizer_file = os.path.join(temp_path, "tokenizer.json")
-        tokenizer_config_file = os.path.join(temp_path, "tokenizer_config.json")
-        try:
-            with open(fast_tokenizer_file, "w") as f:
-                json.dump(character_list["fast_tokenizer_file"], f)
-            with open(tokenizer_config_file, "w") as f:
-                json.dump(character_list["tokenizer_config_file"], f)
-        except Exception as e:
-            print(
-                f"创建 tokenizer.json 和 tokenizer_config.json 文件失败, 原因{str(e)}"
-            )
-
-        self.tokenizer = TokenizerFast.from_file(fast_tokenizer_file)
+        fast_tokenizer_str = json.dumps(character_list["fast_tokenizer_file"])
+        fast_tokenizer_buffer = fast_tokenizer_str.encode("utf-8")
+        self.tokenizer = TokenizerFast.from_buffer(fast_tokenizer_buffer)
+        tokenizer_config = (
+            character_list["tokenizer_config_file"]
+            if "tokenizer_config_file" in character_list
+            else None
+        )
         added_tokens_decoder = {}
         added_tokens_map = {}
-        if tokenizer_config_file is not None:
-            with open(
-                tokenizer_config_file, encoding="utf-8"
-            ) as tokenizer_config_handle:
-                init_kwargs = json.load(tokenizer_config_handle)
-                if "added_tokens_decoder" in init_kwargs:
-                    for idx, token in init_kwargs["added_tokens_decoder"].items():
-                        if isinstance(token, dict):
-                            token = AddedToken(**token)
-                        if isinstance(token, AddedToken):
-                            added_tokens_decoder[int(idx)] = token
-                            added_tokens_map[str(token)] = token
-                        else:
-                            raise ValueError(
-                                f"Found a {token.__class__} in the saved `added_tokens_decoder`, should be a dictionary or an AddedToken instance"
-                            )
-                init_kwargs["added_tokens_decoder"] = added_tokens_decoder
-                added_tokens_decoder = init_kwargs.pop("added_tokens_decoder", {})
-                tokens_to_add = [
-                    token
-                    for index, token in sorted(
-                        added_tokens_decoder.items(), key=lambda x: x[0]
-                    )
-                    if token not in added_tokens_decoder
-                ]
-                added_tokens_encoder = self.added_tokens_encoder(added_tokens_decoder)
-                encoder = list(added_tokens_encoder.keys()) + [
-                    str(token) for token in tokens_to_add
-                ]
-                tokens_to_add += [
-                    token
-                    for token in self.all_special_tokens_extended
-                    if token not in encoder and token not in tokens_to_add
-                ]
-                if len(tokens_to_add) > 0:
-                    is_last_special = None
-                    tokens = []
-                    special_tokens = self.all_special_tokens
-                    for token in tokens_to_add:
-                        is_special = (
-                            (token.special or str(token) in special_tokens)
-                            if isinstance(token, AddedToken)
-                            else str(token) in special_tokens
+        if tokenizer_config is not None:
+            init_kwargs = tokenizer_config
+            if "added_tokens_decoder" in init_kwargs:
+                for idx, token in init_kwargs["added_tokens_decoder"].items():
+                    if isinstance(token, dict):
+                        token = AddedToken(**token)
+                    if isinstance(token, AddedToken):
+                        added_tokens_decoder[int(idx)] = token
+                        added_tokens_map[str(token)] = token
+                    else:
+                        raise ValueError(
+                            f"Found a {token.__class__} in the saved `added_tokens_decoder`, should be a dictionary or an AddedToken instance"
                         )
-                        if is_last_special is None or is_last_special == is_special:
-                            tokens.append(token)
-                        else:
-                            self._add_tokens(tokens, special_tokens=is_last_special)
-                            tokens = [token]
-                        is_last_special = is_special
-                    if tokens:
+            init_kwargs["added_tokens_decoder"] = added_tokens_decoder
+            added_tokens_decoder = init_kwargs.pop("added_tokens_decoder", {})
+            tokens_to_add = [
+                token
+                for index, token in sorted(
+                    added_tokens_decoder.items(), key=lambda x: x[0]
+                )
+                if token not in added_tokens_decoder
+            ]
+            added_tokens_encoder = self.added_tokens_encoder(added_tokens_decoder)
+            encoder = list(added_tokens_encoder.keys()) + [
+                str(token) for token in tokens_to_add
+            ]
+            tokens_to_add += [
+                token
+                for token in self.all_special_tokens_extended
+                if token not in encoder and token not in tokens_to_add
+            ]
+            if len(tokens_to_add) > 0:
+                is_last_special = None
+                tokens = []
+                special_tokens = self.all_special_tokens
+                for token in tokens_to_add:
+                    is_special = (
+                        (token.special or str(token) in special_tokens)
+                        if isinstance(token, AddedToken)
+                        else str(token) in special_tokens
+                    )
+                    if is_last_special is None or is_last_special == is_special:
+                        tokens.append(token)
+                    else:
                         self._add_tokens(tokens, special_tokens=is_last_special)
+                        tokens = [token]
+                    is_last_special = is_special
+                if tokens:
+                    self._add_tokens(tokens, special_tokens=is_last_special)
 
     def _add_tokens(
-        self, new_tokens: List[Union[AddedToken, str]], special_tokens: bool = False
-    ) -> List[Union[AddedToken, str]]:
+        self, new_tokens: "List[Union[AddedToken, str]]", special_tokens: bool = False
+    ) -> "List[Union[AddedToken, str]]":
         """Adds new tokens to the tokenizer.
 
         Args:
@@ -713,7 +702,7 @@ class UniMERNetDecode(object):
         return self.tokenizer.add_tokens(new_tokens)
 
     def added_tokens_encoder(
-        self, added_tokens_decoder: Dict[int, AddedToken]
+        self, added_tokens_decoder: "Dict[int, AddedToken]"
     ) -> Dict[str, int]:
         """Creates an encoder dictionary from added tokens.
 
@@ -739,7 +728,7 @@ class UniMERNetDecode(object):
         return all_toks
 
     @property
-    def all_special_tokens_extended(self) -> List[Union[str, AddedToken]]:
+    def all_special_tokens_extended(self) -> "List[Union[str, AddedToken]]":
         """Retrieves all special tokens, including extended ones.
 
         Returns:
@@ -809,7 +798,7 @@ class UniMERNetDecode(object):
             for i in reversed(range(len(toks[b]))):
                 if toks[b][i] is None:
                     toks[b][i] = ""
-                toks[b][i] = toks[b][i].replace("Ġ", " ").strip()
+                toks[b][i] = toks[b][i].replace("臓", " ").strip()
                 if toks[b][i] in (
                     [
                         self.tokenizer.bos_token,
@@ -853,8 +842,27 @@ class UniMERNetDecode(object):
         text_reg = r"(\\(operatorname|mathrm|text|mathbf)\s?\*? {.*?})"
         letter = "[a-zA-Z]"
         noletter = "[\W_^\d]"
-        names = [x[0].replace(" ", "") for x in re.findall(text_reg, s)]
-        s = re.sub(text_reg, lambda match: str(names.pop(0)), s)
+        names = []
+        for x in re.findall(text_reg, s):
+            pattern = r"\\[a-zA-Z]+"
+            pattern = r"(\\[a-zA-Z]+)\s(?=\w)|\\[a-zA-Z]+\s(?=})"
+            matches = re.findall(pattern, x[0])
+            for m in matches:
+                if (
+                    m
+                    not in [
+                        "\\operatorname",
+                        "\\mathrm",
+                        "\\text",
+                        "\\mathbf",
+                    ]
+                    and m.strip() != ""
+                ):
+                    s = s.replace(m, m + "XXXXXXX")
+                    s = s.replace(" ", "")
+                    names.append(s)
+        if len(names) > 0:
+            s = re.sub(text_reg, lambda match: str(names.pop(0)), s)
         news = s
         while True:
             s = news
@@ -863,7 +871,16 @@ class UniMERNetDecode(object):
             news = re.sub(r"(%s)\s+?(%s)" % (letter, noletter), r"\1\2", news)
             if news == s:
                 break
-        return s
+        return s.replace("XXXXXXX", " ")
+
+    def remove_chinese_text_wrapping(self, formula):
+        pattern = re.compile(r"\\text\s*{\s*([^}]*?[\u4e00-\u9fff]+[^}]*?)\s*}")
+
+        def replacer(match):
+            return match.group(1)
+
+        replaced_formula = pattern.sub(replacer, formula)
+        return replaced_formula.replace('"', "")
 
     def post_process(self, text: str) -> str:
         """Post-processes a string by fixing text and normalizing it.
@@ -876,6 +893,7 @@ class UniMERNetDecode(object):
         """
         from ftfy import fix_text
 
+        text = self.remove_chinese_text_wrapping(text)
         text = fix_text(text)
         text = self.normalize(text)
         return text
@@ -910,6 +928,7 @@ class UniMERNetDecode(object):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class UniMERNetTestTransform:
     """
     A class for transforming images according to UniMERNet test specifications.
@@ -964,7 +983,6 @@ class UniMERNetImageFormat:
     def __init__(self, **kwargs) -> None:
         """Initializes the UniMERNetImageFormat instance."""
         # your init code
-        pass
 
     def format(self, img: np.ndarray) -> np.ndarray:
         """Formats a single image to UniMERNet's required format.

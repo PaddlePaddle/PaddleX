@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from abc import ABC
 from pathlib import Path
-from abc import ABC, abstractmethod
 
-from .build_model import build_model
-from ...utils.device import (
-    update_device_num,
-    set_env_for_device,
-    check_supported_device,
-)
-from ...utils.misc import AutoRegisterABCMetaClass
-from ...utils.config import AttrDict
 from ...utils import logging
+from ...utils.config import AttrDict
+from ...utils.device import (
+    check_supported_device,
+    set_env_for_device,
+    update_device_num,
+)
+from ...utils.flags import FLAGS_json_format_model
+from ...utils.misc import AutoRegisterABCMetaClass
+from .build_model import build_model
 
 
 def build_exportor(config: AttrDict) -> "BaseExportor":
@@ -38,7 +38,7 @@ def build_exportor(config: AttrDict) -> "BaseExportor":
     """
     model_name = config.Global.model
     try:
-        import feature_line_modules
+        pass
     except ModuleNotFoundError:
         pass
     return BaseExportor.get(model_name)(config)
@@ -131,13 +131,12 @@ exporting!"
 
     def update_config(self):
         """update export config"""
-        pass
 
     def get_export_kwargs(self):
         """get key-value arguments of model export function"""
-        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
-            "FLAGS_json_format_model"
-        ) in ["1", "True"]
+        export_with_pir = (
+            self.global_config.get("export_with_pir", False) or FLAGS_json_format_model
+        )
         return {
             "weight_path": self.export_config.weight_path,
             "save_dir": self.global_config.output,

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,24 +24,29 @@ class DetEvaluator(BaseEvaluator):
 
     def _update_dataset(self):
         """update dataset settings"""
-        metric = self.pdx_config.metric if 'metric' in self.pdx_config else 'COCO'
-        data_fields = self.pdx_config.EvalDataset['data_fields'] if 'data_fields' in self.pdx_config.EvalDataset else None
+        metric = self.pdx_config.metric if "metric" in self.pdx_config else "COCO"
+        data_fields = (
+            self.pdx_config.EvalDataset["data_fields"]
+            if "data_fields" in self.pdx_config.EvalDataset
+            else None
+        )
 
         self.pdx_config.update_dataset(
-            self.global_config.dataset_dir, "COCODetDataset",
+            self.global_config.dataset_dir,
+            "COCODetDataset",
             data_fields=data_fields,
             metric=metric,
         )
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         self._update_dataset()
         self.pdx_config.update_weights(self.eval_config.weight_path)
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

@@ -73,23 +73,55 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 </tr>
 </table>
 
-**测试环境说明：**
+<strong>测试环境说明:</strong>
 
-- **性能测试环境**
-  - **测试数据集**：
-    - 行人检测模型：CrowdHuman数据集。
-    - 人体关键点检测模型：COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。
-  - **硬件配置**：
-    - GPU：NVIDIA Tesla T4
-    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
-    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+            <li><strong>测试数据集：
+             </strong>
+               <ul>
+                 <li>行人检测模型：CrowdHuman数据集。</li>
+                 <li>人体关键点检测模型：COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。</li>
+               </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- **推理模式说明**
 
-| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
-|-------------|----------------------------------|------------------|---------------------------------------------|
-| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
-| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
@@ -103,7 +135,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 ### 2.2 本地体验
 
-> ❗ 在本地使用人体关键点检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用人体关键点检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `cv`。
 
 #### 2.2.1 命令行方式体验
 
@@ -116,7 +148,7 @@ paddlex --pipeline human_keypoint_detection \
         --save_path ./output/ \
         --device gpu:0
 ```
-相关参数和运行结果说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明和结果解释。
+相关参数和运行结果说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明和结果解释。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
 
 可视化结果保存至`save_path`，如下所示：
 
@@ -165,15 +197,23 @@ for res in output:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。支持同时指定多个设备以进行并行推理，详情请参考产线并行推理文档。</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件或 <code>config</code> 中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -716,7 +756,7 @@ print(result["persons"])
 
 由于人体关键点检测产线包含两个模块（行人检测模块和人体关键点检测模块），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的行人目标未被检测出来，那么可能是行人检测模型存在不足，您需要参考[行人检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_detection.md#四二次开发)章节，使用您的私有数据集对行人检测模型进行微调；如果在已检测到行人出现关键点检测错误，这表明关键点检测模型需要进一步改进，您需要参考[关键点检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.md#四二次开发)章节,对关键点检测模型进行微调。
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的行人目标未被检测出来，那么可能是行人检测模型存在不足，您需要参考[行人检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集对行人检测模型进行微调；如果在已检测到行人出现关键点检测错误，这表明关键点检测模型需要进一步改进，您需要参考[关键点检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_keypoint_detection.html)中的<b>二次开发</b>章节,对关键点检测模型进行微调。
 
 ### 4.2 模型应用
 

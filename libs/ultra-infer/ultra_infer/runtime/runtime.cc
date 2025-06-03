@@ -63,6 +63,10 @@
 #include "ultra_infer/runtime/backends/tvm/tvm_backend.h"
 #endif
 
+#ifdef ENABLE_OM_BACKEND
+#include "ultra_infer/runtime/backends/om/om_backend.h"
+#endif
+
 namespace ultra_infer {
 
 bool AutoSelectBackend(RuntimeOption &option) {
@@ -93,7 +97,7 @@ bool AutoSelectBackend(RuntimeOption &option) {
   }
 
   if (candidates.size() == 0) {
-    FDERROR << "Cannot found availabel inference backends by model format: "
+    FDERROR << "Cannot found available inference backends by model format: "
             << option.model_format << " with device: " << option.device
             << std::endl;
     return false;
@@ -108,7 +112,7 @@ bool AutoSelectBackend(RuntimeOption &option) {
     }
   }
   std::string debug_message = Str(candidates);
-  FDERROR << "The candiate backends for " << option.model_format << " & "
+  FDERROR << "The candidate backends for " << option.model_format << " & "
           << option.device << " are " << debug_message
           << ", but both of them have not been compiled with current "
              "UltraInfer yet."
@@ -147,6 +151,8 @@ bool Runtime::Init(const RuntimeOption &_option) {
     CreateHorizonBackend();
   } else if (option.backend == Backend::TVM) {
     CreateTVMBackend();
+  } else if (option.backend == Backend::OMONNPU) {
+    CreateOMBackend();
   } else {
     std::string msg = Str(GetAvailableBackends());
     FDERROR << "The compiled UltraInfer only supports " << msg << ", "
@@ -397,6 +403,18 @@ void Runtime::CreatePorosBackend() {
          << "." << std::endl;
 }
 
+void Runtime::CreateOMBackend() {
+#ifdef ENABLE_OM_BACKEND
+  backend_ = utils::make_unique<OmBackend>();
+  FDASSERT(backend_->Init(option), "Failed to initialize om backend.");
+#else
+  FDASSERT(false, "OMBackend is not available, please compiled with ",
+           " ENABLE_OM_BACKEND=ON.");
+#endif
+  FDINFO << "Runtime initialized with Backend::OMONNPU in " << option.device
+         << "." << std::endl;
+}
+
 // only for poros backend
 bool Runtime::Compile(std::vector<std::vector<FDTensor>> &prewarm_tensors) {
 #ifdef ENABLE_POROS_BACKEND
@@ -410,7 +428,7 @@ bool Runtime::Compile(std::vector<std::vector<FDTensor>> &prewarm_tensors) {
   FDASSERT(
       casted_backend->Compile(option.model_file, prewarm_tensors,
                               option.poros_option),
-      "Load model from Torchscript failed while initliazing PorosBackend.");
+      "Load model from Torchscript failed while initializing PorosBackend.");
 #else
   FDASSERT(false, "PorosBackend is not available, please compiled with "
                   "ENABLE_POROS_BACKEND=ON.");

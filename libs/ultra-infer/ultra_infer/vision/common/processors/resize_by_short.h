@@ -49,11 +49,11 @@ public:
    *
    * \param[in] mat The input image data, `result = mat * alpha + beta`
    * \param[in] target_size target size of the output image.
-   * \param[in] interp interpolation method, deafult is 1.
-   * \param[in] use_scale to define wheather to scale the image, deafult is
-   * true. \param[in] max_hw max HW fo output image. \param[in] lib to define
+   * \param[in] interp interpolation method, default is 1.
+   * \param[in] use_scale to define whether to scale the image, default is
+   * true. \param[in] max_hw max HW of output image. \param[in] lib to define
    * OpenCV or FlyCV or CVCUDA will be used. \return true if the process
-   * successed, otherwise false
+   * succeeded, otherwise false
    */
   static bool Run(FDMat *mat, int target_size, int interp = 1,
                   bool use_scale = true,

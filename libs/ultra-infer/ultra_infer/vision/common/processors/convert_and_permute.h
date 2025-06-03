@@ -18,7 +18,7 @@
 
 namespace ultra_infer {
 namespace vision {
-/*! @brief Processor for convert images with given paramters and permute images
+/*! @brief Processor for convert images with given parameters and permute images
  * from HWC to CHW.
  */
 class ULTRAINFER_DECL ConvertAndPermute : public Processor {
@@ -38,7 +38,7 @@ public:
    * \param[in] alpha The alpha channel data
    * \param[in] beta The beta channel data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, const std::vector<float> &alpha,
                   const std::vector<float> &beta, bool swap_rb = false,

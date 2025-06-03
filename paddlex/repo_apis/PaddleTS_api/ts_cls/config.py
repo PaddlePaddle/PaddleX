@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
 
 
 import os
-import yaml
 
-from ..ts_base.config import BaseTSConfig
 from ....utils.misc import abspath
+from ..ts_base.config import BaseTSConfig
 
 
 class TSClassifyConfig(BaseTSConfig):
@@ -25,7 +24,7 @@ class TSClassifyConfig(BaseTSConfig):
 
     def update_dataset(self, dataset_dir: str, dataset_type: str = None):
         """
-        upadte the dataset
+        update the dataset
 
         Args:
             dataset_dir (str): dataset root path
@@ -42,7 +41,7 @@ class TSClassifyConfig(BaseTSConfig):
         update basic info including time_col, freq, target_cols.
 
         Args:
-            info_params (dict): upadte basic info
+            info_params (dict): update basic info
 
         Raises:
             TypeError: if info_params is not dict, raising TypeError

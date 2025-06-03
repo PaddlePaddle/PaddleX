@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
 
 import os
 import os.path as osp
-from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
+from .config import FormulaRecConfig
 from .model import FormulaRecModel
 from .runner import FormulaRecRunner
-from .config import FormulaRecConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEOCR_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
@@ -68,6 +67,33 @@ register_model_info(
         "model_name": "PP-FormulaNet-L",
         "suite": "FormulaRec",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-FormulaNet_plus-S",
+        "suite": "FormulaRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet_plus-S.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-FormulaNet_plus-M",
+        "suite": "FormulaRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet_plus-M.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-FormulaNet_plus-L",
+        "suite": "FormulaRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-FormulaNet_plus-L.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
     }
 )

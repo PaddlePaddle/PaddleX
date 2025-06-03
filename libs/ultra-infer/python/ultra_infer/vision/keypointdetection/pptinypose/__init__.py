@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class PPTinyPose(UltraInferModel):
 
     @property
     def use_dark(self):
-        """Atrribute of PPTinyPose model. Stating whether using Distribution-Aware Coordinate Representation for Human Pose Estimation(DARK for short) in postprocess, default is True
+        """Attribute of PPTinyPose model. Stating whether using Distribution-Aware Coordinate Representation for Human Pose Estimation(DARK for short) in postprocess, default is True
 
         :return: value of use_dark(bool)
         """

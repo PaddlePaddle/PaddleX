@@ -33,7 +33,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </thead>
 <tbody>
 <tr>
-<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
 <td>90.4</td>
 <td>34.5252</td>
 <td>1454.27</td>
@@ -41,7 +41,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 <td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
 <td>75.2</td>
 <td>15.9</td>
 <td>160.1</td>
@@ -49,7 +49,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 <td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
 <td>70.9</td>
 <td>13.8</td>
 <td>46.7</td>
@@ -81,7 +81,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
 <td>97.5</td>
 <td>12.623</td>
 <td>90.8934</td>
@@ -107,7 +107,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </thead>
 <tbody>
 <tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>88.2</td>
 <td>13.5</td>
 <td>45.8</td>
@@ -115,7 +115,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>89.0</td>
 <td>15.7</td>
 <td>159.8</td>
@@ -123,7 +123,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>95.8</td>
 <td>114.6</td>
 <td>3832.6</td>
@@ -149,7 +149,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
 <td>97.8</td>
 <td>13.0</td>
 <td>91.3</td>
@@ -158,7 +158,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </tr>
 </table>
 
-<b>注：以上精度指标的评估集是 [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) 的评估数据集，包含英文文档的 11245 张文图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+<b>注：以上精度指标的评估集是 [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) 的评估数据集，包含英文文档的 11245 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>17类区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
 
@@ -175,7 +175,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </thead>
 <tbody>
 <tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>87.4</td>
 <td>13.6</td>
 <td>46.2</td>
@@ -184,7 +184,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </tr>
 
 <tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>89.0</td>
 <td>17.2</td>
 <td>160.2</td>
@@ -193,7 +193,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 </tr>
 
 <tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>98.3</td>
 <td>115.1</td>
 <td>3827.2</td>
@@ -227,7 +227,7 @@ SubModules:
   ObjectDetection:
     module_name: object_detection
     model_name: PP-DocLayout-L  # 修改为上文 2. 模型列表中的版面区域检测模型名称
-    model_dir: null 
+    model_dir: null
     batch_size: 1
     img_size: null
     threshold: null
@@ -236,7 +236,7 @@ SubModules:
 随后，加载自定义配置文件 `./my_path/object_detection.yaml`，参考以下本地体验中的命令行方式或 Python 脚本方式进行在线体验。
 
 
-### 2.1 本地体验 ———— 命令行方式
+### 3.1 本地体验 ———— 命令行方式
 
 运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_test_0.jpg)到本地。自定义配置文件保存在 `./my_path/object_detection.yaml` ，则只需执行：
 
@@ -269,7 +269,7 @@ paddlex --pipeline ./my_path/object_detection.yaml \
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_0_res.jpg">
 
 
-### 2.2 本地体验 ———— Python 方式
+### 3.2 本地体验 ———— Python 方式
 
 通过上述命令行方式可快速体验查看效果，在项目中往往需要代码集成，您可以通过如下几行代码完成产线的快速推理：
 
@@ -309,7 +309,7 @@ for res in output:
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") # 阈值参数不设置时，默认为0.5
-output = pipeline.predict("layout_test_2.jpg") 
+output = pipeline.predict("layout_test_2.jpg")
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -323,7 +323,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold={2: 0.6}) # 针对类别2text，设置检测得分阈值为0.6，其余类别沿用默认阈值0.5
 for res in output:
     res.print()
@@ -354,7 +354,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg", threshold=0.5)  # 不开启重叠框过滤功能
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True)  # 开启重叠框过滤功能
 for res in output:
@@ -384,7 +384,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6})  # 不调整检测框边的缩放倍数
 output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6}, layout_unclip_ratio=(1.0, 1.05))  # 调整检测框的高的缩放倍数为1.05
 for res in output:
@@ -414,7 +414,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("PMC4836298_00004.jpg") # 默认不设置
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="small") # 设置'small'模式
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="large") # 设置'large'模式
@@ -456,7 +456,7 @@ class LayoutOCRPipeline():
     def __init__(self):
         self.layout_pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")  # 加载上述自定义的配置文件，创建版面检测产线
         self.ocr_pipeline = create_pipeline(pipeline="OCR") # 加载OCR产线
-        
+
     def crop_table(self, layout_res, layout_name):
         img_path = layout_res["input_path"]
         img = cv2.imread(img_path)
@@ -468,7 +468,7 @@ class LayoutOCRPipeline():
             table_img = img[ymin:ymax, xmin:xmax]
             table_img_list.append(table_img)
         return table_img_list
-    
+
     def predict(self, data, layout_name):
         for layout_res in self.layout_pipeline.predict(data):  # 进行版面检测
             final_res = {}
@@ -476,7 +476,7 @@ class LayoutOCRPipeline():
             if len(crop_img_list) == 0:
                 continue
             ocr_res = list(self.ocr_pipeline.predict(    # 进行OCR文字识别
-                                                input=crop_img_list, 
+                                                input=crop_img_list,
                                                 use_doc_orientation_classify=False, # 不使用文档方向分类
                                                 use_doc_unwarping=False, # 不使用文档矫正
                                                 use_textline_orientation=False # 不使用文字方向分类
@@ -512,7 +512,7 @@ if __name__ == "__main__":
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True, layout_merge_bboxes_mode="large")
 for res in output:
     res.print()
@@ -538,7 +538,7 @@ tar -xvf paddlex_hps_object_detection_sdk.tar.gz
 
 - 在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
 
 选择目标检测产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
 
@@ -625,5 +625,3 @@ python -m pip install paddlex_hps_client-*.whl
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
-
-

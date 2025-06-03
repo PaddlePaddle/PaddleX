@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import abstractmethod
 from copy import deepcopy
 
-from .inference import create_predictor, PaddlePredictorOption
+from .inference import PaddlePredictorOption, create_predictor
 from .modules import (
     build_dataset_checker,
-    build_trainer,
-    build_evaluater,
+    build_evaluator,
     build_exportor,
+    build_trainer,
 )
 
 
@@ -83,15 +82,30 @@ class _ModelBasedConfig(_BaseModel):
 
         model_dir = predict_kwargs.pop("model_dir", None)
 
-        device = self._config.Global.get("device")
-        kernel_option = predict_kwargs.pop("kernel_option", {})
-        pp_option = PaddlePredictorOption(self._model_name, **kernel_option)
+        UNSET = object()
+        device = self._config.Global.get("device", None)
+        kernel_option = predict_kwargs.pop("kernel_option", UNSET)
+        use_hpip = predict_kwargs.pop("use_hpip", UNSET)
+        hpi_config = predict_kwargs.pop("hpi_config", UNSET)
+
+        create_predictor_kwargs = {}
+        if kernel_option is not UNSET:
+            kernel_option.setdefault("model_name", self._model_name)
+            create_predictor_kwargs["pp_option"] = PaddlePredictorOption(
+                **kernel_option
+            )
+        if use_hpip is not UNSET:
+            create_predictor_kwargs["use_hpip"] = use_hpip
+        else:
+            create_predictor_kwargs["use_hpip"] = False
+        if hpi_config is not UNSET:
+            create_predictor_kwargs["hpi_config"] = hpi_config
 
         predictor = create_predictor(
             self._model_name,
             model_dir,
             device=device,
-            pp_option=pp_option,
+            **create_predictor_kwargs,
         )
         assert "input" in predict_kwargs
         return predict_kwargs, predictor
@@ -105,7 +119,7 @@ class _ModelBasedConfig(_BaseModel):
         trainer.train()
 
     def evaluate(self):
-        evaluator = build_evaluater(self._config)
+        evaluator = build_evaluator(self._config)
         return evaluator.evaluate()
 
     def export(self):

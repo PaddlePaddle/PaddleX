@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
 # limitations under the License.
 
 
-import os
-import json
 import math
+import os
 import platform
-from pathlib import Path
-
 from collections import defaultdict
-from PIL import Image
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from matplotlib import font_manager
 
+import numpy as np
+
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
-from .....utils.logging import warning
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
+from .....utils.logging import warning
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 
 def simple_analyse(dataset_path, images_dict):
@@ -77,10 +78,10 @@ def simple_analyse(dataset_path, images_dict):
     )
 
 
+@function_requires_deps("matplotlib", "opencv-contrib-python")
 def deep_analyse(dataset_path, output, datatype="MSTextRecDataset"):
     """class analysis for dataset"""
     tags = ["train", "val"]
-    all_instances = 0
     labels_cnt = {}
     x_max = []
     classes_max = []

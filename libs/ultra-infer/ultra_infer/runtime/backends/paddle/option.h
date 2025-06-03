@@ -102,11 +102,13 @@ struct PaddleBackendOption {
    */
   XpuOption xpu_option;
 
+  /// Wenable_tuned_tensorrt_dynamic_shapeDynamicShape, default true
+  bool allow_build_trt_at_runtime = true;
   /// Collect shape for model while enable_trt is true
   bool collect_trt_shape = false;
   /// Collect shape for model by device (for some custom ops)
   bool collect_trt_shape_by_device = false;
-  /// Cache input shape for mkldnn while the input data will change dynamiclly
+  /// Cache input shape for mkldnn while the input data will change dynamically
   int mkldnn_cache_size = -1;
   /// initialize memory size(MB) for GPU
   int gpu_mem_init_size = 100;
@@ -163,7 +165,7 @@ struct PaddleBackendOption {
   std::string model_file = "";  // Path of model file
   std::string params_file = ""; // Path of parameters file, can be empty
 
-  // load model and paramters from memory
+  // load model and parameters from memory
   bool model_from_memory_ = false;
 };
 } // namespace ultra_infer

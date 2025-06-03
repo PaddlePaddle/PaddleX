@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,33 +13,25 @@
 # limitations under the License.
 
 import bisect
+import functools
+import inspect
 import io
 import itertools
 import json
 import os
 import re
-import six
-import inspect
 import unicodedata
-import functools
 from collections import OrderedDict
 from dataclasses import asdict, dataclass
-from typing import Any, Dict, List, Optional, Tuple, Union
-
-import numpy
-import numpy as np
-import lazy_paddle as paddle
-from jinja2 import Template
-from jinja2.exceptions import TemplateError, TemplateSyntaxError
-from jinja2.sandbox import ImmutableSandboxedEnvironment
-
-from .tokenizer_utils_base import CHAT_TEMPLATE_CONFIG_NAME
-from .....utils import logging
-
 from functools import lru_cache
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
-from .vocab import Vocab
+import numpy as np
+
+from .....utils import logging
+from .....utils.deps import class_requires_deps, is_dep_available
 from .tokenizer_utils_base import (
+    CHAT_TEMPLATE_CONFIG_NAME,
     AddedToken,
     BatchEncoding,
     EncodedInput,
@@ -54,6 +46,12 @@ from .tokenizer_utils_base import (
     TruncationStrategy,
 )
 from .utils import convert_to_dict_message, fn_args_to_dict
+from .vocab import Vocab
+
+if is_dep_available("Jinja2"):
+    from jinja2 import Template
+    from jinja2.exceptions import TemplateError, TemplateSyntaxError
+    from jinja2.sandbox import ImmutableSandboxedEnvironment
 
 __all__ = [
     "ChatTemplate",
@@ -64,6 +62,7 @@ __all__ = [
 ]
 
 
+@class_requires_deps("Jinja2")
 @dataclass
 class ChatTemplate:
     conversation: Union[List[str], None] = None
@@ -72,7 +71,7 @@ class ChatTemplate:
 
     @staticmethod
     @lru_cache()
-    def _compile_jinja_template(chat_template) -> Template:
+    def _compile_jinja_template(chat_template) -> "Template":
         def raise_exception(message):
             raise TemplateError(message)
 
@@ -204,6 +203,7 @@ def adapt_stale_fwd_patch(self, name, value):
     model compression, we make these patches compatible with the latest forward
     method.
     """
+
     if name == "forward":
         # NOTE(guosheng): In dygraph to static, `layer.forward` would be patched
         # by an instance of `StaticFunction`. And use string compare to avoid to
@@ -231,13 +231,15 @@ def adapt_stale_fwd_patch(self, name, value):
         ]
 
         if new_args:
+            import paddle
+
             if self.__module__.startswith("paddlenlp"):
                 logging.warning(
                     f"The `forward` method of {self.__class__ if isinstance(self, paddle.nn.Layer) else self} is patched and the patch "
                     "might be based on an old oversion which missing some "
                     f"arguments compared with the latest, such as {new_args}. "
                     "We automatically add compatibility on the patch for "
-                    "these arguemnts, and maybe the patch should be updated."
+                    "these arguments, and maybe the patch should be updated."
                 )
             else:
                 logging.warning(
@@ -245,7 +247,7 @@ def adapt_stale_fwd_patch(self, name, value):
                     "is patched and the patch might be conflict with patches made "
                     f"by paddlenlp which seems have more arguments such as {new_args}. "
                     "We automatically add compatibility on the patch for "
-                    "these arguemnts, and maybe the patch should be updated."
+                    "these arguments, and maybe the patch should be updated."
                 )
             if isinstance(self, paddle.nn.Layer) and inspect.isfunction(value):
 
@@ -288,8 +290,8 @@ class InitTrackerMeta(type):
 
     def __init__(cls, name, bases, attrs):
         init_func = cls.__init__
-        # If attrs has `__init__`, wrap it using accessable `_pre_init, _post_init`.
-        # Otherwise, no need to wrap again since the super cls has been wraped.
+        # If attrs has `__init__`, wrap it using accessible `_pre_init, _post_init`.
+        # Otherwise, no need to wrap again since the super cls has been wrapped.
         # TODO: remove reduplicated tracker if using super cls `__init__`
         pre_init_func = getattr(cls, "_pre_init", None) if "__init__" in attrs else None
         post_init_func = (
@@ -321,12 +323,12 @@ class InitTrackerMeta(type):
 
         @functools.wraps(init_func)
         def __impl__(self, *args, **kwargs):
-            # registed helper by `pre_init_func`
+            # registered helper by `pre_init_func`
             if pre_init_func:
                 pre_init_func(self, init_func, *args, **kwargs)
             # keep full configuration
             init_func(self, *args, **kwargs)
-            # registed helper by `post_init_func`
+            # registered helper by `post_init_func`
             if post_init_func:
                 post_init_func(self, init_func, *args, **kwargs)
             self.init_config = kwargs
@@ -586,7 +588,7 @@ def _is_control(char):
 
 
 def _is_nonnormalized_char(char):
-    """Check whther `chars` is a non-normalized character."""
+    """Check whether `chars` is a non-normalized character."""
     cp = ord(char)
     if (
         (0xFF00 <= cp <= 0xFFEF)
@@ -641,20 +643,20 @@ class ChatTemplateMixin:
 
     def apply_chat_template(
         self,
-        conversation: Union[Dict[str, str], str],
+        conversation: Union[List[List[str]], Dict[str, str], str],
         tokenize: bool = True,
         context_data: Dict[str, Any] = {},
         **tokenizer_kwargs,
-    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
+    ):
         """apply chat_template rules to conversation which should not be batched data
 
         Args:
-            conversation (List[List[str, str]] | str): the conversation messages between user and bot
+            conversation (List[List[str]] , str): the conversation messages between user and bot
             context_data (Dict[str, Any]): the context data for chat_template.json
             tokenize (bool, optional): whether do tokenization. Defaults to True.
 
         Returns:
-            str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]: return the result of applied data
+            str | dict[str, Union[numpy.ndarray, paddle.Tensor]]: return the result of applied data
         """
         if not self.chat_template:
             raise ValueError(
@@ -677,16 +679,16 @@ class ChatTemplateMixin:
 
     def _apply_chat_template_paddle(
         self,
-        conversation: Union[List[Dict[str, str]], str],
+        conversation: Union[List[List[str]], str],
         context_data: Dict[str, Any] = {},
-    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
+    ):
         context_data = self.chat_template._init_context_data(context_data)
 
         if isinstance(conversation, str):
             conversation = [[conversation]]
         elif isinstance(conversation, list) and isinstance(conversation[0], str):
             raise ValueError(
-                "apply_chat_template do not support appling batch conversations, "
+                "apply_chat_template do not support applying batch conversations, "
                 "so you should apply the conversation one by one."
             )
 
@@ -695,9 +697,9 @@ class ChatTemplateMixin:
 
     def _apply_chat_template(
         self,
-        conversation: Union[Dict[str, str], str],
+        conversation: Union[List[List[str]], Dict[str, str], str],
         add_generation_prompt=True,
-    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
+    ):
         if isinstance(conversation, str):
             conversations = [{"role": "user", "content": conversation}]
         elif isinstance(conversation, list):
@@ -708,7 +710,7 @@ class ChatTemplateMixin:
                 conversations = conversation
             else:
                 raise ValueError(
-                    "apply_chat_template do not support appling batch conversations, "
+                    "apply_chat_template do not support applying batch conversations, "
                     "so you should apply the conversation one by one."
                 )
         query = self.chat_template.render(
@@ -720,7 +722,7 @@ class ChatTemplateMixin:
 
     def encode_chat_inputs(
         self,
-        conversations: List[Dict[str, str]],
+        conversations: List[List[str]],
         context_data: Dict[str, Any] = {},
         **kwargs,
     ):
@@ -729,7 +731,7 @@ class ChatTemplateMixin:
         Turn t: sep + bot + query             bot + eos
 
         Args:
-            conversation (List[Dict[str, str]]): the conversation of data
+            conversation (List[List[str]]): the conversation of data
             context_data (Dict[str, Any]): the context data of conversation
 
         Returns:
@@ -749,7 +751,7 @@ class ChatTemplateMixin:
         return query
 
     def _encode_chat_inputs_paddle(
-        self, conversations: List[Dict[str, str]], context_data: Dict[str, Any] = {}
+        self, conversations: List[List[str]], context_data: Dict[str, Any] = {}
     ):
         context_data = self.chat_template._init_context_data(context_data)
         # encode system
@@ -779,7 +781,7 @@ class ChatTemplateMixin:
 
     def _encode_chat_inputs(
         self,
-        conversations: List[Dict[str, str]],
+        conversations: List[List[str]],
         context_data: Dict[str, Any] = {},
         system: str = None,
         add_generation_prompt=True,
@@ -824,7 +826,9 @@ class ChatTemplateMixin:
             ans.append(ans_roundi)
 
         non_learnable_parts = self._extract_non_learnable_parts(origin_msg, ans)
-        assert len(non_learnable_parts) == len(ans)
+        assert len(non_learnable_parts) == len(
+            ans
+        ), f"Get non_learnable_parts len: {len(non_learnable_parts)}, but ans len: {len(ans)}."
 
         conversation_ids = []
         for i in range(len(non_learnable_parts)):
@@ -843,7 +847,7 @@ class ChatTemplateMixin:
         self, origin_msg: List[Dict[str, str]], split_s: List[str]
     ):
         """Split the entire chat by specified words. Extract the non-learnable parts."""
-        # distingish and replace the special words in original string to an uncompiled form: Like | -> \|
+        # distinguish and replace the special words in original string to an uncompiled form: Like | -> \|
         regex_pattern = "|".join(map(re.escape, split_s))
         # splited by replaced specified words
         non_learnable_parts = re.split(
@@ -893,11 +897,11 @@ class ChatTemplateMixin:
         tokenizer.init_chat_template(chat_template_file)
         return tokenizer
 
-    def init_chat_template(self, chat_template: Union[str, Dict]):
+    def init_chat_template(self, chat_template: Union[str, dict]):
         """init chat_tempalte by file_path or template dict data
 
         Args:
-            chat_template (str | dict): file_path or template dict data
+            chat_template (str, dict): file_path or template dict data
         """
         if isinstance(chat_template, str):
             if not os.path.exists(chat_template):
@@ -934,8 +938,9 @@ class ChatTemplateMixin:
             logging.info("Chat-template config file saved in " + chat_template_file)
 
 
-@six.add_metaclass(InitTrackerMeta)
-class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
+class PretrainedTokenizer(
+    ChatTemplateMixin, PretrainedTokenizerBase, metaclass=InitTrackerMeta
+):
     """
     Base class for all tokenizers.
 
@@ -992,8 +997,12 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         init_dict.pop("self", None)
         super(PretrainedTokenizer, self).__init__(**init_dict)
 
-        self.added_tokens_encoder: Dict[str, int] = {}
-        self.added_tokens_decoder: Dict[int, str] = {}
+        self.added_tokens_decoder: Dict[int, AddedToken] = {}
+        self.added_tokens_decoder.update(kwargs.pop("added_tokens_decoder", {}))
+        self.added_tokens_encoder: Dict[str, int] = {
+            k.content: v for v, k in self.added_tokens_decoder.items()
+        }
+
         self.unique_no_split_tokens: List[str] = []
         self.tokens_trie = Trie()
 
@@ -1091,6 +1100,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
                 and self.convert_tokens_to_ids(token)
                 == self.convert_tokens_to_ids(self.unk_token)
                 and token not in tokens_to_add
+                and token not in self.added_tokens_encoder.keys()
             ):
                 tokens_to_add.append(token)
                 if self.verbose:
@@ -1179,6 +1189,11 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         Returns:
             `List[str]`: The list of tokens.
         """
+
+        split_special_tokens = kwargs.pop(
+            "split_special_tokens", self.split_special_tokens
+        )
+
         # Simple mapping string => AddedToken for special tokens with specific tokenization behaviors
         all_special_tokens_extended = dict(
             (str(t), t)
@@ -1200,8 +1215,15 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
                 pattern, lambda m: m.groups()[0] or m.groups()[1].lower(), text
             )
 
-        no_split_token = set(self.unique_no_split_tokens)
-        tokens = self.tokens_trie.split(text)
+        if split_special_tokens:
+            no_split_token = []
+            tokens = [text]
+        else:
+            no_split_token = set(
+                self.unique_no_split_tokens
+            )  # don't split on any of the added tokens
+            # "This is something<special_token_1>  else"
+            tokens = self.tokens_trie.split(text)
 
         # ["This is something", "<special_token_1>", "  else"]
         for i, token in enumerate(tokens):
@@ -1286,7 +1308,9 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
     def convert_ids_to_tokens(self, ids, skip_special_tokens=False):
         if isinstance(ids, int):
             if ids in self.added_tokens_decoder:
-                return self.added_tokens_decoder[ids]
+                token = self.added_tokens_decoder[ids]
+                token = token.content if isinstance(token, AddedToken) else token
+                return token
             else:
                 return self._convert_id_to_token(ids)
         tokens = []
@@ -1295,7 +1319,9 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
             if skip_special_tokens and index in self.all_special_ids:
                 continue
             if index in self.added_tokens_decoder:
-                tokens.append(self.added_tokens_decoder[index])
+                token = self.added_tokens_decoder[index]
+                token = token.content if isinstance(token, AddedToken) else token
+                tokens.append(token)
             else:
                 tokens.append(self._convert_id_to_token(index))
         return tokens
@@ -1427,6 +1453,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         stride: int = 0,
         is_split_into_words: bool = False,
         pad_to_multiple_of: Optional[int] = None,
+        padding_side: Optional[Literal["right", "left"]] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_position_ids: Optional[bool] = None,
         return_token_type_ids: Optional[bool] = None,
@@ -1491,6 +1518,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
             max_length=max_length,
             stride=stride,
             pad_to_multiple_of=pad_to_multiple_of,
+            padding_side=padding_side,
             return_tensors=return_tensors,
             prepend_batch_axis=True,
             return_position_ids=return_position_ids,
@@ -1521,6 +1549,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         stride: int = 0,
         is_split_into_words: bool = False,
         pad_to_multiple_of: Optional[int] = None,
+        padding_side: Optional[Literal["right", "left"]] = None,
         return_position_ids: Optional[bool] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
@@ -1606,6 +1635,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
             max_length=max_length,
             stride=stride,
             pad_to_multiple_of=pad_to_multiple_of,
+            padding_side=padding_side,
             return_position_ids=return_position_ids,
             return_attention_mask=return_attention_mask,
             return_token_type_ids=return_token_type_ids,
@@ -1630,6 +1660,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         max_length: Optional[int] = None,
         stride: int = 0,
         pad_to_multiple_of: Optional[int] = None,
+        padding_side: Optional[Literal["right", "left"]] = None,
         return_position_ids: Optional[bool] = None,
         return_tensors: Optional[str] = None,
         return_token_type_ids: Optional[bool] = None,
@@ -1707,7 +1738,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
                             [0] * len(pair_ids) if pair else []
                         )
                     encoded_inputs["offset_mapping"] = offset_mapping
-                    # Build output dictionnary
+                    # Build output dictionary
                     encoded_inputs["input_ids"] = sequence
                     if return_token_type_ids:
                         encoded_inputs["token_type_ids"] = token_type_ids
@@ -1758,6 +1789,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
                     max_length=max_length,
                     stride=stride,
                     pad_to_multiple_of=None,  # we pad in batch afterward
+                    padding_side=padding_side,  # we pad in batch afterward
                     return_position_ids=return_position_ids,  # we pad in batch afterward
                     return_attention_mask=False,  # we pad in batch afterward
                     return_token_type_ids=return_token_type_ids,
@@ -1780,6 +1812,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
             padding=padding_strategy.value,
             max_length=max_length,
             pad_to_multiple_of=pad_to_multiple_of,
+            padding_side=padding_side,
             return_attention_mask=return_attention_mask,
         )
         if return_dict:
@@ -2028,31 +2061,6 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         else:
             return text
 
-    def decode_token(
-        self,
-        all_input_ids: List[int],
-        prefix_offset: int = 0,
-        read_offset: int = 0,
-    ) -> Tuple[str, int, int]:
-        """tokenizer decoding for the streaming generation use case. This method can be overrided for tokenizer that doesn't follow this API"""
-        # The prefix text is necessary only to defeat cleanup algorithms in the decode
-        # which decide to add a space or not depending on the surrounding ids.
-        prefix_text = self.decode(
-            all_input_ids[prefix_offset:read_offset], skip_special_tokens=False
-        )
-        new_text = self.decode(all_input_ids[prefix_offset:], skip_special_tokens=False)
-
-        if len(new_text) > len(prefix_text) and not new_text.endswith("�"):
-            # utf-8 char at the end means it's a potential unfinished byte sequence
-            # from byte fallback tokenization.
-            # If it's in the middle, it's probably a real invalid id generated
-            # by the model
-            prefix_index = new_text.index(prefix_text)
-            new_text = new_text[prefix_index + len(prefix_text) :]
-            return new_text, read_offset, len(all_input_ids)
-        else:
-            return "", prefix_offset, read_offset
-
 
 def _is_control(char):
     """Checks whether `chars` is a control character."""
@@ -2100,7 +2108,7 @@ def _is_whitespace(char):
     """
     Checks whether `chars` is a whitespace character.
     """
-    # \t, \n, and \r are technically contorl characters but we treat them
+    # \t, \n, and \r are technically control characters but we treat them
     # as whitespace since they are generally considered as such.
     if char == " " or char == "\t" or char == "\n" or char == "\r":
         return True
@@ -2128,7 +2136,7 @@ def convert_to_unicode(text):
 
 def whitespace_tokenize(text):
     """
-    Runs basic whitespace cleaning and splitting on a peice of text.
+    Runs basic whitespace cleaning and splitting on a piece of text.
     Args:
         text (str): Text to be tokenized.
     Returns:

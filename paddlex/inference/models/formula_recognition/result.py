@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,35 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, List
-import cv2
-import PIL
-import fitz
 import copy
 import math
-import random
-import tempfile
+import os
+import re
 import subprocess
+import tempfile
+from typing import List, Optional
+
 import numpy as np
-from pathlib import Path
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
 from ....utils import logging
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.deps import function_requires_deps, is_dep_available
 from ....utils.file_interface import custom_open
+from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("pypdfium2"):
+    import pypdfium2 as pdfium
 
 
 class FormulaRecResult(BaseCVResult):
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
@@ -122,6 +118,7 @@ def get_align_equation(equation: str) -> str:
     """
     is_align = False
     equation = str(equation) + "\n"
+
     begin_dict = [
         r"begin{align}",
         r"begin{align*}",
@@ -143,6 +140,17 @@ def get_align_equation(equation: str) -> str:
     return equation
 
 
+def add_text_for_zh_formula(formula: str) -> str:
+    pattern = re.compile(r"([^\x00-\x7F]+)")
+
+    def replacer(match):
+        return f"\\text{{{match.group(1)}}}"
+
+    replaced_formula = pattern.sub(replacer, formula)
+
+    return replaced_formula
+
+
 def generate_tex_file(tex_file_path: str, equation: str) -> None:
     """
     Generates a LaTeX file containing a specific equation.
@@ -157,17 +165,19 @@ def generate_tex_file(tex_file_path: str, equation: str) -> None:
     """
     with custom_open(tex_file_path, "w") as fp:
         start_template = (
-            r"\documentclass{article}" + "\n"
+            r"\documentclass[varwidth]{standalone}" + "\n"
             r"\usepackage{cite}" + "\n"
             r"\usepackage{amsmath,amssymb,amsfonts,upgreek}" + "\n"
             r"\usepackage{graphicx}" + "\n"
             r"\usepackage{textcomp}" + "\n"
+            r"\usepackage{xeCJK}" + "\n"
             r"\DeclareMathSizes{14}{14}{9.8}{7}" + "\n"
             r"\pagestyle{empty}" + "\n"
             r"\begin{document}" + "\n"
             r"\begin{large}" + "\n"
         )
         fp.write(start_template)
+        equation = add_text_for_zh_formula(equation)
         equation = get_align_equation(equation)
         fp.write(equation)
         end_template = r"\end{large}" + "\n" r"\end{document}" + "\n"
@@ -193,18 +203,19 @@ def generate_pdf_file(
                         and None if an error occurred during the pdflatex execution.
     """
     if os.path.exists(tex_path):
-        command = "pdflatex -interaction=nonstopmode -halt-on-error -output-directory={} {}".format(
+        command = "xelatex -interaction=nonstopmode -halt-on-error -output-directory={} {}".format(
             pdf_dir, tex_path
         )
         if is_debug:
             subprocess.check_call(command, shell=True)
         else:
-            devNull = custom_open(os.devnull, "w")
+            custom_open(os.devnull, "w")
             subprocess.check_call(
                 command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
             )
 
 
+@function_requires_deps("opencv-contrib-python")
 def crop_white_area(image: np.ndarray) -> Optional[List[int]]:
     """
     Finds and returns the bounding box of the non-white area in an image.
@@ -231,6 +242,7 @@ def crop_white_area(image: np.ndarray) -> Optional[List[int]]:
         return None
 
 
+@function_requires_deps("pypdfium2", "opencv-contrib-python")
 def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
     """
     Converts a single-page PDF to an image, optionally cropping white areas and adding padding.
@@ -243,21 +255,16 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
     Returns:
         np.ndarray: The resulting image as a NumPy array, or None if the PDF is not single-page.
     """
-
-    pdfDoc = fitz.open(pdf_path)
-    if pdfDoc.page_count != 1:
+    pdfDoc = pdfium.PdfDocument(pdf_path)
+    if len(pdfDoc) != 1:
         return None
-    for pg in range(pdfDoc.page_count):
-        page = pdfDoc[pg]
+    for page in pdfDoc:
         rotate = int(0)
-        zoom_x = 2
-        zoom_y = 2
-        mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
-        pix = page.get_pixmap(matrix=mat, alpha=False)
-        getpngdata = pix.tobytes(output="png")
-        # decode as np.uint8
-        image_array = np.frombuffer(getpngdata, dtype=np.uint8)
-        img = cv2.imdecode(image_array, cv2.IMREAD_ANYCOLOR)
+        zoom = 2
+        img = page.render(scale=zoom, rotation=rotate).to_pil()
+        img = img.convert("RGB")
+        img = np.array(img)
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         xywh = crop_white_area(img)
 
         if xywh is not None:
@@ -326,6 +333,7 @@ def env_valid() -> bool:
             formula_img = pdf2img(pdf_file_path, img_file_path, is_padding=False)
 
 
+@function_requires_deps("opencv-contrib-python")
 def draw_box_txt_fine(img_size: tuple, box: list, txt: str, font_path: str):
     """
     Draw box text.

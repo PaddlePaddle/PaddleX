@@ -22,7 +22,7 @@ Video detection is a technology that identifies and locates specific objects or 
 <th>Description</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
 <td>462.891M</td>
 <td rowspan="1">
@@ -32,14 +32,14 @@ YOWO is a single-stage network with two branches. One branch extracts spatial fe
 
 </table>
 
-**Test Dataset**: <a href="http://www.thumos.info/download.html">UCF101-24</a> test dataset.
+<b>Test Dataset</b>: <a href="http://www.thumos.info/download.html">UCF101-24</a> test dataset.
 
 
 ## 2. Quick Start
 
 PaddleX supports experiencing the pipeline's effects locally using command line or Python.
 
-Before using the general video detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the general video detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `video`.
 
 ### 2.1 Local Experience
 
@@ -119,9 +119,17 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available when the pipeline supports high-performance inference.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -146,23 +154,6 @@ In the above Python script, the following steps are executed:
 <ul>
   <li><b>str</b>: Local path of the video file: <code>/root/data/video.avi</code>; <b>URL link</b>, such as the network URL of the video file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi">Example</a>; <b>Local directory</b>, the directory must contain the videos to be predicted, such as the local path: <code>/root/data/</code></li>
   <li><b>List</b>: The elements of the list must be of the above types, such as <code>[str, str]</code>, <code>[\"/root/data/video1.mp4\", \"/root/data/video2.avi\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>The inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: For example, <code>cpu</code> indicates using the CPU for inference;</li>
-  <li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the value initialized for the pipeline will be used by default. During initialization, the local GPU 0 will be prioritized. If it is not available, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -539,7 +530,7 @@ You can choose the appropriate method to deploy the model pipeline according to 
 If the default model weights provided by the general video detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/video_modules/video_detection.en.md) section in the [Video Detection Module Development Tutorial](../../../module_usage/tutorials/video_modules/video_detection.en.md) and fine-tune the video detection model using your private dataset.
+Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the <b>Custom Development</b> section in the [Video Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html) and fine-tune the video detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning with your private dataset, you will obtain the local model weight file.
@@ -549,7 +540,7 @@ If you need to use the fine-tuned model weights, simply modify the pipeline conf
 ```
 ......
 Pipeline:
-  model: YOWO #可修改为微调后模型的本地路径
+  model: YOWO # Can be modified to the local path of the fine-tuned model
   device: "gpu"
   batch_size: 1
 ......

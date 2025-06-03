@@ -93,7 +93,9 @@ void PaddleBackend::BuildOption(const PaddleBackendOption &option) {
                                    option.trt_min_subgraph_size, precision,
                                    use_static);
 
-      SetTRTDynamicShapeToConfig(option);
+      if (!option.collect_trt_shape) {
+        SetTRTDynamicShapeToConfig(option);
+      }
       if (option_.enable_fixed_size_opt) {
         paddle_infer::experimental::InternalUtils::SetTransformerMaskid(
             &config_, "opt");
@@ -203,7 +205,7 @@ bool PaddleBackend::Init(const RuntimeOption &runtime_option) {
   option.paddle_infer_option.trt_option.gpu_id = runtime_option.device_id;
   // Note(qiuyanjun): For Ipu option and XPU option, please check the
   // details of RuntimeOption::UseIpu() and RuntimeOption::UseKunlunXin().
-  // Futhermore, please check paddle_infer_option.SetIpuConfig() and
+  // Furthermore, please check paddle_infer_option.SetIpuConfig() and
   // paddle_infer_option.SetXpuConfig() for more details of extra configs.
   return InitFromPaddle(option.model_file, option.params_file,
                         option.model_from_memory_, option.paddle_infer_option);
@@ -320,7 +322,8 @@ bool PaddleBackend::InitFromPaddle(const std::string &model,
     }
     FDINFO << "Start loading shape range info file " << shape_range_info
            << " to set TensorRT dynamic shape." << std::endl;
-    config_.EnableTunedTensorRtDynamicShape(shape_range_info, true);
+    config_.EnableTunedTensorRtDynamicShape(shape_range_info,
+                                            option.allow_build_trt_at_runtime);
   }
   // Note(zhoushunjie): The pass deletion should be executed just before
   // creating predictor.

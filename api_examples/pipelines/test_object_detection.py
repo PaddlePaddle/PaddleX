@@ -1,4 +1,4 @@
-# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ output = pipeline.predict(
     threshold={0: 0.45, 2: 0.48, 7: 0.4},
     layout_nms=True,
     layout_merge_bboxes_mode="large",
-    layout_unclip_ratio=(1.0, 1.0)
+    layout_unclip_ratio=(1.0, 1.0),
 )
 
 # output = pipeline.predict(
@@ -32,7 +32,7 @@ output = pipeline.predict(
 #     "./test_samples/general_layout.png",
 #     threshold={0: 0.45, 2: 0.48, 7: 0.4},
 #     layout_nms=False,
-#     layout_merge_bboxes_mode="small", 
+#     layout_merge_bboxes_mode="small",
 #     layout_unclip_ratio=1.1
 # )
 

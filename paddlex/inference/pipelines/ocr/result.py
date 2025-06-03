@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,31 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from pathlib import Path
-from typing import Dict
-import copy
 import math
 import random
+from typing import Dict
+
 import numpy as np
-import cv2
-import PIL
-from PIL import Image, ImageDraw, ImageFont
-from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from PIL import Image, ImageDraw
+
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
+from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font, create_font_vertical
+from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@class_requires_deps("opencv-contrib-python")
 class OCRResult(BaseCVResult):
     """OCR result"""
-
-    def _get_input_fn(self):
-        fn = super()._get_input_fn()
-        if (page_idx := self["page_index"]) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}{suffix}"
-        else:
-            return fn
 
     def get_minarea_rect(self, points: np.ndarray) -> np.ndarray:
         """
@@ -103,7 +96,9 @@ class OCRResult(BaseCVResult):
                     height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
                     box[:2, 1] = np.mean(box[:, 1])
                     box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
-                draw_left.polygon(box, fill=color)
+                box_pts = [(int(x), int(y)) for x, y in box.tolist()]
+                draw_left.polygon(box_pts, fill=color)
+
                 img_right_text = draw_box_txt_fine(
                     (w, h), box, txt, SIMFANG_FONT_FILE_PATH
                 )
@@ -194,6 +189,7 @@ class OCRResult(BaseCVResult):
 
 
 # Adds a function comment according to Google Style Guide
+@function_requires_deps("opencv-contrib-python")
 def draw_box_txt_fine(
     img_size: tuple, box: np.ndarray, txt: str, font_path: str
 ) -> np.ndarray:
@@ -217,12 +213,13 @@ def draw_box_txt_fine(
     )
 
     if box_height > 2 * box_width and box_height > 30:
-        img_text = Image.new("RGB", (box_height, box_width), (255, 255, 255))
+        img_text = Image.new("RGB", (box_width, box_height), (255, 255, 255))
         draw_text = ImageDraw.Draw(img_text)
         if txt:
-            font = create_font(txt, (box_height, box_width), font_path)
-            draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font)
-        img_text = img_text.transpose(Image.ROTATE_270)
+            font = create_font_vertical(txt, (box_width, box_height), font_path)
+            draw_vertical_text(
+                draw_text, (0, 0), txt, font, fill=(0, 0, 0), line_spacing=2
+            )
     else:
         img_text = Image.new("RGB", (box_width, box_height), (255, 255, 255))
         draw_text = ImageDraw.Draw(img_text)
@@ -246,3 +243,13 @@ def draw_box_txt_fine(
         borderValue=(255, 255, 255),
     )
     return img_right_text
+
+
+@function_requires_deps("opencv-contrib-python")
+def draw_vertical_text(draw, position, text, font, fill=(0, 0, 0), line_spacing=2):
+    x, y = position
+    for char in text:
+        draw.text((x, y), char, font=font, fill=fill)
+        bbox = font.getbbox(char)
+        char_height = bbox[3] - bbox[1]
+        y += char_height + line_spacing

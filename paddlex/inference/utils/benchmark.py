@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import csv
 import functools
-from types import GeneratorType
+import inspect
 import time
+import uuid
 from pathlib import Path
+from types import GeneratorType
+
 import numpy as np
 from prettytable import PrettyTable
 
-from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT_DIR
 from ...utils import logging
+from ...utils.flags import (
+    INFER_BENCHMARK,
+    INFER_BENCHMARK_OUTPUT_DIR,
+    INFER_BENCHMARK_USE_CACHE_FOR_READ,
+)
 
 ENTRY_POINT_NAME = "_entry_point_"
 
 # XXX: Global mutable state
 _inference_operations = []
+
+_is_measuring_time = False
 
 
 class Benchmark:
@@ -35,9 +45,12 @@ class Benchmark:
         self._elapses = {}
         self._warmup = False
 
-    def timeit_with_name(self, name=None):
+    def timeit_with_options(self, name=None, is_read_operation=False):
         # TODO: Refactor
         def _deco(func_or_cls):
+            if not self._enabled:
+                return func_or_cls
+
             nonlocal name
             if name is None:
                 name = func_or_cls.__qualname__
@@ -51,18 +64,61 @@ class Benchmark:
                     raise TypeError
                 func = func_or_cls
 
-            @functools.wraps(func)
-            def _wrapper(*args, **kwargs):
-                if not self._enabled:
-                    return func(*args, **kwargs)
+            try:
+                source_file = inspect.getsourcefile(func)
+                source_line = inspect.getsourcelines(func)[1]
+                location = f"{source_file}:{source_line}"
+            except (TypeError, OSError) as e:
+                location = uuid.uuid4().hex
+                logging.debug(
+                    f"Benchmark: failed to get source file and line number: {e}"
+                )
 
-                tic = time.perf_counter()
-                output = func(*args, **kwargs)
-                if isinstance(output, GeneratorType):
-                    return self.watch_generator(output, name)
-                else:
-                    self._update(time.perf_counter() - tic, name)
+            use_cache = is_read_operation and INFER_BENCHMARK_USE_CACHE_FOR_READ
+            if use_cache:
+                if inspect.isgeneratorfunction(func):
+                    raise RuntimeError(
+                        "When `is_read_operation` is `True`, the wrapped function should not be a generator."
+                    )
+
+                func = functools.lru_cache(maxsize=128)(func)
+
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    args = tuple(
+                        tuple(arg) if isinstance(arg, list) else arg for arg in args
+                    )
+                    kwargs = {
+                        k: tuple(v) if isinstance(v, list) else v
+                        for k, v in kwargs.items()
+                    }
+                    output = func(*args, **kwargs)
+                    output = copy.deepcopy(output)
                     return output
+
+            else:
+
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    global _is_measuring_time
+                    operation_name = f"{name}@{location}"
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
+                    tic = time.perf_counter()
+                    try:
+                        output = func(*args, **kwargs)
+                    finally:
+                        if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
+                    if isinstance(output, GeneratorType):
+                        return self.watch_generator(output, operation_name)
+                    else:
+                        self._update(time.perf_counter() - tic, operation_name)
+                        return output
 
             if isinstance(func_or_cls, type):
                 func_or_cls.__call__ = _wrapper
@@ -73,15 +129,26 @@ class Benchmark:
         return _deco
 
     def timeit(self, func_or_cls):
-        return self.timeit_with_name(None)(func_or_cls)
+        return self.timeit_with_options()(func_or_cls)
 
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
         def wrapper():
+            global _is_measuring_time
             while True:
                 try:
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
                     tic = time.perf_counter()
-                    item = next(generator)
+                    try:
+                        item = next(generator)
+                    finally:
+                        if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
                     self._update(time.perf_counter() - tic, name)
                     yield item
                 except StopIteration:
@@ -123,32 +190,38 @@ class Benchmark:
         # 3. Operations do not nest, except that the entry point operation
         #    contains all other operations.
         # 4. The input batch size for each operation is `batch_size`.
-        # 5. Inference operations are always performed, while preprocessing and
-        #    postprocessing operations are optional.
-        # 6. If present, preprocessing operations are always performed before
-        #    inference operations, and inference operations are completed before
-        #    any postprocessing operations. There is no interleaving among these
+        # 5. Preprocessing operations are always performed before inference
+        #    operations, and inference operations are completed before
+        #    postprocessing operations. There is no interleaving among these
         #    stages.
 
         logs = {k: v for k, v in self.logs.items()}
 
         summary = {"preprocessing": 0, "inference": 0, "postprocessing": 0}
-        base_predictor_time_list = logs.pop(ENTRY_POINT_NAME)
+        for key in logs:
+            if key.startswith(f"{ENTRY_POINT_NAME}@"):
+                base_predictor_time_list = logs.pop(key)
+                break
         iters = len(base_predictor_time_list)
         instances = iters * batch_size
         summary["end_to_end"] = np.mean(base_predictor_time_list)
-
         detail_list = []
+        operation_list = []
         op_tag = "preprocessing"
 
         for name, time_list in logs.items():
             assert len(time_list) == iters
             avg = np.mean(time_list)
+            operation_name = name.split("@")[0]
+            location = name.split("@")[1]
+            if ":" not in location:
+                location = "Unknown"
             detail_list.append(
-                (iters, batch_size, instances, name, avg, avg / batch_size)
+                (iters, batch_size, instances, operation_name, avg, avg / batch_size)
             )
+            operation_list.append((operation_name, location))
 
-            if name in _inference_operations:
+            if operation_name in _inference_operations:
                 summary["inference"] += avg
                 op_tag = "postprocessing"
             else:
@@ -211,10 +284,10 @@ class Benchmark:
             ),
         ]
 
-        return detail_list, summary_list
+        return detail_list, summary_list, operation_list
 
     def collect(self, batch_size):
-        detail_list, summary_list = self.gather(batch_size)
+        detail_list, summary_list, operation_list = self.gather(batch_size)
 
         if self._warmup:
             summary_head = [
@@ -230,11 +303,21 @@ class Benchmark:
                 i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
             ]
             table.add_rows(summary_list)
-            header = "WarmUp Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(header)
+            table_title = "Warmup Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
         else:
+            operation_head = [
+                "Operation",
+                "Source Code Location",
+            ]
+            table = PrettyTable(operation_head)
+            table.add_rows(operation_list)
+            table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
+            logging.info(table)
+
             detail_head = [
                 "Iters",
                 "Batch Size",
@@ -246,8 +329,8 @@ class Benchmark:
             table = PrettyTable(detail_head)
             detail_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in detail_list]
             table.add_rows(detail_list)
-            header = "Detail Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(header)
+            table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             summary_head = [
@@ -263,8 +346,8 @@ class Benchmark:
                 i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
             ]
             table.add_rows(summary_list)
-            header = "Summary Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(header)
+            table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             if INFER_BENCHMARK_OUTPUT_DIR:

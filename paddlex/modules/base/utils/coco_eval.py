@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,15 @@
 # limitations under the License.
 
 
+import argparse
 import os
 import sys
-import argparse
-import numpy as np
-from pycocotools.coco import COCO
-from pycocotools.cocoeval import COCOeval
+
+from ....utils.deps import function_requires_deps, is_dep_available
+
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
+    from pycocotools.cocoeval import COCOeval
 
 
 def parse_args():
@@ -43,6 +46,7 @@ def json_eval_results(args):
     cocoapi_eval(prediction_json_path, "bbox", anno_file=gt_json_path)
 
 
+@function_requires_deps("pycocotools")
 def cocoapi_eval(
     jsonfile,
     style,

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import json
+import os
 
+from ....utils import logging
+from ....utils.device import parse_device
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.device import parse_device
-from ....utils.misc import abspath
-from ....utils import logging
-
 from .config import DetConfig
 from .official_categories import official_categories
 
@@ -336,7 +335,7 @@ class DetModel(BaseModel):
             save_dir (str, optional): the directory path to save output. Defaults to None.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         model_dir = abspath(model_dir)
         input_path = abspath(input_path)

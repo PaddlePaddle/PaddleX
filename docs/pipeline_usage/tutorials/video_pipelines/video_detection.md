@@ -23,7 +23,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
 <td>462.891M</td>
 <td rowspan="1">
@@ -33,7 +33,7 @@ YOWO是具有两个分支的单阶段网络。一个分支通过2D-CNN提取关�
 
 </table>
 
-**测试数据集**：<a href="http://www.thumos.info/download.html">UCF101-24</a> 测试数据集。
+<b>测试数据集</b>：<a href="http://www.thumos.info/download.html">UCF101-24</a> 测试数据集。
 
 
 
@@ -41,7 +41,7 @@ YOWO是具有两个分支的单阶段网络。一个分支通过2D-CNN提取关�
 
 PaddleX 支持在本地使用命令行或 Python 体验产线的效果。
 
-在本地使用通用视频检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用通用视频检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `video`。
 
 ### 2.1 本地体验
 
@@ -121,9 +121,17 @@ for res in output:
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件或 <code>config</code> 中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -148,23 +156,6 @@ for res in output:
 <ul>
   <li><b>str</b>：视频文件本地路径：<code>/root/data/video.avi</code>；<b>如URL链接</b>，如视频文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi">示例</a>；<b>如本地目录</b>，该目录下需包含待预测视频，如本地路径：<code>/root/data/</code></li>
   <li><b>List</b>：列表元素需为上述类型数据，如<code>[str, str]</code>，<code>[\"/root/data/video1.mp4\", \"/root/data/video2.avi\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>产线推理设备</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
-  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
-  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
-  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
-  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
-  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -542,7 +533,7 @@ print(result[&quot;frames&quot;])
 如果通用视频检测产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用视频检测产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用视频检测产线包含视频检测模块，如果模型产线的效果不及预期，那么您需要参考[视频检测模块开发教程](../../../module_usage/tutorials/video_modules/video_detection.md)中的[二次开发](../../../module_usage/tutorials/video_modules/video_detection.md#四二次开发)章节，使用您的私有数据集对视频检测模型进行微调。
+由于通用视频检测产线包含视频检测模块，如果模型产线的效果不及预期，那么您需要参考[视频检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集对视频检测模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。

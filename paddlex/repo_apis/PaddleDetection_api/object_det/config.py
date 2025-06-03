@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,10 @@
 # limitations under the License.
 
 from typing import List
-from ...base import BaseConfig
-from ....utils.misc import abspath
+
 from ....utils import logging
+from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_helper import PPDetConfigMixin
 
 
@@ -422,7 +423,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
 
         Args:
             config (dict): the original config.
-            update_dict (dict): to be updated paramenters and its values
+            update_dict (dict): to be updated parameters and its values
 
         Example:
             self._recursively_set(self.HybridEncoder, {'encoder_layer': {'dim_feedforward': 2048}})

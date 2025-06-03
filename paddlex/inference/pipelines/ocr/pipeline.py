@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,27 +13,29 @@
 # limitations under the License.
 
 from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
-from scipy.ndimage import rotate
-from ...common.reader import ReadImage
+
+from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import (
     CropByPolys,
-    SortQuadBoxes,
     SortPolyBoxes,
+    SortQuadBoxes,
     convert_points_to_boxes,
+    rotate_image,
 )
 from .result import OCRResult
-from ..doc_preprocessor.result import DocPreprocessorResult
-from ....utils import logging
 
 
-class OCRPipeline(BasePipeline):
+class _OCRPipeline(BasePipeline):
     """OCR Pipeline"""
-
-    entities = "OCR"
 
     def __init__(
         self,
@@ -41,6 +43,7 @@ class OCRPipeline(BasePipeline):
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -49,9 +52,15 @@ class OCRPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:
@@ -82,17 +91,21 @@ class OCRPipeline(BasePipeline):
         if self.text_type == "general":
             self.text_det_limit_side_len = text_det_config.get("limit_side_len", 960)
             self.text_det_limit_type = text_det_config.get("limit_type", "max")
+            self.text_det_max_side_limit = text_det_config.get("max_side_limit", 4000)
             self.text_det_thresh = text_det_config.get("thresh", 0.3)
             self.text_det_box_thresh = text_det_config.get("box_thresh", 0.6)
+            self.input_shape = text_det_config.get("input_shape", None)
             self.text_det_unclip_ratio = text_det_config.get("unclip_ratio", 2.0)
             self._sort_boxes = SortQuadBoxes()
             self._crop_by_polys = CropByPolys(det_box_type="quad")
         elif self.text_type == "seal":
             self.text_det_limit_side_len = text_det_config.get("limit_side_len", 736)
             self.text_det_limit_type = text_det_config.get("limit_type", "min")
+            self.text_det_max_side_limit = text_det_config.get("max_side_limit", 4000)
             self.text_det_thresh = text_det_config.get("thresh", 0.2)
             self.text_det_box_thresh = text_det_config.get("box_thresh", 0.6)
             self.text_det_unclip_ratio = text_det_config.get("unclip_ratio", 0.5)
+            self.input_shape = text_det_config.get("input_shape", None)
             self._sort_boxes = SortPolyBoxes()
             self._crop_by_polys = CropByPolys(det_box_type="poly")
         else:
@@ -102,9 +115,11 @@ class OCRPipeline(BasePipeline):
             text_det_config,
             limit_side_len=self.text_det_limit_side_len,
             limit_type=self.text_det_limit_type,
+            max_side_limit=self.text_det_max_side_limit,
             thresh=self.text_det_thresh,
             box_thresh=self.text_det_box_thresh,
             unclip_ratio=self.text_det_unclip_ratio,
+            input_shape=self.input_shape,
         )
 
         text_rec_config = config.get("SubModules", {}).get(
@@ -112,9 +127,12 @@ class OCRPipeline(BasePipeline):
             {"model_config_error": "config error for text_rec_model!"},
         )
         self.text_rec_score_thresh = text_rec_config.get("score_thresh", 0)
-        self.text_rec_model = self.create_model(text_rec_config)
+        self.input_shape = text_rec_config.get("input_shape", None)
+        self.text_rec_model = self.create_model(
+            text_rec_config, input_shape=self.input_shape
+        )
 
-        self.batch_sampler = ImageBatchSampler(batch_size=1)
+        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
     def rotate_image(
@@ -148,7 +166,7 @@ class OCRPipeline(BasePipeline):
         for image_array, rotate_indicator in zip(image_array_list, rotate_angle_list):
             # Convert 0/1 indicator to actual rotation angle
             rotate_angle = rotate_indicator * 180
-            rotated_image = rotate(image_array, rotate_angle, reshape=True)
+            rotated_image = rotate_image(image_array, rotate_angle)
             rotated_images.append(rotated_image)
 
         return rotated_images
@@ -217,6 +235,7 @@ class OCRPipeline(BasePipeline):
         self,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
+        text_det_max_side_limit: Optional[int] = None,
         text_det_thresh: Optional[float] = None,
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
@@ -229,6 +248,7 @@ class OCRPipeline(BasePipeline):
         Args:
             text_det_limit_side_len (Optional[int]): The maximum side length of the text box.
             text_det_limit_type (Optional[str]): The type of limit to apply to the text box.
+            text_det_max_side_limit (Optional[int]): The maximum side length of the text box.
             text_det_thresh (Optional[float]): The threshold for text detection.
             text_det_box_thresh (Optional[float]): The threshold for the bounding box.
             text_det_unclip_ratio (Optional[float]): The ratio for unclipping the text box.
@@ -240,6 +260,8 @@ class OCRPipeline(BasePipeline):
             text_det_limit_side_len = self.text_det_limit_side_len
         if text_det_limit_type is None:
             text_det_limit_type = self.text_det_limit_type
+        if text_det_max_side_limit is None:
+            text_det_max_side_limit = self.text_det_max_side_limit
         if text_det_thresh is None:
             text_det_thresh = self.text_det_thresh
         if text_det_box_thresh is None:
@@ -250,6 +272,7 @@ class OCRPipeline(BasePipeline):
             limit_side_len=text_det_limit_side_len,
             limit_type=text_det_limit_type,
             thresh=text_det_thresh,
+            max_side_limit=text_det_max_side_limit,
             box_thresh=text_det_box_thresh,
             unclip_ratio=text_det_unclip_ratio,
         )
@@ -262,6 +285,7 @@ class OCRPipeline(BasePipeline):
         use_textline_orientation: Optional[bool] = None,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
+        text_det_max_side_limit: Optional[int] = None,
         text_det_thresh: Optional[float] = None,
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
@@ -277,6 +301,7 @@ class OCRPipeline(BasePipeline):
             use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
             text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
             text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
+            text_det_max_side_limit (Optional[int]): Maximum side length for text detection.
             text_det_thresh (Optional[float]): Threshold for text detection.
             text_det_box_thresh (Optional[float]): Threshold for text detection boxes.
             text_det_unclip_ratio (Optional[float]): Ratio for unclipping text detection boxes.
@@ -295,6 +320,7 @@ class OCRPipeline(BasePipeline):
         text_det_params = self.get_text_det_params(
             text_det_limit_side_len,
             text_det_limit_type,
+            text_det_max_side_limit,
             text_det_thresh,
             text_det_box_thresh,
             text_det_unclip_ratio,
@@ -303,87 +329,135 @@ class OCRPipeline(BasePipeline):
         if text_rec_score_thresh is None:
             text_rec_score_thresh = self.text_rec_score_thresh
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            image_array = self.img_reader(batch_data.instances)[0]
+        for _, batch_data in enumerate(self.batch_sampler(input)):
+            image_arrays = self.img_reader(batch_data.instances)
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_results = list(
                     self.doc_preprocessor_pipeline(
-                        image_array,
+                        image_arrays,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
                 )
             else:
-                doc_preprocessor_res = {"output_img": image_array}
+                doc_preprocessor_results = [{"output_img": arr} for arr in image_arrays]
 
-            doc_preprocessor_image = doc_preprocessor_res["output_img"]
+            doc_preprocessor_images = [
+                item["output_img"] for item in doc_preprocessor_results
+            ]
 
-            det_res = next(
-                self.text_det_model(doc_preprocessor_image, **text_det_params)
+            det_results = list(
+                self.text_det_model(doc_preprocessor_images, **text_det_params)
             )
 
-            dt_polys = det_res["dt_polys"]
-            dt_scores = det_res["dt_scores"]
+            dt_polys_list = [item["dt_polys"] for item in det_results]
 
-            dt_polys = self._sort_boxes(dt_polys)
+            dt_polys_list = [self._sort_boxes(item) for item in dt_polys_list]
 
-            single_img_res = {
-                "input_path": batch_data.input_paths[0],
-                "page_index": batch_data.page_indexes[0],
-                "doc_preprocessor_res": doc_preprocessor_res,
-                "dt_polys": dt_polys,
-                "model_settings": model_settings,
-                "text_det_params": text_det_params,
-                "text_type": self.text_type,
-                "text_rec_score_thresh": text_rec_score_thresh,
-            }
-
-            single_img_res["rec_texts"] = []
-            single_img_res["rec_scores"] = []
-            single_img_res["rec_polys"] = []
-            if len(dt_polys) > 0:
-                all_subs_of_img = list(
-                    self._crop_by_polys(doc_preprocessor_image, dt_polys)
+            results = [
+                {
+                    "input_path": input_path,
+                    "page_index": page_index,
+                    "doc_preprocessor_res": doc_preprocessor_res,
+                    "dt_polys": dt_polys,
+                    "model_settings": model_settings,
+                    "text_det_params": text_det_params,
+                    "text_type": self.text_type,
+                    "text_rec_score_thresh": text_rec_score_thresh,
+                    "rec_texts": [],
+                    "rec_scores": [],
+                    "rec_polys": [],
+                }
+                for input_path, page_index, doc_preprocessor_res, dt_polys in zip(
+                    batch_data.input_paths,
+                    batch_data.page_indexes,
+                    doc_preprocessor_results,
+                    dt_polys_list,
                 )
+            ]
+
+            indices = list(range(len(doc_preprocessor_images)))
+            indices = [idx for idx in indices if len(dt_polys_list[idx]) > 0]
+
+            if indices:
+                all_subs_of_imgs = []
+                chunk_indices = [0]
+                for idx in indices:
+                    all_subs_of_img = list(
+                        self._crop_by_polys(
+                            doc_preprocessor_images[idx], dt_polys_list[idx]
+                        )
+                    )
+                    all_subs_of_imgs.extend(all_subs_of_img)
+                    chunk_indices.append(chunk_indices[-1] + len(all_subs_of_img))
+
                 # use textline orientation model
                 if model_settings["use_textline_orientation"]:
                     angles = [
                         int(textline_angle_info["class_ids"][0])
                         for textline_angle_info in self.textline_orientation_model(
-                            all_subs_of_img
+                            all_subs_of_imgs
                         )
                     ]
-                    all_subs_of_img = self.rotate_image(all_subs_of_img, angles)
+                    all_subs_of_imgs = self.rotate_image(all_subs_of_imgs, angles)
                 else:
-                    angles = [-1] * len(all_subs_of_img)
-                single_img_res["textline_orientation_angles"] = angles
+                    angles = [-1] * len(all_subs_of_imgs)
+                for i, idx in enumerate(indices):
+                    res = results[idx]
+                    res["textline_orientation_angles"] = angles[
+                        chunk_indices[i] : chunk_indices[i + 1]
+                    ]
 
-                sub_img_info_list = [
-                    {
-                        "sub_img_id": img_id,
-                        "sub_img_ratio": sub_img.shape[1] / float(sub_img.shape[0]),
-                    }
-                    for img_id, sub_img in enumerate(all_subs_of_img)
-                ]
-                sorted_subs_info = sorted(
-                    sub_img_info_list, key=lambda x: x["sub_img_ratio"]
-                )
-                sorted_subs_of_img = [
-                    all_subs_of_img[x["sub_img_id"]] for x in sorted_subs_info
-                ]
-                for idx, rec_res in enumerate(self.text_rec_model(sorted_subs_of_img)):
-                    sub_img_id = sorted_subs_info[idx]["sub_img_id"]
-                    sub_img_info_list[sub_img_id]["rec_res"] = rec_res
-                for sno in range(len(sub_img_info_list)):
-                    rec_res = sub_img_info_list[sno]["rec_res"]
-                    if rec_res["rec_score"] >= text_rec_score_thresh:
-                        single_img_res["rec_texts"].append(rec_res["rec_text"])
-                        single_img_res["rec_scores"].append(rec_res["rec_score"])
-                        single_img_res["rec_polys"].append(dt_polys[sno])
-            if self.text_type == "general":
-                rec_boxes = convert_points_to_boxes(single_img_res["rec_polys"])
-                single_img_res["rec_boxes"] = rec_boxes
-            else:
-                single_img_res["rec_boxes"] = np.array([])
-            yield OCRResult(single_img_res)
+                # TODO: Process all sub-images in the batch together
+                for i, idx in enumerate(indices):
+                    all_subs_of_img = all_subs_of_imgs[
+                        chunk_indices[i] : chunk_indices[i + 1]
+                    ]
+                    res = results[idx]
+                    dt_polys = dt_polys_list[idx]
+                    sub_img_info_list = [
+                        {
+                            "sub_img_id": img_id,
+                            "sub_img_ratio": sub_img.shape[1] / float(sub_img.shape[0]),
+                        }
+                        for img_id, sub_img in enumerate(all_subs_of_img)
+                    ]
+                    sorted_subs_info = sorted(
+                        sub_img_info_list, key=lambda x: x["sub_img_ratio"]
+                    )
+                    sorted_subs_of_img = [
+                        all_subs_of_img[x["sub_img_id"]] for x in sorted_subs_info
+                    ]
+                    for i, rec_res in enumerate(
+                        self.text_rec_model(sorted_subs_of_img)
+                    ):
+                        sub_img_id = sorted_subs_info[i]["sub_img_id"]
+                        sub_img_info_list[sub_img_id]["rec_res"] = rec_res
+                    for sno in range(len(sub_img_info_list)):
+                        rec_res = sub_img_info_list[sno]["rec_res"]
+                        if rec_res["rec_score"] >= text_rec_score_thresh:
+                            res["rec_texts"].append(rec_res["rec_text"])
+                            res["rec_scores"].append(rec_res["rec_score"])
+                            res["rec_polys"].append(dt_polys[sno])
+
+            for res in results:
+                if self.text_type == "general":
+                    rec_boxes = convert_points_to_boxes(res["rec_polys"])
+                    res["rec_boxes"] = rec_boxes
+                else:
+                    res["rec_boxes"] = np.array([])
+
+                yield OCRResult(res)
+
+
+@pipeline_requires_extra("ocr")
+class OCRPipeline(AutoParallelImageSimpleInferencePipeline):
+    entities = "OCR"
+
+    @property
+    def _pipeline_cls(self):
+        return _OCRPipeline
+
+    def _get_batch_size(self, config):
+        return config.get("batch_size", 1)

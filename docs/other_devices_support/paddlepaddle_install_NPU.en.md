@@ -7,12 +7,12 @@ comments: true
 Currently, PaddleX supports the Ascend 910B chip (more models are under support. If you have a related need for other models, please submit an issue to inform us). The Ascend driver version is 23.0.3. Considering the differences in environments, we recommend using the <b>Ascend development image provided by PaddlePaddle</b> to complete the environment preparation.
 
 ## 1. Docker Environment Preparation
-* Pull the image. This image is only for the development environment and does not contain a pre-compiled PaddlePaddle installation package. The image has CANN-8.0.RC2, the Ascend operator library, installed by default.
+* Pull the image. This image is only for the development environment and does not contain a pre-compiled PaddlePaddle installation package. The image has CANN-8.0.0, the Ascend operator library, installed by default.
 ```bash
 # For X86 architecture
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80RC2-ubuntu20-npu-base-x86_64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-x86_64-gcc84
 # For Aarch64 architecture
-docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80RC2-ubuntu20-npu-base-aarch64-gcc84
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-aarch64-gcc84
 ```
 * Start the container with the following command. ASCEND_RT_VISIBLE_DEVICES specifies the visible NPU card numbers.
 ```bash
@@ -22,13 +22,13 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
     -v /usr/local/bin/npu-smi:/usr/local/bin/npu-smi \
     -v /usr/local/dcmi:/usr/local/dcmi \
     -e ASCEND_RT_VISIBLE_DEVICES="0,1,2,3,4,5,6,7" \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80RC2-ubuntu20-$(uname -m)-gcc84 /bin/bash
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann800-ubuntu20-npu-910b-base-$(uname -m)-gcc84 /bin/bash
 ```
 ## 2. Install Paddle Package
 * Download and install the Python wheel installation package
 ```bash
 # Note: You need to install the CPU version of PaddlePaddle first
-python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddlepaddle==3.0.0.dev20250430 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
 python -m pip install paddle-custom-npu -i https://www.paddlepaddle.org.cn/packages/nightly/npu
 ```
 * CANN-8.0.RC2 does not support some versions of numpy and opencv, it is recommended to install the specified versions.

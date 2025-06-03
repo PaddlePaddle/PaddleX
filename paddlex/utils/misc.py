@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
 
 import os
 import threading
-import numpy as np
 from abc import ABCMeta
+
+import numpy as np
+
 from .errors import (
+    DuplicateRegistrationError,
     raise_class_not_found_error,
     raise_no_entity_registered_error,
-    DuplicateRegistrationError,
 )
 from .logging import *
 
@@ -68,7 +70,7 @@ class CachedProperty(object):
     https://github.com/pydanny/cached-property/blob/master/cached_property.py .
 
     Note that this implementation does NOT work in multi-thread or coroutine
-    senarios.
+    scenarios.
     """
 
     def __init__(self, func):
@@ -197,5 +199,3 @@ class AutoRegisterMetaClass(type):
 
 class AutoRegisterABCMetaClass(ABCMeta, AutoRegisterMetaClass):
     """AutoRegisterABCMetaClass"""
-
-    pass

@@ -19,7 +19,7 @@
 namespace ultra_infer {
 namespace vision {
 
-/*! @brief Processor for tansform images from BGR to RGB.
+/*! @brief Processor for transform images from BGR to RGB.
  */
 class ULTRAINFER_DECL BGR2RGB : public Processor {
 public:
@@ -33,12 +33,12 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
 
-/*! @brief Processor for tansform images from RGB to BGR.
+/*! @brief Processor for transform images from RGB to BGR.
  */
 class ULTRAINFER_DECL RGB2BGR : public Processor {
 public:
@@ -52,12 +52,12 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
 
-/*! @brief Processor for tansform images from BGR to GRAY.
+/*! @brief Processor for transform images from BGR to GRAY.
  */
 class ULTRAINFER_DECL BGR2GRAY : public Processor {
 public:
@@ -71,12 +71,12 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };
 
-/*! @brief Processor for tansform images from RGB to GRAY.
+/*! @brief Processor for transform images from RGB to GRAY.
  */
 class ULTRAINFER_DECL RGB2GRAY : public Processor {
 public:
@@ -90,7 +90,7 @@ public:
    *
    * \param[in] mat The input image data
    * \param[in] lib to define OpenCV or FlyCV or CVCUDA will be used.
-   * \return true if the process successed, otherwise false
+   * \return true if the process succeeded, otherwise false
    */
   static bool Run(FDMat *mat, ProcLib lib = ProcLib::DEFAULT);
 };

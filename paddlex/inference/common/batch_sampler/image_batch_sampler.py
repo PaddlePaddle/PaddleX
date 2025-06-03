@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,38 +14,34 @@
 
 import os
 from pathlib import Path
+
 import numpy as np
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from ...utils.io import PDFReader
-from .base_batch_sampler import BaseBatchSampler
+from .base_batch_sampler import BaseBatchSampler, Batch
 
 
-class ImgInstance:
+class ImgBatch(Batch):
     def __init__(self):
-        self.instances = []
-        self.input_paths = []
+        super().__init__()
         self.page_indexes = []
 
     def append(self, instance, input_path, page_index):
-        self.instances.append(instance)
-        self.input_paths.append(input_path)
+        super().append(instance, input_path)
         self.page_indexes.append(page_index)
 
     def reset(self):
-        self.instances = []
-        self.input_paths = []
+        super().reset()
         self.page_indexes = []
-
-    def __len__(self):
-        return len(self.instances)
 
 
 class ImageBatchSampler(BaseBatchSampler):
 
-    SUFFIX = ["jpg", "png", "jpeg", "JPEG", "JPG", "bmp"]
+    IMG_SUFFIX = ["jpg", "png", "jpeg", "bmp"]
+    PDF_SUFFIX = ["pdf"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -59,16 +55,19 @@ class ImageBatchSampler(BaseBatchSampler):
         return save_path.as_posix()
 
     def _get_files_list(self, fp):
-        file_list = []
         if fp is None or not os.path.exists(fp):
-            raise Exception(f"Not found any img file in path: {fp}")
+            raise Exception(f"Not found any files in path: {fp}")
+        if os.path.isfile(fp):
+            return [fp]
 
-        if os.path.isfile(fp) and fp.split(".")[-1] in self.SUFFIX:
-            file_list.append(fp)
-        elif os.path.isdir(fp):
+        file_list = []
+        if os.path.isdir(fp):
             for root, dirs, files in os.walk(fp):
                 for single_file in files:
-                    if single_file.split(".")[-1] in self.SUFFIX:
+                    if (
+                        single_file.split(".")[-1].lower()
+                        in self.IMG_SUFFIX + self.PDF_SUFFIX
+                    ):
                         file_list.append(os.path.join(root, single_file))
         if len(file_list) == 0:
             raise Exception("Not found any file in {}".format(fp))
@@ -79,36 +78,41 @@ class ImageBatchSampler(BaseBatchSampler):
         if not isinstance(inputs, list):
             inputs = [inputs]
 
-        batch = ImgInstance()
+        batch = ImgBatch()
         for input in inputs:
             if isinstance(input, np.ndarray):
                 batch.append(input, None, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch = ImgInstance()
-            elif isinstance(input, str) and input.split(".")[-1] in ("PDF", "pdf"):
-                file_path = (
-                    self._download_from_url(input)
-                    if input.startswith("http")
-                    else input
-                )
-                for page_idx, page_img in enumerate(self.pdf_reader.read(file_path)):
-                    batch.append(page_img, file_path, page_idx)
-                    if len(batch) == self.batch_size:
-                        yield batch
-                        batch = ImgInstance()
+                    batch = ImgBatch()
             elif isinstance(input, str):
-                file_path = (
-                    self._download_from_url(input)
-                    if input.startswith("http")
-                    else input
-                )
-                file_list = self._get_files_list(file_path)
-                for file_path in file_list:
+                suffix = input.split(".")[-1].lower()
+                if suffix in self.PDF_SUFFIX:
+                    file_path = (
+                        self._download_from_url(input)
+                        if input.startswith("http")
+                        else input
+                    )
+                    for page_idx, page_img in enumerate(
+                        self.pdf_reader.read(file_path)
+                    ):
+                        batch.append(page_img, file_path, page_idx)
+                        if len(batch) == self.batch_size:
+                            yield batch
+                            batch = ImgBatch()
+                elif suffix in self.IMG_SUFFIX:
+                    file_path = (
+                        self._download_from_url(input)
+                        if input.startswith("http")
+                        else input
+                    )
                     batch.append(file_path, file_path, None)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch = ImgInstance()
+                        batch = ImgBatch()
+                else:
+                    file_list = self._get_files_list(input)
+                    yield from self.sample(file_list)
             else:
                 logging.warning(
                     f"Not supported input data type! Only `numpy.ndarray` and `str` are supported! So has been ignored: {input}."

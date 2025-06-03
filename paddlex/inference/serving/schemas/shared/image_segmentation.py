@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from typing import Tuple
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated, TypeAlias
+from pydantic import BaseModel
+from typing_extensions import TypeAlias
 
 __all__ = ["Size", "Mask"]
 
 
-Size: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
+Size: TypeAlias = Tuple[int, int]
 
 
 class Mask(BaseModel):

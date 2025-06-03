@@ -39,6 +39,7 @@ enum Backend {
   SOPHGOTPU,  ///< SOPHGOTPU, support SOPHGO format model, Sophgo TPU only
   HORIZONNPU, ///< HORIZONNPU, support Horizon format model, Horizon NPU
   TVM,        ///< TVMBackend, support TVM format model, CPU / Nvidia GPU
+  OMONNPU,    ///< OMONNPU, support OM format model, OM NPU
 };
 
 /**
@@ -74,6 +75,7 @@ enum ModelFormat {
   SOPHGO,      ///< Model with SOPHGO format
   HORIZON,     ///< Model with HORIZON format
   TVMFormat,   ///< Model with TVM format
+  OM,          ///< Model with OM format
 };
 
 /// Describle all the supported backends for specified model format
@@ -87,7 +89,8 @@ static std::map<ModelFormat, std::vector<Backend>>
         {ModelFormat::HORIZON, {Backend::HORIZONNPU}},
         {ModelFormat::TORCHSCRIPT, {Backend::POROS}},
         {ModelFormat::SOPHGO, {Backend::SOPHGOTPU}},
-        {ModelFormat::TVMFormat, {Backend::TVM}}};
+        {ModelFormat::TVMFormat, {Backend::TVM}},
+        {ModelFormat::OM, {Backend::OMONNPU}}};
 
 /// Describle all the supported backends for specified device
 static std::map<Device, std::vector<Backend>> s_default_backends_by_device = {
@@ -104,7 +107,8 @@ static std::map<Device, std::vector<Backend>> s_default_backends_by_device = {
     {Device::KUNLUNXIN, {Backend::LITE, Backend::PDINFER}},
     {Device::ASCEND, {Backend::LITE}},
     {Device::SOPHGOTPUD, {Backend::SOPHGOTPU}},
-    {Device::DIRECTML, {Backend::ORT}}};
+    {Device::DIRECTML, {Backend::ORT}},
+    {Device::ASCEND, {Backend::OMONNPU}}};
 
 inline bool Supported(ModelFormat format, Backend backend) {
   auto iter = s_default_backends_by_format.find(format);

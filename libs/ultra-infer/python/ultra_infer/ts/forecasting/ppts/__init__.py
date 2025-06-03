@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ from __future__ import absolute_import
 import os
 from copy import deepcopy
 import numpy as np
-import pandas as pd
 from typing import List
 from dataclasses import dataclass
 
@@ -127,6 +126,8 @@ class _PyOnlyForecastingPostprocessor(object):
         self._processor_chain = PyOnlyProcessorChain(processors)
 
     def run(self, data):
+        import pandas as pd
+
         ori_ts = data["ori_ts"]
         pred = data["pred"]
         if ori_ts.get("past_target", None) is not None:

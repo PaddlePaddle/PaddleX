@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class ProcessorManager:
     def use_cuda(self, enable_cv_cuda=False, gpu_id=-1):
         """Use CUDA processors
 
-        :param: enable_cv_cuda: Ture: use CV-CUDA, False: use CUDA only
+        :param: enable_cv_cuda: True: use CV-CUDA, False: use CUDA only
         :param: gpu_id: GPU device id
         """
         return self._manager.use_cuda(enable_cv_cuda, gpu_id)
@@ -49,7 +49,7 @@ class PyProcessorManager(ABC):
     def use_cuda(self, enable_cv_cuda=False, gpu_id=-1):
         """Use CUDA processors
 
-        :param: enable_cv_cuda: Ture: use CV-CUDA, False: use CUDA only
+        :param: enable_cv_cuda: True: use CV-CUDA, False: use CUDA only
         :param: gpu_id: GPU device id
         """
         return self._manager.use_cuda(enable_cv_cuda, gpu_id)

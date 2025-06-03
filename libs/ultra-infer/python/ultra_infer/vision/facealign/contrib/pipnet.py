@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-import logging
+
 from .... import UltraInferModel, ModelFormat
 from .... import c_lib_wrap as C
 
@@ -63,14 +63,14 @@ class PIPNet(UltraInferModel):
     @property
     def mean_vals(self):
         """
-        Returns the mean value of normlization, default mean_vals = [0.485f, 0.456f, 0.406f];
+        Returns the mean value of normalization, default mean_vals = [0.485f, 0.456f, 0.406f];
         """
         return self._model.mean_vals
 
     @property
     def std_vals(self):
         """
-        Returns the std value of normlization, default std_vals = [0.229f, 0.224f, 0.225f];
+        Returns the std value of normalization, default std_vals = [0.229f, 0.224f, 0.225f];
         """
         return self._model.std_vals
 
@@ -91,7 +91,7 @@ class PIPNet(UltraInferModel):
         ), "The value to set `size` must be type of tuple or list."
         assert (
             len(wh) == 2
-        ), "The value to set `size` must contatins 2 elements means [width, height], but now it contains {} elements.".format(
+        ), "The value to set `size` must contains 2 elements means [width, height], but now it contains {} elements.".format(
             len(wh)
         )
         self._model.size = wh

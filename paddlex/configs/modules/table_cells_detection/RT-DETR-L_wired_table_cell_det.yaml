@@ -17,7 +17,7 @@ CheckDataset:
 Train:
   num_classes: 1
   epochs_iters: 40
-  batch_size: 2
+  batch_size: 8
   learning_rate: 0.0001
   pretrain_weight_path: "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams"
   warmup_steps: 100

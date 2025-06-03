@@ -195,7 +195,7 @@ bool OrtBackend::InitFromPaddle(const std::string &model_buffer,
           true, verbose, true, true, true, ops.data(), 2, "onnxruntime",
           nullptr, 0, "", &save_external, option.enable_fp16,
           disable_fp16_ops.data(), option.ort_disabled_ops_.size())) {
-    FDERROR << "Error occured while export PaddlePaddle to ONNX format."
+    FDERROR << "Error occurred while export PaddlePaddle to ONNX format."
             << std::endl;
     return false;
   }
@@ -328,6 +328,9 @@ void OrtBackend::OrtValueToFDTensor(const Ort::Value &value, FDTensor *tensor,
   } else if (data_type == ONNX_TENSOR_ELEMENT_DATA_TYPE_INT8) {
     dtype = FDDataType::INT8;
     numel *= sizeof(int8_t);
+  } else if (data_type == ONNX_TENSOR_ELEMENT_DATA_TYPE_BOOL) {
+    dtype = FDDataType::BOOL;
+    numel *= sizeof(bool);
   } else {
     FDASSERT(
         false,
