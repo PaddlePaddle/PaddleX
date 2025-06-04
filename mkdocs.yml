@@ -186,6 +186,7 @@ plugins:
             高性能推理: High Performance Inference
             服务化部署: Serving
             端侧部署: Edge Deployment
+            获取 ONNX 模型: Obtaining ONNX Models
             多硬件使用: Multi-Device Usage
             多硬件使用指南: Multi-Device Usage Guide
             飞桨多硬件安装: PaddlePaddle Installation on Multiple Devices

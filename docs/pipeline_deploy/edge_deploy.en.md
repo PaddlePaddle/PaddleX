@@ -13,7 +13,7 @@ comments: true
   - [Feedback Section](#feedback-section)
 
 This guide mainly introduces the operation method of the PaddleX edge deployment demo on the Android shell.
-This guide applies to 8 models across 6 modules:
+This guide applies to 13 models across 7 modules:
 
 <table>
   <tr>
@@ -57,14 +57,40 @@ This guide applies to 8 models across 6 modules:
     <td>✅</td>
   </tr>
   <tr>
-    <td>Text Detection</td>
+    <td>Text Line Orientation Classification</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td rowspan="3">Text Detection</td>
+    <td>PP-OCRv5_mobile_det</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>PP-OCRv4_mobile_det</td>
     <td>✅</td>
     <td></td>
   </tr>
   <tr>
-    <td>Text Recognition</td>
+    <td>PP-OCRv3_mobile_det</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="3">Text Recognition</td>
+    <td>PP-OCRv5_mobile_rec</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>PP-OCRv4_mobile_rec</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>PP-OCRv3_mobile_rec</td>
     <td>✅</td>
     <td></td>
   </tr>
