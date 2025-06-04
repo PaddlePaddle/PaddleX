@@ -500,7 +500,7 @@ def time_feature(
             start=tf_kcov[time_col][-1],
             freq=freq,
             periods=extend_points + 1,
-            closed="right",
+            inclusive="right",
             name=time_col,
         ).to_frame()
         tf_kcov = pd.concat([tf_kcov, extend_time])
