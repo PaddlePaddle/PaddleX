@@ -57,7 +57,7 @@ DEP_SPECS = {
     "prettytable": "",
     "py-cpuinfo": "",
     "pyclipper": "",
-    "pycocotools": "",
+    "pycocotools": "<=2.0.8",  # pycocotools upgrade incompatible since 2.0.9
     "pydantic": ">= 2",
     "pypdfium2": ">= 4",
     "PyYAML": "== 6.0.2",
