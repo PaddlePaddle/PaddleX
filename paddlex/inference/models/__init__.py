@@ -50,7 +50,8 @@ from .ts_classification import TSClsPredictor
 from .ts_forecasting import TSFcPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
-
+from .text_to_speech_acoustic import Fastspeech2Predictor
+from .text_to_speech_vocoder import PwganPredictor
 
 def create_predictor(
     model_name: str,
@@ -71,6 +72,8 @@ def create_predictor(
         assert Path(model_dir).exists(), f"{model_dir} is not exists!"
         model_dir = Path(model_dir)
     config = BasePredictor.load_config(model_dir)
+    print(model_name)
+    print(config["Global"]["model_name"])
     assert (
         model_name == config["Global"]["model_name"]
     ), f"Model name mismatch，please input the correct model dir."
