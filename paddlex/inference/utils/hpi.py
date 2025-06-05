@@ -163,8 +163,12 @@ def suggest_inference_backend_and_config(
         # TODO: Is it better to also check the runtime versions of CUDA and
         # cuDNN, and the versions of CUDA and cuDNN used to build `ultra-infer`?
         cuda_version = get_paddle_cuda_version()
+        if not cuda_version:
+            return None, "No CUDA version was found."
         cuda_version = "".join(map(str, cuda_version))
         cudnn_version = get_paddle_cudnn_version()
+        if not cudnn_version:
+            return None, "No cuDNN version was found."
         cudnn_version = "".join(map(str, cudnn_version[:-1]))
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:

@@ -24,6 +24,7 @@ from ...utils.device import (
     set_env_for_device_type,
 )
 from ...utils.flags import USE_PIR_TRT
+from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
 from .trt_blocklist import TRT_BLOCKLIST
 from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
@@ -45,7 +46,7 @@ class PaddlePredictorOption(object):
     )
     SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu")
 
-    def __init__(self, model_name, **kwargs):
+    def __init__(self, model_name=None, **kwargs):
         super().__init__()
         self._model_name = model_name
         self._cfg = {}
@@ -137,12 +138,20 @@ class PaddlePredictorOption(object):
             raise ValueError(
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
-        # TRT Blocklist
-        if run_mode.startswith("trt") and self._model_name in TRT_BLOCKLIST:
-            logging.warning(
-                f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
-            )
-            run_mode = "paddle"
+
+        if self._model_name is not None:
+            # TRT Blocklist
+            if run_mode.startswith("trt") and self._model_name in TRT_BLOCKLIST:
+                logging.warning(
+                    f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
+                )
+                run_mode = "paddle"
+            # MKLDNN Blocklist
+            elif run_mode.startswith("mkldnn") and self._model_name in MKLDNN_BLOCKLIST:
+                logging.warning(
+                    f"The model({self._model_name}) is not supported to run in MKLDNN mode! Using `paddle` instead!"
+                )
+                run_mode = "paddle"
 
         self._update("run_mode", run_mode)
 

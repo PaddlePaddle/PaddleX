@@ -54,6 +54,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             images,
             use_doc_orientation_classify=request.useDocOrientationClassify,
             use_doc_unwarping=request.useDocUnwarping,
+            use_textline_orientation=request.useTextlineOrientation,
             use_seal_recognition=request.useSealRecognition,
             use_table_recognition=request.useTableRecognition,
             layout_threshold=request.layoutThreshold,

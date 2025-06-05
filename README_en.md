@@ -42,30 +42,30 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 Core upgrades are as follows:
 
-- **Rich Model Library:**  
-  - **Extensive Model Coverage:** PaddleX 3.0 includes **270+ models**, covering diverse scenarios such as image/video classification/detection/segmentation, OCR, speech recognition, time series analysis, and more.  
-  - **Mature Solutions:** Built on this robust model library, PaddleX 3.0 offers **critical and production-ready AI solutions**, including general document parsing, key information extraction, document understanding, table recognition, and general image recognition.  
+- **Rich Model Library:**
+  - **Extensive Model Coverage:** PaddleX 3.0 includes **270+ models**, covering diverse scenarios such as image/video classification/detection/segmentation, OCR, speech recognition, time series analysis, and more.
+  - **Mature Solutions:** Built on this robust model library, PaddleX 3.0 offers **critical and production-ready AI solutions**, including general document parsing, key information extraction, document understanding, table recognition, and general image recognition.
 
-- **Unified Inference API & Enhanced Deployment Capabilities:**  
-  - **Standardized Inference Interface:** Reduces API fragmentation across model types, lowering the learning curve for users and accelerating enterprise adoption.  
-  - **Multi-Model Composition:** Complex tasks can be efficiently tackled by combining different models, achieving synergistic performance (1+1>2).  
-  - **Upgraded Deployment:** Unified commands now manage deployments for diverse models, supporting **multi-GPU inference** and **multi-instance serving deployments**.  
+- **Unified Inference API & Enhanced Deployment Capabilities:**
+  - **Standardized Inference Interface:** Reduces API fragmentation across model types, lowering the learning curve for users and accelerating enterprise adoption.
+  - **Multi-Model Composition:** Complex tasks can be efficiently tackled by combining different models, achieving synergistic performance (1+1>2).
+  - **Upgraded Deployment:** Unified commands now manage deployments for diverse models, supporting **multi-GPU inference** and **multi-instance serving deployments**.
 
-- **Full Compatibility with PaddlePaddle Framework 3.0:**  
-  - **Leveraging New Paddle 3.0 Features:**  
-    - Compiler-accelerated training: Enable by appending `-o Global.dy2st=True` to training commands. **Most GPU-based models see >10% speed gains, with some exceeding 30%.**  
-    - Inference upgrades: Full adaptation to Paddle 3.0’s Program Intermediate Representation (PIR) enhances flexibility and compatibility. Static graph models now use `xxx.json` instead of `xxx.pdmodel`.  
-  - **ONNX Model Support:** Seamless format conversion via the Paddle2ONNX plugin.  
+- **Full Compatibility with PaddlePaddle Framework 3.0:**
+  - **Leveraging New Paddle 3.0 Features:**
+    - Compiler-accelerated training: Enable by appending `-o Global.dy2st=True` to training commands. **Most GPU-based models see >10% speed gains, with some exceeding 30%.**
+    - Inference upgrades: Full adaptation to Paddle 3.0’s Program Intermediate Representation (PIR) enhances flexibility and compatibility. Static graph models now use `xxx.json` instead of `xxx.pdmodel`.
+  - **ONNX Model Support:** Seamless format conversion via the Paddle2ONNX plugin.
 
-- **Flagship Capabilities:**  
-  - **PP-OCRv5:** Powers **multi-hardware inference, multi-backend support, and serving deployments** for this industry-leading OCR system.  
-  - **PP-StructureV3:** Orchestrates **15+ models** in hybrid (serial/parallel) pipelines, achieving **SOTA accuracy on OmniDocBench**.  
-  - **PP-ChatOCRv4:** Integrates with **PP-DocBee2 and ERNIE 4.5Turbo**, boosting key information extraction accuracy by **15.7 percentage points** over the previous generation.  
+- **Flagship Capabilities:**
+  - **PP-OCRv5:** Powers **multi-hardware inference, multi-backend support, and serving deployments** for this industry-leading OCR system.
+  - **PP-StructureV3:** Orchestrates **15+ models** in hybrid (serial/parallel) pipelines, achieving **SOTA accuracy on OmniDocBench**.
+  - **PP-ChatOCRv4:** Integrates with **PP-DocBee2 and ERNIE 4.5Turbo**, boosting key information extraction accuracy by **15.7 percentage points** over the previous generation.
 
-- **Multi-Hardware Support:**  
-  - **Broad Compatibility:** Training and inference supported on **NVIDIA, Intel, Apple M-series, Kunlunxin, Ascend, Cambricon, Hygon, Enflame**, and more.  
-  - **Ascend-Optimized:** **200+ fully adapted models**, including **21 OM-accelerated inference models**, plus key solutions like PP-OCRv5 and PP-StructureV3.  
-  - **Kunlunxin-Optimized:** Critical classification, detection, and OCR models (including PP-OCRv5) are fully supported.  
+- **Multi-Hardware Support:**
+  - **Broad Compatibility:** Training and inference supported on **NVIDIA, Intel, Apple M-series, Kunlunxin, Ascend, Cambricon, Hygon, Enflame**, and more.
+  - **Ascend-Optimized:** **200+ fully adapted models**, including **21 OM-accelerated inference models**, plus key solutions like PP-OCRv5 and PP-StructureV3.
+  - **Kunlunxin-Optimized:** Critical classification, detection, and OCR models (including PP-OCRv5) are fully supported.
 
 
 ## 🔠 Explanation of Pipeline
@@ -553,7 +553,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 ### 🛠️ Installation
 
-> ❗Before installing PaddleX, please ensure that you have a basic **Python runtime environment** (Note: Currently supports Python 3.8 to Python 3.12). The PaddleX 3.0-rc1 version depends on PaddlePaddle version 3.0.0 and above. Please make sure the version compatibility is maintained before use.
+> ❗Before installing PaddleX, please ensure that you have a basic **Python runtime environment** (Note: Currently supports Python 3.8 to Python 3.12). The PaddleX 3.0.x version depends on PaddlePaddle version 3.0.0 and above. Please make sure the version compatibility is maintained before use.
 
 * **Installing PaddlePaddle**
 
@@ -572,7 +572,7 @@ python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/pac
 * **Installing PaddleX**
 
 ```bash
-pip install paddlex[base]==3.0.0
+pip install "paddlex[base]==3.0.0"
 ```
 
 > ❗For more installation methods, refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/en/installation/installation.html).

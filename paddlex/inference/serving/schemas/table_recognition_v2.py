@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional, Tuple, Union
+from typing import Dict, Final, List, Optional
 
 from pydantic import BaseModel
 
@@ -35,10 +35,6 @@ class InferRequest(ocr.BaseInferRequest):
     useDocUnwarping: Optional[bool] = None
     useLayoutDetection: Optional[bool] = None
     useOcrModel: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
-    layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
-    layoutMergeBboxesMode: Optional[Union[str, dict]] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None

@@ -191,7 +191,7 @@ SubPipelines:
             unclip_ratio: 1.5
           TextLineOrientation:
             module_name: textline_orientation
-            model_name: PP-LCNet_x0_25_textline_ori 
+            model_name: PP-LCNet_x1_0_textline_ori 
             model_dir: null
             batch_size: 6   
           TextRecognition:

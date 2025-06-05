@@ -40,7 +40,7 @@ class InferRequest(ocr.BaseInferRequest):
     useFormulaRecognition: Optional[bool] = None
     useChartRecognition: Optional[bool] = False
     useRegionDetection: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
+    layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
     layoutMergeBboxesMode: Optional[Union[str, dict]] = None
