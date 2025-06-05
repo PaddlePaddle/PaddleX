@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
+import paddle
 import numpy as np
 
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import TextBatchSampler
 
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .result import TextToPinyinResult
 from ....modules.text_to_pinyin.model_list import MODELS
 
 
-class TextToPinyinPredictor(BasicPredictor):
+class TextToPinyinPredictor(BasePredictor):
 
     entities = MODELS
 

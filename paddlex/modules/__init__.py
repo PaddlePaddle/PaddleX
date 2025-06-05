@@ -70,6 +70,14 @@ from .semantic_segmentation import (
     SegExportor,
     SegTrainer,
 )
+from .text_to_speech_vocoder import TextToSpeechVocoderDatasetChecker
+from .text_to_speech_acoustic import TextToSpeechAcousticDatasetChecker
+from .text_to_pinyin import (
+    TextToPinyinDatasetChecker,
+    TextToPinyinEvaluator,
+    TextToPinyinExportor,
+    TextToPinyinTrainer,
+)
 from .table_recognition import (
     TableRecDatasetChecker,
     TableRecEvaluator,
