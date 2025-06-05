@@ -1,0 +1,3 @@
+MODELS = [
+    "pwgan_csmsc",
+]
