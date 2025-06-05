@@ -1176,6 +1176,11 @@
     "PP-FormulaNet_plus-S": [
       "onnxruntime",
       "paddle"
+    ],
+    "PP-LCNet_x1_0_textline_ori": [
+      "openvino",
+      "onnxruntime",
+      "paddle"
     ]
   },
   "gpu_cuda118_cudnn89": {
@@ -2326,6 +2331,11 @@
     ],
     "PP-FormulaNet_plus-S": [
       "paddle"
+    ],
+    "PP-LCNet_x1_0_textline_ori": [
+      "tensorrt_fp16",
+      "paddle_tensorrt",
+      "onnxruntime"
     ]
   }
 }
