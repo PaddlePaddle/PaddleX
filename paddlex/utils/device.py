@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import importlib.metadata
 import os
 from contextlib import ContextDecorator
 
@@ -40,16 +41,37 @@ def constr_device(device_type, device_ids):
         return f"{device_type}"
 
 
+def get_installed_paddle_variant():
+    try:
+        dist_name = importlib.metadata.distribution("paddlepaddle").metadata["Name"]
+        return dist_name  # 'paddlepaddle'
+    except importlib.metadata.PackageNotFoundError:
+        pass
+    try:
+        dist_name = importlib.metadata.distribution("paddlepaddle-gpu").metadata["Name"]
+        return dist_name  # 'paddlepaddle-gpu'
+    except importlib.metadata.PackageNotFoundError:
+        return None
+
+
 def get_default_device():
+    paddle_variant = get_installed_paddle_variant()
     try:
         gpu_list = GPUtil.getGPUs()
+        has_gpus = bool(gpu_list)
     except Exception:
         logging.debug(
             "Failed to query GPU devices. Falling back to CPU.", exc_info=True
         )
         has_gpus = False
-    else:
-        has_gpus = bool(gpu_list)
+
+    # If GPU is available but CPU-only paddlepaddle is installed we fall back to the CPU as the default device
+    if has_gpus and paddle_variant != "paddlepaddle-gpu":
+        logging.debug(
+            "GPU detected but only CPU version of PaddlePaddle is installed. Falling back to CPU."
+        )
+        has_gpus = False
+
     if not has_gpus:
         # HACK
         if os.path.exists("/etc/nv_tegra_release"):
