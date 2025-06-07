@@ -199,6 +199,9 @@ class GroundingDINOPostProcessor(object):
         tokenized = self.tokenizer(prompt)
         if posmap.dim() == 1:
             non_zero_idx = posmap.nonzero(as_tuple=True)[0].squeeze(-1).tolist()
+            non_zero_idx = (
+                [non_zero_idx] if not isinstance(non_zero_idx, list) else non_zero_idx
+            )
             token_ids = [tokenized["input_ids"][i] for i in non_zero_idx]
             return self.tokenizer.decode(token_ids)
         else:
