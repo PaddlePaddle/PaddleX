@@ -118,7 +118,7 @@ def set_env_for_device_type(device_type):
             "FLAGS_npu_jit_compile": "0",
             "FLAGS_use_stride_kernel": "0",
             "FLAGS_allocator_strategy": "auto_growth",
-            "CUSTOM_DEVICE_BLACK_LIST": "pad3d,pad3d_grad,set_value,set_value_with_tensor",
+            "CUSTOM_DEVICE_BLACK_LIST": "pad3d,pad3d_grad,set_value,set_value_with_tensor,slice",
             "FLAGS_npu_scale_aclnn": "True",
             "FLAGS_npu_split_aclnn": "True",
         }
