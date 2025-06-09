@@ -18,7 +18,7 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 
 ```bash
 # Only install the required dependencies (optional dependencies can be installed later as needed)
-pip install paddlex==3.0.0
+pip install paddlex==3.0.1
 ```
 
 You can install the optional dependencies as needed using the following method (For more details, please refer to [2.3 Selective Installation of Dependencies](#23-selective-installation-of-dependencies)):
@@ -26,13 +26,13 @@ You can install the optional dependencies as needed using the following method (
 Install all dependencies required for PaddleX "basic features":
 
 ```bash
-pip install "paddlex[base]==3.0.0"
+pip install "paddlex[base]==3.0.1"
 ```
 
 Only install the dependencies required for a specific feature:
 
 ```bash
-pip install "paddlex[ocr]==3.0.0"
+pip install "paddlex[ocr]==3.0.1"
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -147,10 +147,13 @@ If your Docker version >= 19.03, please use:
 
 ```bash
 # For CPU
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.1-paddlepaddle3.0.0-cpu /bin/bash
 
 # gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
+
+# gpu，requires GPU driver version ≥545.23.06（Linux） or ≥545.84（Windows）
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.1-paddlepaddle3.0.0-gpu-cuda12.6-cudnn9.5-trt10.5 /bin/bash
 ```
 
 * If your Docker version <= 19.03 and >= 17.06, please use:
@@ -158,17 +161,20 @@ docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=hos
 <details><summary> Click Here</summary>
 
 <pre><code class="language-bash"># For CPU
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.1-paddlepaddle3.0.0-cpu /bin/bash
 
 # For GPU
 # gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.1-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
+
+# gpu，requires GPU driver version ≥545.23.06（Linux） or ≥545.84（Windows）
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.1-paddlepaddle3.0.0-gpu-cuda12.6-cudnn9.5-trt10.5 /bin/bash
 
 </code></pre></details>
 
 * If your Docker version <= 17.06, please update your Docker.
 
-* If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/). Support for CUDA 12 and above is currently in progress. Stay tuned.
+* If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/).
 
 ### 2.2 Custom Installation of PaddleX
 Before installation, please ensure you have completed the local installation of PaddlePaddle by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md).
