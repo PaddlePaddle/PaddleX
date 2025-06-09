@@ -119,7 +119,7 @@ class PaddlePredictorOption(object):
             "trt_dynamic_shape_input_data": None,  # only for trt
             "trt_shape_range_info_path": None,  # only for trt
             "trt_allow_rebuild_at_runtime": True,  # only for trt
-            "mkldnn_cache_capacity": -1,
+            "mkldnn_cache_capacity": 10,
         }
         return default_config
 
