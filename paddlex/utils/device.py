@@ -118,9 +118,7 @@ def set_env_for_device_type(device_type):
             "FLAGS_npu_jit_compile": "0",
             "FLAGS_use_stride_kernel": "0",
             "FLAGS_allocator_strategy": "auto_growth",
-            # Disable slice for unknown reason infer error on PP-formulaNet series models.
-            # Disable roi_align for NPU kernel do not support attribute aligned==True required by Cascade-MaskRCNN-ResNet50-FPN.
-            "CUSTOM_DEVICE_BLACK_LIST": "pad3d,pad3d_grad,set_value,set_value_with_tensor,slice,roi_align",
+            "CUSTOM_DEVICE_BLACK_LIST": "pad3d,pad3d_grad,set_value,set_value_with_tensor",
             "FLAGS_npu_scale_aclnn": "True",
             "FLAGS_npu_split_aclnn": "True",
         }
