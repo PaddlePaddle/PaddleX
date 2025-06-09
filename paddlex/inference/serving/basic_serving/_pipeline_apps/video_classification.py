@@ -51,7 +51,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             )
         video_path = await serving_utils.call_async(
             serving_utils.write_to_temp_file,
-            None,
             file_bytes,
             suffix=ext,
         )
@@ -59,7 +58,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         try:
             result = (await pipeline.infer(video_path, topk=request.topk))[0]
         finally:
-            await serving_utils.call_async(os.unlink, None, video_path)
+            await serving_utils.call_async(os.unlink, video_path)
 
         if "label_names" in result:
             cat_names = result["label_names"]

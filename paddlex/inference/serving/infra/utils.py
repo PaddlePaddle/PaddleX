@@ -20,17 +20,7 @@ import re
 import tempfile
 import uuid
 from functools import partial
-from typing import (
-    Any,
-    Awaitable,
-    Callable,
-    List,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, overload
 from urllib.parse import parse_qs, urlparse
 
 import numpy as np
@@ -288,8 +278,8 @@ async def get_raw_bytes_async(file: str, session: "aiohttp.ClientSession") -> by
 
 
 def call_async(
-    func: Callable[P, R], executor: Any = None, /, *args: P.args, **kwargs: P.kwargs
+    func: Callable[P, R], /, *args: P.args, **kwargs: P.kwargs
 ) -> Awaitable[R]:
     return asyncio.get_running_loop().run_in_executor(
-        executor, partial(func, *args, **kwargs)
+        None, partial(func, *args, **kwargs)
     )

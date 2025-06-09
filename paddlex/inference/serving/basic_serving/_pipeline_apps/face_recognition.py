@@ -75,9 +75,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         index_storage = ctx.extra["index_storage"]
         index_key = ir_common.generate_index_key()
         index_data_bytes = index_data.to_bytes()
-        await serving_utils.call_async(
-            index_storage.set, None, index_key, index_data_bytes
-        )
+        await serving_utils.call_async(index_storage.set, index_key, index_data_bytes)
 
         return AIStudioResultResponse[schema.BuildIndexResult](
             logId=serving_utils.generate_log_id(),
@@ -108,7 +106,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         index_storage = ctx.extra["index_storage"]
         index_data_bytes = await serving_utils.call_async(
-            index_storage.get, None, request.indexKey
+            index_storage.get, request.indexKey
         )
         index_data = IndexData.from_bytes(index_data_bytes)
 
@@ -118,7 +116,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         index_data_bytes = index_data.to_bytes()
         await serving_utils.call_async(
-            index_storage.set, None, request.indexKey, index_data_bytes
+            index_storage.set, request.indexKey, index_data_bytes
         )
 
         return AIStudioResultResponse[schema.AddImagesToIndexResult](
@@ -148,7 +146,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         index_data_bytes = index_data.to_bytes()
         await serving_utils.call_async(
-            index_storage.set, None, request.indexKey, index_data_bytes
+            index_storage.set, request.indexKey, index_data_bytes
         )
 
         return AIStudioResultResponse[schema.RemoveImagesFromIndexResult](

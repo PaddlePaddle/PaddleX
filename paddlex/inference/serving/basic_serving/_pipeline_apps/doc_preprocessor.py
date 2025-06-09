@@ -71,7 +71,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 }
                 vis_imgs = await serving_utils.call_async(
                     common.postprocess_images,
-                    None,
                     vis_imgs,
                     log_id,
                     filename_template=f"{{key}}_{i}.jpg",

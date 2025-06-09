@@ -73,7 +73,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                     imgs["doc_preprocessing_img"] = output_imgs["preprocessed_img"]
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
-                    None,
                     imgs,
                     log_id,
                     filename_template=f"{{key}}_{i}.jpg",

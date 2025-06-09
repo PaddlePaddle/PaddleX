@@ -55,7 +55,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             )
         audio_path = await serving_utils.call_async(
             serving_utils.write_to_temp_file,
-            None,
             file_bytes,
             suffix=ext,
         )
@@ -63,7 +62,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         try:
             result = (await pipeline.infer(audio_path))[0]
         finally:
-            await serving_utils.call_async(os.unlink, None, audio_path)
+            await serving_utils.call_async(os.unlink, audio_path)
 
         segments: List[Dict[str, Any]] = []
         for item in result["result"]["segments"]:
