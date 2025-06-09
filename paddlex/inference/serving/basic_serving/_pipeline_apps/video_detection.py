@@ -51,6 +51,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             )
         video_path = await serving_utils.call_async(
             serving_utils.write_to_temp_file,
+            None,
             file_bytes,
             suffix=ext,
         )
@@ -64,7 +65,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 )
             )[0]
         finally:
-            await serving_utils.call_async(os.unlink, video_path)
+            await serving_utils.call_async(os.unlink, None, video_path)
 
         frames: List[Dict[str, Any]] = []
         for i, item in enumerate(result["result"]):

@@ -87,6 +87,7 @@ async def get_images(
     )
     images, data_info = await serving_utils.call_async(
         serving_utils.file_to_images,
+        None,
         file_bytes,
         file_type,
         max_num_imgs=app_context.extra["max_num_input_imgs"],

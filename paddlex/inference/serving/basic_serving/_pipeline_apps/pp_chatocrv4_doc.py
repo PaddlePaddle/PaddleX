@@ -86,6 +86,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 }
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
+                    None,
                     imgs,
                     log_id,
                     filename_template=f"{{key}}_{i}.jpg",
@@ -138,6 +139,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         vector_info = await serving_utils.call_async(
             pipeline.pipeline.build_vector,
+            None,
             request.visualInfo,
             **kwargs,
         )
@@ -165,6 +167,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         mllm_predict_info = await serving_utils.call_async(
             pipeline.pipeline.mllm_pred,
+            None,
             image,
             request.keyList,
             mllm_chat_bot_config=request.mllmChatBotConfig,
@@ -209,6 +212,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         result = await serving_utils.call_async(
             pipeline.pipeline.chat,
+            None,
             request.keyList,
             request.visualInfo,
             **kwargs,

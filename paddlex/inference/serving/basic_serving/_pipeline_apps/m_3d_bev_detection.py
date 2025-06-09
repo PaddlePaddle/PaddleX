@@ -46,6 +46,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         )
         tar_path = await serving_utils.call_async(
             serving_utils.write_to_temp_file,
+            None,
             file_bytes,
             suffix=".tar",
         )
@@ -57,7 +58,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 )
             )[0]
         finally:
-            await serving_utils.call_async(os.unlink, tar_path)
+            await serving_utils.call_async(os.unlink, None, tar_path)
 
         objects: List[Dict[str, Any]] = []
         for box, label, score in zip(
