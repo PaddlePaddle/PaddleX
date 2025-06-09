@@ -82,7 +82,6 @@ REQUIRED_DEPS = [
     "chardet",
     "colorlog",
     "filelock",
-    "GPUtil",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
@@ -112,6 +111,7 @@ EXTRAS = {
         "multimodal": [
             "einops",
             "ftfy",
+            "GPUtil",
             "Jinja2",
             "opencv-contrib-python",
             # For the same reason as in `cv`
