@@ -20,7 +20,7 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-DEP_SPECS = {
+DEP_SPECS= {
     "aiohttp": ">= 3.9",
     "bce-python-sdk": ">= 0.9",
     "chardet": "",
@@ -37,21 +37,18 @@ DEP_SPECS = {
     "imagesize": "",
     "Jinja2": "",
     "joblib": "",
-    "langchain": "== 0.2.17",
-    "langchain-community": "== 0.2.17",
+    "langchain": "== 0.3.25",
+    "langchain-community": "== 0.3.24",
     "langchain-core": "",
-    "langchain-openai": "== 0.1.25",
+    "langchain-openai": "== 0.3.19",
     "lxml": "",
     "matplotlib": "",
-    "numpy": [
-        "== 1.24.4; python_version < '3.12'",
-        "== 1.26.4; python_version >= '3.12'",
-    ],
-    "openai": "== 1.63.2",
+    "numpy": ">= 1.24",
+    "openai": "== 1.68.2",
     "opencv-contrib-python": "== 4.10.0.84",
     "openpyxl": "",
     "packaging": "",
-    "pandas": "<= 1.5.3",
+    "pandas": "<=1.5.3",
     "pillow": "",
     "premailer": "",
     "prettytable": "",
