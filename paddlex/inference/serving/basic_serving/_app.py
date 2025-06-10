@@ -79,6 +79,7 @@ class PipelineWrapper(Generic[PipelineT]):
         # HACK: We work around a bug in Paddle Inference by performing all
         # inference in the same thread.
         self._queue = Queue()
+        self._closed = False
         self._loop = asyncio.get_running_loop()
         self._thread = Thread(target=self._worker, daemon=False)
         self._thread.start()
@@ -103,16 +104,19 @@ class PipelineWrapper(Generic[PipelineT]):
         return await self.call(_infer, *args, **kwargs)
 
     async def call(self, func: Callable[P, R], *args: P.args, **kwargs: P.kwargs) -> R:
+        if self._closed:
+            raise RuntimeError("`PipelineWrapper` has already been closed")
         fut = self._loop.create_future()
         self._queue.put((func, args, kwargs, fut))
         return await fut
 
     async def close(self):
-        self._queue.put(None)
-        await call_async(self._thread.join)
+        if not self._closed:
+            self._queue.put(None)
+            await call_async(self._thread.join)
 
     def _worker(self):
-        while True:
+        while not self._closed:
             item = self._queue.get()
             if item is None:
                 break
