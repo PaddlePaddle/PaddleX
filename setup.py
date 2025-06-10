@@ -20,7 +20,7 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-DEP_SPECS= {
+DEP_SPECS = {
     "aiohttp": ">= 3.9",
     "bce-python-sdk": ">= 0.9",
     "chardet": "",
