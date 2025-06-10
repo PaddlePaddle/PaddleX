@@ -15,6 +15,7 @@
 import numpy as np
 
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 from ...utils.io import ImageReader
 
@@ -46,7 +47,7 @@ class ReadImage:
 
     def __call__(self, imgs):
         """apply"""
-        return [self.read(img) for img in imgs]
+        return maybe_parallelize(self.read, imgs)
 
     def read(self, img):
         if isinstance(img, np.ndarray):

@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 
 from .....utils.deps import class_requires_deps, is_dep_available
+from .....utils.parallel import maybe_parallelize
 from ....utils.benchmark import benchmark
 from .funcs import load_from_dataframe, time_feature
 
@@ -65,7 +66,7 @@ class TSCutOff:
         Returns:
             List: List of truncated time series data frames.
         """
-        return [self.cutoff(ts) for ts in ts_list]
+        return maybe_parallelize(self.cutoff, ts_list)
 
     def cutoff(self, ts: Any) -> Any:
         """Truncates a single time series data frame to the specified length.
@@ -125,7 +126,7 @@ class TSNormalize:
         Returns:
             List[pd.DataFrame]: List of normalized time series data frames.
         """
-        return [self.tsnorm(ts) for ts in ts_list]
+        return maybe_parallelize(self.tsnorm, ts_list)
 
     def tsnorm(self, ts: pd.DataFrame) -> pd.DataFrame:
         """Normalizes specified columns of a single time series data frame.
@@ -173,7 +174,7 @@ class BuildTSDataset:
         Returns:
             List: List of constructed time series datasets.
         """
-        return [self.buildtsdata(ts) for ts in ts_list]
+        return maybe_parallelize(self.buildtsdata, ts_list)
 
     def buildtsdata(self, ts) -> Any:
         """Builds a time series dataset from a single time series data frame.
@@ -216,7 +217,7 @@ class TimeFeature:
         Returns:
             List: List of time series with extracted time features.
         """
-        return [self.timefeat(ts) for ts in ts_list]
+        return maybe_parallelize(self.timefeat, ts_list)
 
     def timefeat(self, ts: Dict[str, Any]) -> Any:
         """Extracts time features from a single time series data frame.
@@ -275,7 +276,7 @@ class TStoArray:
         Returns:
             List[List[np.ndarray]]: List of lists of arrays for each time series.
         """
-        return [self.tstoarray(ts) for ts in ts_list]
+        return maybe_parallelize(self.tstoarray, ts_list)
 
     def tstoarray(self, ts: Dict[str, Any]) -> List[np.ndarray]:
         """Converts a single time series data frame into arrays.

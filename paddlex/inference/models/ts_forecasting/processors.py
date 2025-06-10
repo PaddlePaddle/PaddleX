@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 if is_dep_available("joblib"):
@@ -51,7 +52,7 @@ class TSDeNormalize:
         Returns:
             List[pd.DataFrame]: A list of DataFrames with de-normalized prediction data.
         """
-        return [self.tsdenorm(pred) for pred in preds_list]
+        return maybe_parallelize(self.tsdenorm, preds_list)
 
     def tsdenorm(self, pred: pd.DataFrame) -> pd.DataFrame:
         """
@@ -95,9 +96,7 @@ class ArraytoTS:
         Returns:
             List[pd.DataFrame]: A list of DataFrames, each representing the forecasted time series.
         """
-        return [
-            self.arraytots(ori_ts, pred) for ori_ts, pred in zip(ori_ts_list, pred_list)
-        ]
+        return maybe_parallelize(self.arraytots, ori_ts_list, pred_list)
 
     def arraytots(self, ori_ts: Dict[str, Any], pred: np.ndarray) -> pd.DataFrame:
         """
