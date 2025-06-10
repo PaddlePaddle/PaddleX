@@ -638,7 +638,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
 
         for image_array in self.img_reader([input]):
 
-            image_string = cv2.imencode(".jpg", image_array)[1].tostring()
+            image_string = cv2.imencode(".jpg", image_array)[1].tobytes()
             image_base64 = base64.b64encode(image_string).decode("utf-8")
             result = {}
             for key in key_list:
