@@ -163,8 +163,12 @@ def suggest_inference_backend_and_config(
         # TODO: Is it better to also check the runtime versions of CUDA and
         # cuDNN, and the versions of CUDA and cuDNN used to build `ultra-infer`?
         cuda_version = get_paddle_cuda_version()
+        if not cuda_version:
+            return None, "No CUDA version was found."
         cuda_version = "".join(map(str, cuda_version))
         cudnn_version = get_paddle_cudnn_version()
+        if not cudnn_version:
+            return None, "No cuDNN version was found."
         cudnn_version = "".join(map(str, cudnn_version[:-1]))
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:
@@ -232,11 +236,14 @@ def suggest_inference_backend_and_config(
         assert pseudo_backend in (
             "paddle",
             "paddle_fp16",
+            "paddle_mkldnn",
             "paddle_tensorrt",
             "paddle_tensorrt_fp16",
         ), pseudo_backend
         if pseudo_backend == "paddle_fp16":
             suggested_backend_config.update({"run_mode": "paddle_fp16"})
+        elif pseudo_backend == "paddle_mkldnn":
+            suggested_backend_config.update({"run_mode": "mkldnn"})
         elif pseudo_backend == "paddle_tensorrt":
             suggested_backend_config.update({"run_mode": "trt_fp32"})
         elif pseudo_backend == "paddle_tensorrt_fp16":

@@ -41,6 +41,8 @@ def get_paddle_cuda_version():
     import paddle.version
 
     cuda_version = paddle.version.cuda()
+    if cuda_version == "False":
+        return None
     return tuple(map(int, cuda_version.split(".")))
 
 
@@ -48,6 +50,8 @@ def get_paddle_cudnn_version():
     import paddle.version
 
     cudnn_version = paddle.version.cudnn()
+    if cudnn_version == "False":
+        return None
     return tuple(map(int, cudnn_version.split(".")))
 
 

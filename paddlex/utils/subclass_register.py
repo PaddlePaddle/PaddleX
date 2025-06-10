@@ -46,7 +46,7 @@ class AutoRegisterMetaClass(type):
         if bases:
             for base in bases:
                 base_cls = mcs.__find_base_class(base)
-                if base_cls:
+                if base_cls and hasattr(cls, mcs.__model_type_attr_name):
                     mcs.__register_to_base_class(base_cls, cls)
 
     @classmethod
@@ -64,7 +64,7 @@ class AutoRegisterMetaClass(type):
 
     @classmethod
     def __register_to_base_class(mcs, base, cls):
-        cls_entity_name = getattr(cls, mcs.__model_type_attr_name, cls.__name__)
+        cls_entity_name = getattr(cls, mcs.__model_type_attr_name)
         if isinstance(cls_entity_name, str):
             cls_entity_name = [cls_entity_name]
 

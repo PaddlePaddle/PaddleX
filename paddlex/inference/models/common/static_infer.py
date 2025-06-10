@@ -349,6 +349,7 @@ class PaddleInfer(StaticInfer):
                     if self._option.run_mode == "paddle_fp16"
                     else PrecisionType.Float32
                 )
+                config.disable_mkldnn()
                 config.enable_use_gpu(100, self._option.device_id, precision)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
@@ -406,15 +407,15 @@ class PaddleInfer(StaticInfer):
                 assert self._option.device_type == "cpu"
                 config.disable_gpu()
                 if "mkldnn" in self._option.run_mode:
-                    try:
+                    if hasattr(config, "set_mkldnn_cache_capacity"):
                         config.enable_mkldnn()
                         if "bf16" in self._option.run_mode:
                             config.enable_mkldnn_bfloat16()
-                    except Exception:
+                        config.set_mkldnn_cache_capacity(self._option.mkldnn_cache_capacity)
+                    else:
                         logging.warning(
                             "MKL-DNN is not available. We will disable MKL-DNN."
                         )
-                    config.set_mkldnn_cache_capacity(-1)
                 else:
                     if hasattr(config, "disable_mkldnn"):
                         config.disable_mkldnn()

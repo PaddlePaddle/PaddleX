@@ -17,10 +17,11 @@ from typing import Callable, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
+from packaging.version import Version
 from pandas.tseries import holiday as hd
 from pandas.tseries.offsets import DateOffset, Day, Easter
 
-from .....utils.deps import function_requires_deps, is_dep_available
+from .....utils.deps import function_requires_deps, get_dep_version, is_dep_available
 
 if is_dep_available("chinese-calendar"):
     import chinese_calendar
@@ -496,13 +497,23 @@ def time_feature(
     # Extend the time series if no known_cov_numeric
     if not kcov:
         freq = freq if freq is not None else pd.infer_freq(tf_kcov[time_col])
-        extend_time = pd.date_range(
-            start=tf_kcov[time_col][-1],
-            freq=freq,
-            periods=extend_points + 1,
-            closed="right",
-            name=time_col,
-        ).to_frame()
+        pd_version = get_dep_version("pandas")
+        if Version(pd_version) >= Version("1.4"):
+            extend_time = pd.date_range(
+                start=tf_kcov[time_col][-1],
+                freq=freq,
+                periods=extend_points + 1,
+                inclusive="right",
+                name=time_col,
+            ).to_frame()
+        else:
+            extend_time = pd.date_range(
+                start=tf_kcov[time_col][-1],
+                freq=freq,
+                periods=extend_points + 1,
+                closed="right",
+                name=time_col,
+            ).to_frame()
         tf_kcov = pd.concat([tf_kcov, extend_time])
 
     # Extract and add time features to known_cov_numeric

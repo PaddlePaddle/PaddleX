@@ -69,9 +69,10 @@ def projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
     """
     assert axis in [0, 1]
 
-    max_length = np.max(boxes[:, axis::2])
-    if max_length < 0:
+    if np.min(boxes[:, axis::2]) < 0:
         max_length = abs(np.min(boxes[:, axis::2]))
+    else:
+        max_length = np.max(boxes[:, axis::2])
 
     projection = np.zeros(max_length, dtype=int)
 
