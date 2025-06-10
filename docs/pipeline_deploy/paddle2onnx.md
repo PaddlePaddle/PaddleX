@@ -6,6 +6,10 @@ PaddleX 的 Paddle2ONNX 插件提供了将飞桨静态图模型转化到 ONNX �
 ## 1. 安装
 
 ```bash
+# Windows 用户需使用以下命令安装 paddlepaddle dev版本
+python -m pip install --pre paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
+
+# 安装 Paddle2ONNX 插件
 paddlex --install paddle2onnx
 ```
 

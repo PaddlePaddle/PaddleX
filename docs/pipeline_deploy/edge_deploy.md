@@ -318,17 +318,38 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td>MobileNetV3_small_x1_0</br>MobileNetV3_small_x1_0_gpu</td>
   </tr>
   <tr>
-    <td rowspan="2">通用OCR</td>
-    <td rowspan="2">ocr</td>
+    <td rowspan="3">通用OCR</td>
+    <td rowspan="3">ocr</td>
     <td>文本检测</td>
-    <td rowspan="2">ppocr_demo</td>
-    <td>PP-OCRv4_mobile_det</td>
-    <td>PP-OCRv4_mobile_det</td>
+    <td rowspan="3">ppocr_demo</td>
+    <td>
+      PP-OCRv5_mobile_det</br>
+      PP-OCRv4_mobile_det</br>
+      PP-OCRv3_mobile_det
+    </td>
+    <td>
+      PP-OCRv5_mobile_det</br>
+      PP-OCRv4_mobile_det</br>
+      PP-OCRv3_mobile_det
+    </td>
+  </tr>
+  <tr>
+    <td>文本行方向分类</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
   </tr>
   <tr>
     <td>文本识别</td>
-    <td>PP-OCRv4_mobile_rec</td>
-    <td>PP-OCRv4_mobile_rec</td>
+    <td>
+      PP-OCRv5_mobile_rec</br>
+      PP-OCRv4_mobile_rec</br>
+      PP-OCRv3_mobile_rec
+    </td>
+    <td>
+      PP-OCRv5_mobile_rec</br>
+      PP-OCRv4_mobile_rec</br>
+      PP-OCRv3_mobile_rec
+    </td>
   </tr>
 </table>
 
