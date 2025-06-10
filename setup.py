@@ -67,10 +67,7 @@ DEP_SPECS = {
     "soundfile": "",
     "starlette": ">= 0.36",
     "tiktoken": "",
-    "tokenizers": {
-        "== 0.19.1; python_version == 3.8",
-        ">= 0.19.1; python_version >= 3.9"
-    },
+    "tokenizers": ">= 0.19",
     "tqdm": "",
     "typing-extensions": "",
     "ujson": "",
