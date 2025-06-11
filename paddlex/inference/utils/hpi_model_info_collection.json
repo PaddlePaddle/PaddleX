@@ -1394,9 +1394,7 @@
     "SAM-H_point": [
       "paddle"
     ],
-    "BEVFusion": [
-      "paddle"
-    ],
+    "BEVFusion": [],
     "YOWO": [
       "paddle"
     ]
