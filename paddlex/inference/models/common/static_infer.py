@@ -33,7 +33,7 @@ from ...utils.hpi import (
     suggest_inference_backend_and_config,
 )
 from ...utils.model_paths import get_model_paths
-from ...utils.pp_option import PaddlePredictorOption
+from ...utils.pp_option import PaddlePredictorOption, get_default_run_mode
 from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 
 CACHE_DIR = ".cache"
@@ -407,15 +407,10 @@ class PaddleInfer(StaticInfer):
                 assert self._option.device_type == "cpu"
                 config.disable_gpu()
                 if "mkldnn" in self._option.run_mode:
-                    if hasattr(config, "set_mkldnn_cache_capacity"):
-                        config.enable_mkldnn()
-                        if "bf16" in self._option.run_mode:
-                            config.enable_mkldnn_bfloat16()
-                        config.set_mkldnn_cache_capacity(self._option.mkldnn_cache_capacity)
-                    else:
-                        logging.warning(
-                            "MKL-DNN is not available. We will disable MKL-DNN."
-                        )
+                    config.enable_mkldnn()
+                    if "bf16" in self._option.run_mode:
+                        config.enable_mkldnn_bfloat16()
+                    config.set_mkldnn_cache_capacity(self._option.mkldnn_cache_capacity)
                 else:
                     if hasattr(config, "disable_mkldnn"):
                         config.disable_mkldnn()
@@ -639,10 +634,19 @@ class HPInfer(StaticInfer):
                 )
             backend_config = self._config.backend_config or {}
 
-        if backend == "paddle" and not backend_config:
-            logging.warning(
-                "The Paddle Inference backend is selected with the default configuration. This may not provide optimal performance."
-            )
+        if backend == "paddle":
+            if not backend_config:
+                is_default_config = True
+            elif backend_config.keys() != {"run_mode"}:
+                is_default_config = False
+            else:
+                is_default_config = backend_config["run_mode"] == get_default_run_mode(
+                    self._config.pdx_model_name, self._config.device_type
+                )
+            if is_default_config:
+                logging.warning(
+                    "The Paddle Inference backend is selected with the default configuration. This may not provide optimal performance."
+                )
 
         return backend, backend_config
 

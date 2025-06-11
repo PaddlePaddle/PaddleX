@@ -24,10 +24,22 @@ from ...utils.device import (
     set_env_for_device_type,
 )
 from ...utils.flags import USE_PIR_TRT
+from .misc import is_mkldnn_available
 from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
 from .trt_blocklist import TRT_BLOCKLIST
 from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
+
+
+def get_default_run_mode(model_name, device_type):
+    if not model_name:
+        return "paddle"
+    if device_type != "cpu":
+        return "paddle"
+    if not is_mkldnn_available() or model_name in MKLDNN_BLOCKLIST:
+        return "paddle"
+    else:
+        return "mkldnn"
 
 
 class PaddlePredictorOption(object):
@@ -104,7 +116,7 @@ class PaddlePredictorOption(object):
         device_type, device_ids = parse_device(get_default_device())
 
         default_config = {
-            "run_mode": "paddle",
+            "run_mode": get_default_run_mode(self.model_name, device_type),
             "device_type": device_type,
             "device_id": None if device_ids is None else device_ids[0],
             "cpu_threads": 8,
@@ -139,6 +151,12 @@ class PaddlePredictorOption(object):
             raise ValueError(
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
+
+        if run_mode.startswith("mkldnn") and not is_mkldnn_available():
+            logging.warning("MKL-DNN is not available. Using `paddle` instead.")
+            run_mode = "paddle"
+
+        # TODO: Check if trt is available
 
         if self._model_name is not None:
             # TRT Blocklist
