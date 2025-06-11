@@ -14,6 +14,7 @@
 
 import os
 from copy import deepcopy
+from functools import lru_cache
 from typing import Dict, List
 
 from ...utils import logging
@@ -23,11 +24,23 @@ from ...utils.device import (
     parse_device,
     set_env_for_device_type,
 )
-from ...utils.flags import DISABLE_MKLDNN_MODEL_BL, DISABLE_TRT_MODEL_BL, USE_PIR_TRT
+from ...utils.flags import (
+    DISABLE_MKLDNN_MODEL_BL,
+    DISABLE_TRT_MODEL_BL,
+    ENABLE_MKLDNN_BYDEFAULT,
+    USE_PIR_TRT,
+)
 from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
 from .trt_blocklist import TRT_BLOCKLIST
 from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
+
+
+@lru_cache(1)
+def _is_intel_cpu():
+    import cpuinfo
+
+    return "GenuineIntel" in cpuinfo.get_cpu_info().get("vendor_id_raw", "")
 
 
 class PaddlePredictorOption(object):
@@ -98,6 +111,18 @@ class PaddlePredictorOption(object):
                     TRT_PRECISION_MAP[self.run_mode]
                 )
             self.trt_cfg_setting = trt_cfg_setting
+
+        # set to MKLDNN by default
+        if (
+            self.run_mode == "paddle"
+            and self.device_type == "cpu"
+            and _is_intel_cpu()
+            and ENABLE_MKLDNN_BYDEFAULT
+        ):
+            logging.debug(
+                "MKLDNN is supported. So the `run_mode` has been set to `mkldnn` for accelerating."
+            )
+            self.run_mode = "mkldnn"
 
     def _get_default_config(self):
         """get default config"""
