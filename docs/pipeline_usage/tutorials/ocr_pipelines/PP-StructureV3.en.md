@@ -1908,7 +1908,7 @@ for i, res in enumerate(result["layoutParsingResults"]):
 #include "base64.hpp" // https://github.com/tobiaslocker/base64
 
 int main() {
-    httplib::Client client("localhost", 8080);  
+    httplib::Client client("localhost", 8080);
 
     const std::string filePath = "./demo.jpg";
 
@@ -1993,8 +1993,8 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/layout-parsing";  
-        String imagePath = "./demo.jpg"; 
+        String API_URL = "http://localhost:8080/layout-parsing";
+        String imagePath = "./demo.jpg";
 
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
@@ -2002,8 +2002,8 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode payload = objectMapper.createObjectNode();
-        payload.put("file", base64Image); 
-        payload.put("fileType", 1); 
+        payload.put("file", base64Image);
+        payload.put("fileType", 1);
 
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -2024,7 +2024,7 @@ public class Main {
                 JsonNode layoutParsingResults = result.get("layoutParsingResults");
                 for (int i = 0; i < layoutParsingResults.size(); i++) {
                     JsonNode item = layoutParsingResults.get(i);
-		            int finalI = i;
+                    int finalI = i;
                     JsonNode prunedResult = item.get("prunedResult");
                     System.out.println("Pruned Result [" + i + "]: " + prunedResult.toString());
 
@@ -2242,8 +2242,8 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = 'http://localhost:8080/layout-parsing';
-const imagePath = './demo.jpg';  
-const fileType = 1;             
+const imagePath = './demo.jpg';
+const fileType = 1;
 
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
@@ -2281,8 +2281,8 @@ axios.post(API_URL, payload)
 <details><summary>PHP</summary>
 <pre><code class="language-php">&lt;?php
 
-$API_URL = "http://localhost:8080layout-parsing"; 
-$image_path = "./demo.jpg"; 
+$API_URL = "http://localhost:8080layout-parsing";
+$image_path = "./demo.jpg";
 
 $image_data = base64_encode(file_get_contents($image_path));
 $payload = array("file" => $image_data, "fileType" => 1);

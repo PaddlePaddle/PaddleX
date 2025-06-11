@@ -1008,7 +1008,7 @@ for i, res in enumerate(result["formulaRecResults"]):
 int main() {
     httplib::Client client("localhost", 8080);
 
-    const std::string filePath = "./demo.jpg";  
+    const std::string filePath = "./demo.jpg";
 
     std::ifstream file(filePath, std::ios::binary | std::ios::ate);
     if (!file) {
@@ -1090,8 +1090,8 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/formula-recognition"; 
-        String imagePath = "./demo.jpg"; 
+        String API_URL = "http://localhost:8080/formula-recognition";
+        String imagePath = "./demo.jpg";
 
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
@@ -1099,8 +1099,8 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode payload = objectMapper.createObjectNode();
-        payload.put("file", base64Image); 
-        payload.put("fileType", 1);       
+        payload.put("file", base64Image);
+        payload.put("fileType", 1);
 
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -1313,8 +1313,8 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = 'http://localhost:8080/formula-recognition';
-const inputFilePath = './demo.jpg'; 
-const fileType = 1; 
+const inputFilePath = './demo.jpg';
+const fileType = 1;
 
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
@@ -1353,11 +1353,11 @@ axios.post(API_URL, payload)
 <details><summary>PHP</summary>
 <pre><code class="language-php">&lt;?php
 
-$API_URL = "http://localhost:8080/formula-recognition"; 
-$image_path = "./demo.jpg"; 
+$API_URL = "http://localhost:8080/formula-recognition";
+$image_path = "./demo.jpg";
 
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array("file" => $image_data, "fileType" => 1); 
+$payload = array("file" => $image_data, "fileType" => 1);
 
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);

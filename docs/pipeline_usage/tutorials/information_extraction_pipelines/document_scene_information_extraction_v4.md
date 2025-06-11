@@ -2376,119 +2376,119 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "os"
 )
 
 func sendPostRequest(url string, payload map[string]interface{}) (map[string]interface{}, error) {
-	bodyBytes, err := json.Marshal(payload)
-	if err != nil {
-		return nil, fmt.Errorf("error marshaling payload: %v", err)
-	}
+    bodyBytes, err := json.Marshal(payload)
+    if err != nil {
+        return nil, fmt.Errorf("error marshaling payload: %v", err)
+    }
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyBytes))
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %v", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
+    req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyBytes))
+    if err != nil {
+        return nil, fmt.Errorf("error creating request: %v", err)
+    }
+    req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return nil, fmt.Errorf("error sending request: %v", err)
+    }
+    defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status code error: %d", resp.StatusCode)
-	}
+    if resp.StatusCode != http.StatusOK {
+        return nil, fmt.Errorf("status code error: %d", resp.StatusCode)
+    }
 
-	respBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response: %v", err)
-	}
+    respBytes, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return nil, fmt.Errorf("error reading response: %v", err)
+    }
 
-	var result map[string]interface{}
-	if err := json.Unmarshal(respBytes, &result); err != nil {
-		return nil, fmt.Errorf("error unmarshaling response: %v", err)
-	}
-	return result["result"].(map[string]interface{}), nil
+    var result map[string]interface{}
+    if err := json.Unmarshal(respBytes, &result); err != nil {
+        return nil, fmt.Errorf("error unmarshaling response: %v", err)
+    }
+    return result["result"].(map[string]interface{}), nil
 }
 
 func main() {
-	apiBase := "http://localhost:8080"
-	imagePath := "./demo.jpg"
-	keys := []string{"合格证编号"}
+    apiBase := "http://localhost:8080"
+    imagePath := "./demo.jpg"
+    keys := []string{"合格证编号"}
 
-	imageBytes, err := ioutil.ReadFile(imagePath)
-	if err != nil {
-		fmt.Printf("read image failed : %v\n", err)
-		return
-	}
-	imageData := base64.StdEncoding.EncodeToString(imageBytes)
+    imageBytes, err := ioutil.ReadFile(imagePath)
+    if err != nil {
+        fmt.Printf("read image failed : %v\n", err)
+        return
+    }
+    imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-	visualPayload := map[string]interface{}{
-		"file":     imageData,
-		"fileType": 1,
-	}
-	visualResult, err := sendPostRequest(apiBase+"/chatocr-visual", visualPayload)
-	if err != nil {
-		fmt.Printf("chatocr-visual request error: %v\n", err)
-		return
-	}
+    visualPayload := map[string]interface{}{
+        "file":     imageData,
+        "fileType": 1,
+    }
+    visualResult, err := sendPostRequest(apiBase+"/chatocr-visual", visualPayload)
+    if err != nil {
+        fmt.Printf("chatocr-visual request error: %v\n", err)
+        return
+    }
 
-	layoutResults := visualResult["layoutParsingResults"].([]interface{})
-	for i, res := range layoutResults {
-		layout := res.(map[string]interface{})
-		fmt.Println("PrunedResult:", layout["prunedResult"])
-		outputImages := layout["outputImages"].(map[string]interface{})
-		for name, img := range outputImages {
-			imgBytes, _ := base64.StdEncoding.DecodeString(img.(string))
-			filename := fmt.Sprintf("%s_%d.jpg", name, i)
-			if err := os.WriteFile(filename, imgBytes, 0644); err == nil {
-				fmt.Printf("save image：%s\n", filename)
-			}
-		}
-	}
+    layoutResults := visualResult["layoutParsingResults"].([]interface{})
+    for i, res := range layoutResults {
+        layout := res.(map[string]interface{})
+        fmt.Println("PrunedResult:", layout["prunedResult"])
+        outputImages := layout["outputImages"].(map[string]interface{})
+        for name, img := range outputImages {
+            imgBytes, _ := base64.StdEncoding.DecodeString(img.(string))
+            filename := fmt.Sprintf("%s_%d.jpg", name, i)
+            if err := os.WriteFile(filename, imgBytes, 0644); err == nil {
+                fmt.Printf("save image：%s\n", filename)
+            }
+        }
+    }
 
-	vectorPayload := map[string]interface{}{
-		"visualInfo": visualResult["visualInfo"],
-	}
-	vectorResult, err := sendPostRequest(apiBase+"/chatocr-vector", vectorPayload)
-	if err != nil {
-		fmt.Printf("chatocr-vector request error: %v\n", err)
-		return
-	}
+    vectorPayload := map[string]interface{}{
+        "visualInfo": visualResult["visualInfo"],
+    }
+    vectorResult, err := sendPostRequest(apiBase+"/chatocr-vector", vectorPayload)
+    if err != nil {
+        fmt.Printf("chatocr-vector request error: %v\n", err)
+        return
+    }
 
-	mllmPayload := map[string]interface{}{
-		"image":   imageData,
-		"keyList": keys,
-	}
-	mllmResult, err := sendPostRequest(apiBase+"/chatocr-mllm", mllmPayload)
-	if err != nil {
-		fmt.Printf("chatocr-mllm request error: %v\n", err)
-		return
-	}
+    mllmPayload := map[string]interface{}{
+        "image":   imageData,
+        "keyList": keys,
+    }
+    mllmResult, err := sendPostRequest(apiBase+"/chatocr-mllm", mllmPayload)
+    if err != nil {
+        fmt.Printf("chatocr-mllm request error: %v\n", err)
+        return
+    }
 
-	chatPayload := map[string]interface{}{
-		"keyList":           keys,
-		"visualInfo":        visualResult["visualInfo"],
-		"useVectorRetrieval": true,
-		"vectorInfo":        vectorResult["vectorInfo"],
-		"mllmPredictInfo":   mllmResult["mllmPredictInfo"],
-	}
-	chatResult, err := sendPostRequest(apiBase+"/chatocr-chat", chatPayload)
-	if err != nil {
-		fmt.Printf("chatocr-chat request error: %v\n", err)
-		return
-	}
+    chatPayload := map[string]interface{}{
+        "keyList":           keys,
+        "visualInfo":        visualResult["visualInfo"],
+        "useVectorRetrieval": true,
+        "vectorInfo":        vectorResult["vectorInfo"],
+        "mllmPredictInfo":   mllmResult["mllmPredictInfo"],
+    }
+    chatResult, err := sendPostRequest(apiBase+"/chatocr-chat", chatPayload)
+    if err != nil {
+        fmt.Printf("chatocr-chat request error: %v\n", err)
+        return
+    }
 
-	fmt.Println("final result：", chatResult["chatResult"])
+    fmt.Println("final result：", chatResult["chatResult"])
 }
 </code></pre></details>
 <details><summary>C#</summary>
