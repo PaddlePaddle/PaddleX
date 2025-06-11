@@ -336,7 +336,8 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
     "PP-DocBee-2B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar",
     "PP-DocBee-7B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar",
     "G2PWModel": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel_1.1.tar",
-    "fastspeech2_csmsc":"https://paddlespeech.bj.bcebos.com/Parakeet/released_models/fastspeech2/fastspeech2_nosil_baker_static_pir_0.4.zip"
+    "fastspeech2_csmsc": "https://paddlespeech.bj.bcebos.com/tmp/fastspeech2_csmsc.tar",
+    "pwgan_csmsc": "https://paddlespeech.bj.bcebos.com/tmp/pwgan_csmsc.tar",
 }
 
 

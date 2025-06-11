@@ -36,9 +36,8 @@ class Fastspeech2Predictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        print(self.config)
+        print(self.model_dir)
         self.model = self._build()
-        self.model_dir = "/home/zhangjinghong/PaddleSpeech/examples/csmsc/tts3/fastspeech2_nosil_baker_ckpt_0.4/inference"
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
 
