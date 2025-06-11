@@ -964,7 +964,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
         Returns:
             LayoutParsingResultV2: The predicted layout parsing result.
         """
-
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
             use_doc_unwarping,

@@ -56,6 +56,10 @@ DISABLE_MKLDNN_MODEL_BL = get_flag_from_env_var(
     "PADDLE_PDX_DISABLE_MKLDNN_MODEL_BL", False
 )
 LOCAL_FONT_FILE_PATH = get_flag_from_env_var("PADDLE_PDX_LOCAL_FONT_FILE_PATH", None)
+ENABLE_MKLDNN_BYDEFAULT = get_flag_from_env_var(
+    "PADDLE_PDX_ENABLE_MKLDNN_BYDEFAULT", True
+)
+
 MODEL_SOURCE = os.environ.get("PADDLE_PDX_MODEL_SOURCE", "huggingface")
 
 

@@ -411,7 +411,9 @@ class PaddleInfer(StaticInfer):
                         config.enable_mkldnn()
                         if "bf16" in self._option.run_mode:
                             config.enable_mkldnn_bfloat16()
-                        config.set_mkldnn_cache_capacity(self._option.mkldnn_cache_capacity)
+                        config.set_mkldnn_cache_capacity(
+                            self._option.mkldnn_cache_capacity
+                        )
                     else:
                         logging.warning(
                             "MKL-DNN is not available. We will disable MKL-DNN."
