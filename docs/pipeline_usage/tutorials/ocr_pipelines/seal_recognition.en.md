@@ -1354,7 +1354,7 @@ for i, res in enumerate(result["sealRecResults"]):
 int main() {
     httplib::Client client("localhost", 8080);
 
-    const std::string filePath = "./demo.jpg";  
+    const std::string filePath = "./demo.jpg";
 
     std::ifstream file(filePath, std::ios::binary | std::ios::ate);
     if (!file) {
@@ -1375,7 +1375,7 @@ int main() {
 
     nlohmann::json jsonObj;
     jsonObj["file"] = encodedFile;
-    jsonObj["fileType"] = 1;  
+    jsonObj["fileType"] = 1;
 
     auto response = client.Post("/seal-recognition", jsonObj.dump(), "application/json");
 
@@ -1436,8 +1436,8 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/seal-recognition"; 
-        String imagePath = "./demo.jpg"; 
+        String API_URL = "http://localhost:8080/seal-recognition";
+        String imagePath = "./demo.jpg";
 
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
@@ -1445,8 +1445,8 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode payload = objectMapper.createObjectNode();
-        payload.put("file", base64Image); 
-        payload.put("fileType", 1); 
+        payload.put("file", base64Image);
+        payload.put("fileType", 1);
 
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -1555,14 +1555,14 @@ func main() {
     }
 
     type OcrResult struct {
-        PrunedResult map[string]interface{} `json:"prunedResult"` 
-        OcrImage     *string                `json:"ocrImage"`     
+        PrunedResult map[string]interface{} `json:"prunedResult"`
+        OcrImage     *string                `json:"ocrImage"`
     }
 
     type Response struct {
         Result struct {
             OcrResults []OcrResult `json:"ocrResults"`
-            DataInfo   interface{} `json:"dataInfo"` 
+            DataInfo   interface{} `json:"dataInfo"`
         } `json:"result"`
     }
 
@@ -1573,14 +1573,14 @@ func main() {
     }
 
     for i, res := range respData.Result.OcrResults {
-        
+
         if res.OcrImage != nil {
             imgBytes, err := base64.StdEncoding.DecodeString(*res.OcrImage)
             if err != nil {
                 fmt.Printf("Error decoding image %d: %v\n", i, err)
                 continue
             }
-            
+
             filename := fmt.Sprintf("ocr_%d.jpg", i)
             if err := ioutil.WriteFile(filename, imgBytes, 0644); err != nil {
                 fmt.Printf("Error saving image %s: %v\n", filename, err)
@@ -1696,7 +1696,7 @@ axios.post(API_URL, payload)
 <details><summary>PHP</summary>
 <pre><code class="language-php">&lt;?php
 
-$API_URL = "http://localhost:8080/seal-recognition"; 
+$API_URL = "http://localhost:8080/seal-recognition";
 $image_path = "./demo.jpg";
 
 $image_data = base64_encode(file_get_contents($image_path));

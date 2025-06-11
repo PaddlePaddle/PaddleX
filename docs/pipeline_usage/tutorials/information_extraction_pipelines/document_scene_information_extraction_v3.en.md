@@ -1783,7 +1783,6 @@ int main() {
     std::string imageData = encode_image(imagePath);
     json keys = { "合格证编号" };
 
-    // Step 1: /chatocr-visual
     json payload_visual = {
         {"file", imageData},
         {"fileType", 1}
@@ -1871,7 +1870,7 @@ public class Main {
 
         Request requestVisual = new Request.Builder()
                 .url(API_BASE_URL + "/chatocr-visual")
-                .post(RequestBody.create(JSON, visualPayload.toString()))  
+                .post(RequestBody.create(JSON, visualPayload.toString()))
                 .build();
 
         Response responseVisual = client.newCall(requestVisual).execute();
@@ -1908,7 +1907,7 @@ public class Main {
 
         Request requestVector = new Request.Builder()
                 .url(API_BASE_URL + "/chatocr-vector")
-                .post(RequestBody.create(JSON, vectorPayload.toString()))  
+                .post(RequestBody.create(JSON, vectorPayload.toString()))
                 .build();
 
         Response responseVector = client.newCall(requestVector).execute();
@@ -1927,7 +1926,7 @@ public class Main {
 
         Request requestChat = new Request.Builder()
                 .url(API_BASE_URL + "/chatocr-chat")
-                .post(RequestBody.create(JSON, chatPayload.toString()))  
+                .post(RequestBody.create(JSON, chatPayload.toString()))
                 .build();
 
         Response responseChat = client.newCall(requestChat).execute();
@@ -2040,7 +2039,7 @@ func main() {
     }
     json.Unmarshal(vectorResp, &vectorResult)
 
-    
+
     mllmPayload := map[string]interface{}{
         "image":   imageBase64,
         "keyList": keys,
@@ -2096,7 +2095,7 @@ class Program
 {
     static readonly string API_BASE_URL = "http://localhost:8080";
     static readonly string inputFilePath = "./demo.jpg";
-    static readonly string[] keys = { "姓名" }; 
+    static readonly string[] keys = { "姓名" };
 
     static async Task Main(string[] args)
     {
@@ -2282,7 +2281,7 @@ foreach ($result_visual_arr["layoutParsingResults"] as $i => $res) {
 }
 
 $payload_vector = [
-    "visualInfo" => $result_visual_raw->visualInfo  
+    "visualInfo" => $result_visual_raw->visualInfo
 ];
 $response_vector_raw = send_post_raw("$API_BASE_URL/chatocr-vector", $payload_vector);
 $response_vector = json_decode($response_vector_raw, true);
