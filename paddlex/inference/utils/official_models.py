@@ -24,6 +24,7 @@ import requests
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
+from ...utils.flags import MODEL_SOURCE
 
 OFFICIAL_MODELS = {
     "ResNet18": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet18_infer.tar",
@@ -459,8 +460,16 @@ class OfficialModelsDict(dict):
             f"Using official model ({key}), the model files will be automatically downloaded and saved in {self._save_dir}."
         )
 
-        if is_huggingface_accessible and key in HUGGINGFACE_MODELS:
+        if (
+            MODEL_SOURCE.lower() == "huggingface"
+            and is_huggingface_accessible
+            and key in HUGGINGFACE_MODELS
+        ):
             return _download_from_hf()
+        elif MODEL_SOURCE.lower() == "modelscope":
+            raise Exception(
+                f"ModelScope is not supported! Please use `HuggingFace` or `BOS`."
+            )
         else:
             return _download_from_bos()
 
