@@ -14,7 +14,6 @@
 from __future__ import annotations
 
 import copy
-import math
 import re
 from functools import partial
 from typing import List
@@ -30,7 +29,8 @@ from ...common.result import (
     MarkdownMixin,
     XlsxMixin,
 )
-from .setting import BLOCK_LABEL_MAP
+from .layout_objects import LayoutBlock
+from .utils import get_seg_flag
 
 
 def compile_title_pattern():
@@ -140,58 +140,6 @@ def format_first_line_func(block, templates, format_func, spliter):
     return spliter.join(lines)
 
 
-def get_seg_flag(block: LayoutParsingBlock, prev_block: LayoutParsingBlock):
-
-    seg_start_flag = True
-    seg_end_flag = True
-
-    block_box = block.bbox
-    context_left_coordinate = block_box[0]
-    context_right_coordinate = block_box[2]
-    seg_start_coordinate = block.seg_start_coordinate
-    seg_end_coordinate = block.seg_end_coordinate
-
-    if prev_block is not None:
-        prev_block_bbox = prev_block.bbox
-        num_of_prev_lines = prev_block.num_of_lines
-        pre_block_seg_end_coordinate = prev_block.seg_end_coordinate
-        prev_end_space_small = (
-            abs(prev_block_bbox[2] - pre_block_seg_end_coordinate) < 10
-        )
-        prev_lines_more_than_one = num_of_prev_lines > 1
-
-        overlap_blocks = context_left_coordinate < prev_block_bbox[2]
-
-        # update context_left_coordinate and context_right_coordinate
-        if overlap_blocks:
-            context_left_coordinate = min(prev_block_bbox[0], context_left_coordinate)
-            context_right_coordinate = max(prev_block_bbox[2], context_right_coordinate)
-            prev_end_space_small = (
-                abs(context_right_coordinate - pre_block_seg_end_coordinate) < 10
-            )
-            edge_distance = 0
-        else:
-            edge_distance = abs(block_box[0] - prev_block_bbox[2])
-
-        current_start_space_small = seg_start_coordinate - context_left_coordinate < 10
-
-        if (
-            prev_end_space_small
-            and current_start_space_small
-            and prev_lines_more_than_one
-            and edge_distance < max(prev_block.width, block.width)
-        ):
-            seg_start_flag = False
-    else:
-        if seg_start_coordinate - context_left_coordinate < 10:
-            seg_start_flag = False
-
-    if context_right_coordinate - seg_end_coordinate < 10:
-        seg_end_flag = False
-
-    return seg_start_flag, seg_end_flag
-
-
 class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
     """Layout Parsing Result V2"""
 
@@ -247,7 +195,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         draw = ImageDraw.Draw(image, "RGBA")
         font_size = int(0.018 * int(image.width)) + 2
         font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
-        parsing_result: List[LayoutParsingBlock] = self["parsing_res_list"]
+        parsing_result: List[LayoutBlock] = self["parsing_res_list"]
         for block in parsing_result:
             bbox = block.bbox
             index = block.order_index
@@ -456,6 +404,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             "table_title": format_text_func,
             "figure_title": format_text_func,
             "chart_title": format_text_func,
+            "vision_footnote": lambda block: block.content.replace(
+                "\n\n", "\n"
+            ).replace("\n", "\n\n"),
             "text": lambda block: block.content.replace("\n\n", "\n").replace(
                 "\n", "\n\n"
             ),
@@ -528,218 +479,3 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             markdown_info["markdown_images"][img["path"]] = img["img"]
 
         return markdown_info
-
-
-class LayoutParsingBlock:
-
-    def __init__(self, label, bbox, content="") -> None:
-        self.label = label
-        self.order_label = None
-        self.bbox = list(map(int, bbox))
-        self.content = content
-        self.seg_start_coordinate = float("inf")
-        self.seg_end_coordinate = float("-inf")
-        self.width = bbox[2] - bbox[0]
-        self.height = bbox[3] - bbox[1]
-        self.area = self.width * self.height
-        self.num_of_lines = 1
-        self.image = None
-        self.index = None
-        self.order_index = None
-        self.text_line_width = 1
-        self.text_line_height = 1
-        self.direction = self.get_bbox_direction()
-        self.child_blocks = []
-        self.update_direction_info()
-
-    def __str__(self) -> str:
-        return f"{self.__dict__}"
-
-    def __repr__(self) -> str:
-        _str = f"\n\n#################\nindex:\t{self.index}\nlabel:\t{self.label}\nregion_label:\t{self.order_label}\nbbox:\t{self.bbox}\ncontent:\t{self.content}\n#################"
-        return _str
-
-    def to_dict(self) -> dict:
-        return self.__dict__
-
-    def update_direction_info(self) -> None:
-        if self.direction == "horizontal":
-            self.secondary_direction = "vertical"
-            self.short_side_length = self.height
-            self.long_side_length = self.width
-            self.start_coordinate = self.bbox[0]
-            self.end_coordinate = self.bbox[2]
-            self.secondary_direction_start_coordinate = self.bbox[1]
-            self.secondary_direction_end_coordinate = self.bbox[3]
-        else:
-            self.secondary_direction = "horizontal"
-            self.short_side_length = self.width
-            self.long_side_length = self.height
-            self.start_coordinate = self.bbox[1]
-            self.end_coordinate = self.bbox[3]
-            self.secondary_direction_start_coordinate = self.bbox[0]
-            self.secondary_direction_end_coordinate = self.bbox[2]
-
-    def append_child_block(self, child_block: LayoutParsingBlock) -> None:
-        if not self.child_blocks:
-            self.ori_bbox = self.bbox.copy()
-        x1, y1, x2, y2 = self.bbox
-        x1_child, y1_child, x2_child, y2_child = child_block.bbox
-        union_bbox = (
-            min(x1, x1_child),
-            min(y1, y1_child),
-            max(x2, x2_child),
-            max(y2, y2_child),
-        )
-        self.bbox = union_bbox
-        self.update_direction_info()
-        child_blocks = [child_block]
-        if child_block.child_blocks:
-            child_blocks.extend(child_block.get_child_blocks())
-        self.child_blocks.extend(child_blocks)
-
-    def get_child_blocks(self) -> list:
-        self.bbox = self.ori_bbox
-        child_blocks = self.child_blocks.copy()
-        self.child_blocks = []
-        return child_blocks
-
-    def get_centroid(self) -> tuple:
-        x1, y1, x2, y2 = self.bbox
-        centroid = ((x1 + x2) / 2, (y1 + y2) / 2)
-        return centroid
-
-    def get_bbox_direction(self, direction_ratio: float = 1.0) -> bool:
-        """
-        Determine if a bounding box is horizontal or vertical.
-
-        Args:
-            bbox (List[float]): Bounding box [x_min, y_min, x_max, y_max].
-            direction_ratio (float): Ratio for determining direction. Default is 1.0.
-
-        Returns:
-            str: "horizontal" or "vertical".
-        """
-        return (
-            "horizontal" if self.width * direction_ratio >= self.height else "vertical"
-        )
-
-
-class LayoutParsingRegion:
-
-    def __init__(
-        self, bbox, blocks: List[LayoutParsingBlock] = [], image_shape=None
-    ) -> None:
-        self.bbox = bbox
-        self.block_map = {}
-        self.direction = "horizontal"
-        self.calculate_bbox_metrics(image_shape)
-        self.doc_title_block_idxes = []
-        self.paragraph_title_block_idxes = []
-        self.vision_block_idxes = []
-        self.unordered_block_idxes = []
-        self.vision_title_block_idxes = []
-        self.normal_text_block_idxes = []
-        self.header_block_idxes = []
-        self.footer_block_idxes = []
-        self.text_line_width = 20
-        self.text_line_height = 10
-        self.init_region_info_from_layout(blocks)
-        self.init_direction_info()
-
-    def init_region_info_from_layout(self, blocks: List[LayoutParsingBlock]):
-        horizontal_normal_text_block_num = 0
-        text_line_height_list = []
-        text_line_width_list = []
-        for idx, block in enumerate(blocks):
-            self.block_map[idx] = block
-            block.index = idx
-            if block.label in BLOCK_LABEL_MAP["header_labels"]:
-                self.header_block_idxes.append(idx)
-            elif block.label in BLOCK_LABEL_MAP["doc_title_labels"]:
-                self.doc_title_block_idxes.append(idx)
-            elif block.label in BLOCK_LABEL_MAP["paragraph_title_labels"]:
-                self.paragraph_title_block_idxes.append(idx)
-            elif block.label in BLOCK_LABEL_MAP["vision_labels"]:
-                self.vision_block_idxes.append(idx)
-            elif block.label in BLOCK_LABEL_MAP["vision_title_labels"]:
-                self.vision_title_block_idxes.append(idx)
-            elif block.label in BLOCK_LABEL_MAP["footer_labels"]:
-                self.footer_block_idxes.append(idx)
-            elif block.label in BLOCK_LABEL_MAP["unordered_labels"]:
-                self.unordered_block_idxes.append(idx)
-            else:
-                self.normal_text_block_idxes.append(idx)
-                text_line_height_list.append(block.text_line_height)
-                text_line_width_list.append(block.text_line_width)
-                if block.direction == "horizontal":
-                    horizontal_normal_text_block_num += 1
-        self.direction = (
-            "horizontal"
-            if horizontal_normal_text_block_num
-            >= len(self.normal_text_block_idxes) * 0.5
-            else "vertical"
-        )
-        self.text_line_width = (
-            np.mean(text_line_width_list) if text_line_width_list else 20
-        )
-        self.text_line_height = (
-            np.mean(text_line_height_list) if text_line_height_list else 10
-        )
-
-    def init_direction_info(self):
-        if self.direction == "horizontal":
-            self.direction_start_index = 0
-            self.direction_end_index = 2
-            self.secondary_direction_start_index = 1
-            self.secondary_direction_end_index = 3
-            self.secondary_direction = "vertical"
-        else:
-            self.direction_start_index = 1
-            self.direction_end_index = 3
-            self.secondary_direction_start_index = 0
-            self.secondary_direction_end_index = 2
-            self.secondary_direction = "horizontal"
-
-        self.direction_center_coordinate = (
-            self.bbox[self.direction_start_index] + self.bbox[self.direction_end_index]
-        ) / 2
-        self.secondary_direction_center_coordinate = (
-            self.bbox[self.secondary_direction_start_index]
-            + self.bbox[self.secondary_direction_end_index]
-        ) / 2
-
-    def calculate_bbox_metrics(self, image_shape):
-        x1, y1, x2, y2 = self.bbox
-        image_height, image_width = image_shape
-        width = x2 - x1
-        x_center, y_center = (x1 + x2) / 2, (y1 + y2) / 2
-        self.euclidean_distance = math.sqrt(((x1) ** 2 + (y1) ** 2))
-        self.center_euclidean_distance = math.sqrt(((x_center) ** 2 + (y_center) ** 2))
-        self.angle_rad = math.atan2(y_center, x_center)
-        self.weighted_distance = (
-            y2 + width + (x1 // (image_width // 10)) * (image_width // 10) * 1.5
-        )
-
-    def sort_normal_blocks(self, blocks):
-        if self.direction == "horizontal":
-            blocks.sort(
-                key=lambda x: (
-                    x.bbox[1] // self.text_line_height,
-                    x.bbox[0] // self.text_line_width,
-                    x.bbox[1] ** 2 + x.bbox[0] ** 2,
-                ),
-            )
-        else:
-            blocks.sort(
-                key=lambda x: (
-                    -x.bbox[0] // self.text_line_width,
-                    x.bbox[1] // self.text_line_height,
-                    -(x.bbox[2] ** 2 + x.bbox[1] ** 2),
-                ),
-            )
-
-    def sort(self):
-        from .xycut_enhanced import xycut_enhanced
-
-        return xycut_enhanced(self)

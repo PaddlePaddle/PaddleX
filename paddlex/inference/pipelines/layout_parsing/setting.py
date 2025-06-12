@@ -21,6 +21,7 @@ XYCUT_SETTINGS = {
         "up_edge_weight": 1,
         "down_edge_weight": 0.0001,
     },
+    "cross_layout_ref_text_block_words_num_threshold": 10,
 }
 
 REGION_SETTINGS = {
