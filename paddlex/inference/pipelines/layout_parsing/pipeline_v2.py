@@ -30,23 +30,22 @@ from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
-from .result_v2 import LayoutParsingBlock, LayoutParsingRegion, LayoutParsingResultV2
-from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, LINE_SETTINGS, REGION_SETTINGS
+from .layout_objects import LayoutBlock, LayoutRegion
+from .result_v2 import LayoutParsingResultV2
+from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
 from .utils import (
     caculate_bbox_area,
     calculate_minimum_enclosing_bbox,
     calculate_overlap_ratio,
     convert_formula_res_to_ocr_format,
-    format_line,
     gather_imgs,
     get_bbox_intersection,
     get_sub_regions_ocr_res,
-    group_boxes_into_lines,
     remove_overlap_blocks,
     shrink_supplement_region_bbox,
-    split_boxes_by_projection,
     update_region_box,
 )
+from .xycut_enhanced import xycut_enhanced
 
 
 class _LayoutParsingPipelineV2(BasePipeline):
@@ -485,6 +484,11 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 )
                 block_to_ocr_map[idx] = [idx]
 
+        mask_labels = (
+            BLOCK_LABEL_MAP.get("unordered_labels", [])
+            + BLOCK_LABEL_MAP.get("header_labels", [])
+            + BLOCK_LABEL_MAP.get("footer_labels", [])
+        )
         block_bboxes = [box["coordinate"] for box in layout_det_res["boxes"]]
         region_det_res["boxes"] = sorted(
             region_det_res["boxes"],
@@ -507,58 +511,117 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 region_to_block_map[region_idx] = []
                 region_bbox = region_info["coordinate"]
                 for block_idx in block_idxes_set:
+                    if layout_det_res["boxes"][block_idx]["label"] in mask_labels:
+                        continue
                     overlap_ratio = calculate_overlap_ratio(
                         region_bbox, block_bboxes[block_idx], mode="small"
                     )
                     if overlap_ratio > REGION_SETTINGS.get(
                         "match_block_overlap_ratio_threshold", 0.8
                     ):
-                        region_to_block_map[region_idx].append(block_idx)
                         matched_idxes.append(block_idx)
+                old_region_bbox_matched_idxes = []
                 if len(matched_idxes) > 0:
+                    while len(old_region_bbox_matched_idxes) != len(matched_idxes):
+                        old_region_bbox_matched_idxes = copy.deepcopy(matched_idxes)
+                        matched_idxes = []
+                        matched_bboxes = [
+                            block_bboxes[idx] for idx in old_region_bbox_matched_idxes
+                        ]
+                        new_region_bbox = calculate_minimum_enclosing_bbox(
+                            matched_bboxes
+                        )
+                        for block_idx in block_idxes_set:
+                            if (
+                                layout_det_res["boxes"][block_idx]["label"]
+                                in mask_labels
+                            ):
+                                continue
+                            overlap_ratio = calculate_overlap_ratio(
+                                new_region_bbox, block_bboxes[block_idx], mode="small"
+                            )
+                            if overlap_ratio > REGION_SETTINGS.get(
+                                "match_block_overlap_ratio_threshold", 0.8
+                            ):
+                                matched_idxes.append(block_idx)
                     for block_idx in matched_idxes:
                         block_idxes_set.remove(block_idx)
-                    matched_bboxes = [block_bboxes[idx] for idx in matched_idxes]
-                    new_region_bbox = calculate_minimum_enclosing_bbox(matched_bboxes)
+                    region_to_block_map[region_idx] = matched_idxes
                     region_det_res["boxes"][region_idx]["coordinate"] = new_region_bbox
             # Supplement region when there is no matched block
-            if len(block_idxes_set) > 0:
-                while len(block_idxes_set) > 0:
-                    matched_idxes = []
-                    unmatched_bboxes = [block_bboxes[idx] for idx in block_idxes_set]
-                    supplement_region_bbox = calculate_minimum_enclosing_bbox(
-                        unmatched_bboxes
+            while len(block_idxes_set) > 0:
+                unmatched_bboxes = [block_bboxes[idx] for idx in block_idxes_set]
+                if len(unmatched_bboxes) == 0:
+                    break
+                supplement_region_bbox = calculate_minimum_enclosing_bbox(
+                    unmatched_bboxes
+                )
+                matched_idxes = []
+                # check if the new region bbox is overlapped with other region bbox, if have, then shrink the new region bbox
+                for region_idx, region_info in enumerate(region_det_res["boxes"]):
+                    if len(region_to_block_map[region_idx]) == 0:
+                        continue
+                    region_bbox = region_info["coordinate"]
+                    overlap_ratio = calculate_overlap_ratio(
+                        supplement_region_bbox, region_bbox
                     )
-                    # check if the new region bbox is overlapped with other region bbox, if have, then shrink the new region bbox
-                    for region_info in region_det_res["boxes"]:
-                        region_bbox = region_info["coordinate"]
-                        overlap_ratio = calculate_overlap_ratio(
-                            supplement_region_bbox, region_bbox
-                        )
-                        if overlap_ratio > 0:
-                            supplement_region_bbox, matched_idxes = (
-                                shrink_supplement_region_bbox(
-                                    supplement_region_bbox,
-                                    region_bbox,
-                                    image.shape[1],
-                                    image.shape[0],
-                                    block_idxes_set,
-                                    block_bboxes,
-                                )
+                    if overlap_ratio > 0:
+                        supplement_region_bbox, matched_idxes = (
+                            shrink_supplement_region_bbox(
+                                supplement_region_bbox,
+                                region_bbox,
+                                image.shape[1],
+                                image.shape[0],
+                                block_idxes_set,
+                                block_bboxes,
                             )
+                        )
+
+                matched_idxes = [
+                    idx
+                    for idx in matched_idxes
+                    if layout_det_res["boxes"][idx]["label"] not in mask_labels
+                ]
+                if len(matched_idxes) == 0:
+                    matched_idxes = [
+                        idx
+                        for idx in block_idxes_set
+                        if layout_det_res["boxes"][idx]["label"] not in mask_labels
+                    ]
                     if len(matched_idxes) == 0:
-                        matched_idxes = list(block_idxes_set)
-                    region_idx = len(region_det_res["boxes"])
-                    region_to_block_map[region_idx] = list(matched_idxes)
-                    for block_idx in matched_idxes:
-                        block_idxes_set.remove(block_idx)
-                    region_det_res["boxes"].append(
-                        {
-                            "coordinate": supplement_region_bbox,
-                            "label": "SupplementaryRegion",
-                            "score": 1,
-                        }
-                    )
+                        break
+                matched_bboxes = [block_bboxes[idx] for idx in matched_idxes]
+                supplement_region_bbox = calculate_minimum_enclosing_bbox(
+                    matched_bboxes
+                )
+                region_idx = len(region_det_res["boxes"])
+                region_to_block_map[region_idx] = list(matched_idxes)
+                for block_idx in matched_idxes:
+                    block_idxes_set.remove(block_idx)
+                region_det_res["boxes"].append(
+                    {
+                        "coordinate": supplement_region_bbox,
+                        "label": "SupplementaryRegion",
+                        "score": 1,
+                    }
+                )
+
+            mask_idxes = [
+                idx
+                for idx in range(len(layout_det_res["boxes"]))
+                if layout_det_res["boxes"][idx]["label"] in mask_labels
+            ]
+            for idx in mask_idxes:
+                bbox = layout_det_res["boxes"][idx]["coordinate"]
+                region_idx = len(region_det_res["boxes"])
+                region_to_block_map[region_idx] = [idx]
+                region_det_res["boxes"].append(
+                    {
+                        "coordinate": bbox,
+                        "label": "SupplementaryRegion",
+                        "score": 1,
+                    }
+                )
 
         region_block_ocr_idx_map = dict(
             region_to_block_map=region_to_block_map,
@@ -567,142 +630,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         return region_block_ocr_idx_map, region_det_res, layout_det_res
 
-    def sort_line_by_projection(
-        self,
-        line: List[List[Union[List[int], str]]],
-        input_img: np.ndarray,
-        text_rec_model: Any,
-        text_rec_score_thresh: Union[float, None] = None,
-        direction: str = "vertical",
-    ) -> None:
-        """
-        Sort a line of text spans based on their vertical position within the layout bounding box.
-
-        Args:
-            line (list): A list of spans, where each span is a list containing a bounding box and text.
-            input_img (ndarray): The input image used for OCR.
-            general_ocr_pipeline (Any): The general OCR pipeline used for text recognition.
-
-        Returns:
-            list: The sorted line of text spans.
-        """
-        sort_index = 0 if direction == "horizontal" else 1
-        splited_boxes = split_boxes_by_projection(line, direction)
-        splited_lines = []
-        if len(line) != len(splited_boxes):
-            splited_boxes.sort(key=lambda span: span[0][sort_index])
-            for span in splited_boxes:
-                bbox, text, label = span
-                if label == "text":
-                    crop_img = input_img[
-                        int(bbox[1]) : int(bbox[3]),
-                        int(bbox[0]) : int(bbox[2]),
-                    ]
-                    crop_img_rec_res = list(text_rec_model([crop_img]))[0]
-                    crop_img_rec_score = crop_img_rec_res["rec_score"]
-                    crop_img_rec_text = crop_img_rec_res["rec_text"]
-                    text = (
-                        crop_img_rec_text
-                        if crop_img_rec_score >= text_rec_score_thresh
-                        else ""
-                    )
-                    span[1] = text
-
-                splited_lines.append(span)
-        else:
-            splited_lines = line
-
-        return splited_lines
-
-    def get_block_rec_content(
-        self,
-        image: list,
-        ocr_rec_res: dict,
-        block: LayoutParsingBlock,
-        text_rec_model: Any,
-        text_rec_score_thresh: Union[float, None] = None,
-    ) -> str:
-
-        if len(ocr_rec_res["rec_texts"]) == 0:
-            block.content = ""
-            return block
-
-        lines, text_direction, text_line_height = group_boxes_into_lines(
-            ocr_rec_res,
-            LINE_SETTINGS.get("line_height_iou_threshold", 0.8),
-        )
-
-        # format line
-        text_lines = []
-        need_new_line_num = 0
-        # words start coordinate and stop coordinate in the line
-        words_start_index = 0 if text_direction == "horizontal" else 1
-        words_stop_index = words_start_index + 2
-        lines_start_index = 1 if text_direction == "horizontal" else 3
-        line_width_list = []
-
-        if block.label == "reference":
-            rec_boxes = ocr_rec_res["boxes"]
-            block_start_coordinate = min([box[words_start_index] for box in rec_boxes])
-            block_stop_coordinate = max([box[words_stop_index] for box in rec_boxes])
-        else:
-            block_start_coordinate = block.bbox[words_start_index]
-            block_stop_coordinate = block.bbox[words_stop_index]
-
-        for idx, line in enumerate(lines):
-            line.sort(
-                key=lambda span: (
-                    span[0][words_start_index] // 2,
-                    (
-                        span[0][lines_start_index]
-                        if text_direction == "horizontal"
-                        else -span[0][lines_start_index]
-                    ),
-                )
-            )
-
-            line_width = line[-1][0][words_stop_index] - line[0][0][words_start_index]
-            line_width_list.append(line_width)
-            # merge formula and text
-            ocr_labels = [span[2] for span in line]
-            if "formula" in ocr_labels:
-                line = self.sort_line_by_projection(
-                    line, image, text_rec_model, text_rec_score_thresh, text_direction
-                )
-
-            line_text, need_new_line = format_line(
-                line,
-                text_direction,
-                np.max(line_width_list),
-                block_start_coordinate,
-                block_stop_coordinate,
-                line_gap_limit=text_line_height * 1.5,
-                block_label=block.label,
-            )
-            if need_new_line:
-                need_new_line_num += 1
-            if idx == 0:
-                line_start_coordinate = line[0][0][0]
-                block.seg_start_coordinate = line_start_coordinate
-            elif idx == len(lines) - 1:
-                line_end_coordinate = line[-1][0][2]
-                block.seg_end_coordinate = line_end_coordinate
-            text_lines.append(line_text)
-
-        delim = LINE_SETTINGS["delimiter_map"].get(block.label, "")
-        if need_new_line_num > len(text_lines) * 0.5 and delim == "":
-            text_lines = [text.replace("\n", "") for text in text_lines]
-            delim = "\n"
-        content = delim.join(text_lines)
-        block.content = content
-        block.num_of_lines = len(text_lines)
-        block.direction = text_direction
-        block.text_line_height = text_line_height
-        block.text_line_width = np.mean(line_width_list)
-
-        return block
-
-    def get_layout_parsing_blocks(
+    def get_layout_parsing_objects(
         self,
         image: list,
         region_block_ocr_idx_map: dict,
@@ -746,7 +674,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         table_index = 0
         seal_index = 0
         chart_index = 0
-        layout_parsing_blocks: List[LayoutParsingBlock] = []
+        layout_parsing_blocks: List[LayoutBlock] = []
 
         for box_idx, box_info in enumerate(layout_det_res["boxes"]):
 
@@ -754,7 +682,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             block_bbox = box_info["coordinate"]
             rec_res = {"boxes": [], "rec_texts": [], "rec_labels": []}
 
-            block = LayoutParsingBlock(label=label, bbox=block_bbox)
+            block = LayoutBlock(label=label, bbox=block_bbox)
 
             if label == "table" and len(table_res_list) > 0:
                 block.content = table_res_list[table_index]["pred_html"]
@@ -783,9 +711,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     rec_res["rec_labels"].append(
                         overall_ocr_res["rec_labels"][box_no],
                     )
-                block = self.get_block_rec_content(
+                block.update_text_content(
                     image=image,
-                    block=block,
                     ocr_rec_res=rec_res,
                     text_rec_model=text_rec_model,
                     text_rec_score_thresh=text_rec_score_thresh,
@@ -805,26 +732,35 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
             layout_parsing_blocks.append(block)
 
-        region_list: List[LayoutParsingRegion] = []
+        page_region_bbox = [65535, 65535, 0, 0]
+        layout_parsing_regions: List[LayoutRegion] = []
         for region_idx, region_info in enumerate(region_det_res["boxes"]):
-            region_bbox = region_info["coordinate"]
+            region_bbox = np.array(region_info["coordinate"]).astype("int")
             region_blocks = [
                 layout_parsing_blocks[idx]
                 for idx in region_block_ocr_idx_map["region_to_block_map"][region_idx]
             ]
-            region = LayoutParsingRegion(
-                bbox=region_bbox,
-                blocks=region_blocks,
-                image_shape=image.shape[:2],
-            )
-            region_list.append(region)
+            if region_blocks:
+                page_region_bbox = update_region_box(region_bbox, page_region_bbox)
+                region = LayoutRegion(bbox=region_bbox, blocks=region_blocks)
+                layout_parsing_regions.append(region)
 
-        region_list = sorted(
-            region_list,
-            key=lambda r: (r.weighted_distance),
+        layout_parsing_page = LayoutRegion(
+            bbox=np.array(page_region_bbox).astype("int"), blocks=layout_parsing_regions
         )
 
-        return region_list
+        return layout_parsing_page
+
+    def sort_layout_parsing_blocks(
+        self, layout_parsing_page: LayoutRegion
+    ) -> List[LayoutBlock]:
+        layout_parsing_regions = xycut_enhanced(layout_parsing_page)
+        parsing_res_list = []
+        for region in layout_parsing_regions:
+            layout_parsing_blocks = xycut_enhanced(region)
+            parsing_res_list.extend(layout_parsing_blocks)
+
+        return parsing_res_list
 
     def get_layout_parsing_res(
         self,
@@ -866,7 +802,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         )
 
         # Format layout parsing block
-        region_list = self.get_layout_parsing_blocks(
+        layout_parsing_page = self.get_layout_parsing_objects(
             image=image,
             region_block_ocr_idx_map=region_block_ocr_idx_map,
             region_det_res=region_det_res,
@@ -879,9 +815,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             text_rec_score_thresh=self.general_ocr_pipeline.text_rec_score_thresh,
         )
 
-        parsing_res_list = []
-        for region in region_list:
-            parsing_res_list.extend(region.sort())
+        parsing_res_list = self.sort_layout_parsing_blocks(layout_parsing_page)
 
         index = 1
         for block in parsing_res_list:

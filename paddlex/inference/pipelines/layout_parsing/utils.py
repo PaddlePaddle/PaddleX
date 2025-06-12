@@ -262,76 +262,6 @@ def calculate_overlap_ratio(
     return inter_area / ref_area
 
 
-def group_boxes_into_lines(ocr_rec_res, line_height_iou_threshold):
-    rec_boxes = ocr_rec_res["boxes"]
-    rec_texts = ocr_rec_res["rec_texts"]
-    rec_labels = ocr_rec_res["rec_labels"]
-
-    text_boxes = [
-        rec_boxes[i] for i in range(len(rec_boxes)) if rec_labels[i] == "text"
-    ]
-    text_orientation = calculate_text_orientation(text_boxes)
-
-    match_direction = "vertical" if text_orientation == "horizontal" else "horizontal"
-
-    line_start_index = 1 if text_orientation == "horizontal" else 0
-    line_end_index = 3 if text_orientation == "horizontal" else 2
-
-    spans = list(zip(rec_boxes, rec_texts, rec_labels))
-    sort_index = 1
-    reverse = False
-    if text_orientation == "vertical":
-        sort_index = 0
-        reverse = True
-    spans.sort(key=lambda span: span[0][sort_index], reverse=reverse)
-    spans = [list(span) for span in spans]
-
-    lines = []
-    line = [spans[0]]
-    line_region_box = spans[0][0].copy()
-    line_heights = []
-    # merge line
-    for span in spans[1:]:
-        rec_bbox = span[0]
-        if (
-            calculate_projection_overlap_ratio(
-                line_region_box, rec_bbox, match_direction, mode="small"
-            )
-            >= line_height_iou_threshold
-        ):
-            line.append(span)
-            line_region_box[line_start_index] = min(
-                line_region_box[line_start_index], rec_bbox[line_start_index]
-            )
-            line_region_box[line_end_index] = max(
-                line_region_box[line_end_index], rec_bbox[line_end_index]
-            )
-        else:
-            line_heights.append(
-                line_region_box[line_end_index] - line_region_box[line_start_index]
-            )
-            lines.append(line)
-            line = [span]
-            line_region_box = rec_bbox.copy()
-
-    lines.append(line)
-    line_heights.append(
-        line_region_box[line_end_index] - line_region_box[line_start_index]
-    )
-
-    min_height = min(line_heights) if line_heights else 0
-    max_height = max(line_heights) if line_heights else 0
-
-    if max_height > min_height * 2 and text_orientation == "vertical":
-        line_heights = np.array(line_heights)
-        min_height_num = np.sum(line_heights < min_height * 1.1)
-        if min_height_num < len(lines) * 0.4:
-            condition = line_heights > min_height * 1.1
-            lines = [value for value, keep in zip(lines, condition) if keep]
-
-    return lines, text_orientation, np.mean(line_heights)
-
-
 def calculate_minimum_enclosing_bbox(bboxes):
     """
     Calculate the minimum enclosing bounding box for a list of bounding boxes.
@@ -358,257 +288,41 @@ def calculate_minimum_enclosing_bbox(bboxes):
     return [min_x, min_y, max_x, max_y]
 
 
-def calculate_text_orientation(
-    bboxes: List[List[int]], orientation_ratio: float = 1.5
-) -> bool:
-    """
-    Calculate the orientation of the text based on the bounding boxes.
-
-    Args:
-        bboxes (list): A list of bounding boxes.
-        orientation_ratio (float): Ratio for determining orientation. Default is 1.5.
-
-    Returns:
-        str: "horizontal" or "vertical".
-    """
-
-    horizontal_box_num = 0
-    for bbox in bboxes:
-        if len(bbox) != 4:
-            raise ValueError(
-                "Invalid bounding box format. Expected a list of length 4."
-            )
-        x1, y1, x2, y2 = bbox
-        width = x2 - x1
-        height = y2 - y1
-        horizontal_box_num += 1 if width * orientation_ratio >= height else 0
-
-    return "horizontal" if horizontal_box_num >= len(bboxes) * 0.5 else "vertical"
-
-
 def is_english_letter(char):
+    """check if the char is english letter"""
     return bool(re.match(r"^[A-Za-z]$", char))
 
 
 def is_numeric(char):
-    return bool(re.match(r"^[\d.]+$", char))
+    """check if the char is numeric"""
+    return bool(re.match(r"^[\d]+$", char))
 
 
 def is_non_breaking_punctuation(char):
     """
-    判断一个字符是否是不需要换行的标点符号，包括全角和半角的符号。
+    check if the char is non-breaking punctuation
 
-    :param char: str, 单个字符
-    :return: bool, 如果字符是不需要换行的标点符号，返回True，否则返回False
+    Args:
+        char (str): character to check
+
+    Returns:
+        bool: True if the char is non-breaking punctuation
     """
     non_breaking_punctuations = {
-        ",",  # 半角逗号
-        "，",  # 全角逗号
-        "、",  # 顿号
-        ";",  # 半角分号
-        "；",  # 全角分号
-        ":",  # 半角冒号
-        "：",  # 全角冒号
-        "-",  # 连字符
+        ",",
+        "，",
+        "、",
+        ";",
+        "；",
+        ":",
+        "：",
+        "-",
+        "'",
+        '"',
+        "“",
     }
 
     return char in non_breaking_punctuations
-
-
-def format_line(
-    line: List[List[Union[List[int], str]]],
-    text_direction: int,
-    block_width: int,
-    block_start_coordinate: int,
-    block_stop_coordinate: int,
-    line_gap_limit: int = 10,
-    block_label: str = "text",
-) -> None:
-    """
-    Format a line of text spans based on layout constraints.
-
-    Args:
-        line (list): A list of spans, where each span is a list containing a bounding box and text.
-        block_left_coordinate (int): The text line directional minimum coordinate of the layout bounding box.
-        block_stop_coordinate (int): The text line directional maximum x-coordinate of the layout bounding box.
-        first_line_span_limit (int): The limit for the number of pixels before the first span that should be considered part of the first line. Default is 10.
-        line_gap_limit (int): The limit for the number of pixels after the last span that should be considered part of the last line. Default is 10.
-        block_label (str): The label associated with the entire block. Default is 'text'.
-    Returns:
-        None: The function modifies the line in place.
-    """
-    first_span_box = line[0][0]
-    last_span_box = line[-1][0]
-
-    for span in line:
-        if span[2] == "formula" and block_label != "formula":
-            formula_rec = span[1]
-            if not formula_rec.startswith("$") and not formula_rec.endswith("$"):
-                if len(line) > 1:
-                    span[1] = f"${span[1]}$"
-                else:
-                    span[1] = f"\n${span[1]}$"
-
-    line_text = ""
-    for span in line:
-        _, text, label = span
-        line_text += text
-        if len(text) > 0 and is_english_letter(line_text[-1]) or label == "formula":
-            line_text += " "
-
-    if text_direction == "horizontal":
-        text_start_index = 0
-        text_stop_index = 2
-    else:
-        text_start_index = 1
-        text_stop_index = 3
-
-    need_new_line = False
-    if (
-        len(line_text) > 0
-        and not is_english_letter(line_text[-1])
-        and not is_non_breaking_punctuation(line_text[-1])
-    ):
-        if (
-            text_direction == "horizontal"
-            and block_stop_coordinate - last_span_box[text_stop_index] > line_gap_limit
-        ) or (
-            text_direction == "vertical"
-            and (
-                block_stop_coordinate - last_span_box[text_stop_index] > line_gap_limit
-                or first_span_box[1] - block_start_coordinate > line_gap_limit
-            )
-        ):
-            need_new_line = True
-
-    if line_text.endswith("-"):
-        line_text = line_text[:-1]
-    elif (
-        len(line_text) > 0 and is_english_letter(line_text[-1])
-    ) or line_text.endswith("$"):
-        line_text += " "
-    elif (
-        len(line_text) > 0
-        and not is_english_letter(line_text[-1])
-        and not is_non_breaking_punctuation(line_text[-1])
-        and not is_numeric(line_text[-1])
-    ) or text_direction == "vertical":
-        if block_stop_coordinate - last_span_box[text_stop_index] > block_width * 0.4:
-            line_text += "\n"
-        if (
-            first_span_box[text_start_index] - block_start_coordinate
-            > block_width * 0.4
-        ):
-            line_text = "\n" + line_text
-
-    return line_text, need_new_line
-
-
-def split_boxes_by_projection(spans: List[List[int]], direction, offset=1e-5):
-    """
-    Check if there is any complete containment in the x-direction
-    between the bounding boxes and split the containing box accordingly.
-
-    Args:
-        spans (list of lists): Each element is a list containing an ndarray of length 4, a text string, and a label.
-        direction: 'horizontal' or 'vertical', indicating whether the spans are arranged horizontally or vertically.
-        offset (float): A small offset value to ensure that the split boxes are not too close to the original boxes.
-    Returns:
-        A new list of boxes, including split boxes, with the same `rec_text` and `label` attributes.
-    """
-
-    def is_projection_contained(box_a, box_b, start_idx, end_idx):
-        """Check if box_a completely contains box_b in the x-direction."""
-        return box_a[start_idx] <= box_b[start_idx] and box_a[end_idx] >= box_b[end_idx]
-
-    new_boxes = []
-    if direction == "horizontal":
-        projection_start_index, projection_end_index = 0, 2
-    else:
-        projection_start_index, projection_end_index = 1, 3
-
-    for i in range(len(spans)):
-        span = spans[i]
-        is_split = False
-        for j in range(i, len(spans)):
-            box_b = spans[j][0]
-            box_a, text, label = span
-            if is_projection_contained(
-                box_a, box_b, projection_start_index, projection_end_index
-            ):
-                is_split = True
-                # Split box_a based on the x-coordinates of box_b
-                if box_a[projection_start_index] < box_b[projection_start_index]:
-                    w = (
-                        box_b[projection_start_index]
-                        - offset
-                        - box_a[projection_start_index]
-                    )
-                    if w > 1:
-                        new_bbox = box_a.copy()
-                        new_bbox[projection_end_index] = (
-                            box_b[projection_start_index] - offset
-                        )
-                        new_boxes.append(
-                            [
-                                np.array(new_bbox),
-                                text,
-                                label,
-                            ]
-                        )
-                if box_a[projection_end_index] > box_b[projection_end_index]:
-                    w = (
-                        box_a[projection_end_index]
-                        - box_b[projection_end_index]
-                        + offset
-                    )
-                    if w > 1:
-                        box_a[projection_start_index] = (
-                            box_b[projection_end_index] + offset
-                        )
-                        span = [
-                            np.array(box_a),
-                            text,
-                            label,
-                        ]
-            if j == len(spans) - 1 and is_split:
-                new_boxes.append(span)
-        if not is_split:
-            new_boxes.append(span)
-
-    return new_boxes
-
-
-def remove_extra_space(input_text: str) -> str:
-    """
-    Process the input text to handle spaces.
-
-    The function removes multiple consecutive spaces between Chinese characters and ensures that
-    only a single space is retained between Chinese and non-Chinese characters.
-
-    Args:
-        input_text (str): The text to be processed.
-
-    Returns:
-        str: The processed text with properly formatted spaces.
-    """
-
-    # Remove spaces between Chinese characters
-    text_without_spaces = re.sub(
-        r"(?<=[\u4e00-\u9fff])\s+(?=[\u4e00-\u9fff])", "", input_text
-    )
-
-    # Ensure single space between Chinese and non-Chinese characters
-    text_with_single_spaces = re.sub(
-        r"(?<=[\u4e00-\u9fff])\s+(?=[^\u4e00-\u9fff])|(?<=[^\u4e00-\u9fff])\s+(?=[\u4e00-\u9fff])",
-        " ",
-        text_without_spaces,
-    )
-
-    # Reduce any remaining consecutive spaces to a single space
-    final_text = re.sub(r"\s+", " ", text_with_single_spaces).strip()
-
-    return final_text
 
 
 def gather_imgs(original_img, layout_det_objs):
@@ -856,6 +570,7 @@ def shrink_supplement_region_bbox(
 
 
 def update_region_box(bbox, region_box):
+    """Update region box with bbox"""
     if region_box is None:
         return bbox
 
@@ -873,6 +588,14 @@ def update_region_box(bbox, region_box):
 
 
 def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
+    """Convert formula result to OCR result format
+
+    Args:
+        formula_res_list (List): Formula results
+        ocr_res (dict): OCR result
+    Returns:
+        ocr_res (dict): Updated OCR result
+    """
     for formula_res in formula_res_list:
         x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
         poly_points = [
@@ -896,9 +619,84 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
 
 
 def caculate_bbox_area(bbox):
+    """Calculate bounding box area"""
     x1, y1, x2, y2 = map(float, bbox)
     area = abs((x2 - x1) * (y2 - y1))
     return area
+
+
+def caculate_euclidean_dist(point1, point2):
+    """Calculate euclidean distance between two points"""
+    x1, y1 = point1
+    x2, y2 = point2
+    return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+
+
+def get_seg_flag(block, prev_block):
+    """Get segment start flag and end flag based on previous block
+
+    Args:
+        block (Block): Current block
+        prev_block (Block): Previous block
+
+    Returns:
+        seg_start_flag (bool): Segment start flag
+        seg_end_flag (bool): Segment end flag
+    """
+
+    seg_start_flag = True
+    seg_end_flag = True
+
+    context_left_coordinate = block.start_coordinate
+    context_right_coordinate = block.end_coordinate
+    seg_start_coordinate = block.seg_start_coordinate
+    seg_end_coordinate = block.seg_end_coordinate
+
+    if prev_block is not None:
+        num_of_prev_lines = prev_block.num_of_lines
+        pre_block_seg_end_coordinate = prev_block.seg_end_coordinate
+        prev_end_space_small = (
+            abs(prev_block.end_coordinate - pre_block_seg_end_coordinate) < 10
+        )
+        prev_lines_more_than_one = num_of_prev_lines > 1
+
+        overlap_blocks = (
+            context_left_coordinate < prev_block.end_coordinate
+            and context_right_coordinate > prev_block.start_coordinate
+        )
+
+        # update context_left_coordinate and context_right_coordinate
+        if overlap_blocks:
+            context_left_coordinate = min(
+                prev_block.start_coordinate, context_left_coordinate
+            )
+            context_right_coordinate = max(
+                prev_block.end_coordinate, context_right_coordinate
+            )
+            prev_end_space_small = (
+                abs(context_right_coordinate - pre_block_seg_end_coordinate) < 10
+            )
+            edge_distance = 0
+        else:
+            edge_distance = abs(block.start_coordinate - prev_block.end_coordinate)
+
+        current_start_space_small = seg_start_coordinate - context_left_coordinate < 10
+
+        if (
+            prev_end_space_small
+            and current_start_space_small
+            and prev_lines_more_than_one
+            and edge_distance < max(prev_block.width, block.width)
+        ):
+            seg_start_flag = False
+    else:
+        if seg_start_coordinate - context_left_coordinate < 10:
+            seg_start_flag = False
+
+    if context_right_coordinate - seg_end_coordinate < 10:
+        seg_end_flag = False
+
+    return seg_start_flag, seg_end_flag
 
 
 def get_show_color(label: str, order_label=False) -> Tuple:
