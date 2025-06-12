@@ -6280,9 +6280,9 @@ You're not viewing the latest version.
 <h3 id="21">2.1 高性能推理工作模式<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
 <p>高性能推理插件支持两种工作模式。通过修改高性能推理配置，可以切换不同的工作模式。</p>
 <h4 id="211">2.1.1 安全自动配置模式<a class="headerlink" href="#211" title="Permanent link">&para;</a></h4>
-<p>安全自动配置模式，具有保护机制，默认**自动选用当前环境性能较优的配置**。在这种模式下，用户可以覆盖默认配置，但用户提供的配置将受到检查，PaddleX将根据先验知识拒绝不可用的配置。这是默认的工作模式。</p>
+<p>安全自动配置模式，具有保护机制，默认 <strong>自动选用当前环境性能较优的配置</strong> 。在这种模式下，用户可以覆盖默认配置，但用户提供的配置将受到检查，PaddleX将根据先验知识拒绝不可用的配置。这是默认的工作模式。</p>
 <h4 id="212">2.1.2 无限制手动配置模式<a class="headerlink" href="#212" title="Permanent link">&para;</a></h4>
-<p>无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对推理后端及其配置有明确需求的用户，建议在熟悉高性能推理的情况下使用。</p>
+<p>无限制手动配置模式，提供完全的配置自由，可以 <strong>自由选择推理后端、修改后端配置等</strong> ，但无法保证推理一定成功。此模式适合有经验和对推理后端及其配置有明确需求的用户，建议在熟悉高性能推理的情况下使用。</p>
 <h3 id="22">2.2 高性能推理配置<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
 <p>常用高性能推理配置项包括：</p>
 <table>
@@ -6509,7 +6509,7 @@ You're not viewing the latest version.
 </details>
 
 <h3 id="24">2.4 在配置文件中启用/禁用高性能推理插件<a class="headerlink" href="#24" title="Permanent link">&para;</a></h3>
-<p>在配置文件中，可以使用 <code>use_hpip</code> 控制高性能推理插件的启用和禁用。与通过 CLI 和 API 配置不同的是，这种方式支持通过在子产线/子模块级别使用 <code>use_hpip</code>，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：</p>
+<p>在配置文件中，可以使用 <code>use_hpip</code> 控制高性能推理插件的启用和禁用。与通过 CLI 和 API 配置不同的是，这种方式支持通过在子产线/子模块级别使用 <code>use_hpip</code>，实现 <strong>仅产线中的某个子产线/子模块使用高性能推理</strong>。示例如下：</p>
 <p><strong>通用OCR产线的 <code>text_detection</code> 模块使用高性能推理，<code>text_recognition</code> 模块不使用高性能推理：</strong></p>
 <details><summary>👉 点击展开</summary>
 
@@ -6624,7 +6624,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月12日 07:28:53 UTC">2025年6月12日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月12日 14:27:38 UTC">2025年6月12日</span>
   </span>
 
     
@@ -6634,7 +6634,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月12日 07:28:53 UTC">2025年6月12日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月12日 14:27:38 UTC">2025年6月12日</span>
   </span>
 
     
@@ -6649,7 +6649,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:gaotingquan@baidu.com">gaotingquan</a>
+        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
     </nav>
   </span>
 
