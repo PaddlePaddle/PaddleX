@@ -1738,11 +1738,10 @@ if resp_chat.status_code != 200:
 result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
-</code></pre>
-
-</details>
+</code></pre></details>
 
 <details><summary>C++</summary>
+
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;fstream&gt;
 #include &lt;vector&gt;

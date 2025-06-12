@@ -2246,7 +2246,7 @@ axios.post(API_URL, payload)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = "http://localhost:8080layout-parsing";
+$API_URL = "http://localhost:8080/layout-parsing";
 $image_path = "./demo.jpg";
 
 $image_data = base64_encode(file_get_contents($image_path));
