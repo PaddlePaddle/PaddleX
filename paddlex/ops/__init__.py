@@ -66,11 +66,14 @@ class CustomOpNotFoundException(Exception):
 
 
 class CustomOperatorPathFinder:
-    def find_module(self, fullname: str, path: str = None):
+    def find_spec(self, fullname: str, path, target=None):
         if not fullname.startswith("paddlex.ops"):
             return None
-
-        return CustomOperatorPathLoader()
+        return importlib.machinery.ModuleSpec(
+            name=fullname,
+            loader=CustomOperatorPathLoader(),
+            is_package=False,        
+        )
 
 
 class CustomOperatorPathLoader:

@@ -12,6 +12,8 @@ BEVFusion 是一种多模态 3D 目标检测模型，通过将环视摄像头图
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/01.png">
 
+请注意，3D多模态融合检测产线目前暂不支持Python 3.12及以上版本。
+
 <b>3D多模态融合检测产线中包含了3D多模态融合检测模块</b>，模块中包含了一个<b>BEVFusion模型</b>，我们提供了该模型的 benchmark 数据：
 
 <p><b>3D多模态融合检测模块：</b></p>

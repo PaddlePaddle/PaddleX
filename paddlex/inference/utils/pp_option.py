@@ -119,6 +119,7 @@ class PaddlePredictorOption(object):
             "trt_dynamic_shape_input_data": None,  # only for trt
             "trt_shape_range_info_path": None,  # only for trt
             "trt_allow_rebuild_at_runtime": True,  # only for trt
+            "mkldnn_cache_capacity": 10,
         }
         return default_config
 
@@ -293,6 +294,14 @@ class PaddlePredictorOption(object):
     @trt_allow_rebuild_at_runtime.setter
     def trt_allow_rebuild_at_runtime(self, trt_allow_rebuild_at_runtime):
         self._update("trt_allow_rebuild_at_runtime", trt_allow_rebuild_at_runtime)
+
+    @property
+    def mkldnn_cache_capacity(self):
+        return self._cfg["mkldnn_cache_capacity"]
+
+    @mkldnn_cache_capacity.setter
+    def mkldnn_cache_capacity(self, capacity: int):
+        self._update("mkldnn_cache_capacity", capacity)
 
     # For backward compatibility
     # TODO: Issue deprecation warnings

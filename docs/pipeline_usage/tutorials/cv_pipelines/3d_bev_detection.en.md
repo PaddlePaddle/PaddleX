@@ -12,6 +12,8 @@ BEVFusion is a multi-modal 3D object detection model that fuses surround camera 
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/01.png">
 
+Please note that the 3D multi-modal fusion detection pipeline currently does not support Python 3.12 or above.
+
 <b>The 3D multi-modal fusion detection pipeline includes a 3D multi-modal fusion detection module</b>，which contains <b>a BEVFusion model</b>. We provide benchmark data for this model:
 
 <p><b>3D Multi-modal Fusion Detection Module:</b></p>

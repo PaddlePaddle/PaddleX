@@ -237,6 +237,7 @@ plugins:
             心跳监测时序数据分类应用教程: Heartbeat Monitoring Time Series Data Classification Application Tutorial
             用电量长期预测应用教程: Long-term Electricity Consumption Forecasting Application Tutorial
             多语种语音识别模块: Multilingual Speech Recognition Task
+            可视化工具: VisualDL
             FAQ: FAQ
             近期更新: Recently Update
       repository: PaddlePaddle/PaddleX #仓库名称
@@ -479,5 +480,6 @@ nav:
        - 心跳监测时序数据分类应用实践教程: practical_tutorials/ts_classification.md
        - 用电量长期预测应用实践教程: practical_tutorials/ts_forecast.md
        - 产线部署实践教程: practical_tutorials/deployment_tutorial.md
+  - 可视化工具: VisualDL.md
   - FAQ: FAQ.md
   - 近期更新: CHANGELOG.md
