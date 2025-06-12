@@ -12,66 +12,61 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# import lazy_paddle as paddle
-
 import paddle
 import numpy as np
 
 from ....utils.func_register import FuncRegister
-from ...common.batch_sampler import AudioBatchSampler
+from ...common.batch_sampler import TextBatchSampler
 
 from ..base import BasePredictor
-from .result import PwganResult
-from ....modules.text_to_speech_vocoder.model_list import MODELS
+from .result import TextToPinyinResult
+from ....modules.text_to_pinyin.model_list import MODELS
 
 
-class PwganPredictor(BasePredictor):
+class TextToPinyinPredictor(BasePredictor):
 
     entities = MODELS
 
     def __init__(self, *args, **kwargs):
-        """Initializes FastspeechPredictor.
+        """Initializes TextSegmentPredictor.
 
         Args:
             *args: Arbitrary positional arguments passed to the superclass.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        print(self.config)
         self.model = self._build()
-        self.model_dir = "/home/zhangjinghong/PaddleSpeech/examples/csmsc/tts3/fastspeech2_nosil_baker_ckpt_0.4/inference"
+
     def _build_batch_sampler(self):
-        """Builds and returns an AudioBatchSampler instance.
+        """Builds and returns an TextBatchSampler instance.
 
         Returns:
-            AudioBatchSampler: An instance of AudioBatchSampler.
+            TextBatchSampler: An instance of TextBatchSampler.
         """
-        return AudioBatchSampler()
+        return TextBatchSampler()
 
     def _get_result_class(self):
-        """Returns the result class, PwganResult.
+        """Returns the result class, TextToPinyinResult.
 
         Returns:
-            type: The PwganResult class.
+            type: The TextToPinyinResult class.
         """
-        return PwganResult
+        return TextToPinyinResult
 
     def _build(self):
         """Build the model.
 
         Returns:
-            Pwgan: An instance of Pwgan.
+            G2PWOnnxConverter: An instance of G2PWOnnxConverter.
         """
-        from .processors import get_predictor
-        model = get_predictor(
-            model_dir=str(self.model_dir),
-            model_file=self.config['Global']['model'] + ".pdmodel",
-            params_file=self.config['Global']['model'] + ".pdiparams",
-            device=self.config['Global']['device'],
-            use_trt=self.config['Global']['use_trt'],
-            use_mkldnn=self.config['Global']['use_mkldnn'],
-            cpu_threads=self.config['Global']['cpu_threads'],
-            precision=self.config['Global']['precision'],)
+        from .processors import (
+            G2PWOnnxConverter,
+        )
+
+        # build model
+        model = G2PWOnnxConverter(
+            model_dir=self.model_dir, style="pinyin", enable_non_tradional_chinese=True
+        )
         return model
 
     def process(self, batch_data):
@@ -79,17 +74,15 @@ class PwganPredictor(BasePredictor):
         Process a batch of data through the preprocessing, inference, and postprocessing.
 
         Args:
-            batch_data (List[Union[str], ...]): A batch of input phone data.
+            batch_data (List[Union[str], ...]): A batch of input text data.
 
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-        from .processors import get_voc_output
-        mel = batch_data[0]
-        wav = get_voc_output(voc_predictor=self.model, input=mel)
-        result = np.array(wav).reshape(1,-1)
-        print(result.shape)
-        return {
-            "result": result,
-        }
 
+        result = self.model(batch_data[0])[0]
+
+        return {
+            "input_path": batch_data,
+            "result": [result],
+        }
