@@ -451,7 +451,7 @@ class _OCRPipeline(BasePipeline):
                 yield OCRResult(res)
 
 
-@pipeline_requires_extra("ocr")
+@pipeline_requires_extra("ocr", alt="ocr-core")
 class OCRPipeline(AutoParallelImageSimpleInferencePipeline):
     entities = "OCR"
 

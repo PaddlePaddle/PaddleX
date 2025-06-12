@@ -30,6 +30,10 @@ _EXTRA_PATTERN = re.compile(
 _COLLECTIVE_EXTRA_NAMES = {"base", "plugins", "all"}
 
 
+class DependencyError(Exception):
+    pass
+
+
 def _get_extra_name_and_remove_extra_marker(dep_spec):
     # XXX: Not sure if this is correct
     m = _EXTRA_PATTERN.search(dep_spec)
@@ -124,7 +128,7 @@ def require_deps(*deps, obj_name=None):
         msg += " following dependencies are not available:\n" + "\n".join(
             unavailable_deps
         )
-        raise RuntimeError(msg)
+        raise DependencyError(msg)
 
 
 def function_requires_deps(*deps):
@@ -177,21 +181,24 @@ def is_extra_available(extra):
     return False
 
 
-def require_extra(extra, *, obj_name=None):
-    if not is_extra_available(extra):
-        if obj_name is not None:
-            msg = f"`{obj_name}` requires additional dependencies."
-        else:
-            msg = "Additional dependencies are required."
-        msg += f' To install them, run `pip install "paddlex[{extra}]==<PADDLEX_VERSION>"` if you’re installing `paddlex` from an index, or `pip install -e "/path/to/PaddleX[{extra}]"` if you’re installing `paddlex` locally.'
-        raise RuntimeError(msg)
+def require_extra(extra, *, obj_name=None, alt=None):
+    if is_extra_available(extra) or (alt is not None and is_extra_available(alt)):
+        return
+    if obj_name is not None:
+        msg = f"`{obj_name}` requires additional dependencies."
+    else:
+        msg = "Additional dependencies are required."
+    msg += f' To install them, run `pip install "paddlex[{extra}]==<PADDLEX_VERSION>"` if you’re installing `paddlex` from an index, or `pip install -e "/path/to/PaddleX[{extra}]"` if you’re installing `paddlex` locally.'
+    if alt is not None:
+        msg += f" Alternatively, you can install `paddlex[{alt}]` instead."
+    raise DependencyError(msg)
 
 
-def pipeline_requires_extra(extra):
+def pipeline_requires_extra(extra, *, alt=None):
     def _deco(pipeline_cls):
         @wraps(pipeline_cls.__init__)
         def _wrapper(self, *args, **kwargs):
-            require_extra(extra, obj_name=pipeline_name)
+            require_extra(extra, obj_name=pipeline_name, alt=alt)
             return old_init_func(self, *args, **kwargs)
 
         old_init_func = pipeline_cls.__init__
@@ -211,7 +218,7 @@ def is_hpip_available():
 
 def require_hpip():
     if not is_hpip_available():
-        raise RuntimeError(
+        raise DependencyError(
             "The high-performance inference plugin is not available. Please install it properly."
         )
 
@@ -222,7 +229,7 @@ def is_serving_plugin_available():
 
 def require_serving_plugin():
     if not is_serving_plugin_available():
-        raise RuntimeError(
+        raise DependencyError(
             "The serving plugin is not available. Please install it properly."
         )
 
@@ -240,7 +247,7 @@ def is_paddle2onnx_plugin_available():
 
 def require_paddle2onnx_plugin():
     if not is_paddle2onnx_plugin_available():
-        raise RuntimeError(
+        raise DependencyError(
             "The Paddle2ONNX plugin is not available. Please install it properly."
         )
 
