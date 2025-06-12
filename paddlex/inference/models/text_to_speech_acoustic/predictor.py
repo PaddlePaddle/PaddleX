@@ -36,7 +36,6 @@ class Fastspeech2Predictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        print(self.model_dir)
         self.model = self._build()
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
