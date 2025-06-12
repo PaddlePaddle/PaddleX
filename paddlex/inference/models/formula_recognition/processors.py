@@ -365,7 +365,7 @@ class LaTeXOCRDecode(object):
         dec = [self.tokenizer.decode(tok) for tok in tokens]
         dec_str_list = [
             "".join(detok.split(" "))
-            .replace("臓", " ")
+            .replace("Ġ", " ")
             .replace("[EOS]", "")
             .replace("[BOS]", "")
             .replace("[PAD]", "")
