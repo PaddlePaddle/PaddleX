@@ -359,6 +359,67 @@ PP-OCRv5_mobile_rec_infer.tar",
 }
 
 
+HUGGINGFACE_MODELS = [
+    "arabic_PP-OCRv3_mobile_rec",
+    "chinese_cht_PP-OCRv3_mobile_rec",
+    "ch_RepSVTR_rec",
+    "ch_SVTRv2_rec",
+    "cyrillic_PP-OCRv3_mobile_rec",
+    "devanagari_PP-OCRv3_mobile_rec",
+    "en_PP-OCRv3_mobile_rec",
+    "en_PP-OCRv4_mobile_rec",
+    "japan_PP-OCRv3_mobile_rec",
+    "ka_PP-OCRv3_mobile_rec",
+    "korean_PP-OCRv3_mobile_rec",
+    "LaTeX_OCR_rec",
+    "latin_PP-OCRv3_mobile_rec",
+    "PicoDet_layout_1x",
+    "PicoDet_layout_1x_table",
+    "PicoDet-L_layout_17cls",
+    "PicoDet-L_layout_3cls",
+    "PicoDet-S_layout_17cls",
+    "PicoDet-S_layout_3cls",
+    "PP-DocBlockLayout",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout_plus-L",
+    "PP-DocLayout-S",
+    "PP-FormulaNet-L",
+    "PP-FormulaNet_plus-L",
+    "PP-FormulaNet_plus-M",
+    "PP-FormulaNet_plus-S",
+    "PP-FormulaNet-S",
+    "PP-LCNet_x1_0_doc_ori",
+    "PP-LCNet_x1_0_table_cls",
+    "PP-OCRv3_mobile_det",
+    "PP-OCRv3_mobile_rec",
+    "PP-OCRv3_server_det",
+    "PP-OCRv4_mobile_det",
+    "PP-OCRv4_mobile_rec",
+    "PP-OCRv4_mobile_seal_det",
+    "PP-OCRv4_server_det",
+    "PP-OCRv4_server_rec_doc",
+    "PP-OCRv4_server_rec",
+    "PP-OCRv4_server_seal_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_mobile_rec",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_server_rec",
+    "RT-DETR-H_layout_17cls",
+    "RT-DETR-H_layout_3cls",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "SLANet",
+    "SLANet_plus",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "ta_PP-OCRv3_mobile_rec",
+    "te_PP-OCRv3_mobile_rec",
+    "UniMERNet",
+    "UVDoc",
+]
+
+
 @lru_cache(1)
 def is_huggingface_accessible():
     try:
@@ -396,7 +457,7 @@ class OfficialModelsDict(dict):
             f"Using official model ({key}), the model files will be automatically downloaded and saved in {self._save_dir}."
         )
 
-        if is_huggingface_accessible:
+        if is_huggingface_accessible and key in HUGGINGFACE_MODELS:
             return _download_from_hf()
         else:
             return _download_from_bos()
