@@ -1381,7 +1381,9 @@ for i, res in enumerate(result["tableRecResults"]):
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
 </code></pre></details>
+
 <details><summary>C++</summary>
+
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;fstream&gt;
 #include &lt;vector&gt;
@@ -1460,7 +1462,9 @@ int main() {
     return 0;
 }
 </code></pre></details>
+
 <details><summary>Java</summary>
+
 <pre><code class="language-java">import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -1528,7 +1532,9 @@ public class Main {
     }
 }
 </code></pre></details>
+
 <details><summary>Go</summary>
+
 <pre><code class="language-go">package main
 
 import (
@@ -1626,7 +1632,9 @@ func main() {
     }
 }
 </code></pre></details>
+
 <details><summary>C#</summary>
+
 <pre><code class="language-csharp">using System;
 using System.IO;
 using System.Net.Http;
@@ -1685,7 +1693,9 @@ class Program
     }
 }
 </code></pre></details>
+
 <details><summary>Node.js</summary>
+
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -1733,7 +1743,9 @@ async function callTableRecognitionAPI() {
 callTableRecognitionAPI();
 
 </code></pre></details>
+
 <details><summary>PHP</summary>
+
 <pre><code class="language-php">&lt;?php
 
 $API_URL = "http://localhost:8080/table-recognition";

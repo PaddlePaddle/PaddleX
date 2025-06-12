@@ -1759,10 +1759,11 @@ if resp_chat.status_code != 200:
 result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
-</code></pre></details>
+</code></pre>
+
+</details>
 
 <details><summary>C++</summary>
-
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;fstream&gt;
 #include &lt;vector&gt;
@@ -1784,12 +1785,11 @@ std::string encode_image(const std::string& path) {
 }
 
 int main() {
-    httplib::Client client("localhost", 8100);
-    std::string imagePath = "/workspace/input_dir/ppchat.jpg";
+    httplib::Client client("localhost", 8080);
+    std::string imagePath = " ./demo.jpg";
     std::string imageData = encode_image(imagePath);
-    json keys = { "合格证编号" };
+    json keys = { "姓名" };
 
-    // Step 1: /chatocr-visual
     json payload_visual = {
         {"file", imageData},
         {"fileType", 1}
@@ -1928,7 +1928,7 @@ public class Main {
         JsonNode resultVector = objectMapper.readTree(responseVector.body().string()).get("result");
 
         ObjectNode chatPayload = objectMapper.createObjectNode();
-        chatPayload.putArray("keyList").add(keys[0]);  // 支持多个 key
+        chatPayload.putArray("keyList").add(keys[0]);  
         chatPayload.set("visualInfo", resultVisual.get("visualInfo"));
         chatPayload.put("useVectorRetrieval", true);
         chatPayload.set("vectorInfo", resultVector.get("vectorInfo"));
@@ -2258,7 +2258,9 @@ function encodeImageToBase64(filePath) {
   }
 })();
 </code></pre></details>
+
 <details><summary>PHP</summary>
+
 <pre><code class="language-php">&lt;?php
 
 $API_BASE_URL = "http://localhost:8080";
@@ -2307,7 +2309,6 @@ if (!isset($response_vector["result"])) {
 }
 $result_vector_raw = json_decode($response_vector_raw, false)->result;
 
-// Step 4: /chatocr-chat
 $payload_chat = [
     "keyList" => $keys,
     "visualInfo" => $result_visual_raw->visualInfo,
