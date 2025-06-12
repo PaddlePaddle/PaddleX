@@ -2856,7 +2856,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as documents and certificates, with 1000 images. </b>
 
 
-## [Text Line Orientation Classification Module](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md)
+## [Text Line Orientation Classification Module](../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md)
 
 <table>
 <thead>
@@ -2872,13 +2872,22 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td>
+<td>PP-LCNet_x0_25_textline_ori</td>
 <td>99.06</td>
 <td>2.31 / 0.43</td>
 <td>3.37 / 1.27</td>
 <td>7</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml">PP-LCNet_x0_25_textline_ori.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">训练模型</a></td>
+</tr>
+<tr>
+<td>PP-LCNet_x1_0_textline_ori</td>
+<td>99.06</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
+<td>7</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/textline_orientation/PP-LCNet_x1_0_textline_ori.yaml">PP-LCNet_x1_0_textline_ori.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_textline_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_textline_ori_pretrained.pdparams">训练模型</a></td>
 </tr>
 </tbody>
 </table>
