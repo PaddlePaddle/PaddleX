@@ -240,7 +240,7 @@ def calculate_overlap_ratio(
     inter_width = max(0, x_max_inter - x_min_inter)
     inter_height = max(0, y_max_inter - y_min_inter)
 
-    inter_area = inter_width * inter_height
+    inter_area = float(inter_width) * float(inter_height)
 
     bbox1_area = caculate_bbox_area(bbox1)
     bbox2_area = caculate_bbox_area(bbox2)
@@ -285,7 +285,7 @@ def calculate_minimum_enclosing_bbox(bboxes):
     max_y = np.max(bboxes_array[:, 3])
 
     # Return the minimum enclosing bounding box
-    return [min_x, min_y, max_x, max_y]
+    return np.array([min_x, min_y, max_x, max_y])
 
 
 def is_english_letter(char):
