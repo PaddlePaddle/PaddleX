@@ -10,7 +10,7 @@ The three deployment methods of PaddleX are detailed below:
 
 * High-Performance Inference: In actual production environments, many applications have stringent performance standards for deployment strategies, especially in terms of response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost serving deployment in pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
-* Edge Deployment: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
+* On-Device Deployment: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../pipeline_deploy/on_device_deployment.en.md).
 
 This tutorial will introduce the three deployment methods of PaddleX through three practical application examples.
 
@@ -322,7 +322,7 @@ Running Results:
 
   The operations for other pipelines are similar to the above two. For more details, refer to the pipeline usage tutorials.
 
-## 3 Edge Deployment Example
+## 3 On-Device Deployment Example
 
 ### 3.1 Environment Preparation
 

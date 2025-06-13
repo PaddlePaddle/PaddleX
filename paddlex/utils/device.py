@@ -15,8 +15,6 @@
 import os
 from contextlib import ContextDecorator
 
-import GPUtil
-
 from . import logging
 from .custom_device_list import (
     DCU_WHITELIST,
@@ -41,25 +39,12 @@ def constr_device(device_type, device_ids):
 
 
 def get_default_device():
-    try:
-        gpu_list = GPUtil.getGPUs()
-    except Exception:
-        logging.debug(
-            "Failed to query GPU devices. Falling back to CPU.", exc_info=True
-        )
-        has_gpus = False
-    else:
-        has_gpus = bool(gpu_list)
-    if not has_gpus:
-        # HACK
-        if os.path.exists("/etc/nv_tegra_release"):
-            logging.debug(
-                "The current device appears to be an NVIDIA Jetson. GPU 0 will be used as the default device."
-            )
-    if not has_gpus:
-        return "cpu"
-    else:
+    import paddle
+
+    if paddle.device.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0:
         return constr_device("gpu", [0])
+    else:
+        return "cpu"
 
 
 def parse_device(device):

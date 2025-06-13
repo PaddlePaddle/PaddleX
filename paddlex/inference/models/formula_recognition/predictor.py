@@ -136,7 +136,7 @@ class FormulaRecPredictor(BasePredictor):
         }
 
     @register("DecodeImage")
-    def build_readimg(self, channel_first, img_mode):
+    def build_readimg(self, channel_first, img_mode="RGB"):
         assert channel_first == False
         return "Read", ReadImage(format=img_mode)
 

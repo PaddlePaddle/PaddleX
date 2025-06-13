@@ -207,10 +207,10 @@ def draw_box_txt_fine(
         np.ndarray: An image with the text drawn in the specified box.
     """
     box_height = int(
-        math.sqrt((box[0][0] - box[3][0]) ** 2 + (box[0][1] - box[3][1]) ** 2)
+        math.sqrt(float(box[0][0] - box[3][0]) ** 2 + float(box[0][1] - box[3][1]) ** 2)
     )
     box_width = int(
-        math.sqrt((box[0][0] - box[1][0]) ** 2 + (box[0][1] - box[1][1]) ** 2)
+        math.sqrt(float(box[0][0] - box[1][0]) ** 2 + float(box[0][1] - box[1][1]) ** 2)
     )
 
     if box_height > 2 * box_width and box_height > 30:

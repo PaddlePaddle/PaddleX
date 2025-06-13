@@ -13,7 +13,7 @@ comments: true
   - [反馈专区](#反馈专区)
 
 本指南主要介绍 PaddleX 端侧部署 demo 在 Android shell 上的运行方法。
-本指南适用于下列 6 种模块的 8 个模型：
+本指南适用于下列 7 种模块的 13 个模型：
 
 <table>
   <tr>
@@ -57,14 +57,40 @@ comments: true
     <td>✅</td>
   </tr>
   <tr>
-    <td>文本检测</td>
+    <td>文本行方向分类</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td rowspan="3">文本检测</td>
+    <td>PP-OCRv5_mobile_det</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>PP-OCRv4_mobile_det</td>
     <td>✅</td>
     <td></td>
   </tr>
   <tr>
-    <td>文本识别</td>
+    <td>PP-OCRv3_mobile_det</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="3">文本识别</td>
+    <td>PP-OCRv5_mobile_rec</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>PP-OCRv4_mobile_rec</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>PP-OCRv3_mobile_rec</td>
     <td>✅</td>
     <td></td>
   </tr>
@@ -292,17 +318,38 @@ detection, image size: 768, 576, detect object: dog, score: 0.731584, location: 
     <td>MobileNetV3_small_x1_0</br>MobileNetV3_small_x1_0_gpu</td>
   </tr>
   <tr>
-    <td rowspan="2">通用OCR</td>
-    <td rowspan="2">ocr</td>
+    <td rowspan="3">通用OCR</td>
+    <td rowspan="3">ocr</td>
     <td>文本检测</td>
-    <td rowspan="2">ppocr_demo</td>
-    <td>PP-OCRv4_mobile_det</td>
-    <td>PP-OCRv4_mobile_det</td>
+    <td rowspan="3">ppocr_demo</td>
+    <td>
+      PP-OCRv5_mobile_det</br>
+      PP-OCRv4_mobile_det</br>
+      PP-OCRv3_mobile_det
+    </td>
+    <td>
+      PP-OCRv5_mobile_det</br>
+      PP-OCRv4_mobile_det</br>
+      PP-OCRv3_mobile_det
+    </td>
+  </tr>
+  <tr>
+    <td>文本行方向分类</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
   </tr>
   <tr>
     <td>文本识别</td>
-    <td>PP-OCRv4_mobile_rec</td>
-    <td>PP-OCRv4_mobile_rec</td>
+    <td>
+      PP-OCRv5_mobile_rec</br>
+      PP-OCRv4_mobile_rec</br>
+      PP-OCRv3_mobile_rec
+    </td>
+    <td>
+      PP-OCRv5_mobile_rec</br>
+      PP-OCRv4_mobile_rec</br>
+      PP-OCRv3_mobile_rec
+    </td>
   </tr>
 </table>
 

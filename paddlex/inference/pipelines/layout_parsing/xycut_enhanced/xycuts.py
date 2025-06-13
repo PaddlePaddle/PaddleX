@@ -17,11 +17,14 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
-from ..result_v2 import LayoutParsingBlock, LayoutParsingRegion
-from ..setting import BLOCK_LABEL_MAP
+from ..layout_objects import LayoutBlock, LayoutRegion
+from ..setting import BLOCK_LABEL_MAP, XYCUT_SETTINGS
 from ..utils import calculate_overlap_ratio, calculate_projection_overlap_ratio
 from .utils import (
     calculate_discontinuous_projection,
+    euclidean_insert,
+    find_local_minima_flat_regions,
+    get_blocks_by_direction_interval,
     get_cut_blocks,
     insert_child_blocks,
     manhattan_insert,
@@ -31,16 +34,16 @@ from .utils import (
     reference_insert,
     shrink_overlapping_boxes,
     sort_normal_blocks,
-    split_projection_profile,
     update_doc_title_child_blocks,
     update_paragraph_title_child_blocks,
+    update_region_child_blocks,
     update_vision_child_blocks,
     weighted_distance_insert,
 )
 
 
 def pre_process(
-    region: LayoutParsingRegion,
+    region: LayoutRegion,
 ) -> List:
     """
     Preprocess the layout for sorting purposes.
@@ -63,10 +66,11 @@ def pre_process(
         "sub_paragraph_title",
         "doc_title_text",
         "vision_title",
+        "sub_region",
     ]
     pre_cut_block_idxes = []
     block_map = region.block_map
-    blocks: List[LayoutParsingBlock] = list(block_map.values())
+    blocks: List[LayoutBlock] = list(block_map.values())
     for block in blocks:
         if block.order_label not in mask_labels:
             update_region_label(block, region)
@@ -83,7 +87,6 @@ def pre_process(
         ) / 2
         center_offset = abs(block_center - region.direction_center_coordinate)
         is_centered = center_offset <= tolerance_len
-
         if is_centered:
             pre_cut_block_idxes.append(block.index)
 
@@ -121,60 +124,83 @@ def pre_process(
                             block.secondary_direction_start_coordinate
                         )
                         cut_coordinates.append(block.secondary_direction_end_coordinate)
-    secondary_discontinuous = calculate_discontinuous_projection(
-        all_boxes, direction=region.direction
+    secondary_check_bboxes = np.array(
+        [
+            block.bbox
+            for block in blocks
+            if block.order_label not in mask_labels + ["vision"]
+        ]
     )
-    if len(secondary_discontinuous) == 1:
-        if not discontinuous:
-            discontinuous = calculate_discontinuous_projection(
-                all_boxes, direction=cut_direction
-            )
-        current_interval = discontinuous[0]
-        for interval in discontinuous[1:]:
-            gap_len = interval[0] - current_interval[1]
-            if gap_len >= region.text_line_height * 3:
-                cut_coordinates.append(current_interval[1])
-            elif gap_len > region.text_line_height * 1.2:
-                (pre_blocks, post_blocks) = get_cut_blocks(
-                    list(block_map.values()), cut_direction, [current_interval[1]], []
+    if len(secondary_check_bboxes) > 0 or blocks[0].label == "region":
+        secondary_discontinuous = calculate_discontinuous_projection(
+            secondary_check_bboxes, direction=region.direction
+        )
+        if len(secondary_discontinuous) == 1 or blocks[0].label == "region":
+            if not discontinuous:
+                discontinuous = calculate_discontinuous_projection(
+                    all_boxes, direction=cut_direction
                 )
-                pre_bboxes = np.array([block.bbox for block in pre_blocks])
-                post_bboxes = np.array([block.bbox for block in post_blocks])
-                projection_index = 1 if cut_direction == "horizontal" else 0
-                pre_projection = projection_by_bboxes(pre_bboxes, projection_index)
-                post_projection = projection_by_bboxes(post_bboxes, projection_index)
-                pre_projection_min = np.min(pre_projection)
-                post_projection_min = np.min(post_projection)
-                pre_projection_min += 5 if pre_projection_min != 0 else 0
-                post_projection_min += 5 if post_projection_min != 0 else 0
-                pre_intervals = split_projection_profile(
-                    pre_projection, pre_projection_min, 1
-                )
-                post_intervals = split_projection_profile(
-                    post_projection, post_projection_min, 1
-                )
-                pre_gap_boxes = []
-                if pre_intervals is not None:
-                    for start, end in zip(*pre_intervals):
-                        bbox = [0] * 4
-                        bbox[projection_index] = start
-                        bbox[projection_index + 2] = end
-                        pre_gap_boxes.append(bbox)
-                post_gap_boxes = []
-                if post_intervals is not None:
-                    for start, end in zip(*post_intervals):
-                        bbox = [0] * 4
-                        bbox[projection_index] = start
-                        bbox[projection_index + 2] = end
-                        post_gap_boxes.append(bbox)
-                max_gap_boxes_num = max(len(pre_gap_boxes), len(post_gap_boxes))
-                if max_gap_boxes_num > 0:
-                    discontinuous_intervals = calculate_discontinuous_projection(
-                        pre_gap_boxes + post_gap_boxes, direction=region.direction
+            current_interval = discontinuous[0]
+            pre_cut_coordinates = [
+                cood for cood in cut_coordinates if cood < current_interval[1]
+            ]
+            if not pre_cut_coordinates:
+                pre_cut_coordinate = 0
+            else:
+                pre_cut_coordinate = max(pre_cut_coordinates)
+            pre_cut_coordinate = max(current_interval[0], pre_cut_coordinate)
+            for interval in discontinuous[1:]:
+                gap_len = interval[0] - current_interval[1]
+                if (
+                    gap_len >= region.text_line_height * 3
+                    or blocks[0].label == "region"
+                ):
+                    cut_coordinates.append(current_interval[1])
+                elif gap_len > region.text_line_height * 1.2:
+                    pre_blocks = get_blocks_by_direction_interval(
+                        list(block_map.values()),
+                        pre_cut_coordinate,
+                        current_interval[1],
+                        cut_direction,
                     )
-                    if len(discontinuous_intervals) != max_gap_boxes_num:
-                        cut_coordinates.append(current_interval[1])
-            current_interval = interval
+                    post_blocks = get_blocks_by_direction_interval(
+                        list(block_map.values()),
+                        current_interval[1],
+                        interval[1],
+                        cut_direction,
+                    )
+                    pre_bboxes = np.array([block.bbox for block in pre_blocks])
+                    post_bboxes = np.array([block.bbox for block in post_blocks])
+                    projection_index = 1 if cut_direction == "horizontal" else 0
+                    pre_projection = projection_by_bboxes(pre_bboxes, projection_index)
+                    post_projection = projection_by_bboxes(
+                        post_bboxes, projection_index
+                    )
+                    pre_intervals = find_local_minima_flat_regions(pre_projection)
+                    post_intervals = find_local_minima_flat_regions(post_projection)
+                    pre_gap_boxes = []
+                    if pre_intervals is not None:
+                        for start, end in pre_intervals:
+                            bbox = [0] * 4
+                            bbox[projection_index] = start
+                            bbox[projection_index + 2] = end
+                            pre_gap_boxes.append(bbox)
+                    post_gap_boxes = []
+                    if post_intervals is not None:
+                        for start, end in post_intervals:
+                            bbox = [0] * 4
+                            bbox[projection_index] = start
+                            bbox[projection_index + 2] = end
+                            post_gap_boxes.append(bbox)
+                    max_gap_boxes_num = max(len(pre_gap_boxes), len(post_gap_boxes))
+                    if max_gap_boxes_num > 0:
+                        discontinuous_intervals = calculate_discontinuous_projection(
+                            pre_gap_boxes + post_gap_boxes, direction=region.direction
+                        )
+                        if len(discontinuous_intervals) != max_gap_boxes_num:
+                            pre_cut_coordinate = current_interval[1]
+                            cut_coordinates.append(current_interval[1])
+                current_interval = interval
     cut_list = get_cut_blocks(blocks, cut_direction, cut_coordinates, mask_labels)
     pre_cut_list.extend(cut_list)
     if region.direction == "vertical":
@@ -184,14 +210,14 @@ def pre_process(
 
 
 def update_region_label(
-    block: LayoutParsingBlock,
-    region: LayoutParsingRegion,
+    block: LayoutBlock,
+    region: LayoutRegion,
 ) -> None:
     """
     Update the region label of a block based on its label and match the block with its children.
 
     Args:
-        blocks (List[LayoutParsingBlock]): The list of blocks to process.
+        blocks (List[LayoutBlock]): The list of blocks to process.
         config (Dict[str, Any]): The configuration dictionary containing the necessary information.
         block_idx (int): The index of the current block being processed.
 
@@ -210,17 +236,18 @@ def update_region_label(
     elif block.label in BLOCK_LABEL_MAP["vision_labels"]:
         block.order_label = "vision"
         block.num_of_lines = 1
-        block.direction = region.direction
-        block.update_direction_info()
+        block.update_direction(region.direction)
     elif block.label in BLOCK_LABEL_MAP["footer_labels"]:
         block.order_label = "footer"
     elif block.label in BLOCK_LABEL_MAP["unordered_labels"]:
         block.order_label = "unordered"
+    elif block.label == "region":
+        block.order_label = "region"
     else:
         block.order_label = "normal_text"
 
     # only vision and doc title block can have child block
-    if block.order_label not in ["vision", "doc_title", "paragraph_title"]:
+    if block.order_label not in ["vision", "doc_title", "paragraph_title", "region"]:
         return
 
     # match doc title text block
@@ -232,10 +259,12 @@ def update_region_label(
     # match vision title block and vision footnote block
     elif block.order_label == "vision":
         update_vision_child_blocks(block, region)
+    elif block.order_label == "region":
+        update_region_child_blocks(block, region)
 
 
 def get_layout_structure(
-    blocks: List[LayoutParsingBlock],
+    blocks: List[LayoutBlock],
     region_direction: str,
     region_secondary_direction: str,
 ) -> Tuple[List[Dict[str, any]], bool]:
@@ -263,11 +292,11 @@ def get_layout_structure(
                 continue
 
             bbox_iou = calculate_overlap_ratio(block.bbox, ref_block.bbox)
-            if bbox_iou > 0:
+            if bbox_iou:
                 if ref_block.order_label == "vision":
                     ref_block.order_label = "cross_layout"
                     break
-                if block.order_label == "vision" or block.area < ref_block.area:
+                if bbox_iou > 0.1 and block.area < ref_block.area:
                     block.order_label = "cross_layout"
                     break
 
@@ -320,13 +349,19 @@ def get_layout_structure(
                         and ref_match_projection_iou == 0
                         and secondary_direction_ref_match_projection_overlap_ratio > 0
                     ):
-                        if block.order_label == "vision" or (
+                        if block.order_label in ["vision", "region"] or (
                             ref_block.order_label == "normal_text"
                             and second_ref_block.order_label == "normal_text"
-                            and ref_block.text_line_width
-                            > ref_block.text_line_height * 5
-                            and second_ref_block.text_line_width
-                            > second_ref_block.text_line_height * 5
+                            and ref_block.long_side_length
+                            > ref_block.text_line_height
+                            * XYCUT_SETTINGS.get(
+                                "cross_layout_ref_text_block_words_num_threshold", 8
+                            )
+                            and second_ref_block.long_side_length
+                            > second_ref_block.text_line_height
+                            * XYCUT_SETTINGS.get(
+                                "cross_layout_ref_text_block_words_num_threshold", 8
+                            )
                         ):
                             block.order_label = (
                                 "cross_reference"
@@ -374,20 +409,20 @@ def sort_by_xycut(
 
 
 def match_unsorted_blocks(
-    sorted_blocks: List[LayoutParsingBlock],
-    unsorted_blocks: List[LayoutParsingBlock],
-    region: LayoutParsingRegion,
-) -> List[LayoutParsingBlock]:
+    sorted_blocks: List[LayoutBlock],
+    unsorted_blocks: List[LayoutBlock],
+    region: LayoutRegion,
+) -> List[LayoutBlock]:
     """
     Match special blocks with the sorted blocks based on their region labels.
     Args:
-        sorted_blocks (List[LayoutParsingBlock]): Sorted blocks to be matched.
-        unsorted_blocks (List[LayoutParsingBlock]): Unsorted blocks to be matched.
+        sorted_blocks (List[LayoutBlock]): Sorted blocks to be matched.
+        unsorted_blocks (List[LayoutBlock]): Unsorted blocks to be matched.
         config (Dict): Configuration dictionary containing various parameters.
         median_width (int): Median width value used for calculations.
 
     Returns:
-        List[LayoutParsingBlock]: The updated sorted blocks after matching special blocks.
+        List[LayoutBlock]: The updated sorted blocks after matching special blocks.
     """
     distance_type_map = {
         "cross_layout": weighted_distance_insert,
@@ -398,6 +433,7 @@ def match_unsorted_blocks(
         "cross_reference": reference_insert,
         "unordered": manhattan_insert,
         "other": manhattan_insert,
+        "region": euclidean_insert,
     }
 
     unsorted_blocks = sort_normal_blocks(
@@ -407,17 +443,19 @@ def match_unsorted_blocks(
         region.direction,
     )
     for idx, block in enumerate(unsorted_blocks):
-        order_label = block.order_label
+        order_label = block.order_label if block.label != "region" else "region"
         if idx == 0 and order_label == "doc_title":
             sorted_blocks.insert(0, block)
             continue
-        sorted_blocks = distance_type_map[order_label](block, sorted_blocks, region)
+        sorted_blocks = distance_type_map[order_label](
+            block=block, sorted_blocks=sorted_blocks, region=region
+        )
     return sorted_blocks
 
 
 def xycut_enhanced(
-    region: LayoutParsingRegion,
-) -> LayoutParsingRegion:
+    region: LayoutRegion,
+) -> LayoutRegion:
     """
     xycut_enhance function performs the following steps:
         1. Preprocess the input blocks by extracting headers, footers, and pre-cut blocks.
@@ -428,34 +466,34 @@ def xycut_enhanced(
         6. Return the ordered result list.
 
     Args:
-        blocks (List[LayoutParsingBlock]): Input blocks to be processed.
+        blocks (List[LayoutBlock]): Input blocks to be processed.
 
     Returns:
-        List[LayoutParsingBlock]: Ordered result list after processing.
+        List[LayoutBlock]: Ordered result list after processing.
     """
     if len(region.block_map) == 0:
         return []
 
-    pre_cut_list: List[List[LayoutParsingBlock]] = pre_process(region)
-    final_order_res_list: List[LayoutParsingBlock] = []
+    pre_cut_list: List[List[LayoutBlock]] = pre_process(region)
+    final_order_res_list: List[LayoutBlock] = []
 
-    header_blocks: List[LayoutParsingBlock] = [
+    header_blocks: List[LayoutBlock] = [
         region.block_map[idx] for idx in region.header_block_idxes
     ]
-    unordered_blocks: List[LayoutParsingBlock] = [
+    unordered_blocks: List[LayoutBlock] = [
         region.block_map[idx] for idx in region.unordered_block_idxes
     ]
-    footer_blocks: List[LayoutParsingBlock] = [
+    footer_blocks: List[LayoutBlock] = [
         region.block_map[idx] for idx in region.footer_block_idxes
     ]
 
-    header_blocks: List[LayoutParsingBlock] = sort_normal_blocks(
+    header_blocks: List[LayoutBlock] = sort_normal_blocks(
         header_blocks, region.text_line_height, region.text_line_width, region.direction
     )
-    footer_blocks: List[LayoutParsingBlock] = sort_normal_blocks(
+    footer_blocks: List[LayoutBlock] = sort_normal_blocks(
         footer_blocks, region.text_line_height, region.text_line_width, region.direction
     )
-    unordered_blocks: List[LayoutParsingBlock] = sort_normal_blocks(
+    unordered_blocks: List[LayoutBlock] = sort_normal_blocks(
         unordered_blocks,
         region.text_line_height,
         region.text_line_width,
@@ -463,16 +501,26 @@ def xycut_enhanced(
     )
     final_order_res_list.extend(header_blocks)
 
-    unsorted_blocks: List[LayoutParsingBlock] = []
-    sorted_blocks_by_pre_cuts: List[LayoutParsingBlock] = []
+    unsorted_blocks: List[LayoutBlock] = []
+    sorted_blocks_by_pre_cuts: List[LayoutBlock] = []
     for pre_cut_blocks in pre_cut_list:
-        sorted_blocks: List[LayoutParsingBlock] = []
-        doc_title_blocks: List[LayoutParsingBlock] = []
-        xy_cut_blocks: List[LayoutParsingBlock] = []
+        sorted_blocks: List[LayoutBlock] = []
+        doc_title_blocks: List[LayoutBlock] = []
+        xy_cut_blocks: List[LayoutBlock] = []
 
-        get_layout_structure(
-            pre_cut_blocks, region.direction, region.secondary_direction
-        )
+        if pre_cut_blocks and pre_cut_blocks[0].label == "region":
+            block_bboxes = np.array([block.bbox for block in pre_cut_blocks])
+            discontinuous = calculate_discontinuous_projection(
+                block_bboxes, direction=region.direction
+            )
+            if len(discontinuous) == 1:
+                get_layout_structure(
+                    pre_cut_blocks, region.direction, region.secondary_direction
+                )
+        else:
+            get_layout_structure(
+                pre_cut_blocks, region.direction, region.secondary_direction
+            )
 
         # Get xy cut blocks and add other blocks in special_block_map
         for block in pre_cut_blocks:
@@ -494,8 +542,6 @@ def xycut_enhanced(
             discontinuous = calculate_discontinuous_projection(
                 block_bboxes, direction=region.direction
             )
-            if len(discontinuous) > 1:
-                xy_cut_blocks = [block for block in xy_cut_blocks]
             blocks_to_sort = deepcopy(xy_cut_blocks)
             if region.direction == "vertical":
                 for block in blocks_to_sort:
@@ -526,7 +572,7 @@ def xycut_enhanced(
                     )
                 )
                 blocks_to_sort = shrink_overlapping_boxes(
-                    blocks_to_sort, region.direction
+                    blocks_to_sort, region.secondary_direction
                 )
                 block_bboxes = np.array([block.bbox for block in blocks_to_sort])
                 sorted_indexes = sort_by_xycut(
@@ -536,13 +582,19 @@ def xycut_enhanced(
             sorted_blocks = [
                 region.block_map[blocks_to_sort[i].index] for i in sorted_indexes
             ]
-
         sorted_blocks = match_unsorted_blocks(
             sorted_blocks,
             doc_title_blocks,
             region=region,
         )
 
+        if unsorted_blocks and unsorted_blocks[0].label == "region":
+            sorted_blocks = match_unsorted_blocks(
+                sorted_blocks,
+                unsorted_blocks,
+                region=region,
+            )
+            unsorted_blocks = []
         sorted_blocks_by_pre_cuts.extend(sorted_blocks)
 
     final_sorted_blocks = match_unsorted_blocks(

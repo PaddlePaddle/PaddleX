@@ -5,6 +5,10 @@ The Paddle2ONNX plugin for PaddleX provides the ability to convert PaddlePaddle 
 ## 1. Installation
 
 ```bash
+# Windows users need to use the following command to install the dev version of paddlepaddle
+# python -m pip install --pre paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
+
+# Install Paddle2ONNX plugin
 paddlex --install paddle2onnx
 ```
 

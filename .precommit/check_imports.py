@@ -43,6 +43,7 @@ MOD_TO_DEP = {
     "filetype": "filetype",
     "ftfy": "ftfy",
     "GPUtil": "GPUtil",
+    "huggingface_hub": "huggingface_hub",
     "imagesize": "imagesize",
     "jinja2": "Jinja2",
     "joblib": "joblib",
