@@ -393,6 +393,8 @@ paddlex --pipeline formula_recognition \
         --device gpu:0
 ```
 
+<b>Note: </b>The official models would be download from HuggingFace by default. If can't access to HuggingFace, please set the environment variable `PADDLE_PDX_MODEL_SOURCE="BOS"` to change the model source to BOS. In the future, more model sources will be supported.
+
 The relevant parameter descriptions can be referenced from [2.2 Integration via Python Script](#22-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the results will be printed to the terminal, as shown below:
