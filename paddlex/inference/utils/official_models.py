@@ -473,7 +473,7 @@ class OfficialModelsDict(dict):
 
         if (
             MODEL_SOURCE.lower() == "huggingface"
-            and is_huggingface_accessible
+            and is_huggingface_accessible()
             and key in HUGGINGFACE_MODELS
         ):
             return _download_from_hf()
