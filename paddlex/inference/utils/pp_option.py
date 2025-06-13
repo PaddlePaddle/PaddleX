@@ -23,7 +23,7 @@ from ...utils.device import (
     parse_device,
     set_env_for_device_type,
 )
-from ...utils.flags import USE_PIR_TRT
+from ...utils.flags import DISABLE_MKLDNN_MODEL_BL, DISABLE_TRT_MODEL_BL, USE_PIR_TRT
 from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
 from .trt_blocklist import TRT_BLOCKLIST
@@ -142,13 +142,21 @@ class PaddlePredictorOption(object):
 
         if self._model_name is not None:
             # TRT Blocklist
-            if run_mode.startswith("trt") and self._model_name in TRT_BLOCKLIST:
+            if (
+                not DISABLE_TRT_MODEL_BL
+                and run_mode.startswith("trt")
+                and self._model_name in TRT_BLOCKLIST
+            ):
                 logging.warning(
                     f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
                 )
                 run_mode = "paddle"
             # MKLDNN Blocklist
-            elif run_mode.startswith("mkldnn") and self._model_name in MKLDNN_BLOCKLIST:
+            elif (
+                not DISABLE_MKLDNN_MODEL_BL
+                and run_mode.startswith("mkldnn")
+                and self._model_name in MKLDNN_BLOCKLIST
+            ):
                 logging.warning(
                     f"The model({self._model_name}) is not supported to run in MKLDNN mode! Using `paddle` instead!"
                 )
