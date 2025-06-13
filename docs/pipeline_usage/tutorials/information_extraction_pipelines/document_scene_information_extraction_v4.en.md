@@ -2009,7 +2009,7 @@ int main() {
     httplib::Client client("localhost", 8080);
     std::string imagePath = "./demo.jpg";
     std::string imageData = encode_image(imagePath);
-    json keys = { "合格证编号" };
+    json keys = { "Name" };
 
     json payload_visual = { {"file", imageData}, {"fileType", 1} };
     auto resp1 = client.Post("/chatocr-visual", payload_visual.dump(), "application/json");
@@ -2083,7 +2083,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String API_BASE_URL = "http://localhost:8080";
         String imagePath = "./demo.jpg";
-        String[] keys = {"合格证编号"};
+        String[] keys = {"Name"};
 
         OkHttpClient client = new OkHttpClient();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -2240,7 +2240,7 @@ func sendPostRequest(url string, payload map[string]interface{}) (map[string]int
 func main() {
     apiBase := "http://localhost:8080"
     imagePath := "./demo.jpg"
-    keys := []string{"合格证编号"}
+    keys := []string{"Name"}
 
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
@@ -2322,7 +2322,7 @@ class Program
 {
     static readonly string API_BASE_URL = "http://localhost:8080";
     static readonly string inputFilePath = "./demo.jpg";
-    static readonly string[] keys = { "合格证编号" };
+    static readonly string[] keys = { "Name" };
 
     static async Task Main(string[] args)
     {
@@ -2441,7 +2441,7 @@ const path = require('path');
 
 const API_BASE_URL = 'http://localhost:8080';
 const imagePath = './demo.jpg';
-const keys = ['合格证编号'];
+const keys = ['Name'];
 
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
@@ -2507,7 +2507,7 @@ function encodeImageToBase64(filePath) {
 
 $API_BASE_URL = "http://localhost:8080";
 $image_path = "./demo.jpg";
-$keys = ["合格证编号"];
+$keys = ["Name"];
 
 $image_data = base64_encode(file_get_contents($image_path));
 
