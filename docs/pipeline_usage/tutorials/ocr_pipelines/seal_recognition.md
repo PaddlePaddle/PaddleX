@@ -631,6 +631,8 @@ paddlex --pipeline seal_recognition \
     --save_path ./output
 ```
 
+<b>注：</b>PaddleX 官方模型默认从 HuggingFace 获取，如运行环境访问 HuggingFace 不便，可通过环境变量修改模型源为 BOS：`PADDLE_PDX_MODEL_SOURCE="BOS"`，未来将支持更多主流模型源；
+
 相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
 
 运行后，会将结果打印到终端上，结果如下：
@@ -1523,98 +1525,98 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-	API_URL := "http://localhost:8080/seal-recognition"
-	filePath := "./demo.jpg"
+    API_URL := "http://localhost:8080/seal-recognition"
+    filePath := "./demo.jpg"
 
-	fileBytes, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		fmt.Printf("Error reading file: %v\n", err)
-		return
-	}
-	fileData := base64.StdEncoding.EncodeToString(fileBytes)
+    fileBytes, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        fmt.Printf("Error reading file: %v\n", err)
+        return
+    }
+    fileData := base64.StdEncoding.EncodeToString(fileBytes)
 
-	payload := map[string]interface{}{
-		"file":     fileData,
-		"fileType": 1,
-	}
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Printf("Error marshaling payload: %v\n", err)
-		return
-	}
+    payload := map[string]interface{}{
+        "file":     fileData,
+        "fileType": 1,
+    }
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Printf("Error marshaling payload: %v\n", err)
+        return
+    }
 
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		fmt.Printf("Error creating request: %v\n", err)
-		return
-	}
-	req.Header.Set("Content-Type", "application/json")
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Printf("Error creating request: %v\n", err)
+        return
+    }
+    req.Header.Set("Content-Type", "application/json")
 
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Printf("Error sending request: %v\n", err)
-		return
-	}
-	defer resp.Body.Close()
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Printf("Error sending request: %v\n", err)
+        return
+    }
+    defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		fmt.Printf("Unexpected status code: %d\n", resp.StatusCode)
-		return
-	}
+    if resp.StatusCode != http.StatusOK {
+        fmt.Printf("Unexpected status code: %d\n", resp.StatusCode)
+        return
+    }
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("Error reading response body: %v\n", err)
-		return
-	}
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        fmt.Printf("Error reading response body: %v\n", err)
+        return
+    }
 
-	type SealResult struct {
-		PrunedResult map[string]interface{}   `json:"prunedResult"`
-		OutputImages map[string]string        `json:"outputImages"`
-		InputImage   *string                  `json:"inputImage"`
-	}
+    type SealResult struct {
+        PrunedResult map[string]interface{}   `json:"prunedResult"`
+        OutputImages map[string]string        `json:"outputImages"`
+        InputImage   *string                  `json:"inputImage"`
+    }
 
-	type Response struct {
-		Result struct {
-			SealRecResults []SealResult  `json:"sealRecResults"`
-			DataInfo       interface{}   `json:"dataInfo"`
-		} `json:"result"`
-	}
+    type Response struct {
+        Result struct {
+            SealRecResults []SealResult  `json:"sealRecResults"`
+            DataInfo       interface{}   `json:"dataInfo"`
+        } `json:"result"`
+    }
 
-	var respData Response
-	if err := json.Unmarshal(body, &respData); err != nil {
-		fmt.Printf("Error unmarshaling response: %v\n", err)
-		return
-	}
+    var respData Response
+    if err := json.Unmarshal(body, &respData); err != nil {
+        fmt.Printf("Error unmarshaling response: %v\n", err)
+        return
+    }
 
-	for i, res := range respData.Result.SealRecResults {
-		fmt.Printf("Pruned Result %d: %+v\n", i, res.PrunedResult)
+    for i, res := range respData.Result.SealRecResults {
+        fmt.Printf("Pruned Result %d: %+v\n", i, res.PrunedResult)
 
-		for name, imgBase64 := range res.OutputImages {
-			imgBytes, err := base64.StdEncoding.DecodeString(imgBase64)
-			if err != nil {
-				fmt.Printf("Error decoding image %s: %v\n", name, err)
-				continue
-			}
+        for name, imgBase64 := range res.OutputImages {
+            imgBytes, err := base64.StdEncoding.DecodeString(imgBase64)
+            if err != nil {
+                fmt.Printf("Error decoding image %s: %v\n", name, err)
+                continue
+            }
 
-			filename := fmt.Sprintf("%s_%d.jpg", name, i)
-			if err := ioutil.WriteFile(filename, imgBytes, 0644); err != nil {
-				fmt.Printf("Error saving image %s: %v\n", filename, err)
-				continue
-			}
-			fmt.Printf("Output image saved at %s\n", filename)
-		}
-	}
+            filename := fmt.Sprintf("%s_%d.jpg", name, i)
+            if err := ioutil.WriteFile(filename, imgBytes, 0644); err != nil {
+                fmt.Printf("Error saving image %s: %v\n", filename, err)
+                continue
+            }
+            fmt.Printf("Output image saved at %s\n", filename)
+        }
+    }
 }
 </code></pre></details>
 

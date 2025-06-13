@@ -93,6 +93,8 @@ for res in output:
     res.save_to_json("./output/res.json")
 ```
 
+<b>注：</b>PaddleX 官方模型默认从 HuggingFace 获取，如运行环境访问 HuggingFace 不便，可通过环境变量修改模型源为 BOS：`PADDLE_PDX_MODEL_SOURCE="BOS"`，未来将支持更多主流模型源；
+
 运行后，得到的结果为：
 ```bash
 {'res': {'input_path': 'test_imgs/img_rot180_demo.jpg', 'page_index': None, 'class_ids': array([2], dtype=int32), 'scores': array([0.88164], dtype=float32), 'label_names': ['180']}}
