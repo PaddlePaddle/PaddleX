@@ -3922,12 +3922,12 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/edge_deploy.html" class="md-nav__link">
+      <a href="../pipeline_deploy/on_device_deployment.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Edge Deployment
+    On-Device Deployment
     
   </span>
   
@@ -5766,13 +5766,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-edge-deployment-example" class="md-nav__link">
+  <a href="#3-on-device-deployment-example" class="md-nav__link">
     <span class="md-ellipsis">
-      3 Edge Deployment Example
+      3 On-Device Deployment Example
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3 Edge Deployment Example">
+    <nav class="md-nav" aria-label="3 On-Device Deployment Example">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6036,13 +6036,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-edge-deployment-example" class="md-nav__link">
+  <a href="#3-on-device-deployment-example" class="md-nav__link">
     <span class="md-ellipsis">
-      3 Edge Deployment Example
+      3 On-Device Deployment Example
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3 Edge Deployment Example">
+    <nav class="md-nav" aria-label="3 On-Device Deployment Example">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6115,7 +6115,7 @@ You're not viewing the latest version.
 <ul>
 <li>High-Performance Inference: In actual production environments, many applications have stringent performance standards for deployment strategies, especially in terms of response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, please refer to the <a href="../pipeline_deploy/high_performance_inference.html">PaddleX High-Performance Inference Guide</a>.</li>
 <li>Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost serving deployment in pipelines. For detailed serving deployment procedures, please refer to the <a href="../pipeline_deploy/serving.html">PaddleX Serving Deployment Guide</a>.</li>
-<li>Edge Deployment: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the <a href="../pipeline_deploy/edge_deploy.html">PaddleX Edge Deployment Guide</a>.</li>
+<li>On-Device Deployment: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the <a href="../pipeline_deploy/on_device_deployment.html">PaddleX On-Device Deployment Guide</a>.</li>
 </ul>
 <p>This tutorial will introduce the three deployment methods of PaddleX through three practical application examples.</p>
 <h2 id="1-high-performance-inference-example">1 High-Performance Inference Example<a class="headerlink" href="#1-high-performance-inference-example" title="Permanent link">&para;</a></h2>
@@ -6388,7 +6388,7 @@ Please note: Each serial number can only be bound to a unique device fingerprint
 </span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>python<span class="w"> </span>fast_test.py
 </span></code></pre></div>
 <p>The operations for other pipelines are similar to the above two. For more details, refer to the pipeline usage tutorials.</p>
-<h2 id="3-edge-deployment-example">3 Edge Deployment Example<a class="headerlink" href="#3-edge-deployment-example" title="Permanent link">&para;</a></h2>
+<h2 id="3-on-device-deployment-example">3 On-Device Deployment Example<a class="headerlink" href="#3-on-device-deployment-example" title="Permanent link">&para;</a></h2>
 <h3 id="31-environment-preparation">3.1 Environment Preparation<a class="headerlink" href="#31-environment-preparation" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -6527,7 +6527,7 @@ Please note: Each serial number can only be bound to a unique device fingerprint
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2025 08:44:15 UTC">June 13, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2025 08:22:20 UTC">June 13, 2025</span>
   </span>
 
     
@@ -6537,7 +6537,7 @@ Please note: Each serial number can only be bound to a unique device fingerprint
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2025 08:44:15 UTC">June 13, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2025 08:22:20 UTC">June 13, 2025</span>
   </span>
 
     
@@ -6552,7 +6552,7 @@ Please note: Each serial number can only be bound to a unique device fingerprint
     </span>
     <nav>
       
-        <a href="mailto:140788363+sam-gsj@users.noreply.github.com">guoshengjian</a>
+        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
     </nav>
   </span>
 

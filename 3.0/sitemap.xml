@@ -512,18 +512,18 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0en/other_devices_support/paddlepaddle_install_XPU.html"/>
     </url>
     <url>
-        <loc>https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/edge_deploy.html</loc>
-        <lastmod>2025-06-13</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/edge_deploy.html"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0en/pipeline_deploy/edge_deploy.html"/>
-    </url>
-    <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/high_performance_inference.html</loc>
         <lastmod>2025-06-13</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/high_performance_inference.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0en/pipeline_deploy/high_performance_inference.html"/>
+    </url>
+    <url>
+        <loc>https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/on_device_deployment.html</loc>
+        <lastmod>2025-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/on_device_deployment.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0en/pipeline_deploy/on_device_deployment.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0/pipeline_deploy/paddle2onnx.html</loc>
@@ -1555,18 +1555,18 @@
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0other_devices_support/paddlepaddle_install_XPU.html"/>
     </url>
     <url>
-        <loc>https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/edge_deploy.html</loc>
-        <lastmod>2025-06-13</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/edge_deploy.html"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0pipeline_deploy/edge_deploy.html"/>
-    </url>
-    <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/high_performance_inference.html</loc>
         <lastmod>2025-06-13</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/high_performance_inference.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0pipeline_deploy/high_performance_inference.html"/>
+    </url>
+    <url>
+        <loc>https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/on_device_deployment.html</loc>
+        <lastmod>2025-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/on_device_deployment.html"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0pipeline_deploy/on_device_deployment.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0/en/pipeline_deploy/paddle2onnx.html</loc>
