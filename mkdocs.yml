@@ -185,7 +185,7 @@ plugins:
             模型产线部署: Pipeline Deploy
             高性能推理: High Performance Inference
             服务化部署: Serving
-            端侧部署: Edge Deployment
+            端侧部署: On-Device Deployment
             获取 ONNX 模型: Obtaining ONNX Models
             多硬件使用: Multi-Device Usage
             多硬件使用指南: Multi-Device Usage Guide
@@ -424,7 +424,7 @@ nav:
   - 模型产线部署:
        - 高性能推理: pipeline_deploy/high_performance_inference.md
        - 服务化部署: pipeline_deploy/serving.md
-       - 端侧部署: pipeline_deploy/edge_deploy.md
+       - 端侧部署: pipeline_deploy/on_device_deployment.md
        - 获取 ONNX 模型: pipeline_deploy/paddle2onnx.md
   - 多硬件使用:
        - 多硬件使用指南: other_devices_support/multi_devices_use_guide.md

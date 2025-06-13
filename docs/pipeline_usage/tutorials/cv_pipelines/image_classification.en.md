@@ -1703,7 +1703,7 @@ print_r($result["categories"]);
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method that places computing and data processing capabilities directly on the user's device, allowing the device to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+📱 <b>On-Device Deployment</b>: Edge deployment is a method that places computing and data processing capabilities directly on the user's device, allowing the device to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
 You can choose the appropriate deployment method according to your needs to integrate the model pipeline into subsequent AI applications.
 
 ## 4. Custom Development

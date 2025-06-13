@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# PaddleX Edge Deployment Demo Usage Guide
+# PaddleX On-Device Deployment Demo Usage Guide
 
-- [PaddleX Edge Deployment Demo Usage Guide](#paddlex-edge-deployment-demo-usage-guide)
+- [PaddleX On-Device Deployment Demo Usage Guide](#paddlex-on-device-deployment-demo-usage-guide)
   - [Installation Process and Usage](#installation-process-and-usage)
     - [Environment Preparation](#environment-preparation)
     - [Material Preparation](#material-preparation)
