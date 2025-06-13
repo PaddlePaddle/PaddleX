@@ -508,7 +508,7 @@ def shrink_supplement_region_bbox(
         (x2 - x2_prime) / image_width,
         (y2 - y2_prime) / image_height,
     ]
-    edge_distance_list_tmp = edge_distance_list[:]
+    edge_distance_list_tmp = deepcopy(edge_distance_list)
     min_distance = min(edge_distance_list)
     src_index = index_conversion_map[edge_distance_list.index(min_distance)]
     if len(block_idxes_set) == 0:
@@ -561,9 +561,7 @@ def shrink_supplement_region_bbox(
             supplement_region_bbox = calculate_minimum_enclosing_bbox(matched_bboxes)
             break
         else:
-            edge_distance_list_tmp = [
-                x for x in edge_distance_list_tmp if x != min_distance
-            ]
+            edge_distance_list_tmp.remove(min_distance)
             min_distance = min(edge_distance_list_tmp)
             src_index = index_conversion_map[edge_distance_list.index(min_distance)]
     return supplement_region_bbox, iner_block_idxes

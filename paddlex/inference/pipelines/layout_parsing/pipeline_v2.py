@@ -423,9 +423,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
                         else:
                             # the other matched ocr be appended to the overall ocr result
                             overall_ocr_res["dt_polys"].append(crop_img_dt_poly)
-                            overall_ocr_res["rec_boxes"] = np.vstack(
-                                (overall_ocr_res["rec_boxes"], crop_box)
-                            )
+                            if len(overall_ocr_res["rec_boxes"]) == 0:
+                                overall_ocr_res["rec_boxes"] = np.array([crop_box])
+                            else:
+                                overall_ocr_res["rec_boxes"] = np.vstack(
+                                    (overall_ocr_res["rec_boxes"], crop_box)
+                                )
                             overall_ocr_res["rec_polys"].append(crop_img_dt_poly)
                             overall_ocr_res["rec_scores"].append(crop_img_rec_score)
                             overall_ocr_res["rec_texts"].append(crop_img_rec_text)
@@ -460,9 +463,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     else (self.general_ocr_pipeline.text_rec_score_thresh)
                 )
                 if crop_img_rec_score >= text_rec_score_thresh:
-                    overall_ocr_res["rec_boxes"] = np.vstack(
-                        (overall_ocr_res["rec_boxes"], crop_box)
-                    )
+                    if len(overall_ocr_res["rec_boxes"]) == 0:
+                        overall_ocr_res["rec_boxes"] = np.array([crop_box])
+                    else:
+                        overall_ocr_res["rec_boxes"] = np.vstack(
+                            (overall_ocr_res["rec_boxes"], crop_box)
+                        )
                     overall_ocr_res["rec_polys"].append(crop_img_dt_poly)
                     overall_ocr_res["rec_scores"].append(crop_img_rec_score)
                     overall_ocr_res["rec_texts"].append(crop_img_rec_text)

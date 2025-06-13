@@ -396,7 +396,7 @@ class LayoutBlock(object):
         self.seg_end_coordinate = float("-inf")
         self.width = bbox[2] - bbox[0]
         self.height = bbox[3] - bbox[1]
-        self.area = self.width * self.height
+        self.area = float(self.width) * float(self.height)
         self.num_of_lines = 1
         self.image = None
         self.index = None
@@ -827,7 +827,7 @@ class LayoutRegion(LayoutBlock):
                 caculate_euclidean_dist((block.bbox[2], block.bbox[1]), ref_point)
                 for block in blocks
             ]
-        self.euclidean_distance = min(block_distance)
+        self.euclidean_distance = min(block_distance) if len(block_distance) > 0 else 0
 
     def update_direction(self, direction=None):
         """
