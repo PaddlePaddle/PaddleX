@@ -566,7 +566,7 @@ python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/pac
 * **安装PaddleX**
 
 ```bash
-pip install "paddlex[base]==3.0.0"
+pip install "paddlex[base]"
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)

@@ -87,7 +87,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ### Installing PaddleX
 
 ```bash
-pip install paddlex[base]==3.0.0
+pip install "paddlex[base]"
 ```
 
 > ❗ For more installation methods, please refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
