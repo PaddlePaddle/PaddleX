@@ -798,7 +798,7 @@ class UniMERNetDecode(object):
             for i in reversed(range(len(toks[b]))):
                 if toks[b][i] is None:
                     toks[b][i] = ""
-                toks[b][i] = toks[b][i].replace("臓", " ").strip()
+                toks[b][i] = toks[b][i].replace("Ġ", " ").strip()
                 if toks[b][i] in (
                     [
                         self.tokenizer.bos_token,
