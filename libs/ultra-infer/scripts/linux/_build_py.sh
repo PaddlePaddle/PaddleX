@@ -21,19 +21,19 @@ export TZ='Asia/Shanghai'
 
 cd /workspace
 
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.cloud.tencent.com/repo/centos7_base.repo
+if [ "$CUDA_VERSION" = "11.8" ]; then
+    wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.cloud.tencent.com/repo/centos7_base.repo
+fi
 yum clean all
 yum makecache
 
-yum --disablerepo=epel -y update ca-certificates
+yum -y update ca-certificates
 yum install -y wget bzip2
 yum install -y epel-release
 yum install -y patchelf rapidjson-devel
 
 PYTHON_DIR="/opt/_internal/cpython-${PYTHON_VERSION}"
 if [ -d "$PYTHON_DIR" ]; then
-    ln -sf "${PYTHON_DIR}/bin/python${PYTHON_VERSION}" /usr/bin/python
-    ln -sf "${PYTHON_DIR}/bin/pip${PYTHON_VERSION}" /usr/bin/pip
     export LD_LIBRARY_PATH="${PYTHON_DIR}/lib:${LD_LIBRARY_PATH}"
     export PATH="${PYTHON_DIR}/bin:${PATH}"
 else
@@ -45,13 +45,23 @@ python -m pip install numpy pandas
 
 cd /workspace/ultra-infer
 
-if [ "$ENABLE_TRT_BACKEND" = "ON" ] && [ "$TRT_DIRECTORY" = "Default" ]; then
+if [[ "$CUDA_VERSION" = "12.6" || "$CUDA_VERSION" = "12.9" ]]; then
+    CC=/opt/rh/gcc-toolset-11/root/usr/bin/gcc
+    CXX=/opt/rh/gcc-toolset-11/root/usr/bin/g++
+    ENABLE_TRT_BACKEND=OFF
+    TRT_DIRECTORY=""
+else
     TRT_VERSION='8.6.1.6'
     CUDA_VERSION='11.8'
-    rm -rf "TensorRT-${TRT_VERSION}" "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.tar.gz"
-    http_proxy= https_proxy= wget "https://fastdeploy.bj.bcebos.com/resource/TensorRT/TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.tar.gz"
-    tar -xzvf "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.tar.gz"
-    TRT_DIRECTORY="/workspace/ultra-infer/TensorRT-${TRT_VERSION}"
+    CUDNN_VERSION='8.6'
+    if [ "$ENABLE_TRT_BACKEND" = "ON" ] && [ "$TRT_DIRECTORY" = "Default" ]; then
+        rm -rf "TensorRT-${TRT_VERSION}" "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.tar.gz"
+        http_proxy= https_proxy= wget "https://fastdeploy.bj.bcebos.com/resource/TensorRT/TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.tar.gz"
+        tar -xzvf "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.tar.gz"
+        TRT_DIRECTORY="/workspace/ultra-infer/TensorRT-${TRT_VERSION}"
+    fi
+    CC=/usr/local/gcc-8.2/bin/gcc
+    CXX=/usr/local/gcc-8.2/bin/g++
 fi
 
 export WITH_GPU="${WITH_GPU}"
@@ -63,8 +73,8 @@ export ENABLE_BENCHMARK="${ENABLE_BENCHMARK}"
 export ENABLE_PADDLE_BACKEND=OFF
 export ENABLE_VISION=OFF
 export ENABLE_TEXT=OFF
-export CC=/usr/local/gcc-8.2/bin/gcc
-export CXX=/usr/local/gcc-8.2/bin/g++
+export CC=$CC
+export CXX=$CXX
 
 cd /workspace/ultra-infer/python
 python -m pip install wheel

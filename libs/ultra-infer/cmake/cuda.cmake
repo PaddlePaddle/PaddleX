@@ -14,6 +14,7 @@ else()
   set(fd_known_gpu_archs "35 50 52 60 61 70 75 80 86")
   set(fd_known_gpu_archs10 "35 50 52 60 61 70 75")
   set(fd_known_gpu_archs11 "50 60 61 70 75 80")
+  set(fd_known_gpu_archs12 "50 60 61 70 75 80")
 endif()
 
 ######################################################################################
@@ -155,6 +156,8 @@ function(select_nvcc_arch_flags out_variable)
       set(cuda_arch_bin "80")
     elseif(${CMAKE_CUDA_COMPILER_VERSION} LESS 12.0) # CUDA 11.1+
       set(cuda_arch_bin "80 86")
+    elseif(${CMAKE_CUDA_COMPILER_VERSION} LESS 13.0) # CUDA 12.1+
+      set(cuda_arch_bin "80 86")
     endif()
   elseif(${CUDA_ARCH_NAME} STREQUAL "All")
     set(cuda_arch_bin ${fd_known_gpu_archs})
@@ -232,6 +235,11 @@ elseif(${CMAKE_CUDA_COMPILER_VERSION} LESS 11.2) # CUDA 11.0/11.1
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Wno-deprecated-gpu-targets")
 elseif(${CMAKE_CUDA_COMPILER_VERSION} LESS 12.0) # CUDA 11.2+
   set(fd_known_gpu_archs "${fd_known_gpu_archs11} 86")
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D_MWAITXINTRIN_H_INCLUDED")
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D__STRICT_ANSI__")
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Wno-deprecated-gpu-targets")
+elseif(${CMAKE_CUDA_COMPILER_VERSION} LESS 13.0) # CUDA 12.x
+  set(fd_known_gpu_archs "${fd_known_gpu_archs12} 86")
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D_MWAITXINTRIN_H_INCLUDED")
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D__STRICT_ANSI__")
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Wno-deprecated-gpu-targets")
