@@ -14,7 +14,6 @@
 
 import argparse
 import ast
-import importlib.metadata
 import importlib.resources
 import os
 import shutil
@@ -29,8 +28,10 @@ from .inference.utils.model_paths import get_model_paths
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.deps import (
+    get_dep_version,
     get_paddle2onnx_spec,
     get_serving_dep_specs,
+    is_paddle2onnx_plugin_available,
     require_paddle2onnx_plugin,
 )
 from .utils.env import get_paddle_cuda_version
@@ -259,12 +260,14 @@ def install(args):
             package = "ultra-infer-npu-python"
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            try:
-                version = importlib.metadata.version(package)
+            version = get_dep_version(package)
+            if version is None:
+                install_packages([package], pip_install_opts=["--find-links", str(f)])
+            else:
                 response = input(
-                    f"The package '{package}' (version {version}) is already installed. Do you want to reinstall it? (y/n): "
+                    f"The plugin '{package}' (version {version}) is already installed. Do you want to reinstall it? (y/n): "
                 )
-                if response.lower() == "y":
+                if response.lower() in ["y", "yes"]:
                     install_packages(
                         [package],
                         pip_install_opts=[
@@ -276,8 +279,11 @@ def install(args):
                     )
                 else:
                     return
-            except importlib.metadata.PackageNotFoundError:
-                install_packages([package], pip_install_opts=["--find-links", str(f)])
+
+        if not is_paddle2onnx_plugin_available():
+            logging.info(
+                "The Paddle2ONNX plugin is not available. It is recommended to run `paddlex --install paddle2onnx` to install the Paddle2ONNX plugin to use the full functionality of high-performance inference."
+            )
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
