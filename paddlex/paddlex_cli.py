@@ -14,6 +14,7 @@
 
 import argparse
 import ast
+import importlib.metadata
 import importlib.resources
 import os
 import shutil
@@ -258,7 +259,25 @@ def install(args):
             package = "ultra-infer-npu-python"
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            install_packages([package], pip_install_opts=["--find-links", str(f)])
+            try:
+                version = importlib.metadata.version(package)
+                response = input(
+                    f"The package '{package}' (version {version}) is already installed. Do you want to reinstall it? (y/n): "
+                )
+                if response.lower() == "y":
+                    install_packages(
+                        [package],
+                        pip_install_opts=[
+                            "--force-reinstall",
+                            "--no-deps",
+                            "--find-links",
+                            str(f),
+                        ],
+                    )
+                else:
+                    return
+            except importlib.metadata.PackageNotFoundError:
+                install_packages([package], pip_install_opts=["--find-links", str(f)])
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
