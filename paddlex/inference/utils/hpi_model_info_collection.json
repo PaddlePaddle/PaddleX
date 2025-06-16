@@ -1992,7 +1992,6 @@
       "onnxruntime"
     ],
     "PP-OCRv4_server_seal_det": [
-      "paddle_tensorrt",
       "tensorrt",
       "onnxruntime",
       "paddle"
@@ -2094,7 +2093,6 @@
       "onnxruntime"
     ],
     "PP-OCRv4_server_det": [
-      "paddle_tensorrt_fp16",
       "tensorrt",
       "onnxruntime",
       "paddle"
