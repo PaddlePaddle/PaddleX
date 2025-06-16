@@ -337,9 +337,11 @@ class BasePredictor(
             pp_option = PaddlePredictorOption(model_name=self.model_name)
         elif pp_option.model_name is None:
             pp_option.model_name = self.model_name
+            pp_option.reset_run_mode_by_default(model_name=self.model_name)
         if device_info:
             pp_option.device_type = device_info[0]
             pp_option.device_id = device_info[1]
+            pp_option.reset_run_mode_by_default(device_type=device_info[0])
         hpi_info = self.get_hpi_info()
         if hpi_info is not None:
             hpi_info = hpi_info.model_dump(exclude_unset=True)
