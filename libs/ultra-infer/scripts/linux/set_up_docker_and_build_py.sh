@@ -24,13 +24,7 @@ if [ "$WITH_GPU" = "ON" ]; then
         DOCKER_IMAGE="ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle_manylinux_devel:cuda12.6-cudnn9.5-trt10.5-gcc11"
         CMAKE_CXX_COMPILER="/opt/rh/gcc-toolset-11/root/usr/bin/g++"
     elif [ "$CUDA_VERSION" = "11.8" ]; then
-DOCKER_IMAGE="ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle_manylinux_devel:cuda11.8-cudnn8.6-trt8.5-gcc8.2"
-DOCKER_IMAGE="ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle_manylinux_devel:cuda11.8-cudnn8.6-trt8.5-gcc8.2"
-
-# Set variables
         DOCKER_IMAGE="ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle_manylinux_devel:cuda11.8-cudnn8.6-trt8.5-gcc8.2"
-
-# Set variables
         CMAKE_CXX_COMPILER="/usr/local/gcc-8.2/bin/g++"
     else
         echo "CUDA_VERSION ${CUDA_VERSION} is not supported."
