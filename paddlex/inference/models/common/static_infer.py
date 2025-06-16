@@ -687,6 +687,8 @@ class HPInfer(StaticInfer):
         return PaddleInfer(self._model_dir, self._model_file_prefix, option=pp_option)
 
     def _build_ui_runtime(self, backend, backend_config, ui_option=None):
+        # TODO: Validate the compatibility of backends with device types
+
         from ultra_infer import ModelFormat, Runtime, RuntimeOption
 
         if ui_option is None:

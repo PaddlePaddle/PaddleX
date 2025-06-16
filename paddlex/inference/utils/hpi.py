@@ -132,13 +132,25 @@ def suggest_inference_backend_and_config(
     available_backends = []
     if "paddle" in model_paths:
         available_backends.append("paddle")
-    if is_built_with_openvino() and is_onnx_model_available:
+    if (
+        is_built_with_openvino()
+        and is_onnx_model_available
+        and hpi_config.device_type == "cpu"
+    ):
         available_backends.append("openvino")
-    if is_built_with_ort() and is_onnx_model_available:
+    if (
+        is_built_with_ort()
+        and is_onnx_model_available
+        and hpi_config.device_type in ("cpu", "gpu")
+    ):
         available_backends.append("onnxruntime")
-    if is_built_with_trt() and is_onnx_model_available:
+    if (
+        is_built_with_trt()
+        and is_onnx_model_available
+        and hpi_config.device_type == "gpu"
+    ):
         available_backends.append("tensorrt")
-    if is_built_with_om() and "om" in model_paths:
+    if is_built_with_om() and "om" in model_paths and hpi_config.device_type == "npu":
         available_backends.append("om")
 
     if not available_backends:
@@ -188,20 +200,21 @@ def suggest_inference_backend_and_config(
         hpi_config.pdx_model_name
     ].copy()
 
-    if not is_mkldnn_available():
-        if "paddle_mkldnn" in supported_pseudo_backends:
-            supported_pseudo_backends.remove("paddle_mkldnn")
+    if not (is_mkldnn_available() and hpi_config.device_type == "cpu"):
+        for pb in supported_pseudo_backends[:]:
+            if pb.startswith("paddle_mkldnn"):
+                supported_pseudo_backends.remove(pb)
 
     # XXX
     if not (
         USE_PIR_TRT
         and importlib.util.find_spec("tensorrt")
         and ctypes.util.find_library("nvinfer")
+        and hpi_config.device_type == "gpu"
     ):
-        if "paddle_tensorrt" in supported_pseudo_backends:
-            supported_pseudo_backends.remove("paddle_tensorrt")
-        if "paddle_tensorrt_fp16" in supported_pseudo_backends:
-            supported_pseudo_backends.remove("paddle_tensorrt_fp16")
+        for pb in supported_pseudo_backends[:]:
+            if pb.startswith("paddle_tensorrt"):
+                supported_pseudo_backends.remove(pb)
 
     supported_backends = []
     backend_to_pseudo_backends = defaultdict(list)
@@ -227,12 +240,27 @@ def suggest_inference_backend_and_config(
                 f"{repr(hpi_config.backend)} is not a supported inference backend.",
             )
         suggested_backend = hpi_config.backend
-        pseudo_backends = backend_to_pseudo_backends[suggested_backend]
-        pseudo_backend = pseudo_backends[0]
     else:
         # Prefer the first one.
         suggested_backend = supported_backends[0]
-        pseudo_backend = supported_pseudo_backends[0]
+
+    pseudo_backends = backend_to_pseudo_backends[suggested_backend]
+
+    if hpi_config.backend_config is not None:
+        requested_base_pseudo_backend = None
+        if suggested_backend == "paddle":
+            if "run_mode" in hpi_config.backend_config:
+                if hpi_config.backend_config["run_mode"].startswith("mkldnn"):
+                    requested_base_pseudo_backend = "paddle_mkldnn"
+                elif hpi_config.backend_config["run_mode"].startswith("trt"):
+                    requested_base_pseudo_backend = "paddle_tensorrt"
+        if requested_base_pseudo_backend:
+            for pb in pseudo_backends:
+                if pb.startswith(requested_base_pseudo_backend):
+                    break
+            else:
+                return None, "Unsupported backend configuration."
+    pseudo_backend = pseudo_backends[0]
 
     suggested_backend_config = {}
     if suggested_backend == "paddle":
