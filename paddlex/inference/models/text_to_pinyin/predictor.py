@@ -79,10 +79,8 @@ class TextToPinyinPredictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-
-        result = self.model(batch_data[0])[0]
-
+        res = self.model(batch_data[0])
+        phones, phone_ids = self.model(batch_data[0])
         return {
-            "input_path": batch_data,
-            "result": [result],
+            "result": [{"phones": phones, "phone_ids": phone_ids}]
         }
