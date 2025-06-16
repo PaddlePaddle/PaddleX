@@ -420,7 +420,7 @@ SubModules:
 
 </details>
 
-**通用图像分类产线修改动态形状配置：**
+**通用图像分类产线修改 TensorRT 动态形状配置：**
 
 <details><summary>👉 修改产线配置文件方式（点击展开）</summary>
 

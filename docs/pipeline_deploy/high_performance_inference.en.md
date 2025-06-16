@@ -419,7 +419,7 @@ SubModules:
 
 </details>
 
-**For the general image classification pipeline, modify dynamic shape configuration:**
+**For the general image classification pipeline, modify TensorRT dynamic shape configuration:**
 
 <details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
 
@@ -439,7 +439,7 @@ SubModules:
 
 </details>
 
-**For the image classification module, modify dynamic shape configuration:**
+**For the image classification module, modify TensorRT dynamic shape configuration:**
 
 <details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
 
