@@ -49,9 +49,6 @@ def get_predictor(
     if paddlespeech.utils.satisfy_paddle_version('3.0.0-beta'):
         model_name = str(model_file).rsplit('.', 1)[0]
         assert model_name == str(params_file).split('.')[0], "The prefix of model_file and params_file should be same."
-        print(model_dir,model_name)
-        print(type(model_dir))
-        print(type(model_name))
         config = inference.Config(model_dir, model_name)
     else:
         config = inference.Config(

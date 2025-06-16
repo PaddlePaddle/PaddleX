@@ -81,7 +81,6 @@ class Fastspeech2Predictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-        print(batch_data)
         from .processors import get_am_output
         phone = batch_data
         mel = get_am_output(
@@ -93,7 +92,6 @@ class Fastspeech2Predictor(BasePredictor):
                 spk_id=self.config['Global']['speaker_id'], 
         )
         result = mel
-        print(result)
         return {
             "result": mel,
         }

@@ -37,7 +37,6 @@ class PwganPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        print(self.config)
         self.model = self._build()
         self.model_dir = "/home/zhangjinghong/PaddleSpeech/examples/csmsc/tts3/fastspeech2_nosil_baker_ckpt_0.4/inference"
     def _build_batch_sampler(self):
@@ -88,7 +87,6 @@ class PwganPredictor(BasePredictor):
         mel = batch_data[0]
         wav = get_voc_output(voc_predictor=self.model, input=mel)
         result = np.array(wav).reshape(1,-1)
-        print(result.shape)
         return {
             "result": result,
         }
