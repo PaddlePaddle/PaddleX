@@ -6197,7 +6197,7 @@ You're not viewing the latest version.
 <p>高稳定性服务化部署 SDK 的 <code>server/pipeline_config.yaml</code> 文件为产线配置文件。用户可以修改该文件以设置要使用的模型目录等。</p>
 <p>此外，PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server 打造，支持用户修改 Triton Inference Server 的配置文件。</p>
 <p>在高稳定性服务化部署 SDK 的 <code>server/model_repo/{端点名称}</code> 目录中，可以找到一个或多个 <code>config*.pbtxt</code> 文件。如果目录中存在 <code>config_{设备类型}.pbtxt</code> 文件，请修改期望使用的设备类型对应的配置文件；否则，请修改 <code>config.pbtxt</code>。</p>
-<p>一个常见的需求是调整执行实例数量，以进行水平扩展。为了实现这一点，需要修改配置文件中的 <code>instance_group</code> 配置，使用 <code>count</code> 指定每一设备上放置的实例数量，使用 <code>kind</code> 指定设备类型，使用 <code>gpus</code> 指定 GPU 编号。示例如下：</p>
+<p>一个常见的需求是调整执行实例数量。为了实现这一点，需要修改配置文件中的 <code>instance_group</code> 配置，使用 <code>count</code> 指定每一设备上放置的实例数量，使用 <code>kind</code> 指定设备类型，使用 <code>gpus</code> 指定 GPU 编号。示例如下：</p>
 <ul>
 <li>
 <p>在 GPU 0 上放置 4 个实例：</p>
@@ -6300,7 +6300,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月18日 05:42:23 UTC">2025年6月18日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月18日 16:28:18 UTC">2025年6月18日</span>
   </span>
 
     
@@ -6310,7 +6310,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月18日 05:42:23 UTC">2025年6月18日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年6月18日 16:28:18 UTC">2025年6月18日</span>
   </span>
 
     
