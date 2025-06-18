@@ -266,7 +266,7 @@ In addition, the PaddleX high-stability serving solution is built on NVIDIA Trit
 
 In the `server/model_repo/{endpoint name}` directory of the high-stability serving SDK, you can find one or more `config*.pbtxt` files. If a `config_{device type}.pbtxt` file exists in the directory, please modify the configuration file corresponding to the desired device type. Otherwise, please modify `config.pbtxt`.
 
-A common requirement is to adjust the number of execution instances for horizontal scaling. To achieve this, you need to modify the `instance_group` setting in the configuration file, using `count` to specify the number of instances placed on each device, `kind` to specify the device type, and `gpus` to specify the GPU IDs. An example is as follows:
+A common requirement is to adjust the number of execution instances. To achieve this, you need to modify the `instance_group` setting in the configuration file, using `count` to specify the number of instances placed on each device, `kind` to specify the device type, and `gpus` to specify the GPU IDs. An example is as follows:
 
 - Place 4 instances on GPU 0:
 
