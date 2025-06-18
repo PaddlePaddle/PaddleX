@@ -435,8 +435,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         markdown_content = ""
         last_label = None
-        seg_start_flag = None
-        seg_end_flag = None
+        seg_start_flag = True
+        seg_end_flag = True
         prev_block = None
         page_first_element_seg_start_flag = None
         page_last_element_seg_end_flag = None
@@ -468,6 +468,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                         else handle_func(block)
                     )
                 last_label = label
+        page_first_element_seg_start_flag = (
+            True
+            if page_first_element_seg_start_flag is None
+            else page_first_element_seg_start_flag
+        )
         page_last_element_seg_end_flag = seg_end_flag
 
         markdown_info["markdown_texts"] = markdown_content
