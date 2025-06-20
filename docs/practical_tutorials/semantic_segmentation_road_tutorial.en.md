@@ -49,15 +49,15 @@ PaddleX provides 18 end-to-end semantic segmentation models. For details, refer 
 <tr>
 <td>OCRNet_HRNet-W48</td>
 <td>82.15</td>
-<td>87.97</td>
-<td>2180.76</td>
+<td>582.92 / 536.28</td>
+<td>3513.72 / 2543.10</td>
 <td>270</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
 <td>77.04</td>
-<td>5.98</td>
-<td>140.02</td>
+<td>28.12 / 23.84</td>
+<td>398.31 / 398.31</td>
 <td>31</td>
 </tr>
 </tbody>

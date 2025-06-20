@@ -40,36 +40,36 @@ PaddleX 提供了5个端到端的时序预测模型，具体可参考 [模型列
 <tbody>
 <tr>
 <td>DLinear</td>
-<td>0.382</td>
-<td>0.394</td>
+<td>0.34 / 0.12</td>
+<td>0.64 / 0.06</td>
 <td>76k</td>
 <td>DLinear结构简单，效率高且易用的时序预测模型</td>
 </tr>
 <tr>
 <td>Nonstationary</td>
-<td>0.600</td>
-<td>0.515</td>
+<td>3.92 / 2.59</td>
+<td>18.09 / 13.36</td>
 <td>60.3M</td>
 <td>基于transformer结构，针对性优化非平稳时间序列的长时序预测模型</td>
 </tr>
 <tr>
 <td>PatchTST</td>
-<td>0.385</td>
-<td>0.397</td>
+<td>1.81 / 0.45</td>
+<td>5.79 / 0.77</td>
 <td>2.2M</td>
 <td>PatchTST是兼顾局部模式和全局依赖关系的高精度长时序预测模型</td>
 </tr>
 <tr>
 <td>TiDE</td>
-<td>0.405</td>
-<td>0.412</td>
+<td>- / -</td>
+<td>4.54 / 1.09</td>
 <td>34.9M</td>
 <td>TiDE是适用于处理多变量、长期的时间序列预测问题的高精度模型</td>
 </tr>
 <tr>
 <td>TimesNet</td>
-<td>0.417</td>
-<td>0.431</td>
+<td>15.19 / 13.77</td>
+<td>23.14 / 12.42</td>
 <td>5.2M</td>
 <td>通过多周期分析，TimesNet是适应性强的高精度时间序列分析模型</td>
 </tr>

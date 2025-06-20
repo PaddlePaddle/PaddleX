@@ -29,8 +29,8 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <td>PP-ShiTuV2_det</td>
 <td>41.5</td>
 <td>62.0</td>
-<td>12.79 / 4.51</td>
-<td>44.14 / 44.14</td>
+<td>11.81 / 4.53</td>
+<td>43.03 / 25.31</td>
 <td>27.54</td>
 <td>An mainbody detection model based on PicoDet_LCNet_x2_5, which may detect multiple common objects simultaneously.</td>
 </tr>
@@ -50,23 +50,23 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <tr>
 <td>PP-ShiTuV2_rec</td>
 <td>84.2</td>
-<td>3.48 / 0.55</td>
-<td>8.04 / 4.04</td>
+<td>3.91 / 1.06</td>
+<td>6.82 / 2.89</td>
 <td>16.3 M</td>
 <td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: mainbody detection, feature extraction, and vector retrieval. These models are part of the feature extraction module, and different models can be selected based on system requirements.</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
-<td>12.94 / 2.88</td>
-<td>58.36 / 58.36</td>
+<td>12.57 / 11.62</td>
+<td>67.09 / 67.09</td>
 <td>306.6 M</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
 <td>91.03</td>
-<td>51.65 / 11.18</td>
-<td>255.78 / 255.78</td>
+<td>49.85 / 49.85</td>
+<td>229.14 / 229.14</td>
 <td>1.05 G</td>
 </tr>
 </table>

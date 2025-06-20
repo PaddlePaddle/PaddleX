@@ -372,20 +372,20 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tbody>
 <tr>
 <td>DLinear</td>
-<td>0.382</td>
-<td>0.394</td>
+<td>0.34 / 0.12</td>
+<td>0.64 / 0.06</td>
 <td>72K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>NLinear</td>
-<td>0.386</td>
-<td>0.392</td>
+<td>0.27 / 0.10</td>
+<td>0.49 / 0.08</td>
 <td>40K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>RLinear</td>
-<td>0.384</td>
-<td>0.392</td>
+<td>0.39 / 0.18</td>
+<td>0.82 / 0.08</td>
 <td>40K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>

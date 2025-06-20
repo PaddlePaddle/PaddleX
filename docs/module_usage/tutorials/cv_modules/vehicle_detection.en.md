@@ -22,16 +22,16 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 <tr>
 <td>PP-YOLOE-S_vehicle</td>
 <td>61.3</td>
-<td>9.79 / 3.48</td>
-<td>54.14 / 46.69</td>
+<td>10.54 / 6.69</td>
+<td>52.73 / 23.58</td>
 <td>28.79</td>
 <td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
 </tr>
 <tr>
 <td>PP-YOLOE-L_vehicle</td>
 <td>63.9</td>
-<td>32.84 / 9.03</td>
-<td>176.60 / 176.60</td>
+<td>30.30 / 26.27</td>
+<td>169.28 / 111.88</td>
 <td>196.02</td>
 </tr>
 </table>

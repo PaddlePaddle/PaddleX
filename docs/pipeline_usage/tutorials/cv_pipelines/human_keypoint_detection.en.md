@@ -28,8 +28,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>PP-YOLOE-L_human</td>
 <td>48.0</td>
 <td>81.9</td>
-<td>33.27 / 9.19</td>
-<td>173.72 / 173.72</td>
+<td>30.59 / 26.64</td>
+<td>180.05 / 112.70</td>
 <td>196.02</td>
 <td rowspan="2">Pedestrian detection model based on PP-YOLOE</td>
 </tr>
@@ -37,8 +37,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>PP-YOLOE-S_human</td>
 <td>42.5</td>
 <td>77.9</td>
-<td>9.94 / 3.42</td>
-<td>54.48 / 46.52</td>
+<td>10.26 / 6.66</td>
+<td>54.01 / 23.48</td>
 <td>28.79</td>
 </tr>
 </table>
@@ -58,8 +58,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <tr>
 <td>PP-TinyPose_128x96</td>
 <td>Top-Down</td>
-<td>128*96</td>
-<td>58.4</td>
+<td>24.22 / 4.34</td>
+<td>- / 6.19</td>
 <td></td>
 <td></td>
 <td>4.9</td>
@@ -68,8 +68,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <tr>
 <td>PP-TinyPose_256x192</td>
 <td>Top-Down</td>
-<td>256*192</td>
-<td>68.3</td>
+<td>21.73 / 3.59</td>
+<td>- / 10.18</td>
 <td></td>
 <td></td>
 <td>4.9</td>

@@ -96,26 +96,18 @@ PaddleX provides 2 end-to-end seal text detection models, which can be reference
 </thead>
 <tbody>
 <tr>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-<tr>
 <td>PP-OCRv4_mobile_seal_det</td>
 <td>96.47</td>
-<td>10.5878</td>
-<td>131.813</td>
+<td>9.70 / 3.56</td>
+<td>50.38 / 19.64</td>
 <td>4.7M</td>
 <td><a href="../../paddlex/configs/modules/seal_text_detection/PP-OCRv4_mobile_seal_det.yaml">PP-OCRv4_mobile_seal_det.yaml</a></td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_seal_det</td>
 <td>98.21</td>
-<td>84.341</td>
-<td>2425.06</td>
+<td>124.64 / 91.57</td>
+<td>545.68 / 439.86</td>
 <td>108.3 M</td>
 <td><a href="../../paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml">PP-OCRv4_server_seal_det.yaml</a></td>
 </tr>

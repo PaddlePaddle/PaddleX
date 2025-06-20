@@ -25,10 +25,11 @@ Rotated object detection is a variant of the object detection module, specifical
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
+<td>PP-YOLOE-R-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 <td>78.14</td>
-<td>20.7039</td>
-<td>157.942</td>
+<td>67.50 / 61.15</td>
+<td>414.79 / 414.79</td>
 <td>211.0 M</td>
 <td rowspan="1">PP-YOLOE-R is an efficient one-stage anchor-free rotated bounding box detection model. Based on PP-YOLOE, PP-YOLOE-R introduces several useful designs to improve detection accuracy with minimal additional parameters and computational cost.</td>
 </tr>
