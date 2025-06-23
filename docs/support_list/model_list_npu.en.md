@@ -1166,7 +1166,9 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tbody>
 <tr>
 <td>UVDoc</td>
-<td>54.40</td>
+<td>0.179</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
 <td>30.3 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>

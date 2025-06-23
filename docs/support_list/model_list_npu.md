@@ -1168,6 +1168,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <td>UVDoc</td>
 <td>0.179</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
 <td>30.3 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
