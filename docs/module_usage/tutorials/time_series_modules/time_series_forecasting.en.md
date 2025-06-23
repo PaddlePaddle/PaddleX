@@ -32,6 +32,13 @@ Time series forecasting aims to predict the possible values or states at a futur
 <td>76k</td>
 <td>Simple structure, high efficiency and easy-to-use time series prediction model</td>
 </tr>
+<td>NLinear</td>
+<td>0.386</td>
+<td>0.392</td>
+<td>0.27 / 0.10</td>
+<td>0.49 / 0.08</td>
+<td>40K</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>Nonstationary</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
