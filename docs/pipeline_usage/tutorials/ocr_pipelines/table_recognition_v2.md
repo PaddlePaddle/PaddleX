@@ -188,10 +188,11 @@ PP-OCRv4_server_rec_doc_infer.tar">推理模型</a>/<a href="https://paddle-mode
 <td>PP-OCRv4的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
 <td>80.61 </td>
-<td>6.58 / 2.43</td>
-<td>33.17 / 33.17</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
 <td>71.2 M</td>
 <td>PP-OCRv4的服务器端模型，推理精度高，可以部署在多种不同的服务器上</td>
 </tr>
@@ -282,10 +283,11 @@ PP-OCRv4_server_rec_doc_infer.tar">推理模型</a>/<a href="https://paddle-mode
 <td>PP-OCRv4的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
 <td>80.61 </td>
-<td>6.58 / 2.43</td>
-<td>33.17 / 33.17</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
 <td>71.2 M</td>
 <td>PP-OCRv4的服务器端模型，推理精度高，可以部署在多种不同的服务器上</td>
 </tr>

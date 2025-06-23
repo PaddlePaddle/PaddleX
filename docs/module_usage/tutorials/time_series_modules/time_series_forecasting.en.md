@@ -45,6 +45,13 @@ Time series forecasting aims to predict the possible values or states at a futur
 <td>High-precision long-term time series prediction model that takes into account both local patterns and global dependencies</td>
 </tr>
 <tr>
+<td>RLinear</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
+<td>0.39 / 0.18</td>
+<td>0.82 / 0.08</td>
+<td>40K</td>
+</tr>
+<tr>
 <td>TiDE</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
 <td>- / -</td>

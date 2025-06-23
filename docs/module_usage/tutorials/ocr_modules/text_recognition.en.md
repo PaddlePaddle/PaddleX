@@ -146,10 +146,11 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>80.61 </td>
-<td>6.58 / 2.43</td>
-<td>33.17 / 33.17</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
 <td>71.2 M</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>

@@ -209,17 +209,17 @@ comments: true
 <td>MaskFormer_small</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskFormer_small_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_small_pretrained.pdparams">训练模型</a></td>
 <td>49.70</td>
-<td>69.856</td>
-<td></td>
-<td></td>
+<td>65.21 / 65.21</td>
+<td>- / 629.85</td>
+<td>243 M</td>
 </tr>
 <tr>
 <td>MaskFormer_tiny</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskFormer_tiny_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_tiny_pretrained.pdparams">训练模型</a></td>
 <td>46.69</td>
-<td>50.157</td>
-<td></td>
-<td></td>
+<td>47.95 / 47.95</td>
+<td>- / 492.67</td>
+<td>160 M</td>
 </tr>
 </tbody>
 </table>

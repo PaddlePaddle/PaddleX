@@ -173,46 +173,46 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 </thead>
 <tbody>
 <tr>
-<td>SeaFormer_base(slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_base(slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">Training Model</a></td>
+<td>SeaFormer_base</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_base(slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">Training Model</a></td>
 <td>40.92</td>
-<td>24.4073</td>
-<td>397.574</td>
+<td>23.78 / 17.41</td>
+<td>282.05 / 38.88</td>
 <td>30.8 M</td>
 </tr>
 <tr>
-<td>SeaFormer_large (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_large (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">Training Model</a></td>
+<td>SeaFormer_large</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_large (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">Training Model</a></td>
 <td>43.66</td>
-<td>27.8123</td>
-<td>550.464</td>
+<td>23.76 / 23.40</td>
+<td>348.86 / 61.81</td>
 <td>49.8 M</td>
 </tr>
 <tr>
-<td>SeaFormer_small (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_small (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">Training Model</a></td>
+<td>SeaFormer_small</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_small (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">Training Model</a></td>
 <td>38.73</td>
-<td>19.2295</td>
-<td>358.343</td>
+<td>18.83 / 13.27</td>
+<td>272.28 / 35.17</td>
 <td>14.3 M</td>
 </tr>
 <tr>
-<td>SeaFormer_tiny (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Training Model</a></td>
+<td>SeaFormer_tiny</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Training Model</a></td>
 <td>34.58</td>
-<td>13.9496</td>
-<td>330.132</td>
+<td>15.83 / 11.48</td>
+<td>243.15 / 30.52</td>
 <td>6.1M</td>
 </tr>
 <tr>
 <td>MaskFormer_small</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskFormer_small_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_small_pretrained.pdparams">Training Model</a></td>
 <td>49.70</td>
-<td></td>
-<td></td>
-<td></td>
+<td>65.21 / 65.21</td>
+<td>- / 629.85</td>
+<td>243 M</td>
 </tr>
 <tr>
 <td>MaskFormer_tiny</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskFormer_tiny_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_tiny_pretrained.pdparams">Training Model</a></td>
 <td>46.69</td>
-<td></td>
-<td></td>
-<td></td>
+<td>47.95 / 47.95</td>
+<td>- / 492.67</td>
+<td>160 M</td>
 </tr>
 </tbody>
 </table>

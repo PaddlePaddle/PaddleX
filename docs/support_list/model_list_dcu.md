@@ -1,3 +1,8 @@
+<tr>
+<td>YOLOv3-DarkNet53</td>
+<td>39.1</td>
+<td>219.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-DarkNet53_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">训练模型</a></td></tr>
 ---
 comments: true
 ---
@@ -172,6 +177,11 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>37.8</td>
 <td>137.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>YOLOv3-DarkNet53</td>
+<td>39.1</td>
+<td>219.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-DarkNet53_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>Cascade-FasterRCNN-ResNet50-FPN</td>
 <td>41.1</td>

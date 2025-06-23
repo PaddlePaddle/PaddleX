@@ -123,7 +123,7 @@ Layout parsing is a technology that extracts structured information from documen
 </tbody>
 </table>
 
-<p><b>Table Structure Recognition Module (Optional):</b></p>
+<p><b>Table Structure Recognition Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -134,25 +134,62 @@ Layout parsing is a technology that extracts structured information from documen
 <th>Introduction</th>
 </tr>
 <tr>
-<td>SLANet</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
-<td>59.52</td>
-<td>23.96 / 21.75</td>
-<td>- / 43.12</td>
-<td>6.9 M</td>
-<td>SLANet is a table structure recognition model independently developed by the Baidu PaddlePaddle Vision Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a lightweight backbone network PP-LCNet that is friendly to CPUs, a high-low feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structure and position information.</td>
+<td>SLANeXt_wired</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANeXt_wired_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wired_pretrained.pdparams">Training Model</a></td>
+<td rowspan="2">69.65</td>
+<td rowspan="2">85.92 / 85.92</td>
+<td rowspan="2">- / 501.66</td>
+<td rowspan="2">351M</td>
+<td rowspan="2">The SLANeXt series are the latest table structure recognition models developed by the PaddlePaddle Vision Team. Compared to SLANet and SLANet_plus, SLANeXt focuses on table structure recognition and has dedicated weights trained for wired and wireless tables, significantly improving the recognition ability for both types, especially for wired tables.</td>
 </tr>
 <tr>
-<td>SLANet_plus</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
-<td>63.69</td>
-<td>23.43 / 22.16</td>
-<td>- / 41.80</td>
-<td>6.9 M</td>
-<td>SLANet_plus is the enhanced version of the SLANet table structure recognition model independently developed by the Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus has significantly improved the ability to recognize wireless and complex tables and reduced the model's sensitivity to table positioning accuracy. Even if there is a deviation in table positioning, it can still recognize accurately.</td>
+<td>SLANeXt_wireless</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANeXt_wireless_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wireless_pretrained.pdparams">Training Model</a></td>
+</tr>
+</table>
+<p><b>Table Classification Module Models:</b></p>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Top1 Acc(%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+</tr>
+<tr>
+<td>PP-LCNet_x1_0_table_cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">Training Model</a></td>
+<td>94.2</td>
+<td>2.62 / 0.60</td>
+<td>3.17 / 1.14</td>
+<td>6.6M</td>
 </tr>
 </table>
 
+<p><b>Table Cell Detection Module Models:</b></p>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>RT-DETR-L_wired_table_cell_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
+<td rowspan="2">82.7</td>
+<td rowspan="2">33.47 / 27.02</td>
+<td rowspan="2">402.55 / 256.56</td>
+<td rowspan="2">124M</td>
+<td rowspan="2">RT-DETR is the first real-time end-to-end object detection model. The PaddlePaddle Vision Team used RT-DETR-L as the base model and pre-trained it on a self-built table cell detection dataset, achieving good performance for both wired and wireless table cell detection.</td>
+</tr>
+<tr>
+<td>RT-DETR-L_wireless_table_cell_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
+</tr>
+</table>
 <p><b>Text Detection Module (Required):</b></p>
 <table>
 <thead>
@@ -273,10 +310,11 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
 <td>80.61 </td>
-<td>6.58 / 2.43</td>
-<td>33.17 / 33.17</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
 <td>71.2 M</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>

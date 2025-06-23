@@ -61,6 +61,30 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <td>1179.56 / 1179.56</td>
 <td>113.6 M</td>
 </tr>
+<tr>
+<td>Mask-RT-DETR-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">Trained Model</a></td>
+<td>87.08 / 87.08</td>
+<td>- / 2090.73</td>
+<td></td>
+<td>66.6 M</td>
+</tr>
+<tr>
+<td>Mask-RT-DETR-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">Trained Model</a></td>
+<td>41.0</td>
+<td>120.86 / 120.86</td>
+<td>- / 2163.07</td>
+<td>51.8 M</td>
+</tr>
+<tr>
+<td>Mask-RT-DETR-X</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">Trained Model</a></td>
+<td>47.5</td>
+<td>141.43 / 141.43</td>
+<td>1379.14 / 1379.14</td>
+<td>237.5 M</td>
+</tr>
 </table>
 
 > <b>Note: The above accuracy metrics are mAP(0.5:0.95) on the [COCO2017](https://cocodataset.org/#home) validation set. GPU inference time is based on an NVIDIA V100 machine with FP32 precision.</b>
