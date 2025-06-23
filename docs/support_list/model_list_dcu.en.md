@@ -237,8 +237,8 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3_Plus-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>PP-LiteSeg-T</td>
-<td>73.10</td>
-<td>28.5 M</td>
+<td>77.04</td>
+<td>31 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>

@@ -45,7 +45,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <td>0.9898</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>72.8K</td>
+<td>100K</td>
 <td>A simple, efficient, and easy-to-use time series anomaly detection model</td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <td>0.9936</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>32K</td>
+<td>52K</td>
 <td>A classic autoencoder-based model that is efficient and easy to use for time series anomaly detection</td>
 </tr>
 <tr>

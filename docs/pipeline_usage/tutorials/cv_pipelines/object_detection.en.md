@@ -85,6 +85,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>Cascade-FasterRCNN-ResNet50-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">Training Model</a></td>
+<td>41.1</td>
 <td>120.28 / 120.28</td>
 <td>- / 6514.61</td>
 <td>245.4 M</td>
@@ -93,6 +94,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Training Model</a></td>
+<td>45.0</td>
 <td>124.10 / 124.10</td>
 <td>- / 6709.52</td>
 <td>246.2 M</td>
@@ -122,6 +124,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet34-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet34-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">Training Model</a></td>
+<td>37.8</td>
 <td>76.90 / 76.90</td>
 <td>- / 4136.79</td>
 <td>137.5 M</td>
@@ -130,6 +133,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet50-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">Training Model</a></td>
+<td>38.4</td>
 <td>95.48 / 95.48</td>
 <td>- / 3693.90</td>
 <td>148.1 M</td>
@@ -137,6 +141,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet50-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">Training Model</a></td>
+<td>39.5</td>
 <td>98.03 / 98.03</td>
 <td>- / 4278.36</td>
 <td>148.1 M</td>
@@ -144,6 +149,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Training Model</a></td>
+<td>41.4</td>
 <td>99.23 / 99.23</td>
 <td>- / 4415.68</td>
 <td>148.1 M</td>
@@ -151,6 +157,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">Training Model</a></td>
+<td>36.7</td>
 <td>129.10 / 129.10</td>
 <td>- / 3868.44</td>
 <td>120.2 M</td>
@@ -158,6 +165,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet101-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">Training Model</a></td>
+<td>41.4</td>
 <td>131.48 / 131.48</td>
 <td>- / 4380.00</td>
 <td>216.3 M</td>
@@ -165,6 +173,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNet101</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">Training Model</a></td>
+<td>39.0</td>
 <td>216.71 / 216.71</td>
 <td>- / 5376.45</td>
 <td>188.1 M</td>
@@ -172,6 +181,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <td>FasterRCNN-ResNeXt101-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Training Model</a></td>
+<td>43.4</td>
 <td>234.38 / 234.38</td>
 <td>- / 6154.61</td>
 <td>360.6 M</td>

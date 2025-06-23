@@ -58,8 +58,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <tr>
 <td>PP-TinyPose_128x96</td>
 <td>Top-Down</td>
-<td>24.22 / 4.34</td>
-<td>- / 6.19</td>
+<td>58.4</td>
 <td>24.22 / 4.34</td>
 <td>- / 6.19</td>
 <td>4.9</td>
@@ -68,8 +67,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <tr>
 <td>PP-TinyPose_256x192</td>
 <td>Top-Down</td>
-<td>21.73 / 3.59</td>
-<td>- / 10.18</td>
+<td>68.3</td>
 <td>21.73 / 3.59</td>
 <td>- / 10.18</td>
 <td>4.9</td>

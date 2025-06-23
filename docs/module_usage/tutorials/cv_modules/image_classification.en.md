@@ -24,7 +24,7 @@ The image classification module is a crucial component in computer vision system
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>306.5 M</td>
+<td>331 M</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td>
@@ -110,7 +110,7 @@ The image classification module is a crucial component in computer vision system
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>306.5 M</td>
+<td>331 M</td>
 <td rowspan="2">CLIP is an image classification model based on the correlation between vision and language. It adopts contrastive learning and pre-training methods to achieve unsupervised or weakly supervised image classification, especially suitable for large-scale datasets. By mapping images and texts into the same representation space, the model learns general features, exhibiting good generalization ability and interpretability. With relatively good training errors, it performs well in many downstream tasks.</td>
 </tr>
 <tr>
@@ -722,7 +722,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.37</td>
 <td>13.04 / 10.77</td>
 <td>133.79 / 118.45</td>
-<td>310.5 M</td>
+<td>340 M</td>
 <td rowspan="6">SwinTransformer is a novel vision Transformer network that can serve as a general-purpose backbone for computer vision tasks. SwinTransformer consists of a hierarchical Transformer structure represented by shifted windows. Shifted windows restrict self-attention computations to non-overlapping local windows while allowing cross-window connections, thereby enhancing network performance.</td>
 </tr>
 <tr>

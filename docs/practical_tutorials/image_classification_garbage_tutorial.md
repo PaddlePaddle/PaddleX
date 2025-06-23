@@ -58,10 +58,10 @@ PaddleX 提供了 80 个端到端的图像分类模型，具体可参考 [模型
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_224</td>
-<td>85.39</td>
+<td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>331</td>
+<td>331 M</td>
 </tr>
 <tr>
 <td>PP-HGNetV2_B4</td>
@@ -75,7 +75,7 @@ PaddleX 提供了 80 个端到端的图像分类模型，具体可参考 [模型
 <td>83.37</td>
 <td>13.04 / 10.77</td>
 <td>133.79 / 118.45</td>
-<td>342</td>
+<td>340 M</td>
 </tr>
 <tr>
 <td>PP-HGNet_small</td>

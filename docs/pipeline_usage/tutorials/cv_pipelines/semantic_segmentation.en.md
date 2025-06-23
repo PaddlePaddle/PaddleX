@@ -25,7 +25,7 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <td>82.15</td>
 <td>582.92 / 536.28</td>
 <td>3513.72 / 2543.10</td>
-<td>249.8 M</td>
+<td>270 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
@@ -98,7 +98,7 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <td>82.15</td>
 <td>582.92 / 536.28</td>
 <td>3513.72 / 2543.10</td>
-<td>249.8 M</td>
+<td>270 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>

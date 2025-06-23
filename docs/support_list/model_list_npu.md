@@ -785,8 +785,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W48_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>PP-LiteSeg-T</td>
-<td>73.10</td>
-<td>28.5 M</td>
+<td>77.04</td>
+<td>31 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>SegFormer-B0 (slice)</td>
@@ -1350,7 +1350,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>98.98</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>112K</td>
+<td>100K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>Nonstationary_ad</td>

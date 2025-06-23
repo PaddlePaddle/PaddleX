@@ -57,10 +57,10 @@ PaddleX provides 80 end-to-end image classification models, which can be referen
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_224</td>
-<td>85.39</td>
+<td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>331</td>
+<td>331 M</td>
 </tr>
 <tr>
 <td>PP-HGNetV2_B4</td>
@@ -74,7 +74,7 @@ PaddleX provides 80 end-to-end image classification models, which can be referen
 <td>83.37</td>
 <td>13.04 / 10.77</td>
 <td>133.79 / 118.45</td>
-<td>342</td>
+<td>340 M</td>
 </tr>
 <tr>
 <td>PP-HGNet_small</td>

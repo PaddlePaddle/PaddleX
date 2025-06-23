@@ -36,7 +36,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>98.98</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>112K</td>
+<td>100K</td>
 </tr>
 <tr>
 <td>Nonstationary_ad</td>

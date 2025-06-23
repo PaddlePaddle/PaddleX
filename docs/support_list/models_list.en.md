@@ -24,7 +24,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>306.5 M</td>
+<td>331 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/image_classification/CLIP_vit_base_patch16_224.yaml">CLIP_vit_base_patch16_224.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_224_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
@@ -671,7 +671,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>83.37</td>
 <td>13.04 / 10.77</td>
 <td>133.79 / 118.45</td>
-<td>310.5 M</td>
+<td>340 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/image_classification/SwinTransformer_base_patch4_window7_224.yaml">SwinTransformer_base_patch4_window7_224.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SwinTransformer_base_patch4_window7_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SwinTransformer_base_patch4_window7_224_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
@@ -1609,8 +1609,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tr>
 <td>PP-TinyPose_128x96</td>
 <td>Top-Down</td>
-<td>24.22 / 4.34</td>
-<td>- / 6.19</td>
+<td>58.4</td>
 <td>24.22 / 4.34</td>
 <td>- / 6.19</td>
 <td>4.9</td>
@@ -1620,8 +1619,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tr>
 <td>PP-TinyPose_256x192</td>
 <td>Top-Down</td>
-<td>21.73 / 3.59</td>
-<td>- / 10.18</td>
+<td>68.3</td>
 <td>21.73 / 3.59</td>
 <td>- / 10.18</td>
 <td>4.9</td>
@@ -1715,7 +1713,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>82.15</td>
 <td>582.92 / 536.28</td>
 <td>3513.72 / 2543.10</td>
-<td>249.8 M</td>
+<td>270 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/semantic_segmentation/OCRNet_HRNet-W48.yaml">OCRNet_HRNet-W48.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Training Model</a></td>
 </tr>
@@ -2491,7 +2489,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td rowspan="2">69.65</td>
 <td rowspan="2">85.92 / 85.92</td>
 <td rowspan="2">- / 501.66</td>
-<td rowspan="2">--</td>
+<td rowspan="2">351</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_structure_recognition/SLANeXt_wired.yaml">SLANeXt_wired.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANeXt_wired_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wired_pretrained.pdparams">Training Model</a></td>
 </tr>

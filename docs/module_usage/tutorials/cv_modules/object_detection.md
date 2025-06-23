@@ -129,7 +129,7 @@ comments: true
 <tr>
 <td>FasterRCNN-ResNet34-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td>
-<td>37.8</td>
+FasterRCNN-ResNet34-FPN
 <td>76.90 / 76.90</td>
 <td>- / 4136.79</td>
 <td>137.5 M</td>

@@ -24,7 +24,7 @@ comments: true
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>306.5 M</td>
+<td>331 M</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td>
@@ -109,7 +109,7 @@ comments: true
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>306.5 M</td>
+<td>331 M</td>
 <td rowspan="2">CLIP是一种基于视觉和语言相关联的图像分类模型，采用对比学习和预训练方法，实现无监督或弱监督的图像分类，尤其适用于大规模数据集。模型通过将图像和文本映射到同一表示空间，学习到通用特征，具有良好的泛化能力和解释性。其在较好的训练误差，在很多下游任务都有较好的表现。</td>
 </tr>
 <tr>
@@ -717,7 +717,7 @@ comments: true
 <td>83.37</td>
 <td>13.04 / 10.77</td>
 <td>133.79 / 118.45</td>
-<td>310.5 M</td>
+<td>340 M</td>
 <td rowspan="6">SwinTransformer 是一种新的视觉 Transformer 网络，可以用作计算机视觉领域的通用骨干网路。SwinTransformer 由移动窗口（shifted windows）表示的层次 Transformer 结构组成。移动窗口将自注意计算限制在非重叠的局部窗口上，同时允许跨窗口连接，从而提高了网络性能。</td>
 </tr>
 <tr>

@@ -27,7 +27,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <td>0.9898</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>72.8K</td>
+<td>100K</td>
 <td>DLinear_ad is a simple, efficient, and easy-to-use model for time-series anomaly detection.</td>
 </tr>
 <tr>
@@ -45,7 +45,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <td>0.9936</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>32K</td>
+<td>52K</td>
 <td>AutoEncoder_ad is a classic autoencoder-based model for efficient and easy-to-use time-series anomaly detection.</td>
 </tr>
 <tr>
