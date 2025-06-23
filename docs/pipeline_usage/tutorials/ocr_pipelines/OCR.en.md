@@ -199,7 +199,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>81.53</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
-<td>74.7 M</td>
+<td>182 M</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the ability to recognize some traditional Chinese characters, Japanese, and special characters, and can support the recognition of more than 15,000 characters. In addition to improving the text recognition capability related to documents, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
@@ -208,7 +208,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>78.74</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.6 M</td>
+<td>10.5 M</td>
 <td>
 The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
@@ -218,7 +218,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>80.61 </td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>71.2 M</td>
+<td>173 M</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
@@ -227,7 +227,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>70.39</td>
 <td>4.81 / 1.23</td>
 <td>17.20 / 4.18</td>
-<td>6.8 M</td>
+<td>7.5 M</td>
 <td>The ultra-lightweight English recognition model, trained based on the PP-OCRv4 recognition model, supports the recognition of English letters and numbers.</td>
 </tr>
 </table>
@@ -291,7 +291,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>81.53</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
-<td>74.7 M</td>
+<td>182 M</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
@@ -300,7 +300,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>78.74</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.6 M</td>
+<td>10.5 M</td>
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
@@ -309,7 +309,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>80.61 </td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>71.2 M</td>
+<td>173 M</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
@@ -318,7 +318,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>72.96</td>
 <td>3.89 / 1.16</td>
 <td>8.72 / 3.56</td>
-<td>9.2 M</td>
+<td>10.3 M</td>
 <td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
 </tr>
 </table>
@@ -338,7 +338,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>68.81</td>
 <td>10.38 / 8.31</td>
 <td>66.52 / 30.83</td>
-<td>73.9 M</td>
+<td>80.5 M</td>
 <td rowspan="1">
 SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
 </td>
@@ -360,7 +360,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>65.07</td>
 <td>6.29 / 1.57</td>
 <td>20.64 / 5.40</td>
-<td>22.1 M</td>
+<td>48.8 M</td>
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
@@ -381,7 +381,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td> 70.39</td>
 <td>4.81 / 1.23</td>
 <td>17.20 / 4.18</td>
-<td>6.8 M</td>
+<td>7.5 M</td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
@@ -390,7 +390,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>70.69</td>
 <td>3.56 / 0.78</td>
 <td>8.44 / 5.78</td>
-<td>7.8 M </td>
+<td>17.3 M </td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv3 recognition model supports the recognition of English and numbers.</td>
 </tr>
 </table>
@@ -411,7 +411,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>60.21</td>
 <td>3.73 / 0.98</td>
 <td>8.76 / 2.91</td>
-<td>8.6 M</td>
+<td>9.6 M</td>
 <td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
@@ -420,7 +420,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>45.69</td>
 <td>3.86 / 1.01</td>
 <td>8.62 / 2.92</td>
-<td>8.8 M </td>
+<td>9.8 M </td>
 <td>The ultra-lightweight Japanese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Japanese and numbers.</td>
 </tr>
 <tr>
@@ -429,7 +429,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>82.06</td>
 <td>3.90 / 1.16</td>
 <td>9.24 / 3.18</td>
-<td>9.7 M </td>
+<td>10.8 M </td>
 <td>The ultra-lightweight Traditional Chinese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Traditional Chinese and numbers.</td>
 </tr>
 <tr>
@@ -438,7 +438,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>95.88</td>
 <td>3.59 / 0.81</td>
 <td>8.28 / 6.21</td>
-<td>7.8 M </td>
+<td>8.7 M </td>
 <td>The ultra-lightweight Telugu recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Telugu and numbers.</td>
 </tr>
 <tr>
@@ -447,7 +447,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>96.96</td>
 <td>3.49 / 0.89</td>
 <td>8.63 / 2.77</td>
-<td>8.0 M </td>
+<td>17.4 M </td>
 <td>The ultra-lightweight Kannada recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Kannada and numbers.</td>
 </tr>
 <tr>
@@ -456,7 +456,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>76.83</td>
 <td>3.49 / 0.86</td>
 <td>8.35 / 3.41</td>
-<td>8.0 M </td>
+<td>8.7 M </td>
 <td>The ultra-lightweight Tamil recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Tamil and numbers.</td>
 </tr>
 <tr>
@@ -465,7 +465,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>76.93</td>
 <td>3.53 / 0.78</td>
 <td>8.50 / 6.83</td>
-<td>7.8 M</td>
+<td>8.7 M</td>
 <td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
@@ -474,7 +474,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>73.55</td>
 <td>3.60 / 0.83</td>
 <td>8.44 / 4.69</td>
-<td>7.8 M</td>
+<td>17.3 M</td>
 <td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
@@ -483,7 +483,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>94.28</td>
 <td>3.56 / 0.79</td>
 <td>8.22 / 2.76</td>
-<td>7.9 M  </td>
+<td>8.7 M  </td>
 <td>
 The ultra-lightweight cyrillic alphabet recognition model trained based on the PP-OCRv3 recognition model supports the recognition of cyrillic letters and numbers.</td>
 </tr>

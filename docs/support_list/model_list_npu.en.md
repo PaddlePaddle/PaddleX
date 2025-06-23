@@ -1159,7 +1159,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <thead>
 <tr>
 <th>Model Name</th>
-<th>MS-SSIM (%)</th>
+<th>CER</th>
 <th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>

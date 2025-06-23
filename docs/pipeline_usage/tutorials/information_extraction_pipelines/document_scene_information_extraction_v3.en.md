@@ -200,7 +200,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>78.20</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.6 M</td>
+<td>10.5 M</td>
 <td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
@@ -209,7 +209,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>79.20</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>71.2 M</td>
+<td>173 M</td>
 </tr>
 </table>
 
@@ -228,7 +228,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>68.81</td>
 <td>10.38 / 8.31</td>
 <td>66.52 / 30.83</td>
-<td>73.9 M</td>
+<td>80.5 M</td>
 <td rowspan="1">
 SVTRv2 is a server-side text recognition model developed by the OpenOCR team at the Vision and Learning Lab (FVL) of Fudan University. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 6% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the A-list.
 </td>
@@ -250,7 +250,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <td>65.07</td>
 <td>6.29 / 1.57</td>
 <td>20.64 / 5.40</td>
-<td>22.1 M</td>
+<td>48.8 M</td>
 <td rowspan="1">
 The RepSVTR text recognition model is a mobile-oriented text recognition model based on SVTRv2. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the B-list, while maintaining similar inference speed.
 </td>
@@ -285,7 +285,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <td>96.47</td>
 <td>9.70 / 3.56</td>
 <td>50.38 / 19.64</td>
-<td>4.6</td>
+<td>4.7</td>
 <td>PP-OCRv4's mobile seal text detection model, offering higher efficiency, suitable for deployment on edge devices</td>
 </tr>
 </tbody>
