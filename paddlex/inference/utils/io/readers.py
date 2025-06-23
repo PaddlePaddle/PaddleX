@@ -52,6 +52,8 @@ class ReaderType(enum.Enum):
     TS = 5
     PDF = 6
     YAML = 8
+    MARKDOWN = 9
+    TXT = 10
 
 
 class _BaseReader(object):
@@ -206,6 +208,41 @@ class YAMLReader(_BaseReader):
         return ReaderType.YAML
 
 
+class MarkDownReader(_BaseReader):
+
+    def __init__(self, backend="Markdown", **bk_args):
+        super().__init__(backend, **bk_args)
+
+    def read(self, in_path):
+        return self._backend.read_file(str(in_path))
+
+    def _init_backend(self, bk_type, bk_args):
+        if bk_type == "Markdown":
+            return TXTReaderBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        return ReaderType.MARKDOWN
+
+
+class TXTReader(_BaseReader):
+    """TXTReader"""
+
+    def __init__(self, backend="txt", **bk_args):
+        super().__init__(backend, **bk_args)
+
+    def read(self, in_path):
+        return self._backend.read_file(str(in_path))
+
+    def _init_backend(self, bk_type, bk_args):
+        if bk_type == "txt":
+            return TXTReaderBackend(**bk_args)
+
+    def get_type(self):
+        return ReaderType.TXT
+
+
 class _BaseReaderBackend(object):
     """_BaseReaderBackend"""
 
@@ -259,6 +296,15 @@ class PDFReaderBackend(_BaseReaderBackend):
             img_cv = np.array(image)
             img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
             yield img_cv
+
+
+class TXTReaderBackend(_BaseReaderBackend):
+    """TXTReaderBackend"""
+
+    def read_file(self, in_path):
+        with open(in_path, "r") as f:
+            data = f.readlines()
+        return data
 
 
 class _VideoReaderBackend(_BaseReaderBackend):

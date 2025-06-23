@@ -12,6 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .generate_ensemble_prompt import GenerateEnsemblePrompt
-from .generate_kie_prompt import GenerateKIEPrompt
-from .generate_translate_prompt import GenerateTranslatePrompt
+
+from ...common.result import BaseCVResult, MarkdownMixin
+
+
+class TranslationMarkdownResult(BaseCVResult, MarkdownMixin):
+    def __init__(self, data) -> None:
+        """Initializes a new instance of the class with the specified data."""
+        super().__init__(data)
+        MarkdownMixin.__init__(self)
+
+    def _to_markdown(self, pretty=True) -> dict:
+        return self
