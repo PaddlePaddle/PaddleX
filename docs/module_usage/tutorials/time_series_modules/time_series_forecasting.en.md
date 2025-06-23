@@ -15,6 +15,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <th>Model Name</th><th>Model Download Link</th>
 <th>mse</th>
 <th>mae</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Introduce</th>
 </tr>
@@ -23,6 +25,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <tr>
 <td>DLinear</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
+<td>0.382</td>
+<td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
 <td>76k</td>
@@ -31,6 +35,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <tr>
 <td>Nonstationary</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
+<td>0.600</td>
+<td>0.515</td>
 <td>3.92 / 2.59</td>
 <td>18.09 / 13.36</td>
 <td>60.3M</td>
@@ -39,6 +45,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <tr>
 <td>PatchTST</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
+<td>0.379</td>
+<td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
 <td>2.2M</td>
@@ -47,6 +55,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <tr>
 <td>RLinear</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
+<td>0.385</td>
+<td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
 <td>40K</td>
@@ -54,6 +64,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <tr>
 <td>TiDE</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
+<td>0.407</td>
+<td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
 <td>34.9M</td>
@@ -62,6 +74,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 <tr>
 <td>TimesNet</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
+<td>0.416</td>
+<td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
 <td>5.2M</td>

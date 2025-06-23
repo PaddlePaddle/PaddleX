@@ -1193,8 +1193,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <td>Co-Deformable-DETR-R50</td>
 <td>49.7</td>
-<td></td>
-<td></td>
+<td>259.62 / 259.62</td>
+<td>32413.76 / 32413.76</td>
 <td>184 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-R50.yaml">Co-Deformable-DETR-R50.yaml.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">训练模型</a></td>
@@ -1202,8 +1202,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <td>Co-Deformable-DETR-Swin-T</td>
 <td>48.0 (640x640 输入尺寸下)</td>
-<td></td>
-<td></td>
+<td>120.17 / 120.17</td>
+<td>- / 15620.29</td>
 <td>187 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-Deformable-DETR-Swin-T.yaml">Co-Deformable-Swin-T.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
@@ -1211,8 +1211,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <td>Co-DINO-R50</td>
 <td>52.0</td>
-<td></td>
-<td></td>
+<td>1123.23 / 1123.23</td>
+<td>- / -</td>
 <td>186 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-R50.yaml">Co-DINO-R50.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">训练模型</a></td>
@@ -1220,8 +1220,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <td>Co-DINO-Swin-L</td>
 <td>55.9 (640x640 输入尺寸下)</td>
-<td></td>
-<td></td>
+<td>- / -</td>
+<td>- / -</td>
 <td>840 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/Co-DINO-Swin-L.yaml">Co-DINO-Swin-L.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">训练模型</a></td>
@@ -1521,8 +1521,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>Top-Down</td>
 <td>24.22 / 4.34</td>
 <td>- / 6.19</td>
-<td></td>
-<td></td>
+<td>24.22 / 4.34</td>
+<td>- / 6.19</td>
 <td>4.9</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml">PP-TinyPose_128x96.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TinyPose_128x96_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_128x96_pretrained.pdparams">训练模型</a></td>
@@ -1532,8 +1532,8 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>Top-Down</td>
 <td>21.73 / 3.59</td>
 <td>- / 10.18</td>
-<td></td>
-<td></td>
+<td>21.73 / 3.59</td>
+<td>- / 10.18</td>
 <td>4.9</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/keypoint_detection/PP-TinyPose_256x192.yaml">PP-TinyPose_256x192.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TinyPose_256x192_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_256x192_pretrained.pdparams">训练模型</a></td>
@@ -2454,7 +2454,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <thead>
 <tr>
 <th>模型名称</th>
-<th>MS-SSIM （%）</th>
+<th>CER </th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小</th>
@@ -2464,7 +2464,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tbody>
 <tr>
 <td>UVDoc</td>
-<td>54.40</td>
+<td>0.179</td>
 <td>19.05 / 19.05</td>
 <td>- / 869.82</td>
 <td>30.3 M</td>
@@ -2757,8 +2757,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>模型</th>
 <th>模型下载链接</th>
 <th>Top-1 Acc（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -2796,6 +2796,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>模型名称</th>
 <th>mse</th>
 <th>mae</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
@@ -2803,6 +2805,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tbody>
 <tr>
 <td>DLinear</td>
+<td>0.382</td>
+<td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
 <td>72 K</td>
@@ -2810,6 +2814,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>NLinear</td>
+<td>0.386</td>
+<td>0.392</td>
 <td>0.27 / 0.10</td>
 <td>0.49 / 0.08</td>
 <td>40 K</td>
@@ -2817,6 +2823,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>Nonstationary</td>
+<td>0.600</td>
+<td>0.515</td>
 <td>3.92 / 2.59</td>
 <td>18.09 / 13.36</td>
 <td>55.5 M</td>
@@ -2824,6 +2832,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>PatchTST</td>
+<td>0.379</td>
+<td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
 <td>2.0 M</td>
@@ -2831,6 +2841,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>RLinear</td>
+<td>0.385</td>
+<td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
 <td>40 K</td>
@@ -2838,6 +2850,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>TiDE</td>
+<td>0.407</td>
+<td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
 <td>31.7 M</td>
@@ -2845,6 +2859,8 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>TimesNet</td>
+<td>0.416</td>
+<td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
 <td>4.9 M</td>

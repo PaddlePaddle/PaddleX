@@ -532,7 +532,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>87.4</td>
 <td>2.16 / 0.41</td>
 <td>2.37 / 0.73</td>
-<td>4.8</td>
+<td>0.96</td>
 <td>基于PP-LCNet_x0_25的文本行分类模型，含有两个类别，即0度，180度</td>
 </tr>
 <tr>

@@ -519,6 +519,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">Inference Model</a>/
 <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">Training Model</a>
 </td>
+<td>98.85</td>
 <td>2.16 / 0.41</td>
 <td>2.37 / 0.73</td>
 <td>0.96</td>

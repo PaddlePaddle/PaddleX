@@ -167,7 +167,7 @@ comments: true
 <tr>
 <th>模型名称</th><th>模型下载链接</th>
 <th>mloU（%）</th>
-<th>GPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时</th>
 <th>模型存储大小（M)</th>
 </tr>

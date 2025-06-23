@@ -43,8 +43,8 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 <td>SLANeXt_wired</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANeXt_wired_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wired_pretrained.pdparams">Training Model</a></td>
 <td rowspan="2">69.65</td>
-<td rowspan="2"></td>
-<td rowspan="2"></td>
+<td rowspan="2">85.92 / 85.92</td>
+<td rowspan="2">- / 501.66</td>
 <td rowspan="2">351M</td>
 <td rowspan="2">SLANeXt series is a new generation of form structure recognition model developed by Baidu PaddlePaddle's Vision Team. Compared with SLANet and SLANet_plus, SLANeXt focuses on the recognition of form structure, and special weights are trained for the recognition of wired and wireless forms, which significantly improves the recognition ability of all types of forms, especially the recognition ability of wired forms is greatly improved.</td>
 </tr>

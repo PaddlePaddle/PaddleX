@@ -65,9 +65,9 @@ PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型
 <tr>
 <td>Mask-RT-DETR-M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">训练模型</a></td>
+<td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td></td>
 <td>66.6 M</td>
 </tr>
 <tr>

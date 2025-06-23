@@ -60,8 +60,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>Top-Down</td>
 <td>24.22 / 4.34</td>
 <td>- / 6.19</td>
-<td></td>
-<td></td>
+<td>24.22 / 4.34</td>
+<td>- / 6.19</td>
 <td>4.9</td>
 <td rowspan="2">PP-TinyPose is a real-time keypoint detection model developed by Baidu PaddlePaddle Vision Team, optimized for mobile devices, capable of smoothly performing multi-person pose estimation tasks on mobile devices</td>
 </tr>
@@ -70,8 +70,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>Top-Down</td>
 <td>21.73 / 3.59</td>
 <td>- / 10.18</td>
-<td></td>
-<td></td>
+<td>21.73 / 3.59</td>
+<td>- / 10.18</td>
 <td>4.9</td>
 </tr>
 </table>

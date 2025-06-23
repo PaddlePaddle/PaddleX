@@ -64,9 +64,9 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <tr>
 <td>Mask-RT-DETR-M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">Trained Model</a></td>
+<td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td></td>
 <td>66.6 M</td>
 </tr>
 <tr>

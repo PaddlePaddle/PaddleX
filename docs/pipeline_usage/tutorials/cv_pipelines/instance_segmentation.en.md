@@ -52,18 +52,18 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <tr>
 <td>Cascade-MaskRCNN-ResNet50-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">Training Model</a></td>
+<td>36.3</td>
 <td>136.79 / 136.79</td>
 <td>- / 5935.41</td>
-<td>nan / nan</td>
 <td>254.8 M</td>
 <td rowspan="2">Cascade-MaskRCNN is an improved Mask RCNN instance segmentation model that utilizes multiple detectors in a cascade, optimizing segmentation results by leveraging different IOU thresholds to address the mismatch between detection and inference stages, thereby enhancing instance segmentation accuracy.</td>
 </tr>
 <tr>
 <td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Training Model</a></td>
+<td>39.1</td>
 <td>137.40 / 137.40</td>
 <td>- / 6816.68</td>
-<td>nan / nan</td>
 <td>254.7 M</td>
 </tr>
 <tr>
@@ -86,9 +86,9 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <tr>
 <td>Mask-RT-DETR-M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">Training Model</a></td>
+<td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td>nan / nan</td>
 <td>66.6 M</td>
 </tr>
 <tr>
@@ -110,52 +110,51 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <tr>
 <td>MaskRCNN-ResNet50-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">Training Model</a></td>
+<td>35.6</td>
 <td>112.79 / 112.79</td>
 <td>- / 4912.37</td>
-<td>nan / nan</td>
 <td>157.5 M</td>
 <td rowspan="6">Mask R-CNN is a full-task deep learning model from Facebook AI Research (FAIR) that can perform object classification and localization in a single model, combined with image-level masks to complete segmentation tasks.</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet50-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">Training Model</a></td>
+<td>36.4</td>
 <td>112.88 / 112.88</td>
 <td>- / 5204.97</td>
-<td>nan / nan</td>
 <td>157.5 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">Training Model</a></td>
+<td>32.8</td>
 <td>181.60 / 181.60</td>
 <td>- / 5523.45</td>
-<td>nan / nan</td>
 <td>128.7 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet101-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">Training Model</a></td>
+<td>36.6</td>
 <td>138.84 / 138.84</td>
 <td>- / 5107.74</td>
-<td>nan / nan</td>
 <td>225.4 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet101-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">Training Model</a></td>
+<td>38.1</td>
 <td>141.73 / 141.73</td>
 <td>- / 5592.76</td>
-<td>nan / nan</td>
 <td>225.1 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNeXt101-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Training Model</a></td>
+<td>39.5</td>
 <td>220.83 / 220.83</td>
 <td>- / 5932.59</td>
-<td>nan / nan</td>
 <td>370.0 M</td>
-<td></td>
 </tr>
 <tr>
 <td>PP-YOLOE_seg-S</td>

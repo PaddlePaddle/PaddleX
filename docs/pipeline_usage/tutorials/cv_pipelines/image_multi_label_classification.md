@@ -24,7 +24,7 @@ comments: true
 <td>CLIP_vit_base_patch16_448_ML</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_448_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">训练模型</a></td>
 <td>89.15</td>
-<td>-</td>
+<td>325.6 M</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0_ML</td>

@@ -118,7 +118,7 @@ PaddleX 提供了 2 个端到端的印章文本检测模型，具体可参考 [�
 <tr>
 <th>模型名称</th>
 <th>检测Hmean（%）</th>
-<th>GPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）</th>
 <th>模型存储大小</th>
 <th>yaml 文件</th>

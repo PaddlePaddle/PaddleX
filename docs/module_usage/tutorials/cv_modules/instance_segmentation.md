@@ -52,18 +52,18 @@ comments: true
 <tr>
 <td>Cascade-MaskRCNN-ResNet50-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>36.3</td>
 <td>136.79 / 136.79</td>
 <td>- / 5935.41</td>
-<td></td>
 <td>254.8 M</td>
 <td rowspan="2">Cascade-MaskRCNN 是一种改进的Mask RCNN实例分割模型，通过级联多个检测器，利用不同IOU阈值优化分割结果，解决检测与推理阶段的mismatch问题，提高了实例分割的准确性。</td>
 </tr>
 <tr>
 <td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
+<td>39.1</td>
 <td>137.40 / 137.40</td>
 <td>- / 6816.68</td>
-<td></td>
 <td>254.7 M</td>
 </tr>
 <tr>
@@ -86,9 +86,9 @@ comments: true
 <tr>
 <td>Mask-RT-DETR-M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Mask-RT-DETR-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">训练模型</a></td>
+<td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td></td>
 <td>66.6 M</td>
 </tr>
 <tr>
@@ -110,52 +110,51 @@ comments: true
 <tr>
 <td>MaskRCNN-ResNet50-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>35.6</td>
 <td>112.79 / 112.79</td>
 <td>- / 4912.37</td>
-<td></td>
 <td>157.5 M</td>
 <td rowspan="6">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet50-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>36.4</td>
 <td>112.88 / 112.88</td>
 <td>- / 5204.97</td>
-<td></td>
 <td>157.5 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>32.8</td>
 <td>181.60 / 181.60</td>
 <td>- / 5523.45</td>
-<td></td>
 <td>128.7 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet101-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
+<td>36.6</td>
 <td>138.84 / 138.84</td>
 <td>- / 5107.74</td>
-<td></td>
 <td>225.4 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet101-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNet101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>38.1</td>
 <td>141.73 / 141.73</td>
 <td>- / 5592.76</td>
-<td></td>
 <td>225.1 M</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNeXt101-vd-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>39.5</td>
 <td>220.83 / 220.83</td>
 <td>- / 5932.59</td>
-<td></td>
 <td>370.0 M</td>
-<td></td>
 </tr>
 <tr>
 <td>PP-YOLOE_seg-S</td>

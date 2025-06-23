@@ -41,7 +41,7 @@ PaddleX provides 18 end-to-end semantic segmentation models. For details, refer 
 <th>Model List</th>
 <th>mIoU (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
 </thead>

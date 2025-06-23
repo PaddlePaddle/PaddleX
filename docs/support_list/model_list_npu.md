@@ -1160,14 +1160,14 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <thead>
 <tr>
 <th>模型名称</th>
-<th>MS-SSIM （%）</th>
+<th>CER </th>
 <th>模型存储大小</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
 <tr>
 <td>UVDoc</td>
-<td>54.40</td>
+<td>0.179</td>
 <td>30.3 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
@@ -1258,48 +1258,64 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>模型名称</th>
 <th>mse</th>
 <th>mae</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
 <tr>
 <td>DLinear</td>
+<td>0.382</td>
+<td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
 <td>72K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>NLinear</td>
+<td>0.386</td>
+<td>0.392</td>
 <td>0.27 / 0.10</td>
 <td>0.49 / 0.08</td>
 <td>40K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>Nonstationary</td>
+<td>0.600</td>
+<td>0.515</td>
 <td>3.92 / 2.59</td>
 <td>18.09 / 13.36</td>
 <td>55.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>PatchTST</td>
+<td>0.379</td>
+<td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
 <td>2.0M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>RLinear</td>
+<td>0.385</td>
+<td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
 <td>40K</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>TiDE</td>
+<td>0.407</td>
+<td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
 <td>31.7M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>TimesNet</td>
+<td>0.416</td>
+<td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
 <td>4.9M</td>

@@ -24,7 +24,7 @@ Image multi-label classification is a technique that assigns multiple relevant c
 <td>CLIP_vit_base_patch16_448_ML</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_448_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">Training Model</a></td>
 <td>89.15</td>
-<td>-</td>
+<td>325.6 M</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0_ML</td>

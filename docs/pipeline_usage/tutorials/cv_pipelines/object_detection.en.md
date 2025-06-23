@@ -87,7 +87,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">Training Model</a></td>
 <td>120.28 / 120.28</td>
 <td>- / 6514.61</td>
-<td>nan / nan</td>
 <td>245.4 M</td>
 <td rowspan="2">Cascade-FasterRCNN is an improved version of the Faster R-CNN object detection model. By coupling multiple detectors and optimizing detection results using different IoU thresholds, it addresses the mismatch problem between training and prediction stages, enhancing the accuracy of object detection.</td>
 </tr>
@@ -96,15 +95,12 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Training Model</a></td>
 <td>124.10 / 124.10</td>
 <td>- / 6709.52</td>
-<td>nan / nan</td>
 <td>246.2 M</td>
 </tr>
 <tr>
 <td>CenterNet-DLA-34</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-DLA-34_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">Training Model</a></td>
 <td>37.6</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
 <td>75.4 M</td>
 <td rowspan="2">CenterNet is an anchor-free object detection model that treats the keypoints of the object to be detected as a single point—the center point of its bounding box, and performs regression through these keypoints.</td>
 </tr>
@@ -112,8 +108,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>CenterNet-ResNet50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">Training Model</a></td>
 <td>38.9</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
 <td>319.7 M</td>
 </tr>
 <tr>
@@ -130,7 +124,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet34-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">Training Model</a></td>
 <td>76.90 / 76.90</td>
 <td>- / 4136.79</td>
-<td>nan / nan</td>
 <td>137.5 M</td>
 <td rowspan="9">Faster R-CNN is a typical two-stage object detection model that first generates region proposals and then performs classification and regression on these proposals. Compared to its predecessors R-CNN and Fast R-CNN, Faster R-CNN's main improvement lies in the region proposal aspect, using a Region Proposal Network (RPN) to provide region proposals instead of traditional selective search. RPN is a Convolutional Neural Network (CNN) that shares convolutional features with the detection network, reducing the computational overhead of region proposals.</td>
 </tr>
@@ -139,7 +132,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">Training Model</a></td>
 <td>95.48 / 95.48</td>
 <td>- / 3693.90</td>
-<td>nan / nan</td>
 <td>148.1 M</td>
 </tr>
 <tr>
@@ -147,7 +139,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">Training Model</a></td>
 <td>98.03 / 98.03</td>
 <td>- / 4278.36</td>
-<td>nan / nan</td>
 <td>148.1 M</td>
 </tr>
 <tr>
@@ -155,7 +146,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Training Model</a></td>
 <td>99.23 / 99.23</td>
 <td>- / 4415.68</td>
-<td>nan / nan</td>
 <td>148.1 M</td>
 </tr>
 <tr>
@@ -163,7 +153,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">Training Model</a></td>
 <td>129.10 / 129.10</td>
 <td>- / 3868.44</td>
-<td>nan / nan</td>
 <td>120.2 M</td>
 </tr>
 <tr>
@@ -171,7 +160,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">Training Model</a></td>
 <td>131.48 / 131.48</td>
 <td>- / 4380.00</td>
-<td>nan / nan</td>
 <td>216.3 M</td>
 </tr>
 <tr>
@@ -179,7 +167,6 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">Training Model</a></td>
 <td>216.71 / 216.71</td>
 <td>- / 5376.45</td>
-<td>nan / nan</td>
 <td>188.1 M</td>
 </tr>
 <tr>
@@ -187,15 +174,12 @@ Object detection aims to identify the categories and locations of multiple objec
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Training Model</a></td>
 <td>234.38 / 234.38</td>
 <td>- / 6154.61</td>
-<td>nan / nan</td>
 <td>360.6 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-Swin-Tiny-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-Swin-Tiny-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">Training Model</a></td>
 <td>42.6</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
 <td>159.8 M</td>
 </tr>
 <tr>
@@ -392,8 +376,8 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>Co-Deformable-DETR-R50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">Training Model</a></td>
 <td>49.7</td>
-<td></td>
-<td></td>
+<td>259.62 / 259.62</td>
+<td>32413.76 / 32413.76</td>
 <td>184 M</td>
 <td rowspan="4">Co-DETR is an advanced end-to-end object detector. It is based on the DETR architecture and significantly enhances detection performance and training efficiency by introducing a collaborative hybrid assignment training strategy that combines traditional one-to-many label assignments with one-to-one matching in object detection tasks.</td>
 </tr>
@@ -401,24 +385,24 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>Co-Deformable-DETR-Swin-T</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">Training Model</a></td>
 <td>48.0（@640x640 input shape）</td>
-<td></td>
-<td></td>
+<td>120.17 / 120.17</td>
+<td>- / 15620.29</td>
 <td>187 M</td>
 </tr>
 <tr>
 <td>Co-DINO-R50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">Training Model</a></td>
 <td>52.0</td>
-<td></td>
-<td></td>
+<td>1123.23 / 1123.23</td>
+<td>- / -</td>
 <td>186 M</td>
 </tr>
 <tr>
 <td>Co-DINO-Swin-L</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">Training Model</a></td>
 <td>55.9 （@640x640 input shape）</td>
-<td></td>
-<td></td>
+<td>- / -</td>
+<td>- / -</td>
 <td>840 M</td>
 </tr>
 </table>

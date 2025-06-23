@@ -73,7 +73,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -100,7 +100,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -145,7 +145,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -173,7 +173,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
