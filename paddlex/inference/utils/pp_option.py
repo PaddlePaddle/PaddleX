@@ -69,6 +69,7 @@ class PaddlePredictorOption(object):
 
     def __init__(self, model_name=None, **kwargs):
         super().__init__()
+        self._is_default_run_mode = True
         self._model_name = model_name
         self._cfg = {}
         self._init_option(**kwargs)
@@ -106,6 +107,10 @@ class PaddlePredictorOption(object):
                 raise Exception(
                     f"{k} is not supported to set! The supported option is: {self._get_settable_attributes()}"
                 )
+
+        if "run_mode" in self._cfg:
+            self._is_default_run_mode = False
+
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
@@ -153,9 +158,10 @@ class PaddlePredictorOption(object):
         self.changed = True
 
     def reset_run_mode_by_default(self, model_name=None, device_type=None):
-        model_name = model_name or self.model_name
-        device_type = device_type or self.device_type
-        self._update("run_mode", get_default_run_mode(model_name, device_type))
+        if self._is_default_run_mode:
+            model_name = model_name or self.model_name
+            device_type = device_type or self.device_type
+            self._update("run_mode", get_default_run_mode(model_name, device_type))
 
     @property
     def run_mode(self):
@@ -198,6 +204,7 @@ class PaddlePredictorOption(object):
                 )
                 run_mode = "paddle"
 
+        self._is_default_run_mode = False
         self._update("run_mode", run_mode)
 
     @property
