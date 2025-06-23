@@ -303,7 +303,7 @@ class TXTReaderBackend(_BaseReaderBackend):
 
     def read_file(self, in_path):
         with open(in_path, "r") as f:
-            data = f.readlines()
+            data = f.read()
         return data
 
 

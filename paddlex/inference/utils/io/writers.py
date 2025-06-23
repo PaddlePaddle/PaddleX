@@ -54,6 +54,8 @@ class WriterType(enum.Enum):
     XLSX = 6
     CSV = 7
     YAML = 8
+    MARKDOWN = 9
+    TXT = 10
 
 
 class _BaseWriter(object):

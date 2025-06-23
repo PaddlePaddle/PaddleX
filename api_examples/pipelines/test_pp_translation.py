@@ -14,9 +14,10 @@
 
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-Translation")
+pipeline = create_pipeline(pipeline="PP-DocTranslation")
 
-img_path = "2504_10258v1.pdf"
+input_path = "docs/pipeline_usage/tutorials/ocr_pipelines/PP-Translation.md"
+output_path = "./output"
 
 chat_bot_config = {
     "module_name": "chat_bot",
@@ -27,31 +28,36 @@ chat_bot_config = {
 }
 
 
-visual_predict_res = pipeline.visual_predict(
-    img_path,
-    use_doc_orientation_classify=False,
-    use_doc_unwarping=False,
-    use_common_ocr=True,
-    use_seal_recognition=True,
-    use_table_recognition=True,
-)
+if input_path.lower().endswith(".md"):
+    ori_md_info_list = pipeline.load_from_markdown(input_path)
+else:
+    # Use PP-StructureV3 to get original markdown info list
+    visual_predict_res = pipeline.visual_predict(
+        input_path,
+        use_doc_orientation_classify=False,
+        use_doc_unwarping=False,
+        use_common_ocr=True,
+        use_seal_recognition=True,
+        use_table_recognition=True,
+    )
 
-ori_md_info_list = []
-for res in visual_predict_res:
-    layout_parsing_result = res["layout_parsing_result"]
-    ori_md_info_list.append(layout_parsing_result.markdown)
-    layout_parsing_result.print()
-    layout_parsing_result.save_to_img("./output")
-    layout_parsing_result.save_to_json("./output")
-    layout_parsing_result.save_to_xlsx("./output")
-    layout_parsing_result.save_to_html("./output")
-    layout_parsing_result.save_to_markdown("./output")
+    ori_md_info_list = []
+    for res in visual_predict_res:
+        layout_parsing_result = res["layout_parsing_result"]
+        ori_md_info_list.append(layout_parsing_result.markdown)
+        layout_parsing_result.save_to_img(output_path)
+        layout_parsing_result.save_to_markdown(output_path)
 
+    # To concatenate markdown pages into a single markdown file, when input is a pdf file
+    if input_path.lower().endswith(".pdf"):
+        ori_md_info = pipeline.concatenate_markdown_pages(ori_md_info_list)
+        ori_md_info.save_to_markdown(output_path)
 
-src_md_info, tgt_md_info = pipeline.translate(
+tgt_md_info_list = pipeline.translate(
     ori_md_info_list=ori_md_info_list,
-    target_language="zh",
+    target_language="en",
+    chunk_size=5000,
     chat_bot_config=chat_bot_config,
 )
-src_md_info.save_to_markdown("./output")
-tgt_md_info.save_to_markdown("./output")
+for tgt_md_info in tgt_md_info_list:
+    tgt_md_info.save_to_markdown(output_path)

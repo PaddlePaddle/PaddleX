@@ -37,8 +37,4 @@ class BaseCVResult(BaseResult, ImgMixin):
             fp = Path(fn)
             stem, suffix = fp.stem, fp.suffix
             fn = f"{stem}_{page_idx}{suffix}"
-        if (language := self.get("language", None)) is not None:
-            fp = Path(fn)
-            stem, suffix = fp.stem, fp.suffix
-            fn = f"{stem}_{language}{suffix}"
         return fn
