@@ -38,6 +38,7 @@ class InferRequest(ocr.BaseInferRequest):
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float]]] = None
     layoutMergeBboxesMode: Optional[str] = None
+    visualize: Optional[bool] = None
 
 
 class FormulaRecResult(BaseModel):
