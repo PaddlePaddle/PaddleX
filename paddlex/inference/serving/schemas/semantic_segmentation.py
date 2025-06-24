@@ -32,6 +32,7 @@ INFER_ENDPOINT: Final[str] = "/semantic-segmentation"
 class InferRequest(BaseModel):
     image: str
     targetSize: Optional[Union[int, image_segmentation.Size]] = None
+    visualize: Optional[bool] = None
 
 
 class InferResult(BaseModel):

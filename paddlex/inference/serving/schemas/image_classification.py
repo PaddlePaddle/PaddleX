@@ -33,6 +33,7 @@ INFER_ENDPOINT: Final[str] = "/image-classification"
 class InferRequest(BaseModel):
     image: str
     topk: Optional[Annotated[int, Field(gt=0)]] = None
+    visualize: Optional[bool] = None
 
 
 class InferResult(BaseModel):

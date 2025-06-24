@@ -872,6 +872,25 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>Yes</td>
 </tr>
 <tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Whether to return visualized results and intermediate images generated during the processing pipeline.<br/><br/>
+Behavior details:<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: intermediate images will be returned.</li>
+<li>If <code>false</code> is provided: no intermediate images will be returned.</li>
+<li>If this parameter is omitted or set to <code>null</code>: the value from the pipeline configuration <code>Serving.visualize</code> will be used.</li>
+</ul>
+<br/>For example, you can add the following to the pipeline configuration file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+This will disable image return by default. You can override the default behavior by explicitly passing the <code>visualize</code> parameter in the request body.<br/>
+If neither the request body nor the configuration file sets this parameter (or both are <code>null</code>/missing), the default behavior is to return intermediate images.
+</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
