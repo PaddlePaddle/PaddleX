@@ -97,7 +97,7 @@ PaddleX provides 2 end-to-end seal text detection models, which can be reference
 <tbody>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td>
-<td>96.47</td>
+<td>96.36</td>
 <td>9.70 / 3.56</td>
 <td>50.38 / 19.64</td>
 <td>4.7M</td>
@@ -105,7 +105,7 @@ PaddleX provides 2 end-to-end seal text detection models, which can be reference
 </tr>
 <tr>
 <td>PP-OCRv4_server_seal_det</td>
-<td>98.21</td>
+<td>98.40</td>
 <td>124.64 / 91.57</td>
 <td>545.68 / 439.86</td>
 <td>109</td>

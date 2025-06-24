@@ -127,7 +127,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 <tr>
 <td>RT-DETR-H_layout_3cls</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
-<td>95.9</td>
+<td>95.8</td>
 <td>114.80 / 25.65</td>
 <td>924.38 / 924.38</td>
 <td>470.1</td>

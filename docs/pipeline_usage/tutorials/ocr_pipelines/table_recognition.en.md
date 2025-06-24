@@ -119,7 +119,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <tr>
 <td>PP-OCRv4_server_rec</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
-<td>79.20</td>
+<td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
 <td>173 M</td>
@@ -253,7 +253,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <td>PicoDet-S_layout_17cls</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
-<td>70.3</td>
+<td>87.4</td>
 <td>8.80 / 3.62</td>
 <td>17.51 / 6.35</td>
 <td>4.8</td>
@@ -280,7 +280,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <td>RT-DETR-H_layout_3cls</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
-<td>95.9</td>
+<td>95.8</td>
 <td>114.80 / 25.65</td>
 <td>924.38 / 924.38</td>
 <td>470.1</td>
@@ -362,7 +362,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <td>PP-OCRv4_server_rec_doc</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td>81.53</td>
+<td>86.58</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
 <td>182 M</td>
@@ -381,7 +381,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <tr>
 <td>PP-OCRv4_server_rec</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
-<td>80.61 </td>
+<td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
 <td>173 M</td>
@@ -415,7 +415,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <tr>
 <td>PP-OCRv4_server_rec_doc</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td>81.53</td>
+<td>86.58</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
 <td>182 M</td>
@@ -433,7 +433,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <tr>
 <td>PP-OCRv4_server_rec</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
-<td>80.61 </td>
+<td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
 <td>173 M</td>
@@ -649,7 +649,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
                   </ul>
               </li>
           </ul>
