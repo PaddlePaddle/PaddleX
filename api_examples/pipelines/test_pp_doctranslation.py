@@ -16,7 +16,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="PP-DocTranslation")
 
-input_path = "docs/pipeline_usage/tutorials/ocr_pipelines/PP-Translation.md"
+input_path = "document_sample.pdf"
 output_path = "./output"
 
 chat_bot_config = {

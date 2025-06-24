@@ -26,7 +26,7 @@ from ..base import BasePipeline
 from .result import MarkdownResult
 
 
-@pipeline_requires_extra("ie")
+@pipeline_requires_extra("trans")
 class PP_DocTranslation_Pipeline(BasePipeline):
     entities = ["PP-DocTranslation"]
 
@@ -247,6 +247,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         return markdown_info_list
 
     def split_markdown(self, md_text, chunk_size):
+        from bs4 import BeautifulSoup
 
         if (
             not isinstance(md_text, str)
@@ -258,34 +259,100 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         chunks = []
         current_chunk = []
 
-        # if md_text less than chunk_size, return the md_text
+        # 如果整体文本小于chunk_size，直接返回
         if len(md_text) < chunk_size:
-            chunks.append(md_text)
-            return chunks
+            return [md_text]
 
-        # split the md_text into paragraphs
-        paragraphs = md_text.split("\n\n")
+        # 段落分割，两个及以上换行符视为分段
+        paragraphs = re.split(r"\n{2,}", md_text)
+
+        def split_table_to_chunks(table_html):
+            # 使用 BeautifulSoup 解析表格
+            soup = BeautifulSoup(table_html, "html.parser")
+            table = soup.find("table")
+
+            if not table:
+                return [table_html]  # 如果没有找到表格，直接返回原始内容
+
+            # 提取所有<tr>行
+            trs = table.find_all("tr")
+
+            # 按行累加，确保每个chunk长度<=chunk_size，且不破坏<tr>的完整性
+            table_chunks = []
+            current_rows = []
+            current_len = len("<table></table>")  # 基础长度
+
+            for tr in trs:
+                tr_str = str(tr)
+                row_len = len(tr_str)
+                if current_rows and current_len + row_len > chunk_size:
+                    # 打包当前chunk
+                    content = "<table>" + "".join(current_rows) + "</table>"
+                    table_chunks.append(content)
+                    current_rows = []  # 重置当前行列表
+                    current_len = len("<table></table>") + row_len
+
+                current_rows.append(tr_str)
+                current_len += row_len
+
+            if current_rows:
+                content = "<table>" + "".join(current_rows) + "</table>"
+                table_chunks.append(content)
+
+            return table_chunks
+
+        # 句子分割，英文句号需区分小数点
+        sentence_pattern = re.compile(
+            r"(?<=[。！？!?])|(?<=\.)\s+(?=[A-Z])|(?<=\.)\s*$"
+        )
 
         for paragraph in paragraphs:
-            if len(paragraph) == 0:
-                # 空行直接跳过
+            paragraph = paragraph.strip()
+            if not paragraph:
                 continue
 
-            if len(paragraph) <= chunk_size:
-                current_chunk.append(paragraph)
-            else:
-                # if the paragraph is too long, split it into sentences
-                sentences = re.split(r"(?<=[。.!?])", paragraph)
-                for sentence in sentences:
-                    if len(sentence) == 0:
-                        continue
+            # 使用 BeautifulSoup 检查是否为完整表格
+            soup = BeautifulSoup(paragraph, "html.parser")
+            table = soup.find("table")
 
-                    if len(sentence) > chunk_size:
-                        raise ValueError("A sentence exceeds the chunk size limit.")
-
-                    # if the current chunk is too long, store it and start a new one
-                    if sum(len(s) for s in current_chunk) + len(sentence) > chunk_size:
+            if table:
+                table_html = str(table)
+                if len(table_html) <= chunk_size:
+                    if current_chunk:
                         chunks.append("\n\n".join(current_chunk))
+                        current_chunk = []
+                    chunks.append(table_html)
+                else:
+                    # 表格太大，行分段
+                    if current_chunk:
+                        chunks.append("\n\n".join(current_chunk))
+                        current_chunk = []
+                    table_chunks = split_table_to_chunks(table_html)
+                    chunks.extend(table_chunks)
+                continue
+
+            # 普通文本处理
+            if sum(len(s) for s in current_chunk) + len(paragraph) <= chunk_size:
+                current_chunk.append(paragraph)
+            elif len(paragraph) <= chunk_size:
+                if current_chunk:
+                    chunks.append("\n\n".join(current_chunk))
+                current_chunk = [paragraph]
+            else:
+                # 段落太长，按句子切分
+                sentences = [
+                    s for s in sentence_pattern.split(paragraph) if s and s.strip()
+                ]
+                for sentence in sentences:
+                    sentence = sentence.strip()
+                    if not sentence:
+                        continue
+                    if len(sentence) > chunk_size:
+                        print(sentence)
+                        raise ValueError("A sentence exceeds the chunk size limit.")
+                    if sum(len(s) for s in current_chunk) + len(sentence) > chunk_size:
+                        if current_chunk:
+                            chunks.append("\n\n".join(current_chunk))
                         current_chunk = [sentence]
                     else:
                         current_chunk.append(sentence)
@@ -297,7 +364,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         if current_chunk:
             chunks.append("\n\n".join(current_chunk))
 
-        return chunks
+        return [c for c in chunks if c.strip()]
 
     def translate(
         self,

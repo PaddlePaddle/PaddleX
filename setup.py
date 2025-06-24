@@ -74,6 +74,7 @@ DEP_SPECS = {
     "ujson": "",
     "uvicorn": ">= 0.16",
     "yarl": ">= 1.9",
+    "beautifulsoup4": "",
 }
 
 REQUIRED_DEPS = [
@@ -135,6 +136,21 @@ EXTRAS = {
             "scikit-learn",
             "shapely",
             "tokenizers",
+        ],
+        "trans": [
+            "ftfy",
+            "imagesize",
+            "lxml",
+            "openai",
+            "opencv-contrib-python",
+            "openpyxl",
+            "premailer",
+            "pyclipper",
+            "pypdfium2",
+            "scikit-learn",
+            "shapely",
+            "tokenizers",
+            "beautifulsoup4",
         ],
         "ocr": [
             "einops",

@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pathlib as Path
+from pathlib import Path
+
 from ...common.result import BaseCVResult, MarkdownMixin
 
 
@@ -21,7 +22,7 @@ class MarkdownResult(BaseCVResult, MarkdownMixin):
         """Initializes a new instance of the class with the specified data."""
         super().__init__(data)
         MarkdownMixin.__init__(self)
-        
+
     def _get_input_fn(self):
         fn = super()._get_input_fn()
         if (page_idx := self.get("page_index", None)) is not None:
