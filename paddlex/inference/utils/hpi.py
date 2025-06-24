@@ -270,6 +270,8 @@ def suggest_inference_backend_and_config(
             "paddle_mkldnn",
             "paddle_tensorrt",
             "paddle_tensorrt_fp16",
+            "tensorrt",
+            "tensorrt_fp16"
         ), pseudo_backend
         if pseudo_backend == "paddle":
             suggested_backend_config.update({"run_mode": "paddle"})
