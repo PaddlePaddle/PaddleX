@@ -609,19 +609,20 @@ Below are the API references for basic service deployment and examples of multi-
 <tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Whether to return visualized results and intermediate images generated during the processing pipeline.<br/><br/>
-Behavior details:<br/>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
 <ul style="margin: 0 0 0 1em; padding-left: 0em;">
-<li>If <code>true</code> is provided: intermediate images will be returned.</li>
-<li>If <code>false</code> is provided: no intermediate images will be returned.</li>
-<li>If this parameter is omitted or set to <code>null</code>: the value from the pipeline configuration <code>Serving.visualize</code> will be used.</li>
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
 </ul>
-<br/>For example, you can add the following to the pipeline configuration file:<br/>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
 <pre><code>Serving:
   visualize: False
 </code></pre>
-This will disable image return by default. You can override the default behavior by explicitly passing the <code>visualize</code> parameter in the request body.<br/>
-If neither the request body nor the configuration file sets this parameter (or both are <code>null</code>/missing), the default behavior is to return intermediate images.
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
 </td>
 <td>No</td>
 </tr>
