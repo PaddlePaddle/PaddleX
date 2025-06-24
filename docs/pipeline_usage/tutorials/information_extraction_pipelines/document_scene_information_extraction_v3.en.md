@@ -1925,7 +1925,7 @@ public class Main {
         JsonNode resultVector = objectMapper.readTree(responseVector.body().string()).get("result");
 
         ObjectNode chatPayload = objectMapper.createObjectNode();
-        chatPayload.putArray("keyList").add(keys[0]);  
+        chatPayload.putArray("keyList").add(keys[0]);
         chatPayload.set("visualInfo", resultVisual.get("visualInfo"));
         chatPayload.put("useVectorRetrieval", true);
         chatPayload.set("vectorInfo", resultVector.get("vectorInfo"));
