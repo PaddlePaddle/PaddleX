@@ -19,7 +19,7 @@ Keypoint detection algorithms mainly include two approaches: Top-Down and Bottom
     <th>AP(0.5:0.95)</th>
     <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
     <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-    <th>Model Size (M)</th>
+    <th>Model Storage Size (MB)</th>
     <th>Introduction</th>
   </tr>
   <tr>

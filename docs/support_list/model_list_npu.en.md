@@ -12,7 +12,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Top-1 Accuracy (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -507,7 +507,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -749,7 +749,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mIoU (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -860,7 +860,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Mask AP</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1054,7 +1054,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Detection Hmean (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1078,7 +1078,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1100,7 +1100,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1117,7 +1117,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1136,7 +1136,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Accuracy (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1224,7 +1224,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1261,7 +1261,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <th>mae</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1333,7 +1333,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <th>Precision</th>
 <th>Recall</th>
 <th>F1-Score</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1375,7 +1375,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Acc (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>

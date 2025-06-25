@@ -17,7 +17,7 @@ Face feature models typically take standardized face images processed through de
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>

@@ -33,7 +33,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 <tr>
 <th>Model Name</th>
 <th>Acc (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>

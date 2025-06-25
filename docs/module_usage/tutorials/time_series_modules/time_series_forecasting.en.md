@@ -17,7 +17,7 @@ Time series forecasting aims to predict the possible values or states at a futur
 <th>mae</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduce</th>
 </tr>
 </thead>

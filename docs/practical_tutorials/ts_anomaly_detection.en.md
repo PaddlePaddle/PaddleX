@@ -35,7 +35,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <th>Precision</th>
 <th>Recall</th>
 <th>F1-Score</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>

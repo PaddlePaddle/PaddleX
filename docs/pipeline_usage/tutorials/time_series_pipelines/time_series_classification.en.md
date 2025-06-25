@@ -16,7 +16,7 @@ Time series classification is a technique that categorizes time-series data into
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Acc(%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>

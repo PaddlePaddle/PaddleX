@@ -168,7 +168,7 @@ PaddleX 提供了 4个人脸检测模型，具体可参考 [模型列表](../sup
 <th>AP(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -479,7 +479,7 @@ PaddleX 提供了 2个人脸特征模型，具体可参考 [模型列表](../sup
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>

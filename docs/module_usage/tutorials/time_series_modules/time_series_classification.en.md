@@ -14,7 +14,7 @@ Time series classification involves identifying and categorizing different patte
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Acc(%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>

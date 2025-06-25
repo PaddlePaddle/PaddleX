@@ -15,7 +15,7 @@ Unsupervised anomaly detection is a technology that automatically identifies and
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>ROCAUC（Avg）</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>

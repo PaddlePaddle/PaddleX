@@ -17,7 +17,7 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Avg (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>

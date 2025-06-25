@@ -14,7 +14,7 @@ Open-vocabulary segmentation is an image segmentation task that aims to segment 
 <th>Model</th><th>Model Download Link</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>

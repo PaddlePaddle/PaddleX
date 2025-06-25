@@ -16,7 +16,7 @@ Small object detection typically refers to accurately detecting and locating sma
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description (VisDrone)</th>
 </tr>
 <tr>

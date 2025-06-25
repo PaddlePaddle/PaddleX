@@ -43,7 +43,7 @@ PaddleX 提供了 18 个端到端的语义分割模型，具体可参考 [模型
 <th>mIoU (%)</th>
 <th>GPU 推理耗时(ms)</th>
 <th>CPU 推理耗时(ms)</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
