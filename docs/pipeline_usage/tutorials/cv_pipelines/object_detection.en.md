@@ -23,7 +23,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>42.6</td>
 <td>14.31 / 11.06</td>
 <td>45.95 / 25.06</td>
-<td>20.9 M</td>
+<td>20.9</td>
 <td rowspan="2">PP-PicoDet is a lightweight object detection algorithm for full-size, wide-angle targets, considering the computational capacity of mobile devices. Compared to traditional object detection algorithms, PP-PicoDet has a smaller model size and lower computational complexity, achieving higher speed and lower latency while maintaining detection accuracy.</td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>29.1</td>
 <td>9.15 / 3.26</td>
 <td>16.06 / 4.04</td>
-<td>4.4 M</td>
+<td>4.4</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-L</td>
@@ -40,7 +40,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>52.9</td>
 <td>32.06 / 28.00</td>
 <td>185.32 / 116.21</td>
-<td>185.3 M</td>
+<td>185.3</td>
 <td rowspan="2">PP-YOLOE_plus is an upgraded version of the high-precision cloud-edge integrated model PP-YOLOE, developed by Baidu's PaddlePaddle vision team. By using the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the model's end-to-end inference speed.</td>
 </tr>
 <tr>
@@ -49,7 +49,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>43.7</td>
 <td>11.43 / 7.52</td>
 <td>60.16 / 26.94</td>
-<td>28.3 M</td>
+<td>28.3</td>
 </tr>
 <tr>
 <td>RT-DETR-H</td>
@@ -57,7 +57,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>56.3</td>
 <td>114.57 / 101.56</td>
 <td>938.20 / 938.20</td>
-<td>435.8 M</td>
+<td>435.8</td>
 <td rowspan="2">RT-DETR is the first real-time end-to-end object detector. The model features an efficient hybrid encoder to meet both model performance and throughput requirements, efficiently handling multi-scale features, and proposes an accelerated and optimized query selection mechanism to optimize the dynamics of decoder queries. RT-DETR supports flexible end-to-end inference speeds by using different decoders.</td>
 </tr>
 <tr>
@@ -66,7 +66,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>53.0</td>
 <td>34.76 / 27.60</td>
 <td>495.39 / 247.68</td>
-<td>113.7 M</td>
+<td>113.7</td>
 </tr>
 </table>
 
@@ -88,7 +88,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>41.1</td>
 <td>120.28 / 120.28</td>
 <td>- / 6514.61</td>
-<td>245.4 M</td>
+<td>245.4</td>
 <td rowspan="2">Cascade-FasterRCNN is an improved version of the Faster R-CNN object detection model. By coupling multiple detectors and optimizing detection results using different IoU thresholds, it addresses the mismatch problem between training and prediction stages, enhancing the accuracy of object detection.</td>
 </tr>
 <tr>
@@ -97,20 +97,20 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>45.0</td>
 <td>124.10 / 124.10</td>
 <td>- / 6709.52</td>
-<td>246.2 M</td>
+<td>246.2</td>
 </tr>
 <tr>
 <td>CenterNet-DLA-34</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-DLA-34_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">Training Model</a></td>
 <td>37.6</td>
-<td>75.4 M</td>
+<td>75.4</td>
 <td rowspan="2">CenterNet is an anchor-free object detection model that treats the keypoints of the object to be detected as a single point—the center point of its bounding box, and performs regression through these keypoints.</td>
 </tr>
 <tr>
 <td>CenterNet-ResNet50</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">Training Model</a></td>
 <td>38.9</td>
-<td>319.7 M</td>
+<td>319.7</td>
 </tr>
 <tr>
 <td>DETR-R50</td>
@@ -118,7 +118,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>42.3</td>
 <td>58.80 / 26.90</td>
 <td>370.96 / 208.77</td>
-<td>159.3 M</td>
+<td>159.3</td>
 <td>DETR is a transformer-based object detection model proposed by Facebook. It achieves end-to-end object detection without the need for predefined anchor boxes or NMS post-processing strategies.</td>
 </tr>
 <tr>
@@ -127,7 +127,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>37.8</td>
 <td>76.90 / 76.90</td>
 <td>- / 4136.79</td>
-<td>137.5 M</td>
+<td>137.5</td>
 <td rowspan="9">Faster R-CNN is a typical two-stage object detection model that first generates region proposals and then performs classification and regression on these proposals. Compared to its predecessors R-CNN and Fast R-CNN, Faster R-CNN's main improvement lies in the region proposal aspect, using a Region Proposal Network (RPN) to provide region proposals instead of traditional selective search. RPN is a Convolutional Neural Network (CNN) that shares convolutional features with the detection network, reducing the computational overhead of region proposals.</td>
 </tr>
 <tr>
@@ -136,7 +136,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>38.4</td>
 <td>95.48 / 95.48</td>
 <td>- / 3693.90</td>
-<td>148.1 M</td>
+<td>148.1</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-FPN</td>
@@ -144,7 +144,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>39.5</td>
 <td>98.03 / 98.03</td>
 <td>- / 4278.36</td>
-<td>148.1 M</td>
+<td>148.1</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
@@ -152,7 +152,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>41.4</td>
 <td>99.23 / 99.23</td>
 <td>- / 4415.68</td>
-<td>148.1 M</td>
+<td>148.1</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50</td>
@@ -160,7 +160,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>36.7</td>
 <td>129.10 / 129.10</td>
 <td>- / 3868.44</td>
-<td>120.2 M</td>
+<td>120.2</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101-FPN</td>
@@ -168,7 +168,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>41.4</td>
 <td>131.48 / 131.48</td>
 <td>- / 4380.00</td>
-<td>216.3 M</td>
+<td>216.3</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101</td>
@@ -176,7 +176,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>39.0</td>
 <td>216.71 / 216.71</td>
 <td>- / 5376.45</td>
-<td>188.1 M</td>
+<td>188.1</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNeXt101-vd-FPN</td>
@@ -184,13 +184,13 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>43.4</td>
 <td>234.38 / 234.38</td>
 <td>- / 6154.61</td>
-<td>360.6 M</td>
+<td>360.6</td>
 </tr>
 <tr>
 <td>FasterRCNN-Swin-Tiny-FPN</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-Swin-Tiny-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">Training Model</a></td>
 <td>42.6</td>
-<td>159.8 M</td>
+<td>159.8</td>
 </tr>
 <tr>
 <td>FCOS-ResNet50</td>
@@ -198,7 +198,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>39.6</td>
 <td>101.02 / 34.42</td>
 <td>752.15 / 752.15</td>
-<td>124.2 M</td>
+<td>124.2</td>
 <td>FCOS is an anchor-free object detection model that performs dense predictions. It uses the backbone of RetinaNet and directly regresses the width and height of the target object on the feature map, predicting the object's category and centerness (the degree of offset of pixels on the feature map from the object's center), which is eventually used as a weight to adjust the object score.</td>
 </tr>
 <tr>
@@ -207,7 +207,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>42.6</td>
 <td>14.31 / 11.06</td>
 <td>45.95 / 25.06</td>
-<td>20.9 M</td>
+<td>20.9</td>
 <td rowspan="4">PP-PicoDet is a lightweight object detection algorithm designed for full-size and wide-aspect-ratio targets, with a focus on mobile device computation. Compared to traditional object detection algorithms, PP-PicoDet boasts smaller model sizes and lower computational complexity, achieving higher speeds and lower latency while maintaining detection accuracy.</td>
 </tr>
 <tr>
@@ -216,7 +216,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>37.5</td>
 <td>10.48 / 5.00</td>
 <td>22.88 / 9.03</td>
-<td>16.8 M</td>
+<td>16.8</td>
 </tr>
 <tr>
 <td>PicoDet-S</td>
@@ -224,7 +224,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>29.1</td>
 <td>9.15 / 3.26</td>
 <td>16.06 / 4.04</td>
-<td>4.4 M</td>
+<td>4.4</td>
 </tr>
 <tr>
 <td>PicoDet-XS</td>
@@ -232,7 +232,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>26.2</td>
 <td>9.54 / 3.52</td>
 <td>17.96 / 5.38</td>
-<td>5.7 M</td>
+<td>5.7</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-L</td>
@@ -240,7 +240,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>52.9</td>
 <td>32.06 / 28.00</td>
 <td>185.32 / 116.21</td>
-<td>185.3 M</td>
+<td>185.3</td>
 <td rowspan="4">PP-YOLOE_plus is an iteratively optimized and upgraded version of PP-YOLOE, a high-precision cloud-edge integrated model developed by Baidu PaddlePaddle's Vision Team. By leveraging the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the end-to-end inference speed of the model.</td>
 </tr>
 <tr>
@@ -249,7 +249,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>49.8</td>
 <td>18.37 / 15.04</td>
 <td>108.77 / 63.48</td>
-<td>82.3 M</td>
+<td>82.3</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-S</td>
@@ -257,7 +257,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>43.7</td>
 <td>11.43 / 7.52</td>
 <td>60.16 / 26.94</td>
-<td>28.3 M</td>
+<td>28.3</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-X</td>
@@ -265,7 +265,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>54.7</td>
 <td>56.28 / 50.60</td>
 <td>292.08 / 212.24</td>
-<td>349.4 M</td>
+<td>349.4</td>
 </tr>
 <tr>
 <td>RT-DETR-H</td>
@@ -273,7 +273,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>56.3</td>
 <td>114.57 / 101.56</td>
 <td>938.20 / 938.20</td>
-<td>435.8 M</td>
+<td>435.8</td>
 <td rowspan="5">RT-DETR is the first real-time end-to-end object detector. It features an efficient hybrid encoder that balances model performance and throughput, efficiently processes multi-scale features, and introduces an accelerated and optimized query selection mechanism to dynamize decoder queries. RT-DETR supports flexible end-to-end inference speeds through the use of different decoders.</td>
 </tr>
 <tr>
@@ -282,7 +282,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>53.0</td>
 <td>34.76 / 27.60</td>
 <td>495.39 / 247.68</td>
-<td>113.7 M</td>
+<td>113.7</td>
 </tr>
 <tr>
 <td>RT-DETR-R18</td>
@@ -290,7 +290,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>46.5</td>
 <td>19.11 / 14.82</td>
 <td>263.13 / 143.05</td>
-<td>70.7 M</td>
+<td>70.7</td>
 </tr>
 <tr>
 <td>RT-DETR-R50</td>
@@ -298,7 +298,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>53.1</td>
 <td>41.11 / 10.12</td>
 <td>536.20 / 482.86</td>
-<td>149.1 M</td>
+<td>149.1</td>
 </tr>
 <tr>
 <td>RT-DETR-X</td>
@@ -306,7 +306,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>54.8</td>
 <td>61.91 / 51.41</td>
 <td>639.79 / 639.79</td>
-<td>232.9 M</td>
+<td>232.9</td>
 </tr>
 <tr>
 <td>YOLOv3-DarkNet53</td>
@@ -314,7 +314,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>39.1</td>
 <td>39.62 / 35.54</td>
 <td>166.57 / 136.34</td>
-<td>219.7 M</td>
+<td>219.7</td>
 <td rowspan="3">YOLOv3 is a real-time end-to-end object detector that utilizes a unique single Convolutional Neural Network (CNN) to frame the object detection problem as a regression task, enabling real-time detection. The model employs multi-scale detection to enhance performance across different object sizes.</td>
 </tr>
 <tr>
@@ -323,7 +323,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>31.4</td>
 <td>16.54 / 6.21</td>
 <td>64.37 / 45.55</td>
-<td>83.8 M</td>
+<td>83.8</td>
 </tr>
 <tr>
 <td>YOLOv3-ResNet50_vd_DCN</td>
@@ -331,7 +331,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>40.6</td>
 <td>31.64 / 26.72</td>
 <td>226.75 / 226.75</td>
-<td>163.0 M</td>
+<td>163.0</td>
 </tr>
 <tr>
 <td>YOLOX-L</td>
@@ -339,7 +339,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>50.1</td>
 <td>49.68 / 45.03</td>
 <td>232.52 / 156.24</td>
-<td>192.5 M</td>
+<td>192.5</td>
 <td rowspan="6">Building upon YOLOv3's framework, YOLOX significantly boosts detection performance in complex scenarios by incorporating Decoupled Head, Data Augmentation, Anchor Free, and SimOTA components.</td>
 </tr>
 <tr>
@@ -348,7 +348,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>46.9</td>
 <td>43.46 / 29.52</td>
 <td>147.64 / 80.06</td>
-<td>90.0 M</td>
+<td>90.0</td>
 </tr>
 <tr>
 <td>YOLOX-N</td>
@@ -356,7 +356,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>26.1</td>
 <td>42.94 / 17.79</td>
 <td>64.15 / 7.19</td>
-<td>3.4 M</td>
+<td>3.4</td>
 </tr>
 <tr>
 <td>YOLOX-S</td>
@@ -364,7 +364,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>40.4</td>
 <td>46.53 / 29.34</td>
 <td>98.37 / 35.02</td>
-<td>32.0 M</td>
+<td>32.0</td>
 </tr>
 <tr>
 <td>YOLOX-T</td>
@@ -372,7 +372,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>32.9</td>
 <td>31.81 / 18.91</td>
 <td>55.34 / 11.63</td>
-<td>18.1 M</td>
+<td>18.1</td>
 </tr>
 <tr>
 <td>YOLOX-X</td>
@@ -380,7 +380,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>51.8</td>
 <td>84.06 / 77.28</td>
 <td>390.38 / 272.88</td>
-<td>351.5 M</td>
+<td>351.5</td>
 </tr>
 <tr>
 <td>Co-Deformable-DETR-R50</td>
@@ -388,7 +388,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>49.7</td>
 <td>259.62 / 259.62</td>
 <td>32413.76 / 32413.76</td>
-<td>184 M</td>
+<td>184</td>
 <td rowspan="4">Co-DETR is an advanced end-to-end object detector. It is based on the DETR architecture and significantly enhances detection performance and training efficiency by introducing a collaborative hybrid assignment training strategy that combines traditional one-to-many label assignments with one-to-one matching in object detection tasks.</td>
 </tr>
 <tr>
@@ -397,7 +397,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>48.0（@640x640 input shape）</td>
 <td>120.17 / 120.17</td>
 <td>- / 15620.29</td>
-<td>187 M</td>
+<td>187</td>
 </tr>
 <tr>
 <td>Co-DINO-R50</td>
@@ -405,7 +405,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>52.0</td>
 <td>1123.23 / 1123.23</td>
 <td>- / -</td>
-<td>186 M</td>
+<td>186</td>
 </tr>
 <tr>
 <td>Co-DINO-Swin-L</td>
@@ -413,7 +413,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <td>55.9 （@640x640 input shape）</td>
 <td>- / -</td>
 <td>- / -</td>
-<td>840 M</td>
+<td>840</td>
 </tr>
 </table>
 

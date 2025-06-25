@@ -51,7 +51,7 @@ PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型
 <td>50.6</td>
 <td>180.83 / 180.83</td>
 <td>1711.24 / 1711.24</td>
-<td>449.9 M</td>
+<td>449.9</td>
 <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@ PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型
 <td>45.7</td>
 <td>113.20 / 113.20</td>
 <td>1179.56 / 1179.56</td>
-<td>113.6 M</td>
+<td>113.6</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-M</td>
@@ -68,7 +68,7 @@ PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型
 <td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td>66.6 M</td>
+<td>66.6</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-S</td>
@@ -76,7 +76,7 @@ PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型
 <td>41.0</td>
 <td>120.86 / 120.86</td>
 <td>- / 2163.07</td>
-<td>51.8 M</td>
+<td>51.8</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-X</td>
@@ -84,7 +84,7 @@ PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型
 <td>47.5</td>
 <td>141.43 / 141.43</td>
 <td>1379.14 / 1379.14</td>
-<td>237.5 M</td>
+<td>237.5</td>
 </tr>
 </table>
 

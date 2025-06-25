@@ -26,7 +26,7 @@ comments: true
 <td>82.15</td>
 <td>582.92 / 536.28</td>
 <td>3513.72 / 2543.10</td>
-<td>270 M</td>
+<td>270</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
@@ -34,7 +34,7 @@ comments: true
 <td>73.10</td>
 <td>28.12 / 23.84</td>
 <td>398.31 / 398.31</td>
-<td>28.5 M</td>
+<td>28.5</td>
 </tr>
 </tbody>
 </table>
@@ -59,7 +59,7 @@ comments: true
 <td>80.36</td>
 <td>481.33 / 446.18</td>
 <td>2952.95 / 1907.07</td>
-<td>94.9 M</td>
+<td>94.9</td>
 </tr>
 <tr>
 <td>Deeplabv3_Plus-R101</td>
@@ -67,7 +67,7 @@ comments: true
 <td>81.10</td>
 <td>766.70 / 194.42</td>
 <td>4441.56 / 2984.19</td>
-<td>162.5 M</td>
+<td>162.5</td>
 </tr>
 <tr>
 <td>Deeplabv3-R50</td>
@@ -75,7 +75,7 @@ comments: true
 <td>79.90</td>
 <td>681.65 / 602.10</td>
 <td>3786.41 / 3093.10</td>
-<td>138.3 M</td>
+<td>138.3</td>
 </tr>
 <tr>
 <td>Deeplabv3-R101</td>
@@ -83,7 +83,7 @@ comments: true
 <td>80.85</td>
 <td>974.62 / 896.99</td>
 <td>5222.60 / 4230.79</td>
-<td>205.9 M</td>
+<td>205.9</td>
 </tr>
 <tr>
 <td>OCRNet_HRNet-W18</td>
@@ -91,7 +91,7 @@ comments: true
 <td>80.67</td>
 <td>271.02 / 221.38</td>
 <td>1791.52 / 1061.62</td>
-<td>43.1 M</td>
+<td>43.1</td>
 </tr>
 <tr>
 <td>OCRNet_HRNet-W48</td>
@@ -99,7 +99,7 @@ comments: true
 <td>82.15</td>
 <td>582.92 / 536.28</td>
 <td>3513.72 / 2543.10</td>
-<td>270 M</td>
+<td>270</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
@@ -107,7 +107,7 @@ comments: true
 <td>73.10</td>
 <td>28.12 / 23.84</td>
 <td>398.31 / 398.31</td>
-<td>28.5 M</td>
+<td>28.5</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-B</td>
@@ -115,49 +115,49 @@ comments: true
 <td>75.25</td>
 <td>35.69 / 35.69</td>
 <td>485.10 / 485.10</td>
-<td>47.0 M</td>
+<td>47.0</td>
 </tr>
 <tr>
 <td>SegFormer-B0 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B0 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>76.73</td>
 <td>11.1946</td>
 <td>268.929</td>
-<td>13.2 M</td>
+<td>13.2</td>
 </tr>
 <tr>
 <td>SegFormer-B1 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B1 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>78.35</td>
 <td>17.9998</td>
 <td>403.393</td>
-<td>48.5 M</td>
+<td>48.5</td>
 </tr>
 <tr>
 <td>SegFormer-B2 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B2 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>81.60</td>
 <td>48.0371</td>
 <td>1248.52</td>
-<td>96.9 M</td>
+<td>96.9</td>
 </tr>
 <tr>
 <td>SegFormer-B3 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B3 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>82.47</td>
 <td>64.341</td>
 <td>1666.35</td>
-<td>167.3 M</td>
+<td>167.3</td>
 </tr>
 <tr>
 <td>SegFormer-B4 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B4 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>82.38</td>
 <td>82.4336</td>
 <td>1995.42</td>
-<td>226.7 M</td>
+<td>226.7</td>
 </tr>
 <tr>
 <td>SegFormer-B5 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B5 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>82.58</td>
 <td>97.3717</td>
 <td>2420.19</td>
-<td>229.7 M</td>
+<td>229.7</td>
 </tr>
 </tbody>
 </table>
@@ -179,7 +179,7 @@ comments: true
 <td>40.92</td>
 <td>23.78 / 17.41</td>
 <td>282.05 / 38.88</td>
-<td>30.8 M</td>
+<td>30.8</td>
 </tr>
 <tr>
 <td>SeaFormer_large</td>
@@ -187,7 +187,7 @@ comments: true
 <td>43.66</td>
 <td>23.76 / 23.40</td>
 <td>348.86 / 61.81</td>
-<td>49.8 M</td>
+<td>49.8</td>
 </tr>
 <tr>
 <td>SeaFormer_small</td>
@@ -195,7 +195,7 @@ comments: true
 <td>38.73</td>
 <td>18.83 / 13.27</td>
 <td>272.28 / 35.17</td>
-<td>14.3 M</td>
+<td>14.3</td>
 </tr>
 <tr>
 <td>SeaFormer_tiny</td>
@@ -211,7 +211,7 @@ comments: true
 <td>49.70</td>
 <td>65.21 / 65.21</td>
 <td>- / 629.85</td>
-<td>243 M</td>
+<td>243</td>
 </tr>
 <tr>
 <td>MaskFormer_tiny</td>
@@ -219,7 +219,7 @@ comments: true
 <td>46.69</td>
 <td>47.95 / 47.95</td>
 <td>- / 492.67</td>
-<td>160 M</td>
+<td>160</td>
 </tr>
 </tbody>
 </table>

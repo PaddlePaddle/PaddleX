@@ -56,7 +56,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>0.179</td>
 <td>19.05 / 19.05</td>
 <td>- / 869.82</td>
-<td>30.3 M</td>
+<td>30.3</td>
 <td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>
@@ -111,7 +111,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>59.52</td>
 <td>23.96 / 21.75</td>
 <td>- / 43.12</td>
-<td>6.9 M</td>
+<td>6.9</td>
 <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
 <tr>
@@ -120,7 +120,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>63.69</td>
 <td>23.43 / 22.16</td>
 <td>- / 41.80</td>
-<td>6.9 M</td>
+<td>6.9</td>
 <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
 </tr>
 </table>
@@ -144,7 +144,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>90.4</td>
 <td>33.59 / 33.59</td>
 <td>503.01 / 251.08</td>
-<td>123.76 M</td>
+<td>123.76</td>
 <td>A high-precision layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using RT-DETR-L.</td>
 </tr>
 <tr>
@@ -190,7 +190,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>97.5</td>
 <td>9.57 / 6.63</td>
 <td>27.66 / 16.75</td>
-<td>7.4 M</td>
+<td>7.4</td>
 <td>A high-efficiency layout area localization model trained on a self-built dataset using PicoDet-1x, capable of detecting table regions.</td>
 </tr>
 </tbody></table>
@@ -394,7 +394,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>86.58</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
-<td>182 M</td>
+<td>182</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
@@ -403,7 +403,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>78.74</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.5 M</td>
+<td>10.5</td>
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
@@ -412,7 +412,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>173 M</td>
+<td>173</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
@@ -421,7 +421,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>72.96</td>
 <td>3.89 / 1.16</td>
 <td>8.72 / 3.56</td>
-<td>10.3 M</td>
+<td>10.3</td>
 <td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
 </tr>
 </table>
@@ -441,7 +441,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>68.81</td>
 <td>10.38 / 8.31</td>
 <td>66.52 / 30.83</td>
-<td>80.5 M</td>
+<td>80.5</td>
 <td rowspan="1">
 SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
 </td>
@@ -463,7 +463,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>65.07</td>
 <td>6.29 / 1.57</td>
 <td>20.64 / 5.40</td>
-<td>48.8 M</td>
+<td>48.8</td>
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
@@ -484,7 +484,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td> 70.39</td>
 <td>4.81 / 1.23</td>
 <td>17.20 / 4.18</td>
-<td>7.5 M</td>
+<td>7.5</td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
@@ -514,7 +514,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>60.21</td>
 <td>3.73 / 0.98</td>
 <td>8.76 / 2.91</td>
-<td>9.6 M</td>
+<td>9.6</td>
 <td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
@@ -568,7 +568,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>76.93</td>
 <td>3.53 / 0.78</td>
 <td>8.50 / 6.83</td>
-<td>8.7 M</td>
+<td>8.7</td>
 <td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
@@ -577,7 +577,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>73.55</td>
 <td>3.60 / 0.83</td>
 <td>8.44 / 4.69</td>
-<td>17.3 M</td>
+<td>17.3</td>
 <td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
@@ -623,7 +623,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>40.01</td>
 <td>1088.89 / 1088.89</td>
 <td>- / -</td>
-<td>99 M</td>
+<td>99</td>
 </tr>
 </tbody>
 </table>

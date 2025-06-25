@@ -25,7 +25,7 @@ comments: true
 <td>84.2</td>
 <td>3.91 / 1.06</td>
 <td>6.82 / 2.89</td>
-<td>16.3 M</td>
+<td>16.3</td>
 <td rowspan="3">PP-ShiTuV2是一个通用图像特征系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
 </tr>
 <tr>
@@ -34,7 +34,7 @@ comments: true
 <td>88.69</td>
 <td>12.57 / 11.62</td>
 <td>67.09 / 67.09</td>
-<td>306.6 M</td>
+<td>306.6</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>

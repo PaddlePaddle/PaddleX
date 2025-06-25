@@ -61,7 +61,7 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <td>92.2</td>
 <td>2.52 / 0.66</td>
 <td>2.60 / 1.07</td>
-<td>6.7 M</td>
+<td>6.7</td>
 <td>PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories.</td>
 </tr>
 </tbody>

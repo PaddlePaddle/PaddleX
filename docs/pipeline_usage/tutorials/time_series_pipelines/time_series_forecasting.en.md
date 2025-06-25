@@ -48,7 +48,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.515</td>
 <td>3.92 / 2.59</td>
 <td>18.09 / 13.36</td>
-<td>55.5 M</td>
+<td>55.5</td>
 </tr>
 <tr>
 <td>PatchTST</td>

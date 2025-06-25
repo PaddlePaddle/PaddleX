@@ -26,7 +26,7 @@ comments: true
 <td>STFPM</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td>
 <td>99.01</td>
-<td>21.5 M</td>
+<td>21.5</td>
 </tr>
 </tbody>
 </table>

@@ -52,7 +52,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <td>84.2</td>
 <td>3.91 / 1.06</td>
 <td>6.82 / 2.89</td>
-<td>16.3 M</td>
+<td>16.3</td>
 <td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: mainbody detection, feature extraction, and vector retrieval. These models are part of the feature extraction module, and different models can be selected based on system requirements.</td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <td>88.69</td>
 <td>12.57 / 11.62</td>
 <td>67.09 / 67.09</td>
-<td>306.6 M</td>
+<td>306.6</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>

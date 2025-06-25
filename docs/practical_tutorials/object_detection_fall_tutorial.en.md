@@ -50,7 +50,7 @@ PaddleX provides 37 end-to-end object detection models. Refer to the [Model List
 <td>42.6</td>
 <td>14.31 / 11.06</td>
 <td>45.95 / 25.06</td>
-<td>20.9 M</td>
+<td>20.9</td>
 <td rowspan="2">PP-PicoDet is a lightweight object detection algorithm for full-size, wide-angle targets, considering the computational capacity of mobile devices. Compared to traditional object detection algorithms, PP-PicoDet has a smaller model size and lower computational complexity, achieving higher speed and lower latency while maintaining detection accuracy.</td>
 </tr>
 <tr>
@@ -59,7 +59,7 @@ PaddleX provides 37 end-to-end object detection models. Refer to the [Model List
 <td>29.1</td>
 <td>9.15 / 3.26</td>
 <td>16.06 / 4.04</td>
-<td>4.4 M</td>
+<td>4.4</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-L</td>
@@ -67,7 +67,7 @@ PaddleX provides 37 end-to-end object detection models. Refer to the [Model List
 <td>52.9</td>
 <td>32.06 / 28.00</td>
 <td>185.32 / 116.21</td>
-<td>185.3 M</td>
+<td>185.3</td>
 <td rowspan="2">PP-YOLOE_plus is an upgraded version of the high-precision cloud-edge integrated model PP-YOLOE, developed by Baidu's PaddlePaddle vision team. By using the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the model's end-to-end inference speed.</td>
 </tr>
 <tr>
@@ -76,7 +76,7 @@ PaddleX provides 37 end-to-end object detection models. Refer to the [Model List
 <td>43.7</td>
 <td>11.43 / 7.52</td>
 <td>60.16 / 26.94</td>
-<td>28.3 M</td>
+<td>28.3</td>
 </tr>
 <tr>
 <td>RT-DETR-H</td>
@@ -84,7 +84,7 @@ PaddleX provides 37 end-to-end object detection models. Refer to the [Model List
 <td>56.3</td>
 <td>114.57 / 101.56</td>
 <td>938.20 / 938.20</td>
-<td>435.8 M</td>
+<td>435.8</td>
 <td rowspan="2">RT-DETR is the first real-time end-to-end object detector. The model features an efficient hybrid encoder to meet both model performance and throughput requirements, efficiently handling multi-scale features, and proposes an accelerated and optimized query selection mechanism to optimize the dynamics of decoder queries. RT-DETR supports flexible end-to-end inference speeds by using different decoders.</td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@ PaddleX provides 37 end-to-end object detection models. Refer to the [Model List
 <td>53.0</td>
 <td>34.76 / 27.60</td>
 <td>495.39 / 247.68</td>
-<td>113.7 M</td>
+<td>113.7</td>
 </tr>
 </table>
 

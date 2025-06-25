@@ -59,7 +59,7 @@ comments: true
 <td>91.7</td>
 <td>2.53 / 0.67</td>
 <td>2.73 / 1.10</td>
-<td>6.7 M</td>
+<td>6.7</td>
 <td>PP-LCNet_x1_0_vehicle_attribute 是一种基于PP-LCNet的轻量级车辆属性识别模型。</td>
 </tr>
 </tbody>

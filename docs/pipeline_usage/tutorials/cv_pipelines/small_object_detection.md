@@ -29,7 +29,7 @@ comments: true
 <td>25.1</td>
 <td>116.07 / 20.10</td>
 <td>176.44 / 40.21</td>
-<td>77.3 M</td>
+<td>77.3</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-L</td>
@@ -37,7 +37,7 @@ comments: true
 <td>31.9</td>
 <td>100.02 / 48.33</td>
 <td>271.29 / 151.20</td>
-<td>325.0 M</td>
+<td>325.0</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-largesize-L</td>
@@ -45,7 +45,7 @@ comments: true
 <td>42.7</td>
 <td>515.69 / 460.17</td>
 <td>2816.08 / 1736.00</td>
-<td>340.5 M</td>
+<td>340.5</td>
 </tr>
 </tbody>
 </table>

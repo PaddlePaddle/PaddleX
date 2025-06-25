@@ -24,7 +24,7 @@ Rotated object detection is a derivative of the object detection module, specifi
 <td>78.14</td>
 <td>67.50 / 61.15</td>
 <td>414.79 / 414.79</td>
-<td>211.0 M</td>
+<td>211.0</td>
 <td rowspan="1">PP-YOLOE-R is an efficient single-stage Anchor-free rotated box detection model. Based on PP-YOLOE, PP-YOLOE-R introduces a series of useful designs to improve detection accuracy with minimal parameters and computational cost.</td>
 </tr>
 </table>

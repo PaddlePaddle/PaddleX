@@ -24,7 +24,7 @@ The image classification module is a crucial component in computer vision system
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>331 M</td>
+<td>331</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td>
@@ -32,7 +32,7 @@ The image classification module is a crucial component in computer vision system
 <td>68.2</td>
 <td>4.23 / 0.78</td>
 <td>5.24 / 1.48</td>
-<td>10.5 M</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td>PP-HGNet_small</td>
@@ -40,7 +40,7 @@ The image classification module is a crucial component in computer vision system
 <td>81.51</td>
 <td>5.87 / 1.68</td>
 <td>25.58 / 18.50</td>
-<td>86.5 M</td>
+<td>86.5</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0</td>
@@ -48,7 +48,7 @@ The image classification module is a crucial component in computer vision system
 <td>77.77</td>
 <td>4.41 / 0.87</td>
 <td>10.58 / 1.87</td>
-<td>21.4 M</td>
+<td>21.4</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B4</td>
@@ -56,7 +56,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.57</td>
 <td>7.05 / 1.16</td>
 <td>16.23 / 7.55</td>
-<td>70.4 M</td>
+<td>70.4</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B6</td>
@@ -64,7 +64,7 @@ The image classification module is a crucial component in computer vision system
 <td>86.30</td>
 <td>13.86 / 3.28</td>
 <td>67.25 / 56.70</td>
-<td>268.4 M</td>
+<td>268.4</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0</td>
@@ -72,7 +72,7 @@ The image classification module is a crucial component in computer vision system
 <td>71.32</td>
 <td>2.59 / 0.68</td>
 <td>3.18 / 1.19</td>
-<td>10.5 M</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td>ResNet50</td>
@@ -80,7 +80,7 @@ The image classification module is a crucial component in computer vision system
 <td>76.5</td>
 <td>6.25 / 1.17</td>
 <td>15.93 / 9.72</td>
-<td>90.8 M</td>
+<td>90.8</td>
 </tr>
 <tr>
 <td>SwinTransformer_tiny_patch4_window7_224</td>
@@ -88,7 +88,7 @@ The image classification module is a crucial component in computer vision system
 <td>81.10</td>
 <td>7.11 / 2.01</td>
 <td>62.72 / 47.35</td>
-<td>100.1 M</td>
+<td>100.1</td>
 </tr>
 </table>
 
@@ -110,7 +110,7 @@ The image classification module is a crucial component in computer vision system
 <td>85.36</td>
 <td>12.03 / 2.49</td>
 <td>60.86 / 42.69</td>
-<td>331 M</td>
+<td>331</td>
 <td rowspan="2">CLIP is an image classification model based on the correlation between vision and language. It adopts contrastive learning and pre-training methods to achieve unsupervised or weakly supervised image classification, especially suitable for large-scale datasets. By mapping images and texts into the same representation space, the model learns general features, exhibiting good generalization ability and interpretability. With relatively good training errors, it performs well in many downstream tasks.</td>
 </tr>
 <tr>
@@ -127,7 +127,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.84</td>
 <td>11.37 / 5.65</td>
 <td>143.98 / 52.31</td>
-<td>313.9 M</td>
+<td>313.9</td>
 <td rowspan="6">The ConvNeXt series of models were proposed by Meta in 2022, based on the CNN architecture. This series of models builds upon ResNet, incorporating the advantages of SwinTransformer, including training strategies and network structure optimization ideas, to improve the pure CNN architecture network. It explores the performance limits of convolutional neural networks. The ConvNeXt series of models possesses many advantages of convolutional neural networks, including high inference efficiency and ease of migration to downstream tasks.</td>
 </tr>
 <tr>
@@ -136,7 +136,7 @@ The image classification module is a crucial component in computer vision system
 <td>84.90</td>
 <td>29.48 / 11.17</td>
 <td>293.76 / 134.27</td>
-<td>313.9 M</td>
+<td>313.9</td>
 </tr>
 <tr>
 <td>ConvNeXt_large_224</td>
@@ -144,7 +144,7 @@ The image classification module is a crucial component in computer vision system
 <td>84.26</td>
 <td>22.99 / 12.73</td>
 <td>220.79 / 113.24</td>
-<td>700.7 M</td>
+<td>700.7</td>
 </tr>
 <tr>
 <td>ConvNeXt_large_384</td>
@@ -152,7 +152,7 @@ The image classification module is a crucial component in computer vision system
 <td>85.27</td>
 <td>58.90 / 24.63</td>
 <td>509.48 / 260.27</td>
-<td>700.7 M</td>
+<td>700.7</td>
 </tr>
 <tr>
 <td>ConvNeXt_small</td>
@@ -160,7 +160,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.13</td>
 <td>7.72 / 4.35</td>
 <td>95.92 / 33.34</td>
-<td>178.0 M</td>
+<td>178.0</td>
 </tr>
 <tr>
 <td>ConvNeXt_tiny</td>
@@ -168,7 +168,7 @@ The image classification module is a crucial component in computer vision system
 <td>82.03</td>
 <td>6.00 / 2.47</td>
 <td>63.59 / 18.23</td>
-<td>104.1 M</td>
+<td>104.1</td>
 </tr>
 <tr>
 <td>FasterNet-L</td>
@@ -176,7 +176,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.5</td>
 <td>11.96 / 2.68</td>
 <td>51.93 / 35.33</td>
-<td>357.1 M</td>
+<td>357.1</td>
 <td rowspan="6">FasterNet is a neural network designed to improve runtime speed. Its key improvements are as follows:<br/>
 1. Re-examined popular operators and found that low FLOPS mainly stem from frequent memory accesses, especially in depthwise convolutions;<br/>
 2. Proposed Partial Convolution (PConv) to extract image features more efficiently by reducing redundant computations and memory accesses;<br/>
@@ -188,7 +188,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.0</td>
 <td>11.17 / 2.16</td>
 <td>38.49 / 21.17</td>
-<td>204.6 M</td>
+<td>204.6</td>
 </tr>
 <tr>
 <td>FasterNet-S</td>
@@ -196,7 +196,7 @@ The image classification module is a crucial component in computer vision system
 <td>81.3</td>
 <td>7.70 / 1.24</td>
 <td>19.51 / 11.22</td>
-<td>119.3 M</td>
+<td>119.3</td>
 </tr>
 <tr>
 <td>FasterNet-T0</td>
@@ -204,7 +204,7 @@ The image classification module is a crucial component in computer vision system
 <td>71.9</td>
 <td>4.73 / 0.82</td>
 <td>6.40 / 1.96</td>
-<td>15.1 M</td>
+<td>15.1</td>
 </tr>
 <tr>
 <td>FasterNet-T1</td>
@@ -212,7 +212,7 @@ The image classification module is a crucial component in computer vision system
 <td>75.9</td>
 <td>4.80 / 0.80</td>
 <td>8.14 / 3.13</td>
-<td>29.2 M</td>
+<td>29.2</td>
 </tr>
 <tr>
 <td>FasterNet-T2</td>
@@ -220,7 +220,7 @@ The image classification module is a crucial component in computer vision system
 <td>79.1</td>
 <td>6.10 / 0.88</td>
 <td>12.71 / 5.35</td>
-<td>57.4 M</td>
+<td>57.4</td>
 </tr>
 <tr>
 <td>MobileNetV1_x0_5</td>
@@ -228,7 +228,7 @@ The image classification module is a crucial component in computer vision system
 <td>63.5</td>
 <td>1.98 / 0.51</td>
 <td>2.50 / 1.04</td>
-<td>4.8 M</td>
+<td>4.8</td>
 <td rowspan="4">MobileNetV1 is a network released by Google in 2017 for mobile devices or embedded devices. This network decomposes traditional convolution operations into depthwise separable convolutions, which are a combination of Depthwise convolution and Pointwise convolution. Compared to traditional convolutional networks, this combination can significantly reduce the number of parameters and computations. Additionally, this network can be used for image classification and other vision tasks.</td>
 </tr>
 <tr>
@@ -237,7 +237,7 @@ The image classification module is a crucial component in computer vision system
 <td>51.4</td>
 <td>1.99 / 0.45</td>
 <td>1.82 / 0.73</td>
-<td>1.8 M</td>
+<td>1.8</td>
 </tr>
 <tr>
 <td>MobileNetV1_x0_75</td>
@@ -245,7 +245,7 @@ The image classification module is a crucial component in computer vision system
 <td>68.8</td>
 <td>2.33 / 0.41</td>
 <td>3.33 / 1.34</td>
-<td>9.3 M</td>
+<td>9.3</td>
 </tr>
 <tr>
 <td>MobileNetV1_x1_0</td>
@@ -253,7 +253,7 @@ The image classification module is a crucial component in computer vision system
 <td>71.0</td>
 <td>2.31 / 0.45</td>
 <td>3.91 / 1.89</td>
-<td>15.2 M</td>
+<td>15.2</td>
 </tr>
 <tr>
 <td>MobileNetV2_x0_5</td>
@@ -261,7 +261,7 @@ The image classification module is a crucial component in computer vision system
 <td>65.0</td>
 <td>3.58 / 0.62</td>
 <td>3.86 / 1.23</td>
-<td>7.1 M</td>
+<td>7.1</td>
 <td rowspan="5">MobileNetV2 is a lightweight network proposed by Google following MobileNetV1. Compared to MobileNetV1, MobileNetV2 introduces Linear bottlenecks and Inverted residual blocks as the basic structure of the network. By stacking these basic modules extensively, the network structure of MobileNetV2 is formed. Finally, it achieves higher classification accuracy with only half the FLOPs of MobileNetV1.</td>
 </tr>
 <tr>
@@ -270,7 +270,7 @@ The image classification module is a crucial component in computer vision system
 <td>53.2</td>
 <td>3.05 / 0.66</td>
 <td>3.30 / 0.98</td>
-<td>5.5 M</td>
+<td>5.5</td>
 </tr>
 <tr>
 <td>MobileNetV2_x1_0</td>
@@ -278,7 +278,7 @@ The image classification module is a crucial component in computer vision system
 <td>72.2</td>
 <td>3.85 / 0.63</td>
 <td>5.50 / 1.87</td>
-<td>12.6 M</td>
+<td>12.6</td>
 </tr>
 <tr>
 <td>MobileNetV2_x1_5</td>
@@ -286,7 +286,7 @@ The image classification module is a crucial component in computer vision system
 <td>74.1</td>
 <td>3.93 / 0.73</td>
 <td>8.84 / 3.12</td>
-<td>25.0 M</td>
+<td>25.0</td>
 </tr>
 <tr>
 <td>MobileNetV2_x2_0</td>
@@ -294,7 +294,7 @@ The image classification module is a crucial component in computer vision system
 <td>75.2</td>
 <td>3.89 / 0.79</td>
 <td>10.36 / 4.50</td>
-<td>41.2 M</td>
+<td>41.2</td>
 </tr>
 <tr>
 <td>MobileNetV3_large_x0_5</td>
@@ -302,7 +302,7 @@ The image classification module is a crucial component in computer vision system
 <td>69.2</td>
 <td>4.60 / 0.77</td>
 <td>5.32 / 1.58</td>
-<td>9.6 M</td>
+<td>9.6</td>
 <td rowspan="10">MobileNetV3 is a NAS-based lightweight network proposed by Google in 2019. To further enhance performance, relu and sigmoid activation functions are replaced with hard_swish and hard_sigmoid activation functions, respectively. Additionally, some improvement strategies specifically designed to reduce network computations are introduced.</td>
 </tr>
 <tr>
@@ -311,7 +311,7 @@ The image classification module is a crucial component in computer vision system
 <td>64.3</td>
 <td>4.44 / 0.75</td>
 <td>5.20 / 1.50</td>
-<td>7.5 M</td>
+<td>7.5</td>
 </tr>
 <tr>
 <td>MobileNetV3_large_x0_75</td>
@@ -319,7 +319,7 @@ The image classification module is a crucial component in computer vision system
 <td>73.1</td>
 <td>5.30 / 0.85</td>
 <td>6.02 / 1.93</td>
-<td>14.0 M</td>
+<td>14.0</td>
 </tr>
 <tr>
 <td>MobileNetV3_large_x1_0</td>
@@ -327,7 +327,7 @@ The image classification module is a crucial component in computer vision system
 <td>75.3</td>
 <td>5.38 / 0.81</td>
 <td>7.16 / 2.19</td>
-<td>19.5 M</td>
+<td>19.5</td>
 </tr>
 <tr>
 <td>MobileNetV3_large_x1_25</td>
@@ -335,7 +335,7 @@ The image classification module is a crucial component in computer vision system
 <td>76.4</td>
 <td>5.54 / 0.84</td>
 <td>7.06 / 2.84</td>
-<td>26.5 M</td>
+<td>26.5</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x0_5</td>
@@ -343,7 +343,7 @@ The image classification module is a crucial component in computer vision system
 <td>59.2</td>
 <td>3.87 / 0.77</td>
 <td>4.90 / 1.32</td>
-<td>6.8 M</td>
+<td>6.8</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x0_35</td>
@@ -351,7 +351,7 @@ The image classification module is a crucial component in computer vision system
 <td>53.0</td>
 <td>3.68 / 0.77</td>
 <td>3.94 / 1.27</td>
-<td>6.0 M</td>
+<td>6.0</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x0_75</td>
@@ -359,7 +359,7 @@ The image classification module is a crucial component in computer vision system
 <td>66.0</td>
 <td>3.92 / 0.77</td>
 <td>4.68 / 1.39</td>
-<td>8.5 M</td>
+<td>8.5</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td>
@@ -367,7 +367,7 @@ The image classification module is a crucial component in computer vision system
 <td>68.2</td>
 <td>4.23 / 0.78</td>
 <td>5.24 / 1.48</td>
-<td>10.5 M</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_25</td>
@@ -375,7 +375,7 @@ The image classification module is a crucial component in computer vision system
 <td>70.7</td>
 <td>4.59 / 0.79</td>
 <td>5.36 / 1.63</td>
-<td>13.0 M</td>
+<td>13.0</td>
 </tr>
 <tr>
 <td>MobileNetV4_conv_large</td>
@@ -383,7 +383,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.4</td>
 <td>9.04 / 2.28</td>
 <td>34.34 / 22.01</td>
-<td>125.2 M</td>
+<td>125.2</td>
 <td rowspan="5">MobileNetV4 is an efficient architecture specifically designed for mobile devices. Its core lies in the introduction of the UIB (Universal Inverted Bottleneck) module, a unified and flexible structure that integrates IB (Inverted Bottleneck), ConvNeXt, FFN (Feed Forward Network), and the latest ExtraDW (Extra Depthwise) module. Alongside UIB, Mobile MQA, a customized attention block for mobile accelerators, was also introduced, achieving up to 39% significant acceleration. Furthermore, MobileNetV4 introduces a novel Neural Architecture Search (NAS) scheme to enhance the effectiveness of the search process.</td>
 </tr>
 <tr>
@@ -392,7 +392,7 @@ The image classification module is a crucial component in computer vision system
 <td>79.9</td>
 <td>5.70 / 1.05</td>
 <td>13.78 / 5.64</td>
-<td>37.6 M</td>
+<td>37.6</td>
 </tr>
 <tr>
 <td>MobileNetV4_conv_small</td>
@@ -400,7 +400,7 @@ The image classification module is a crucial component in computer vision system
 <td>74.6</td>
 <td>3.81 / 0.55</td>
 <td>5.24 / 1.50</td>
-<td>14.7 M</td>
+<td>14.7</td>
 </tr>
 <tr>
 <td>MobileNetV4_hybrid_large</td>
@@ -408,7 +408,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.8</td>
 <td>13.43 / 4.28</td>
 <td>61.16 / 31.06</td>
-<td>145.1 M</td>
+<td>145.1</td>
 </tr>
 <tr>
 <td>MobileNetV4_hybrid_medium</td>
@@ -416,7 +416,7 @@ The image classification module is a crucial component in computer vision system
 <td>80.5</td>
 <td>11.82 / 1.30</td>
 <td>22.01 / 6.06</td>
-<td>42.9 M</td>
+<td>42.9</td>
 </tr>
 <tr>
 <td>PP-HGNet_base</td>
@@ -424,7 +424,7 @@ The image classification module is a crucial component in computer vision system
 <td>85.0</td>
 <td>13.43 / 3.81</td>
 <td>71.24 / 51.48</td>
-<td>249.4 M</td>
+<td>249.4</td>
 <td rowspan="3">PP-HGNet (High Performance GPU Net) is a high-performance backbone network developed by Baidu PaddlePaddle's vision team, tailored for GPU platforms. This network combines the fundamentals of VOVNet with learnable downsampling layers (LDS Layer), incorporating the advantages of models such as ResNet_vd and PPHGNet. On GPU platforms, this model achieves higher accuracy compared to other SOTA models at the same speed. Specifically, it outperforms ResNet34-0 by 3.8 percentage points and ResNet50-0 by 2.4 percentage points. Under the same SLSD conditions, it ultimately surpasses ResNet50-D by 4.7 percentage points. Additionally, at the same level of accuracy, its inference speed significantly exceeds that of mainstream Vision Transformers.</td>
 </tr>
 <tr>
@@ -433,7 +433,7 @@ The image classification module is a crucial component in computer vision system
 <td>81.51</td>
 <td>5.87 / 1.68</td>
 <td>25.58 / 18.50</td>
-<td>86.5 M</td>
+<td>86.5</td>
 </tr>
 <tr>
 <td>PP-HGNet_tiny</td>
@@ -441,7 +441,7 @@ The image classification module is a crucial component in computer vision system
 <td>79.83</td>
 <td>5.84 / 1.38</td>
 <td>17.03 / 10.58</td>
-<td>52.4 M</td>
+<td>52.4</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0</td>
@@ -449,7 +449,7 @@ The image classification module is a crucial component in computer vision system
 <td>77.77</td>
 <td>4.41 / 0.87</td>
 <td>10.58 / 1.87</td>
-<td>21.4 M</td>
+<td>21.4</td>
 <td rowspan="7">PP-HGNetV2 (High Performance GPU Network V2) is the next-generation version of Baidu PaddlePaddle's PP-HGNet, featuring further optimizations and improvements upon its predecessor. It pushes the limits of NVIDIA's "Accuracy-Latency Balance," significantly outperforming other models with similar inference speeds in terms of accuracy. It demonstrates strong performance across various label classification and evaluation scenarios.</td>
 </tr>
 <tr>
@@ -458,7 +458,7 @@ The image classification module is a crucial component in computer vision system
 <td>79.18</td>
 <td>4.52 / 0.73</td>
 <td>11.98 / 2.28</td>
-<td>22.6 M</td>
+<td>22.6</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B2</td>
@@ -466,7 +466,7 @@ The image classification module is a crucial component in computer vision system
 <td>81.74</td>
 <td>6.67 / 0.96</td>
 <td>14.22 / 4.04</td>
-<td>39.9 M</td>
+<td>39.9</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B3</td>
@@ -474,7 +474,7 @@ The image classification module is a crucial component in computer vision system
 <td>82.98</td>
 <td>7.47 / 1.94</td>
 <td>17.73 / 5.63</td>
-<td>57.9 M</td>
+<td>57.9</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B4</td>
@@ -482,7 +482,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.57</td>
 <td>7.05 / 1.16</td>
 <td>16.23 / 7.55</td>
-<td>70.4 M</td>
+<td>70.4</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B5</td>
@@ -490,7 +490,7 @@ The image classification module is a crucial component in computer vision system
 <td>84.75</td>
 <td>10.38 / 1.95</td>
 <td>31.53 / 18.02</td>
-<td>140.8 M</td>
+<td>140.8</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B6</td>
@@ -498,7 +498,7 @@ The image classification module is a crucial component in computer vision system
 <td>86.30</td>
 <td>13.86 / 3.28</td>
 <td>67.25 / 56.70</td>
-<td>268.4 M</td>
+<td>268.4</td>
 </tr>
 <tr>
 <td>PP-LCNet_x0_5</td>
@@ -506,7 +506,7 @@ The image classification module is a crucial component in computer vision system
 <td>63.14</td>
 <td>2.41 / 0.60</td>
 <td>2.54 / 0.90</td>
-<td>6.7 M</td>
+<td>6.7</td>
 <td rowspan="8">PP-LCNet is a lightweight backbone network developed by Baidu PaddlePaddle's vision team. It enhances model performance without increasing inference time, significantly surpassing other lightweight SOTA models.</td>
 </tr>
 <tr>
@@ -515,7 +515,7 @@ The image classification module is a crucial component in computer vision system
 <td>51.86</td>
 <td>2.16 / 0.60</td>
 <td>2.73 / 0.77</td>
-<td>5.5 M</td>
+<td>5.5</td>
 </tr>
 <tr>
 <td>PP-LCNet_x0_35</td>
@@ -523,7 +523,7 @@ The image classification module is a crucial component in computer vision system
 <td>58.09</td>
 <td>2.18 / 0.60</td>
 <td>2.32 / 0.89</td>
-<td>5.9 M</td>
+<td>5.9</td>
 </tr>
 <tr>
 <td>PP-LCNet_x0_75</td>
@@ -531,7 +531,7 @@ The image classification module is a crucial component in computer vision system
 <td>68.18</td>
 <td>2.61 / 0.58</td>
 <td>3.00 / 1.09</td>
-<td>8.4 M</td>
+<td>8.4</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0</td>
@@ -539,7 +539,7 @@ The image classification module is a crucial component in computer vision system
 <td>71.32</td>
 <td>2.59 / 0.68</td>
 <td>3.18 / 1.19</td>
-<td>10.5 M</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_5</td>
@@ -547,7 +547,7 @@ The image classification module is a crucial component in computer vision system
 <td>73.71</td>
 <td>2.60 / 0.68</td>
 <td>3.98 / 1.66</td>
-<td>16.0 M</td>
+<td>16.0</td>
 </tr>
 <tr>
 <td>PP-LCNet_x2_0</td>
@@ -555,7 +555,7 @@ The image classification module is a crucial component in computer vision system
 <td>75.18</td>
 <td>2.53 / 0.68</td>
 <td>5.21 / 2.24</td>
-<td>23.2 M</td>
+<td>23.2</td>
 </tr>
 <tr>
 <td>PP-LCNet_x2_5</td>
@@ -563,7 +563,7 @@ The image classification module is a crucial component in computer vision system
 <td>76.60</td>
 <td>2.76 / 0.67</td>
 <td>6.78 / 3.20</td>
-<td>32.1 M</td>
+<td>32.1</td>
 </tr>
 <tr>
 <tr>
@@ -572,7 +572,7 @@ The image classification module is a crucial component in computer vision system
 <td>77.05</td>
 <td>4.04 / 0.62</td>
 <td>6.80 / 2.67</td>
-<td>23.7 M</td>
+<td>23.7</td>
 <td rowspan="3">The PP-LCNetV2 image classification model is the next-generation version of PP-LCNet, self-developed by Baidu PaddlePaddle's vision team. Based on PP-LCNet, it has undergone further optimization and improvements, primarily utilizing re-parameterization strategies to combine depthwise convolutions with varying kernel sizes and optimizing pointwise convolutions, Shortcuts, etc. Without using additional data, the PPLCNetV2_base model achieves over 77% Top-1 Accuracy on the ImageNet dataset for image classification, while maintaining an inference time of less than 4.4 ms on Intel CPU platforms.</td>
 </tr>
 <tr>
@@ -581,7 +581,7 @@ The image classification module is a crucial component in computer vision system
 <td>78.51</td>
 <td>4.91 / 0.85</td>
 <td>10.30 / 5.38</td>
-<td>37.3 M</td>
+<td>37.3</td>
 </tr>
 <tr>
 <td>PP-LCNetV2_small</td>
@@ -589,7 +589,7 @@ The image classification module is a crucial component in computer vision system
 <td>73.97</td>
 <td>3.07 / 0.60</td>
 <td>4.28 / 1.58</td>
-<td>14.6 M</td>
+<td>14.6</td>
 </tr>
 <tr>
 <tr>
@@ -598,7 +598,7 @@ The image classification module is a crucial component in computer vision system
 <td>72.3</td>
 <td>2.87 / 0.77</td>
 <td>7.91 / 4.64</td>
-<td>41.5 M</td>
+<td>41.5</td>
 <td rowspan="11">The ResNet series of models were introduced in 2015, winning the ILSVRC2015 competition with a top-5 error rate of 3.57%. This network innovatively proposed residual structures, which are stacked to construct the ResNet network. Experiments have shown that using residual blocks can effectively improve convergence speed and accuracy.</td>
 </tr>
 <tr>
@@ -607,7 +607,7 @@ The image classification module is a crucial component in computer vision system
 <td>71.0</td>
 <td>2.63 / 0.74</td>
 <td>6.30 / 4.16</td>
-<td>41.5 M</td>
+<td>41.5</td>
 </tr>
 <tr>
 <td>ResNet34_vd</td>
@@ -615,7 +615,7 @@ The image classification module is a crucial component in computer vision system
 <td>76.0</td>
 <td>4.47 / 1.09</td>
 <td>14.30 / 8.33</td>
-<td>77.3 M</td>
+<td>77.3</td>
 </tr>
 <tr>
 <td>ResNet34</td>
@@ -623,7 +623,7 @@ The image classification module is a crucial component in computer vision system
 <td>74.6</td>
 <td>4.20 / 1.07</td>
 <td>12.53 / 7.83</td>
-<td>77.3 M</td>
+<td>77.3</td>
 </tr>
 <tr>
 <td>ResNet50_vd</td>
@@ -631,7 +631,7 @@ The image classification module is a crucial component in computer vision system
 <td>79.1</td>
 <td>6.66 / 1.23</td>
 <td>16.34 / 10.00</td>
-<td>90.8 M</td>
+<td>90.8</td>
 </tr>
 <tr>
 <td>ResNet50</td>
@@ -639,7 +639,7 @@ The image classification module is a crucial component in computer vision system
 <td>76.5</td>
 <td>6.25 / 1.17</td>
 <td>15.93 / 9.72</td>
-<td>90.8 M</td>
+<td>90.8</td>
 </tr>
 <tr>
 <td>ResNet101_vd</td>
@@ -647,7 +647,7 @@ The image classification module is a crucial component in computer vision system
 <td>80.2</td>
 <td>11.93 / 2.07</td>
 <td>32.47 / 23.62</td>
-<td>158.4 M</td>
+<td>158.4</td>
 </tr>
 <tr>
 <td>ResNet101</td>
@@ -655,7 +655,7 @@ The image classification module is a crucial component in computer vision system
 <td>77.6</td>
 <td>13.73 / 2.06</td>
 <td>29.69 / 17.72</td>
-<td>158.4 M</td>
+<td>158.4</td>
 </tr>
 <tr>
 <td>ResNet152_vd</td>
@@ -663,7 +663,7 @@ The image classification module is a crucial component in computer vision system
 <td>80.6</td>
 <td>20.70 / 2.82</td>
 <td>43.90 / 27.91</td>
-<td>214.3 M</td>
+<td>214.3</td>
 </tr>
 <tr>
 <td>ResNet152</td>
@@ -671,7 +671,7 @@ The image classification module is a crucial component in computer vision system
 <td>78.3</td>
 <td>17.86 / 2.79</td>
 <td>46.19 / 26.00</td>
-<td>214.2 M</td>
+<td>214.2</td>
 </tr>
 <tr>
 <td>ResNet200_vd</td>
@@ -679,7 +679,7 @@ The image classification module is a crucial component in computer vision system
 <td>80.9</td>
 <td>22.55 / 3.54</td>
 <td>58.54 / 35.70</td>
-<td>266.0 M</td>
+<td>266.0</td>
 </tr>
 <tr>
 <tr>
@@ -688,7 +688,7 @@ The image classification module is a crucial component in computer vision system
 <td>73.6</td>
 <td>6.24 / 0.96</td>
 <td>8.78 / 2.44</td>
-<td>11.2 M</td>
+<td>11.2</td>
 <td rowspan="4">StarNet focuses on exploring the untapped potential of "star operations" (i.e., element-wise multiplication) in network design. It reveals that star operations can map inputs to high-dimensional, nonlinear feature spaces, a process akin to kernel tricks but without the need to expand the network size. Consequently, StarNet, a simple yet powerful prototype network, is further proposed, demonstrating exceptional performance and low latency under compact network structures and limited computational resources.</td>
 </tr>
 <tr>
@@ -697,7 +697,7 @@ The image classification module is a crucial component in computer vision system
 <td>74.8</td>
 <td>4.78 / 0.85</td>
 <td>7.24 / 2.48</td>
-<td>14.3 M</td>
+<td>14.3</td>
 </tr>
 <tr>
 <td>StarNet-S3</td>
@@ -705,7 +705,7 @@ The image classification module is a crucial component in computer vision system
 <td>77.0</td>
 <td>6.77 / 1.07</td>
 <td>9.69 / 3.35</td>
-<td>22.2 M</td>
+<td>22.2</td>
 </tr>
 <tr>
 <td>StarNet-S4</td>
@@ -713,7 +713,7 @@ The image classification module is a crucial component in computer vision system
 <td>79.0</td>
 <td>9.01 / 1.48</td>
 <td>14.79 / 4.58</td>
-<td>28.9 M</td>
+<td>28.9</td>
 </tr>
 <tr>
 <tr>
@@ -722,7 +722,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.37</td>
 <td>13.04 / 10.77</td>
 <td>133.79 / 118.45</td>
-<td>340 M</td>
+<td>340</td>
 <td rowspan="6">SwinTransformer is a novel vision Transformer network that can serve as a general-purpose backbone for computer vision tasks. SwinTransformer consists of a hierarchical Transformer structure represented by shifted windows. Shifted windows restrict self-attention computations to non-overlapping local windows while allowing cross-window connections, thereby enhancing network performance.</td>
 </tr>
 <tr>
@@ -731,7 +731,7 @@ The image classification module is a crucial component in computer vision system
 <td>84.17</td>
 <td>33.99 / 28.42</td>
 <td>400.19 / 317.36</td>
-<td>311.4 M</td>
+<td>311.4</td>
 </tr>
 <tr>
 <td>SwinTransformer_large_patch4_window7_224</td>
@@ -739,7 +739,7 @@ The image classification module is a crucial component in computer vision system
 <td>86.19</td>
 <td>23.69 / 6.18</td>
 <td>198.60 / 177.18</td>
-<td>694.8 M</td>
+<td>694.8</td>
 </tr>
 <tr>
 <td>SwinTransformer_large_patch4_window12_384</td>
@@ -747,7 +747,7 @@ The image classification module is a crucial component in computer vision system
 <td>87.06</td>
 <td>68.07 / 14.84</td>
 <td>609.07 / 525.72</td>
-<td>696.1 M</td>
+<td>696.1</td>
 </tr>
 <tr>
 <td>SwinTransformer_small_patch4_window7_224</td>
@@ -755,7 +755,7 @@ The image classification module is a crucial component in computer vision system
 <td>83.21</td>
 <td>12.17 / 3.51</td>
 <td>111.03 / 92.51</td>
-<td>175.6 M</td>
+<td>175.6</td>
 </tr>
 <tr>
 <td>SwinTransformer_tiny_patch4_window7_224</td>
@@ -763,7 +763,7 @@ The image classification module is a crucial component in computer vision system
 <td>81.10</td>
 <td>7.11 / 2.01</td>
 <td>62.72 / 47.35</td>
-<td>100.1 M</td>
+<td>100.1</td>
 </tr>
 </tr></tr></tr></tr></table>
 

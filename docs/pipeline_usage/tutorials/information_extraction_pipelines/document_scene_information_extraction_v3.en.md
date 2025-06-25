@@ -30,7 +30,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>59.52</td>
 <td>23.96 / 21.75</td>
 <td>- / 43.12</td>
-<td>6.9 M</td>
+<td>6.9</td>
 <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
 <tr>
@@ -39,7 +39,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>63.69</td>
 <td>23.43 / 22.16</td>
 <td>- / 41.80</td>
-<td>6.9 M</td>
+<td>6.9</td>
 <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
 </tr>
 </table>
@@ -72,7 +72,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>97.5</td>
 <td>9.57 / 6.63</td>
 <td>27.66 / 16.75</td>
-<td>7.4 M</td>
+<td>7.4</td>
 <td>An efficient layout area localization model trained on the PubLayNet dataset based on PicoDet-1x can locate one type of tables.</td>
 </tr>
 <tr>
@@ -200,7 +200,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>78.20</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.5 M</td>
+<td>10.5</td>
 <td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
@@ -209,7 +209,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>173 M</td>
+<td>173</td>
 </tr>
 </table>
 
@@ -228,7 +228,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>68.81</td>
 <td>10.38 / 8.31</td>
 <td>66.52 / 30.83</td>
-<td>80.5 M</td>
+<td>80.5</td>
 <td rowspan="1">
 SVTRv2 is a server-side text recognition model developed by the OpenOCR team at the Vision and Learning Lab (FVL) of Fudan University. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 6% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the A-list.
 </td>
@@ -250,7 +250,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <td>65.07</td>
 <td>6.29 / 1.57</td>
 <td>20.64 / 5.40</td>
-<td>48.8 M</td>
+<td>48.8</td>
 <td rowspan="1">
 The RepSVTR text recognition model is a mobile-oriented text recognition model based on SVTRv2. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the B-list, while maintaining similar inference speed.
 </td>
@@ -310,7 +310,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <td>0.179</td>
 <td>19.05 / 19.05</td>
 <td>- / 869.82</td>
-<td>30.3 M</td>
+<td>30.3</td>
 <td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>

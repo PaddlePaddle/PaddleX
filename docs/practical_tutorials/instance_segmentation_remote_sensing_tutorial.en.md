@@ -50,7 +50,7 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <td>50.6</td>
 <td>180.83 / 180.83</td>
 <td>1711.24 / 1711.24</td>
-<td>449.9 M</td>
+<td>449.9</td>
 <td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
 </tr>
 <tr>
@@ -59,7 +59,7 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <td>45.7</td>
 <td>113.20 / 113.20</td>
 <td>1179.56 / 1179.56</td>
-<td>113.6 M</td>
+<td>113.6</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-M</td>
@@ -67,7 +67,7 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td>66.6 M</td>
+<td>66.6</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-S</td>
@@ -75,7 +75,7 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <td>41.0</td>
 <td>120.86 / 120.86</td>
 <td>- / 2163.07</td>
-<td>51.8 M</td>
+<td>51.8</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-X</td>
@@ -83,7 +83,7 @@ PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model
 <td>47.5</td>
 <td>141.43 / 141.43</td>
 <td>1379.14 / 1379.14</td>
-<td>237.5 M</td>
+<td>237.5</td>
 </tr>
 </table>
 

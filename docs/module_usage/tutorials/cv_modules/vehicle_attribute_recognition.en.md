@@ -28,7 +28,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <td>91.7</td>
 <td>2.53 / 0.67</td>
 <td>2.73 / 1.10</td>
-<td>6.7 M</td>
+<td>6.7</td>
 <td>PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet.</td>
 </tr>
 </tbody>

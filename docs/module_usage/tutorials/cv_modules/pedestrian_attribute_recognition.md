@@ -28,7 +28,7 @@ comments: true
 <td>92.2</td>
 <td>2.52 / 0.66</td>
 <td>2.60 / 1.07</td>
-<td>6.7 M</td>
+<td>6.7</td>
 <td>PP-LCNet_x1_0_pedestrian_attribute 是一种基于PP-LCNet的轻量级行人属性识别模型，包含26个类别</td>
 </tr>
 </tbody>

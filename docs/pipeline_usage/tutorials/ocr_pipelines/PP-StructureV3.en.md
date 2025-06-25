@@ -55,7 +55,7 @@ Layout parsing is a technology that extracts structured information from documen
 <td>0.179</td>
 <td>19.05 / 19.05</td>
 <td>- / 869.82</td>
-<td>30.3 M</td>
+<td>30.3</td>
 <td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>
@@ -81,7 +81,7 @@ Layout parsing is a technology that extracts structured information from documen
 <td>83.2</td>
 <td>53.03 / 17.23</td>
 <td>634.62 / 378.32</td>
-<td>126.01 M</td>
+<td>126.01</td>
 <td>基于RT-DETR-L在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报、古籍、日文文档、竖版文字文档等场景的自建数据集训练的更高精度版面区域定位模型</td>
 </tr>
 <tr>
@@ -90,7 +90,7 @@ Layout parsing is a technology that extracts structured information from documen
 <td>95.9</td>
 <td>34.60 / 28.54</td>
 <td>506.43 / 256.83</td>
-<td>123.92 M</td>
+<td>123.92</td>
 <td>基于RT-DETR-L在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报、古籍、日文文档、竖版文字文档等场景的自建数据集训练的文档图像版面子模块检测模型</td>
 </tr>
 <tr>
@@ -99,7 +99,7 @@ Layout parsing is a technology that extracts structured information from documen
 <td>90.4</td>
 <td>33.59 / 33.59</td>
 <td>503.01 / 251.08</td>
-<td>123.76 M</td>
+<td>123.76</td>
 <td>A high-precision layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on RT-DETR-L.</td>
 </tr>
 <tr>
@@ -279,7 +279,7 @@ PP-OCRv5_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>86.38</td>
 <td>8.46 / 2.36</td>
 <td>31.21 / 31.21</td>
-<td>81 M</td>
+<td>81</td>
 <td rowspan="2">PP-OCRv5_rec 是新一代文本识别模型。该模型致力于以单一模型高效、精准地支持简体中文、繁体中文、英文、日文四种主要语言，以及手写、竖版、拼音、生僻字等复杂文本场景的识别。在保持识别效果的同时，兼顾推理速度和模型鲁棒性，为各种场景下的文档理解提供高效、精准的技术支撑。</td>
 </tr>
 <tr>
@@ -289,7 +289,7 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>81.29</td>
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
-<td>16 M</td>
+<td>16</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td>
@@ -297,7 +297,7 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>86.58</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
-<td>182 M</td>
+<td>182</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
@@ -306,7 +306,7 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>78.74</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.5 M</td>
+<td>10.5</td>
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
@@ -315,7 +315,7 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>173 M</td>
+<td>173</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
@@ -324,7 +324,7 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>72.96</td>
 <td>3.89 / 1.16</td>
 <td>8.72 / 3.56</td>
-<td>10.3 M</td>
+<td>10.3</td>
 <td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
 </tr>
 </table>
@@ -344,7 +344,7 @@ PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td>68.81</td>
 <td>10.38 / 8.31</td>
 <td>66.52 / 30.83</td>
-<td>80.5 M</td>
+<td>80.5</td>
 <td rowspan="1">
 SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
 </td>
@@ -366,7 +366,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>65.07</td>
 <td>6.29 / 1.57</td>
 <td>20.64 / 5.40</td>
-<td>48.8 M</td>
+<td>48.8</td>
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
@@ -387,7 +387,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td> 70.39</td>
 <td>4.81 / 1.23</td>
 <td>17.20 / 4.18</td>
-<td>7.5 M</td>
+<td>7.5</td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
@@ -417,7 +417,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>60.21</td>
 <td>3.73 / 0.98</td>
 <td>8.76 / 2.91</td>
-<td>9.6 M</td>
+<td>9.6</td>
 <td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
@@ -471,7 +471,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>76.93</td>
 <td>3.53 / 0.78</td>
 <td>8.50 / 6.83</td>
-<td>8.7 M</td>
+<td>8.7</td>
 <td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
@@ -480,7 +480,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>73.55</td>
 <td>3.60 / 0.83</td>
 <td>8.44 / 4.69</td>
-<td>17.3 M</td>
+<td>17.3</td>
 <td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
@@ -567,7 +567,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>45.71</td>
 <td>182.25 / 182.25</td>
 <td>- / 254.39</td>
-<td>224 M</td>
+<td>224</td>
 <td rowspan="2">PP-FormulaNet is an advanced formula recognition model developed by the Baidu PaddlePaddle Vision Team. The PP-FormulaNet-S version uses PP-HGNetV2-B4 as its backbone network. Through parallel masking and model distillation techniques, it significantly improves inference speed while maintaining high recognition accuracy, making it suitable for applications requiring fast inference. The PP-FormulaNet-L version, on the other hand, uses Vary_VIT_B as its backbone network and is trained on a large-scale formula dataset, showing significant improvements in recognizing complex formulas compared to PP-FormulaNet-S.</td>
 </tr>
 <tr>
@@ -577,7 +577,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>45.78</td>
 <td>1482.03 / 1482.03</td>
 <td>- / 3131.54</td>
-<td>695 M</td>
+<td>695</td>
 </tr>
 <tr>
 <td>PP-FormulaNet_plus-S</td>
@@ -586,7 +586,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>53.32</td>
 <td>179.20 / 179.20</td>
 <td>- / 260.99</td>
-<td>248 M</td>
+<td>248</td>
 <td rowspan="3">PP-FormulaNet_plus is an enhanced version of the formula recognition model developed by the Baidu PaddlePaddle Vision Team, building upon the original PP-FormulaNet. Compared to the original version, PP-FormulaNet_plus utilizes a more diverse formula dataset during training, including sources such as Chinese dissertations, professional books, textbooks, exam papers, and mathematics journals. This expansion significantly improves the model’s recognition capabilities. Among the models, PP-FormulaNet_plus-M and PP-FormulaNet_plus-L have added support for Chinese formulas and increased the maximum number of predicted tokens for formulas from 1,024 to 2,560, greatly enhancing the recognition performance for complex formulas. Meanwhile, the PP-FormulaNet_plus-S model focuses on improving the recognition of English formulas. With these improvements, the PP-FormulaNet_plus series models perform exceptionally well in handling complex and diverse formula recognition tasks. </td>
 </tr>
 <tr>
@@ -596,7 +596,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>89.76</td>
 <td>1040.27 / 1040.27</td>
 <td>- / 1615.80</td>
-<td>592 M</td>
+<td>592</td>
 </tr>
 <tr>
 <td>PP-FormulaNet_plus-L</td>
@@ -605,7 +605,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>90.64</td>
 <td>1476.07 / 1476.07</td>
 <td>- / 3125.58</td>
-<td>698 M</td>
+<td>698</td>
 </tr>
 <tr>
 <td>LaTeX_OCR_rec</td>
@@ -614,7 +614,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>39.96</td>
 <td>1088.89 / 1088.89</td>
 <td>- / -</td>
-<td>99 M</td>
+<td>99</td>
 <td>LaTeX-OCR is a formula recognition algorithm based on an autoregressive large model. It uses Hybrid ViT as the backbone network and a transformer as the decoder, significantly improving the accuracy of formula recognition.</td>
 </tr>
 </table>
@@ -672,7 +672,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>0.179</td>
 <td>19.05 / 19.05</td>
 <td>- / 869.82</td>
-<td>30.3 M</td>
+<td>30.3</td>
 <td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>

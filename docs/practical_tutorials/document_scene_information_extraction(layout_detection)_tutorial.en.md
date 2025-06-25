@@ -106,7 +106,7 @@ PaddleX provides 4 end-to-end layout detection models, which can be referenced i
 <td>90.4</td>
 <td>33.59 / 33.59</td>
 <td>503.01 / 251.08</td>
-<td>123.76 M</td>
+<td>123.76</td>
 <td>A high-precision layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using RT-DETR-L.</td>
 </tr>
 <tr>
@@ -154,7 +154,7 @@ PaddleX provides 4 end-to-end layout detection models, which can be referenced i
 <td>97.5</td>
 <td>9.57 / 6.63</td>
 <td>27.66 / 16.75</td>
-<td>7.4 M</td>
+<td>7.4</td>
 <td>A high-efficiency layout area localization model trained on a self-built dataset using PicoDet-1x, capable of detecting table regions.</td>
 </tr>
 </tbody></table>

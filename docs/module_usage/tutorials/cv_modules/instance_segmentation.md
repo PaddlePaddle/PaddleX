@@ -24,7 +24,7 @@ comments: true
 <td>50.6</td>
 <td>180.83 / 180.83</td>
 <td>1711.24 / 1711.24</td>
-<td>449.9 M</td>
+<td>449.9</td>
 <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@ comments: true
 <td>45.7</td>
 <td>113.20 / 113.20</td>
 <td>1179.56 / 1179.56</td>
-<td>113.6 M</td>
+<td>113.6</td>
 </tr>
 </table>
 
@@ -55,7 +55,7 @@ comments: true
 <td>36.3</td>
 <td>136.79 / 136.79</td>
 <td>- / 5935.41</td>
-<td>254.8 M</td>
+<td>254.8</td>
 <td rowspan="2">Cascade-MaskRCNN 是一种改进的Mask RCNN实例分割模型，通过级联多个检测器，利用不同IOU阈值优化分割结果，解决检测与推理阶段的mismatch问题，提高了实例分割的准确性。</td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ comments: true
 <td>39.1</td>
 <td>137.40 / 137.40</td>
 <td>- / 6816.68</td>
-<td>254.7 M</td>
+<td>254.7</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-H</td>
@@ -72,7 +72,7 @@ comments: true
 <td>50.6</td>
 <td>180.83 / 180.83</td>
 <td>1711.24 / 1711.24</td>
-<td>449.9 M</td>
+<td>449.9</td>
 <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
 </tr>
 <tr>
@@ -81,7 +81,7 @@ comments: true
 <td>45.7</td>
 <td>113.20 / 113.20</td>
 <td>1179.56 / 1179.56</td>
-<td>113.6 M</td>
+<td>113.6</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-M</td>
@@ -89,7 +89,7 @@ comments: true
 <td>42.7</td>
 <td>87.08 / 87.08</td>
 <td>- / 2090.73</td>
-<td>66.6 M</td>
+<td>66.6</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-S</td>
@@ -97,7 +97,7 @@ comments: true
 <td>41.0</td>
 <td>120.86 / 120.86</td>
 <td>- / 2163.07</td>
-<td>51.8 M</td>
+<td>51.8</td>
 </tr>
 <tr>
 <td>Mask-RT-DETR-X</td>
@@ -105,7 +105,7 @@ comments: true
 <td>47.5</td>
 <td>141.43 / 141.43</td>
 <td>1379.14 / 1379.14</td>
-<td>237.5 M</td>
+<td>237.5</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet50-FPN</td>
@@ -113,7 +113,7 @@ comments: true
 <td>35.6</td>
 <td>112.79 / 112.79</td>
 <td>- / 4912.37</td>
-<td>157.5 M</td>
+<td>157.5</td>
 <td rowspan="6">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
 </tr>
 <tr>
@@ -122,7 +122,7 @@ comments: true
 <td>36.4</td>
 <td>112.88 / 112.88</td>
 <td>- / 5204.97</td>
-<td>157.5 M</td>
+<td>157.5</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet50</td>
@@ -130,7 +130,7 @@ comments: true
 <td>32.8</td>
 <td>181.60 / 181.60</td>
 <td>- / 5523.45</td>
-<td>128.7 M</td>
+<td>128.7</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet101-FPN</td>
@@ -138,7 +138,7 @@ comments: true
 <td>36.6</td>
 <td>138.84 / 138.84</td>
 <td>- / 5107.74</td>
-<td>225.4 M</td>
+<td>225.4</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNet101-vd-FPN</td>
@@ -146,7 +146,7 @@ comments: true
 <td>38.1</td>
 <td>141.73 / 141.73</td>
 <td>- / 5592.76</td>
-<td>225.1 M</td>
+<td>225.1</td>
 </tr>
 <tr>
 <td>MaskRCNN-ResNeXt101-vd-FPN</td>
@@ -154,7 +154,7 @@ comments: true
 <td>39.5</td>
 <td>220.83 / 220.83</td>
 <td>- / 5932.59</td>
-<td>370.0 M</td>
+<td>370.0</td>
 </tr>
 <tr>
 <td>PP-YOLOE_seg-S</td>
@@ -162,7 +162,7 @@ comments: true
 <td>32.5</td>
 <td>243.41 / 222.30</td>
 <td>2507.70 / 1282.35</td>
-<td>31.5 M</td>
+<td>31.5</td>
 <td>PP-YOLOE_seg 是一种基于PP-YOLOE的实例分割模型。该模型沿用了PP-YOLOE的backbone和head，通过设计PP-YOLOE实例分割头，大幅提升了实例分割的性能和推理速度。</td>
 </tr>
 <tr>
@@ -171,7 +171,7 @@ comments: true
 <td>35.5</td>
 <td>131.99 / 131.99</td>
 <td>- / 2369.98</td>
-<td>179.1 M</td>
+<td>179.1</td>
 <td> SOLOv2 是一种按位置分割物体的实时实例分割算法。该模型是SOLO的改进版本，通过引入掩码学习和掩码NMS，实现了精度和速度上取得良好平衡。</td>
 </tr>
 </table>

@@ -25,7 +25,7 @@ The image multi-label classification module is a crucial component in computer v
 <td>89.15</td>
 <td>48.87 / 8.10</td>
 <td>275.33 / 188.48</td>
-<td>325.6 M</td>
+<td>325.6</td>
 <td>CLIP_ML is an image multi-label classification model based on CLIP, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 <tr>
@@ -34,7 +34,7 @@ The image multi-label classification module is a crucial component in computer v
 <td>80.98</td>
 <td>7.15 / 1.77</td>
 <td>21.35 / 8.19</td>
-<td>39.6 M</td>
+<td>39.6</td>
 <td rowspan="3">PP-HGNetV2_ML is an image multi-label classification model based on PP-HGNetV2, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 <tr>
@@ -43,7 +43,7 @@ The image multi-label classification module is a crucial component in computer v
 <td>87.96</td>
 <td>8.11 / 2.82</td>
 <td>44.76 / 29.38</td>
-<td>88.5 M</td>
+<td>88.5</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B6_ML</td>
@@ -51,7 +51,7 @@ The image multi-label classification module is a crucial component in computer v
 <td>91.25</td>
 <td>34.54 / 8.22</td>
 <td>189.17 / 189.17</td>
-<td>286.5 M</td>
+<td>286.5</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_ML</td>
@@ -59,7 +59,7 @@ The image multi-label classification module is a crucial component in computer v
 <td>77.96</td>
 <td>5.28 / 1.62</td>
 <td>13.16 / 5.61</td>
-<td>29.4 M</td>
+<td>29.4</td>
 <td>PP-LCNet_ML is an image multi-label classification model based on PP-LCNet, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@ The image multi-label classification module is a crucial component in computer v
 <td>83.50</td>
 <td>10.54 / 2.97</td>
 <td>55.39 / 35.52</td>
-<td>108.9 M</td>
+<td>108.9</td>
 <td>ResNet50_ML is an image multi-label classification model based on ResNet50, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 </table>

@@ -37,7 +37,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>45.71</td>
 <td>182.25 / 182.25</td>
 <td>- / 254.39</td>
-<td>224 M</td>
+<td>224</td>
 <td rowspan="2">PP-FormulaNet is an advanced formula recognition model developed by the Baidu PaddlePaddle Vision Team. The PP-FormulaNet-S version uses PP-HGNetV2-B4 as its backbone network. Through parallel masking and model distillation techniques, it significantly improves inference speed while maintaining high recognition accuracy, making it suitable for applications requiring fast inference. The PP-FormulaNet-L version, on the other hand, uses Vary_VIT_B as its backbone network and is trained on a large-scale formula dataset, showing significant improvements in recognizing complex formulas compared to PP-FormulaNet-S.</td>
 </tr>
 <tr>
@@ -47,7 +47,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>45.78</td>
 <td>1482.03 / 1482.03</td>
 <td>- / 3131.54</td>
-<td>695 M</td>
+<td>695</td>
 </tr>
 <tr>
 <td>PP-FormulaNet_plus-S</td>
@@ -56,7 +56,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>53.32</td>
 <td>179.20 / 179.20</td>
 <td>- / 260.99</td>
-<td>248 M</td>
+<td>248</td>
 <td rowspan="3">PP-FormulaNet_plus is an enhanced version of the formula recognition model developed by the Baidu PaddlePaddle Vision Team, building upon the original PP-FormulaNet. Compared to the original version, PP-FormulaNet_plus utilizes a more diverse formula dataset during training, including sources such as Chinese dissertations, professional books, textbooks, exam papers, and mathematics journals. This expansion significantly improves the model’s recognition capabilities. Among the models, PP-FormulaNet_plus-M and PP-FormulaNet_plus-L have added support for Chinese formulas and increased the maximum number of predicted tokens for formulas from 1,024 to 2,560, greatly enhancing the recognition performance for complex formulas. Meanwhile, the PP-FormulaNet_plus-S model focuses on improving the recognition of English formulas. With these improvements, the PP-FormulaNet_plus series models perform exceptionally well in handling complex and diverse formula recognition tasks. </td>
 </tr>
 <tr>
@@ -66,7 +66,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>89.76</td>
 <td>1040.27 / 1040.27</td>
 <td>- / 1615.80</td>
-<td>592 M</td>
+<td>592</td>
 </tr>
 <tr>
 <td>PP-FormulaNet_plus-L</td>
@@ -75,7 +75,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>90.64</td>
 <td>1476.07 / 1476.07</td>
 <td>- / 3125.58</td>
-<td>698 M</td>
+<td>698</td>
 </tr>
 <tr>
 <td>LaTeX_OCR_rec</td>
@@ -84,7 +84,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <td>39.96</td>
 <td>1088.89 / 1088.89</td>
 <td>- / -</td>
-<td>99 M</td>
+<td>99</td>
 <td>LaTeX-OCR is a formula recognition algorithm based on an autoregressive large model. It uses Hybrid ViT as the backbone network and a transformer as the decoder, significantly improving the accuracy of formula recognition.</td>
 </tr>
 </table>

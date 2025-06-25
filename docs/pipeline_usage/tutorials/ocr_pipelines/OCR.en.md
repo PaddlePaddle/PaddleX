@@ -58,7 +58,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>0.179</td>
 <td>19.05 / 19.05</td>
 <td>- / 869.82</td>
-<td>30.3 M</td>
+<td>30.3</td>
 <td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>
@@ -182,7 +182,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>86.38</td>
 <td>8.46 / 2.36</td>
 <td>31.21 / 31.21</td>
-<td>81 M</td>
+<td>81</td>
 <td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model is dedicated to efficiently and accurately supporting four major languages—Simplified Chinese, Traditional Chinese, English, and Japanese—with a single model. It supports complex text scenarios, including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it also balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
 </tr>
 <tr>
@@ -191,7 +191,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>81.29</td>
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
-<td>16 M</td>
+<td>16</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td>
@@ -199,7 +199,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>86.58</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
-<td>182 M</td>
+<td>182</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the ability to recognize some traditional Chinese characters, Japanese, and special characters, and can support the recognition of more than 15,000 characters. In addition to improving the text recognition capability related to documents, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
@@ -208,7 +208,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>78.74</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.5 M</td>
+<td>10.5</td>
 <td>
 The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
@@ -218,7 +218,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>173 M</td>
+<td>173</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
@@ -227,7 +227,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>70.39</td>
 <td>4.81 / 1.23</td>
 <td>17.20 / 4.18</td>
-<td>7.5 M</td>
+<td>7.5</td>
 <td>The ultra-lightweight English recognition model, trained based on the PP-OCRv4 recognition model, supports the recognition of English letters and numbers.</td>
 </tr>
 </table>
@@ -259,7 +259,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>60.35</td>
 <td>8.46 / 2.36</td>
 <td>31.21 / 31.21</td>
-<td>81 M</td>
+<td>81</td>
 <td rowspan="2">PP-OCRv5_rec is a next-generation text recognition model. This model efficiently and accurately supports four major languages with a single model: Simplified Chinese, Traditional Chinese, English, and Japanese. It recognizes complex text scenarios including handwritten, vertical text, pinyin, and rare characters. While maintaining recognition accuracy, it balances inference speed and model robustness, providing efficient and precise technical support for document understanding in various scenarios.</td>
 </tr>
 <tr>
@@ -271,7 +271,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>54.65</td>
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
-<td>16 M</td>
+<td>16</td>
 </tr>
 </table>
 
@@ -291,7 +291,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>86.58</td>
 <td>8.69 / 2.78</td>
 <td>37.93 / 37.93</td>
-<td>182 M</td>
+<td>182</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
@@ -300,7 +300,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>78.74</td>
 <td>5.26 / 1.12</td>
 <td>17.48 / 3.61</td>
-<td>10.5 M</td>
+<td>10.5</td>
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
@@ -309,7 +309,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>85.19</td>
 <td>8.75 / 2.49</td>
 <td>36.93 / 36.93</td>
-<td>173 M</td>
+<td>173</td>
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
@@ -318,7 +318,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>72.96</td>
 <td>3.89 / 1.16</td>
 <td>8.72 / 3.56</td>
-<td>10.3 M</td>
+<td>10.3</td>
 <td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
 </tr>
 </table>
@@ -338,7 +338,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>68.81</td>
 <td>10.38 / 8.31</td>
 <td>66.52 / 30.83</td>
-<td>80.5 M</td>
+<td>80.5</td>
 <td rowspan="1">
 SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
 </td>
@@ -360,7 +360,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>65.07</td>
 <td>6.29 / 1.57</td>
 <td>20.64 / 5.40</td>
-<td>48.8 M</td>
+<td>48.8</td>
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
@@ -381,7 +381,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td> 70.39</td>
 <td>4.81 / 1.23</td>
 <td>17.20 / 4.18</td>
-<td>7.5 M</td>
+<td>7.5</td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
@@ -411,7 +411,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>60.21</td>
 <td>3.73 / 0.98</td>
 <td>8.76 / 2.91</td>
-<td>9.6 M</td>
+<td>9.6</td>
 <td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
@@ -465,7 +465,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>76.93</td>
 <td>3.53 / 0.78</td>
 <td>8.50 / 6.83</td>
-<td>8.7 M</td>
+<td>8.7</td>
 <td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
@@ -474,7 +474,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>73.55</td>
 <td>3.60 / 0.83</td>
 <td>8.44 / 4.69</td>
-<td>17.3 M</td>
+<td>17.3</td>
 <td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
