@@ -35,7 +35,7 @@ PaddleX 提供了4个端到端的时序异常检测模型，具体可参考 [模
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>

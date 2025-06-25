@@ -12,7 +12,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>Top1 Acc（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -507,7 +507,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>mAP（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -749,7 +749,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>mloU（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -860,7 +860,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>Mask AP</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1055,7 +1055,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>检测Hmean（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1079,7 +1079,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>识别Avg Accuracy(%)</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1101,7 +1101,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>识别Avg Accuracy(%)</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1118,7 +1118,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>识别Avg Accuracy(%)</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1137,7 +1137,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>精度（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1225,7 +1225,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>mAP（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1262,7 +1262,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mae</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1334,7 +1334,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -1376,7 +1376,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>acc(%)</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>

@@ -18,7 +18,7 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mIoU（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
