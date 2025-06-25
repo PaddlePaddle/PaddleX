@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__all__ = ["get_neighbor_boxes_idx"]
+__all__ = ["get_neighbor_boxes_idx", "TableRec"]
 
 import os
 import pickle
@@ -667,9 +667,6 @@ class TableOCR:
                     margin_st = -1
 
         if len(detail["margin"]) == 1 and len(detail["line"]) == 0:
-            self.logger.debug(
-                f"box_img.shape: {box_img.shape}, shrink_box: {[origin_box[0], origin_box[1] + ver_main_scope[0], origin_box[2], ver_main_scope[1] - ver_main_scope[0]]}"
-            )
             return box_img[ver_main_scope[0] : ver_main_scope[1], :], [
                 origin_box[0],
                 origin_box[1] + ver_main_scope[0],
@@ -798,9 +795,7 @@ class TableOCR:
                     iou = compute_iou(box1=rect1, box2=rect2)
                     if iou >= iou_thresh:
                         region["text_boxes"].append(box)
-                        self.logger.debug(
-                            f"row {i} col {j} inside text box: {rect1}, cell bound: {rect2}"
-                        )
+
                 if len(region["text_boxes"]) == 0:
                     region["empty_cell"] = 1
 
