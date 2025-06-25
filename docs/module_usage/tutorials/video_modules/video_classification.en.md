@@ -13,7 +13,7 @@ The Video Classification Module is a crucial component in a computer vision syst
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top1 Acc(%)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>

@@ -18,7 +18,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <th>Precision</th>
 <th>Recall</th>
 <th>F1-Score</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>

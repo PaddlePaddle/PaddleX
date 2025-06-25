@@ -18,7 +18,7 @@ Video detection is a technology that identifies and locates specific objects or 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Frame-mAP(@ IoU 0.5)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>

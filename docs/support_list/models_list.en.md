@@ -14,7 +14,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Top1 Acc (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -726,7 +726,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -818,7 +818,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mA (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -843,7 +843,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>recall@1 (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -886,7 +886,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -921,7 +921,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -946,7 +946,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1405,7 +1405,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Model</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -1435,7 +1435,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -1459,7 +1459,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1492,7 +1492,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1525,7 +1525,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1575,7 +1575,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mIoU</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1602,7 +1602,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>AP(0.5:0.95)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -1658,7 +1658,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mloU（%）</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1799,7 +1799,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mIoU (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -1868,7 +1868,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Mask AP</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -2019,7 +2019,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Detection Hmean (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2093,7 +2093,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Detection Hmean (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -2127,7 +2127,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Recognition Avg Accuracy(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2195,7 +2195,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Recognition Avg Accuracy(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2216,7 +2216,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Recognition Avg Accuracy(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2238,7 +2238,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Recognition Avg Accuracy(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2271,7 +2271,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Recognition Avg Accuracy(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2377,7 +2377,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Zh-BLEU(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2462,7 +2462,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Accuracy (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2509,7 +2509,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2538,7 +2538,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Top1 Acc(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2562,7 +2562,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>CER</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2591,7 +2591,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(0.5)（%）</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2619,7 +2619,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(0.5)（%）</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2648,7 +2648,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(0.5)（%）</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2695,7 +2695,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2720,7 +2720,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2865,7 +2865,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Top-1 Acc (%)</th>
 <th>GPU Inference Time (ms)<br>[Standard Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br>[Standard Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>YAML File</th>
 <th>Model Download Link</th>
 </tr>
@@ -2904,7 +2904,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>mae</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -2984,7 +2984,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Precision</th>
 <th>Recall</th>
 <th>F1 Score</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>YAML File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -3032,7 +3032,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tr>
 <th>Model Name</th>
 <th>acc(%)</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th></tr>
 </thead>
@@ -3107,7 +3107,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tr>
 <th>Model</th>
 <th>Top1 Acc(%)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
@@ -3141,7 +3141,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tr>
 <th>Model</th>
 <th>Frame-mAP(@ IoU 0.5)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>

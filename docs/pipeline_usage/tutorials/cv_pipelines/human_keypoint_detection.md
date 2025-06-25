@@ -18,7 +18,7 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 <th>mAP(0.5)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
@@ -49,7 +49,7 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 <th>AP(0.5:0.95)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>

@@ -14,7 +14,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>Top1 Acc（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -671,7 +671,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -736,7 +736,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mA（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -761,7 +761,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mA（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -786,7 +786,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>recall@1（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -864,7 +864,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -889,7 +889,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1238,7 +1238,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1280,7 +1280,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP(0.5)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -1314,7 +1314,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>模型</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -1369,7 +1369,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1402,7 +1402,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mAP（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1435,7 +1435,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1485,7 +1485,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mIoU</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1512,7 +1512,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>AP(0.5:0.95)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -1570,7 +1570,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mloU（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1697,7 +1697,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>mloU（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1764,7 +1764,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>Mask AP</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -1974,7 +1974,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>检测Hmean（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -2008,7 +2008,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2076,7 +2076,7 @@ PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2097,7 +2097,7 @@ PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2120,7 +2120,7 @@ PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2155,7 +2155,7 @@ en_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2456,7 +2456,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>CER </th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -2483,7 +2483,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2511,7 +2511,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2540,7 +2540,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2586,7 +2586,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2612,7 +2612,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2656,7 +2656,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2682,7 +2682,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
 </tr>
@@ -2758,7 +2758,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>Top-1 Acc（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -2797,7 +2797,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>mae</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -2877,7 +2877,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>
@@ -2926,7 +2926,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <th>模型名称</th>
 <th>acc(%)</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th></tr>
 </thead>

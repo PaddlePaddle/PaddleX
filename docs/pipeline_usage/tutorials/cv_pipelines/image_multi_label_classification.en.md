@@ -16,7 +16,7 @@ Image multi-label classification is a technique that assigns multiple relevant c
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>

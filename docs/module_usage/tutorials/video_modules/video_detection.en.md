@@ -15,7 +15,7 @@ The output of the video detection module includes bounding boxes and class label
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Frame-mAP (@ IoU 0.5)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>

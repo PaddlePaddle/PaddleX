@@ -426,7 +426,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>

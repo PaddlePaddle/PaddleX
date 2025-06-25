@@ -16,7 +16,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 </thead>

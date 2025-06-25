@@ -61,7 +61,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>mAP（%）</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -94,7 +94,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>recall@1（%）</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -197,7 +197,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>mAP（%）</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -255,7 +255,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th>Avg（%）</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>
@@ -274,7 +274,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <th>模型名称</th>
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 <th>模型下载链接</th></tr>
 </thead>
 <tbody>

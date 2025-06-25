@@ -179,7 +179,7 @@ PaddleX provides 4 face detection models. For details, please refer to the [Mode
 <th>AP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 </thead>
@@ -487,7 +487,7 @@ PaddleX provides 2 face feature models. For details, please refer to the [Model 
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 </thead>

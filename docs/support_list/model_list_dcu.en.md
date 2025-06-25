@@ -12,7 +12,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Top-1 Accuracy (%)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -56,7 +56,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>Model Storage Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -221,7 +221,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mIoU (%)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>

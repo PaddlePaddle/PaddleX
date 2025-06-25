@@ -16,7 +16,7 @@ The image classification module is a crucial component in computer vision system
 <th>Top1 Acc(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_224</td>
