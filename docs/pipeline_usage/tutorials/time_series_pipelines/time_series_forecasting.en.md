@@ -30,7 +30,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
-<td>72K</td>
+<td>0.072</td>
 </tr>
 <tr>
 <td>NLinear</td>
@@ -39,7 +39,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.392</td>
 <td>0.27 / 0.10</td>
 <td>0.49 / 0.08</td>
-<td>40K</td>
+<td>0.04</td>
 </tr>
 <tr>
 <td>Nonstationary</td>
@@ -57,7 +57,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
-<td>2.0M</td>
+<td>2.0</td>
 </tr>
 <tr>
 <td>RLinear</td>
@@ -66,7 +66,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
-<td>40K</td>
+<td>0.04</td>
 </tr>
 <tr>
 <td>TiDE</td>
@@ -75,7 +75,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
-<td>31.7M</td>
+<td>31.7</td>
 </tr>
 <tr>
 <td>TimesNet</td>
@@ -84,7 +84,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 <td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
-<td>4.9M</td>
+<td>4.9</td>
 </tr>
 </tbody>
 </table>
@@ -99,7 +99,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

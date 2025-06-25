@@ -27,7 +27,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <td>0.9898</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>100K</td>
+<td>0.1</td>
 <td>DLinear_ad is a simple, efficient, and easy-to-use model for time-series anomaly detection.</td>
 </tr>
 <tr>
@@ -36,7 +36,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <td>0.9855</td>
 <td>1.94 / 1.16</td>
 <td>5.31 / 1.66</td>
-<td>1.5MB</td>
+<td>1.5</td>
 <td>Based on the transformer structure, this model is optimized for anomaly detection in non-stationary time series.</td>
 </tr>
 <tr>
@@ -45,7 +45,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <td>0.9936</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>52K</td>
+<td>0.052</td>
 <td>AutoEncoder_ad is a classic autoencoder-based model for efficient and easy-to-use time-series anomaly detection.</td>
 </tr>
 <tr>
@@ -54,7 +54,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <td>0.9878</td>
 <td>2.10 / 0.55</td>
 <td>6.98 / 0.63</td>
-<td>164K</td>
+<td>0.164</td>
 <td>PatchTST is a high-precision time-series anomaly detection model that balances local patterns and global dependencies.</td>
 </tr>
 </tbody>
@@ -69,7 +69,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

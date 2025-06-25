@@ -28,7 +28,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>99.36</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>52K</td>
+<td>0.052</td>
 </tr>
 <tr>
 <td>DLinear_ad</td>
@@ -36,7 +36,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>98.98</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>100K</td>
+<td>0.1</td>
 </tr>
 <tr>
 <td>Nonstationary_ad</td>
@@ -44,7 +44,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>98.55</td>
 <td>1.94 / 1.16</td>
 <td>5.31 / 1.66</td>
-<td>1.8M</td>
+<td>1.8</td>
 </tr>
 <tr>
 <td>PatchTST_ad</td>
@@ -52,7 +52,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 <td>98.78</td>
 <td>2.10 / 0.55</td>
 <td>6.98 / 0.63</td>
-<td>320K</td>
+<td>0.32</td>
 </tr>
 </tbody>
 </table>
@@ -67,7 +67,7 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

@@ -32,7 +32,7 @@ comments: true
 <td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
-<td>72k</td>
+<td>0.072</td>
 <td>DLinear结构简单，效率高且易用的时序预测模型</td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@ comments: true
 <td>0.392</td>
 <td>0.27 / 0.10</td>
 <td>0.49 / 0.08</td>
-<td>40k</td>
+<td>0.04</td>
 <td>NLinear结构简单，效率高且易用的时序预测模型</td>
 </tr>
 <tr>
@@ -52,7 +52,7 @@ comments: true
 <td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
-<td>40k</td>
+<td>0.04</td>
 <td>RLinear结构简单，效率高且易用的时序预测模型</td>
 </tr>
 <tr>
@@ -62,7 +62,7 @@ comments: true
 <td>0.515</td>
 <td>3.92 / 2.59</td>
 <td>18.09 / 13.36</td>
-<td>60.3M</td>
+<td>60.3</td>
 <td>基于transformer结构，针对性优化非平稳时间序列的长时序预测模型</td>
 </tr>
 <tr>
@@ -72,7 +72,7 @@ comments: true
 <td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
-<td>2.0M</td>
+<td>2.0</td>
 <td>PatchTST是兼顾局部模式和全局依赖关系的高精度长时序预测模型</td>
 </tr>
 <tr>
@@ -82,7 +82,7 @@ comments: true
 <td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
-<td>31.7M</td>
+<td>31.7</td>
 <td>TiDE是适用于处理多变量、长期的时间序列预测问题的高精度模型</td>
 </tr>
 <tr>
@@ -92,7 +92,7 @@ comments: true
 <td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
-<td>4.9M</td>
+<td>4.9</td>
 <td>通过多周期分析，TimesNet是适应性强的高精度时间序列分析模型</td>
 </tr>
 </tbody>
@@ -111,7 +111,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

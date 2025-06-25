@@ -45,7 +45,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <td>0.9898</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>100K</td>
+<td>0.1</td>
 <td>A simple, efficient, and easy-to-use time series anomaly detection model</td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <td>0.9855</td>
 <td>1.94 / 1.16</td>
 <td>5.31 / 1.66</td>
-<td>1.5MB</td>
+<td>1.5</td>
 <td>A transformer-based model optimized for anomaly detection in non-stationary time series</td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <td>0.9936</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>52K</td>
+<td>0.052</td>
 <td>A classic autoencoder-based model that is efficient and easy to use for time series anomaly detection</td>
 </tr>
 <tr>
@@ -69,7 +69,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <td>0.9878</td>
 <td>2.10 / 0.55</td>
 <td>6.98 / 0.63</td>
-<td>164K</td>
+<td>0.164</td>
 <td>A high-precision time series anomaly detection model that balances local patterns and global dependencies</td>
 </tr>
 </tbody>

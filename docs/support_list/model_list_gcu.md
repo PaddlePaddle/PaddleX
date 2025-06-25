@@ -403,7 +403,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <tr>
 <td>PicoDet-XS</td>
 <td>26.2</td>
-<td>5.7M</td>
+<td>5.7</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-XS_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>PP-YOLOE_plus-L</td>

@@ -24,7 +24,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>CLIP_vit_large_patch14_224</td>
 <td>88.1</td>
-<td>1.04 G</td>
+<td>1040</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_large_patch14_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_large_patch14_224_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>ConvNeXt_base_224</td>
@@ -469,7 +469,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mA (%)</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -488,7 +488,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mA (%)</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -604,7 +604,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>PicoDet-XS</td>
 <td>26.2</td>
-<td>5.7M</td>
+<td>5.7</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-XS_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>PP-YOLOE_plus-L</td>
@@ -676,7 +676,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP（%）</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -713,7 +713,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>YOLOX-N</td>
 <td>26.1</td>
-<td>3.4M</td>
+<td>3.4</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
@@ -725,7 +725,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP（%）</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -826,7 +826,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mIoU (%)</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -944,7 +944,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>recall@1（%）</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -961,7 +961,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
 <td>91.03</td>
-<td>1.05 G</td>
+<td>1050</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>
@@ -973,7 +973,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP（%）</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -992,7 +992,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>mAP（%）</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1016,7 +1016,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1035,7 +1035,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Avg（%）</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1160,7 +1160,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>CER</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1181,7 +1181,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Detection Hmean (%)</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1205,7 +1205,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <th>Model Name</th>
 <th>Top-1 Acc (%)</th>
-<th>Model Size</th>
+<th>Model Storage Size (MB)</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -1231,7 +1231,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>PicoDet_layout_1x</td>
 <td>86.8</td>
-<td>7.4M</td>
+<td>7.4</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>PicoDet-L_layout_3cls</td>
@@ -1271,7 +1271,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
-<td>72K</td>
+<td>0.072</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>NLinear</td>
@@ -1279,7 +1279,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>0.392</td>
 <td>0.27 / 0.10</td>
 <td>0.49 / 0.08</td>
-<td>40K</td>
+<td>0.04</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>Nonstationary</td>
@@ -1295,7 +1295,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
-<td>2.0M</td>
+<td>2.0</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>RLinear</td>
@@ -1303,7 +1303,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
-<td>40K</td>
+<td>0.04</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>TiDE</td>
@@ -1311,7 +1311,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
-<td>31.7M</td>
+<td>31.7</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>TimesNet</td>
@@ -1319,7 +1319,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
-<td>4.9M</td>
+<td>4.9</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>
@@ -1342,28 +1342,28 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>99.36</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>52K</td>
+<td>0.052</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>DLinear_ad</td>
 <td>98.98</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>100K</td>
+<td>0.1</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>Nonstationary_ad</td>
 <td>98.55</td>
 <td>1.94 / 1.16</td>
 <td>5.31 / 1.66</td>
-<td>1.8M</td>
+<td>1.8</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>PatchTST_ad</td>
 <td>98.78</td>
 <td>2.10 / 0.55</td>
 <td>6.98 / 0.63</td>
-<td>320K</td>
+<td>0.32</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>
@@ -1382,7 +1382,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>TimesNet_cls</td>
 <td>87.5</td>
-<td>792K</td>
+<td>0.792</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>

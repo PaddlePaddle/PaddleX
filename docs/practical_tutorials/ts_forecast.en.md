@@ -47,7 +47,7 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
-<td>76k</td>
+<td>0.076</td>
 <td>A simple, efficient, and easy-to-use time series forecasting model</td>
 </tr>
 <tr>
@@ -56,7 +56,7 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <td>0.515</td>
 <td>3.92 / 2.59</td>
 <td>18.09 / 13.36</td>
-<td>60.3M</td>
+<td>60.3</td>
 <td>Based on transformer architecture, optimized for long-term forecasting of non-stationary time series</td>
 </tr>
 <tr>
@@ -65,7 +65,7 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <td>0.391</td>
 <td>1.81 / 0.45</td>
 <td>5.79 / 0.77</td>
-<td>2.2M</td>
+<td>2.2</td>
 <td>A high-accuracy long-term forecasting model that balances local patterns and global dependencies</td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <td>0.414</td>
 <td>- / -</td>
 <td>4.54 / 1.09</td>
-<td>34.9M</td>
+<td>34.9</td>
 <td>A high-accuracy model suitable for handling multivariate, long-term time series forecasting problems</td>
 </tr>
 <tr>
@@ -83,7 +83,7 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <td>0.429</td>
 <td>15.19 / 13.77</td>
 <td>23.14 / 12.42</td>
-<td>5.2M</td>
+<td>5.2</td>
 <td>Through multi-period analysis, TimesNet is an adaptable and high-accuracy time series analysis model</td>
 </tr>
 </tbody>

@@ -403,7 +403,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <tr>
 <td>PicoDet-XS</td>
 <td>26.2</td>
-<td>5.7M</td>
+<td>5.7</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-XS_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>PP-YOLOE_plus-L</td>

@@ -42,7 +42,7 @@ comments: true
 <td>91.03</td>
 <td>49.85 / 49.85</td>
 <td>229.14 / 229.14</td>
-<td>1.05 G</td>
+<td>1050</td>
 </tr>
 </table>
 
@@ -56,7 +56,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

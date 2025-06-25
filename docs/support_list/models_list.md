@@ -32,7 +32,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>88.1</td>
 <td>49.15 / 9.75</td>
 <td>223.16 / 206.49</td>
-<td>1.04 G</td>
+<td>1040</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/image_classification/CLIP_vit_large_patch14_224.yaml">CLIP_vit_large_patch14_224.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_large_patch14_224_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_large_patch14_224_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -812,7 +812,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>91.03</td>
 <td>49.85 / 49.85</td>
 <td>229.14 / 229.14</td>
-<td>1.05 G</td>
+<td>1050</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/image_feature/PP-ShiTuV2_rec_CLIP_vit_large.yaml">PP-ShiTuV2_rec_CLIP_vit_large.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
@@ -1043,7 +1043,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>26.2</td>
 <td>9.54 / 3.52</td>
 <td>17.96 / 5.38</td>
-<td>5.7M</td>
+<td>5.7</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/PicoDet-XS.yaml">PicoDet-XS.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-XS_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -1163,7 +1163,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>26.1</td>
 <td>42.94 / 17.79</td>
 <td>64.15 / 7.19</td>
-<td>3.4M</td>
+<td>3.4</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/object_detection/YOLOX-N.yaml">YOLOX-N.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -1731,7 +1731,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>34.58</td>
 <td>13.9496</td>
 <td>330.132</td>
-<td>6.1M</td>
+<td>6.1</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/semantic_segmentation/SeaFormer_tiny.yaml">SeaFormer_tiny.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_tiny (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">训练模型</a></td></tr>
 
@@ -1984,7 +1984,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>96.36</td>
 <td>9.70 / 3.56</td>
 <td>50.38 / 19.64</td>
-<td>4.7M</td>
+<td>4.7</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/seal_text_detection/PP-OCRv4_mobile_seal_det.yaml">PP-OCRv4_mobile_seal_det.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -2139,7 +2139,7 @@ en_PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></
 <td>70.69</td>
 <td>3.56 / 0.78</td>
 <td>8.44 / 5.78</td>
-<td>17.3 M </td>
+<td>17.3</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/en_PP-OCRv3_mobile_rec.yaml">en_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 en_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2174,7 +2174,7 @@ korean_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</
 <td>45.69</td>
 <td>3.86 / 1.01</td>
 <td>8.62 / 2.92</td>
-<td>9.8 M </td>
+<td>9.8</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/japan_PP-OCRv3_mobile_rec.yaml">japan_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 japan_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2184,7 +2184,7 @@ japan_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a
 <td>82.06</td>
 <td>3.90 / 1.16</td>
 <td>9.24 / 3.18</td>
-<td>10.8 M </td>
+<td>10.8</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/chinese_cht_PP-OCRv3_mobile_rec.yaml">chinese_cht_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 chinese_cht_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2194,7 +2194,7 @@ chinese_cht_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模
 <td>95.88</td>
 <td>3.59 / 0.81</td>
 <td>8.28 / 6.21</td>
-<td>8.7 M </td>
+<td>8.7</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/te_PP-OCRv3_mobile_rec.yaml">te_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 te_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2204,7 +2204,7 @@ te_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></
 <td>96.96</td>
 <td>3.49 / 0.89</td>
 <td>8.63 / 2.77</td>
-<td>17.4 M </td>
+<td>17.4</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ka_PP-OCRv3_mobile_rec.yaml">ka_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 ka_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2214,7 +2214,7 @@ ka_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></
 <td>76.83</td>
 <td>3.49 / 0.86</td>
 <td>8.35 / 3.41</td>
-<td>8.7 M </td>
+<td>8.7</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ta_PP-OCRv3_mobile_rec.yaml">ta_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 ta_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2244,7 +2244,7 @@ arabic_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</
 <td>94.28</td>
 <td>3.56 / 0.79</td>
 <td>8.22 / 2.76</td>
-<td>8.7 M  </td>
+<td>8.7</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/cyrillic_PP-OCRv3_mobile_rec.yaml">cyrillic_PP-OCRv3_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 cyrillic_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
@@ -2280,7 +2280,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>43.50</td>
 <td>1311.84 / 1311.84</td>
 <td>- / 8288.07</td>
-<td>1.53 G</td>
+<td>1530</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/UniMERNet.yaml">UniMERNet.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
 </tr>
@@ -2441,7 +2441,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>94.2</td>
 <td>2.62 / 0.60</td>
 <td>3.17 / 1.14</td>
-<td>6.6M</td>
+<td>6.6</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_classification/PP-LCNet_x1_0_table_cls.yaml">PP-LCNet_x1_0_table_cls.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_table_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">训练模型</a></td>
 </tr>
@@ -2808,7 +2808,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>0.394</td>
 <td>0.34 / 0.12</td>
 <td>0.64 / 0.06</td>
-<td>72 K</td>
+<td>0.072</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_forecast/DLinear.yaml">DLinear.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -2817,7 +2817,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>0.392</td>
 <td>0.27 / 0.10</td>
 <td>0.49 / 0.08</td>
-<td>40 K</td>
+<td>0.04</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_forecast/NLinear.yaml">NLinear.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -2844,7 +2844,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>0.392</td>
 <td>0.39 / 0.18</td>
 <td>0.82 / 0.08</td>
-<td>40 K</td>
+<td>0.04</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_forecast/RLinear.yaml">RLinear.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -2887,7 +2887,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>99.36</td>
 <td>0.24 / 0.13</td>
 <td>0.41 / 0.05</td>
-<td>52 K</td>
+<td>0.052</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml">AutoEncoder_ad.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/AutoEncoder_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -2895,7 +2895,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>98.98</td>
 <td>0.39 / 0.16</td>
 <td>0.69 / 0.08</td>
-<td>112 K</td>
+<td>0.112</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_anomaly_detection/DLinear_ad.yaml">DLinear_ad.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
@@ -2911,7 +2911,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>98.78</td>
 <td>2.10 / 0.55</td>
 <td>6.98 / 0.63</td>
-<td>320 K</td>
+<td>0.32</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml">PatchTST_ad.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">训练模型</a></td></tr>
 
@@ -2934,7 +2934,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>TimesNet_cls</td>
 <td>87.5</td>
-<td>792 K</td>
+<td>0.792</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/ts_classification/TimesNet_cls.yaml">TimesNet_cls.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
@@ -2948,7 +2948,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <th>模型</th>
 <th>训练数据</th>
-<th>模型大小</th>
+<th>模型存储大小（MB）</th>
 <th>词错率</th>
 <th>yaml文件</th>
 <th>模型下载链接</th>
@@ -2956,7 +2956,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>whisper_large</td>
 <td>680kh</td>
-<td>5.8G</td>
+<td>5800</td>
 <td>2.7 (Librispeech)</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_large.yaml">whisper_large.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_large.tar">推理模型</a></td>
@@ -2964,7 +2964,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>whisper_medium</td>
 <td>680kh</td>
-<td>2.9G</td>
+<td>2900</td>
 <td>-</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_medium.yaml">whisper_medium.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_medium.tar">推理模型</a></td>
@@ -2972,7 +2972,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>whisper_small</td>
 <td>680kh</td>
-<td>923M</td>
+<td>923</td>
 <td>-</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_small.yaml">whisper_small.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_small.tar">推理模型</a></td>
@@ -2980,7 +2980,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>whisper_base</td>
 <td>680kh</td>
-<td>277M</td>
+<td>277</td>
 <td>-</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_base.yaml">whisper_base.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_base.tar">推理模型</a></td>
@@ -2988,7 +2988,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>whisper_tiny</td>
 <td>680kh</td>
-<td>145M</td>
+<td>145</td>
 <td>-</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/multilingual_speech_recognition/whisper_tiny.yaml">whisper_tiny.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">推理模型</a></td>
@@ -3042,7 +3042,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <tr>
 <td>YOWO</td>
 <td>80.94</td>
-<td>462.891M</td>
+<td>462.891</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/video_detection/YOWO.yaml">YOWO.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 </tr>
@@ -3110,7 +3110,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

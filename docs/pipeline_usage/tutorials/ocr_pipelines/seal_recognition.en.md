@@ -458,7 +458,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>70.69</td>
 <td>3.56 / 0.78</td>
 <td>8.44 / 5.78</td>
-<td>17.3 M </td>
+<td>17.3</td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv3 recognition model supports the recognition of English and numbers.</td>
 </tr>
 </table>
@@ -488,7 +488,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>45.69</td>
 <td>3.86 / 1.01</td>
 <td>8.62 / 2.92</td>
-<td>9.8 M </td>
+<td>9.8</td>
 <td>The ultra-lightweight Japanese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Japanese and numbers.</td>
 </tr>
 <tr>
@@ -497,7 +497,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>82.06</td>
 <td>3.90 / 1.16</td>
 <td>9.24 / 3.18</td>
-<td>10.8 M </td>
+<td>10.8</td>
 <td>The ultra-lightweight Traditional Chinese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Traditional Chinese and numbers.</td>
 </tr>
 <tr>
@@ -506,7 +506,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>95.88</td>
 <td>3.59 / 0.81</td>
 <td>8.28 / 6.21</td>
-<td>8.7 M </td>
+<td>8.7</td>
 <td>The ultra-lightweight Telugu recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Telugu and numbers.</td>
 </tr>
 <tr>
@@ -515,7 +515,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>96.96</td>
 <td>3.49 / 0.89</td>
 <td>8.63 / 2.77</td>
-<td>17.4 M </td>
+<td>17.4</td>
 <td>The ultra-lightweight Kannada recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Kannada and numbers.</td>
 </tr>
 <tr>
@@ -524,7 +524,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>76.83</td>
 <td>3.49 / 0.86</td>
 <td>8.35 / 3.41</td>
-<td>8.7 M </td>
+<td>8.7</td>
 <td>The ultra-lightweight Tamil recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Tamil and numbers.</td>
 </tr>
 <tr>
@@ -551,7 +551,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>94.28</td>
 <td>3.56 / 0.79</td>
 <td>8.22 / 2.76</td>
-<td>8.7 M  </td>
+<td>8.7</td>
 <td>
 The ultra-lightweight cyrillic alphabet recognition model trained based on the PP-OCRv3 recognition model supports the recognition of cyrillic letters and numbers.</td>
 </tr>
@@ -561,7 +561,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>96.44</td>
 <td>3.60 / 0.78</td>
 <td>6.95 / 2.87</td>
-<td>7.9 M  </td>
+<td>7.9</td>
 <td>The ultra-lightweight Devanagari script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Devanagari script and numbers.</td>
 </tr>
 </table>
@@ -593,7 +593,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.9 / TensorRT 8.6.1.6 / CUDA 11.8</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
