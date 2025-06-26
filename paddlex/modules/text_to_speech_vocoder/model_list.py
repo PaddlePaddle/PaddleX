@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .audio_batch_sampler import AudioBatchSampler
-from .base_batch_sampler import BaseBatchSampler
-from .det_3d_batch_sampler import Det3DBatchSampler
-from .doc_vlm_batch_sampler import DocVLMBatchSampler
-from .image_batch_sampler import ImageBatchSampler
-from .ts_batch_sampler import TSBatchSampler
-from .video_batch_sampler import VideoBatchSampler
-from .text_batch_sampler import TextBatchSampler
+MODELS = [
+    "pwgan_csmsc",
+]
