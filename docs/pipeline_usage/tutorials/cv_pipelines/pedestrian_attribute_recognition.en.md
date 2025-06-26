@@ -19,24 +19,26 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE-L_human</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-L_human_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_human_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE-L_human</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-L_human_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_human_pretrained.pdparams">Training Model</a></td>
 <td>48.0</td>
 <td>81.9</td>
-<td>33.27 / 9.19</td>
-<td>173.72 / 173.72</td>
+<td>30.59 / 26.64</td>
+<td>180.05 / 112.70</td>
 <td>196.02</td>
 <td rowspan="2">Pedestrian detection model based on PP-YOLOE</td>
 </tr>
 <tr>
-<td>PP-YOLOE-S_human</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-S_human_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_human_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE-S_human</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-S_human_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_human_pretrained.pdparams">Training Model</a></td>
 <td>42.5</td>
 <td>77.9</td>
-<td>9.94 / 3.42</td>
-<td>54.48 / 46.52</td>
+<td>10.26 / 6.66</td>
+<td>54.01 / 23.48</td>
 <td>28.79</td>
 </tr>
 </table>
@@ -48,17 +50,18 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_pedestrian_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">Training Model</a></td>
+<td>PP-LCNet_x1_0_pedestrian_attribute</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">Training Model</a></td>
 <td>92.2</td>
-<td>2.35 / 0.49</td>
-<td>3.17 / 1.25</td>
-<td>6.7 M</td>
+<td>2.52 / 0.66</td>
+<td>2.60 / 1.07</td>
+<td>6.7</td>
 <td>PP-LCNet_x1_0_pedestrian_attribute is a lightweight pedestrian attribute recognition model based on PP-LCNet, covering 26 categories.</td>
 </tr>
 </tbody>
@@ -79,7 +82,7 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

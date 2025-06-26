@@ -16,14 +16,15 @@ Time series classification is a technique that categorizes time-series data into
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Acc(%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td>
+<td>TimesNet_cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td>
 <td>87.5</td>
-<td>792K</td>
+<td>0.792</td>
 </tr>
 </tbody>
 </table>
@@ -38,7 +39,7 @@ Time series classification is a technique that categorizes time-series data into
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

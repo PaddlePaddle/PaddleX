@@ -46,33 +46,36 @@ PaddleX provides 3 high-precision and high-efficiency end-to-end small object de
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
 <td>31.9</td>
 <td>52.1</td>
-<td>57.1</td>
-<td>1007.0</td>
+<td>100.02 / 48.33</td>
+<td>271.29 / 151.20</td>
 <td>324.93</td>
 <td rowspan="3">PP-YOLOE_plus small object detection model trained based on VisDrone. VisDrone is a benchmark dataset for UAV vision data, which is used for training and evaluation of small object detection tasks due to its small targets and certain challenges.</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
 <td>25.1</td>
 <td>42.8</td>
-<td>65.5</td>
-<td>324.4</td>
+<td>116.07 / 20.10</td>
+<td>176.44 / 40.21</td>
 <td>77.29</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-largesize-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
 <td>42.7</td>
 <td>65.9</td>
-<td>458.5</td>
-<td>11172.7</td>
+<td>515.69 / 460.17</td>
+<td>2816.08 / 1736.00</td>
 <td>340.42</td>
 </tr>
 </table>

@@ -17,22 +17,24 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <th>mAP 0.5:0.95</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE-S_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-S_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE-S_vehicle</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-S_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">Training Model</a></td>
 <td>61.3</td>
-<td>9.79 / 3.48</td>
-<td>54.14 / 46.69</td>
+<td>10.54 / 6.69</td>
+<td>52.73 / 23.58</td>
 <td>28.79</td>
 <td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
 </tr>
 <tr>
-<td>PP-YOLOE-L_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-L_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE-L_vehicle</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-L_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">Training Model</a></td>
 <td>63.9</td>
-<td>32.84 / 9.03</td>
-<td>176.60 / 176.60</td>
+<td>30.30 / 26.27</td>
+<td>169.28 / 111.88</td>
 <td>196.02</td>
 </tr>
 </table>
@@ -45,17 +47,18 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
+<td>PP-LCNet_x1_0_vehicle_attribute</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
 <td>91.7</td>
-<td>2.32 / 0.52</td>
-<td>3.22 / 1.26</td>
-<td>6.7 M</td>
+<td>2.53 / 0.67</td>
+<td>2.73 / 1.10</td>
+<td>6.7</td>
 <td>PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet.</td>
 </tr>
 </tbody>
@@ -76,7 +79,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

@@ -16,53 +16,59 @@ comments: true
 <th>mAP(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
-<td>14.68 / 5.81</td>
-<td>47.32 / 47.32</td>
-<td>20.9 M</td>
+<td>14.31 / 11.06</td>
+<td>45.95 / 25.06</td>
+<td>20.9</td>
 <td rowspan="2">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
 </tr>
 <tr>
-<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
 <td>29.1</td>
-<td>7.98 / 2.33</td>
-<td>14.82 / 5.60</td>
-<td>4.4 M</td>
+<td>9.15 / 3.26</td>
+<td>16.06 / 4.04</td>
+<td>4.4</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
 <td>52.9</td>
-<td>33.55 / 10.46</td>
-<td>189.05 / 189.05</td>
-<td>185.3 M</td>
+<td>32.06 / 28.00</td>
+<td>185.32 / 116.21</td>
+<td>185.3</td>
 <td rowspan="2">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
 <td>43.7</td>
-<td>12.16 / 4.58</td>
-<td>73.86 / 52.90</td>
-<td>28.3 M</td>
+<td>11.43 / 7.52</td>
+<td>60.16 / 26.94</td>
+<td>28.3</td>
 </tr>
 <tr>
-<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
 <td>56.3</td>
-<td>115.92 / 28.16</td>
-<td>971.32 / 971.32</td>
-<td>435.8 M</td>
+<td>114.57 / 101.56</td>
+<td>938.20 / 938.20</td>
+<td>435.8</td>
 <td rowspan="2">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
 </tr>
 <tr>
-<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>53.0</td>
-<td>35.00 / 10.45</td>
-<td>495.51 / 495.51</td>
-<td>113.7 M</td>
+<td>34.76 / 27.60</td>
+<td>495.39 / 247.68</td>
+<td>113.7</td>
 </tr>
 </table>
 
@@ -75,306 +81,347 @@ comments: true
 <th>mAP(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>Cascade-FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>Cascade-FasterRCNN-ResNet50-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.1</td>
-<td>135.92 / 135.92</td>
-<td></td>
-<td>245.4 M</td>
+<td>120.28 / 120.28</td>
+<td>- / 6514.61</td>
+<td>245.4</td>
 <td rowspan="2">Cascade-FasterRCNN 是一种改进的Faster R-CNN目标检测模型，通过耦联多个检测器，利用不同IoU阈值优化检测结果，解决训练和预测阶段的mismatch问题，提高目标检测的准确性。</td>
 </tr>
 <tr>
-<td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
+<td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>45.0</td>
-<td>138.23 / 138.23</td>
-<td></td>
-<td>246.2 M</td>
+<td>124.10 / 124.10</td>
+<td>- / 6709.52</td>
+<td>246.2</td>
 </tr>
 <tr>
-<td>CenterNet-DLA-34</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-DLA-34_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">训练模型</a></td>
+<td>CenterNet-DLA-34</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-DLA-34_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">训练模型</a></td>
 <td>37.6</td>
-<td></td>
-<td></td>
-<td>75.4 M</td>
+<td>67.19 / 67.19</td>
+<td>6622.61 / 6622.61</td>
+<td>75.4</td>
 <td rowspan="2">CenterNet是一种anchor-free目标检测模型，把待检测物体的关键点视为单一点-即其边界框的中心点，并通过关键点进行回归。</td>
 </tr>
 <tr>
-<td>CenterNet-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>CenterNet-ResNet50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CenterNet-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>38.9</td>
-<td></td>
-<td></td>
-<td>319.7 M</td>
+<td>216.06 / 216.06</td>
+<td>2545.79 / 2545.79</td>
+<td>319.7</td>
 </tr>
 <tr>
-<td>DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DETR-R50_pretrained.pdparams">训练模型</a></td>
+<td>DETR-R50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DETR-R50_pretrained.pdparams">训练模型</a></td>
 <td>42.3</td>
-<td>62.91 / 17.33</td>
-<td>392.63 / 392.63</td>
-<td>159.3 M</td>
+<td>58.80 / 26.90</td>
+<td>370.96 / 208.77</td>
+<td>159.3</td>
 <td>DETR 是Facebook提出的一种transformer目标检测模型，该模型在不需要预定义的先验框anchor和NMS的后处理策略的情况下，就可以实现端到端的目标检测。</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet34-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet34-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td>
 <td>37.8</td>
-<td>83.33 / 31.64</td>
-<td></td>
-<td>137.5 M</td>
+<td>76.90 / 76.90</td>
+<td>- / 4136.79</td>
+<td>137.5</td>
 <td rowspan="9">Faster R-CNN是典型的two-stage目标检测模型，即先生成区域建议（Region Proposal），然后在生成的Region Proposal上做分类和回归。相较于前代R-CNN和Fast R-CNN，Faster R-CNN的改进主要在于区域建议方面，使用区域建议网络（Region Proposal Network, RPN）提供区域建议，以取代传统选择性搜索。RPN是卷积神经网络，并与检测网络共享图像的卷积特征，减少了区域建议的计算开销。</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>38.4</td>
-<td>107.08 / 35.40</td>
-<td></td>
-<td>148.1 M</td>
+<td>95.48 / 95.48</td>
+<td>- / 3693.90</td>
+<td>148.1</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50-vd-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>39.5</td>
-<td>109.36 / 36.00</td>
-<td></td>
-<td>148.1 M</td>
+<td>98.03 / 98.03</td>
+<td>- / 4278.36</td>
+<td>148.1</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.4</td>
-<td>109.06 / 36.19</td>
-<td></td>
-<td>148.1 M</td>
+<td>99.23 / 99.23</td>
+<td>- / 4415.68</td>
+<td>148.1</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>36.7</td>
-<td>496.33 / 109.12</td>
-<td></td>
-<td>120.2 M</td>
+<td>129.10 / 129.10</td>
+<td>- / 3868.44</td>
+<td>120.2</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet101-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.4</td>
-<td>148.21 / 42.21</td>
-<td></td>
-<td>216.3 M</td>
+<td>131.48 / 131.48</td>
+<td>- / 4380.00</td>
+<td>216.3</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet101</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNet101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">训练模型</a></td>
 <td>39.0</td>
-<td>538.58 / 120.88</td>
-<td></td>
-<td>188.1 M</td>
+<td>216.71 / 216.71</td>
+<td>- / 5376.45</td>
+<td>188.1</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNeXt101-vd-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>43.4</td>
-<td>258.01 / 58.25</td>
-<td></td>
-<td>360.6 M</td>
+<td>234.38 / 234.38</td>
+<td>- / 6154.61</td>
+<td>360.6</td>
 </tr>
 <tr>
-<td>FasterRCNN-Swin-Tiny-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-Swin-Tiny-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-Swin-Tiny-FPN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FasterRCNN-Swin-Tiny-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
-<td></td>
-<td></td>
-<td>159.8 M</td>
+<td>65.92 / 65.92</td>
+<td>- / 2468.98</td>
+<td>159.8</td>
 </tr>
 <tr>
-<td>FCOS-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FCOS-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FCOS-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>FCOS-ResNet50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/FCOS-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FCOS-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>39.6</td>
-<td>106.13 / 28.32</td>
-<td>721.79 / 721.79</td>
-<td>124.2 M</td>
+<td>101.02 / 34.42</td>
+<td>752.15 / 752.15</td>
+<td>124.2</td>
 <td>FCOS是一种密集预测的anchor-free目标检测模型，使用RetinaNet的骨架，直接在feature map上回归目标物体的长宽，并预测物体的类别以及centerness（feature map上像素点离物体中心的偏移程度），centerness最终会作为权重来调整物体得分。</td>
 </tr>
 <tr>
-<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
-<td>14.68 / 5.81</td>
-<td>47.32 / 47.32</td>
-<td>20.9 M</td>
+<td>14.31 / 11.06</td>
+<td>45.95 / 25.06</td>
+<td>20.9</td>
 <td rowspan="4">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
 </tr>
 <tr>
-<td>PicoDet-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams">训练模型</a></td>
 <td>37.5</td>
-<td>9.62 / 3.23</td>
-<td>23.75 / 14.88</td>
-<td>16.8 M</td>
+<td>10.48 / 5.00</td>
+<td>22.88 / 9.03</td>
+<td>16.8</td>
 </tr>
 <tr>
-<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
 <td>29.1</td>
-<td>7.98 / 2.33</td>
-<td>14.82 / 5.60</td>
-<td>4.4 M</td>
+<td>9.15 / 3.26</td>
+<td>16.06 / 4.04</td>
+<td>4.4</td>
 </tr>
 <tr>
-<td>PicoDet-XS</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-XS_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-XS</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-XS_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">训练模型</a></td>
 <td>26.2</td>
-<td>9.66 / 2.75</td>
-<td>19.15 / 7.24</td>
-<td>5.7 M</td>
+<td>9.54 / 3.52</td>
+<td>17.96 / 5.38</td>
+<td>5.7</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
 <td>52.9</td>
-<td>33.55 / 10.46</td>
-<td>189.05 / 189.05</td>
-<td>185.3 M</td>
+<td>32.06 / 28.00</td>
+<td>185.32 / 116.21</td>
+<td>185.3</td>
 <td rowspan="4">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-M_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-M_pretrained.pdparams">训练模型</a></td>
 <td>49.8</td>
-<td>19.52 / 7.46</td>
-<td>113.36 / 113.36</td>
-<td>82.3 M</td>
+<td>18.37 / 15.04</td>
+<td>108.77 / 63.48</td>
+<td>82.3</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
 <td>43.7</td>
-<td>12.16 / 4.58</td>
-<td>73.86 / 52.90</td>
-<td>28.3 M</td>
+<td>11.43 / 7.52</td>
+<td>60.16 / 26.94</td>
+<td>28.3</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-X_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-X</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-X_pretrained.pdparams">训练模型</a></td>
 <td>54.7</td>
-<td>58.87 / 15.84</td>
-<td>292.93 / 292.93</td>
-<td>349.4 M</td>
+<td>56.28 / 50.60</td>
+<td>292.08 / 212.24</td>
+<td>349.4</td>
 </tr>
 <tr>
-<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
 <td>56.3</td>
-<td>115.92 / 28.16</td>
-<td>971.32 / 971.32</td>
-<td>435.8 M</td>
+<td>114.57 / 101.56</td>
+<td>938.20 / 938.20</td>
+<td>435.8</td>
 <td rowspan="5">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
 </tr>
 <tr>
-<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>53.0</td>
-<td>35.00 / 10.45</td>
-<td>495.51 / 495.51</td>
-<td>113.7 M</td>
+<td>34.76 / 27.60</td>
+<td>495.39 / 247.68</td>
+<td>113.7</td>
 </tr>
 <tr>
-<td>RT-DETR-R18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-R18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R18_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-R18</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-R18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R18_pretrained.pdparams">训练模型</a></td>
 <td>46.5</td>
-<td>20.21 / 6.23</td>
-<td>266.01 / 266.01</td>
-<td>70.7 M</td>
+<td>19.11 / 14.82</td>
+<td>263.13 / 143.05</td>
+<td>70.7</td>
 </tr>
 <tr>
-<td>RT-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R50_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-R50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R50_pretrained.pdparams">训练模型</a></td>
 <td>53.1</td>
-<td>42.14 / 11.31</td>
-<td>523.97 / 523.97</td>
-<td>149.1 M</td>
+<td>41.11 / 10.12</td>
+<td>536.20 / 482.86</td>
+<td>149.1</td>
 </tr>
 <tr>
-<td>RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-X_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-X</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-X_pretrained.pdparams">训练模型</a></td>
 <td>54.8</td>
-<td>61.24 / 15.83</td>
-<td>647.08 / 647.08</td>
-<td>232.9 M</td>
+<td>61.91 / 51.41</td>
+<td>639.79 / 639.79</td>
+<td>232.9</td>
 </tr>
 <tr>
-<td>YOLOv3-DarkNet53</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-DarkNet53_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">训练模型</a></td>
+<td>YOLOv3-DarkNet53</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-DarkNet53_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">训练模型</a></td>
 <td>39.1</td>
-<td>41.58 / 10.10</td>
-<td>158.78 / 158.78</td>
-<td>219.7 M</td>
+<td>39.62 / 35.54</td>
+<td>166.57 / 136.34</td>
+<td>219.7</td>
 <td rowspan="3">YOLOv3是一种实时的端到端目标检测器。它使用一个独特的单个卷积神经网络，将目标检测问题分解为一个回归问题，从而实现实时的检测。该模型采用了多个尺度的检测，提高了不同尺度目标物体的检测性能。</td>
 </tr>
 <tr>
-<td>YOLOv3-MobileNetV3</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-MobileNetV3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-MobileNetV3_pretrained.pdparams">训练模型</a></td>
+<td>YOLOv3-MobileNetV3</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-MobileNetV3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-MobileNetV3_pretrained.pdparams">训练模型</a></td>
 <td>31.4</td>
-<td>16.53 / 5.70</td>
-<td>60.44 / 60.44</td>
-<td>83.8 M</td>
+<td>16.54 / 6.21</td>
+<td>64.37 / 45.55</td>
+<td>83.8</td>
 </tr>
 <tr>
-<td>YOLOv3-ResNet50_vd_DCN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-ResNet50_vd_DCN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-ResNet50_vd_DCN_pretrained.pdparams">训练模型</a></td>
+<td>YOLOv3-ResNet50_vd_DCN</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOv3-ResNet50_vd_DCN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-ResNet50_vd_DCN_pretrained.pdparams">训练模型</a></td>
 <td>40.6</td>
-<td>32.91 / 10.07</td>
-<td>225.72 / 224.32</td>
-<td>163.0 M</td>
+<td>31.64 / 26.72</td>
+<td>226.75 / 226.75</td>
+<td>163.0</td>
 </tr>
 <tr>
-<td>YOLOX-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-L_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-L_pretrained.pdparams">训练模型</a></td>
 <td>50.1</td>
-<td>121.19 / 13.55</td>
-<td>295.38 / 274.15</td>
-<td>192.5 M</td>
+<td>49.68 / 45.03</td>
+<td>232.52 / 156.24</td>
+<td>192.5</td>
 <td rowspan="6">YOLOX模型以YOLOv3作为目标检测网络的框架，通过设计Decoupled Head、Data Aug、Anchor Free以及SimOTA组件，显著提升了模型在各种复杂场景下的检测性能。</td>
 </tr>
 <tr>
-<td>YOLOX-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">训练模型</a></td>
 <td>46.9</td>
-<td>87.19 / 10.09</td>
-<td>183.95 / 172.67</td>
-<td>90.0 M</td>
+<td>43.46 / 29.52</td>
+<td>147.64 / 80.06</td>
+<td>90.0</td>
 </tr>
 <tr>
-<td>YOLOX-N</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-N</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td>
 <td>26.1</td>
-<td>53.31 / 45.02</td>
-<td>69.69 / 59.18</td>
-<td>3.4 M</td>
+<td>42.94 / 17.79</td>
+<td>64.15 / 7.19</td>
+<td>3.4</td>
 </tr>
 <tr>
-<td>YOLOX-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">训练模型</a></td>
 <td>40.4</td>
-<td>129.52 / 13.19</td>
-<td>181.39 / 179.01</td>
-<td>32.0 M</td>
+<td>46.53 / 29.34</td>
+<td>98.37 / 35.02</td>
+<td>32.0</td>
 </tr>
 <tr>
-<td>YOLOX-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">训练模型</a></td>
 <td>32.9</td>
-<td>66.81 / 61.31</td>
-<td>92.30 / 83.90</td>
-<td>18.1 M</td>
+<td>31.81 / 18.91</td>
+<td>55.34 / 11.63</td>
+<td>18.1</td>
 </tr>
 <tr>
-<td>YOLOX-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-X</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLOX-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">训练模型</a></td>
 <td>51.8</td>
-<td>156.40 / 20.17</td>
-<td>480.14 / 454.35</td>
-<td>351.5 M</td>
+<td>84.06 / 77.28</td>
+<td>390.38 / 272.88</td>
+<td>351.5</td>
 </tr>
 <tr>
-<td>Co-Deformable-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">训练模型</a></td>
+<td>Co-Deformable-DETR-R50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">训练模型</a></td>
 <td>49.7</td>
-<td></td>
-<td></td>
-<td>184 M</td>
+<td>259.62 / 259.62</td>
+<td>32413.76 / 32413.76</td>
+<td>184</td>
 <td rowspan="4">Co-DETR是一种先进的端到端目标检测器。它基于DETR架构，通过引入协同混合分配训练策略，将目标检测任务中的传统一对多标签分配与一对一匹配相结合，从而显著提高了检测性能和训练效率</td>
 </tr>
 <tr>
-<td>Co-Deformable-DETR-Swin-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
+<td>Co-Deformable-DETR-Swin-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
 <td>48.0（640x640 输入尺寸下）</td>
-<td></td>
-<td></td>
-<td>187 M</td>
+<td>120.17 / 120.17</td>
+<td>- / 15620.29</td>
+<td>187</td>
 </tr>
 <tr>
-<td>Co-DINO-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">训练模型</a></td>
+<td>Co-DINO-R50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-R50_pretrained.pdparams">训练模型</a></td>
 <td>52.0</td>
-<td></td>
-<td></td>
-<td>186 M</td>
+<td>1123.23 / 1123.23</td>
+<td>- / -</td>
+<td>186</td>
 </tr>
 <tr>
-<td>Co-DINO-Swin-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">训练模型</a></td>
+<td>Co-DINO-Swin-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Co-DINO-Swin-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-DINO-Swin-L_pretrained.pdparams">训练模型</a></td>
 <td>55.9 （640x640 输入尺寸下）</td>
-<td></td>
-<td></td>
-<td>840 M</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>840</td>
 </tr>
 </table>
 
@@ -391,7 +438,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

@@ -14,16 +14,17 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(%)</th>
 <th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小 (M)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">推理模型</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">训练模型</a></td>
+<td>PP-YOLOE-R-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">推理模型</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">训练模型</a></td>
 <td>78.14</td>
-<td>20.7039</td>
-<td>157.942</td>
-<td>211.0 M</td>
+<td>67.50 / 61.15</td>
+<td>414.79 / 414.79</td>
+<td>211.0</td>
 <td rowspan="1">PP-YOLOE-R是一个高效的单阶段Anchor-free旋转框检测模型。基于PP-YOLOE, PP-YOLOE-R以极少的参数量和计算量为代价，引入了一系列有用的设计来提升检测精度。</td>
 </tr>
 </table>
@@ -38,7 +39,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

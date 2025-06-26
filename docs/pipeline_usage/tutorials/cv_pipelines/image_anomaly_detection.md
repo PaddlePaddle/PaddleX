@@ -18,14 +18,15 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mIoU（%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td>
+<td>STFPM</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td>
 <td>99.01</td>
-<td>21.5 M</td>
+<td>21.5</td>
 </tr>
 </tbody>
 </table>
@@ -43,7 +44,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

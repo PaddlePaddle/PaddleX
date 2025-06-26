@@ -14,28 +14,31 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>Top1 Acc(%)</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSM-R50_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSM-R50_8frames_uniform</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSM-R50_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>74.36</td>
-<td>93.4 M</td>
+<td>93.4</td>
 <td rowspan="1">
 PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型基于ResNet-50骨干网络进行优化，从数据增强、网络结构微调、训练策略、BN层优化、预训练模型选择、模型蒸馏等6个方面进行模型调优，在中心采样评估方式下，Kinetics-400上精度较原论文实现提升3.95个点
 </td>
 </tr>
 
 <tr>
-<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>71.71</td>
-<td>22.5 M</td>
+<td>22.5</td>
 <td rowspan="2">PP-TSMv2是轻量化的视频分类模型，基于CPU端模型PP-LCNetV2进行优化，从骨干网络与预训练模型选择、数据增强、tsm模块调优、输入帧数优化、解码速度优化、DML蒸馏、LTA模块等7个方面进行模型调优，在中心采样评估方式下，精度达到75.16%，输入10s视频在CPU端的推理速度仅需456ms。</td>
 </tr>
 <tr>
-<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>73.11</td>
-<td>22.5 M</td>
+<td>22.5</td>
 </tr>
 
 </table>
@@ -50,7 +53,7 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

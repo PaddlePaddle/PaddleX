@@ -16,53 +16,59 @@ comments: true
 <th>mAP(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>CLIP_vit_base_patch16_448_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_448_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">训练模型</a></td>
+<td>CLIP_vit_base_patch16_448_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_448_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">训练模型</a></td>
 <td>89.15</td>
-<td>54.75 / 14.30</td>
-<td>280.23 / 280.23</td>
-<td>325.6 M</td>
+<td>48.87 / 8.10</td>
+<td>275.33 / 188.48</td>
+<td>325.6</td>
 <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
-<td>PP-HGNetV2-B0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-HGNetV2-B0_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">训练模型</a></td>
 <td>80.98</td>
-<td>6.47 / 1.38</td>
-<td>21.56 / 13.69</td>
-<td>39.6 M</td>
+<td>7.15 / 1.77</td>
+<td>21.35 / 8.19</td>
+<td>39.6</td>
 <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
-<td>PP-HGNetV2-B4_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B4_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-HGNetV2-B4_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B4_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">训练模型</a></td>
 <td>87.96</td>
-<td>9.63 / 2.79</td>
-<td>43.98 / 36.63</td>
-<td>88.5 M</td>
+<td>8.11 / 2.82</td>
+<td>44.76 / 29.38</td>
+<td>88.5</td>
 </tr>
 <tr>
-<td>PP-HGNetV2-B6_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B6_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-HGNetV2-B6_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B6_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">训练模型</a></td>
 <td>91.25</td>
-<td>37.07 / 9.43</td>
-<td>188.58 / 188.58</td>
-<td>286.5 M</td>
+<td>34.54 / 8.22</td>
+<td>189.17 / 189.17</td>
+<td>286.5</td>
 </tr>
 <tr>
-<td>PP-LCNet_x1_0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">训练模型</a></td>
 <td>77.96</td>
-<td>4.04 / 1.15</td>
-<td>11.76 / 8.32</td>
-<td>29.4 M</td>
+<td>5.28 / 1.62</td>
+<td>13.16 / 5.61</td>
+<td>29.4</td>
 <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
-<td>ResNet50_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">训练模型</a></td>
+<td>ResNet50_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">训练模型</a></td>
 <td>83.50</td>
-<td>12.12 / 3.27</td>
-<td>51.79 / 44.36</td>
-<td>108.9 M</td>
+<td>10.54 / 2.97</td>
+<td>55.39 / 35.52</td>
+<td>108.9</td>
 <td>ResNet50_ML是一种基于ResNet50的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 </table>
@@ -77,7 +83,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

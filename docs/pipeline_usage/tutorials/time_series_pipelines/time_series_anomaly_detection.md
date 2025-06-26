@@ -20,37 +20,41 @@ comments: true
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/AutoEncoder_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">训练模型</a></td>
+<td>AutoEncoder_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/AutoEncoder_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">训练模型</a></td>
 <td>99.36</td>
-<td>84.36</td>
-<td>91.25</td>
-<td>52K</td>
+<td>0.24 / 0.13</td>
+<td>0.41 / 0.05</td>
+<td>0.052</td>
 </tr>
 <tr>
-<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">训练模型</a></td>
+<td>DLinear_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">训练模型</a></td>
 <td>98.98</td>
-<td>93.96</td>
-<td>96.41</td>
-<td>112K</td>
+<td>0.39 / 0.16</td>
+<td>0.69 / 0.08</td>
+<td>0.1</td>
 </tr>
 <tr>
-<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">训练模型</a></td>
+<td>Nonstationary_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">训练模型</a></td>
 <td>98.55</td>
-<td>88.95</td>
-<td>93.51</td>
-<td>1.8M</td>
+<td>1.94 / 1.16</td>
+<td>5.31 / 1.66</td>
+<td>1.8</td>
 </tr>
 <tr>
-<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">训练模型</a></td>
+<td>PatchTST_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">训练模型</a></td>
 <td>98.78</td>
-<td>90.70</td>
-<td>94.57</td>
-<td>320K</td>
+<td>2.10 / 0.55</td>
+<td>6.98 / 0.63</td>
+<td>0.32</td>
 </tr>
 </tbody>
 </table>
@@ -68,7 +72,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

@@ -25,7 +25,8 @@ BEVFusion 是一种多模态 3D 目标检测模型，通过将环视摄像头图
 <th>介绍</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
+<td>BEVFusion</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
 <td>53.9</td>
 <td>60.9</td>
 <td rowspan="2">BEVFusion是一种在BEV视角下的多模态融合检测模型，采用两个分支处理不同模态的数据，得到lidar和camera在BEV视角下的特征，camera分支采用LSS这种自底向上的方式来显式的生成图像BEV特征，lidar分支采用经典的点云检测网络，最后对两种模态的BEV特征进行对齐和融合，应用于检测head或分割head。
@@ -44,7 +45,7 @@ BEVFusion 是一种多模态 3D 目标检测模型，通过将环视摄像头图
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

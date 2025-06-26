@@ -16,30 +16,33 @@ Small object detection is a specialized technique for identifying tiny objects w
 <th>mAP (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
 <td>25.1</td>
-<td>135.68 / 122.94</td>
-<td>188.09 / 107.74</td>
-<td>77.3 M</td>
+<td>116.07 / 20.10</td>
+<td>176.44 / 40.21</td>
+<td>77.3</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
 <td>31.9</td>
-<td>114.24 / 93.98</td>
-<td>285.39 / 285.39</td>
-<td>325.0 M</td>
+<td>100.02 / 48.33</td>
+<td>271.29 / 151.20</td>
+<td>325.0</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-largesize-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
 <td>42.7</td>
-<td>639.57 / 332.79</td>
-<td>2807.12 / 2807.12</td>
-<td>340.5 M</td>
+<td>515.69 / 460.17</td>
+<td>2816.08 / 1736.00</td>
+<td>340.5</td>
 </tr>
 </tbody>
 </table>
@@ -54,7 +57,7 @@ Small object detection is a specialized technique for identifying tiny objects w
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

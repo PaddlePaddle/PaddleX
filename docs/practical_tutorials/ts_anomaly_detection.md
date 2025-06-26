@@ -35,7 +35,7 @@ PaddleX 提供了4个端到端的时序异常检测模型，具体可参考 [模
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -43,33 +43,33 @@ PaddleX 提供了4个端到端的时序异常检测模型，具体可参考 [模
 <tr>
 <td>DLinear_ad</td>
 <td>0.9898</td>
-<td>0.9396</td>
-<td>0.9641</td>
-<td>72.8K</td>
+<td>0.39 / 0.16</td>
+<td>0.69 / 0.08</td>
+<td>0.1</td>
 <td>DLinear_ad结构简单，效率高且易用的时序异常检测模型</td>
 </tr>
 <tr>
 <td>Nonstationary_ad</td>
 <td>0.9855</td>
-<td>0.8895</td>
-<td>0.9351</td>
-<td>1.5MB</td>
+<td>1.94 / 1.16</td>
+<td>5.31 / 1.66</td>
+<td>1.5</td>
 <td>基于transformer结构，针对性优化非平稳时间序列的异常检测模型</td>
 </tr>
 <tr>
 <td>AutoEncoder_ad</td>
 <td>0.9936</td>
-<td>0.8436</td>
-<td>0.9125</td>
-<td>32K</td>
+<td>0.24 / 0.13</td>
+<td>0.41 / 0.05</td>
+<td>0.052</td>
 <td>AutoEncoder_ad是经典的自编码结构的效率高且易用的时序异常检测模型</td>
 </tr>
 <tr>
 <td>PatchTST_ad</td>
 <td>0.9878</td>
-<td>0.9070</td>
-<td>0.9457</td>
-<td>164K</td>
+<td>2.10 / 0.55</td>
+<td>6.98 / 0.63</td>
+<td>0.164</td>
 <td>PatchTST是兼顾局部模式和全局依赖关系的高精度时序异常检测模型</td>
 </tr>
 </tbody>

@@ -22,15 +22,15 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
 <th>mAP(0.5)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_det</td>
 <td>41.5</td>
 <td>62.0</td>
-<td>12.79 / 4.51</td>
-<td>44.14 / 44.14</td>
+<td>11.81 / 4.53</td>
+<td>43.03 / 25.31</td>
 <td>27.54</td>
 <td>基于PicoDet_LCNet_x2_5的主体检测模型，模型可能会同时检测出多个常见主体。</td>
 </tr>
@@ -43,30 +43,30 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
 <th>recall@1 (%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec</td>
 <td>84.2</td>
-<td>3.48 / 0.55</td>
-<td>8.04 / 4.04</td>
-<td>16.3 M</td>
+<td>3.91 / 1.06</td>
+<td>6.82 / 2.89</td>
+<td>16.3</td>
 <td rowspan="3">PP-ShiTuV2是一个通用图像特征系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
-<td>12.94 / 2.88</td>
-<td>58.36 / 58.36</td>
-<td>306.6 M</td>
+<td>12.57 / 11.62</td>
+<td>67.09 / 67.09</td>
+<td>306.6</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
 <td>91.03</td>
-<td>51.65 / 11.18</td>
-<td>255.78 / 255.78</td>
-<td>1.05 G</td>
+<td>49.85 / 49.85</td>
+<td>229.14 / 229.14</td>
+<td>1050</td>
 </tr>
 </table>
 
@@ -86,7 +86,7 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

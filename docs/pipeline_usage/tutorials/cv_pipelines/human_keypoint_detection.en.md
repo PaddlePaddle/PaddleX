@@ -21,15 +21,15 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-YOLOE-L_human</td>
 <td>48.0</td>
 <td>81.9</td>
-<td>33.27 / 9.19</td>
-<td>173.72 / 173.72</td>
+<td>30.59 / 26.64</td>
+<td>180.05 / 112.70</td>
 <td>196.02</td>
 <td rowspan="2">Pedestrian detection model based on PP-YOLOE</td>
 </tr>
@@ -37,8 +37,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>PP-YOLOE-S_human</td>
 <td>42.5</td>
 <td>77.9</td>
-<td>9.94 / 3.42</td>
-<td>54.48 / 46.52</td>
+<td>10.26 / 6.66</td>
+<td>54.01 / 23.48</td>
 <td>28.79</td>
 </tr>
 </table>
@@ -52,26 +52,24 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <th>AP(0.5:0.95)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-TinyPose_128x96</td>
 <td>Top-Down</td>
-<td>128*96</td>
 <td>58.4</td>
-<td></td>
-<td></td>
+<td>24.22 / 4.34</td>
+<td>- / 6.19</td>
 <td>4.9</td>
 <td rowspan="2">PP-TinyPose is a real-time keypoint detection model developed by Baidu PaddlePaddle Vision Team, optimized for mobile devices, capable of smoothly performing multi-person pose estimation tasks on mobile devices</td>
 </tr>
 <tr>
 <td>PP-TinyPose_256x192</td>
 <td>Top-Down</td>
-<td>256*192</td>
 <td>68.3</td>
-<td></td>
-<td></td>
+<td>21.73 / 3.59</td>
+<td>- / 10.18</td>
 <td>4.9</td>
 </tr>
 </table>
@@ -91,7 +89,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

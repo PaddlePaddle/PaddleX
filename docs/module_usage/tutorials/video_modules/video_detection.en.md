@@ -15,13 +15,14 @@ The output of the video detection module includes bounding boxes and class label
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Frame-mAP (@ IoU 0.5)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
-<td>462.891M</td>
+<td>462.891</td>
 <td rowspan="1">
 YOWO is a single-stage network with two branches. One branch extracts spatial features of key frames (i.e., the current frame) through a 2D-CNN, while the other branch captures spatiotemporal features of a clip composed of previous frames using a 3D-CNN. To accurately aggregate these features, YOWO employs a channel fusion and attention mechanism to maximize the utilization of inter-channel dependencies. Finally, the fused features are used for frame-level detection.
 </td>
@@ -39,7 +40,7 @@ YOWO is a single-stage network with two branches. One branch extracts spatial fe
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

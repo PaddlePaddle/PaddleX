@@ -12,18 +12,23 @@ The primary purpose of Text Image Unwarping is to perform geometric transformati
 <table>
 <thead>
 <tr>
-<th>Model Name</th><th>Model Download Link</th>
-<th>MS-SSIM （%）</th>
-<th>Model Size (M)</th>
-<th>information</th>
+<th>Model</th><th>Model Download Link</th>
+<th>CER</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
-<td>54.40</td>
-<td>30.3 M</td>
-<td>High-precision Text Image Unwarping Model</td>
+<td>UVDoc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
+<td>0.179</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
+<td>30.3</td>
+<td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>
 </table>
@@ -39,7 +44,7 @@ The primary purpose of Text Image Unwarping is to perform geometric transformati
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

@@ -16,23 +16,25 @@ Table structure recognition is a crucial component in table recognition systems,
 <th>Accuracy (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
+<td>SLANet</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
 <td>59.52</td>
-<td>103.08 / 103.08</td>
-<td>197.99 / 197.99</td>
-<td>6.9 M</td>
+<td>23.96 / 21.75</td>
+<td>- / 43.12</td>
+<td>6.9</td>
 <td rowspan="1">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
+<td>SLANet_plus</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
 <td>63.69</td>
-<td>140.29 / 140.29</td>
-<td>195.39 / 195.39</td>
-<td>6.9 M</td>
+<td>23.43 / 22.16</td>
+<td>- / 41.80</td>
+<td>6.9</td>
 <td rowspan="1">
 SLANet_plus is an enhanced version of SLANet, a table structure recognition model developed by Baidu PaddlePaddle's Vision Team. Compared to SLANet, SLANet_plus significantly improves its recognition capabilities for wireless and complex tables, while reducing the model's sensitivity to the accuracy of table localization. Even when there are offsets in table localization, it can still perform relatively accurate recognition.
 </td>
@@ -41,8 +43,8 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 <td>SLANeXt_wired</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANeXt_wired_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wired_pretrained.pdparams">Training Model</a></td>
 <td rowspan="2">69.65</td>
-<td rowspan="2"></td>
-<td rowspan="2"></td>
+<td rowspan="2">85.92 / 85.92</td>
+<td rowspan="2">- / 501.66</td>
 <td rowspan="2">351M</td>
 <td rowspan="2">SLANeXt series is a new generation of form structure recognition model developed by Baidu PaddlePaddle's Vision Team. Compared with SLANet and SLANet_plus, SLANeXt focuses on the recognition of form structure, and special weights are trained for the recognition of wired and wireless forms, which significantly improves the recognition ability of all types of forms, especially the recognition ability of wired forms is greatly improved.</td>
 </tr>
@@ -62,7 +64,7 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

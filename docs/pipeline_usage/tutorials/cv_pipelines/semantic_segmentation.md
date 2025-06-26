@@ -19,23 +19,25 @@ comments: true
 <th>mloU（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W48_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">训练模型</a></td>
+<td>OCRNet_HRNet-W48</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W48_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">训练模型</a></td>
 <td>82.15</td>
-<td>627.36 / 170.76</td>
-<td>3531.61 / 3531.61</td>
-<td>249.8 M</td>
+<td>582.92 / 536.28</td>
+<td>3513.72 / 2543.10</td>
+<td>270</td>
 </tr>
 <tr>
-<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">训练模型</a></td>
+<td>PP-LiteSeg-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">训练模型</a></td>
 <td>73.10</td>
-<td>30.16 / 14.03</td>
-<td>420.07 / 235.01</td>
-<td>28.5 M</td>
+<td>28.12 / 23.84</td>
+<td>398.31 / 398.31</td>
+<td>28.5</td>
 </tr>
 </tbody>
 </table>
@@ -50,107 +52,115 @@ comments: true
 <th>mloU（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Deeplabv3_Plus-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3_Plus-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">训练模型</a></td>
+<td>Deeplabv3_Plus-R50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3_Plus-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">训练模型</a></td>
 <td>80.36</td>
-<td>503.51 / 122.30</td>
-<td>3543.91 / 3543.91</td>
-<td>94.9 M</td>
+<td>481.33 / 446.18</td>
+<td>2952.95 / 1907.07</td>
+<td>94.9</td>
 </tr>
 <tr>
-<td>Deeplabv3_Plus-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3_Plus-R101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">训练模型</a></td>
+<td>Deeplabv3_Plus-R101</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3_Plus-R101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">训练模型</a></td>
 <td>81.10</td>
-<td>803.79 / 175.45</td>
-<td>5136.21 / 5136.21</td>
-<td>162.5 M</td>
+<td>766.70 / 194.42</td>
+<td>4441.56 / 2984.19</td>
+<td>162.5</td>
 </tr>
 <tr>
-<td>Deeplabv3-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">训练模型</a></td>
+<td>Deeplabv3-R50</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">训练模型</a></td>
 <td>79.90</td>
-<td>647.56 / 121.67</td>
-<td>3803.09 / 3803.09</td>
-<td>138.3 M</td>
+<td>681.65 / 602.10</td>
+<td>3786.41 / 3093.10</td>
+<td>138.3</td>
 </tr>
 <tr>
-<td>Deeplabv3-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3-R101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">训练模型</a></td>
+<td>Deeplabv3-R101</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Deeplabv3-R101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">训练模型</a></td>
 <td>80.85</td>
-<td>950.43 / 178.50</td>
-<td>5517.14 / 5517.14</td>
-<td>205.9 M</td>
+<td>974.62 / 896.99</td>
+<td>5222.60 / 4230.79</td>
+<td>205.9</td>
 </tr>
 <tr>
-<td>OCRNet_HRNet-W18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">训练模型</a></td>
+<td>OCRNet_HRNet-W18</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">训练模型</a></td>
 <td>80.67</td>
-<td>286.12 / 80.76</td>
-<td>1794.03 / 1794.03</td>
-<td>43.1 M</td>
+<td>271.02 / 221.38</td>
+<td>1791.52 / 1061.62</td>
+<td>43.1</td>
 </tr>
 <tr>
-<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W48_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">训练模型</a></td>
+<td>OCRNet_HRNet-W48</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/OCRNet_HRNet-W48_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">训练模型</a></td>
 <td>82.15</td>
-<td>627.36 / 170.76</td>
-<td>3531.61 / 3531.61</td>
-<td>249.8 M</td>
+<td>582.92 / 536.28</td>
+<td>3513.72 / 2543.10</td>
+<td>270</td>
 </tr>
 <tr>
-<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">训练模型</a></td>
+<td>PP-LiteSeg-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">训练模型</a></td>
 <td>73.10</td>
-<td>30.16 / 14.03</td>
-<td>420.07 / 235.01</td>
-<td>28.5 M</td>
+<td>28.12 / 23.84</td>
+<td>398.31 / 398.31</td>
+<td>28.5</td>
 </tr>
 <tr>
-<td>PP-LiteSeg-B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-B_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">训练模型</a></td>
+<td>PP-LiteSeg-B</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LiteSeg-B_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">训练模型</a></td>
 <td>75.25</td>
-<td>40.92 / 20.18</td>
-<td>494.32 / 310.34</td>
-<td>47.0 M</td>
+<td>35.69 / 35.69</td>
+<td>485.10 / 485.10</td>
+<td>47.0</td>
 </tr>
 <tr>
 <td>SegFormer-B0 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B0 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>76.73</td>
 <td>11.1946</td>
 <td>268.929</td>
-<td>13.2 M</td>
+<td>13.2</td>
 </tr>
 <tr>
 <td>SegFormer-B1 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B1 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>78.35</td>
 <td>17.9998</td>
 <td>403.393</td>
-<td>48.5 M</td>
+<td>48.5</td>
 </tr>
 <tr>
 <td>SegFormer-B2 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B2 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>81.60</td>
 <td>48.0371</td>
 <td>1248.52</td>
-<td>96.9 M</td>
+<td>96.9</td>
 </tr>
 <tr>
 <td>SegFormer-B3 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B3 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>82.47</td>
 <td>64.341</td>
 <td>1666.35</td>
-<td>167.3 M</td>
+<td>167.3</td>
 </tr>
 <tr>
 <td>SegFormer-B4 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B4 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>82.38</td>
 <td>82.4336</td>
 <td>1995.42</td>
-<td>226.7 M</td>
+<td>226.7</td>
 </tr>
 <tr>
 <td>SegFormer-B5 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SegFormer-B5 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">训练模型</a></td>
 <td>82.58</td>
 <td>97.3717</td>
 <td>2420.19</td>
-<td>229.7 M</td>
+<td>229.7</td>
 </tr>
 </tbody>
 </table>
@@ -160,9 +170,9 @@ comments: true
 <tr>
 <th>模型名称</th><th>模型下载链接</th>
 <th>mloU（%）</th>
-<th>GPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
@@ -171,28 +181,28 @@ comments: true
 <td>40.92</td>
 <td>24.4073</td>
 <td>397.574</td>
-<td>30.8 M</td>
+<td>30.8</td>
 </tr>
 <tr>
 <td>SeaFormer_large (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_large (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">训练模型</a></td>
 <td>43.66</td>
 <td>27.8123</td>
 <td>550.464</td>
-<td>49.8 M</td>
+<td>49.8</td>
 </tr>
 <tr>
 <td>SeaFormer_small (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_small (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">训练模型</a></td>
 <td>38.73</td>
 <td>19.2295</td>
 <td>358.343</td>
-<td>14.3 M</td>
+<td>14.3</td>
 </tr>
 <tr>
 <td>SeaFormer_tiny (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SeaFormer_tiny (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">训练模型</a></td>
 <td>34.58</td>
 <td>13.9496</td>
 <td>330.132</td>
-<td>6.1M</td>
+<td>6.1</td>
 </tr>
 </tbody>
 </table>
@@ -211,7 +221,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
