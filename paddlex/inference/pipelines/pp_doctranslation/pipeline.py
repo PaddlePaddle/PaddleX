@@ -24,10 +24,20 @@ from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from .result import MarkdownResult
+from .utils import (
+    split_original_texts,
+    split_text_recursive,
+    translate_code_block,
+    translate_html_block,
+)
 
 
 @pipeline_requires_extra("trans")
 class PP_DocTranslation_Pipeline(BasePipeline):
+    """
+    PP_ DocTranslation_Pipeline
+    """
+
     entities = ["PP-DocTranslation"]
 
     def __init__(
@@ -246,125 +256,62 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             markdown_info_list.append(MarkdownResult(markdown_info))
         return markdown_info_list
 
-    def split_markdown(self, md_text, chunk_size):
-        from bs4 import BeautifulSoup
+    def chunk_translate(self, md_blocks, chunk_size, translate_func):
+        """
+        Chunks the given markdown blocks into smaller chunks of size `chunk_size` and translates them using the given
+        translate function.
 
-        if (
-            not isinstance(md_text, str)
-            or not isinstance(chunk_size, int)
-            or chunk_size <= 0
-        ):
-            raise ValueError("Invalid input parameters.")
+        Args:
+            md_blocks (list): A list of tuples representing each block of markdown content. Each tuple consists of a string
+          indicating the block type ('text', 'code') and the actual content of the block.
+            chunk_size (int): The maximum size of each chunk.
+            translate_func (callable): A callable that accepts a string argument and returns the translated version of that string.
 
-        chunks = []
-        current_chunk = []
-
-        # 如果整体文本小于chunk_size，直接返回
-        if len(md_text) < chunk_size:
-            return [md_text]
-
-        # 段落分割，两个及以上换行符视为分段
-        paragraphs = re.split(r"\n{2,}", md_text)
-
-        def split_table_to_chunks(table_html):
-            # 使用 BeautifulSoup 解析表格
-            soup = BeautifulSoup(table_html, "html.parser")
-            table = soup.find("table")
-
-            if not table:
-                return [table_html]  # 如果没有找到表格，直接返回原始内容
-
-            # 提取所有<tr>行
-            trs = table.find_all("tr")
-
-            # 按行累加，确保每个chunk长度<=chunk_size，且不破坏<tr>的完整性
-            table_chunks = []
-            current_rows = []
-            current_len = len("<table></table>")  # 基础长度
-
-            for tr in trs:
-                tr_str = str(tr)
-                row_len = len(tr_str)
-                if current_rows and current_len + row_len > chunk_size:
-                    # 打包当前chunk
-                    content = "<table>" + "".join(current_rows) + "</table>"
-                    table_chunks.append(content)
-                    current_rows = []  # 重置当前行列表
-                    current_len = len("<table></table>") + row_len
-
-                current_rows.append(tr_str)
-                current_len += row_len
-
-            if current_rows:
-                content = "<table>" + "".join(current_rows) + "</table>"
-                table_chunks.append(content)
-
-            return table_chunks
-
-        # 句子分割，英文句号需区分小数点
-        sentence_pattern = re.compile(
-            r"(?<=[。！？!?])|(?<=\.)\s+(?=[A-Z])|(?<=\.)\s*$"
-        )
-
-        for paragraph in paragraphs:
-            paragraph = paragraph.strip()
-            if not paragraph:
-                continue
-
-            # 使用 BeautifulSoup 检查是否为完整表格
-            soup = BeautifulSoup(paragraph, "html.parser")
-            table = soup.find("table")
-
-            if table:
-                table_html = str(table)
-                if len(table_html) <= chunk_size:
-                    if current_chunk:
-                        chunks.append("\n\n".join(current_chunk))
-                        current_chunk = []
-                    chunks.append(table_html)
+        Returns:
+            str: A string containing all the translated chunks concatenated together with newlines between them.
+        """
+        translation_results = []
+        chunk = ""
+        logging.info(f"Split the original text into {len(md_blocks)} blocks")
+        logging.info("Starting translation...")
+        for idx, block in enumerate(md_blocks):
+            block_type, block_content = block
+            if block_type == "code":
+                if chunk.strip():
+                    translation_results.append(translate_func(chunk.strip()))
+                    chunk = ""  # Clear the chunk
+                logging.info(f"Translating block {idx+1}/{len(md_blocks)}...")
+                translate_code_block(
+                    block_content, chunk_size, translate_func, translation_results
+                )
+            elif len(block_content) < chunk_size:
+                if len(chunk) + len(block_content) < chunk_size:
+                    chunk += "\n\n" + block_content
                 else:
-                    # 表格太大，行分段
-                    if current_chunk:
-                        chunks.append("\n\n".join(current_chunk))
-                        current_chunk = []
-                    table_chunks = split_table_to_chunks(table_html)
-                    chunks.extend(table_chunks)
-                continue
-
-            # 普通文本处理
-            if sum(len(s) for s in current_chunk) + len(paragraph) <= chunk_size:
-                current_chunk.append(paragraph)
-            elif len(paragraph) <= chunk_size:
-                if current_chunk:
-                    chunks.append("\n\n".join(current_chunk))
-                current_chunk = [paragraph]
+                    if chunk.strip():
+                        logging.info(f"Translating block {idx+1}/{len(md_blocks)}...")
+                        translation_results.append(translate_func(chunk.strip()))
+                    chunk = block_content
             else:
-                # 段落太长，按句子切分
-                sentences = [
-                    s for s in sentence_pattern.split(paragraph) if s and s.strip()
-                ]
-                for sentence in sentences:
-                    sentence = sentence.strip()
-                    if not sentence:
-                        continue
-                    if len(sentence) > chunk_size:
-                        print(sentence)
-                        raise ValueError("A sentence exceeds the chunk size limit.")
-                    if sum(len(s) for s in current_chunk) + len(sentence) > chunk_size:
-                        if current_chunk:
-                            chunks.append("\n\n".join(current_chunk))
-                        current_chunk = [sentence]
-                    else:
-                        current_chunk.append(sentence)
+                logging.info(f"Translating block {idx+1}/{len(md_blocks)}...")
+                if chunk.strip():
+                    translation_results.append(translate_func(chunk.strip()))
+                    chunk = ""  # Clear the chunk
 
-            if sum(len(s) for s in current_chunk) >= chunk_size:
-                chunks.append("\n\n".join(current_chunk))
-                current_chunk = []
+                if block_type == "text":
+                    split_text_recursive(
+                        block_content, chunk_size, translate_func, translation_results
+                    )
+                elif block_type == "text_with_html" or block_type == "html":
+                    translate_html_block(
+                        block_content, chunk_size, translate_func, translation_results
+                    )
+                else:
+                    raise ValueError(f"Unknown block type: {block_type}")
 
-        if current_chunk:
-            chunks.append("\n\n".join(current_chunk))
-
-        return [c for c in chunks if c.strip()]
+        if chunk.strip():
+            translation_results.append(translate_func(chunk.strip()))
+        return "\n\n".join(translation_results)
 
     def translate(
         self,
@@ -383,12 +330,19 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         Translate the given original text into the specified target language using the configured translation model.
 
         Args:
-            original_text (str): The original text to be translated.
-            target_language (str): The desired target language code.
+            ori_md_info_list (List[Dict]): A list of dictionaries containing information about the original markdown text to be translated.
+            target_language (str, optional): The desired target language code. Defaults to "zh".
+            chunk_size (int, optional): The maximum number of characters allowed per chunk when splitting long texts. Defaults to 5000.
+            task_description (str, optional): A description of the task being performed by the translation model. Defaults to None.
+            output_format (str, optional): The desired output format of the translation result. Defaults to None.
+            rules_str (str, optional): Rules or guidelines for the translation model to follow. Defaults to None.
+            few_shot_demo_text_content (str, optional): Demo text content for the translation model. Defaults to None.
+            few_shot_demo_key_value_list (str, optional): Demo text key-value list for the translation model. Defaults to None.
+            chat_bot_config (Any, optional): Configuration for the chat bot used in the translation process. Defaults to None.
             **kwargs: Additional keyword arguments passed to the translation model.
 
-        Returns:
-            str: The translated text in the target language.
+        Yields:
+            MarkdownResult: A dictionary containing the translation result in the target language.
         """
         if self.chat_bot is None:
             logging.warning(
@@ -410,39 +364,37 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             # for multi page pdf
             ori_md_info_list = [self.concatenate_markdown_pages(ori_md_info_list)]
 
+        def translate_func(text):
+            """
+            Translate the given text using the configured translation model.
+
+            Args:
+                text (str): The text to be translated.
+
+            Returns:
+                str: The translated text in the target language.
+            """
+            prompt = self.translate_pe.generate_prompt(
+                original_text=text,
+                language=target_language,
+                task_description=task_description,
+                output_format=output_format,
+                rules_str=rules_str,
+                few_shot_demo_text_content=few_shot_demo_text_content,
+                few_shot_demo_key_value_list=few_shot_demo_key_value_list,
+            )
+            translate = chat_bot.generate_chat_results(prompt=prompt).get("content", "")
+            if translate is None:
+                raise Exception("The call to the large model failed.")
+            return translate
+
         for ori_md in ori_md_info_list:
 
             original_texts = ori_md["markdown_texts"]
-            chunks = self.split_markdown(original_texts, chunk_size)
-
-            target_language_chunks = []
-
-            if len(chunks) > 1:
-                logging.info(
-                    f"Get the markdown text, it's length is {len(original_texts)}, will split it into {len(chunks)} parts."
-                )
-
-            logging.info(
-                "Starting to translate the markdown text, will take a while. please wait..."
+            md_blocks = split_original_texts(original_texts)
+            target_language_texts = self.chunk_translate(
+                md_blocks, chunk_size, translate_func
             )
-            for idx, chunk in enumerate(chunks):
-                logging.info(f"Translating the {idx+1}/{len(chunks)} part.")
-                prompt = self.translate_pe.generate_prompt(
-                    original_text=chunk,
-                    language=target_language,
-                    task_description=task_description,
-                    output_format=output_format,
-                    rules_str=rules_str,
-                    few_shot_demo_text_content=few_shot_demo_text_content,
-                    few_shot_demo_key_value_list=few_shot_demo_key_value_list,
-                )
-                target_language_chunk = chat_bot.generate_chat_results(
-                    prompt=prompt
-                ).get("content", "")
-
-                target_language_chunks.append(target_language_chunk)
-
-            target_language_texts = "\n\n".join(target_language_chunks)
 
             yield MarkdownResult(
                 {
