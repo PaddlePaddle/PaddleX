@@ -384,6 +384,7 @@ HUGGINGFACE_MODELS = [
     "PicoDet-S_layout_17cls",
     "PicoDet-S_layout_3cls",
     "PP-DocBee2-3B",
+    "PP-Chart2Table",
     "PP-DocBee-2B",
     "PP-DocBee-7B",
     "PP-DocBlockLayout",
