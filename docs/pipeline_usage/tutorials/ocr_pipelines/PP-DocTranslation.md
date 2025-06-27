@@ -634,7 +634,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
@@ -733,6 +733,7 @@ tgt_md_info_list = pipeline.translate(
 for tgt_md_info in tgt_md_info_list:
     tgt_md_info.save_to_markdown(output_path)
 ```
+
 执行上述代码后，您将得到翻译原文的文档解析结果、翻译原文的Markdown文件和翻译后文档的Markdown文件，保存在`output`文件夹中。
 
 # PP-DocTranslation 预测流程、API说明及产出说明
@@ -902,7 +903,7 @@ for tgt_md_info in tgt_md_info_list:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_region_detection</code></td>
@@ -1342,7 +1343,7 @@ for tgt_md_info in tgt_md_info_list:
 - 调用`save_to_json()` 方法会将上述内容保存到指定的 `save_path` 中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于 json 文件不支持保存numpy数组，因此会将其中的 `numpy.array` 类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的 `save_path` 中，如果指定为目录，则会将版面区域检测可视化图像、全局OCR可视化图像、版面阅读顺序可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 - 调用`save_to_markdown()` 方法会将转化后的 Markdown 文件保存到指定的 `save_path` 中，保存的文件路径为`save_path/{your_img_basename}.md`，如果输入是 PDF 文件，建议直接指定目录，否责多个 markdown 文件会被覆盖。
-- 调用 `concatenate_markdown_pages()` 方法将 `PP-StructureV3 pipeline` 输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容。
+- 调用 `concatenate_markdown_pages()` 方法将 PP-DocTranslation 产线输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容。
 </details>
 
 <details><summary>（4）调用 <code>translate()</code> 方法执行文档翻译，该方法会返回翻译的 markdown 原文和译文，是一个markdown对象，可以通过执行 <code>save_to_markdown()</code> 方法将需要的部分保存到本地。以下是 <code>translate()</code> 方法的相关参数说明：</summary>
@@ -1442,14 +1443,21 @@ for tgt_md_info in tgt_md_info_list:
 <tr>
 <td><code>chat_bot_config</code></td>
 <td>大语言模型配置</td>
-<td><code>Any|None</code></td>
+<td><code>dict|None</code></td>
 <td>
 <ul>
-<li><b>Dict</b>：模型参数配置字典</li>
+<li><b>dict</b>：模型参数配置字典</li>
 <li><b>None</b>：使用默认配置</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>llm_request_interval</code></td>
+<td>向大语言模型发送请求的时间间隔，单位为秒。该参数可用于防止过于频繁地调用大语言模型。</td>
+<td><code>float</code></td>
+<td>大于等于0的浮点数</td>
+<td><code>0</code></td>
 </tr>
 </tbody>
 </table>
