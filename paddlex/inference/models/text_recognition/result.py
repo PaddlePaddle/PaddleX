@@ -17,7 +17,7 @@ import copy
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 
 
@@ -41,7 +41,7 @@ class TextRecResult(BaseCVResult):
         image = image.convert("RGB")
         image_width, image_height = image.size
         text = f"{rec_text} ({rec_score})"
-        font = self.adjust_font_size(image_width, text, PINGFANG_FONT_FILE_PATH)
+        font = self.adjust_font_size(image_width, text, PINGFANG_FONT.path)
         row_height = font.getbbox(text)[3]
         new_image_height = image_height + int(row_height * 1.2)
         new_image = Image.new("RGB", (image_width, new_image_height), (255, 255, 255))

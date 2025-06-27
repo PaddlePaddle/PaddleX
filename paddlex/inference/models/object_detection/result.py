@@ -18,7 +18,7 @@ from typing import List
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 from ...utils.color_map import font_colormap, get_colormap
 
@@ -32,7 +32,7 @@ def draw_box(img: Image.Image, boxes: List[dict]) -> Image.Image:
         img (PIL.Image.Image): visualized image
     """
     font_size = int(0.018 * int(img.width)) + 2
-    font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+    font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
 
     draw_thickness = int(max(img.size) * 0.002)
     draw = ImageDraw.Draw(img)

@@ -17,27 +17,10 @@ from pathlib import Path
 import PIL
 from PIL import ImageFont
 
-from .. import logging
-from ..cache import CACHE_DIR
-from ..download import download
-from ..flags import LOCAL_FONT_FILE_PATH
-
-
-def get_font_file_path(file_name: str) -> str:
-    """
-    Get the path of the font file.
-
-    Returns:
-    str: The path to the font file.
-    """
-    font_path = (Path(CACHE_DIR) / "fonts" / file_name).resolve().as_posix()
-    if not Path(font_path).is_file():
-        download(
-            url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{file_name}",
-            save_path=font_path,
-        )
-
-    return font_path
+from . import logging
+from .cache import CACHE_DIR
+from .download import download
+from .flags import LOCAL_FONT_FILE_PATH
 
 
 def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
@@ -87,12 +70,39 @@ def create_font_vertical(
     return font
 
 
+class Font:
+    def __init__(self, font_name=None, local_path=None):
+        self._local_path = local_path
+        if not local_path:
+            assert font_name is not None
+            self._font_name = font_name
+
+    @property
+    def path(self):
+        # HACK: download font file when needed only
+        if not self._local_path:
+            self._get_offical_font()
+        return self._local_path
+
+    def _get_offical_font(self):
+        """
+        Download the official font file.
+        """
+        font_path = (Path(CACHE_DIR) / "fonts" / self._font_name).resolve().as_posix()
+        if not Path(font_path).is_file():
+            download(
+                url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{self._font_name}",
+                save_path=font_path,
+            )
+        self._local_path = font_path
+
+
 if Path(str(LOCAL_FONT_FILE_PATH)).is_file():
     logging.warning(
         f"Using the local font file(`{LOCAL_FONT_FILE_PATH}`) specified by `LOCAL_FONT_FILE_PATH`!"
     )
-    PINGFANG_FONT_FILE_PATH = LOCAL_FONT_FILE_PATH
-    SIMFANG_FONT_FILE_PATH = LOCAL_FONT_FILE_PATH
+    PINGFANG_FONT = Font(local_path=LOCAL_FONT_FILE_PATH)
+    SIMFANG_FONT = Font(local_path=LOCAL_FONT_FILE_PATH)
 else:
-    PINGFANG_FONT_FILE_PATH = get_font_file_path("PingFang-SC-Regular.ttf")
-    SIMFANG_FONT_FILE_PATH = get_font_file_path("simfang.ttf")
+    PINGFANG_FONT = Font(font_name="PingFang-SC-Regular.ttf")
+    SIMFANG_FONT = Font(font_name="simfang.ttf")

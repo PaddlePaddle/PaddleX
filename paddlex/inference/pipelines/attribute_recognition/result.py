@@ -18,7 +18,7 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 from ...utils.color_map import font_colormap, get_colormap
 
@@ -35,7 +35,7 @@ def draw_attribute_result(img, boxes):
         img (PIL.Image.Image): visualized image
     """
     font_size = int((0.024 * int(img.width) + 2) * 0.7)
-    font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+    font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
 
     draw_thickness = int(max(img.size) * 0.005)
     draw = ImageDraw.Draw(img)
