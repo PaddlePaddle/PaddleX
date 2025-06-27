@@ -130,11 +130,14 @@ class PP_DocTranslation_Pipeline(BasePipeline):
     def visual_predict(
         self,
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
-        use_doc_orientation_classify: Optional[bool] = None,
-        use_doc_unwarping: Optional[bool] = None,
+        use_doc_orientation_classify: Optional[bool] = False,
+        use_doc_unwarping: Optional[bool] = False,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Optional[bool] = None,
         use_table_recognition: Optional[bool] = None,
+        use_formula_recognition: Optional[bool] = None,
+        use_chart_recognition: Optional[bool] = False,
+        use_region_detection: Optional[bool] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
@@ -151,6 +154,12 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         seal_det_box_thresh: Optional[float] = None,
         seal_det_unclip_ratio: Optional[float] = None,
         seal_rec_score_thresh: Optional[float] = None,
+        use_wired_table_cells_trans_to_html: bool = False,
+        use_wireless_table_cells_trans_to_html: bool = False,
+        use_table_orientation_classify: bool = True,
+        use_ocr_results_with_table_cells: bool = True,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = True,
         **kwargs,
     ) -> dict:
         """
@@ -161,11 +170,13 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         Args:
             input (Union[str, list[str], np.ndarray, list[np.ndarray]]): Input image path, list of image paths,
                                                                         numpy array of an image, or list of numpy arrays.
-            use_doc_orientation_classify (bool): Flag to use document orientation classification.
-            use_doc_unwarping (bool): Flag to use document unwarping.
+            use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
+            use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
             use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
-            use_seal_recognition (bool): Flag to use seal recognition.
-            use_table_recognition (bool): Flag to use table recognition.
+            use_seal_recognition (Optional[bool]): Whether to use seal recognition.
+            use_table_recognition (Optional[bool]): Whether to use table recognition.
+            use_formula_recognition (Optional[bool]): Whether to use formula recognition.
+            use_region_detection (Optional[bool]): Whether to use region detection.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
             layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
@@ -186,10 +197,16 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
-            **kwargs: Additional keyword arguments.
+            use_wired_table_cells_trans_to_html (bool): Whether to use wired table cells trans to HTML.
+            use_wireless_table_cells_trans_to_html (bool): Whether to use wireless table cells trans to HTML.
+            use_table_orientation_classify (bool): Whether to use table orientation classification.
+            use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
+            use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
+            use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
+            **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
-            dict: A dictionary containing the layout parsing result and visual information.
+            dict: A dictionary containing the layout parsing result.
         """
         if self.use_layout_parser == False:
             logging.error("The models for layout parser are not initialized.")
@@ -208,6 +225,9 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             use_textline_orientation=use_textline_orientation,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
+            use_formula_recognition=use_formula_recognition,
+            use_chart_recognition=use_chart_recognition,
+            use_region_detection=use_region_detection,
             layout_threshold=layout_threshold,
             layout_nms=layout_nms,
             layout_unclip_ratio=layout_unclip_ratio,
@@ -224,6 +244,12 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             seal_det_thresh=seal_det_thresh,
             seal_det_unclip_ratio=seal_det_unclip_ratio,
             seal_rec_score_thresh=seal_rec_score_thresh,
+            use_wired_table_cells_trans_to_html=use_wired_table_cells_trans_to_html,
+            use_wireless_table_cells_trans_to_html=use_wireless_table_cells_trans_to_html,
+            use_table_orientation_classify=use_table_orientation_classify,
+            use_ocr_results_with_table_cells=use_ocr_results_with_table_cells,
+            use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
+            use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
         ):
 
             visual_predict_res = {
@@ -377,6 +403,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         few_shot_demo_text_content: str = None,
         few_shot_demo_key_value_list: str = None,
         chat_bot_config=None,
+        llm_request_interval: float = 0,
         **kwargs,
     ):
         """

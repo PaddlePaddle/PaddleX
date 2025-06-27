@@ -596,6 +596,12 @@ Below are the API references for basic service deployment and examples of multi-
 <td>Yes</td>
 </tr>
 <tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -613,12 +619,6 @@ For example, adding the following setting to the pipeline config file:<br/>
 will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
 If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
 </td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>threshold</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

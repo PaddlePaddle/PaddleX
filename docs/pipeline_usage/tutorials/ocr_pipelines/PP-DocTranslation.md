@@ -644,7 +644,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="PP-DocTranslation")
 
 # 文档路径
-img_path = "document_sample.pdf"
+input_path = "document_sample.pdf"
 
 # 输出目录
 output_path = "./output"
@@ -780,7 +780,7 @@ for tgt_md_info in tgt_md_info_list:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_doc_unwarping</code></td>
@@ -792,7 +792,7 @@ for tgt_md_info in tgt_md_info_list:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_textline_orientation</code></td>
@@ -852,7 +852,7 @@ for tgt_md_info in tgt_md_info_list:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_chart_recognition</code></td>
@@ -1486,6 +1486,599 @@ for tgt_md_info in tgt_md_info_list:
 
 ☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving.md)。
 
+以下是基础服务化部署的API参考与多语言服务调用示例：
+
+<details><summary>API参考</summary>
+<p>对于服务提供的主要操作：</p>
+<ul>
+<li>HTTP请求方法为POST。</li>
+<li>请求体和响应体均为JSON数据（JSON对象）。</li>
+<li>当请求处理成功时，响应状态码为<code>200</code>，响应体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>请求的UUID。</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>错误码。固定为<code>0</code>。</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>错误说明。固定为<code>"Success"</code>。</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>操作结果。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>当请求处理未成功时，响应体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>请求的UUID。</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>错误码。与响应状态码相同。</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>错误说明。</td>
+</tr>
+</tbody>
+</table>
+<p>服务提供的主要操作如下：</p>
+<ul>
+<li><b><code>analyzeImages</code></b></li>
+</ul>
+<p>使用计算机视觉模型对图像进行分析，获得OCR、表格识别结果等。</p>
+<p><code>POST /doctrans-visual</code></p>
+<ul>
+<li>请求体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>file</code></td>
+<td><code>string</code></td>
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认对于超过10页的PDF文件，只有前10页的内容会被处理。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: null
+</code></pre>
+</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>fileType</code></td>
+<td><code>integer</code>｜<code>null</code></td>
+<td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_unwarping</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_textline_orientation</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useFormulaRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_formula_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useChartRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_chart_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useRegionDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_region_detection</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_threshold</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_nms</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_unclip_ratio</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>object</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_merge_bboxes_mode</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_limit_side_len</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_limit_type</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_box_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_unclip_ratio</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_rec_score_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_limit_side_len</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_limit_type</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_box_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_unclip_ratio</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_rec_score_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useWiredTableCellsTransToHtml</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_wired_table_cells_trans_to_html</code> 参数相关说明。</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useWirelessTableCellsTransToHtml</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_wireless_table_cells_trans_to_html</code> 参数相关说明。</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableOrientationClassify</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_orientation_classify</code> 参数相关说明。</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrResultsWithTableCells</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_ocr_results_with_table_cells</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useE2eWiredTableRecModel</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wired_table_rec_model</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useE2eWirelessTableRecModel</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wireless_table_rec_model</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>是否返回可视化结果图以及处理过程中的中间图像等。
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>传入 <code>true</code>：返回图像。</li>
+<li>传入 <code>false</code>：不返回图像。</li>
+<li>若请求体中未提供该参数或传入 <code>null</code>：遵循产线配置文件<code>Serving.visualize</code> 的设置。</li>
+</ul>
+<br/>例如，在产线配置文件中添加如下字段：<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
+</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layoutParsingResults</code></td>
+<td><code>array</code></td>
+<td>版面解析结果。数组长度为1（对于图像输入）或实际处理的文档页数（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中实际处理的每一页的结果。</td>
+</tr>
+<tr>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>输入数据信息。</td>
+</tr>
+</tbody>
+</table>
+<p><code>layoutParsingResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>产线对象的 <code>visual_predict</code> 方法生成的 <code>layout_parsing_result</code> 的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 和 <code>page_index</code> 字段。</td>
+</tr>
+<tr>
+<td><code>markdown</code></td>
+<td><code>object</code></td>
+<td>Markdown结果。</td>
+</tr>
+<tr>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线预测结果的 <code>img</code> 属性说明。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+</tbody>
+</table>
+<p><code>markdown</code>为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>Markdown文本。</td>
+</tr>
+<tr>
+<td><code>images</code></td>
+<td><code>object</code></td>
+<td>Markdown图片相对路径和Base64编码图像的键值对。</td>
+</tr>
+<tr>
+<td><code>isStart</code></td>
+<td><code>boolean</code></td>
+<td>当前页面第一个元素是否为段开始。</td>
+</tr>
+<tr>
+<td><code>isEnd</code></td>
+<td><code>boolean</code></td>
+<td>当前页面最后一个元素是否为段结束。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><b><code>translate</code></b></li>
+</ul>
+<p>利用大模型翻译文档。</p>
+<p><code>POST /doctrans-translate</code></p>
+<ul>
+<li>请求体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>markdownList</code></td>
+<td><code>array</code></td>
+<td>待翻译的Markdown列表。可从<code>analyzeImages</code>操作的结果中获取。<code>images</code>属性将不会被用到。</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>targetLanguage</code></td>
+<td><code>string</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>target_language</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>chunkSize</code></td>
+<td><code>integer</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>chunk_size</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>taskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>task_description</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>outputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>output_format</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>rulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>rules_str</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>fewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>few_shot_demo_text_content</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>fewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>few_shot_demo_key_value_list</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>llmRequestInterval</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>llm_request_interval</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>translationResults</code></td>
+<td><code>array</code></td>
+<td>翻译结果。</td>
+</tr>
+</tbody>
+</table>
+<p><code>translationResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>language</code></td>
+<td><code>string</code></td>
+<td>目标语言。</td>
+</tr>
+<tr>
+<td><code>markdown</code></td>
+<td><code>object</code></td>
+<td>Markdown结果。对象定义与<code>analyzeImages</code>操作返回的<code>markdown</code>一致。</td>
+</tr>
+</tbody>
+</table>
+<li><b>注意：</b></li>
+在请求体中包含大模型调用的API key等敏感参数可能存在安全风险。如无必要，请在配置文件中设置这些参数，在请求时不传递。
+<br/><br/>
+</details>
+<details><summary>多语言调用服务示例</summary>
+<details>
+<summary>Python</summary>
+
+<pre><code class="language-python">import base64
+import pathlib
+import pprint
+import sys
+
+import requests
+
+
+API_BASE_URL = "http://127.0.0.1:8080"
+
+file_path = "./demo.jpg"
+target_language = "en"
+
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
+
+payload = {
+    "file": file_data,
+    "fileType": 1,
+}
+resp_visual = requests.post(url=f"{API_BASE_URL}/doctrans-visual", json=payload)
+if resp_visual.status_code != 200:
+    print(
+        f"Request to doctrans-visual failed with status code {resp_visual.status_code}."
+    )
+    pprint.pp(resp_visual.json())
+    sys.exit(1)
+result_visual = resp_visual.json()["result"]
+
+markdown_list = []
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    md_dir = pathlib.Path(f"markdown_{i}")
+    md_dir.mkdir(exist_ok=True)
+    (md_dir / "doc.md").write_text(res["markdown"]["text"])
+    for img_path, img in res["markdown"]["images"].items():
+        img_path = md_dir / img_path
+        img_path.parent.mkdir(parents=True, exist_ok=True)
+        img_path.write_bytes(base64.b64decode(img))
+    print(f"Markdown document to be translated is saved at {md_dir / 'doc.md'}")
+    del res["markdown"]["images"]
+    markdown_list.append(res["markdown"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
+
+payload = {
+    "markdownList": markdown_list,
+    "targetLanguage": target_language,
+}
+resp_translate = requests.post(url=f"{API_BASE_URL}/doctrans-translate", json=payload)
+if resp_translate.status_code != 200:
+    print(
+        f"Request to doctrans-translate failed with status code {resp_translate.status_code}."
+    )
+    pprint.pp(resp_translate.json())
+    sys.exit(1)
+result_translate = resp_translate.json()["result"]
+
+for i, res in enumerate(result_translate["translationResults"]):
+    md_dir = pathlib.Path(f"markdown_{i}")
+    (md_dir / "doc_translated.md").write_text(res["markdown"]["text"])
+    print(f"Translated markdown document saved at {md_dir / 'doc_translated.md'}")
+</code></pre></details>
+</details>
+<br/>
+
+📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/on_device_deployment.md)。
+
+您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
 如果通用文档翻译产线中的版面解析v3子产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用版面解析v3子产线的在您的场景中的识别效果。

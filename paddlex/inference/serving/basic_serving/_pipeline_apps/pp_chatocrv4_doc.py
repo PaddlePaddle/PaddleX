@@ -129,19 +129,13 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     ) -> AIStudioResultResponse[schema.BuildVectorStoreResult]:
         pipeline = ctx.pipeline
 
-        kwargs: Dict[str, Any] = {
-            "flag_save_bytes_vector": True,
-            "retriever_config": request.retrieverConfig,
-        }
-        if request.minCharacters is not None:
-            kwargs["min_characters"] = request.minCharacters
-        if request.blockSize is not None:
-            kwargs["block_size"] = request.blockSize
-
         vector_info = await serving_utils.call_async(
             pipeline.pipeline.build_vector,
             request.visualInfo,
-            **kwargs,
+            min_characters=request.minCharacters,
+            block_size=request.blockSize,
+            flag_save_bytes_vector=True,
+            retriever_config=request.retrieverConfig,
         )
 
         return AIStudioResultResponse[schema.BuildVectorStoreResult](
@@ -187,8 +181,13 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     ) -> AIStudioResultResponse[schema.ChatResult]:
         pipeline = ctx.pipeline
 
-        kwargs: Dict[str, Any] = dict(
+        result = await serving_utils.call_async(
+            pipeline.pipeline.chat,
+            request.keyList,
+            request.visualInfo,
+            use_vector_retrieval=request.useVectorRetrieval,
             vector_info=request.vectorInfo,
+            min_characters=request.minCharacters,
             text_task_description=request.textTaskDescription,
             text_output_format=request.textOutputFormat,
             text_rules_str=request.textRulesStr,
@@ -199,21 +198,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             table_rules_str=request.tableRulesStr,
             table_few_shot_demo_text_content=request.tableFewShotDemoTextContent,
             table_few_shot_demo_key_value_list=request.tableFewShotDemoKeyValueList,
+            mllm_predict_info=request.mllmPredictInfo,
+            mllm_integration_strategy=request.mllmIntegrationStrategy,
             chat_bot_config=request.chatBotConfig,
             retriever_config=request.retrieverConfig,
-        )
-        if request.useVectorRetrieval is not None:
-            kwargs["use_vector_retrieval"] = request.useVectorRetrieval
-        if request.minCharacters is not None:
-            kwargs["min_characters"] = request.minCharacters
-        if request.mllmIntegrationStrategy is not None:
-            kwargs["mllm_integration_strategy"] = request.mllmIntegrationStrategy
-
-        result = await serving_utils.call_async(
-            pipeline.pipeline.chat,
-            request.keyList,
-            request.visualInfo,
-            **kwargs,
         )
 
         return AIStudioResultResponse[schema.ChatResult](

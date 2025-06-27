@@ -24,27 +24,25 @@ __all__ = [
     "AnalyzeImagesRequest",
     "LayoutParsingResult",
     "AnalyzeImagesResult",
-    "BUILD_VECTOR_STORE_ENDPOINT",
-    "BuildVectorStoreRequest",
-    "BuildVectorStoreResult",
-    "INVOKE_MLLM_ENDPOINT",
-    "InvokeMLLMRequest",
-    "InvokeMLLMResult",
-    "CHAT_ENDPOINT",
-    "ChatRequest",
-    "ChatResult",
+    "TRANSLATE_ENDPOINT",
+    "TranslateRequest",
+    "TranslationResult",
+    "TranslateResult",
     "PRIMARY_OPERATIONS",
 ]
 
-ANALYZE_IMAGES_ENDPOINT: Final[str] = "/chatocr-visual"
+ANALYZE_IMAGES_ENDPOINT: Final[str] = "/doctrans-visual"
 
 
 class AnalyzeImagesRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
+    useDocOrientationClassify: Optional[bool] = False
+    useDocUnwarping: Optional[bool] = False
     useTextlineOrientation: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
+    useFormulaRecognition: Optional[bool] = None
+    useChartRecognition: Optional[bool] = False
+    useRegionDetection: Optional[bool] = None
     layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
@@ -61,75 +59,50 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
+    useWiredTableCellsTransToHtml: bool = False
+    useWirelessTableCellsTransToHtml: bool = False
+    useTableOrientationClassify: bool = True
+    useOcrResultsWithTableCells: bool = True
+    useE2eWiredTableRecModel: bool = False
+    useE2eWirelessTableRecModel: bool = True
     visualize: Optional[bool] = None
 
 
 class LayoutParsingResult(BaseModel):
     prunedResult: dict
+    markdown: ocr.MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
 
 
 class AnalyzeImagesResult(BaseModel):
     layoutParsingResults: List[LayoutParsingResult]
-    visualInfo: List[dict]
     dataInfo: DataInfo
 
 
-BUILD_VECTOR_STORE_ENDPOINT: Final[str] = "/chatocr-vector"
+TRANSLATE_ENDPOINT: Final[str] = "/doctrans-translate"
 
 
-class BuildVectorStoreRequest(BaseModel):
-    visualInfo: List[dict]
-    minCharacters: int = 3500
-    blockSize: int = 300
-    retrieverConfig: Optional[dict] = None
-
-
-class BuildVectorStoreResult(BaseModel):
-    vectorInfo: dict
-
-
-INVOKE_MLLM_ENDPOINT: Final[str] = "/chatocr-mllm"
-
-
-class InvokeMLLMRequest(BaseModel):
-    image: str
-    keyList: List[str]
-    mllmChatBotConfig: Optional[dict] = None
-
-
-class InvokeMLLMResult(BaseModel):
-    mllmPredictInfo: dict
-
-
-CHAT_ENDPOINT: Final[str] = "/chatocr-chat"
-
-
-class ChatRequest(BaseModel):
-    keyList: List[str]
-    visualInfo: List[dict]
-    useVectorRetrieval: bool = True
-    vectorInfo: Optional[dict] = None
-    minCharacters: int = 3500
-    textTaskDescription: Optional[str] = None
-    textOutputFormat: Optional[str] = None
-    textRulesStr: Optional[str] = None
-    textFewShotDemoTextContent: Optional[str] = None
-    textFewShotDemoKeyValueList: Optional[str] = None
-    tableTaskDescription: Optional[str] = None
-    tableOutputFormat: Optional[str] = None
-    tableRulesStr: Optional[str] = None
-    tableFewShotDemoTextContent: Optional[str] = None
-    tableFewShotDemoKeyValueList: Optional[str] = None
-    mllmPredictInfo: Optional[dict] = None
-    mllmIntegrationStrategy: str = "integration"
+class TranslateRequest(BaseModel):
+    markdownList: List[ocr.MarkdownData]
+    targetLanguage: str = "zh"
+    chunkSize: int = 5000
+    taskDescription: Optional[str] = None
+    outputFormat: Optional[str] = None
+    rulesStr: Optional[str] = None
+    fewShotDemoTextContent: Optional[str] = None
+    fewShotDemoKeyValueList: Optional[str] = None
     chatBotConfig: Optional[dict] = None
-    retrieverConfig: Optional[dict] = None
+    sleepInterval: float = 0
 
 
-class ChatResult(BaseModel):
-    chatResult: dict
+class TranslationResult(BaseModel):
+    language: str
+    markdown: ocr.MarkdownData
+
+
+class TranslateResult(BaseModel):
+    translationResults: List[TranslationResult]
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
@@ -138,15 +111,5 @@ PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
         AnalyzeImagesRequest,
         AnalyzeImagesResult,
     ),
-    "buildVectorStore": (
-        BUILD_VECTOR_STORE_ENDPOINT,
-        BuildVectorStoreRequest,
-        BuildVectorStoreResult,
-    ),
-    "invokeMllm": (
-        INVOKE_MLLM_ENDPOINT,
-        InvokeMLLMRequest,
-        InvokeMLLMResult,
-    ),
-    "chat": (CHAT_ENDPOINT, ChatRequest, ChatResult),
+    "translate": (TRANSLATE_ENDPOINT, TranslateRequest, TranslateResult),
 }
