@@ -413,7 +413,7 @@ korean_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddl
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
 <td>14</td>
-<td>An ultra-lightweight Korean text recognition model trained based on the PP-OCRv5 recognition framework. Supports Korean and numeric text recognition.</td>
+<td>An ultra-lightweight Korean text recognition model trained based on the PP-OCRv5 recognition framework. Supports Korean, English and numeric text recognition.</td>
 </tr>
 <tr>
 <td>latin_PP-OCRv5_mobile_rec</td>
@@ -433,7 +433,7 @@ eslav_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
 <td>14</td>
-<td>An East Slavic language recognition model trained based on the PP-OCRv5 recognition framework. Supports East Slavic languages and numeric text recognition.</td>
+<td>An East Slavic language recognition model trained based on the PP-OCRv5 recognition framework. Supports East Slavic languages, English and numeric text recognition.</td>
 </tr>
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td>

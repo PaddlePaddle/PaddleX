@@ -265,7 +265,7 @@ korean_PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-m
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
 <td>14</td>
-<td>基于PP-OCRv5识别模型训练得到的超轻量韩文识别模型，支持韩文、数字识别</td>
+<td>基于PP-OCRv5识别模型训练得到的超轻量韩文识别模型，支持韩文、英文和数字识别</td>
 </tr>
 <tr>
 <td>latin_PP-OCRv5_mobile_rec</td>
@@ -285,7 +285,7 @@ eslav_PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-mo
 <td>5.43 / 1.46</td>
 <td>21.20 / 5.32</td>
 <td>14</td>
-<td>基于PP-OCRv5识别模型训练得到的东斯拉夫语言识别模型， 支持东斯拉夫语言、数字识别</td>
+<td>基于PP-OCRv5识别模型训练得到的东斯拉夫语言识别模型， 支持东斯拉夫语言、英文和数字识别</td>
 </tr>
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td>
