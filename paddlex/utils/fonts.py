@@ -72,6 +72,9 @@ def create_font_vertical(
 
 class Font:
     def __init__(self, font_name=None, local_path=None):
+        if local_path is None:
+            if Path(str(LOCAL_FONT_FILE_PATH)).is_file():
+                local_path = str(LOCAL_FONT_FILE_PATH)
         self._local_path = local_path
         if not local_path:
             assert font_name is not None
@@ -101,8 +104,6 @@ if Path(str(LOCAL_FONT_FILE_PATH)).is_file():
     logging.warning(
         f"Using the local font file(`{LOCAL_FONT_FILE_PATH}`) specified by `LOCAL_FONT_FILE_PATH`!"
     )
-    PINGFANG_FONT = Font(local_path=LOCAL_FONT_FILE_PATH)
-    SIMFANG_FONT = Font(local_path=LOCAL_FONT_FILE_PATH)
-else:
-    PINGFANG_FONT = Font(font_name="PingFang-SC-Regular.ttf")
-    SIMFANG_FONT = Font(font_name="simfang.ttf")
+
+PINGFANG_FONT = Font(font_name="PingFang-SC-Regular.ttf")
+SIMFANG_FONT = Font(font_name="simfang.ttf")

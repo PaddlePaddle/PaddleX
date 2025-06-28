@@ -38,10 +38,11 @@ class TextRecResult(BaseCVResult):
         image = Image.fromarray(self["input_img"][:, :, ::-1])
         rec_text = self["rec_text"]
         rec_score = self["rec_score"]
+        vis_font = self["vis_font"] if self["vis_font"] is not None else PINGFANG_FONT
         image = image.convert("RGB")
         image_width, image_height = image.size
         text = f"{rec_text} ({rec_score})"
-        font = self.adjust_font_size(image_width, text, PINGFANG_FONT.path)
+        font = self.adjust_font_size(image_width, text, vis_font.path)
         row_height = font.getbbox(text)[3]
         new_image_height = image_height + int(row_height * 1.2)
         new_image = Image.new("RGB", (image_width, new_image_height), (255, 255, 255))

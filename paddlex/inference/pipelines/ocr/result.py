@@ -82,6 +82,11 @@ class OCRResult(BaseCVResult):
         random.seed(0)
         draw_left = ImageDraw.Draw(img_left)
         for idx, (box, txt) in enumerate(zip(boxes, txts)):
+            vis_font = (
+                self["vis_fonts"][idx]
+                if self["vis_fonts"][idx] is not None
+                else SIMFANG_FONT
+            )
             try:
                 color = (
                     random.randint(0, 255),
@@ -100,7 +105,7 @@ class OCRResult(BaseCVResult):
                     box_pts = [(int(x), int(y)) for x, y in box.tolist()]
                     draw_left.polygon(box_pts, fill=color)
 
-                img_right_text = draw_box_txt_fine((w, h), box, txt, SIMFANG_FONT.path)
+                img_right_text = draw_box_txt_fine((w, h), box, txt, vis_font.path)
                 pts = np.array(box, np.int32).reshape((-1, 1, 2))
                 cv2.polylines(img_right_text, [pts], True, color, 1)
                 img_right = cv2.bitwise_and(img_right, img_right_text)
