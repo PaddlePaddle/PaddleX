@@ -6,6 +6,14 @@ comments: true
 
 ## Latest Version Information
 
+### PaddleX v3.1.0(6.28/2025)
+
+- **Key Models:**
+  - **Added PP-OCRv5 Multilingual Text Recognition Model**, supporting training and inference workflows for text recognition in 37 languages, including French, Spanish, Portuguese, Russian, Korean, and more. **Average precision increased by over 30%.**
+  - Upgraded **PP-Chart2Table model in PP-StructureV3**. Chart-to-table conversion capability further improved, with RMS-F1 on our internal evaluation set **increased by 9.36 percentage points (71.24% -> 80.60%)**.
+- **Key Pipelines:**
+  - Added **document translation pipeline PP-DocTranslation** based on PP-StructureV3 and ERNIE 4.5 Turbo. Supports translation of Markdown documents, various complex-layout PDF documents, and document images, with results saved as Markdown format documents.
+
 ### PaddleX v3.0.0(5.20/2025)
 
 Core upgrades are as follows:

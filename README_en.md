@@ -38,6 +38,15 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 📣 Recent Updates
 
 
+🔥🔥 **2025.6.28, PaddleX v3.1.0 Released**
+
+- **Key Models:**
+  - **Added PP-OCRv5 Multilingual Text Recognition Model**, supporting training and inference workflows for text recognition in 37 languages, including French, Spanish, Portuguese, Russian, Korean, and more. **Average precision increased by over 30%.**
+  - Upgraded **PP-Chart2Table model in PP-StructureV3**. Chart-to-table conversion capability further improved, with RMS-F1 on our internal evaluation set **increased by 9.36 percentage points (71.24% -> 80.60%)**.
+- **Key Pipelines:**
+  - Added **document translation pipeline PP-DocTranslation** based on PP-StructureV3 and ERNIE 4.5 Turbo. Supports translation of Markdown documents, various complex-layout PDF documents, and document images, with results saved as Markdown format documents.
+
+
 🔥🔥 **2025.5.20: PaddleX v3.0.0 Released**
 
 Core upgrades are as follows:
