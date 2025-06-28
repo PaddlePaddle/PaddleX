@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import re
+from time import sleep
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -310,7 +311,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                 translate_code_block(
                     block_content, chunk_size, translate_func, translation_results
                 )
-            elif len(block_content) < chunk_size:
+            elif len(block_content) < chunk_size and block_type == "text":
                 if len(chunk) + len(block_content) < chunk_size:
                     chunk += "\n\n" + block_content
                 else:
@@ -343,14 +344,14 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         self,
         ori_md_info_list: List[Dict],
         target_language: str = "zh",
-        chunk_size: int = 5000,
+        chunk_size: int = 3000,
         task_description: str = None,
         output_format: str = None,
         rules_str: str = None,
         few_shot_demo_text_content: str = None,
         few_shot_demo_key_value_list: str = None,
-        chat_bot_config=None,
-        llm_request_interval: float = 0,
+        llm_request_interval: float = 0.0,
+        chat_bot_config: Dict = None,
         **kwargs,
     ):
         """
@@ -365,7 +366,8 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             rules_str (str, optional): Rules or guidelines for the translation model to follow. Defaults to None.
             few_shot_demo_text_content (str, optional): Demo text content for the translation model. Defaults to None.
             few_shot_demo_key_value_list (str, optional): Demo text key-value list for the translation model. Defaults to None.
-            chat_bot_config (Any, optional): Configuration for the chat bot used in the translation process. Defaults to None.
+            llm_request_interval (float, optional): The interval in seconds between each request to the LLM. Defaults to 0.0.
+            chat_bot_config (Dict, optional): Configuration for the chat bot used in the translation process. Defaults to None.
             **kwargs: Additional keyword arguments passed to the translation model.
 
         Yields:
@@ -391,6 +393,9 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             # for multi page pdf
             ori_md_info_list = [self.concatenate_markdown_pages(ori_md_info_list)]
 
+        if not isinstance(llm_request_interval, float):
+            llm_request_interval = float(llm_request_interval)
+
         def translate_func(text):
             """
             Translate the given text using the configured translation model.
@@ -401,6 +406,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             Returns:
                 str: The translated text in the target language.
             """
+            sleep(llm_request_interval)
             prompt = self.translate_pe.generate_prompt(
                 original_text=text,
                 language=target_language,
@@ -414,6 +420,24 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             if translate is None:
                 raise Exception("The call to the large model failed.")
             return translate
+
+        base_prompt_content = self.translate_pe.generate_prompt(
+            original_text="",
+            language=target_language,
+            task_description=task_description,
+            output_format=output_format,
+            rules_str=rules_str,
+            few_shot_demo_text_content=few_shot_demo_text_content,
+            few_shot_demo_key_value_list=few_shot_demo_key_value_list,
+        )
+        base_prompt_length = len(base_prompt_content)
+
+        if chunk_size > base_prompt_length:
+            chunk_size = chunk_size - base_prompt_length
+        else:
+            raise ValueError(
+                f"Chunk size should be greater than the base prompt length ({base_prompt_length}), but got {chunk_size}."
+            )
 
         for ori_md in ori_md_info_list:
 

@@ -7,6 +7,8 @@ comments: true
 ## 1. PP-DocTranslation产线介绍
 通用文档翻译产线（PP-DocTranslation）是飞桨提供的文档智能翻译解决方案，融合了先进的通用版面解析技术与大语言模型（LLM）能力，为您提供高效的文档智能翻译服务。该解决方案能够精准识别并提取文档中的各类元素，包括文本块、标题、段落、图片、表格及其他复杂版面结构，并在此基础之上实现高质量的多语种互译。PP-DocTranslation 支持多种主流语言间的相互翻译，尤其擅长处理排版复杂、上下文依赖性强的文档场景，力求输出精准自然、流畅专业的翻译结果。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/doc_translation/pp_doctranslation.png">
+
 
 <b>通用文档翻译产线中使用了通用版面解析v3子产线，因此具有通用版面解析v3产线的所有功能，更多关于通用版面解析v3产线的功能介绍和使用细节，可以点击 [通用版面解析v3产线文档](./PP-StructureV3.md) 页面查看</b>。
 
@@ -1441,6 +1443,13 @@ for tgt_md_info in tgt_md_info_list:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>llm_request_interval</code></td>
+<td>向大语言模型发送请求的时间间隔，单位为秒。该参数可用于防止过于频繁地调用大语言模型。</td>
+<td><code>float</code></td>
+<td>大于等于0的浮点数</td>
+<td><code>0</code></td>
+</tr>
+<tr>
 <td><code>chat_bot_config</code></td>
 <td>大语言模型配置</td>
 <td><code>dict|None</code></td>
@@ -1451,13 +1460,6 @@ for tgt_md_info in tgt_md_info_list:
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
-<tr>
-<td><code>llm_request_interval</code></td>
-<td>向大语言模型发送请求的时间间隔，单位为秒。该参数可用于防止过于频繁地调用大语言模型。</td>
-<td><code>float</code></td>
-<td>大于等于0的浮点数</td>
-<td><code>0</code></td>
 </tr>
 </tbody>
 </table>

@@ -56,7 +56,7 @@ else:
 tgt_md_info_list = pipeline.translate(
     ori_md_info_list=ori_md_info_list,
     target_language="en",
-    chunk_size=5000,
+    chunk_size=3000,
     chat_bot_config=chat_bot_config,
 )
 for tgt_md_info in tgt_md_info_list:

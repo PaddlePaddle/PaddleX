@@ -181,118 +181,47 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
 def split_original_texts(text):
     """
     Split the original text into chunks.
-
-    Args:
-        text (str): The original text to be split.
-
-    Returns:
-        list: A list of strings representing the chunks of the original text.
     """
     from bs4 import BeautifulSoup
 
+    # find all html blocks and replace them with placeholders
     soup = BeautifulSoup(text, "html.parser")
-    result = []
-    last_position = 0
-    contents = soup.contents
-    i = 0
-    while i < len(contents):
-        element = contents[i]
-        str_element = str(element)
-        if len(str_element) == 0:
-            i += 1
-            continue
+    html_blocks = []
+    html_placeholders = []
+    placeholder_fmt = "<<HTML_BLOCK_{}>>"
+    text_after_placeholder = ""
 
-        # find element in original text
-        start = text.find(str_element, last_position)
-        if start != -1:
-            end = start + len(str_element)
-            element_str = text[start:end]
+    index = 0
+    for elem in soup.contents:
+        if hasattr(elem, "name") and elem.name is not None:
+            html_str = str(elem)
+            placeholder = placeholder_fmt.format(index)
+            html_blocks.append(html_str)
+            html_placeholders.append(placeholder)
+            text_after_placeholder += placeholder
+            index += 1
         else:
-            # if element is not a tag, try to find it in original text
-            if hasattr(element, "name") and element.name is not None:
-                tag = element.name
-                pat = r"<{tag}.*?>.*?</{tag}>".format(tag=tag)
-                re_html = re.compile(pat, re.DOTALL)
-                match = re_html.search(text, last_position)
-                if match:
-                    start = match.start()
-                    end = match.end()
-                    element_str = text[start:end]
-                else:
-                    element_str = str_element
-                    start = -1
-                    end = -1
-            else:
-                element_str = str_element
-                start = -1
-                end = -1
+            text_after_placeholder += str(elem)
 
-        true_start = True
-        if start > 0 and text[start - 1] != "\n":
-            true_start = False
+    # split text into paragraphs
+    splited_block = []
+    splited_block = split_and_append_text(splited_block, text_after_placeholder)
 
-        # process previous text
-        if start != -1 and last_position < start:
-            text_content = text[last_position:start]
-            result = split_and_append_text(result, text_content)
+    # replace placeholders with html blocks
+    current_index = 0
+    for idx, block in enumerate(splited_block):
+        _, content = block
+        while (
+            current_index < len(html_placeholders)
+            and html_placeholders[current_index] in content
+        ):
+            content = content.replace(
+                html_placeholders[current_index], html_blocks[current_index]
+            )
+            current_index += 1
+            splited_block[idx] = ("html", content)
 
-        if hasattr(element, "name") and element.name is not None:
-            if (
-                end < len(text)
-                and end >= 0
-                and (text[end] not in ["\n", " "] or element_str.endswith("\n"))
-            ):
-                next_block_pos = text.find("\n\n", end)
-                if next_block_pos == -1:
-                    mix_region_end = len(text)
-                else:
-                    mix_region_end = next_block_pos + 2
-
-                j = i + 1
-                while j < len(contents):
-                    next_element_str = str(contents[j])
-                    next_start = text.find(next_element_str, end)
-                    if next_start == -1 or next_start >= mix_region_end:
-                        break
-                    j += 1
-                if true_start:
-                    # merge text and html
-                    result.append(
-                        ("text_with_html", text[start:mix_region_end].rstrip("\n"))
-                    )
-                else:
-                    _, last_content = result[-1]
-                    result.pop()
-                    result.append(
-                        (
-                            "text_with_html",
-                            last_content + text[start:mix_region_end].rstrip("\n"),
-                        )
-                    )
-                last_position = mix_region_end
-                i = j
-            else:
-                # pure HTML block
-                if true_start:
-                    result.append(("html", element_str))
-                else:
-                    _, last_content = result[-1]
-                    result.pop()
-                    result.append(("html", last_content + element_str))
-                last_position = end
-                i += 1
-        else:
-            # normal text
-            result = split_and_append_text(result, element_str)
-            last_position = end if end != -1 else last_position + len(element_str)
-            i += 1
-
-    # process remaining text
-    if last_position < len(text):
-        text_content = text[last_position:]
-        result = split_and_append_text(result, text_content)
-
-    return result
+    return splited_block
 
 
 def split_and_append_text(result, text_content):
