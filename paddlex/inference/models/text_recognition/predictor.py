@@ -13,7 +13,17 @@
 # limitations under the License.
 
 from ....modules.text_recognition.model_list import MODELS
-from ....utils.fonts import PINGFANG_FONT, Font
+from ....utils.fonts import (
+    ARABIC_FONT,
+    CYRILLIC_FONT,
+    DEVANAGARI_FONT,
+    KANNADA_FONT,
+    KOREAN_FONT,
+    LATIN_FONT,
+    SIMFANG_FONT,
+    TAMIL_FONT,
+    TELUGU_FONT,
+)
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -102,40 +112,37 @@ class TextRecPredictor(BasePredictor):
 
     def get_vis_font(self):
         if self.model_name.startswith("PP-OCR"):
-            return PINGFANG_FONT
+            return SIMFANG_FONT
 
         if self.model_name in (
             "latin_PP-OCRv3_mobile_rec",
             "latin_PP-OCRv5_mobile_rec",
         ):
-            return Font("latin.ttf")
+            return LATIN_FONT
 
         if self.model_name in (
             "cyrillic_PP-OCRv3_mobile_rec",
             "eslav_PP-OCRv5_mobile_rec",
         ):
-            return Font("cyrillic.ttf")
+            return CYRILLIC_FONT
 
         if self.model_name in (
             "korean_PP-OCRv3_mobile_rec",
             "korean_PP-OCRv5_mobile_rec",
         ):
-            return Font("korean.ttf")
+            return KOREAN_FONT
 
-        if self.model_name in (
-            "arabic_PP-OCRv3_mobile_rec",
-            "arabic_PP-OCRv5_mobile_rec",
-        ):
-            return Font("arabic.ttf")
+        if self.model_name == "arabic_PP-OCRv3_mobile_rec":
+            return ARABIC_FONT
 
         if self.model_name == "ka_PP-OCRv3_mobile_rec":
-            return Font("kannada.ttf")
+            return KANNADA_FONT
 
         if self.model_name == "te_PP-OCRv3_mobile_rec":
-            return Font("telugu.ttf")
+            return TELUGU_FONT
 
         if self.model_name == "ta_PP-OCRv3_mobile_rec":
-            return Font("tamil.ttf")
+            return TAMIL_FONT
 
         if self.model_name == "devanagari_PP-OCRv3_mobile_rec":
-            return Font("devanagari.ttf")
+            return DEVANAGARI_FONT

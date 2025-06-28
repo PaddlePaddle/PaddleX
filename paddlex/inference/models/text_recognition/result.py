@@ -17,7 +17,7 @@ import copy
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT
+from ....utils.fonts import SIMFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 
 
@@ -26,11 +26,13 @@ class TextRecResult(BaseCVResult):
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
         data.pop("input_img")
+        data.pop("vis_font")
         return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs):
         data = copy.deepcopy(self)
         data.pop("input_img")
+        data.pop("vis_font")
         return JsonMixin._to_json(data, *args, **kwargs)
 
     def _to_img(self):
@@ -38,7 +40,7 @@ class TextRecResult(BaseCVResult):
         image = Image.fromarray(self["input_img"][:, :, ::-1])
         rec_text = self["rec_text"]
         rec_score = self["rec_score"]
-        vis_font = self["vis_font"] if self["vis_font"] is not None else PINGFANG_FONT
+        vis_font = self["vis_font"] if self["vis_font"] is not None else SIMFANG_FONT
         image = image.convert("RGB")
         image_width, image_height = image.size
         text = f"{rec_text} ({rec_score})"
