@@ -939,7 +939,7 @@ for item in markdown_images:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_doc_unwarping</code></td>
@@ -951,7 +951,7 @@ for item in markdown_images:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_textline_orientation</code></td>
@@ -1023,7 +1023,7 @@ for item in markdown_images:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>False</code></td>
 </tr>
 <tr>
 <td><code>use_region_detection</code></td>
@@ -1653,23 +1653,6 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
-<td><code>visualize</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>是否返回可视化结果图以及处理过程中的中间图像等。
-<ul style="margin: 0 0 0 1em; padding-left: 0em;">
-<li>传入 <code>true</code>：返回图像。</li>
-<li>传入 <code>false</code>：不返回图像。</li>
-<li>若请求体中未提供该参数或传入 <code>null</code>：遵循产线配置文件<code>Serving.visualize</code> 的设置。</li>
-</ul>
-<br/>例如，在产线配置文件中添加如下字段：<br/>
-<pre><code>Serving:
-  visualize: False
-</code></pre>
-将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
-</td>
-<td>否</td>
-</tr>
-<tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
@@ -1849,6 +1832,23 @@ for res in output:
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wireless_table_rec_model</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>是否返回可视化结果图以及处理过程中的中间图像等。
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>传入 <code>true</code>：返回图像。</li>
+<li>传入 <code>false</code>：不返回图像。</li>
+<li>若请求体中未提供该参数或传入 <code>null</code>：遵循产线配置文件<code>Serving.visualize</code> 的设置。</li>
+</ul>
+<br/>例如，在产线配置文件中添加如下字段：<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
+</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -1893,7 +1893,7 @@ for res in output:
 <tr>
 <td><code>markdown</code></td>
 <td><code>object</code></td>
-<td>markdown结果。</td>
+<td>Markdown结果。</td>
 </tr>
 <tr>
 <td><code>outputImages</code></td>
@@ -1925,7 +1925,7 @@ for res in output:
 <tr>
 <td><code>images</code></td>
 <td><code>object</code></td>
-<td>Markdown图片相对路径和base64编码图像的键值对。</td>
+<td>Markdown图片相对路径和Base64编码图像的键值对。</td>
 </tr>
 <tr>
 <td><code>isStart</code></td>

@@ -359,6 +359,8 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
 PP-OCRv5_server_rec_infer.tar",
     "PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 PP-OCRv5_mobile_rec_infer.tar",
+    "eslav_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+eslav_PP-OCRv5_mobile_rec_infer.tar",
     "PP-DocBee2-3B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar",
 }
 

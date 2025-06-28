@@ -23,6 +23,7 @@ from setuptools import find_packages, setup
 DEP_SPECS = {
     "aiohttp": ">= 3.9",
     "bce-python-sdk": ">= 0.9",
+    "beautifulsoup4": "",
     "chardet": "",
     "chinese-calendar": "",
     "colorlog": "",
@@ -74,7 +75,6 @@ DEP_SPECS = {
     "ujson": "",
     "uvicorn": ">= 0.16",
     "yarl": ">= 1.9",
-    "beautifulsoup4": "",
 }
 
 REQUIRED_DEPS = [
@@ -138,6 +138,7 @@ EXTRAS = {
             "tokenizers",
         ],
         "trans": [
+            "beautifulsoup4",
             "ftfy",
             "imagesize",
             "lxml",
@@ -150,7 +151,6 @@ EXTRAS = {
             "scikit-learn",
             "shapely",
             "tokenizers",
-            "beautifulsoup4",
         ],
         "ocr": [
             "einops",

@@ -926,6 +926,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
         Predicts the layout parsing result for the given input.
 
         Args:
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): Input image path, list of image paths,
+                                                                        numpy array of an image, or list of numpy arrays.
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
             use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.

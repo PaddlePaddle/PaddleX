@@ -154,8 +154,16 @@ class GenerateTranslatePrompt(BaseGeneratePrompt):
         if few_shot_demo_text_content is None:
             few_shot_demo_text_content = self.few_shot_demo_text_content
 
+        if few_shot_demo_text_content:
+            few_shot_demo_text_content = (
+                f"这里是一些示例：\n{few_shot_demo_text_content}\n"
+            )
+
         if few_shot_demo_key_value_list is None:
             few_shot_demo_key_value_list = self.few_shot_demo_key_value_list
+
+        if few_shot_demo_key_value_list:
+            few_shot_demo_key_value_list = f"这里是一些专业术语对照表,对照表中单词要参考对照表翻译：\n{few_shot_demo_key_value_list}\n"
 
         prompt = f"""{task_description}{rules_str}{output_format}{few_shot_demo_text_content}{few_shot_demo_key_value_list}"""
 

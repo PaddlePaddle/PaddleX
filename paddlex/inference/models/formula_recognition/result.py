@@ -27,7 +27,7 @@ from PIL import Image, ImageDraw, ImageFont
 from ....utils import logging
 from ....utils.deps import function_requires_deps, is_dep_available
 from ....utils.file_interface import custom_open
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 
 if is_dep_available("opencv-contrib-python"):
@@ -308,7 +308,7 @@ def draw_formula_module(
             return formula_img
         else:
             img_right_text = draw_box_txt_fine(
-                img_size, box, "Rendering Failed", PINGFANG_FONT_FILE_PATH
+                img_size, box, "Rendering Failed", PINGFANG_FONT.path
             )
         return img_right_text
 

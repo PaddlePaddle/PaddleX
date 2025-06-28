@@ -33,4 +33,5 @@ MODELS = [
     "ch_RepSVTR_rec",
     "PP-OCRv5_server_rec",
     "PP-OCRv5_mobile_rec",
+    "eslav_PP-OCRv5_mobile_rec",
 ]

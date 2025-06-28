@@ -917,26 +917,6 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>visualize</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>
-Whether to return the final visualization image and intermediate images during the processing.<br/>
-<ul style="margin: 0 0 0 1em; padding-left: 0em;">
-<li>If <code>true</code> is provided: return images.</li>
-<li>If <code>false</code> is provided: do not return any images.</li>
-<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
-</ul>
-<br/>
-For example, adding the following setting to the pipeline config file:<br/>
-<pre><code>Serving:
-  visualize: False
-</code></pre>
-will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
-If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
-</td>
-<td>No</td>
-</tr>
-<tr>
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
@@ -964,6 +944,26 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
 <td>Please refer to description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1051,7 +1051,7 @@ import sys
 
 import requests
 
-API_BASE_URL = "<url id="cu9nt776o68pmutlr330" status="failed" title="" type="url" wc="0">http://0.0.0.0:8080"</url>
+API_BASE_URL = "http://127.0.0.1:8080"
 
 base_image_label_pairs = [
     {"image": "./demo0.jpg", "label": "ID0"},

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
+from typing import Dict, Optional
 
 from pydantic import BaseModel
 from typing_extensions import Literal, TypeAlias
@@ -23,3 +23,10 @@ FileType: TypeAlias = Literal[0, 1]
 class BaseInferRequest(BaseModel):
     file: str
     fileType: Optional[FileType] = None
+
+
+class MarkdownData(BaseModel):
+    text: str
+    isStart: bool
+    isEnd: bool
+    images: Optional[Dict[str, str]] = None
