@@ -81,12 +81,10 @@ class OCRResult(BaseCVResult):
         img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
         random.seed(0)
         draw_left = ImageDraw.Draw(img_left)
+        vis_font = SIMFANG_FONT
+        if self["vis_fonts"]:
+            vis_font = self["vis_fonts"][0]
         for idx, (box, txt) in enumerate(zip(boxes, txts)):
-            vis_font = (
-                self["vis_fonts"][idx]
-                if self["vis_fonts"][idx] is not None
-                else SIMFANG_FONT
-            )
             try:
                 color = (
                     random.randint(0, 255),
