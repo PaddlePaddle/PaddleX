@@ -18,6 +18,7 @@ import io
 import mimetypes
 import re
 import tempfile
+import threading
 import uuid
 from functools import partial
 from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, overload
@@ -176,29 +177,33 @@ def base64_encode(data: bytes) -> str:
     return base64.b64encode(data).decode("ascii")
 
 
+_lock = threading.Lock()
+
+
 @function_requires_deps("pypdfium2", "opencv-contrib-python")
 def read_pdf(
     bytes_: bytes, max_num_imgs: Optional[int] = None
 ) -> Tuple[List[np.ndarray], PDFInfo]:
     images: List[np.ndarray] = []
     page_info_list: List[PDFPageInfo] = []
-    doc = pdfium.PdfDocument(bytes_)
-    for page in doc:
-        if max_num_imgs is not None and len(images) >= max_num_imgs:
-            break
-        # TODO: Do not always use zoom=2.0
-        zoom = 2.0
-        deg = 0
-        image = page.render(scale=zoom, rotation=deg).to_pil()
-        image = image.convert("RGB")
-        image = np.array(image)
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        images.append(image)
-        page_info = PDFPageInfo(
-            width=image.shape[1],
-            height=image.shape[0],
-        )
-        page_info_list.append(page_info)
+    with _lock:
+        doc = pdfium.PdfDocument(bytes_)
+        for page in doc:
+            if max_num_imgs is not None and len(images) >= max_num_imgs:
+                break
+            # TODO: Do not always use zoom=2.0
+            zoom = 2.0
+            deg = 0
+            image = page.render(scale=zoom, rotation=deg).to_pil()
+            image = image.convert("RGB")
+            image = np.array(image)
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            images.append(image)
+            page_info = PDFPageInfo(
+                width=image.shape[1],
+                height=image.shape[0],
+            )
+            page_info_list.append(page_info)
     pdf_info = PDFInfo(
         numPages=len(page_info_list),
         pages=page_info_list,

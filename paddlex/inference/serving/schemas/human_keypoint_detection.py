@@ -36,6 +36,7 @@ INFER_ENDPOINT: Final[str] = "/human-keypoint-detection"
 class InferRequest(BaseModel):
     image: str
     detThreshold: Optional[float] = None
+    visualize: Optional[bool] = None
 
 
 class Person(BaseModel):

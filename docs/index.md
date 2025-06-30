@@ -88,7 +88,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ### 安装PaddleX
 
 ```bash
-pip install paddlex[base]==3.0.0
+pip install "paddlex[base]"
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)

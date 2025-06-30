@@ -41,23 +41,23 @@ PaddleX provides 18 end-to-end semantic segmentation models. For details, refer 
 <th>Model List</th>
 <th>mIoU (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>OCRNet_HRNet-W48</td>
 <td>82.15</td>
-<td>87.97</td>
-<td>2180.76</td>
+<td>582.92 / 536.28</td>
+<td>3513.72 / 2543.10</td>
 <td>270</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
 <td>77.04</td>
-<td>5.98</td>
-<td>140.02</td>
+<td>28.12 / 23.84</td>
+<td>398.31 / 398.31</td>
 <td>31</td>
 </tr>
 </tbody>
@@ -370,6 +370,6 @@ For more parameters, please refer to [General Semantic Segmentation Pipeline Usa
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
-* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
+* On-Device Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../pipeline_deploy/on_device_deployment.en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.

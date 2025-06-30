@@ -22,7 +22,6 @@ from .shared import ocr
 __all__ = [
     "INFER_ENDPOINT",
     "InferRequest",
-    "MarkdownData",
     "LayoutParsingResult",
     "InferResult",
     "PRIMARY_OPERATIONS",
@@ -62,18 +61,12 @@ class InferRequest(ocr.BaseInferRequest):
     useOcrResultsWithTableCells: bool = True
     useE2eWiredTableRecModel: bool = False
     useE2eWirelessTableRecModel: bool = True
-
-
-class MarkdownData(BaseModel):
-    text: str
-    images: Dict[str, str]
-    isStart: bool
-    isEnd: bool
+    visualize: Optional[bool] = None
 
 
 class LayoutParsingResult(BaseModel):
     prunedResult: dict
-    markdown: MarkdownData
+    markdown: ocr.MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
 

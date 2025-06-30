@@ -43,8 +43,8 @@ PaddleX provides 80 end-to-end image classification models, which can be referen
 <th>Model List</th>
 <th>Top-1 Accuracy (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
@@ -57,9 +57,9 @@ PaddleX provides 80 end-to-end image classification models, which can be referen
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_224</td>
-<td>85.39</td>
-<td>12.03</td>
-<td>234.85</td>
+<td>85.36</td>
+<td>12.03 / 2.49</td>
+<td>60.86 / 42.69</td>
 <td>331</td>
 </tr>
 <tr>
@@ -72,15 +72,15 @@ PaddleX provides 80 end-to-end image classification models, which can be referen
 <tr>
 <td>SwinTransformer_base_patch4_window7_224</td>
 <td>83.37</td>
-<td>12.35</td>
-<td>-</td>
-<td>342</td>
+<td>13.04 / 10.77</td>
+<td>133.79 / 118.45</td>
+<td>340</td>
 </tr>
 <tr>
 <td>PP-HGNet_small</td>
 <td>81.51</td>
-<td>4.24</td>
-<td>108.21</td>
+<td>5.87 / 1.68</td>
+<td>25.58 / 18.50</td>
 <td>94</td>
 </tr>
 <tr>
@@ -93,22 +93,22 @@ PaddleX provides 80 end-to-end image classification models, which can be referen
 <tr>
 <td>ResNet50</td>
 <td>76.50</td>
-<td>3.12</td>
-<td>50.90</td>
+<td>6.25 / 1.17</td>
+<td>15.93 / 9.72</td>
 <td>98</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0</td>
 <td>71.32</td>
-<td>1.01</td>
-<td>3.39</td>
+<td>2.59 / 0.68</td>
+<td>3.18 / 1.19</td>
 <td>7</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td>
 <td>68.24</td>
-<td>1.09</td>
-<td>3.65</td>
+<td>4.23 / 0.78</td>
+<td>5.24 / 1.48</td>
 <td>12</td>
 </tr>
 </tbody>
@@ -419,6 +419,6 @@ For more parameters, please refer to the [General Image Classification Pipeline 
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
-* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
+* On-Device Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../pipeline_deploy/on_device_deployment.en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.

@@ -22,16 +22,17 @@ comments: true
 <th>Top-1 Acc（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
-<td>2.31 / 0.43</td>
-<td>3.37 / 1.27</td>
+<td>2.62 / 0.59</td>
+<td>3.24 / 1.19</td>
 <td>7</td>
 <td>基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度</td>
 </tr>
@@ -44,15 +45,20 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>CER </th>
-<th>模型存储大小（M)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
+<td>UVDoc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
 <td>0.179</td>
-<td>30.3 M</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
+<td>30.3</td>
 <td>高精度文本图像矫正模型</td>
 </tr>
 </tbody>
@@ -66,96 +72,107 @@ comments: true
 <th>mAP(0.5)（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
 <td>90.4</td>
-<td>34.6244 / 10.3945</td>
-<td>510.57 / -</td>
-<td>123.76 M</td>
+<td>33.59 / 33.59</td>
+<td>503.01 / 251.08</td>
+<td>123.76</td>
 <td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
 <td>75.2</td>
-<td>13.3259 / 4.8685</td>
-<td>44.0680 / 44.0680</td>
+<td>13.03 / 4.72</td>
+<td>43.39 / 24.44</td>
 <td>22.578</td>
 <td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
 </tr>
 <tr>
-<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayout-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
 <td>70.9</td>
-<td>8.3008 / 2.3794</td>
-<td>10.0623 / 9.9296</td>
+<td>11.54 / 3.86</td>
+<td>18.53 / 6.29</td>
 <td>4.834</td>
 <td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
 <tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
-<td>86.8</td>
-<td>9.03 / 3.10</td>
-<td>25.82 / 20.70</td>
+<td>PicoDet_layout_1x</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
+<td>97.8</td>
+<td>9.62 / 6.75</td>
+<td>26.96 / 12.77</td>
 <td>7.4</td>
 <td>基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域</td>
 </tr>
 <tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
-<td>95.7</td>
-<td>8.02 / 3.09</td>
-<td>23.70 / 20.41</td>
-<td>7.4 M</td>
+<td>PicoDet_layout_1x_table</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
+<td>97.5</td>
+<td>9.57 / 6.63</td>
+<td>27.66 / 16.75</td>
+<td>7.4</td>
 <td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位包含表格这1类区域</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
-<td>87.1</td>
-<td>8.99 / 2.22</td>
-<td>16.11 / 8.73</td>
+<td>PicoDet-S_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>88.2</td>
+<td>8.43 / 3.44</td>
+<td>17.60 / 6.51</td>
 <td>4.8</td>
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>70.3</td>
-<td>9.11 / 2.12</td>
-<td>15.42 / 9.12</td>
+<td>PicoDet-S_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>87.4</td>
+<td>8.80 / 3.62</td>
+<td>17.51 / 6.35</td>
 <td>4.8</td>
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
-<td>89.3</td>
-<td>13.05 / 4.50</td>
-<td>41.30 / 41.30</td>
+<td>PicoDet-L_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>89.0</td>
+<td>12.80 / 9.57</td>
+<td>45.04 / 23.86</td>
 <td>22.6</td>
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>79.9</td>
-<td>13.50 / 4.69</td>
-<td>43.32 / 43.32</td>
+<td>PicoDet-L_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>89.0</td>
+<td>12.60 / 10.27</td>
+<td>43.70 / 24.42</td>
 <td>22.6</td>
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
-<td>95.9</td>
-<td>114.93 / 27.71</td>
-<td>947.56 / 947.56</td>
+<td>RT-DETR-H_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>95.8</td>
+<td>114.80 / 25.65</td>
+<td>924.38 / 924.38</td>
 <td>470.1</td>
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>92.6</td>
-<td>115.29 / 104.09</td>
-<td>995.27 / 995.27</td>
+<td>115.29 / 101.18</td>
+<td>964.75 / 964.75</td>
 <td>470.2</td>
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
@@ -169,23 +186,25 @@ comments: true
 <th>精度（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">训练模型</a></td>
+<td>SLANet</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">训练模型</a></td>
 <td>59.52</td>
-<td>103.08 / 103.08</td>
-<td>197.99 / 197.99</td>
-<td>6.9 M</td>
+<td>23.96 / 21.75</td>
+<td>- / 43.12</td>
+<td>6.9</td>
 <td>SLANet 是百度飞桨视觉团队自研的表格结构识别模型。该模型通过采用CPU 友好型轻量级骨干网络PP-LCNet、高低层特征融合模块CSP-PAN、结构与位置信息对齐的特征解码模块SLA Head，大幅提升了表格结构识别的精度和推理速度。</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_plus_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">训练模型</a></td>
+<td>SLANet_plus</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_plus_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">训练模型</a></td>
 <td>63.69</td>
-<td>140.29 / 140.29</td>
-<td>195.39 / 195.39</td>
-<td>6.9 M</td>
+<td>23.43 / 22.16</td>
+<td>- / 41.80</td>
+<td>6.9</td>
 <td>SLANet_plus 是百度飞桨视觉团队自研的表格结构识别模型SLANet的增强版。相较于SLANet，SLANet_plus 对无线表、复杂表格的识别能力得到了大幅提升，并降低了模型对表格定位准确性的敏感度，即使表格定位出现偏移，也能够较准确地进行识别。</td>
 </tr>
 </table>
@@ -198,56 +217,62 @@ comments: true
 <th>检测Hmean（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv5_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv5_server_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">训练模型</a></td>
 <td>83.8</td>
 <td>89.55 / 70.19</td>
-<td>371.65 / 371.65</td>
+<td>383.15 / 383.15</td>
 <td>84.3</td>
 <td>PP-OCRv5 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 <tr>
-<td>PP-OCRv5_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv5_mobile_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>79.0</td>
-<td>8.79 / 3.13</td>
-<td>51.00 / 28.58</td>
+<td>10.67 / 6.36</td>
+<td>57.77 / 28.15</td>
 <td>4.7</td>
 <td>PP-OCRv5 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv4_server_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">训练模型</a></td>
 <td>69.2</td>
-<td>83.34 / 80.91</td>
-<td>442.58 / 442.58</td>
+<td>127.82 / 98.87</td>
+<td>585.95 / 489.77</td>
 <td>109</td>
 <td>PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv4_mobile_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>63.8</td>
-<td>8.79 / 3.13</td>
-<td>51.00 / 28.58</td>
+<td>9.87 / 4.17</td>
+<td>56.60 / 20.79</td>
 <td>4.7</td>
 <td>PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
 <tr>
-<td>PP-OCRv3_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv3_mobile_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>精度接近 PP-OCRv4_mobile_det</td>
-<td>8.44 / 2.91</td>
-<td>27.87 / 27.87</td>
+<td>9.90 / 3.60</td>
+<td>41.93 / 20.76</td>
 <td>2.1</td>
 <td>PP-OCRv3 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
 <tr>
-<td>PP-OCRv3_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv3_server_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">训练模型</a></td>
 <td>精度接近 PP-OCRv4_server_det</td>
-<td>65.41 / 13.67</td>
-<td>305.07 / 305.07</td>
+<td>119.50 / 75.00</td>
+<td>379.35 / 318.35</td>
 <td>102.1</td>
 <td>PP-OCRv3 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
@@ -261,41 +286,45 @@ comments: true
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>PP-OCRv4_server_rec_doc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 PP-OCRv4_server_rec_doc_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
-<td>81.53</td>
-<td>6.65 / 6.65</td>
-<td>32.92 / 32.92</td>
-<td>74.7 M</td>
+<td>86.58</td>
+<td>8.69 / 2.78</td>
+<td>37.93 / 37.93</td>
+<td>182</td>
 <td>PP-OCRv4_server_rec_doc是在PP-OCRv4_server_rec的基础上，在更多中文文档数据和PP-OCR训练数据的混合数据训练而成，增加了部分繁体字、日文、特殊字符的识别能力，可支持识别的字符为1.5万+，除文档相关的文字识别能力提升外，也同时提升了通用文字的识别能力</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
 <td>78.74</td>
-<td>4.82 / 4.82</td>
-<td>16.74 / 4.64</td>
-<td>10.6 M</td>
+<td>5.26 / 1.12</td>
+<td>17.48 / 3.61</td>
+<td>10.5</td>
 <td>PP-OCRv4的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
-<td>80.61 </td>
-<td>6.58 / 6.58</td>
-<td>33.17 / 33.17</td>
-<td>71.2 M</td>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>85.19</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
+<td>173</td>
 <td>PP-OCRv4的服务器端模型，推理精度高，可以部署在多种不同的服务器上</td>
 </tr>
 <tr>
-<td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>72.96</td>
-<td>5.87 / 5.87</td>
-<td>9.07 / 4.28</td>
-<td>9.2 M</td>
+<td>3.89 / 1.16</td>
+<td>8.72 / 3.56</td>
+<td>10.3</td>
 <td>PP-OCRv3的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
 </tr>
 </table>
@@ -306,15 +335,16 @@ PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_SVTRv2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">训练模型</a></td>
+<td>ch_SVTRv2_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_SVTRv2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">训练模型</a></td>
 <td>68.81</td>
-<td>8.08 / 8.08</td>
-<td>50.17 / 42.50</td>
-<td>73.9 M</td>
+<td>10.38 / 8.31</td>
+<td>66.52 / 30.83</td>
+<td>80.5</td>
 <td rowspan="1">
 SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队研发的服务端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，A榜端到端识别精度相比PP-OCRv4提升6%。
 </td>
@@ -327,15 +357,16 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_RepSVTR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">训练模型</a></td>
+<td>ch_RepSVTR_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_RepSVTR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">训练模型</a></td>
 <td>65.07</td>
-<td>5.93 / 5.93</td>
-<td>20.73 / 7.32</td>
-<td>22.1 M</td>
+<td>6.29 / 1.57</td>
+<td>20.64 / 5.40</td>
+<td>48.8</td>
 <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
 </tr>
 </table>
@@ -348,25 +379,27 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>en_PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 en_PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td> 70.39</td>
-<td>4.81 / 4.81</td>
-<td>16.10 / 5.31</td>
-<td>6.8 M</td>
+<td>4.81 / 1.23</td>
+<td>17.20 / 4.18</td>
+<td>7.5</td>
 <td>基于PP-OCRv4识别模型训练得到的超轻量英文识别模型，支持英文、数字识别</td>
 </tr>
 <tr>
-<td>en_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>en_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 en_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>70.69</td>
-<td>5.44 / 5.44</td>
-<td>8.65 / 5.57</td>
-<td>7.8 M </td>
+<td>3.56 / 0.78</td>
+<td>8.44 / 5.78</td>
+<td>17.3</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量英文识别模型，支持英文、数字识别</td>
 </tr>
 </table>
@@ -378,97 +411,107 @@ en_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></
 <th>识别 Avg Accuracy(%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>korean_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>korean_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 korean_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>60.21</td>
-<td>5.40 / 5.40</td>
-<td>9.11 / 4.05</td>
-<td>8.6 M</td>
+<td>3.73 / 0.98</td>
+<td>8.76 / 2.91</td>
+<td>9.6</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量韩文识别模型，支持韩文、数字识别</td>
 </tr>
 <tr>
-<td>japan_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>japan_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 japan_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>45.69</td>
-<td>5.70 / 5.70</td>
-<td>8.48 / 4.07</td>
-<td>8.8 M </td>
+<td>3.86 / 1.01</td>
+<td>8.62 / 2.92</td>
+<td>9.8</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量日文识别模型，支持日文、数字识别</td>
 </tr>
 <tr>
-<td>chinese_cht_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>chinese_cht_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 chinese_cht_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>82.06</td>
-<td>5.90 / 5.90</td>
-<td>9.28 / 4.34</td>
-<td>9.7 M </td>
+<td>3.90 / 1.16</td>
+<td>9.24 / 3.18</td>
+<td>10.8</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量繁体中文识别模型，支持繁体中文、数字识别</td>
 </tr>
 <tr>
-<td>te_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>te_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 te_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>95.88</td>
-<td>5.42 / 5.42</td>
-<td>8.10 / 6.91</td>
-<td>7.8 M </td>
+<td>3.59 / 0.81</td>
+<td>8.28 / 6.21</td>
+<td>8.7</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量泰卢固文识别模型，支持泰卢固文、数字识别</td>
 </tr>
 <tr>
-<td>ka_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>ka_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 ka_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>96.96</td>
-<td>5.25 / 5.25</td>
-<td>9.09 / 3.86</td>
-<td>8.0 M </td>
+<td>3.49 / 0.89</td>
+<td>8.63 / 2.77</td>
+<td>17.4</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量卡纳达文识别模型，支持卡纳达文、数字识别</td>
 </tr>
 <tr>
-<td>ta_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>ta_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 ta_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>76.83</td>
-<td>5.23 / 5.23</td>
-<td>10.13 / 4.30</td>
-<td>8.0 M </td>
+<td>3.49 / 0.86</td>
+<td>8.35 / 3.41</td>
+<td>8.7</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量泰米尔文识别模型，支持泰米尔文、数字识别</td>
 </tr>
 <tr>
-<td>latin_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>latin_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 latin_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>76.93</td>
-<td>5.20 / 5.20</td>
-<td>8.83 / 7.15</td>
-<td>7.8 M</td>
+<td>3.53 / 0.78</td>
+<td>8.50 / 6.83</td>
+<td>8.7</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量拉丁文识别模型，支持拉丁文、数字识别</td>
 </tr>
 <tr>
-<td>arabic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>arabic_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 arabic_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>73.55</td>
-<td>5.35 / 5.35</td>
-<td>8.80 / 4.56</td>
-<td>7.8 M</td>
+<td>3.60 / 0.83</td>
+<td>8.44 / 4.69</td>
+<td>17.3</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量阿拉伯字母识别模型，支持阿拉伯字母、数字识别</td>
 </tr>
 <tr>
-<td>cyrillic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>cyrillic_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 cyrillic_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>94.28</td>
-<td>5.23 / 5.23</td>
-<td>8.89 / 3.88</td>
-<td>7.9 M  </td>
+<td>3.56 / 0.79</td>
+<td>8.22 / 2.76</td>
+<td>8.7</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量斯拉夫字母识别模型，支持斯拉夫字母、数字识别</td>
 </tr>
 <tr>
-<td>devanagari_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+<td>devanagari_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>96.44</td>
-<td>5.22 / 5.22</td>
-<td>8.56 / 4.06</td>
-<td>7.9 M</td>
+<td>3.60 / 0.78</td>
+<td>6.95 / 2.87</td>
+<td>8.7</td>
 <td>基于PP-OCRv3识别模型训练得到的超轻量梵文字母识别模型，支持梵文字母、数字识别</td>
 </tr>
 </table>
@@ -482,21 +525,32 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>Top-1 Acc（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x0_25_textline_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">训练模型</a></td>
-<td>95.54</td>
-<td>-</td>
-<td>-</td>
-<td>0.32</td>
+<td>PP-LCNet_x0_25_textline_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">训练模型</a></td>
+<td>87.4</td>
+<td>2.16 / 0.41</td>
+<td>2.37 / 0.73</td>
+<td>0.96</td>
 <td>基于PP-LCNet_x0_25的文本行分类模型，含有两个类别，即0度，180度</td>
+</tr>
+<tr>
+<td>PP-LCNet_x1_0_textline_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_textline_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_textline_ori_pretrained.pdparams">训练模型</a></td>
+<td>99.42</td>
+<td>- / -</td>
+<td>2.98 / 2.98</td>
+<td>6.5</td>
+<td>基于PP-LCNet_x1_0的文本行分类模型，含有两个类别，即0度，180度</td>
 </tr>
 </tbody>
 </table>
+
 
 <p><b>公式识别模块（可选）：</b></p>
 <table>
@@ -508,18 +562,19 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>ExpRate （%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
+<td>LaTeX_OCR_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
 <td>0.8821</td>
 <td>0.0823</td>
 <td>40.01</td>
-<td>2047.13 / 2047.13</td>
-<td>10582.73 / 10582.73</td>
-<td>89.7 M</td>
+<td>1088.89 / 1088.89</td>
+<td>- / -</td>
+<td>99</td>
 </tr>
 </tbody>
 </table>
@@ -532,25 +587,27 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <th>检测Hmean（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">训练模型</a></td>
-<td>98.21</td>
-<td>74.75 / 67.72</td>
-<td>382.55 / 382.55</td>
+<td>PP-OCRv4_server_seal_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">训练模型</a></td>
+<td>98.40</td>
+<td>124.64 / 91.57</td>
+<td>545.68 / 439.86</td>
 <td>109</td>
 <td>PP-OCRv4的服务端印章文本检测模型，精度更高，适合在较好的服务器上部署</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td>
-<td>96.47</td>
-<td>7.82 / 3.09</td>
-<td>48.28 / 23.97</td>
-<td>4.6</td>
+<td>PP-OCRv4_mobile_seal_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td>
+<td>96.36</td>
+<td>9.70 / 3.56</td>
+<td>50.38 / 19.64</td>
+<td>4.7</td>
 <td>PP-OCRv4的移动端印章文本检测模型，效率更高，适合在端侧部署</td>
 </tr>
 </tbody>
@@ -582,7 +639,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
@@ -1761,6 +1818,23 @@ for res in visual_predict_res:
 <td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_rec_score_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>是否返回可视化结果图以及处理过程中的中间图像等。
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>传入 <code>true</code>：返回图像。</li>
+<li>传入 <code>false</code>：不返回图像。</li>
+<li>若请求体中未提供该参数或传入 <code>null</code>：遵循产线配置文件<code>Serving.visualize</code> 的设置。</li>
+</ul>
+<br/>例如，在产线配置文件中添加如下字段：<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
+</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -1805,7 +1879,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>产线对象的 <code>visual_predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 和 <code>page_index</code> 字段。</td>
+<td>产线对象的 <code>visual_predict</code> 方法生成的 <code>layout_parsing_result</code> 的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 和 <code>page_index</code> 字段。</td>
 </tr>
 <tr>
 <td><code>outputImages</code></td>
@@ -1845,13 +1919,13 @@ for res in visual_predict_res:
 </tr>
 <tr>
 <td><code>minCharacters</code></td>
-<td><code>integer</code> | <code>null</code></td>
-<td>启用向量数据库的最小数据长度。</td>
+<td><code>integer</code></td>
+<td>请参阅产线对象中 <code>build_vector</code> 方法的 <code>min_characters</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>blockSize</code></td>
-<td><code>int</code> | <code>null</code></td>
+<td><code>integer</code></td>
 <td>请参阅产线对象中 <code>build_vector</code> 方法的 <code>block_size</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
@@ -1902,7 +1976,7 @@ for res in visual_predict_res:
 <tbody>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></code></td>
+<td><code>string</code></td>
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
@@ -1971,7 +2045,7 @@ for res in visual_predict_res:
 </tr>
 <tr>
 <td><code>useVectorRetrieval</code></td>
-<td><code>boolean</code> | <code>null</code></td>
+<td><code>boolean</code></td>
 <td>请参阅产线对象中 <code>chat</code> 方法的 <code>use_vector_retrieval</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
@@ -1984,7 +2058,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>minCharacters</code></td>
 <td><code>integer</code></td>
-<td>启用向量数据库的最小数据长度</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>min_characters</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -2055,7 +2129,7 @@ for res in visual_predict_res:
 </tr>
 <tr>
 <td><code>mllmIntegrationStrategy</code></td>
-<td><code>string</code> | <code>null</code></td>
+<td><code>string</code></td>
 <td>请参阅产线对象中 <code>chat</code> 方法的 <code>mllm_integration_strategy</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
@@ -2112,7 +2186,7 @@ import sys
 import requests
 
 
-API_BASE_URL = "http://0.0.0.0:8080"
+API_BASE_URL = "http://127.0.0.1:8080"
 
 image_path = "./demo.jpg"
 keys = ["姓名"]
@@ -2187,10 +2261,625 @@ print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
 </details>
+
+<details><summary>C++</summary>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
+
+using json = nlohmann::json;
+
+std::string encode_image(const std::string& path) {
+    std::ifstream file(path, std::ios::binary | std::ios::ate);
+    if (!file) throw std::runtime_error("File open error.");
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<char> buf(size);
+    file.read(buf.data(), size);
+    return base64::to_base64(std::string(buf.data(), buf.size()));
+}
+
+int main() {
+    httplib::Client client("localhost", 8080);
+    std::string imagePath = "./demo.jpg";
+    std::string imageData = encode_image(imagePath);
+    json keys = { "合格证编号" };
+
+    json payload_visual = { {"file", imageData}, {"fileType", 1} };
+    auto resp1 = client.Post("/chatocr-visual", payload_visual.dump(), "application/json");
+    if (!resp1 || resp1->status != 200) {
+        std::cerr << "chatocr-visual failed.\n"; return 1;
+    }
+    json result_visual = json::parse(resp1->body)["result"];
+
+    for (size_t i = 0; i < result_visual["layoutParsingResults"].size(); ++i) {
+        auto& res = result_visual["layoutParsingResults"][i];
+        std::cout << "prunedResult: " << res["prunedResult"].dump() << "\n";
+        if (res.contains("outputImages")) {
+            for (auto& [name, b64] : res["outputImages"].items()) {
+                std::string outPath = name + "_" + std::to_string(i) + ".jpg";
+                std::string decoded = base64::from_base64(b64.get<std::string>());
+                std::ofstream out(outPath, std::ios::binary);
+                out.write(decoded.data(), decoded.size());
+                out.close();
+                std::cout << "Saved: " << outPath << "\n";
+            }
+        }
+    }
+
+    json payload_vector = { {"visualInfo", result_visual["visualInfo"]} };
+    auto resp2 = client.Post("/chatocr-vector", payload_vector.dump(), "application/json");
+    if (!resp2 || resp2->status != 200) {
+        std::cerr << "chatocr-vector failed.\n"; return 1;
+    }
+    json result_vector = json::parse(resp2->body)["result"];
+
+    json payload_mllm = { {"image", imageData}, {"keyList", keys} };
+    auto resp3 = client.Post("/chatocr-mllm", payload_mllm.dump(), "application/json");
+    if (!resp3 || resp3->status != 200) {
+        std::cerr << "chatocr-mllm failed.\n"; return 1;
+    }
+    json result_mllm = json::parse(resp3->body)["result"];
+
+    json payload_chat = {
+        {"keyList", keys},
+        {"visualInfo", result_visual["visualInfo"]},
+        {"useVectorRetrieval", true},
+        {"vectorInfo", result_vector["vectorInfo"]},
+        {"mllmPredictInfo", result_mllm["mllmPredictInfo"]}
+    };
+    auto resp4 = client.Post("/chatocr-chat", payload_chat.dump(), "application/json");
+    if (!resp4 || resp4->status != 200) {
+        std::cerr << "chatocr-chat failed.\n"; return 1;
+    }
+
+    json result_chat = json::parse(resp4->body)["result"];
+    std::cout << "Final chat result: " << result_chat["chatResult"] << std::endl;
+
+    return 0;
+}
+</code></pre></details>
+
+<details><summary>Java</summary>
+
+<pre><code class="language-java">import okhttp3.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Iterator;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        String API_BASE_URL = "http://localhost:8080";
+        String imagePath = "./demo.jpg";
+        String[] keys = {"合格证编号"};
+
+        OkHttpClient client = new OkHttpClient();
+        ObjectMapper objectMapper = new ObjectMapper();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        byte[] imageBytes = java.nio.file.Files.readAllBytes(new File(imagePath).toPath());
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+        ObjectNode visualPayload = objectMapper.createObjectNode();
+        visualPayload.put("file", base64Image);
+        visualPayload.put("fileType", 1);
+
+        Request requestVisual = new Request.Builder()
+                .url(API_BASE_URL + "/chatocr-visual")
+                .post(RequestBody.create(JSON, visualPayload.toString()))
+                .build();
+
+        Response responseVisual = client.newCall(requestVisual).execute();
+        if (!responseVisual.isSuccessful()) {
+            System.err.println("chatocr-visual failed: " + responseVisual.code());
+            return;
+        }
+
+        JsonNode resultVisual = objectMapper.readTree(responseVisual.body().string()).get("result");
+
+        JsonNode layoutResults = resultVisual.get("layoutParsingResults");
+        for (int i = 0; i < layoutResults.size(); i++) {
+            JsonNode res = layoutResults.get(i);
+            System.out.println("prunedResult [" + i + "]: " + res.get("prunedResult").toString());
+
+            JsonNode outputImages = res.get("outputImages");
+            if (outputImages != null && outputImages.isObject()) {
+                Iterator<String> names = outputImages.fieldNames();
+                while (names.hasNext()) {
+                    String imgName = names.next();
+                    String imgBase64 = outputImages.get(imgName).asText();
+                    byte[] imgBytes = Base64.getDecoder().decode(imgBase64);
+                    String imgPath = imgName + "_" + i + ".jpg";
+                    try (FileOutputStream fos = new FileOutputStream(imgPath)) {
+                        fos.write(imgBytes);
+                        System.out.println("Saved image: " + imgPath);
+                    }
+                }
+            }
+        }
+
+        ObjectNode vectorPayload = objectMapper.createObjectNode();
+        vectorPayload.set("visualInfo", resultVisual.get("visualInfo"));
+
+        Request requestVector = new Request.Builder()
+                .url(API_BASE_URL + "/chatocr-vector")
+                .post(RequestBody.create(JSON, vectorPayload.toString()))
+                .build();
+
+        Response responseVector = client.newCall(requestVector).execute();
+        if (!responseVector.isSuccessful()) {
+            System.err.println("chatocr-vector failed: " + responseVector.code());
+            return;
+        }
+
+        JsonNode resultVector = objectMapper.readTree(responseVector.body().string()).get("result");
+
+        ObjectNode mllmPayload = objectMapper.createObjectNode();
+        mllmPayload.put("image", base64Image);
+        mllmPayload.putArray("keyList").add(keys[0]);
+
+        Request requestMllm = new Request.Builder()
+                .url(API_BASE_URL + "/chatocr-mllm")
+                .post(RequestBody.create(JSON, mllmPayload.toString()))
+                .build();
+
+        Response responseMllm = client.newCall(requestMllm).execute();
+        if (!responseMllm.isSuccessful()) {
+            System.err.println("chatocr-mllm failed: " + responseMllm.code());
+            return;
+        }
+
+        JsonNode resultMllm = objectMapper.readTree(responseMllm.body().string()).get("result");
+
+        ObjectNode chatPayload = objectMapper.createObjectNode();
+        chatPayload.putArray("keyList").add(keys[0]);
+        chatPayload.set("visualInfo", resultVisual.get("visualInfo"));
+        chatPayload.put("useVectorRetrieval", true);
+        chatPayload.set("vectorInfo", resultVector.get("vectorInfo"));
+        chatPayload.set("mllmPredictInfo", resultMllm.get("mllmPredictInfo"));
+
+        Request requestChat = new Request.Builder()
+                .url(API_BASE_URL + "/chatocr-chat")
+                .post(RequestBody.create(JSON, chatPayload.toString()))
+                .build();
+
+        Response responseChat = client.newCall(requestChat).execute();
+        if (!responseChat.isSuccessful()) {
+            System.err.println("chatocr-chat failed: " + responseChat.code());
+            return;
+        }
+
+        JsonNode resultChat = objectMapper.readTree(responseChat.body().string()).get("result");
+        System.out.println("Final result:");
+        System.out.println(resultChat.get("chatResult").toString());
+    }
+}
+</code></pre></details>
+
+<details><summary>Go</summary>
+
+<pre><code class="language-go">package main
+
+import (
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "os"
+)
+
+func sendPostRequest(url string, payload map[string]interface{}) (map[string]interface{}, error) {
+    bodyBytes, err := json.Marshal(payload)
+    if err != nil {
+        return nil, fmt.Errorf("error marshaling payload: %v", err)
+    }
+
+    req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyBytes))
+    if err != nil {
+        return nil, fmt.Errorf("error creating request: %v", err)
+    }
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return nil, fmt.Errorf("error sending request: %v", err)
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusOK {
+        return nil, fmt.Errorf("status code error: %d", resp.StatusCode)
+    }
+
+    respBytes, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return nil, fmt.Errorf("error reading response: %v", err)
+    }
+
+    var result map[string]interface{}
+    if err := json.Unmarshal(respBytes, &result); err != nil {
+        return nil, fmt.Errorf("error unmarshaling response: %v", err)
+    }
+    return result["result"].(map[string]interface{}), nil
+}
+
+func main() {
+    apiBase := "http://localhost:8080"
+    imagePath := "./demo.jpg"
+    keys := []string{"合格证编号"}
+
+    imageBytes, err := ioutil.ReadFile(imagePath)
+    if err != nil {
+        fmt.Printf("read image failed : %v\n", err)
+        return
+    }
+    imageData := base64.StdEncoding.EncodeToString(imageBytes)
+
+    visualPayload := map[string]interface{}{
+        "file":     imageData,
+        "fileType": 1,
+    }
+    visualResult, err := sendPostRequest(apiBase+"/chatocr-visual", visualPayload)
+    if err != nil {
+        fmt.Printf("chatocr-visual request error: %v\n", err)
+        return
+    }
+
+    layoutResults := visualResult["layoutParsingResults"].([]interface{})
+    for i, res := range layoutResults {
+        layout := res.(map[string]interface{})
+        fmt.Println("PrunedResult:", layout["prunedResult"])
+        outputImages := layout["outputImages"].(map[string]interface{})
+        for name, img := range outputImages {
+            imgBytes, _ := base64.StdEncoding.DecodeString(img.(string))
+            filename := fmt.Sprintf("%s_%d.jpg", name, i)
+            if err := os.WriteFile(filename, imgBytes, 0644); err == nil {
+                fmt.Printf("save image：%s\n", filename)
+            }
+        }
+    }
+
+    vectorPayload := map[string]interface{}{
+        "visualInfo": visualResult["visualInfo"],
+    }
+    vectorResult, err := sendPostRequest(apiBase+"/chatocr-vector", vectorPayload)
+    if err != nil {
+        fmt.Printf("chatocr-vector request error: %v\n", err)
+        return
+    }
+
+    mllmPayload := map[string]interface{}{
+        "image":   imageData,
+        "keyList": keys,
+    }
+    mllmResult, err := sendPostRequest(apiBase+"/chatocr-mllm", mllmPayload)
+    if err != nil {
+        fmt.Printf("chatocr-mllm request error: %v\n", err)
+        return
+    }
+
+    chatPayload := map[string]interface{}{
+        "keyList":           keys,
+        "visualInfo":        visualResult["visualInfo"],
+        "useVectorRetrieval": true,
+        "vectorInfo":        vectorResult["vectorInfo"],
+        "mllmPredictInfo":   mllmResult["mllmPredictInfo"],
+    }
+    chatResult, err := sendPostRequest(apiBase+"/chatocr-chat", chatPayload)
+    if err != nil {
+        fmt.Printf("chatocr-chat request error: %v\n", err)
+        return
+    }
+
+    fmt.Println("final result：", chatResult["chatResult"])
+}
+</code></pre></details>
+
+<details><summary>C#</summary>
+
+<pre><code class="language-csharp">using System;
+using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
+class Program
+{
+    static readonly string API_BASE_URL = "http://localhost:8080";
+    static readonly string inputFilePath = "./demo.jpg";
+    static readonly string[] keys = { "合格证编号" };
+
+    static async Task Main(string[] args)
+    {
+        var httpClient = new HttpClient();
+
+        byte[] imageBytes = File.ReadAllBytes(inputFilePath);
+        string imageData = Convert.ToBase64String(imageBytes);
+
+        var payloadVisual = new JObject
+        {
+            { "file", imageData },
+            { "fileType", 1 }
+        };
+
+        var respVisual = await httpClient.PostAsync($"{API_BASE_URL}/chatocr-visual",
+            new StringContent(payloadVisual.ToString(), Encoding.UTF8, "application/json"));
+
+        if (!respVisual.IsSuccessStatusCode)
+        {
+            Console.Error.WriteLine($"Request to chatocr-visual failed: {respVisual.StatusCode}");
+            Console.Error.WriteLine(await respVisual.Content.ReadAsStringAsync());
+            return;
+        }
+
+        JObject resultVisual = JObject.Parse(await respVisual.Content.ReadAsStringAsync())["result"] as JObject;
+
+        var layoutParsingResults = (JArray)resultVisual["layoutParsingResults"];
+        for (int i = 0; i < layoutParsingResults.Count; i++)
+        {
+            var res = layoutParsingResults[i];
+            Console.WriteLine($"[{i}] prunedResult:\n{res["prunedResult"]}");
+
+            JObject outputImages = res["outputImages"] as JObject;
+            if (outputImages != null)
+            {
+                foreach (var img in outputImages)
+                {
+                    string imgName = img.Key;
+                    string base64Img = img.Value?.ToString();
+                    if (!string.IsNullOrEmpty(base64Img))
+                    {
+                        string imgPath = $"{imgName}_{i}.jpg";
+                        File.WriteAllBytes(imgPath, Convert.FromBase64String(base64Img));
+                        Console.WriteLine($"Output image saved at {imgPath}");
+                    }
+                }
+            }
+        }
+
+        var payloadVector = new JObject
+        {
+            { "visualInfo", resultVisual["visualInfo"] }
+        };
+
+        var respVector = await httpClient.PostAsync($"{API_BASE_URL}/chatocr-vector",
+            new StringContent(payloadVector.ToString(), Encoding.UTF8, "application/json"));
+
+        if (!respVector.IsSuccessStatusCode)
+        {
+            Console.Error.WriteLine($"Request to chatocr-vector failed: {respVector.StatusCode}");
+            Console.Error.WriteLine(await respVector.Content.ReadAsStringAsync());
+            return;
+        }
+
+        JObject resultVector = JObject.Parse(await respVector.Content.ReadAsStringAsync())["result"] as JObject;
+
+        var payloadMllm = new JObject
+        {
+            { "image", imageData },
+            { "keyList", new JArray(keys) }
+        };
+
+        var respMllm = await httpClient.PostAsync($"{API_BASE_URL}/chatocr-mllm",
+            new StringContent(payloadMllm.ToString(), Encoding.UTF8, "application/json"));
+
+        if (!respMllm.IsSuccessStatusCode)
+        {
+            Console.Error.WriteLine($"Request to chatocr-mllm failed: {respMllm.StatusCode}");
+            Console.Error.WriteLine(await respMllm.Content.ReadAsStringAsync());
+            return;
+        }
+
+        JObject resultMllm = JObject.Parse(await respMllm.Content.ReadAsStringAsync())["result"] as JObject;
+
+        var payloadChat = new JObject
+        {
+            { "keyList", new JArray(keys) },
+            { "visualInfo", resultVisual["visualInfo"] },
+            { "useVectorRetrieval", true },
+            { "vectorInfo", resultVector["vectorInfo"] },
+            { "mllmPredictInfo", resultMllm["mllmPredictInfo"] }
+        };
+
+        var respChat = await httpClient.PostAsync($"{API_BASE_URL}/chatocr-chat",
+            new StringContent(payloadChat.ToString(), Encoding.UTF8, "application/json"));
+
+        if (!respChat.IsSuccessStatusCode)
+        {
+            Console.Error.WriteLine($"Request to chatocr-chat failed: {respChat.StatusCode}");
+            Console.Error.WriteLine(await respChat.Content.ReadAsStringAsync());
+            return;
+        }
+
+        JObject resultChat = JObject.Parse(await respChat.Content.ReadAsStringAsync())["result"] as JObject;
+        Console.WriteLine("Final result:");
+        Console.WriteLine(resultChat["chatResult"]);
+    }
+}
+</code></pre></details>
+
+<details><summary>Node.js</summary>
+
+<pre><code class="language-js">const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+
+const API_BASE_URL = 'http://localhost:8080';
+const imagePath = './demo.jpg';
+const keys = ['合格证编号'];
+
+function encodeImageToBase64(filePath) {
+  const bitmap = fs.readFileSync(filePath);
+  return Buffer.from(bitmap).toString('base64');
+}
+
+(async () => {
+  try {
+    const imageData = encodeImageToBase64(imagePath);
+
+    const respVisual = await axios.post(`${API_BASE_URL}/chatocr-visual`, {
+      file: imageData,
+      fileType: 1
+    });
+
+    const resultVisual = respVisual.data.result;
+    resultVisual.layoutParsingResults.forEach((res, i) => {
+      console.log(`\n[${i}] prunedResult:\n`, res.prunedResult);
+      const outputImages = res.outputImages || {};
+      for (const [imgName, base64Img] of Object.entries(outputImages)) {
+        const fileName = `${imgName}_${i}.jpg`;
+        fs.writeFileSync(fileName, Buffer.from(base64Img, 'base64'));
+        console.log(`Output image saved at ${fileName}`);
+      }
+    });
+
+    const respVector = await axios.post(`${API_BASE_URL}/chatocr-vector`, {
+      visualInfo: resultVisual.visualInfo
+    });
+    const resultVector = respVector.data.result;
+
+    const respMllm = await axios.post(`${API_BASE_URL}/chatocr-mllm`, {
+      image: imageData,
+      keyList: keys
+    });
+    const resultMllm = respMllm.data.result;
+
+    const respChat = await axios.post(`${API_BASE_URL}/chatocr-chat`, {
+      keyList: keys,
+      visualInfo: resultVisual.visualInfo,
+      useVectorRetrieval: true,
+      vectorInfo: resultVector.vectorInfo,
+      mllmPredictInfo: resultMllm.mllmPredictInfo
+    });
+
+    const resultChat = respChat.data.result;
+    console.log('\nFinal result:\n', resultChat.chatResult);
+
+  } catch (error) {
+    if (error.response) {
+      console.error(`❌ Request failed: ${error.response.status}`);
+      console.error(error.response.data);
+    } else {
+      console.error('❌ Error occurred:', error.message);
+    }
+  }
+})();
+</code></pre></details>
+
+<details><summary>PHP</summary>
+
+<pre><code class="language-php">&lt;?php
+
+$API_BASE_URL = "http://localhost:8080";
+$image_path = "./demo.jpg";
+$keys = ["合格证编号"];
+
+$image_data = base64_encode(file_get_contents($image_path));
+
+$payload_visual = [
+    "file" => $image_data,
+    "fileType" => 1
+];
+$response_visual_raw = send_post_raw("$API_BASE_URL/chatocr-visual", $payload_visual);
+$response_visual = json_decode($response_visual_raw, true);
+if (!isset($response_visual["result"])) {
+    echo "chatocr-visual request error\n";
+    print_r($response_visual);
+    exit(1);
+}
+$result_visual_raw = json_decode($response_visual_raw, false)->result;
+$result_visual_arr = $response_visual["result"];
+
+foreach ($result_visual_arr["layoutParsingResults"] as $i => $res) {
+    echo "[$i] prunedResult:\n";
+    print_r($res["prunedResult"]);
+    if (!empty($res["outputImages"])) {
+        foreach ($res["outputImages"] as $img_name => $base64_img) {
+            $img_path = "{$img_name}_{$i}.jpg";
+            file_put_contents($img_path, base64_decode($base64_img));
+            echo "Output image saved at $img_path\n";
+        }
+    }
+}
+
+$payload_vector = [
+    "visualInfo" => $result_visual_raw->visualInfo
+];
+$response_vector_raw = send_post_raw("$API_BASE_URL/chatocr-vector", $payload_vector);
+$response_vector = json_decode($response_vector_raw, true);
+if (!isset($response_vector["result"])) {
+    echo "chatocr-vector request error\n";
+    print_r($response_vector);
+    exit(1);
+}
+$result_vector_raw = json_decode($response_vector_raw, false)->result;
+
+$payload_mllm = [
+    "image" => $image_data,
+    "keyList" => $keys
+];
+$response_mllm_raw = send_post_raw("$API_BASE_URL/chatocr-mllm", $payload_mllm);
+$response_mllm = json_decode($response_mllm_raw, true);
+if (!isset($response_mllm["result"])) {
+    echo "chatocr-mllm request error\n";
+    print_r($response_mllm);
+    exit(1);
+}
+$result_mllm_raw = json_decode($response_mllm_raw, false)->result;
+
+$payload_chat = [
+    "keyList" => $keys,
+    "visualInfo" => $result_visual_raw->visualInfo,
+    "useVectorRetrieval" => true,
+    "vectorInfo" => $result_vector_raw->vectorInfo,
+    "mllmPredictInfo" => $result_mllm_raw->mllmPredictInfo
+];
+$response_chat_raw = send_post_raw("$API_BASE_URL/chatocr-chat", $payload_chat);
+$response_chat = json_decode($response_chat_raw, true);
+if (!isset($response_chat["result"])) {
+    echo "chatocr-chat request error\n";
+    print_r($response_chat);
+    exit(1);
+}
+
+echo "Final result:\n";
+echo json_encode($response_chat["result"]["chatResult"], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n";
+
+
+function send_post_raw($url, $data) {
+    $json_str = json_encode($data, JSON_UNESCAPED_UNICODE);
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_str);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    if ($response === false) {
+        echo "cURL error: " . curl_error($ch) . "\n";
+    }
+    curl_close($ch);
+    return $response;
+}
+?&gt;
+</code></pre></details>
 </details>
 <br/>
 
-📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
+📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/on_device_deployment.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发

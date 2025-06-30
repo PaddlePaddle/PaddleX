@@ -15,44 +15,77 @@ Time series forecasting aims to predict the possible values or states at a futur
 <th>Model Name</th><th>Model Download Link</th>
 <th>mse</th>
 <th>mae</th>
-<th>Model Size (M)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduce</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>DLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
+<td>DLinear</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.382</td>
 <td>0.394</td>
-<td>76k</td>
+<td>0.34 / 0.12</td>
+<td>0.64 / 0.06</td>
+<td>0.076</td>
 <td>Simple structure, high efficiency and easy-to-use time series prediction model</td>
 </tr>
+<td>NLinear</td>
+<td>0.386</td>
+<td>0.392</td>
+<td>0.27 / 0.10</td>
+<td>0.49 / 0.08</td>
+<td>0.04</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
-<td>Nonstationary</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
+<td>Nonstationary</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
 <td>0.600</td>
 <td>0.515</td>
-<td>60.3M</td>
+<td>3.92 / 2.59</td>
+<td>18.09 / 13.36</td>
+<td>60.3</td>
 <td>Based on the transformer structure, targeted optimization of long-term time series prediction models for non-stationary time series</td>
 </tr>
 <tr>
-<td>PatchTST</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
-<td>0.385</td>
-<td>0.397</td>
-<td>2.2M</td>
+<td>PatchTST</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
+<td>0.379</td>
+<td>0.391</td>
+<td>1.81 / 0.45</td>
+<td>5.79 / 0.77</td>
+<td>2.2</td>
 <td>High-precision long-term time series prediction model that takes into account both local patterns and global dependencies</td>
 </tr>
 <tr>
-<td>TiDE</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
-<td>0.405</td>
-<td>0.412</td>
-<td>34.9M</td>
+<td>RLinear</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
+<td>0.385</td>
+<td>0.392</td>
+<td>0.39 / 0.18</td>
+<td>0.82 / 0.08</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td>TiDE</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
+<td>0.407</td>
+<td>0.414</td>
+<td>- / -</td>
+<td>4.54 / 1.09</td>
+<td>34.9</td>
 <td>High-precision model suitable for handling multivariate, long-term time series prediction problems</td>
 </tr>
 <tr>
-<td>TimesNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
-<td>0.417</td>
-<td>0.431</td>
-<td>5.2M</td>
+<td>TimesNet</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
+<td>0.416</td>
+<td>0.429</td>
+<td>15.19 / 13.77</td>
+<td>23.14 / 12.42</td>
+<td>5.2</td>
 <td>Through multi-period analysis, TimesNet is a highly adaptable high-precision time series analysis model</td>
 </tr>
 </tbody>
@@ -68,7 +101,7 @@ Time series forecasting aims to predict the possible values or states at a futur
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

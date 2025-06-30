@@ -18,7 +18,7 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 
 ```bash
 # Only install the required dependencies (optional dependencies can be installed later as needed)
-pip install paddlex==3.0.1
+pip install paddlex
 ```
 
 You can install the optional dependencies as needed using the following method (For more details, please refer to [2.3 Selective Installation of Dependencies](#23-selective-installation-of-dependencies)):
@@ -26,13 +26,13 @@ You can install the optional dependencies as needed using the following method (
 Install all dependencies required for PaddleX "basic features":
 
 ```bash
-pip install "paddlex[base]==3.0.1"
+pip install "paddlex[base]"
 ```
 
 Only install the dependencies required for a specific feature:
 
 ```bash
-pip install "paddlex[ocr]==3.0.1"
+pip install "paddlex[ocr]"
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -278,6 +278,7 @@ PaddleX currently provides the following dependency groups:
 | `speech` | Basic features of speech pipeline.s |
 | `ts` | Basic features of time series pipelines. |
 | `video` | Basic features of video pipelines. |
+| `trans` | Basic features of translation pipelines. |
 | `serving` | The serving feature. Installing this group is equivalent to installing the PaddleX serving plugin; the plugin can also be installed via the PaddleX CLI. |
 | `plugins` | All plugin-provided features that support installation via dependency groups. |
 | `all` | All basic features of PaddleX, as well as all plugin-provided features installable via dependency groups. |

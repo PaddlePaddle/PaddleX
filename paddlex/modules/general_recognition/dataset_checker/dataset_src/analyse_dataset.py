@@ -19,7 +19,7 @@ import numpy as np
 
 from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
-from .....utils.fonts import PINGFANG_FONT_FILE_PATH
+from .....utils.fonts import PINGFANG_FONT
 
 if is_dep_available("matplotlib"):
     import matplotlib.pyplot as plt
@@ -52,7 +52,7 @@ def deep_analyse(dataset_path, output, dataset_type="ShiTuRec"):
     if os_system == "windows":
         plt.rcParams["font.sans-serif"] = "FangSong"
     else:
-        font = font_manager.FontProperties(fname=PINGFANG_FONT_FILE_PATH, size=10)
+        font = font_manager.FontProperties(fname=PINGFANG_FONT.path, size=10)
 
     x = np.arange(len(categories))  # 标签位置
     width = 0.35  # 每个条形的宽度

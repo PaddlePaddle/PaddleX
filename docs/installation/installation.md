@@ -20,7 +20,7 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 
 ```bash
 # 仅安装必须依赖（可以在之后按需安装可选依赖）
-pip install paddlex==3.0.0
+pip install paddlex
 ```
 
 通过如下方式可以安装所需的可选依赖（更多说明请参考 [2.3 选择性安装依赖](#23-选择性安装依赖)）：
@@ -28,12 +28,12 @@ pip install paddlex==3.0.0
 安装 PaddleX “基础功能”需要的全部依赖：
 
 ```bash
-pip install "paddlex[base]==3.0.1"
+pip install "paddlex[base]"
 ```
 
 仅安装某项功能所需依赖：
 ```bash
-pip install "paddlex[ocr]==3.0.1"
+pip install "paddlex[ocr]"
 ```
 
 ### 1.2 插件安装模式
@@ -279,6 +279,7 @@ PaddleX 目前提供如下依赖组：
 | `speech` | 语音产线的基础功能。 |
 | `ts` | 时序产线的基础功能。 |
 | `video` | 视频产线的基础功能。 |
+| `trans` | 翻译产线的基础功能。 |
 | `serving` | 服务化部署功能。安装此依赖组等效于安装 PaddleX 服务化部署插件；也可以通过 PaddleX CLI 安装服务化部署插件。 |
 | `plugins` | 所有支持通过指定依赖组安装的插件提供的功能。 |
 | `all` | PaddleX 的所有基础功能，以及所有支持通过指定依赖组安装的插件提供的功能。 |

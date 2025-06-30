@@ -21,16 +21,17 @@ Open vocabulary object detection is an advanced object detection technology that
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">Inference Model</a></td>
+<td>GroundingDINO-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">Inference Model</a></td>
 <td>49.4</td>
 <td>64.4</td>
-<td>253.72</td>
-<td>1807.4</td>
+<td>- / -</td>
+<td>- / -</td>
 <td>658.3</td>
 <td rowspan="3">An open vocabulary object detection model trained on O365, GoldG, and Cap4M datasets. The text encoder uses Bert, and the visual model part adopts DINO overall, with additional cross-modal fusion modules designed, achieving good results in the field of open vocabulary object detection.</td>
 </tr>
@@ -45,7 +46,7 @@ Open vocabulary object detection is an advanced object detection technology that
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
@@ -465,6 +466,26 @@ Below are the API references and multi-language service invocation examples for 
 <td><code>thresholds</code></td>
 <td><code>object</code> | <code>null</code></td>
 <td>The thresholds used by the model for prediction.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -912,7 +933,7 @@ print_r($result[&quot;detectedObjects&quot;]);
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
+📱 <b>On-Device Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
 ## 4. Custom Development

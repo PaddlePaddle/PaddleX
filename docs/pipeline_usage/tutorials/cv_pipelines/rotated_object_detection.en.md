@@ -20,16 +20,17 @@ Rotated object detection is a variant of the object detection module, specifical
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
+<td>PP-YOLOE-R-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 <td>78.14</td>
-<td>20.7039</td>
-<td>157.942</td>
-<td>211.0 M</td>
+<td>67.50 / 61.15</td>
+<td>414.79 / 414.79</td>
+<td>211.0</td>
 <td rowspan="1">PP-YOLOE-R is an efficient one-stage anchor-free rotated bounding box detection model. Based on PP-YOLOE, PP-YOLOE-R introduces several useful designs to improve detection accuracy with minimal additional parameters and computational cost.</td>
 </tr>
 </table>
@@ -44,7 +45,7 @@ Rotated object detection is a variant of the object detection module, specifical
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
@@ -445,15 +446,29 @@ Below are the API references and multi-language service call examples for basic 
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>detThreshold</code></td>
+<td><code>threshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>det_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>clsThreshold</code></td>
-<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>cls_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -914,7 +929,7 @@ print_r($result["detectedObjects"]);
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+📱 <b>On-Device Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 ## 4. Custom Development

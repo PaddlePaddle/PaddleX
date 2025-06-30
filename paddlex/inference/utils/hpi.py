@@ -17,6 +17,7 @@ import importlib.resources
 import importlib.util
 import json
 import platform
+from collections import defaultdict
 from functools import lru_cache
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
@@ -30,6 +31,7 @@ from ...utils.env import (
     get_paddle_version,
 )
 from ...utils.flags import USE_PIR_TRT
+from .misc import is_mkldnn_available
 from .model_paths import ModelPaths
 
 
@@ -130,13 +132,25 @@ def suggest_inference_backend_and_config(
     available_backends = []
     if "paddle" in model_paths:
         available_backends.append("paddle")
-    if is_built_with_openvino() and is_onnx_model_available:
+    if (
+        is_built_with_openvino()
+        and is_onnx_model_available
+        and hpi_config.device_type == "cpu"
+    ):
         available_backends.append("openvino")
-    if is_built_with_ort() and is_onnx_model_available:
+    if (
+        is_built_with_ort()
+        and is_onnx_model_available
+        and hpi_config.device_type in ("cpu", "gpu")
+    ):
         available_backends.append("onnxruntime")
-    if is_built_with_trt() and is_onnx_model_available:
+    if (
+        is_built_with_trt()
+        and is_onnx_model_available
+        and hpi_config.device_type == "gpu"
+    ):
         available_backends.append("tensorrt")
-    if is_built_with_om() and "om" in model_paths:
+    if is_built_with_om() and "om" in model_paths and hpi_config.device_type == "npu":
         available_backends.append("om")
 
     if not available_backends:
@@ -186,24 +200,24 @@ def suggest_inference_backend_and_config(
         hpi_config.pdx_model_name
     ].copy()
 
+    if not (is_mkldnn_available() and hpi_config.device_type == "cpu"):
+        for pb in supported_pseudo_backends[:]:
+            if pb.startswith("paddle_mkldnn"):
+                supported_pseudo_backends.remove(pb)
+
     # XXX
     if not (
         USE_PIR_TRT
         and importlib.util.find_spec("tensorrt")
         and ctypes.util.find_library("nvinfer")
+        and hpi_config.device_type == "gpu"
     ):
-        if (
-            "paddle_tensorrt" in supported_pseudo_backends
-            or "paddle_tensorrt_fp16" in supported_pseudo_backends
-        ):
-            supported_pseudo_backends.append("paddle")
-        if "paddle_tensorrt" in supported_pseudo_backends:
-            supported_pseudo_backends.remove("paddle_tensorrt")
-        if "paddle_tensorrt_fp16" in supported_pseudo_backends:
-            supported_pseudo_backends.remove("paddle_tensorrt_fp16")
+        for pb in supported_pseudo_backends[:]:
+            if pb.startswith("paddle_tensorrt"):
+                supported_pseudo_backends.remove(pb)
 
-    candidate_backends = []
-    backend_to_pseudo_backend = {}
+    supported_backends = []
+    backend_to_pseudo_backends = defaultdict(list)
     for pb in supported_pseudo_backends:
         if pb.startswith("paddle"):
             backend = "paddle"
@@ -213,26 +227,43 @@ def suggest_inference_backend_and_config(
             backend = pb
         if available_backends is not None and backend not in available_backends:
             continue
-        candidate_backends.append(backend)
-        backend_to_pseudo_backend[backend] = pb
+        supported_backends.append(backend)
+        backend_to_pseudo_backends[backend].append(pb)
 
-    if not candidate_backends:
+    if not supported_backends:
         return None, "No inference backend can be selected."
 
     if hpi_config.backend is not None:
-        if hpi_config.backend not in candidate_backends:
+        if hpi_config.backend not in supported_backends:
             return (
                 None,
                 f"{repr(hpi_config.backend)} is not a supported inference backend.",
             )
         suggested_backend = hpi_config.backend
     else:
-        # The first backend is the preferred one.
-        suggested_backend = candidate_backends[0]
+        # Prefer the first one.
+        suggested_backend = supported_backends[0]
+
+    pseudo_backends = backend_to_pseudo_backends[suggested_backend]
+
+    if hpi_config.backend_config is not None:
+        requested_base_pseudo_backend = None
+        if suggested_backend == "paddle":
+            if "run_mode" in hpi_config.backend_config:
+                if hpi_config.backend_config["run_mode"].startswith("mkldnn"):
+                    requested_base_pseudo_backend = "paddle_mkldnn"
+                elif hpi_config.backend_config["run_mode"].startswith("trt"):
+                    requested_base_pseudo_backend = "paddle_tensorrt"
+        if requested_base_pseudo_backend:
+            for pb in pseudo_backends:
+                if pb.startswith(requested_base_pseudo_backend):
+                    break
+            else:
+                return None, "Unsupported backend configuration."
+    pseudo_backend = pseudo_backends[0]
 
     suggested_backend_config = {}
     if suggested_backend == "paddle":
-        pseudo_backend = backend_to_pseudo_backend["paddle"]
         assert pseudo_backend in (
             "paddle",
             "paddle_fp16",
@@ -240,7 +271,9 @@ def suggest_inference_backend_and_config(
             "paddle_tensorrt",
             "paddle_tensorrt_fp16",
         ), pseudo_backend
-        if pseudo_backend == "paddle_fp16":
+        if pseudo_backend == "paddle":
+            suggested_backend_config.update({"run_mode": "paddle"})
+        elif pseudo_backend == "paddle_fp16":
             suggested_backend_config.update({"run_mode": "paddle_fp16"})
         elif pseudo_backend == "paddle_mkldnn":
             suggested_backend_config.update({"run_mode": "mkldnn"})
@@ -250,7 +283,6 @@ def suggest_inference_backend_and_config(
             # TODO: Check if the target device supports FP16.
             suggested_backend_config.update({"run_mode": "trt_fp16"})
     elif suggested_backend == "tensorrt":
-        pseudo_backend = backend_to_pseudo_backend["tensorrt"]
         assert pseudo_backend in ("tensorrt", "tensorrt_fp16"), pseudo_backend
         if pseudo_backend == "tensorrt_fp16":
             suggested_backend_config.update({"precision": "fp16"})

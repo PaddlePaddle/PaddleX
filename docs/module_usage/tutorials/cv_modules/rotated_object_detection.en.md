@@ -14,16 +14,17 @@ Rotated object detection is a derivative of the object detection module, specifi
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
+<td>PP-YOLOE-R-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 <td>78.14</td>
-<td>20.7039</td>
-<td>157.942</td>
-<td>211.0 M</td>
+<td>67.50 / 61.15</td>
+<td>414.79 / 414.79</td>
+<td>211.0</td>
 <td rowspan="1">PP-YOLOE-R is an efficient single-stage Anchor-free rotated box detection model. Based on PP-YOLOE, PP-YOLOE-R introduces a series of useful designs to improve detection accuracy with minimal parameters and computational cost.</td>
 </tr>
 </table>
@@ -38,7 +39,7 @@ Rotated object detection is a derivative of the object detection module, specifi
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

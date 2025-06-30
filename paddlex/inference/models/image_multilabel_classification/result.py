@@ -18,7 +18,7 @@ import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 from ...utils.color_map import get_colormap
 
@@ -43,7 +43,7 @@ class MLClassResult(BaseCVResult):
         image_width, image_height = image.size
         font_size = int(image_width * 0.06)
 
-        font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size)
+        font = ImageFont.truetype(PINGFANG_FONT.path, font_size)
         text_lines = []
         row_width = 0
         row_height = 0

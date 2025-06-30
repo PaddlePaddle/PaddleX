@@ -41,41 +41,41 @@ PaddleX provides 4 end-to-end text detection models. For details, refer to the [
 <th>Model</th>
 <th>Detection Hmean (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>PP-OCRv4_server_det</td>
-<td>82.56</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>69.2</td>
+<td>127.82 / 98.87</td>
+<td>585.95 / 489.77</td>
 <td>109</td>
 <td>The server-side text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td>
-<td>77.35</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>63.8</td>
+<td>9.87 / 4.17</td>
+<td>56.60 / 20.79</td>
 <td>4.7</td>
 <td>The mobile text detection model of PP-OCRv4, with higher efficiency, suitable for deployment on edge devices</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_det</td>
-<td>78.68</td>
-<td>-</td>
-<td>-</td>
+<td>Accuracy comparable to PP-OCRv4_mobile_det</td>
+<td>9.90 / 3.60</td>
+<td>41.93 / 20.76</td>
 <td>2.1</td>
 <td>The mobile text detection model of PP-OCRv3, with higher efficiency, suitable for deployment on edge devices</td>
 </tr>
 <tr>
 <td>PP-OCRv3_server_det</td>
 <td>80.11</td>
-<td>-</td>
-<td>-</td>
+<td>119.50 / 75.00</td>
+<td>379.35 / 318.35</td>
 <td>102.1</td>
 <td>The server-side text detection model of PP-OCRv3, with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
@@ -377,6 +377,6 @@ For more parameters, please refer to the [General OCR Pipeline Usage Tutorial](.
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
-* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
+* On-Device Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../pipeline_deploy/on_device_deployment.en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.

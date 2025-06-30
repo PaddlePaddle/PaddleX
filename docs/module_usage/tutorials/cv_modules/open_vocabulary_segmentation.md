@@ -13,22 +13,24 @@ comments: true
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_box_infer.tar">推理模型</a></td>
-<td>144.9</td>
-<td>33920.7</td>
+<td>SAM-H_box</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_box_infer.tar">推理模型</a></td>
+<td>- / -</td>
+<td>- / -</td>
 <td>2433.7</td>
 <td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。其中SAM-H_box表示使用框作为分割提示输入，SAM会分割被框包裹主的主体；SAM-H_point表示使用点作为分割提示输入，SAM会分割点所在的主体。</td>
 </tr>
 <tr>
-<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_point_infer.tar">推理模型</a></td>
-<td>144.9</td>
-<td>33920.7</td>
+<td>SAM-H_point</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_point_infer.tar">推理模型</a></td>
+<td>- / -</td>
+<td>- / -</td>
 <td>2433.7</td>
 </tr>
 </table>
@@ -42,7 +44,7 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>其他环境：Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

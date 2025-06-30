@@ -34,6 +34,7 @@ class InferRequest(BaseModel):
     image: str
     prompt: List[List[float]]
     promptType: str
+    visualize: Optional[bool] = None
 
 
 class MaskInfo(BaseModel):

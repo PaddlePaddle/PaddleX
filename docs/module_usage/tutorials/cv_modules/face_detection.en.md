@@ -23,34 +23,38 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
+<td style="text-align: center;">BlazeFace</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">77.7/73.4/49.5</td>
-<td style="text-align: center;">60.34 / 54.76</td>
-<td style="text-align: center;">84.18 / 84.18</td>
+<td style="text-align: center;">50.90 / 45.74</td>
+<td style="text-align: center;">71.92 / 71.92</td>
 <td style="text-align: center;">0.447</td>
 <td style="text-align: center;">A lightweight and efficient face detection model</td>
 </tr>
 <tr>
-<td style="text-align: center;">BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
+<td style="text-align: center;">BlazeFace-FPN-SSH</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">83.2/80.5/60.5</td>
-<td style="text-align: center;">69.29 / 63.42</td>
-<td style="text-align: center;">86.96 / 86.96</td>
+<td style="text-align: center;">58.99 / 51.75</td>
+<td style="text-align: center;">87.39 / 87.39</td>
 <td style="text-align: center;">0.606</td>
 <td style="text-align: center;">An improved model of BlazeFace, incorporating FPN and SSH structures</td>
 </tr>
 <tr>
-<td style="text-align: center;">PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
+<td style="text-align: center;">PicoDet_LCNet_x2_5_face</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">93.7/90.7/68.1</td>
-<td style="text-align: center;">35.37 / 12.88</td>
-<td style="text-align: center;">126.24 / 126.24</td>
+<td style="text-align: center;">33.91 / 26.53</td>
+<td style="text-align: center;">153.56 / 79.21</td>
 <td style="text-align: center;">28.9</td>
 <td style="text-align: center;">Face Detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
-<td style="text-align: center;">PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
+<td style="text-align: center;">PP-YOLOE_plus-S_face</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">93.9/91.8/79.8</td>
-<td style="text-align: center;">22.54 / 8.33</td>
-<td style="text-align: center;">138.67 / 138.67</td>
+<td style="text-align: center;">21.28 / 11.09</td>
+<td style="text-align: center;">137.26 / 72.09</td>
 <td style="text-align: center;">26.5</td>
 <td style="text-align: center;">Face Detection model based on PP-YOLOE_plus-S</td>
 </tr>
@@ -67,7 +71,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

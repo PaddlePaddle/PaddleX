@@ -46,33 +46,36 @@ PaddleX provides 3 high-precision and high-efficiency end-to-end small object de
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
 <td>31.9</td>
 <td>52.1</td>
-<td>57.1</td>
-<td>1007.0</td>
+<td>100.02 / 48.33</td>
+<td>271.29 / 151.20</td>
 <td>324.93</td>
 <td rowspan="3">PP-YOLOE_plus small object detection model trained based on VisDrone. VisDrone is a benchmark dataset for UAV vision data, which is used for training and evaluation of small object detection tasks due to its small targets and certain challenges.</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
 <td>25.1</td>
 <td>42.8</td>
-<td>65.5</td>
-<td>324.4</td>
+<td>116.07 / 20.10</td>
+<td>176.44 / 40.21</td>
 <td>77.29</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus_SOD-largesize-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
 <td>42.7</td>
 <td>65.9</td>
-<td>458.5</td>
-<td>11172.7</td>
+<td>515.69 / 460.17</td>
+<td>2816.08 / 1736.00</td>
 <td>340.42</td>
 </tr>
 </table>
@@ -320,6 +323,6 @@ For more parameters, please refer to [Small Object Detection Pipeline Usage Tuto
 
 * High-performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smooth user experience. For this reason, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment processes, please refer to [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Service deployment: Service deployment is a common deployment form in actual production environments. By encapsulating inference functions into services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service deployment of the pipeline at a low cost. For detailed service deployment processes, please refer to [PaddleX Service Deployment Guide](../pipeline_deploy/serving.en.md).
-* Edge deployment: Edge deployment is a way of placing computing and data processing functions on user devices themselves, where devices can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
+* Edge deployment: Edge deployment is a way of placing computing and data processing functions on user devices themselves, where devices can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to [PaddleX On-Device Deployment Guide](../pipeline_deploy/on_device_deployment.en.md).
 
 You can choose an appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.

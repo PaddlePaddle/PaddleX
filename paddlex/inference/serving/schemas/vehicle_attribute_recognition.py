@@ -35,6 +35,7 @@ INFER_ENDPOINT: Final[str] = "/vehicle-attribute-recognition"
 class InferRequest(BaseModel):
     image: str
     detThreshold: Optional[float] = None
+    visualize: Optional[bool] = None
     clsThreshold: Optional[
         Union[float, Dict[Union[Literal["default"], int], float], List[float]]
     ] = None

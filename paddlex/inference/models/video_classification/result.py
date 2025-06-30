@@ -17,7 +17,7 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
@@ -47,7 +47,7 @@ class TopkVideoResult(BaseVideoResult):
             max_font_size = int(image_size[0] * 0.05)
             for font_size in range(max_font_size, min_font_size - 1, -1):
                 font = ImageFont.truetype(
-                    PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8"
+                    PINGFANG_FONT.path, font_size, encoding="utf-8"
                 )
                 if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
                     text_width_tmp, text_height_tmp = draw.textsize(label_str, font)
@@ -57,7 +57,7 @@ class TopkVideoResult(BaseVideoResult):
                 if text_width_tmp <= image_size[0]:
                     break
                 else:
-                    font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, min_font_size)
+                    font = ImageFont.truetype(PINGFANG_FONT.path, min_font_size)
             color_list = get_colormap(rgb=True)
             color = tuple(color_list[0])
             font_color = tuple(self._get_font_colormap(3))

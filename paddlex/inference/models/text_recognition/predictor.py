@@ -13,6 +13,17 @@
 # limitations under the License.
 
 from ....modules.text_recognition.model_list import MODELS
+from ....utils.fonts import (
+    ARABIC_FONT,
+    CYRILLIC_FONT,
+    DEVANAGARI_FONT,
+    KANNADA_FONT,
+    KOREAN_FONT,
+    LATIN_FONT,
+    SIMFANG_FONT,
+    TAMIL_FONT,
+    TELUGU_FONT,
+)
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -31,6 +42,7 @@ class TextRecPredictor(BasePredictor):
     def __init__(self, *args, input_shape=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.input_shape = input_shape
+        self.vis_font = self.get_vis_font()
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -68,6 +80,7 @@ class TextRecPredictor(BasePredictor):
             "input_img": batch_raw_imgs,
             "rec_text": texts,
             "rec_score": scores,
+            "vis_font": [self.vis_font] * len(batch_raw_imgs),
         }
 
     @register("DecodeImage")
@@ -76,7 +89,7 @@ class TextRecPredictor(BasePredictor):
         return "Read", ReadImage(format=img_mode)
 
     @register("RecResizeImg")
-    def build_resize(self, image_shape):
+    def build_resize(self, image_shape, **kwargs):
         return "ReisizeNorm", OCRReisizeNormImg(
             rec_image_shape=image_shape, input_shape=self.input_shape
         )
@@ -96,3 +109,40 @@ class TextRecPredictor(BasePredictor):
     @register("KeepKeys")
     def foo(self, *args, **kwargs):
         return None, None
+
+    def get_vis_font(self):
+        if self.model_name.startswith("PP-OCR"):
+            return SIMFANG_FONT
+
+        if self.model_name in (
+            "latin_PP-OCRv3_mobile_rec",
+            "latin_PP-OCRv5_mobile_rec",
+        ):
+            return LATIN_FONT
+
+        if self.model_name in (
+            "cyrillic_PP-OCRv3_mobile_rec",
+            "eslav_PP-OCRv5_mobile_rec",
+        ):
+            return CYRILLIC_FONT
+
+        if self.model_name in (
+            "korean_PP-OCRv3_mobile_rec",
+            "korean_PP-OCRv5_mobile_rec",
+        ):
+            return KOREAN_FONT
+
+        if self.model_name == "arabic_PP-OCRv3_mobile_rec":
+            return ARABIC_FONT
+
+        if self.model_name == "ka_PP-OCRv3_mobile_rec":
+            return KANNADA_FONT
+
+        if self.model_name == "te_PP-OCRv3_mobile_rec":
+            return TELUGU_FONT
+
+        if self.model_name == "ta_PP-OCRv3_mobile_rec":
+            return TAMIL_FONT
+
+        if self.model_name == "devanagari_PP-OCRv3_mobile_rec":
+            return DEVANAGARI_FONT

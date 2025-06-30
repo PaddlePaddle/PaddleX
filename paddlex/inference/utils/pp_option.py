@@ -23,11 +23,32 @@ from ...utils.device import (
     parse_device,
     set_env_for_device_type,
 )
-from ...utils.flags import USE_PIR_TRT
+from ...utils.flags import (
+    DISABLE_MKLDNN_MODEL_BL,
+    DISABLE_TRT_MODEL_BL,
+    ENABLE_MKLDNN_BYDEFAULT,
+    USE_PIR_TRT,
+)
+from .misc import is_mkldnn_available
 from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
 from .trt_blocklist import TRT_BLOCKLIST
 from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
+
+
+def get_default_run_mode(model_name, device_type):
+    if not model_name:
+        return "paddle"
+    if device_type != "cpu":
+        return "paddle"
+    if (
+        ENABLE_MKLDNN_BYDEFAULT
+        and is_mkldnn_available()
+        and model_name not in MKLDNN_BLOCKLIST
+    ):
+        return "mkldnn"
+    else:
+        return "paddle"
 
 
 class PaddlePredictorOption(object):
@@ -48,6 +69,7 @@ class PaddlePredictorOption(object):
 
     def __init__(self, model_name=None, **kwargs):
         super().__init__()
+        self._is_default_run_mode = True
         self._model_name = model_name
         self._cfg = {}
         self._init_option(**kwargs)
@@ -85,6 +107,10 @@ class PaddlePredictorOption(object):
                 raise Exception(
                     f"{k} is not supported to set! The supported option is: {self._get_settable_attributes()}"
                 )
+
+        if "run_mode" in self._cfg:
+            self._is_default_run_mode = False
+
         for k, v in self._get_default_config().items():
             self._cfg.setdefault(k, v)
 
@@ -101,12 +127,16 @@ class PaddlePredictorOption(object):
 
     def _get_default_config(self):
         """get default config"""
-        device_type, device_ids = parse_device(get_default_device())
+        if self.device_type is None:
+            device_type, device_ids = parse_device(get_default_device())
+            device_id = None if device_ids is None else device_ids[0]
+        else:
+            device_type, device_id = self.device_type, self.device_id
 
         default_config = {
-            "run_mode": "paddle",
+            "run_mode": get_default_run_mode(self.model_name, device_type),
             "device_type": device_type,
-            "device_id": None if device_ids is None else device_ids[0],
+            "device_id": device_id,
             "cpu_threads": 8,
             "delete_pass": [],
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
@@ -127,9 +157,15 @@ class PaddlePredictorOption(object):
         self._cfg[k] = v
         self.changed = True
 
+    def reset_run_mode_by_default(self, model_name=None, device_type=None):
+        if self._is_default_run_mode:
+            model_name = model_name or self.model_name
+            device_type = device_type or self.device_type
+            self._update("run_mode", get_default_run_mode(model_name, device_type))
+
     @property
     def run_mode(self):
-        return self._cfg["run_mode"]
+        return self._cfg.get("run_mode")
 
     @run_mode.setter
     def run_mode(self, run_mode: str):
@@ -140,25 +176,40 @@ class PaddlePredictorOption(object):
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
 
+        if run_mode.startswith("mkldnn") and not is_mkldnn_available():
+            logging.warning("MKL-DNN is not available. Using `paddle` instead.")
+            run_mode = "paddle"
+
+        # TODO: Check if trt is available
+
         if self._model_name is not None:
             # TRT Blocklist
-            if run_mode.startswith("trt") and self._model_name in TRT_BLOCKLIST:
+            if (
+                not DISABLE_TRT_MODEL_BL
+                and run_mode.startswith("trt")
+                and self._model_name in TRT_BLOCKLIST
+            ):
                 logging.warning(
                     f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
                 )
                 run_mode = "paddle"
             # MKLDNN Blocklist
-            elif run_mode.startswith("mkldnn") and self._model_name in MKLDNN_BLOCKLIST:
+            elif (
+                not DISABLE_MKLDNN_MODEL_BL
+                and run_mode.startswith("mkldnn")
+                and self._model_name in MKLDNN_BLOCKLIST
+            ):
                 logging.warning(
                     f"The model({self._model_name}) is not supported to run in MKLDNN mode! Using `paddle` instead!"
                 )
                 run_mode = "paddle"
 
+        self._is_default_run_mode = False
         self._update("run_mode", run_mode)
 
     @property
     def device_type(self):
-        return self._cfg["device_type"]
+        return self._cfg.get("device_type")
 
     @device_type.setter
     def device_type(self, device_type):
@@ -176,7 +227,7 @@ class PaddlePredictorOption(object):
 
     @property
     def device_id(self):
-        return self._cfg["device_id"]
+        return self._cfg.get("device_id")
 
     @device_id.setter
     def device_id(self, device_id):
@@ -184,7 +235,7 @@ class PaddlePredictorOption(object):
 
     @property
     def cpu_threads(self):
-        return self._cfg["cpu_threads"]
+        return self._cfg.get("cpu_threads")
 
     @cpu_threads.setter
     def cpu_threads(self, cpu_threads):
@@ -195,7 +246,7 @@ class PaddlePredictorOption(object):
 
     @property
     def delete_pass(self):
-        return self._cfg["delete_pass"]
+        return self._cfg.get("delete_pass")
 
     @delete_pass.setter
     def delete_pass(self, delete_pass):
@@ -203,7 +254,7 @@ class PaddlePredictorOption(object):
 
     @property
     def enable_new_ir(self):
-        return self._cfg["enable_new_ir"]
+        return self._cfg.get("enable_new_ir")
 
     @enable_new_ir.setter
     def enable_new_ir(self, enable_new_ir: bool):
@@ -212,7 +263,7 @@ class PaddlePredictorOption(object):
 
     @property
     def enable_cinn(self):
-        return self._cfg["enable_cinn"]
+        return self._cfg.get("enable_cinn")
 
     @enable_cinn.setter
     def enable_cinn(self, enable_cinn: bool):
@@ -221,7 +272,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_cfg_setting(self):
-        return self._cfg["trt_cfg_setting"]
+        return self._cfg.get("trt_cfg_setting")
 
     @trt_cfg_setting.setter
     def trt_cfg_setting(self, config: Dict):
@@ -233,7 +284,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_use_dynamic_shapes(self):
-        return self._cfg["trt_use_dynamic_shapes"]
+        return self._cfg.get("trt_use_dynamic_shapes")
 
     @trt_use_dynamic_shapes.setter
     def trt_use_dynamic_shapes(self, trt_use_dynamic_shapes):
@@ -241,7 +292,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_collect_shape_range_info(self):
-        return self._cfg["trt_collect_shape_range_info"]
+        return self._cfg.get("trt_collect_shape_range_info")
 
     @trt_collect_shape_range_info.setter
     def trt_collect_shape_range_info(self, trt_collect_shape_range_info):
@@ -249,7 +300,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_discard_cached_shape_range_info(self):
-        return self._cfg["trt_discard_cached_shape_range_info"]
+        return self._cfg.get("trt_discard_cached_shape_range_info")
 
     @trt_discard_cached_shape_range_info.setter
     def trt_discard_cached_shape_range_info(self, trt_discard_cached_shape_range_info):
@@ -259,7 +310,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_dynamic_shapes(self):
-        return self._cfg["trt_dynamic_shapes"]
+        return self._cfg.get("trt_dynamic_shapes")
 
     @trt_dynamic_shapes.setter
     def trt_dynamic_shapes(self, trt_dynamic_shapes: Dict[str, List[List[int]]]):
@@ -270,7 +321,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_dynamic_shape_input_data(self):
-        return self._cfg["trt_dynamic_shape_input_data"]
+        return self._cfg.get("trt_dynamic_shape_input_data")
 
     @trt_dynamic_shape_input_data.setter
     def trt_dynamic_shape_input_data(
@@ -280,7 +331,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_shape_range_info_path(self):
-        return self._cfg["trt_shape_range_info_path"]
+        return self._cfg.get("trt_shape_range_info_path")
 
     @trt_shape_range_info_path.setter
     def trt_shape_range_info_path(self, trt_shape_range_info_path: str):
@@ -289,7 +340,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_allow_rebuild_at_runtime(self):
-        return self._cfg["trt_allow_rebuild_at_runtime"]
+        return self._cfg.get("trt_allow_rebuild_at_runtime")
 
     @trt_allow_rebuild_at_runtime.setter
     def trt_allow_rebuild_at_runtime(self, trt_allow_rebuild_at_runtime):
@@ -297,7 +348,7 @@ class PaddlePredictorOption(object):
 
     @property
     def mkldnn_cache_capacity(self):
-        return self._cfg["mkldnn_cache_capacity"]
+        return self._cfg.get("mkldnn_cache_capacity")
 
     @mkldnn_cache_capacity.setter
     def mkldnn_cache_capacity(self, capacity: int):

@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# PaddleX Edge Deployment Demo Usage Guide
+# PaddleX On-Device Deployment Demo Usage Guide
 
-- [PaddleX Edge Deployment Demo Usage Guide](#paddlex-edge-deployment-demo-usage-guide)
+- [PaddleX On-Device Deployment Demo Usage Guide](#paddlex-on-device-deployment-demo-usage-guide)
   - [Installation Process and Usage](#installation-process-and-usage)
     - [Environment Preparation](#environment-preparation)
     - [Material Preparation](#material-preparation)
@@ -13,7 +13,7 @@ comments: true
   - [Feedback Section](#feedback-section)
 
 This guide mainly introduces the operation method of the PaddleX edge deployment demo on the Android shell.
-This guide applies to 8 models across 6 modules:
+This guide applies to 13 models across 7 modules:
 
 <table>
   <tr>
@@ -57,14 +57,40 @@ This guide applies to 8 models across 6 modules:
     <td>✅</td>
   </tr>
   <tr>
-    <td>Text Detection</td>
+    <td>Text Line Orientation Classification</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td rowspan="3">Text Detection</td>
+    <td>PP-OCRv5_mobile_det</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>PP-OCRv4_mobile_det</td>
     <td>✅</td>
     <td></td>
   </tr>
   <tr>
-    <td>Text Recognition</td>
+    <td>PP-OCRv3_mobile_det</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="3">Text Recognition</td>
+    <td>PP-OCRv5_mobile_rec</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>PP-OCRv4_mobile_rec</td>
+    <td>✅</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>PP-OCRv3_mobile_rec</td>
     <td>✅</td>
     <td></td>
   </tr>
@@ -290,17 +316,38 @@ This section describes the deployment steps applicable to the demos listed in th
     <td>MobileNetV3_small_x1_0</br>MobileNetV3_small_x1_0_gpu</td>
   </tr>
   <tr>
-    <td rowspan="2">General OCR</td>
-    <td rowspan="2">ocr</td>
+    <td rowspan="3">General OCR</td>
+    <td rowspan="3">ocr</td>
     <td>Text Detection</td>
-    <td rowspan="2">ppocr_demo</td>
-    <td>PP-OCRv4_mobile_det</td>
-    <td>PP-OCRv4_mobile_det</td>
+    <td rowspan="3">ppocr_demo</td>
+    <td>
+      PP-OCRv5_mobile_det</br>
+      PP-OCRv4_mobile_det</br>
+      PP-OCRv3_mobile_det
+    </td>
+    <td>
+      PP-OCRv5_mobile_det</br>
+      PP-OCRv4_mobile_det</br>
+      PP-OCRv3_mobile_det
+    </td>
+  </tr>
+  <tr>
+    <td>Text Line Orientation Classification</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
+    <td>PP-LCNet_x0_25_textline_ori</td>
   </tr>
   <tr>
     <td>Text Recognition</td>
-    <td>PP-OCRv4_mobile_rec</td>
-    <td>PP-OCRv4_mobile_rec</td>
+    <td>
+      PP-OCRv5_mobile_rec</br>
+      PP-OCRv4_mobile_rec</br>
+      PP-OCRv3_mobile_rec
+    </td>
+    <td>
+      PP-OCRv5_mobile_rec</br>
+      PP-OCRv4_mobile_rec</br>
+      PP-OCRv3_mobile_rec
+    </td>
   </tr>
 </table>
 

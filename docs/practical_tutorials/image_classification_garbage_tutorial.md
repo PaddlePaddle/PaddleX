@@ -58,9 +58,9 @@ PaddleX 提供了 80 个端到端的图像分类模型，具体可参考 [模型
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_224</td>
-<td>85.39</td>
-<td>12.03</td>
-<td>234.85</td>
+<td>85.36</td>
+<td>12.03 / 2.49</td>
+<td>60.86 / 42.69</td>
 <td>331</td>
 </tr>
 <tr>
@@ -73,15 +73,15 @@ PaddleX 提供了 80 个端到端的图像分类模型，具体可参考 [模型
 <tr>
 <td>SwinTransformer_base_patch4_window7_224</td>
 <td>83.37</td>
-<td>12.35</td>
-<td>-</td>
-<td>342</td>
+<td>13.04 / 10.77</td>
+<td>133.79 / 118.45</td>
+<td>340</td>
 </tr>
 <tr>
 <td>PP-HGNet_small</td>
 <td>81.51</td>
-<td>4.24</td>
-<td>108.21</td>
+<td>5.87 / 1.68</td>
+<td>25.58 / 18.50</td>
 <td>94</td>
 </tr>
 <tr>
@@ -94,22 +94,22 @@ PaddleX 提供了 80 个端到端的图像分类模型，具体可参考 [模型
 <tr>
 <td>ResNet50</td>
 <td>76.50</td>
-<td>3.12</td>
-<td>50.90</td>
+<td>6.25 / 1.17</td>
+<td>15.93 / 9.72</td>
 <td>98</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0</td>
 <td>71.32</td>
-<td>1.01</td>
-<td>3.39</td>
+<td>2.59 / 0.68</td>
+<td>3.18 / 1.19</td>
 <td>7</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td>
 <td>68.24</td>
-<td>1.09</td>
-<td>3.65</td>
+<td>4.23 / 0.78</td>
+<td>5.24 / 1.48</td>
 <td>12</td>
 </tr>
 </tbody>
@@ -417,6 +417,6 @@ for res in output:
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
 * 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
-* 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
+* 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/on_device_deployment.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

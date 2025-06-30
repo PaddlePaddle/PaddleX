@@ -368,6 +368,7 @@ class _OCRPipeline(BasePipeline):
                     "rec_texts": [],
                     "rec_scores": [],
                     "rec_polys": [],
+                    "vis_fonts": [],
                 }
                 for input_path, page_index, doc_preprocessor_res, dt_polys in zip(
                     batch_data.input_paths,
@@ -439,6 +440,7 @@ class _OCRPipeline(BasePipeline):
                         if rec_res["rec_score"] >= text_rec_score_thresh:
                             res["rec_texts"].append(rec_res["rec_text"])
                             res["rec_scores"].append(rec_res["rec_score"])
+                            res["vis_fonts"].append(rec_res["vis_font"])
                             res["rec_polys"].append(dt_polys[sno])
 
             for res in results:

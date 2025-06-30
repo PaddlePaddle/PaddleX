@@ -16,22 +16,22 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 <th>mAP 0.5:0.95</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-YOLOE-S_vehicle</td>
 <td>61.3</td>
-<td>9.79 / 3.48</td>
-<td>54.14 / 46.69</td>
+<td>10.54 / 6.69</td>
+<td>52.73 / 23.58</td>
 <td>28.79</td>
 <td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
 </tr>
 <tr>
 <td>PP-YOLOE-L_vehicle</td>
 <td>63.9</td>
-<td>32.84 / 9.03</td>
-<td>176.60 / 176.60</td>
+<td>30.30 / 26.27</td>
+<td>169.28 / 111.88</td>
 <td>196.02</td>
 </tr>
 </table>
@@ -46,7 +46,7 @@ Vehicle detection is a subtask of object detection, specifically referring to th
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

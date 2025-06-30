@@ -17,26 +17,28 @@ Face feature models typically take standardized face images processed through de
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
+<td>MobileFaceNet</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
-<td>3.16 / 0.48</td>
-<td>6.49 / 6.49</td>
+<td>3.31 / 0.73</td>
+<td>5.93 / 1.30</td>
 <td>4.1</td>
 <td>Face feature model trained on MobileFaceNet with MS1Mv3 dataset</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
+<td>ResNet50_face</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
-<td>5.68 / 1.09</td>
-<td>14.96 / 11.90</td>
+<td>6.12 / 3.11</td>
+<td>15.85 / 9.44</td>
 <td>87.2</td>
 <td>Face feature model trained on ResNet50 with MS1Mv3 dataset</td>
 </tr>
@@ -53,7 +55,7 @@ Face feature models typically take standardized face images processed through de
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

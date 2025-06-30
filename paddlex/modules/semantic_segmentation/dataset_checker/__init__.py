@@ -38,8 +38,18 @@ class SegDatasetChecker(BaseDatasetChecker):
             str: the root directory of dataset.
         """
         anno_dirs = list(Path(dataset_dir).glob("**/images"))
-        assert len(anno_dirs) == 1
-        dataset_dir = anno_dirs[0].parent.as_posix()
+        if len(anno_dirs) == 1:
+            dataset_dir = anno_dirs[0].parent.as_posix()
+        elif len(anno_dirs) == 0:
+            dataset_dir = Path(dataset_dir)
+        else:
+            raise ValueError(
+                f"Segmentation Dataset Format Error: We currently only support `PaddleX` and `Labelme` formats. "
+                f"For `PaddleX` format, your dataset root must contain exactly one `images` directory. "
+                f"For `Labelme` format, your dataset root must contain no `images` directories. "
+                f"However, your dataset root contains {len(anno_dirs)} `images` directories. "
+                f"Please adjust your dataset structure to comply with the supported formats."
+            )
         return dataset_dir
 
     def convert_dataset(self, src_dataset_dir: str) -> str:

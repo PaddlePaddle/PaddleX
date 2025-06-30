@@ -16,41 +16,45 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <th>precision</th>
 <th>recall</th>
 <th>f1_score</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">Training Model</a></td>
+<td>DLinear_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9898</td>
-<td>0.9396</td>
-<td>0.9640</td>
-<td>72.8K</td>
+<td>0.39 / 0.16</td>
+<td>0.69 / 0.08</td>
+<td>0.1</td>
 <td>DLinear_ad is a simple, efficient, and easy-to-use model for time-series anomaly detection.</td>
 </tr>
 <tr>
-<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Training Model</a></td>
+<td>Nonstationary_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9855</td>
-<td>0.8895</td>
-<td>0.9257</td>
-<td>1.5MB</td>
+<td>1.94 / 1.16</td>
+<td>5.31 / 1.66</td>
+<td>1.5</td>
 <td>Based on the transformer structure, this model is optimized for anomaly detection in non-stationary time series.</td>
 </tr>
 <tr>
-<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Training Model</a></td>
+<td>AutoEncoder_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9936</td>
-<td>0.8436</td>
-<td>0.9127</td>
-<td>32K</td>
+<td>0.24 / 0.13</td>
+<td>0.41 / 0.05</td>
+<td>0.052</td>
 <td>AutoEncoder_ad is a classic autoencoder-based model for efficient and easy-to-use time-series anomaly detection.</td>
 </tr>
 <tr>
-<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td>
+<td>PatchTST_ad</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9878</td>
-<td>0.9070</td>
-<td>0.9459</td>
-<td>164K</td>
+<td>2.10 / 0.55</td>
+<td>6.98 / 0.63</td>
+<td>0.164</td>
 <td>PatchTST is a high-precision time-series anomaly detection model that balances local patterns and global dependencies.</td>
 </tr>
 </tbody>
@@ -65,7 +69,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>

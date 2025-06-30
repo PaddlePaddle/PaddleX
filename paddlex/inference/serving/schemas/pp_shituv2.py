@@ -90,6 +90,7 @@ class InferRequest(BaseModel):
     recThreshold: Optional[float] = None
     hammingRadius: Optional[float] = None
     topk: Optional[int] = None
+    visualize: Optional[bool] = None
 
 
 class RecResult(BaseModel):

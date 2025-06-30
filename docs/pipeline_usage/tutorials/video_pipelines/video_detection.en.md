@@ -18,13 +18,14 @@ Video detection is a technology that identifies and locates specific objects or 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Frame-mAP(@ IoU 0.5)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
-<td>462.891M</td>
+<td>462.891</td>
 <td rowspan="1">
 YOWO is a single-stage network with two branches. One branch extracts spatial features of the keyframe (i.e., the current frame) through 2D-CNN, while the other branch captures spatiotemporal features of the clip composed of previous frames through 3D-CNN. To accurately aggregate these features, YOWO uses a channel fusion and attention mechanism, maximizing the utilization of inter-channel dependencies. Finally, the fused features are used for frame-level detection.
 </td>
@@ -523,7 +524,7 @@ print(result["frames"])
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on the user's device, allowing it to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+📱 <b>On-Device Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on the user's device, allowing it to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures on edge deployment, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.
 
 ## 4. Custom Development

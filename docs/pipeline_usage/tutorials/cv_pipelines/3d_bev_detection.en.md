@@ -25,7 +25,8 @@ Please note that the 3D multi-modal fusion detection pipeline currently does not
 <th>Description</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">Training Model</a></td>
+<td>BEVFusion</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">Training Model</a></td>
 <td>53.9</td>
 <td>60.9</td>
 <td rowspan="2">BEVFusion is a multi-modal fusion detection model from a BEV perspective. It uses two branches to process data from different modalities, obtaining features for LiDAR and camera in the BEV perspective. The camera branch uses the LSS bottom-up approach to explicitly generate image BEV features, while the LiDAR branch uses a classic point cloud detection network. Finally, the BEV features from both modalities are aligned and fused, applied to the detection head or segmentation head.
@@ -44,7 +45,7 @@ Please note that the 3D multi-modal fusion detection pipeline currently does not
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
               </li>
           </ul>
@@ -498,7 +499,7 @@ print(result["detectedObjects"])
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing functions on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
+📱 <b>On-Device Deployment</b>: Edge deployment is a method of placing computing and data processing functions on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.md).
 
 You can choose an appropriate deployment method for your model pipeline based on your needs, and then proceed with subsequent AI application integration.
 

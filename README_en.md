@@ -38,6 +38,15 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 📣 Recent Updates
 
 
+🔥🔥 **2025.6.28, PaddleX v3.1.0 Released**
+
+- **Key Models:**
+  - **Added PP-OCRv5 Multilingual Text Recognition Model**, supporting training and inference workflows for text recognition in 37 languages, including French, Spanish, Portuguese, Russian, Korean, and more. **Average precision increased by over 30%.**
+  - Upgraded **PP-Chart2Table model in PP-StructureV3**. Chart-to-table conversion capability further improved, with RMS-F1 on our internal evaluation set **increased by 9.36 percentage points (71.24% -> 80.60%)**.
+- **Key Pipelines:**
+  - Added **document translation pipeline PP-DocTranslation** based on PP-StructureV3 and ERNIE 4.5 Turbo. Supports translation of Markdown documents, various complex-layout PDF documents, and document images, with results saved as Markdown format documents.
+
+
 🔥🔥 **2025.5.20: PaddleX v3.0.0 Released**
 
 Core upgrades are as follows:
@@ -74,7 +83,7 @@ PaddleX is dedicated to achieving pipeline-level model training, inference, and 
 ## 📊 What can PaddleX do？
 
 
-All pipelines of PaddleX support **online experience** on [AI Studio]((https://aistudio.baidu.com/overview)) and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/high_performance_inference.html) / [serving](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/serving.html) / [edge deployment](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/edge_deploy.html) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/pipeline_develop_guide.html).
+All pipelines of PaddleX support **online experience** on [AI Studio]((https://aistudio.baidu.com/overview)) and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/high_performance_inference.html) / [serving](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/serving.html) / [edge deployment](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/on_device_deployment.html) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/pipeline_develop_guide.html).
 
 In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based GUI](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the pipeline requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Barrier"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
@@ -85,7 +94,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <th>Local Inference</th>
         <th>High-Performance Inference</th>
         <th>Serving</th>
-        <th>Edge Deployment</th>
+        <th>On-Device Deployment</th>
         <th>Custom Development</th>
         <th><a href="https://aistudio.baidu.com/pipeline/mine">Zero-Code Development On AI Studio</a></td>
     </tr>
@@ -572,7 +581,7 @@ python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/pac
 * **Installing PaddleX**
 
 ```bash
-pip install "paddlex[base]==3.0.0"
+pip install "paddlex[base]"
 ```
 
 > ❗For more installation methods, refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/en/installation/installation.html).
@@ -924,7 +933,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 
   * [🚀 PaddleX High-Performance Inference Guide](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/high_performance_inference.html)
   * [🖥️ PaddleX Serving Guide](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/serving.html)
-  * [📱 PaddleX Edge Deployment Guide](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/edge_deploy.html)
+  * [📱 PaddleX On-Device Deployment Guide](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/on_device_deployment.html)
   * [🌐 Installation and Usage of the Paddle2ONNX Plugin](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/paddle2onnx.html)
 
 </details>
