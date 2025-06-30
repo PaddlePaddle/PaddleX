@@ -36,12 +36,18 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
       <li><b>Performance Test Environment</b>
           <ul>
             <li><strong>Test Dataset：</strong>The above accuracy metrics are the average anomaly scores on the <b><a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a></b> validation set.</li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>
