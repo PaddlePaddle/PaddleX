@@ -72,7 +72,7 @@ class CustomOperatorPathFinder:
         return importlib.machinery.ModuleSpec(
             name=fullname,
             loader=CustomOperatorPathLoader(),
-            is_package=False,        
+            is_package=False,
         )
 
 
