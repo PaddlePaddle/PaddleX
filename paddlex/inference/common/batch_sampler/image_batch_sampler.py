@@ -110,9 +110,14 @@ class ImageBatchSampler(BaseBatchSampler):
                     if len(batch) == self.batch_size:
                         yield batch
                         batch = ImgBatch()
-                else:
+                elif Path(input).is_dir():
                     file_list = self._get_files_list(input)
                     yield from self.sample(file_list)
+                else:
+                    logging.error(
+                        f"Not supported input file type! Only PDF and image files ended with suffix `{', '.join(self.IMG_SUFFIX + self.PDF_SUFFIX)}` are supported! But recevied `{input}`."
+                    )
+                    yield batch
             else:
                 logging.warning(
                     f"Not supported input data type! Only `numpy.ndarray` and `str` are supported! So has been ignored: {input}."
