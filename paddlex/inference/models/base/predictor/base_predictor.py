@@ -237,7 +237,9 @@ class BasePredictor(
 
     def create_static_infer(self):
         if not self._use_hpip:
-            return PaddleInfer(self.model_dir, self.MODEL_FILE_PREFIX, self._pp_option)
+            return PaddleInfer(
+                self.model_name, self.model_dir, self.MODEL_FILE_PREFIX, self._pp_option
+            )
         else:
             return HPInfer(
                 self.model_dir,
@@ -334,14 +336,11 @@ class BasePredictor(
         else:
             device_info = None
         if pp_option is None:
-            pp_option = PaddlePredictorOption(model_name=self.model_name)
-        elif pp_option.model_name is None:
-            pp_option.model_name = self.model_name
-            pp_option.reset_run_mode_by_default(model_name=self.model_name)
+            pp_option = PaddlePredictorOption()
         if device_info:
             pp_option.device_type = device_info[0]
             pp_option.device_id = device_info[1]
-            pp_option.reset_run_mode_by_default(device_type=device_info[0])
+        pp_option.setdefault_by_model_name(model_name=self.model_name)
         hpi_info = self.get_hpi_info()
         if hpi_info is not None:
             hpi_info = hpi_info.model_dump(exclude_unset=True)
