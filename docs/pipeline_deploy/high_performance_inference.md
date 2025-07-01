@@ -303,11 +303,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>openvino</code></td>
-    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理使用的逻辑处理器数量。默认为 <code>8</code>。</td>
+    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理使用的逻辑处理器数量。默认为 <code>10</code>。</td>
   </tr>
   <tr>
     <td><code>onnxruntime</code></td>
-    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理时算子内部的并行计算线程数。默认为 <code>8</code>。</td>
+    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理时算子内部的并行计算线程数。默认为 <code>10</code>。</td>
   </tr>
   <tr>
     <td><code>tensorrt</code></td>

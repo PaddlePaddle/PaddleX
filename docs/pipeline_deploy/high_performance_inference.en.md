@@ -302,11 +302,11 @@ The available configuration items for `backend_config` vary for different backen
   </tr>
   <tr>
     <td><code>openvino</code></td>
-    <td><code>cpu_num_threads</code> (<code>int</code>): The number of logical processors used for CPU inference. The default is <code>8</code>.</td>
+    <td><code>cpu_num_threads</code> (<code>int</code>): The number of logical processors used for CPU inference. The default is <code>10</code>.</td>
   </tr>
   <tr>
     <td><code>onnxruntime</code></td>
-    <td><code>cpu_num_threads</code> (<code>int</code>): The number of parallel computation threads within the operator during CPU inference. The default is <code>8</code>.</td>
+    <td><code>cpu_num_threads</code> (<code>int</code>): The number of parallel computation threads within the operator during CPU inference. The default is <code>10</code>.</td>
   </tr>
   <tr>
     <td><code>tensorrt</code></td>
