@@ -61,11 +61,11 @@ InferenceBackend: TypeAlias = Literal[
 
 
 class OpenVINOConfig(BaseModel):
-    cpu_num_threads: int = 8
+    cpu_num_threads: int = 10
 
 
 class ONNXRuntimeConfig(BaseModel):
-    cpu_num_threads: int = 8
+    cpu_num_threads: int = 10
 
 
 class TensorRTConfig(BaseModel):
