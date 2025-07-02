@@ -176,8 +176,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             rules_str=request.rulesStr,
             few_shot_demo_text_content=request.fewShotDemoTextContent,
             few_shot_demo_key_value_list=request.fewShotDemoKeyValueList,
-            chat_bot_config=request.chatBotConfig,
+            glossary=request.glossary,
             llm_request_interval=request.llmRequestInterval,
+            chat_bot_config=request.chatBotConfig,
         )
 
         translation_results: List[Dict[str, Any]] = []

@@ -92,8 +92,9 @@ class TranslateRequest(BaseModel):
     rulesStr: Optional[str] = None
     fewShotDemoTextContent: Optional[str] = None
     fewShotDemoKeyValueList: Optional[str] = None
+    glossary: Optional[dict] = None
+    llmRequestInterval: float = 0.0
     chatBotConfig: Optional[dict] = None
-    sleepInterval: float = 0
 
 
 class TranslationResult(BaseModel):
