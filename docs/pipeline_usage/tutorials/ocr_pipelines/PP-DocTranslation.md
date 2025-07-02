@@ -1998,15 +1998,15 @@ for tgt_md_info in tgt_md_info_list:
 <td>否</td>
 </tr>
 <tr>
-<td><code>chatBotConfig</code></td>
-<td><code>object</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>translate</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
 <td><code>llmRequestInterval</code></td>
 <td><code>number</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>translate</code> 方法的 <code>llm_request_interval</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>translate</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

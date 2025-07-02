@@ -1397,7 +1397,7 @@ After executing the above code, you will obtain the parsed results of the origin
 <td>Time interval in seconds for sending requests to the large language model. This parameter can be used to prevent overly frequent calls to the large language model.</td>
 <td><code>float</code></td>
 <td>A floating-point number greater than or equal to 0</td>
-<td><code>0</code></td>
+<td><code>0.0</code></td>
 </tr>
 <tr>
 <td><code>chat_bot_config</code></td>
@@ -1938,15 +1938,15 @@ The following is the API reference for basic Serving and examples of multilingua
 <td>No</td>
 </tr>
 <tr>
-<td><code>chatBotConfig</code></td>
-<td><code>object</code>|<code>null</code></td>
-<td>Refer to the description of the <code>translate</code>method's<code>chat_bot_config</code>parameter in the pipeline object.</td>
-<td>No</td>
-</tr>
-<tr>
 <td><code>llmRequestInterval</code></td>
 <td><code>number</code>|<code>null</code></td>
 <td>Refer to the description of the <code>translate</code>method's<code>llm_request_interval</code>parameter in the pipeline object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>Refer to the description of the <code>translate</code>method's<code>chat_bot_config</code>parameter in the pipeline object.</td>
 <td>No</td>
 </tr>
 </tbody>
