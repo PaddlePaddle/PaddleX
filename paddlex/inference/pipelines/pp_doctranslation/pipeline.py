@@ -326,8 +326,8 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                     chunk = ""  # Clear the chunk
 
                 if block_type == "text":
-                    split_text_recursive(
-                        block_content, chunk_size, translate_func, translation_results
+                    translation_results.append(
+                        split_text_recursive(block_content, chunk_size, translate_func)
                     )
                 elif block_type == "text_with_html" or block_type == "html":
                     translate_html_block(
@@ -350,6 +350,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         rules_str: str = None,
         few_shot_demo_text_content: str = None,
         few_shot_demo_key_value_list: str = None,
+        glossary: Dict = None,
         llm_request_interval: float = 0.0,
         chat_bot_config: Dict = None,
         **kwargs,
@@ -366,6 +367,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             rules_str (str, optional): Rules or guidelines for the translation model to follow. Defaults to None.
             few_shot_demo_text_content (str, optional): Demo text content for the translation model. Defaults to None.
             few_shot_demo_key_value_list (str, optional): Demo text key-value list for the translation model. Defaults to None.
+            glossary (Dict, optional): A dictionary containing terms and their corresponding definitions. Defaults to None.
             llm_request_interval (float, optional): The interval in seconds between each request to the LLM. Defaults to 0.0.
             chat_bot_config (Dict, optional): Configuration for the chat bot used in the translation process. Defaults to None.
             **kwargs: Additional keyword arguments passed to the translation model.
@@ -395,6 +397,22 @@ class PP_DocTranslation_Pipeline(BasePipeline):
 
         if not isinstance(llm_request_interval, float):
             llm_request_interval = float(llm_request_interval)
+
+        assert isinstance(glossary, dict) or glossary is None, "glossary must be a dict"
+
+        glossary_str = ""
+        if glossary is not None:
+            for k, v in glossary.items():
+                if isinstance(v, list):
+                    v = "或".join(v)
+                glossary_str += f"{k}: {v}\n"
+
+        if glossary_str != "":
+            if few_shot_demo_key_value_list is None:
+                few_shot_demo_key_value_list = glossary_str
+            else:
+                few_shot_demo_key_value_list += "\n"
+                few_shot_demo_key_value_list += glossary_str
 
         def translate_func(text):
             """
