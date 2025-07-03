@@ -14,7 +14,6 @@
 
 import numpy as np
 
-from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import AudioBatchSampler
 
 from ..base import BasePredictor
@@ -34,7 +33,7 @@ class Fastspeech2Predictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.model = self._build()
+        self.infer = self.create_static_infer()
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
 
@@ -51,24 +50,6 @@ class Fastspeech2Predictor(BasePredictor):
         """
         return Fastspeech2Result
 
-    def _build(self):
-        """Build the model.
-
-        Returns:
-            Fastspeech2: An instance of Fastspeech2.
-        """
-        from .processors import get_predictor
-        model = get_predictor(
-            model_dir=str(self.model_dir),
-            model_file=self.config['Global']['model'] + ".pdmodel",
-            params_file=self.config['Global']['model'] + ".pdiparams",
-            device=self.config['Global']['device'],
-            use_trt=self.config['Global']['use_trt'],
-            use_mkldnn=self.config['Global']['use_mkldnn'],
-            cpu_threads=self.config['Global']['cpu_threads'],
-            precision=self.config['Global']['precision'],)
-        return model
-
     def process(self, batch_data):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
@@ -79,17 +60,8 @@ class Fastspeech2Predictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-        from .processors import get_am_output
         phone = batch_data
-        mel = get_am_output(
-                input=phone,
-                am_predictor=self.model,
-                am=self.config['Global']['model'],
-                lang=self.config['Global']['lang'],
-                speaker_dict=self.config['Global']['speaker_dict'],
-                spk_id=self.config['Global']['speaker_id'], 
-        )
-        result = mel
+        mel = self.infer(phone)
         return {
             "result": mel,
         }

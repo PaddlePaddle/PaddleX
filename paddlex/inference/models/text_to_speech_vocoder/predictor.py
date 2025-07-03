@@ -34,8 +34,7 @@ class PwganPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.model = self._build()
-        self.model_dir = "/home/zhangjinghong/PaddleSpeech/examples/csmsc/tts3/fastspeech2_nosil_baker_ckpt_0.4/inference"
+        self.infer = self.create_static_infer()
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
 
@@ -52,24 +51,6 @@ class PwganPredictor(BasePredictor):
         """
         return PwganResult
 
-    def _build(self):
-        """Build the model.
-
-        Returns:
-            Pwgan: An instance of Pwgan.
-        """
-        from .processors import get_predictor
-        model = get_predictor(
-            model_dir=str(self.model_dir),
-            model_file=self.config['Global']['model'] + ".pdmodel",
-            params_file=self.config['Global']['model'] + ".pdiparams",
-            device=self.config['Global']['device'],
-            use_trt=self.config['Global']['use_trt'],
-            use_mkldnn=self.config['Global']['use_mkldnn'],
-            cpu_threads=self.config['Global']['cpu_threads'],
-            precision=self.config['Global']['precision'],)
-        return model
-
     def process(self, batch_data):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
@@ -80,9 +61,8 @@ class PwganPredictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-        from .processors import get_voc_output
         mel = batch_data[0]
-        wav = get_voc_output(voc_predictor=self.model, input=mel)
+        wav = self.infer([mel])
         result = np.array(wav).reshape(1,-1)
         return {
             "result": result,

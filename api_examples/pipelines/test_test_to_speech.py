@@ -12,3 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="3d_bev_detection")
+output = pipeline.predict("./dataset/nuscenes_demo_infer/nuscenes_infos_val.pkl")
+
+for res in output:
+    print(res)
+    res.print()  ## 打印预测的结构化输出
+    res.save_to_json("./output/res.json")  ## 保存结果到json文件
