@@ -163,7 +163,7 @@ class GenerateTranslatePrompt(BaseGeneratePrompt):
             few_shot_demo_key_value_list = self.few_shot_demo_key_value_list
 
         if few_shot_demo_key_value_list:
-            few_shot_demo_key_value_list = f"这里是一些专业术语对照表,对照表中单词要参考对照表翻译：\n{few_shot_demo_key_value_list}\n"
+            few_shot_demo_key_value_list = f"\n这里是一些专业术语对照表,如果遇到对照表中单词要参考对照表翻译：\n{few_shot_demo_key_value_list}\n"
 
         prompt = f"""{task_description}{rules_str}{output_format}{few_shot_demo_text_content}{few_shot_demo_key_value_list}"""
 
