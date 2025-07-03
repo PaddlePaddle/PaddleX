@@ -35,7 +35,7 @@ from .utils.deps import (
     require_paddle2onnx_plugin,
 )
 from .utils.env import get_paddle_cuda_version
-from .utils.install import install_packages
+from .utils.install import install_packages, uninstall_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 
@@ -243,6 +243,8 @@ def install(args):
             )
             sys.exit(2)
 
+        hpip_links_file = "hpip_links.html"
+
         if device_type == "cpu":
             package = "ultra-infer-python"
         elif device_type == "gpu":
@@ -251,28 +253,29 @@ def install(args):
                 sys.exit(
                     "No CUDA version found. Please make sure you have installed PaddlePaddle with CUDA enabled."
                 )
-            if cuda_version[0] != 11:
+            if cuda_version[0] == 12:
+                hpip_links_file = "hpip_links_cu12.html"
+            elif cuda_version[0] != 11:
                 sys.exit(
-                    "You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin."
+                    "Currently, only CUDA versions 11.x and 12.x are supported by the high-performance inference plugin."
                 )
             package = "ultra-infer-gpu-python"
         elif device_type == "npu":
             package = "ultra-infer-npu-python"
 
-        with importlib.resources.path("paddlex", "hpip_links.html") as f:
+        with importlib.resources.path("paddlex", hpip_links_file) as f:
             version = get_dep_version(package)
             if version is None:
                 install_packages([package], pip_install_opts=["--find-links", str(f)])
             else:
                 response = input(
-                    f"The plugin '{package}' (version {version}) is already installed. Do you want to reinstall it? (y/n): "
+                    f"The high-performance inference plugin is already installed (version {repr(version)}). Do you want to reinstall it? (y/n):"
                 )
                 if response.lower() in ["y", "yes"]:
+                    uninstall_packages([package])
                     install_packages(
                         [package],
                         pip_install_opts=[
-                            "--force-reinstall",
-                            "--no-deps",
                             "--find-links",
                             str(f),
                         ],
