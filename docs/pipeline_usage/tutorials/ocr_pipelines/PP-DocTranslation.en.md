@@ -1386,8 +1386,20 @@ After executing the above code, you will obtain the parsed results of the origin
 <td><code>str|None</code></td>
 <td>
 <ul>
-<li><b>str</b>: Example data in key-value pair format, which can include a terminology对照表 (glossary)</li>
+<li><b>str</b>: Example data in key-value pair format</li>
 <li><b>None</b>: Do not provide structured examples</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>glossary</code></td>
+<td>Glossary of technical terms</td>
+<td><code>dict|None</code></td>
+<td>
+<ul>
+<li><b>dict</b>: Dictionary for glossary mapping</li>
+<li><b>None</b>: Use default configuration</li>
 </ul>
 </td>
 <td><code>None</code></td>

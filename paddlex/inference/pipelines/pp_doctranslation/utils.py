@@ -15,6 +15,29 @@
 import re
 
 
+def _is_sentence_dot(text, i):
+    """
+    Check if the given character is a sentence ending punctuation.
+    """
+    # if the character is not a period, return False
+    if text[i] != ".":
+        return False
+    # previous character
+    prev = text[i - 1] if i > 0 else ""
+    # next character
+    next = text[i + 1] if i + 1 < len(text) else ""
+    # previous is digit or letter, then not sentence ending punctuation
+    if prev.isdigit() or prev.isalpha():
+        return False
+    # next is digit or letter, then not sentence ending punctuation
+    if next.isdigit() or next.isalpha():
+        return False
+    # next is a punctuation, then sentence ending punctuation
+    if next in ("", " ", "\t", "\n", '"', "'", "”", "’", ")", "】", "」", "》"):
+        return True
+    return False
+
+
 def _find_split_pos(text, chunk_size):
     """
     Find the position to split the text into two chunks.
@@ -27,21 +50,44 @@ def _find_split_pos(text, chunk_size):
         int: The index where the text should be split.
     """
     center = len(text) // 2
+    split_chars = ["\n", "。", ";", "；", "!", "！", "?", "？"]
+
     # Search forward
     for i in range(center, len(text)):
-        if text[i] in ["\n", ".", "。", ";", "；", "!", "！", "?", "？"]:
-            if i + 1 < len(text) and len(text[: i + 1]) <= chunk_size:
-                return i + 1
+        if text[i] in split_chars:
+            # Check for whitespace around the split character
+            j = i + 1
+            while j < len(text) and text[j] in " \t\n":
+                j += 1
+            if j < len(text) and len(text[:j]) <= chunk_size:
+                return i, j
+        elif text[i] == "." and _is_sentence_dot(text, i):
+            j = i + 1
+            while j < len(text) and text[j] in " \t\n":
+                j += 1
+            if j < len(text) and len(text[:j]) <= chunk_size:
+                return i, j
+
     # Search backward
     for i in range(center, 0, -1):
-        if text[i] in ["\n", ".", "。", ";", "；", "!", "！", "?", "？"]:
-            if len(text[: i + 1]) <= chunk_size:
-                return i + 1
+        if text[i] in split_chars:
+            j = i + 1
+            while j < len(text) and text[j] in " \t\n":
+                j += 1
+            if len(text[:j]) <= chunk_size:
+                return i, j
+        elif text[i] == "." and _is_sentence_dot(text, i):
+            j = i + 1
+            while j < len(text) and text[j] in " \t\n":
+                j += 1
+            if len(text[:j]) <= chunk_size:
+                return i, j
+
     # If no suitable position is found, split directly
-    return min(chunk_size, len(text))
+    return min(chunk_size, len(text)), min(chunk_size, len(text))
 
 
-def split_text_recursive(text, chunk_size, translate_func, results):
+def split_text_recursive(text, chunk_size, translate_func):
     """
     Split the text recursively and translate each chunk.
 
@@ -56,15 +102,19 @@ def split_text_recursive(text, chunk_size, translate_func, results):
     """
     text = text.strip()
     if len(text) <= chunk_size:
-        results.append(translate_func(text))
+        return translate_func(text)
     else:
-        split_pos = _find_split_pos(text, chunk_size)
-        left = text[:split_pos].strip()
-        right = text[split_pos:].strip()
+        split_pos, end_whitespace = _find_split_pos(text, chunk_size)
+        left = text[:split_pos]
+        right = text[end_whitespace:]
+        whitespace = text[split_pos:end_whitespace]
+
         if left:
-            split_text_recursive(left, chunk_size, translate_func, results)
+            left_text = split_text_recursive(left, chunk_size, translate_func)
         if right:
-            split_text_recursive(right, chunk_size, translate_func, results)
+            right_text = split_text_recursive(right, chunk_size, translate_func)
+
+        return left_text + whitespace + right_text
 
 
 def translate_code_block(code_block, chunk_size, translate_func, results):
@@ -94,15 +144,14 @@ def translate_code_block(code_block, chunk_size, translate_func, results):
         footer = ""
         code_content = code_block
 
-    translated_code_lines = []
-    split_text_recursive(
-        code_content, chunk_size, translate_func, translated_code_lines
+    translated_code_lines = split_text_recursive(
+        code_content, chunk_size, translate_func
     )
 
     # drop ``` or ~~~
     filtered_code_lines = [
         line
-        for line in translated_code_lines
+        for line in translated_code_lines.split("\n")
         if not (line.strip().startswith("```") or line.strip().startswith("~~~"))
     ]
     translated_code = "\n".join(filtered_code_lines)
@@ -125,6 +174,17 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         None
     """
     from bs4 import BeautifulSoup
+
+    # if this is a short and simple tag, just translate it
+    if (
+        html_block.count("<") < 5
+        and html_block.count(">") < 5
+        and html_block.count("<") == html_block.count(">")
+        and len(html_block) < chunk_size
+    ):
+        translated = translate_func(html_block)
+        results.append(translated)
+        return
 
     soup = BeautifulSoup(html_block, "html.parser")
 
