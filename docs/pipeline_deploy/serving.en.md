@@ -352,7 +352,8 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 Users can call the pipeline service through the Python client provided by the SDK (which uses gRPC under the hood) or by manually constructing HTTP requests (with no restriction on client-side programming languages). Supported Python versions are 3.8 to 3.12.
 
-The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found here.Users need to replace example codes based on the data fields of each pipeline to adapt to different pipeline code.
+
+The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).Users need to replace example codes based on the data fields of each pipeline to adapt to different pipeline code.
 
 
 #### 2.4.1 Use Python Client
