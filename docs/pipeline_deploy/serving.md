@@ -369,18 +369,31 @@ python -m pip install paddlex_hps_client-*.whl
 
 #### 2.4.2 手动构造 HTTP 请求
 
-以下方式经封装 Input 后通过 HTTP 方式调用，其核心步骤与 Python 客户端方式相同，Triton 原生 HTTP 接口要求请求体是 JSON 的同时，也需要将输入格式包裹为 BYTES 类型的张量。得到结果后针对 Triton 返回的 Output 结构进行解析，具体示例代码如下（以 OCR 产线为例）:
-```bash
-#!/bin/bash
+以下方式通过封装 Input 采用 HTTP 方式调用，其核心步骤与 Python 客户端方式相同。
 
-TRITON_URL="http://localhost:8000/v2/models/ocr/infer"  
+（1）构造请求体
+
+Triton要求请求体为 JSON 格式，主要包含两个部分：
+- "inputs"：用于传入一个或多个输入张量。
+- "outputs"：希望返回的输出张量名称。
+
+其中 inputs 字段下的张量。对于 OCR 服务来说，输入字段名为 input，数据类型为 BYTES，形状为 [1, 1]，内容为一个 JSON 字符串，其内容中需包含：
+- file: 输入图像路径或url
+- fileType: 类型标识，1 表示图像
+- visualize: 是否返回处理过程中的中间图像（可选）
+```bash
 IMG_URL="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg"
 FILE_TYPE=1
+INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE, \"visualize\": false}"
+```
+请求体中的 inputs 输入张量应满足如下结构：
+- name: 必须与模型定义一致（本例中为 "input"）
+- datatype: 指定为 "BYTES"，因为输入是字符串类型
+- shape: 本例中为[1,1]
+- data: 封装了上一步构造的 `INPUT_JSON` 字符串。
 
-#  构造input
-INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE}"
-
-# 将请求封装成triton接受的形式
+构造请求体方式如下
+```json
 REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
   "inputs": [{
     "name": "input",
@@ -391,21 +404,34 @@ REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
   "outputs": [{ "name": "output" }]
 }')
 
+```
+
+将构造好的 JSON 请求体通过 curl 发送到 Triton 模型的推理接口。Triton 将会执行推理并返回一个标准的 JSON 格式响应体。
+
+```bash
+TRITON_URL="http://localhost:8000/v2/models/ocr/infer"
 RESP_JSON=$(curl -s -X POST "$TRITON_URL" \
     -H "Content-Type: application/json" \
     -d "$REQUEST_JSON")
+```
+Triton 的原生返回结构如下
+```json
+{
+  "outputs": [
+    {
+      "name": "output",
+      "data": [
+        "{\"errorCode\": 0, \"result\": {\"ocrResults\": [...]}}"
+      ]
+    }
+  ]
+}
 
+```
+其中outputs[0].data[0] 是一个字符串，该字符串包含了产线结果，包含errorCode、ocrResults等字段。这里的响应的数据字段都与基础服务化部署方案保持一致，具体解析规则可以查看各产线使用教程。这里以 OCR 为例进行解析。
+```bash
 
 OUTPUT_STR=$(echo "$RESP_JSON" | jq -r '.outputs[0].data[0]')
-
-ERROR_CODE=$(echo "$OUTPUT_STR" | jq '.errorCode')
-if [[ "$ERROR_CODE" != "0" ]]; then
-  echo "inference error：errorCode = $ERROR_CODE"
-  echo "$OUTPUT_STR" | jq '.errorMsg'
-  exit 1
-fi
-
-# 解析result
 idx=0
 echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b64; do
   item_json=$(echo "$item_b64" | base64 -d)
@@ -415,5 +441,10 @@ echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b6
   echo " Image saved -> ocr_${idx}.jpg"
   ((idx++))
 done
-```
+
+``` 
+
+
+
+
 
