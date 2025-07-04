@@ -21,16 +21,17 @@ Open vocabulary object detection is an advanced object detection technology that
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">Inference Model</a></td>
+<td>GroundingDINO-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">Inference Model</a></td>
 <td>49.4</td>
 <td>64.4</td>
-<td>253.72</td>
-<td>1807.4</td>
+<td>- / -</td>
+<td>- / -</td>
 <td>658.3</td>
 <td rowspan="3">An open vocabulary object detection model trained on O365, GoldG, and Cap4M datasets. The text encoder uses Bert, and the visual model part adopts DINO overall, with additional cross-modal fusion modules designed, achieving good results in the field of open vocabulary object detection.</td>
 </tr>
@@ -41,12 +42,18 @@ Open vocabulary object detection is an advanced object detection technology that
       <li><b>Performance Test Environment</b>
           <ul>
             <li><strong>Test Dataset：</strong>COCO val2017 validation set</li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>
@@ -456,6 +463,18 @@ Below are the API references and multi-language service invocation examples for 
 <td>Yes</td>
 </tr>
 <tr>
+<td><code>prompt</code></td>
+<td><code>string</code></td>
+<td>The text prompt used for prediction.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>thresholds</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>The thresholds used by the model for prediction.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -473,18 +492,6 @@ For example, adding the following setting to the pipeline config file:<br/>
 will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
 If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
 </td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>prompt</code></td>
-<td><code>string</code></td>
-<td>The text prompt used for prediction.</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>thresholds</code></td>
-<td><code>object</code> | <code>null</code></td>
-<td>The thresholds used by the model for prediction.</td>
 <td>No</td>
 </tr>
 </tbody>

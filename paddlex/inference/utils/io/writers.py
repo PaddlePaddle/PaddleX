@@ -19,7 +19,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import soundfile as sf
 import yaml
 from PIL import Image
 
@@ -55,7 +54,8 @@ class WriterType(enum.Enum):
     XLSX = 6
     CSV = 7
     YAML = 8
-    AUDIO = 9
+    MARKDOWN = 9
+    TXT = 10
 
 
 class _BaseWriter(object):
@@ -260,26 +260,6 @@ class MarkdownWriter(_BaseWriter):
         """get type"""
         return WriterType.MARKDOWN
 
-class AudioWriter(_BaseWriter):
-    """AudioWriter"""
-
-    def __init__(self, sample_rate=24000, backend="wav", **bk_args):
-        super().__init__(sample_rate=sample_rate, backend=backend, **bk_args)
-        self.sample_rate = sample_rate
-    def write(self, out_path, obj):
-        """write"""
-        return self._backend.write_obj(str(out_path), obj)
-
-    def _init_backend(self, bk_type, bk_args):
-        """init backend"""
-        if bk_type == "wav":
-            return AudioWriterBackend(**bk_args)
-        else:
-            raise ValueError("Unsupported backend type")
-
-    def get_type(self):
-        """get type"""
-        return WriterType.AUDIO
 
 class _BaseWriterBackend(object):
     """_BaseWriterBackend"""
@@ -478,14 +458,3 @@ class MarkdownWriterBackend(_BaseWriterBackend):
         """write markdown obj"""
         with open(out_path, mode="w", encoding="utf-8", errors="replace") as f:
             f.write(obj)
-
-class AudioWriterBackend(_BaseWriterBackend):
-    """AudioWriterBackend"""
-
-    def __init__(self,sample_rate=24000):
-        super().__init__()
-        self.sample_rate = sample_rate
-    def _write_obj(self, out_path, obj):
-        """write audio obj"""
-        audio = obj['result']
-        sf.write(out_path, audio, self.sample_rate)

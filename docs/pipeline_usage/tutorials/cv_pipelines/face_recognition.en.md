@@ -21,40 +21,44 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <th>AP (%)<br/>Easy/Medium/Hard</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
+<td>BlazeFace</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
 <td>77.7/73.4/49.5</td>
-<td>60.34 / 54.76</td>
-<td>84.18 / 84.18</td>
+<td>50.90 / 45.74</td>
+<td>71.92 / 71.92</td>
 <td>0.447</td>
 <td>A lightweight and efficient face detection model</td>
 </tr>
 <tr>
-<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
+<td>BlazeFace-FPN-SSH</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
 <td>83.2/80.5/60.5</td>
-<td>69.29 / 63.42</td>
-<td>86.96 / 86.96</td>
+<td>58.99 / 51.75</td>
+<td>87.39 / 87.39</td>
 <td>0.606</td>
 <td>Improved BlazeFace with FPN and SSH structures</td>
 </tr>
 <tr>
-<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
+<td>PicoDet_LCNet_x2_5_face</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
 <td>93.7/90.7/68.1</td>
-<td>35.37 / 12.88</td>
-<td>126.24 / 126.24</td>
+<td>33.91 / 26.53</td>
+<td>153.56 / 79.21</td>
 <td>28.9</td>
 <td>Face detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
+<td>PP-YOLOE_plus-S_face</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
 <td>93.9/91.8/79.8</td>
-<td>22.54 / 8.33</td>
-<td>138.67 / 138.67</td>
+<td>21.28 / 11.09</td>
+<td>137.26 / 72.09</td>
 <td>26.5</td>
 <td>Face detection model based on PP-YOLOE_plus-S</td>
 </tr>
@@ -70,26 +74,28 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
+<td>MobileFaceNet</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
-<td>5.7</td>
-<td>101.6</td>
+<td>3.31 / 0.73</td>
+<td>5.93 / 1.30</td>
 <td>4.1</td>
 <td>Face recognition model trained on MS1Mv3 based on MobileFaceNet</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
+<td>ResNet50_face</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
-<td>8.7</td>
-<td>200.7</td>
+<td>6.12 / 3.11</td>
+<td>15.85 / 9.44</td>
 <td>87.2</td>
 <td>Face recognition model trained on MS1Mv3 based on ResNet50</td>
 </tr>
@@ -107,12 +113,18 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
                 <li>Face Feature Model: Evaluated on the AgeDB-30, CFP-FP, and LFW datasets, respectively.</li>
               </ul>
             </li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>
@@ -911,26 +923,6 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>visualize</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>
-Whether to return the final visualization image and intermediate images during the processing.<br/>
-<ul style="margin: 0 0 0 1em; padding-left: 0em;">
-<li>If <code>true</code> is provided: return images.</li>
-<li>If <code>false</code> is provided: do not return any images.</li>
-<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
-</ul>
-<br/>
-For example, adding the following setting to the pipeline config file:<br/>
-<pre><code>Serving:
-  visualize: False
-</code></pre>
-will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
-If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
-</td>
-<td>No</td>
-</tr>
-<tr>
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
@@ -958,6 +950,26 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
 <td>Please refer to description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1045,7 +1057,7 @@ import sys
 
 import requests
 
-API_BASE_URL = "<url id="cu9nt776o68pmutlr330" status="failed" title="" type="url" wc="0">http://0.0.0.0:8080"</url>
+API_BASE_URL = "http://127.0.0.1:8080"
 
 base_image_label_pairs = [
     {"image": "./demo0.jpg", "label": "ID0"},

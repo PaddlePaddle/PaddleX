@@ -32,7 +32,7 @@ PaddleX 提供了1个端到端的时序分类模型，具体可参考 [模型列
 <tr>
 <th>模型名称</th>
 <th>acc(%)</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -40,7 +40,7 @@ PaddleX 提供了1个端到端的时序分类模型，具体可参考 [模型列
 <tr>
 <td>TimesNet_cls</td>
 <td>87.5</td>
-<td>792K</td>
+<td>0.792</td>
 <td>通过多周期分析，TimesNet是适应性强的高精度时序分类模型</td>
 </tr>
 </tbody>

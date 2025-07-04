@@ -20,17 +20,18 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">推理模型</a></td>
+<td>GroundingDINO-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">推理模型</a></td>
 <td>49.4</td>
 <td>64.4</td>
-<td>253.72</td>
-<td>1807.4</td>
+<td>- / -</td>
+<td>- / -</td>
 <td>658.3</td>
 <td rowspan="3">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
 </tr>
@@ -49,7 +50,12 @@ comments: true
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+              <li><strong>软件环境：</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
                   </ul>
               </li>
           </ul>
@@ -456,6 +462,18 @@ for res in output:
 <td>是</td>
 </tr>
 <tr>
+<td><code>prompt</code></td>
+<td><code>string</code></td>
+<td>预测使用的文本提示词。</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>thresholds</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>模型预测使用的阈值。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -470,18 +488,6 @@ for res in output:
 </code></pre>
 将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
 </td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>prompt</code></td>
-<td><code>string</code></td>
-<td>预测使用的文本提示词。</td>
-<td>是</td>
-</tr>
-<tr>
-<td><code>thresholds</code></td>
-<td><code>object</code> | <code>null</code></td>
-<td>模型预测使用的阈值。</td>
 <td>否</td>
 </tr>
 </tbody>

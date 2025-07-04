@@ -41,7 +41,7 @@ PaddleX 提供了 1 个端到端的高精度异常检测模型，具体可参考
 <tr>
 <th>模型</th>
 <th>mIoU</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>

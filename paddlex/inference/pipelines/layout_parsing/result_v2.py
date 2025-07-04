@@ -21,7 +21,7 @@ from typing import List
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import (
     BaseCVResult,
     HtmlMixin,
@@ -194,7 +194,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
         draw = ImageDraw.Draw(image, "RGBA")
         font_size = int(0.018 * int(image.width)) + 2
-        font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+        font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
         parsing_result: List[LayoutBlock] = self["parsing_res_list"]
         for block in parsing_result:
             bbox = block.bbox
@@ -475,6 +475,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         )
         page_last_element_seg_end_flag = seg_end_flag
 
+        markdown_info["page_index"] = self["page_index"]
+        markdown_info["input_path"] = self["input_path"]
         markdown_info["markdown_texts"] = markdown_content
         markdown_info["page_continuation_flags"] = (
             page_first_element_seg_start_flag,

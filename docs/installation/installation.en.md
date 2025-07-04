@@ -278,6 +278,7 @@ PaddleX currently provides the following dependency groups:
 | `speech` | Basic features of speech pipeline.s |
 | `ts` | Basic features of time series pipelines. |
 | `video` | Basic features of video pipelines. |
+| `trans` | Basic features of translation pipelines. |
 | `serving` | The serving feature. Installing this group is equivalent to installing the PaddleX serving plugin; the plugin can also be installed via the PaddleX CLI. |
 | `plugins` | All plugin-provided features that support installation via dependency groups. |
 | `all` | All basic features of PaddleX, as well as all plugin-provided features installable via dependency groups. |

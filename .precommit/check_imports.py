@@ -32,6 +32,7 @@ from setup import DEP_SPECS, REQUIRED_DEPS
 MOD_TO_DEP = {
     "aiohttp": "aiohttp",
     "baidubce": "bce-python-sdk",
+    "bs4": "beautifulsoup4",
     "chardet": "chardet",
     "chinese_calendar": "chinese-calendar",
     "colorlog": "colorlog",

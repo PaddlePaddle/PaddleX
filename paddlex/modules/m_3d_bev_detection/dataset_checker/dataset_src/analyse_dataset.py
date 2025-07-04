@@ -21,7 +21,7 @@ from collections import defaultdict
 import numpy as np
 
 from paddlex.utils.deps import function_requires_deps, is_dep_available
-from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
+from paddlex.utils.fonts import PINGFANG_FONT
 
 if is_dep_available("matplotlib"):
     import matplotlib.pyplot as plt
@@ -88,7 +88,7 @@ def deep_analyse(dataset_dir, output):
     if os_system == "windows":
         plt.rcParams["font.sans-serif"] = "FangSong"
     else:
-        font = font_manager.FontProperties(fname=PINGFANG_FONT_FILE_PATH)
+        font = font_manager.FontProperties(fname=PINGFANG_FONT.path)
     fig, ax = plt.subplots(figsize=(max(8, int(len(classes) / 5)), 5), dpi=120)
     ax.bar(x, cnts_train_sorted, width=0.5, label="train")
     ax.bar(x + width, cnts_val_sorted, width=0.5, label="val")

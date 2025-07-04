@@ -35,7 +35,7 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <th>Precision</th>
 <th>Recall</th>
 <th>F1-Score</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -43,33 +43,33 @@ PaddleX provides 4 end-to-end time series anomaly detection models. For details,
 <tr>
 <td>DLinear_ad</td>
 <td>0.9898</td>
-<td>0.9396</td>
-<td>0.9641</td>
-<td>72.8K</td>
+<td>0.39 / 0.16</td>
+<td>0.69 / 0.08</td>
+<td>0.1</td>
 <td>A simple, efficient, and easy-to-use time series anomaly detection model</td>
 </tr>
 <tr>
 <td>Nonstationary_ad</td>
 <td>0.9855</td>
-<td>0.8895</td>
-<td>0.9351</td>
-<td>1.5MB</td>
+<td>1.94 / 1.16</td>
+<td>5.31 / 1.66</td>
+<td>1.5</td>
 <td>A transformer-based model optimized for anomaly detection in non-stationary time series</td>
 </tr>
 <tr>
 <td>AutoEncoder_ad</td>
 <td>0.9936</td>
-<td>0.8436</td>
-<td>0.9125</td>
-<td>32K</td>
+<td>0.24 / 0.13</td>
+<td>0.41 / 0.05</td>
+<td>0.052</td>
 <td>A classic autoencoder-based model that is efficient and easy to use for time series anomaly detection</td>
 </tr>
 <tr>
 <td>PatchTST_ad</td>
 <td>0.9878</td>
-<td>0.9070</td>
-<td>0.9457</td>
-<td>164K</td>
+<td>2.10 / 0.55</td>
+<td>6.98 / 0.63</td>
+<td>0.164</td>
 <td>A high-precision time series anomaly detection model that balances local patterns and global dependencies</td>
 </tr>
 </tbody>

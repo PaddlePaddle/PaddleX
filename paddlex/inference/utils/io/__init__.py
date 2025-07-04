@@ -17,6 +17,7 @@ from .readers import (
     AudioReader,
     CSVReader,
     ImageReader,
+    MarkDownReader,
     PDFReader,
     ReaderType,
     VideoReader,

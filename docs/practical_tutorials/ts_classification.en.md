@@ -33,7 +33,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 <tr>
 <th>Model Name</th>
 <th>Acc (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -41,7 +41,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 <tr>
 <td>TimesNet_cls</td>
 <td>87.5</td>
-<td>792K</td>
+<td>0.792</td>
 <td>TimesNet is an adaptive and high-precision time series classification model through multi-cycle analysis</td>
 </tr>
 </tbody>
