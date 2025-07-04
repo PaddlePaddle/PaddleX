@@ -350,8 +350,11 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 调用服务
 
-目前，支持Python客户端、HTTP两种方式调用产线服务，支持的 Python 版本为 3.8 – 3.12。
-#### 2.4.1 Python客户端
+用户可以通过 SDK 中的 Python 客户端调用产线服务（底层使用 gRPC），或者手动构造 HTTP 请求（对客户端语言无限制）。支持的 Python 版本为 3.8 至 3.12。
+
+使用高稳定性服务化部署方案部署的服务，提供与基础服务化部署方案相匹配的主要操作。对于每个主要操作，端点名称以及请求和响应的数据字段都与基础服务化部署方案保持一致。请参阅各产线使用教程中的 <b>“开发集成/部署”</b> 部分。在 [此处](../pipeline_usage/pipeline_develop_guide.md) 可以找到各产线的使用教程。用户需根据各产线的数据字段进行示例代码的替换，以适应不同产线代码。
+
+#### 2.4.1 使用 Python 客户端
 
 切换到高稳定性服务化部署 SDK 的 `client` 目录，执行如下命令安装依赖：
 
@@ -361,82 +364,55 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 `client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
-核心步骤如下（以doc_preprocessor产线举例）：
-
-（1）构造请求体：
-```python
-input_ = {
-    "file": img,  
-    "fileType": 1,                                
-}
-```
 
 
-(2)发送推理请求
-```python
-client = triton_grpc.InferenceServerClient(url)
-output = triton_request(client, "document-preprocessing", input_)
-```
+#### 2.4.2 手动构造HTTP请求
 
-(3)解析响应体
-```python
-if output["errorCode"] != 0:
-    raise RuntimeError(output["errorMsg"])
-
-for i, res in enumerate(output["result"]["docPreprocessingResults"]):
-    utils.save_output_file(res["outputImage"], f"out_{i}.png")
-```
-- errorCode == 0 表示成功
-
-- outputImage：Base64‑PNG，需解码后保存
-
-执行如下命令运行client.py文件
+以下方式通过封装input采用HTTP方式调用，其核心步骤与Python客户端方式相同，Triton 原生 HTTP 接口要求请求体是 JSON 的同时，也需要将输入格式包裹为 BYTES 类型的张量。得到结果后针对 Triton 返回的 output 结构进行解析，具体示例代码如下（以ocr产线为例）:
 ```bash
-python client.py \
-  --file ./demo.jpg \
-  --file-type 1 \
-  --url  localhost:8001 \
-  --visualize false
+#!/bin/bash
+
+TRITON_URL="http://localhost:8000/v2/models/ocr/infer"  
+IMG_URL="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg"
+FILE_TYPE=1
+
+#  构造input
+INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE}"
+
+# 将请求封装成triton接受的形式
+REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
+  "inputs": [{
+    "name": "input",
+    "shape": [1, 1],
+    "datatype": "BYTES",
+    "data": [ $input ]
+  }],
+  "outputs": [{ "name": "output" }]
+}')
+
+RESP_JSON=$(curl -s -X POST "$TRITON_URL" \
+    -H "Content-Type: application/json" \
+    -d "$REQUEST_JSON")
+
+
+OUTPUT_STR=$(echo "$RESP_JSON" | jq -r '.outputs[0].data[0]')
+
+ERROR_CODE=$(echo "$OUTPUT_STR" | jq '.errorCode')
+if [[ "$ERROR_CODE" != "0" ]]; then
+  echo "inference error：errorCode = $ERROR_CODE"
+  echo "$OUTPUT_STR" | jq '.errorMsg'
+  exit 1
+fi
+
+# 解析result
+idx=0
+echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b64; do
+  item_json=$(echo "$item_b64" | base64 -d)
+
+  img_data=$(echo "$item_json" | jq -r '.ocrImage')
+  echo "$img_data" | base64 -d > "ocr_${idx}.jpg"
+  echo " Image saved -> ocr_${idx}.jpg"
+  ((idx++))
+done
 ```
-- file：需要处理的图像内容
-- fileType：文件类型
-- url：服务端口
-- visualize：是否返回调试可视化(可选)
 
-
-#### 2.4.2 HTTP
-
-以下方式依赖tritonclient.http，其核心步骤与Python客户端方式相同，具体示例代码如下（以doc_preprocessor产线为例）:
-```python
-#!/usr/bin/env python
-import base64, json, numpy as np
-from pathlib import Path
-from tritonclient.http import InferenceServerClient, InferInput, InferRequestedOutput
-
-SERVER_URL = "localhost:8000"
-PIPELINE_NAME = "document-preprocessing"
-FILE_PATH  = "./demo.jpg"
-
-file_b64 = base64.b64encode(open(FILE_PATH, "rb").read()).decode()
-payload  = {"file": file_b64, "fileType": 1}
-
-# 封装 BYTES 张量
-inp = InferInput("input", [1, 1], "BYTES")
-inp.set_data_from_numpy(np.array([[json.dumps(payload).encode()]], dtype=np.object_))
-
-# 推理
-client = InferenceServerClient(SERVER_URL)
-resp   = client.infer(PIPELINE_NAME, [inp], outputs=[InferRequestedOutput("output")])
-
-# 解析结果
-result = json.loads(resp.as_numpy("output")[0, 0].decode())
-if result["errorCode"]:
-    raise RuntimeError(result["errorMsg"])
-
-for i, item in enumerate(result["result"]["docPreprocessingResults"]):
-    Path(f"out_{i}.png").write_bytes(base64.b64decode(item["outputImage"]))
-    print(f"Image saved out_{i}.png")
-
-```
-
-使用高稳定性服务化部署方案部署的服务，提供与基础服务化部署方案相匹配的主要操作。对于每个主要操作，端点名称以及请求和响应的数据字段都与基础服务化部署方案保持一致。请参阅各产线使用教程中的 <b>“开发集成/部署”</b> 部分。在 [此处](../pipeline_usage/pipeline_develop_guide.md) 可以找到各产线的使用教程。用户需根据各产线的数据字段进行示例代码的替换，以适应不同产线代码。

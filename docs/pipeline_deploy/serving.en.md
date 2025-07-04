@@ -350,7 +350,7 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 Invoke the Service
 
-Currently, both the Python client and HTTP requests are supported for calling the service. Supported Python versions are 3.8 to 3.12.
+Currently, users can call the pipeline service through the Python client provided by the SDK (which uses gRPC under the hood) or by manually constructing HTTP requests (with no restriction on client-side programming languages). Supported Python versions are 3.8 to 3.12.
 
 #### 2.4.1 Python Client
 
@@ -362,79 +362,57 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 
-The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.The core steps are as follows (using the doc_preprocessor pipeline as an example):
-
-(1) Construct the request payload:
-```python
-input_ = {
-    "file": img,  
-    "fileType": 1,                                
-}
-```
-
-(2) Send the inference request:
-```python
-client = triton_grpc.InferenceServerClient(url)
-output = triton_request(client, "document-preprocessing", input_)
-```
-
-(3) Parse the response:
-```python
-if output["errorCode"] != 0:
-    raise RuntimeError(output["errorMsg"])
-
-for i, res in enumerate(output["result"]["docPreprocessingResults"]):
-    utils.save_output_file(res["outputImage"], f"out_{i}.png")
-```
-- errorCode == 0 indicates success.
-- outputImage: Base64‑encoded PNG image, which needs to be decoded and saved.
-
-To run the client.py script, execute the following command:
-```bash
-python client.py \
-  --file ./demo.jpg \
-  --file-type 1 \
-  --url  localhost:8001 \
-  --visualize false
-```
-- file: the image file to be processed
-- fileType: type of the input file
-- url: server endpoint
-- visualize: whether to return debugging visualization (optional)
+The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.
 
 #### 2.4.2 HTTP
 
-The following approach relies on tritonclient.http,  and its core steps are the same as the Python client method.The example code is provided below（using doc_preprocessor pipeline as an example):
-```python
-#!/usr/bin/env python
-import base64, json, numpy as np
-from pathlib import Path
-from tritonclient.http import InferenceServerClient, InferInput, InferRequestedOutput
+When using the HTTP method by wrapping the input, the core steps are the same as those in the Python client approach. The native Triton HTTP interface requires the request body to be in JSON format, and the input must be encapsulated as a tensor of type BYTES. After receiving the result, the response structure of the output field returned by Triton needs to be parsed accordingly. The specific example code is as follows(using the OCR pipeline as an example):
 
-SERVER_URL = "localhost:8000"
-PIPELINE_NAME = "document-preprocessing"
-FILE_PATH  = "./demo.jpg"
 
-file_b64 = base64.b64encode(open(FILE_PATH, "rb").read()).decode()
-payload  = {"file": file_b64, "fileType": 1}
+```bash
+#!/bin/bash
 
-# Construct BYTES tensor input
-inp = InferInput("input", [1, 1], "BYTES")
-inp.set_data_from_numpy(np.array([[json.dumps(payload).encode()]], dtype=np.object_))
+TRITON_URL="http://localhost:8000/v2/models/ocr/infer"  
+IMG_URL="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg"
+FILE_TYPE=1
 
-# Run inference
-client = InferenceServerClient(SERVER_URL)
-resp   = client.infer(PIPELINE_NAME, [inp], outputs=[InferRequestedOutput("output")])
+#  构造input
+INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE}"
 
-# Parse the response
-result = json.loads(resp.as_numpy("output")[0, 0].decode())
-if result["errorCode"]:
-    raise RuntimeError(result["errorMsg"])
+# 将请求封装成triton接受的形式
+REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
+  "inputs": [{
+    "name": "input",
+    "shape": [1, 1],
+    "datatype": "BYTES",
+    "data": [ $input ]
+  }],
+  "outputs": [{ "name": "output" }]
+}')
 
-for i, item in enumerate(result["result"]["docPreprocessingResults"]):
-    Path(f"out_{i}.png").write_bytes(base64.b64decode(item["outputImage"]))
-    print(f"Image saved out_{i}.png")
+RESP_JSON=$(curl -s -X POST "$TRITON_URL" \
+    -H "Content-Type: application/json" \
+    -d "$REQUEST_JSON")
 
+
+OUTPUT_STR=$(echo "$RESP_JSON" | jq -r '.outputs[0].data[0]')
+
+ERROR_CODE=$(echo "$OUTPUT_STR" | jq '.errorCode')
+if [[ "$ERROR_CODE" != "0" ]]; then
+  echo "inference error：errorCode = $ERROR_CODE"
+  echo "$OUTPUT_STR" | jq '.errorMsg'
+  exit 1
+fi
+
+# 解析result
+idx=0
+echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b64; do
+  item_json=$(echo "$item_b64" | base64 -d)
+
+  img_data=$(echo "$item_json" | jq -r '.ocrImage')
+  echo "$img_data" | base64 -d > "ocr_${idx}.jpg"
+  echo " Image saved -> ocr_${idx}.jpg"
+  ((idx++))
+done
 ```
 
-The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).Users need to replace example codes based on the data fields of each pipeline to adapt to different pipeline code.
