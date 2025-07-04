@@ -42,12 +42,14 @@ from .ocr import OCRPipeline
 from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
 from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
 from .pp_chatocr import PP_ChatOCRv3_Pipeline, PP_ChatOCRv4_Pipeline
+from .pp_doctranslation import PP_DocTranslation_Pipeline
 from .pp_shitu_v2 import ShiTuV2Pipeline
 from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .seal_recognition import SealRecognitionPipeline
 from .semantic_segmentation import SemanticSegmentationPipeline
 from .small_object_detection import SmallObjectDetectionPipeline
 from .table_recognition import TableRecognitionPipeline, TableRecognitionPipelineV2
+from .text_to_speech import TextToSpeechPipeline
 from .ts_anomaly_detection import TSAnomalyDetPipeline
 from .ts_classification import TSClsPipeline
 from .ts_forecasting import TSFcPipeline
