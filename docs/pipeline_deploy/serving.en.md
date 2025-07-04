@@ -350,7 +350,9 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 Invoke the Service
 
-Currently, only the Python client is supported for calling the service. Supported Python versions are 3.8 to 3.12.
+Currently, both the Python client and HTTP requests are supported for calling the service. Supported Python versions are 3.8 to 3.12.
+
+#### 2.4.1 Python Client
 
 Navigate to the `client` directory of the high-stability serving SDK, and run the following command to install dependencies:
 
@@ -360,6 +362,79 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 
-The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.
+The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.The core steps are as follows (using the doc_preprocessor pipeline as an example):
 
-The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).
+(1) Construct the request payload:
+```python
+input_ = {
+    "file": img,  
+    "fileType": 1,                                
+}
+```
+
+(2) Send the inference request:
+```python
+client = triton_grpc.InferenceServerClient(url)
+output = triton_request(client, "document-preprocessing", input_)
+```
+
+(3) Parse the response:
+```python
+if output["errorCode"] != 0:
+    raise RuntimeError(output["errorMsg"])
+
+for i, res in enumerate(output["result"]["docPreprocessingResults"]):
+    utils.save_output_file(res["outputImage"], f"out_{i}.png")
+```
+- errorCode == 0 indicates success.
+- outputImage: Base64‑encoded PNG image, which needs to be decoded and saved.
+
+To run the client.py script, execute the following command:
+```bash
+python client.py \
+  --file ./demo.jpg \
+  --file-type 1 \
+  --url  localhost:8001 \
+  --visualize false
+```
+- file: the image file to be processed
+- fileType: type of the input file
+- url: server endpoint
+- visualize: whether to return debugging visualization (optional)
+
+#### 2.4.2 HTTP
+
+The following approach relies on tritonclient.http,  and its core steps are the same as the Python client method.The example code is provided below（using doc_preprocessor pipeline as an example):
+```python
+#!/usr/bin/env python
+import base64, json, numpy as np
+from pathlib import Path
+from tritonclient.http import InferenceServerClient, InferInput, InferRequestedOutput
+
+SERVER_URL = "localhost:8000"
+PIPELINE_NAME = "document-preprocessing"
+FILE_PATH  = "./demo.jpg"
+
+file_b64 = base64.b64encode(open(FILE_PATH, "rb").read()).decode()
+payload  = {"file": file_b64, "fileType": 1}
+
+# Construct BYTES tensor input
+inp = InferInput("input", [1, 1], "BYTES")
+inp.set_data_from_numpy(np.array([[json.dumps(payload).encode()]], dtype=np.object_))
+
+# Run inference
+client = InferenceServerClient(SERVER_URL)
+resp   = client.infer(PIPELINE_NAME, [inp], outputs=[InferRequestedOutput("output")])
+
+# Parse the response
+result = json.loads(resp.as_numpy("output")[0, 0].decode())
+if result["errorCode"]:
+    raise RuntimeError(result["errorMsg"])
+
+for i, item in enumerate(result["result"]["docPreprocessingResults"]):
+    Path(f"out_{i}.png").write_bytes(base64.b64decode(item["outputImage"]))
+    print(f"Image saved out_{i}.png")
+
+```
+
+The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).Users need to replace example codes based on the data fields of each pipeline to adapt to different pipeline code.
