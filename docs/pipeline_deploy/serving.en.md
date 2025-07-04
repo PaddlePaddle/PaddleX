@@ -376,10 +376,10 @@ TRITON_URL="http://localhost:8000/v2/models/ocr/infer"
 IMG_URL="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg"
 FILE_TYPE=1
 
-#  构造input
+# Construct input JSON
 INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE}"
 
-# 将请求封装成triton接受的形式
+# Wrap the input into the format expected by Triton
 REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
   "inputs": [{
     "name": "input",
@@ -390,21 +390,23 @@ REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
   "outputs": [{ "name": "output" }]
 }')
 
+# Send inference request
 RESP_JSON=$(curl -s -X POST "$TRITON_URL" \
     -H "Content-Type: application/json" \
     -d "$REQUEST_JSON")
 
-
+# Parse output field
 OUTPUT_STR=$(echo "$RESP_JSON" | jq -r '.outputs[0].data[0]')
 
+# Check error code
 ERROR_CODE=$(echo "$OUTPUT_STR" | jq '.errorCode')
 if [[ "$ERROR_CODE" != "0" ]]; then
-  echo "inference error：errorCode = $ERROR_CODE"
+  echo "inference error: errorCode = $ERROR_CODE"
   echo "$OUTPUT_STR" | jq '.errorMsg'
   exit 1
 fi
 
-# 解析result
+# Parse result and save output images
 idx=0
 echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b64; do
   item_json=$(echo "$item_b64" | base64 -d)
@@ -414,5 +416,6 @@ echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b6
   echo " Image saved -> ocr_${idx}.jpg"
   ((idx++))
 done
+
 ```
 

@@ -366,9 +366,9 @@ python -m pip install paddlex_hps_client-*.whl
 `client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
 
-#### 2.4.2 手动构造HTTP请求
+#### 2.4.2 手动构造 HTTP 请求
 
-以下方式通过封装input采用HTTP方式调用，其核心步骤与Python客户端方式相同，Triton 原生 HTTP 接口要求请求体是 JSON 的同时，也需要将输入格式包裹为 BYTES 类型的张量。得到结果后针对 Triton 返回的 output 结构进行解析，具体示例代码如下（以ocr产线为例）:
+以下方式通过封装 Input 采用 HTTP 方式调用，其核心步骤与 Python 客户端方式相同，Triton 原生 HTTP 接口要求请求体是 JSON 的同时，也需要将输入格式包裹为 BYTES 类型的张量。得到结果后针对 Triton 返回的 Output 结构进行解析，具体示例代码如下（以 OCR 产线为例）:
 ```bash
 #!/bin/bash
 
