@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -6010,7 +6010,7 @@ You're not viewing the latest version.
 
 
   
-    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/CHANGELOG.en.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/CHANGELOG.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -6031,44 +6031,44 @@ You're not viewing the latest version.
 <h3 id="paddlex-v3005202025">PaddleX v3.0.0(5.20/2025)<a class="headerlink" href="#paddlex-v3005202025" title="Permanent link">&para;</a></h3>
 <p>Core upgrades are as follows:</p>
 <ul>
-<li><strong>Rich Model Library:</strong></li>
-<li><strong>Extensive Model Coverage:</strong> PaddleX 3.0 includes <strong>270+ models</strong>, covering diverse scenarios such as image/video classification/detection/segmentation, OCR, speech recognition, time series analysis, and more.</li>
+<li><strong>Rich Model Library:</strong>  </li>
+<li><strong>Extensive Model Coverage:</strong> PaddleX 3.0 includes <strong>270+ models</strong>, covering diverse scenarios such as image/video classification/detection/segmentation, OCR, speech recognition, time series analysis, and more.  </li>
 <li>
-<p><strong>Mature Solutions:</strong> Built on this robust model library, PaddleX 3.0 offers <strong>critical and production-ready AI solutions</strong>, including general document parsing, key information extraction, document understanding, table recognition, and general image recognition.</p>
+<p><strong>Mature Solutions:</strong> Built on this robust model library, PaddleX 3.0 offers <strong>critical and production-ready AI solutions</strong>, including general document parsing, key information extraction, document understanding, table recognition, and general image recognition.  </p>
 </li>
 <li>
-<p><strong>Unified Inference API &amp; Enhanced Deployment Capabilities:</strong></p>
+<p><strong>Unified Inference API &amp; Enhanced Deployment Capabilities:</strong>  </p>
 </li>
-<li><strong>Standardized Inference Interface:</strong> Reduces API fragmentation across model types, lowering the learning curve for users and accelerating enterprise adoption.</li>
-<li><strong>Multi-Model Composition:</strong> Complex tasks can be efficiently tackled by combining different models, achieving synergistic performance (1+1&gt;2).</li>
+<li><strong>Standardized Inference Interface:</strong> Reduces API fragmentation across model types, lowering the learning curve for users and accelerating enterprise adoption.  </li>
+<li><strong>Multi-Model Composition:</strong> Complex tasks can be efficiently tackled by combining different models, achieving synergistic performance (1+1&gt;2).  </li>
 <li>
-<p><strong>Upgraded Deployment:</strong> Unified commands now manage deployments for diverse models, supporting <strong>multi-GPU inference</strong> and <strong>multi-instance serving deployments</strong>.</p>
+<p><strong>Upgraded Deployment:</strong> Unified commands now manage deployments for diverse models, supporting <strong>multi-GPU inference</strong> and <strong>multi-instance serving deployments</strong>.  </p>
 </li>
 <li>
-<p><strong>Full Compatibility with PaddlePaddle Framework 3.0:</strong></p>
+<p><strong>Full Compatibility with PaddlePaddle Framework 3.0:</strong>  </p>
 </li>
-<li><strong>Leveraging New Paddle 3.0 Features:</strong><ul>
-<li>Compiler-accelerated training: Enable by appending <code>-o Global.dy2st=True</code> to training commands. <strong>Most GPU-based models see &gt;10% speed gains, with some exceeding 30%.</strong></li>
-<li>Inference upgrades: Full adaptation to Paddle 3.0’s Program Intermediate Representation (PIR) enhances flexibility and compatibility. Static graph models now use <code>xxx.json</code> instead of <code>xxx.pdmodel</code>.</li>
+<li><strong>Leveraging New Paddle 3.0 Features:</strong>  <ul>
+<li>Compiler-accelerated training: Enable by appending <code>-o Global.dy2st=True</code> to training commands. <strong>Most GPU-based models see &gt;10% speed gains, with some exceeding 30%.</strong>  </li>
+<li>Inference upgrades: Full adaptation to Paddle 3.0’s Program Intermediate Representation (PIR) enhances flexibility and compatibility. Static graph models now use <code>xxx.json</code> instead of <code>xxx.pdmodel</code>.  </li>
 </ul>
 </li>
 <li>
-<p><strong>ONNX Model Support:</strong> Seamless format conversion via the Paddle2ONNX plugin.</p>
+<p><strong>ONNX Model Support:</strong> Seamless format conversion via the Paddle2ONNX plugin.  </p>
 </li>
 <li>
-<p><strong>Flagship Capabilities:</strong></p>
+<p><strong>Flagship Capabilities:</strong>  </p>
 </li>
-<li><strong>PP-OCRv5:</strong> Powers <strong>multi-hardware inference, multi-backend support, and serving deployments</strong> for this industry-leading OCR system.</li>
-<li><strong>PP-StructureV3:</strong> Orchestrates <strong>15+ models</strong> in hybrid (serial/parallel) pipelines, achieving <strong>SOTA accuracy on OmniDocBench</strong>.</li>
+<li><strong>PP-OCRv5:</strong> Powers <strong>multi-hardware inference, multi-backend support, and serving deployments</strong> for this industry-leading OCR system.  </li>
+<li><strong>PP-StructureV3:</strong> Orchestrates <strong>15+ models</strong> in hybrid (serial/parallel) pipelines, achieving <strong>SOTA accuracy on OmniDocBench</strong>.  </li>
 <li>
-<p><strong>PP-ChatOCRv4:</strong> Integrates with <strong>PP-DocBee2 and ERNIE 4.5Turbo</strong>, boosting key information extraction accuracy by <strong>15.7 percentage points</strong> over the previous generation.</p>
+<p><strong>PP-ChatOCRv4:</strong> Integrates with <strong>PP-DocBee2 and ERNIE 4.5Turbo</strong>, boosting key information extraction accuracy by <strong>15.7 percentage points</strong> over the previous generation.  </p>
 </li>
 <li>
-<p><strong>Multi-Hardware Support:</strong></p>
+<p><strong>Multi-Hardware Support:</strong>  </p>
 </li>
-<li><strong>Broad Compatibility:</strong> Training and inference supported on <strong>NVIDIA, Intel, Apple M-series, Kunlunxin, Ascend, Cambricon, Hygon, Enflame</strong>, and more.</li>
-<li><strong>Ascend-Optimized:</strong> <strong>200+ fully adapted models</strong>, including <strong>21 OM-accelerated inference models</strong>, plus key solutions like PP-OCRv5 and PP-StructureV3.</li>
-<li><strong>Kunlunxin-Optimized:</strong> Critical classification, detection, and OCR models (including PP-OCRv5) are fully supported.</li>
+<li><strong>Broad Compatibility:</strong> Training and inference supported on <strong>NVIDIA, Intel, Apple M-series, Kunlunxin, Ascend, Cambricon, Hygon, Enflame</strong>, and more.  </li>
+<li><strong>Ascend-Optimized:</strong> <strong>200+ fully adapted models</strong>, including <strong>21 OM-accelerated inference models</strong>, plus key solutions like PP-OCRv5 and PP-StructureV3.  </li>
+<li><strong>Kunlunxin-Optimized:</strong> Critical classification, detection, and OCR models (including PP-OCRv5) are fully supported.  </li>
 </ul>
 <h3 id="paddlex-v300rc14222025">PaddleX v3.0.0rc1(4.22/2025)<a class="headerlink" href="#paddlex-v300rc14222025" title="Permanent link">&para;</a></h3>
 <p>This version fully adapts to PaddlePaddle 3.0.0, with the following core upgrades:</p>
@@ -6403,7 +6403,7 @@ Added deployment solutions for models through OpenVINO.</li>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 13:38:58 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 4, 2025 06:39:13 UTC">July 4, 2025</span>
   </span>
 
     
@@ -6413,7 +6413,7 @@ Added deployment solutions for models through OpenVINO.</li>
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 13:38:58 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 4, 2025 06:39:13 UTC">July 4, 2025</span>
   </span>
 
     
@@ -6428,7 +6428,7 @@ Added deployment solutions for models through OpenVINO.</li>
     </span>
     <nav>
       
-        <a href="mailto:140788363+sam-gsj@users.noreply.github.com">guoshengjian</a>
+        <a href="mailto:56299030+boomercat@users.noreply.github.com">Poki Bai</a>
     </nav>
   </span>
 
@@ -6580,7 +6580,7 @@ Added deployment solutions for models through OpenVINO.</li>
       <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../javascripts/katex.min.js"></script>
       
