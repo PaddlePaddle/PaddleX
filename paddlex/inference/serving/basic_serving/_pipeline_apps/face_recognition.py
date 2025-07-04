@@ -166,9 +166,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     ) -> AIStudioResultResponse[schema.InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
-        visualize_enabled = (
-            request.visualize if request.visualize is not None else ctx.config.visualize
-        )
+
         image_bytes = await serving_utils.get_raw_bytes_async(
             request.image, aiohttp_session
         )
@@ -213,7 +211,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                     score=obj["det_score"],
                 )
             )
-        if visualize_enabled:
+        if ctx.config.visualize:
             output_image_base64 = serving_utils.base64_encode(
                 serving_utils.image_to_bytes(result.img["res"])
             )

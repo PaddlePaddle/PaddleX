@@ -62,7 +62,6 @@ class InferRequest(ocr.BaseInferRequest):
     useOcrResultsWithTableCells: bool = True
     useE2eWiredTableRecModel: bool = False
     useE2eWirelessTableRecModel: bool = True
-    visualize: Optional[bool] = None
 
 
 class MarkdownData(BaseModel):

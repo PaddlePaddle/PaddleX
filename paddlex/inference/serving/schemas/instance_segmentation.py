@@ -33,7 +33,6 @@ INFER_ENDPOINT: Final[str] = "/instance-segmentation"
 class InferRequest(BaseModel):
     image: str
     threshold: Optional[float] = None
-    visualize: Optional[bool] = None
 
 
 class Instance(BaseModel):

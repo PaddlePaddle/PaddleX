@@ -45,10 +45,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
         log_id = serving_utils.generate_log_id()
 
-        visualize_enabled = (
-            request.visualize if request.visualize is not None else ctx.config.visualize
-        )
-
         images, data_info = await ocr_common.get_images(request, ctx)
 
         result = await pipeline.infer(
@@ -68,7 +64,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 return_url=ctx.extra["return_img_urls"],
                 max_img_size=ctx.extra["max_output_img_size"],
             )
-            if visualize_enabled:
+            if ctx.config.visualize:
                 vis_imgs = {
                     "input_img": img,
                     "doc_preprocessing_img": item.img["preprocessed_img"],
