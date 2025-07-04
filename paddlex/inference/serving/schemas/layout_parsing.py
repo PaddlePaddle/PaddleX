@@ -53,7 +53,6 @@ class InferRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-    visualize: Optional[bool] = None
 
 
 class LayoutParsingResult(BaseModel):

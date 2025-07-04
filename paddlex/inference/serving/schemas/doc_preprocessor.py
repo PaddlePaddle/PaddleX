@@ -35,7 +35,6 @@ class InferRequest(ocr.BaseInferRequest):
     # consistent with the parameters of the wrapped function though.
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
-    visualize: Optional[bool] = None
 
 
 class DocPreprocessingResult(BaseModel):

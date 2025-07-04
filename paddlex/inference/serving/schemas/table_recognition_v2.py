@@ -47,7 +47,6 @@ class InferRequest(ocr.BaseInferRequest):
     useWirelessTableCellsTransToHtml: bool = False
     useTableOrientationClassify: bool = True
     useOcrResultsWithTableCells: bool = True
-    visualize: Optional[bool] = None
 
 
 class TableRecResult(BaseModel):

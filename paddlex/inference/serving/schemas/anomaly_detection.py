@@ -26,7 +26,6 @@ INFER_ENDPOINT: Final[str] = "/image-anomaly-detection"
 
 class InferRequest(BaseModel):
     image: str
-    visualize: Optional[bool] = None
 
 
 class InferResult(BaseModel):
