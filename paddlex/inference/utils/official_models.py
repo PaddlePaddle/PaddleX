@@ -501,4 +501,5 @@ class OfficialModelsDict(dict):
         else:
             return _download_from_bos()
 
+
 official_models = OfficialModelsDict(OFFICIAL_MODELS)
