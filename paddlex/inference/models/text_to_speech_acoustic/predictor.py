@@ -21,6 +21,7 @@ from .result import Fastspeech2Result
 from ....modules.text_to_speech_acoustic.model_list import MODELS
 
 
+
 class Fastspeech2Predictor(BasePredictor):
 
     entities = MODELS
