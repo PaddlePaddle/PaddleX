@@ -352,7 +352,10 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 Currently, users can call the pipeline service through the Python client provided by the SDK (which uses gRPC under the hood) or by manually constructing HTTP requests (with no restriction on client-side programming languages). Supported Python versions are 3.8 to 3.12.
 
-#### 2.4.1 Python Client
+The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found here.Users need to replace example codes based on the data fields of each pipeline to adapt to different pipeline code.
+
+
+#### 2.4.1 Use Python Client
 
 Navigate to the `client` directory of the high-stability serving SDK, and run the following command to install dependencies:
 
@@ -364,9 +367,9 @@ python -m pip install paddlex_hps_client-*.whl
 
 The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.
 
-#### 2.4.2 HTTP
+#### 2.4.2 Manually Construct HTTP Requests
 
-When using the HTTP method by wrapping the input, the core steps are the same as those in the Python client approach. The native Triton HTTP interface requires the request body to be in JSON format, and the input must be encapsulated as a tensor of type BYTES. After receiving the result, the response structure of the output field returned by Triton needs to be parsed accordingly. The specific example code is as follows(using the OCR pipeline as an example):
+The following method demonstrates how to call the service using the HTTP interface by wrapping the input. The core steps are the same as those used in the Python client approach. The native Triton HTTP interface requires the request body to be in JSON format, and the input must be encapsulated as a tensor of type BYTES. After receiving the result, the output structure returned by Triton needs to be parsed accordingly. The specific example code is as follows (using the OCR pipeline as an example):
 
 
 ```bash
