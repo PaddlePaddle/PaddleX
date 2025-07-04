@@ -243,6 +243,20 @@ def install(args):
             )
             sys.exit(2)
 
+        hpip_links_file = "hpip_links.html"
+        if device_type == "gpu":
+            cuda_version = get_paddle_cuda_version()
+            if not cuda_version:
+                sys.exit(
+                    "No CUDA version found. Please make sure you have installed PaddlePaddle with CUDA enabled."
+                )
+            if cuda_version[0] == 12:
+                hpip_links_file = "hpip_links_cu12.html"
+            elif cuda_version[0] != 11:
+                sys.exit(
+                    "Currently, only CUDA versions 11.x and 12.x are supported by the high-performance inference plugin."
+                )
+
         package_mapping = {
             "cpu": "ultra-infer-python",
             "gpu": "ultra-infer-gpu-python",
@@ -257,20 +271,6 @@ def install(args):
                     f"The high-performance inference plugin '{package}' is mutually exclusive with '{other_package}' (version {version} installed). Uninstalling '{other_package}'..."
                 )
                 uninstall_packages([other_package])
-
-        hpip_links_file = "hpip_links.html"
-        if device_type == "gpu":
-            cuda_version = get_paddle_cuda_version()
-            if not cuda_version:
-                sys.exit(
-                    "No CUDA version found. Please make sure you have installed PaddlePaddle with CUDA enabled."
-                )
-            if cuda_version[0] == 12:
-                hpip_links_file = "hpip_links_cu12.html"
-            elif cuda_version[0] != 11:
-                sys.exit(
-                    "Currently, only CUDA versions 11.x and 12.x are supported by the high-performance inference plugin."
-                )
 
         with importlib.resources.path("paddlex", hpip_links_file) as f:
             version = get_dep_version(package)
