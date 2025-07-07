@@ -350,7 +350,13 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 Invoke the Service
 
-Currently, only the Python client is supported for calling the service. Supported Python versions are 3.8 to 3.12.
+Users can call the pipeline service through the Python client provided by the SDK or by manually constructing HTTP requests (with no restriction on client programming languages). 
+
+
+The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).
+
+
+#### 2.4.1 Use Python Client
 
 Navigate to the `client` directory of the high-stability serving SDK, and run the following command to install dependencies:
 
@@ -360,6 +366,68 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 
+The Python client currently supports Python versions 3.8 to 3.12.
+
 The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.
 
-The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).
+#### 2.4.2 Manually Construct HTTP Requests
+
+The following method demonstrates how to call the service using the HTTP interface in scenarios where the Python client is not applicable.
+
+First, you need to manually construct the HTTP request body. The request body must be in JSON format and contains the following fields:
+
+- `inputs`: Input tensor information. The input tensor name `name` is uniformly set to `input`, the shape is `[1, 1]`, and the data type `datatype` is `BYTES`. The  tensor data `data` contains a single JSON string, and the content of this JSON should follow the pipeline-specific format (consistent with the basic serving solution).
+- `outputs`: Output tensor information. The output tensor name `name` is uniformly set to `output`.
+
+Taking the general OCR pipeline as an example, the constructed request body is as follows:
+
+```JSON
+{
+  "inputs": [
+    {
+      "name": "input",
+      "shape": [1, 1],
+      "datatype": "BYTES",
+      "data": [
+        {
+          "file": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png",
+          "visualize": false
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "output"
+    }
+  ]
+}
+```
+
+Send the constructed request body to the corresponding HTTP inference endpoint of the service. By default, the service listens on HTTP port `8000`, and the inference request URL follows the format `http://{hostname}:8000/v2/models/{endpoint name}/infer`.
+
+Using the general OCR pipeline as an example, the following is a `curl` command to send the request:
+
+```bash
+# Assuming `REQUEST_JSON` is the request body constructed in the previous step
+curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
+    -H 'Content-Type: application/json' \
+    -d "${REQUEST_JSON}"
+```
+
+Finally, the response from the service needs to be parsed. The raw response body has the following structure:
+
+```json
+{
+  "outputs": [
+    {
+      "name": "output",
+      "data": [
+        "{\"errorCode\": 0, \"result\": {\"ocrResults\": [...]}}"
+      ]
+    }
+  ]
+}
+```
+
+`outputs[0].data[0]` is a JSON string. The internal fields follow the same format as the response body in the basic serving solution. For detailed parsing rules, please refer to the usage guide for each specific pipeline.
