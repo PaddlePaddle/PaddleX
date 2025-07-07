@@ -350,10 +350,9 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 调用服务
 
-用户可以通过 SDK 中的 Python 客户端调用产线服务（底层使用 gRPC），或者手动构造 HTTP 请求（对客户端语言无限制）。支持的 Python 版本为 3.8 至 3.12。
+用户可以通过 SDK 中的 Python 客户端调用产线服务，或者手动构造 HTTP 请求（对客户端语言无限制）。
 
-
-使用高稳定性服务化部署方案部署的服务，提供与基础服务化部署方案相匹配的主要操作。对于每个主要操作，端点名称以及请求和响应的数据字段都与基础服务化部署方案保持一致。请参阅各产线使用教程中的 <b>“开发集成/部署”</b> 部分。在 [此处](../pipeline_usage/pipeline_develop_guide.md) 可以找到各产线的使用教程。用户需根据各产线的数据字段进行示例代码的替换，以适应不同产线代码。
+使用高稳定性服务化部署方案部署的服务，提供与基础服务化部署方案相匹配的主要操作。对于每个主要操作，端点名称以及请求和响应的数据字段都与基础服务化部署方案保持一致。请参阅各产线使用教程中的 <b>“开发集成/部署”</b> 部分。在 [此处](../pipeline_usage/pipeline_develop_guide.md) 可以找到各产线的使用教程。
 
 #### 2.4.1 使用 Python 客户端
 
@@ -365,29 +364,21 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 
+Python 客户端目前支持的 Python 版本为 3.8 至 3.12。
+
 `client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
 #### 2.4.2 手动构造 HTTP 请求
 
-以下方式手工构造 HTTP 请求体并调用，适用于 Python 客户端不可用的情形。
+以下方式手工构造 HTTP 请求体并调用，适用于 Python 客户端不适用的情形。
 
+首先，需要构造请求体。请求体为 JSON 格式，包含以下字段：
 
+- `inputs`：输入张量信息。输入张量名称 `name` 统一为 `input`，张量形状 `shape` 为 `[1, 1]`，数据类型 `datatype` 为 `BYTES`。张量数据 `data` 包含一个 JSON 字符串，JSON 的内容需对应不同产线字段（与基础服务化部署一致）。
+- `outputs`：输出张量信息。输出张量名称 `name` 统一为`output`。
 
-Triton 要求请求体为 JSON 格式，主要包含以下字段：
+以通用 OCR 产线为例，构造的请求体内容示例如下：
 
-
-- "inputs"：用于传入一个或多个输入张量。每个输入张量需包含张量名称：所有产线统一为 `input`、数据类型：所有产线统一为 `BYTES`、张量形状：所有产线统一为 `[1, 1]`、数据内容：内容为一个 JSON 字符串，JSON 的内容需对应不同产线字段，其中 OCR 产线其内容中需包含：
-  - file: 输入图像路径或url
-  - fileType: 类型标识，1 表示图像
-  - visualize: 是否返回处理过程中的中间图像（可选）
-```bash
-IMG_URL="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg"
-FILE_TYPE=1
-INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE, \"visualize\": false}"
-```
-- "outputs"：希望返回的输出张量名称，所有产线统一为`output`。
-
-最终构造请求体的 JSON 内容如下：
 ```JSON
 {
   "inputs": [
@@ -396,7 +387,10 @@ INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE, \"visualize\": fa
       "shape": [1, 1],
       "datatype": "BYTES",
       "data": [
-        "{{INPUT_JSON}}"  //对应每一产线的请求内容
+        {
+          "file": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png",
+          "visualize": false
+        }
       ]
     }
   ],
@@ -406,23 +400,21 @@ INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE, \"visualize\": fa
     }
   ]
 }
-
 ```
 
-将构造好的 JSON 请求体通过 curl 命令发送到服务对应的 HTTP 推理端点。服务默认监听的 HTTP 端口为 8000，推理请求的 URL 格式为：
+将构造好的请求体通过发送到服务对应的 HTTP 推理端点。服务默认监听的 HTTP 端口为 `8000`，推理请求的 URL 格式为 `http://{主机名}:8000/v2/models/{端点名称}/infer`。
+
+以通用 OCR 产线为例，如下是通过 `curl` 向发送请求的例子：
 
 ```bash
-http://localhost:8000/v2/models/{端点名称}/infer
+# 假设 `REQUEST_JSON` 为上一步骤中构造的请求体
+curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
+    -H 'Content-Type: application/json' \
+    -d "${REQUEST_JSON}"
 ```
 
-其中 {端点名称} 为具体产线配置的模型名称，例如 OCR 产线的端点名称为 ocr，OCR 产线通过 `curl` 向该端点发送请求并获取响应：
-```bash
-TRITON_URL="http://localhost:8000/v2/models/ocr/infer"
-RESP_JSON=$(curl -s -X POST "$TRITON_URL" \
-    -H "Content-Type: application/json" \
-    -d "$REQUEST_JSON")
-```
-Triton 的原生返回结构如下
+最后，需要解析服务的响应。响应体的原始结构如下：
+
 ```json
 {
   "outputs": [
@@ -434,8 +426,6 @@ Triton 的原生返回结构如下
     }
   ]
 }
-
 ```
 
-
-其中outputs[0].data[0] 是一个字符串，该字符串包含了产线推理结果，包含errorCode、ocrResults等字段。这里的响应的数据字段都与基础服务化部署方案保持一致，具体解析规则可以查看各产线使用教程。
+其中 `outputs[0].data[0]` 是一个 JSON 字符串，其中的字段与基础服务化部署方案中的响应体保持一致，具体解析规则可以查看各产线使用教程。
