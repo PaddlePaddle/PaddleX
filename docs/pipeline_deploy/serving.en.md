@@ -350,7 +350,7 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 Invoke the Service
 
-Users can call the pipeline service through the Python client provided by the SDK or by manually constructing HTTP requests (with no restriction on client-side programming languages). 
+Users can call the pipeline service through the Python client provided by the SDK or by manually constructing HTTP requests (with no restriction on client programming languages). 
 
 
 The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).
@@ -365,6 +365,8 @@ Navigate to the `client` directory of the high-stability serving SDK, and run th
 python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
+
+The Python client currently supports Python versions 3.8 to 3.12.
 
 The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.
 
@@ -402,7 +404,7 @@ Taking the general OCR pipeline as an example, the constructed request body is a
 }
 ```
 
-Send the constructed request body to the corresponding HTTP inference endpoint of the service. By default, the service listens on HTTP port 8000, and the inference request URL follows the format:http://{hostname}:8000/v2/models/{endpoint name}/infer'.
+Send the constructed request body to the corresponding HTTP inference endpoint of the service. By default, the service listens on HTTP port `8000`, and the inference request URL follows the format `http://{hostname}:8000/v2/models/{endpoint name}/infer'`.
 
 Using the general OCR pipeline as an example, the following is a `curl` command to send the request:
 
