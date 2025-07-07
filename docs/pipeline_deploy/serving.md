@@ -364,50 +364,58 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
-`client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
+`client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
 #### 2.4.2 手动构造 HTTP 请求
 
-以下方式通过封装 Input 采用 HTTP 方式调用，其核心步骤与 Python 客户端方式相同。
+以下方式手工构造 HTTP 请求体并调用，适用于 Python 客户端不可用的情形。
 
-（1）构造请求体
 
-Triton要求请求体为 JSON 格式，主要包含两个部分：
-- "inputs"：用于传入一个或多个输入张量。
-- "outputs"：希望返回的输出张量名称。
 
-其中 inputs 字段下的张量。对于 OCR 服务来说，输入字段名为 input，数据类型为 BYTES，形状为 [1, 1]，内容为一个 JSON 字符串，其内容中需包含：
-- file: 输入图像路径或url
-- fileType: 类型标识，1 表示图像
-- visualize: 是否返回处理过程中的中间图像（可选）
+Triton 要求请求体为 JSON 格式，主要包含以下字段：
+
+
+- "inputs"：用于传入一个或多个输入张量。每个输入张量需包含张量名称：所有产线统一为 `input`、数据类型：所有产线统一为 `BYTES`、张量形状：所有产线统一为 `[1, 1]`、数据内容：内容为一个 JSON 字符串，JSON 的内容需对应不同产线字段，其中 OCR 产线其内容中需包含：
+  - file: 输入图像路径或url
+  - fileType: 类型标识，1 表示图像
+  - visualize: 是否返回处理过程中的中间图像（可选）
 ```bash
 IMG_URL="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg"
 FILE_TYPE=1
 INPUT_JSON="{\"file\": \"$IMG_URL\", \"fileType\": $FILE_TYPE, \"visualize\": false}"
 ```
-请求体中的 inputs 输入张量应满足如下结构：
-- name: 必须与模型定义一致（本例中为 "input"）
-- datatype: 指定为 "BYTES"，因为输入是字符串类型
-- shape: 本例中为[1,1]
-- data: 封装了上一步构造的 `INPUT_JSON` 字符串。
+- "outputs"：希望返回的输出张量名称，所有产线统一为`output`。
 
-构造请求体方式如下
-```json
-REQUEST_JSON=$(jq -nc --arg input "$INPUT_JSON" '{
-  "inputs": [{
-    "name": "input",
-    "shape": [1, 1],
-    "datatype": "BYTES",
-    "data": [ $input ]
-  }],
-  "outputs": [{ "name": "output" }]
-}')
+最终构造请求体的 JSON 内容如下：
+```JSON
+{
+  "inputs": [
+    {
+      "name": "input",
+      "shape": [1, 1],
+      "datatype": "BYTES",
+      "data": [
+        "{{INPUT_JSON}}"  //对应每一产线的请求内容
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "output"
+    }
+  ]
+}
 
 ```
 
-将构造好的 JSON 请求体通过 curl 发送到 Triton 模型的推理接口。Triton 将会执行推理并返回一个标准的 JSON 格式响应体。
+将构造好的 JSON 请求体通过 curl 命令发送到服务对应的 HTTP 推理端点。服务默认监听的 HTTP 端口为 8000，推理请求的 URL 格式为：
 
+```bash
+http://localhost:8000/v2/models/{端点名称}/infer
+```
+
+其中 {端点名称} 为具体产线配置的模型名称，例如 OCR 产线的端点名称为 ocr，OCR 产线通过 `curl` 向该端点发送请求并获取响应：
 ```bash
 TRITON_URL="http://localhost:8000/v2/models/ocr/infer"
 RESP_JSON=$(curl -s -X POST "$TRITON_URL" \
@@ -428,23 +436,6 @@ Triton 的原生返回结构如下
 }
 
 ```
-其中outputs[0].data[0] 是一个字符串，该字符串包含了产线结果，包含errorCode、ocrResults等字段。这里的响应的数据字段都与基础服务化部署方案保持一致，具体解析规则可以查看各产线使用教程。这里以 OCR 为例进行解析。
-```bash
-
-OUTPUT_STR=$(echo "$RESP_JSON" | jq -r '.outputs[0].data[0]')
-idx=0
-echo "$OUTPUT_STR" | jq -r '.result.ocrResults[] | @base64' | while read item_b64; do
-  item_json=$(echo "$item_b64" | base64 -d)
-
-  img_data=$(echo "$item_json" | jq -r '.ocrImage')
-  echo "$img_data" | base64 -d > "ocr_${idx}.jpg"
-  echo " Image saved -> ocr_${idx}.jpg"
-  ((idx++))
-done
-
-``` 
 
 
-
-
-
+其中outputs[0].data[0] 是一个字符串，该字符串包含了产线推理结果，包含errorCode、ocrResults等字段。这里的响应的数据字段都与基础服务化部署方案保持一致，具体解析规则可以查看各产线使用教程。
