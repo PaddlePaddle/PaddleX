@@ -375,8 +375,8 @@ The `client.py` script in the `client` directory contains examples of how to cal
 The following method demonstrates how to call the service using the HTTP interface in scenarios where the Python client is not applicable.
 
 First, you need to manually construct the HTTP request body. The request body must be in JSON format and contains the following fields:
-- `inputs`: Input tensor information. The input tensor name `name` is uniformly set to `input`, the shape is `[1, 1]`, and the data type `datatype` is `BYTES`. The  tensor data `data` contains a single JSON string, and the content of this JSON should follow the pipeline-specific format (consistent with the basic serving solution).
 
+- `inputs`: Input tensor information. The input tensor name `name` is uniformly set to `input`, the shape is `[1, 1]`, and the data type `datatype` is `BYTES`. The  tensor data `data` contains a single JSON string, and the content of this JSON should follow the pipeline-specific format (consistent with the basic serving solution).
 - `outputs`: Output tensor information. The output tensor name `name` is uniformly set to `output`.
 
 Taking the general OCR pipeline as an example, the constructed request body is as follows:
