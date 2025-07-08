@@ -788,7 +788,7 @@ After executing the above code, you will obtain the parsed results of the origin
 <li><b>None</b>: If set to <code>None</code>, the parameter value initialized by the pipeline will be used by default, which is initialized to <code>True</code>;</li>
 </ul>
 </td>
-<td><code>False</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_doc_unwarping</code></td>
@@ -800,7 +800,7 @@ After executing the above code, you will obtain the parsed results of the origin
 <li><b>None</b>: If set to <code>None</code>, the parameter value initialized by the pipeline will be used by default, initialized to<code>True</code>;</li>
 </ul>
 </td>
-<td><code>False</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_textline_orientation</code></td>
@@ -872,7 +872,7 @@ After executing the above code, you will obtain the parsed results of the origin
 <li><b>None</b>: If set to<code>None</code>, the parameter value initialized by the pipeline will be used by default, initialized to<code>True</code>;</li>
 </ul>
 </td>
-<td><code>False</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_region_detection</code></td>

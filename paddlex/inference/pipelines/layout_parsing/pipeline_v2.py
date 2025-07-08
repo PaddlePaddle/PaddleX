@@ -193,16 +193,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 formula_recognition_config,
             )
 
-        if self.use_chart_recognition:
-            chart_recognition_config = config.get("SubModules", {}).get(
-                "ChartRecognition",
-                {
-                    "model_config_error": "config error for block_region_detection_model!"
-                },
-            )
-            self.chart_recognition_model = self.create_model(
-                chart_recognition_config,
-            )
+        # TODO(gaotingquan): init the model at any time
+        chart_recognition_config = config.get("SubModules", {}).get(
+            "ChartRecognition",
+            {"model_config_error": "config error for block_region_detection_model!"},
+        )
+        self.chart_recognition_model = self.create_model(
+            chart_recognition_config,
+        )
 
         return
 
@@ -890,13 +888,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
-        use_doc_orientation_classify: Union[bool, None] = False,
-        use_doc_unwarping: Union[bool, None] = False,
+        use_doc_orientation_classify: Union[bool, None] = None,
+        use_doc_unwarping: Union[bool, None] = None,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
-        use_chart_recognition: Union[bool, None] = False,
+        use_chart_recognition: Union[bool, None] = None,
         use_region_detection: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
