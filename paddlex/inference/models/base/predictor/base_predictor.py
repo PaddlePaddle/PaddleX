@@ -27,6 +27,7 @@ from .....utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_ITERS,
     INFER_BENCHMARK_WARMUP,
+    PIPELINE_BENCHMARK,
 )
 from .....utils.subclass_register import AutoRegisterABCMetaClass
 from ....common.batch_sampler import BaseBatchSampler
@@ -207,6 +208,13 @@ class BasePredictor(
                 benchmark.collect(batch_size)
 
             yield output[0]
+        elif PIPELINE_BENCHMARK:
+
+            @benchmark.timeit_with_options(name=type(self).__name__ + ".apply")
+            def _apply(input, **kwargs):
+                return list(self.apply(input, **kwargs))
+
+            yield from _apply(input, **kwargs)
         else:
             yield from self.apply(input, **kwargs)
 

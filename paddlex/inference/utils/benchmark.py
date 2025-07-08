@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import contextvars
 import copy
 import csv
 import functools
@@ -29,6 +30,7 @@ from ...utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_OUTPUT_DIR,
     INFER_BENCHMARK_USE_CACHE_FOR_READ,
+    PIPELINE_BENCHMARK,
 )
 
 ENTRY_POINT_NAME = "_entry_point_"
@@ -37,6 +39,9 @@ ENTRY_POINT_NAME = "_entry_point_"
 _inference_operations = []
 
 _is_measuring_time = False
+
+step_var = contextvars.ContextVar("step", default=0)
+level_var = contextvars.ContextVar("level", default=0)
 
 
 class Benchmark:
@@ -97,27 +102,48 @@ class Benchmark:
                     return output
 
             else:
+                if INFER_BENCHMARK:
 
-                @functools.wraps(func)
-                def _wrapper(*args, **kwargs):
-                    global _is_measuring_time
-                    operation_name = f"{name}@{location}"
-                    if _is_measuring_time:
-                        raise RuntimeError(
-                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
-                        )
-                    if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
-                        _is_measuring_time = True
-                    tic = time.perf_counter()
-                    try:
-                        output = func(*args, **kwargs)
-                    finally:
+                    @functools.wraps(func)
+                    def _wrapper(*args, **kwargs):
+                        global _is_measuring_time
+                        operation_name = f"{name}@{location}"
+                        if _is_measuring_time:
+                            raise RuntimeError(
+                                "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                            )
                         if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
-                            _is_measuring_time = False
-                    if isinstance(output, GeneratorType):
-                        return self.watch_generator(output, operation_name)
-                    else:
-                        self._update(time.perf_counter() - tic, operation_name)
+                            _is_measuring_time = True
+                        tic = time.perf_counter()
+                        try:
+                            output = func(*args, **kwargs)
+                        finally:
+                            if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                                _is_measuring_time = False
+                        if isinstance(output, GeneratorType):
+                            return self.watch_generator(output, operation_name)
+                        else:
+                            self._update(time.perf_counter() - tic, operation_name)
+                            return output
+
+                elif PIPELINE_BENCHMARK:
+
+                    @functools.wraps(func)
+                    def _wrapper(*args, **kwargs):
+                        step_var.set(step_var.get() + 1)
+                        level_var.set(level_var.get() + 1)
+                        operation_name = (
+                            f"{step_var.get()}@{level_var.get()}@{name}@{location}"
+                        )
+
+                        tic = time.perf_counter()
+                        output = func(*args, **kwargs)
+                        if isinstance(output, GeneratorType):
+                            return self.watch_generator_simple(output, operation_name)
+                        else:
+                            self._update(time.perf_counter() - tic, operation_name)
+                            level_var.set(level_var.get() - 1)
+
                         return output
 
             if isinstance(func_or_cls, type):
@@ -130,6 +156,12 @@ class Benchmark:
 
     def timeit(self, func_or_cls):
         return self.timeit_with_options()(func_or_cls)
+
+    def time_methods(self, cls):
+        for attr_name, attr_value in cls.__dict__.items():
+            if callable(attr_value) and not attr_name.startswith("__"):
+                setattr(cls, attr_name, self.timeit(attr_value))
+        return cls
 
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
@@ -156,8 +188,24 @@ class Benchmark:
 
         return wrapper()
 
+    def watch_generator_simple(self, generator, name):
+        @functools.wraps(generator)
+        def wrapper():
+            while True:
+                try:
+                    tic = time.perf_counter()
+                    item = next(generator)
+                    self._update(time.perf_counter() - tic, name)
+                    yield item
+                except StopIteration:
+                    break
+
+        return wrapper()
+
     def reset(self):
         self._elapses = {}
+        step_var.set(0)
+        level_var.set(0)
 
     def _update(self, elapse, name):
         elapse = elapse * 1000
@@ -363,6 +411,113 @@ class Benchmark:
                     writer = csv.writer(file)
                     writer.writerows(csv_data)
 
+    def collect_pipeline(self):
+        detail_list, summary_list, operation_list = self.gather_pipeline()
+
+        operation_head = [
+            "Operation",
+            "Source Code Location",
+        ]
+        table = PrettyTable(operation_head)
+        table.add_rows(operation_list)
+        table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+        logging.info(table_title)
+        logging.info(table)
+
+        detail_head = [
+            "Step",
+            "Operation",
+            "Time",
+        ]
+        table = PrettyTable(detail_head)
+        table.add_rows(detail_list)
+        table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+        table.align["Operation"] = "l"
+        table.align["Time"] = "l"
+        logging.info(table_title)
+        logging.info(table)
+
+        summary_head = [
+            "Level",
+            "Operation",
+            "Time",
+        ]
+        table = PrettyTable(summary_head)
+        table.add_rows(summary_list)
+        table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+        table.align["Operation"] = "l"
+        table.align["Time"] = "l"
+        logging.info(table_title)
+        logging.info(table)
+
+        if INFER_BENCHMARK_OUTPUT_DIR:
+            save_dir = Path(INFER_BENCHMARK_OUTPUT_DIR)
+            save_dir.mkdir(parents=True, exist_ok=True)
+            csv_data = [detail_head, *detail_list]
+            with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
+                writer = csv.writer(file)
+                writer.writerows(csv_data)
+
+            csv_data = [summary_head, *summary_list]
+            with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
+                writer = csv.writer(file)
+                writer.writerows(csv_data)
+
+    def gather_pipeline(self):
+        detail_list = []
+        operation_list = set()
+        summary_list = []
+
+        for name, time_list in self.logs.items():
+            all_time = np.sum(time_list)
+
+            parts = name.split("@")
+            step = int(parts[0])
+            level = int(parts[1])
+            operation_name = parts[2]
+            location = parts[3]
+            if ":" not in location:
+                location = "Unknown"
+
+            operation_list.add((operation_name, location))
+
+            while len(summary_list) < level:
+                summary_list.append([len(summary_list) + 1, {}])
+            if summary_list[level - 1][1].get(operation_name, None) is None:
+                summary_list[level - 1][1][operation_name] = [all_time]
+            else:
+                summary_list[level - 1][1][operation_name].append(all_time)
+
+            if level != 1:
+                operation_name = "    " * int(level - 1) + "-> " + operation_name
+
+            detail_list.append((step, operation_name, all_time))
+
+        operation_list = list(operation_list)
+        detail_list.sort(key=lambda x: x[0])
+
+        new_summary_list = []
+        all_time_backup = 0.0
+        for i in range(len(summary_list)):
+            level = summary_list[i][0]
+            op_dict = summary_list[i][1]
+
+            ops_all_time = 0.0
+            op_info_list = []
+            for name, time_list in op_dict.items():
+                op_all_time = np.sum(time_list)
+                op_info_list.append(["", name, op_all_time])
+                ops_all_time += op_all_time
+
+            new_summary_list.append([level, "Core", ops_all_time])
+            if i > 0:
+                new_summary_list.append(["", "Other", all_time_backup - ops_all_time])
+            new_summary_list += op_info_list
+
+            all_time_backup = ops_all_time
+
+        return detail_list, new_summary_list, operation_list
+
 
 def get_inference_operations():
     return _inference_operations
@@ -373,7 +528,7 @@ def set_inference_operations(val):
     _inference_operations = val
 
 
-if INFER_BENCHMARK:
+if INFER_BENCHMARK or PIPELINE_BENCHMARK:
     benchmark = Benchmark(enabled=True)
 else:
     benchmark = Benchmark(enabled=False)

@@ -25,6 +25,7 @@ from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -48,6 +49,7 @@ from .utils import (
 from .xycut_enhanced import xycut_enhanced
 
 
+@benchmark.time_methods
 class _LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
