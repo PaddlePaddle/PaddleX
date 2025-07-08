@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,26 +13,9 @@
 # limitations under the License.
 
 
-from .readers import (
-    AudioReader,
-    CSVReader,
-    ImageReader,
-    MarkDownReader,
-    PDFReader,
-    ReaderType,
-    VideoReader,
-    YAMLReader,
-)
-from .writers import (
-    CSVWriter,
-    HtmlWriter,
-    ImageWriter,
-    JsonWriter,
-    MarkdownWriter,
-    TextWriter,
-    VideoWriter,
-    WriterType,
-    XlsxWriter,
-    YAMLWriter,
-    AudioWriter,
-)
+from ...common.result import BaseResult
+
+class Fastspeech2Result(BaseResult):
+
+    def __init__(self, data: dict) -> None:
+        super().__init__(data)

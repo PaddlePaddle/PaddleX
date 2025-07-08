@@ -20,3 +20,4 @@ from .image_batch_sampler import ImageBatchSampler
 from .markdown_batch_sampler import MarkDownBatchSampler
 from .ts_batch_sampler import TSBatchSampler
 from .video_batch_sampler import VideoBatchSampler
+from .text_batch_sampler import TextBatchSampler
