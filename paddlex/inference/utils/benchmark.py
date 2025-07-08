@@ -49,6 +49,9 @@ class Benchmark:
         self._enabled = enabled
         self._elapses = {}
         self._warmup = False
+        self._detail_list = []
+        self._summary_list = []
+        self._operation_list = []
 
     def timeit_with_options(self, name=None, is_read_operation=False):
         # TODO: Refactor
@@ -158,8 +161,13 @@ class Benchmark:
         return self.timeit_with_options()(func_or_cls)
 
     def time_methods(self, cls):
+        black_list = ["inintial_predictor"]
         for attr_name, attr_value in cls.__dict__.items():
-            if callable(attr_value) and not attr_name.startswith("__"):
+            if (
+                callable(attr_value)
+                and not attr_name.startswith("__")
+                and attr_name not in black_list
+            ):
                 setattr(cls, attr_name, self.timeit(attr_value))
         return cls
 
@@ -411,58 +419,6 @@ class Benchmark:
                     writer = csv.writer(file)
                     writer.writerows(csv_data)
 
-    def collect_pipeline(self):
-        detail_list, summary_list, operation_list = self.gather_pipeline()
-
-        operation_head = [
-            "Operation",
-            "Source Code Location",
-        ]
-        table = PrettyTable(operation_head)
-        table.add_rows(operation_list)
-        table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
-        logging.info(table_title)
-        logging.info(table)
-
-        detail_head = [
-            "Step",
-            "Operation",
-            "Time",
-        ]
-        table = PrettyTable(detail_head)
-        table.add_rows(detail_list)
-        table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
-        table.align["Operation"] = "l"
-        table.align["Time"] = "l"
-        logging.info(table_title)
-        logging.info(table)
-
-        summary_head = [
-            "Level",
-            "Operation",
-            "Time",
-        ]
-        table = PrettyTable(summary_head)
-        table.add_rows(summary_list)
-        table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
-        table.align["Operation"] = "l"
-        table.align["Time"] = "l"
-        logging.info(table_title)
-        logging.info(table)
-
-        if INFER_BENCHMARK_OUTPUT_DIR:
-            save_dir = Path(INFER_BENCHMARK_OUTPUT_DIR)
-            save_dir.mkdir(parents=True, exist_ok=True)
-            csv_data = [detail_head, *detail_list]
-            with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(csv_data)
-
-            csv_data = [summary_head, *summary_list]
-            with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(csv_data)
-
     def gather_pipeline(self):
         detail_list = []
         operation_list = set()
@@ -504,19 +460,97 @@ class Benchmark:
 
             ops_all_time = 0.0
             op_info_list = []
-            for name, time_list in op_dict.items():
+            for idx, (name, time_list) in enumerate(op_dict.items()):
                 op_all_time = np.sum(time_list)
-                op_info_list.append(["", name, op_all_time])
+                op_info_list.append([level if i + idx == 0 else "", name, op_all_time])
                 ops_all_time += op_all_time
 
-            new_summary_list.append([level, "Core", ops_all_time])
             if i > 0:
+                new_summary_list.append([level, "Core", ops_all_time])
                 new_summary_list.append(["", "Other", all_time_backup - ops_all_time])
             new_summary_list += op_info_list
 
             all_time_backup = ops_all_time
 
         return detail_list, new_summary_list, operation_list
+
+    def _initialize_pipeline_data(self):
+        if not (self._operation_list and self._detail_list and self._summary_list):
+            self._detail_list, self._summary_list, self._operation_list = (
+                self.gather_pipeline()
+            )
+
+    def print_pipeline_data(self):
+        self._initialize_pipeline_data()
+        self.print_operation_info()
+        self.print_detail_data()
+        self.print_summary_data()
+
+    def print_operation_info(self):
+        self._initialize_pipeline_data()
+        operation_head = [
+            "Operation",
+            "Source Code Location",
+        ]
+        table = PrettyTable(operation_head)
+        table.add_rows(self._operation_list)
+        table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+        logging.info(table_title)
+        logging.info(table)
+
+    def print_detail_data(self):
+        self._initialize_pipeline_data()
+        detail_head = [
+            "Step",
+            "Operation",
+            "Time",
+        ]
+        table = PrettyTable(detail_head)
+        table.add_rows(self._detail_list)
+        table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+        table.align["Operation"] = "l"
+        table.align["Time"] = "l"
+        logging.info(table_title)
+        logging.info(table)
+
+    def print_summary_data(self):
+        self._initialize_pipeline_data()
+        summary_head = [
+            "Level",
+            "Operation",
+            "Time",
+        ]
+        table = PrettyTable(summary_head)
+        table.add_rows(self._summary_list)
+        table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+        table.align["Operation"] = "l"
+        table.align["Time"] = "l"
+        logging.info(table_title)
+        logging.info(table)
+
+    def save_pipeline_data(self, save_path):
+        self._initialize_pipeline_data()
+        save_dir = Path(save_path)
+        save_dir.mkdir(parents=True, exist_ok=True)
+        detail_head = [
+            "Step",
+            "Operation",
+            "Time",
+        ]
+        csv_data = [detail_head, *self._detail_list]
+        with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(csv_data)
+
+        summary_head = [
+            "Level",
+            "Operation",
+            "Time",
+        ]
+        csv_data = [summary_head, *self._summary_list]
+        with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(csv_data)
 
 
 def get_inference_operations():
