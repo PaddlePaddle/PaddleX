@@ -532,6 +532,7 @@ class Benchmark:
         self._initialize_pipeline_data()
         save_dir = Path(save_path)
         save_dir.mkdir(parents=True, exist_ok=True)
+
         detail_head = [
             "Step",
             "Operation",
