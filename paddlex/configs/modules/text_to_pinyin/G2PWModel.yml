@@ -1,0 +1,11 @@
+Global:
+  model: G2PWModel
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  input: "欢迎使用飞桨"
+  kernel_option:
+    run_mode: paddle
