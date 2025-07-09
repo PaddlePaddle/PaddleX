@@ -205,12 +205,11 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
             node_text = text_nodes[idx].strip()
             if len(node_text) > chunk_size:
                 # if node_text is too long, split it
-                translated_lines = []
-                split_text_recursive(
-                    node_text, chunk_size, translate_func, translated_lines
+                translated_text = split_text_recursive(
+                    node_text, chunk_size, translate_func
                 )
                 # concatenate translated lines with \n
-                text_nodes[idx].replace_with("\n".join(translated_lines))
+                text_nodes[idx].replace_with(translated_text)
                 idx += 1
                 continue
             li_str = f"<li>{node_text}</li>"
