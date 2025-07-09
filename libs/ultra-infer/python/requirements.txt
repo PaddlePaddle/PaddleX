@@ -1,7 +1,7 @@
 wheel
 requests
 tqdm
-numpy<2
+numpy
 # Compatible with paddlex
 opencv-contrib-python
 pyyaml

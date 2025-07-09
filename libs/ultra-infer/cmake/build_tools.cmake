@@ -67,8 +67,8 @@ function(download_yaml_cpp)
 endfunction()
 
 function(download_pybind)
-    set(PATCHELF_URL https://bj.bcebos.com/fastdeploy/third_party/pybind11-linux-x86-241210.tgz)
-    download_and_decompress(${PATCHELF_URL} ${CMAKE_CURRENT_BINARY_DIR}/pybind11-linux-x86-241210.tgz ${THIRD_PARTY_DIR}/pybind11)
+    set(PATCHELF_URL https://bj.bcebos.com/fastdeploy/third_party/pybind11-linux-x86-v2.13.tgz)
+    download_and_decompress(${PATCHELF_URL} ${CMAKE_CURRENT_BINARY_DIR}/pybind11-linux-x86-v2.13.tgz ${THIRD_PARTY_DIR}/pybind11)
 endfunction()
 
 function(download_dlpack)
