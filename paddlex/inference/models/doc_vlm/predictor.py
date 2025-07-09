@@ -18,7 +18,7 @@ import warnings
 from typing import List
 
 from ....modules.doc_vlm.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
+from ....utils.device import TemporaryDeviceChanger, constr_device
 from ....utils.env import get_device_type
 from ...common.batch_sampler import DocVLMBatchSampler
 from ..base import BasePredictor
@@ -44,6 +44,9 @@ class DocVLMPredictor(BasePredictor):
 
         super().__init__(*args, **kwargs)
         self.device = kwargs.get("device", None)
+        if self.device is None and self.pp_option is not None:
+            if self.pp_option.device_type is not None and self.pp_option.device_type != "cpu":
+                self.device = constr_device(self.pp_option.device_type, str(self.pp_option.device_id))
         self.dtype = (
             "bfloat16"
             if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
