@@ -43,6 +43,7 @@ MOD_TO_DEP = {
     "filelock": "filelock",
     "filetype": "filetype",
     "ftfy": "ftfy",
+    "git": "gitpython",
     "GPUtil": "GPUtil",
     "huggingface_hub": "huggingface_hub",
     "imagesize": "imagesize",

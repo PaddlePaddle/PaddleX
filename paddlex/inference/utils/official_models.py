@@ -16,7 +16,6 @@ import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
-from functools import lru_cache
 from pathlib import Path
 
 import huggingface_hub as hf_hub
@@ -24,11 +23,15 @@ import huggingface_hub as hf_hub
 hf_hub.logging.set_verbosity_error()
 
 import requests
+from git import Repo
 
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
 from ...utils.flags import MODEL_SOURCE
+
+# import modelscope.hub as ms_hub
+
 
 ALL_MODELS = [
     "ResNet18",
@@ -383,34 +386,41 @@ OCR_MODELS = [
 
 
 class _BaseModelHoster(ABC):
+    root_url = None
     _available_check_timeout = 1
+    MODEL_LIST = []
 
-    def __init__(self, check_url=None):
-        self._check_url = check_url
+    def __init__(self, save_dir):
+        self._save_dir = save_dir
 
     def get_model(self, model_name):
-        assert model_name in ALL_MODELS
-        return self._download(model_name)
+        assert (
+            model_name in self.MODEL_LIST
+        ), f"The model {model_name} is not supported on hosting {self.__class__.__name__}!"
+        model_dir = self._save_dir / f"{model_name}"
+        self._download(model_name, model_dir)
+        return model_dir
 
     @abstractmethod
     def _download(self):
         raise NotImplementedError
 
-    @lru_cache(1)
-    def is_available(self):
-        if self._check_url is None:
+    @classmethod
+    def is_available(cls):
+        if cls.root_url is None:
             return True
         try:
-            response = requests.get(
-                self._check_url, timeout=self._available_check_timeout
-            )
+            response = requests.get(cls.root_url, timeout=cls._available_check_timeout)
             return response.ok == True
         except requests.exceptions.RequestException as e:
             return False
 
 
 class _BosModelHoster(_BaseModelHoster):
-    STORAGE_DIR = "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/"
+    MODEL_LIST = ALL_MODELS
+    alias = "bos"
+
+    URL_PREFIX = "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/"
     special_model_fn = {
         "whisper_large": "whisper_large.tar",
         "whisper_base": "whisper_base.tar",
@@ -419,31 +429,30 @@ class _BosModelHoster(_BaseModelHoster):
         "whisper_tiny": "whisper_tiny.tar",
     }
 
-    def __init__(self):
-        super().__init__(check_url=None)
+    def __init__(self, save_dir):
+        super().__init__(save_dir)
 
-    def _download(self, model_name):
+    def _download(self, model_name, save_dir):
         if model_name in self.special_model_fn:
             fn = self.special_model_fn[model_name]
         else:
             fn = f"{model_name}_infer.tar"
-        url = self.STORAGE_DIR + "/" + fn
-        download_and_extract(url, self._save_dir, model_name, overwrite=False)
-        return self._save_dir / model_name
+        url = self.URL_PREFIX + "/" + fn
+        download_and_extract(url, save_dir.parent, model_name, overwrite=False)
 
 
 class _HuggingFaceModelHoster(_BaseModelHoster):
-    _check_url = "https://huggingface.co"
-    _model_list = OCR_MODELS
+    MODEL_LIST = OCR_MODELS
+    alias = "huggingface"
+    root_url = "https://huggingface.co"
 
-    def __init__(self):
-        super().__init__(self._check_url)
+    def __init__(self, save_dir):
+        super().__init__(save_dir)
 
-    def _download(self, model_name):
-        local_dir = self._save_dir / f"{model_name}"
-        if os.path.exists(local_dir):
+    def _download(self, model_name, save_dir):
+        if os.path.exists(save_dir):
             hf_hub.snapshot_download(
-                repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
+                repo_id=f"PaddlePaddle/{model_name}", local_dir=save_dir
             )
         else:
             with tempfile.TemporaryDirectory() as td:
@@ -451,42 +460,97 @@ class _HuggingFaceModelHoster(_BaseModelHoster):
                 hf_hub.snapshot_download(
                     repo_id=f"PaddlePaddle/{model_name}", local_dir=temp_dir
                 )
-                shutil.move(temp_dir, local_dir)
+                shutil.move(temp_dir, save_dir)
+
+
+class _ModelScopeModelHoster(_BaseModelHoster):
+    MODEL_LIST = OCR_MODELS
+    alias = "modelscope"
+    root_url = "https://www.modelscope.cn"
+
+    def __init__(self, save_dir):
+        super().__init__(save_dir)
+
+    def _download(self, model_name, save_dir):
+        def _clone(target_dir):
+            try:
+                repo = Repo(target_dir)
+                repo.git.reset("--hard")
+                repo.git.clean("-fd")
+                head_ref = repo.remotes.origin.refs.HEAD
+                default_branch = (
+                    str(head_ref.reference).replace("origin/", "")
+                    if hasattr(head_ref, "reference")
+                    else "master"
+                )
+                repo.git.checkout(default_branch)
+                repo.remotes.origin.pull()
+            except Exception as e:
+                shutil.rmtree(target_dir)
+                Repo.clone_from(repo_url, target_dir)
+
+        repo_url = f"{self.root_url}/PaddlePaddle/{model_name}"
+        if os.path.exists(save_dir):
+            _clone(save_dir)
+        else:
+            with tempfile.TemporaryDirectory() as td:
+                temp_dir = os.path.join(td, "temp_dir")
+                Repo.clone_from(repo_url, temp_dir)
+                shutil.move(temp_dir, save_dir)
 
 
 class _ModelManager:
     _save_dir = Path(CACHE_DIR) / "official_models"
 
     def __init__(self) -> None:
-        self._bos_hoster = _BosModelHoster()
-        self._hf_hoster = _HuggingFaceModelHoster()
+        self._hosters = self._build_hosters()
+
+    def _build_hosters(self):
+        hosters = []
+        for hoster_cls in [
+            _HuggingFaceModelHoster,
+            _ModelScopeModelHoster,
+            _BosModelHoster,
+        ]:
+            if hoster_cls.alias == MODEL_SOURCE:
+                if hoster_cls.is_available():
+                    hosters.insert(0, hoster_cls(self._save_dir))
+            else:
+                if hoster_cls.is_available():
+                    hosters.append(hoster_cls(self._save_dir))
+        if len(hosters) == 0:
+            logging.warning("No model hoster is available!")
+        return hosters
 
     def _get_model_local_path(self, model_name):
         logging.info(
             f"Using official model ({model_name}), the model files will be automatically downloaded and saved in {self._save_dir}."
         )
+        return self._download_from_hoster(self._hosters, model_name)
 
-        if (
-            MODEL_SOURCE == "huggingface"
-            and self._hf_hoster.is_available()
-            and model_name in self._hf_hoster.support_models
-        ):
-            try:
-                return self._hf_hoster.get_model(model_name)
-            except Exception as e:
-                logging.warning(
-                    f"Encounter exception when download model from huggingface: \n{e}.\nPaddleX would try to download from BOS."
-                )
-                return self._bos_hoster.get_model(model_name)
-        elif MODEL_SOURCE == "modelscope":
-            raise Exception(
-                f"ModelScope is not supported! Please use `HuggingFace` or `BOS`."
-            )
-        else:
-            return self._bos_hoster.get_model(model_name)
+    def _download_from_hoster(self, hosters, model_name):
+        for hoster in hosters:
+            if model_name in hoster.MODEL_LIST:
+                try:
+                    return hoster.get_model(model_name)
+                except Exception as e:
+                    logging.warning(
+                        f"Encounter exception when download model from {hoster.alias}: \n{e}."
+                    )
+                    if len(hosters) > 1:
+                        logging.warning(
+                            f"PaddleX would try to download from other model sources."
+                        )
+                        return self._download_from_hoster(hosters[1:], model_name)
+                    raise Exception(
+                        f"No model source is available! Please check network or use local model files!"
+                    )
 
-    def __getitem__(self, key):
-        return self._get_model_local_path(key)
+    def __contains__(self, model_name):
+        return model_name in ALL_MODELS
+
+    def __getitem__(self, model_name):
+        return self._get_model_local_path(model_name)
 
 
 official_models = _ModelManager()
