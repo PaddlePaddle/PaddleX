@@ -22,6 +22,7 @@ from setuptools import find_packages, setup
 
 DEP_SPECS = {
     "aiohttp": ">= 3.9",
+    "aistudio_sdk": ">=0.3.5",
     "bce-python-sdk": ">= 0.9",
     "beautifulsoup4": "",
     "chardet": "",
@@ -34,7 +35,6 @@ DEP_SPECS = {
     "filelock": "",
     "filetype": ">= 1.2",
     "ftfy": "",
-    "gitpython": "",
     "GPUtil": ">= 1.4",
     "huggingface_hub": "",
     "imagesize": "",
@@ -46,6 +46,7 @@ DEP_SPECS = {
     "langchain-openai": ">= 0.1",
     "lxml": "",
     "matplotlib": "",
+    "modelscope": ">=1.28.0",
     "numpy": ">= 1.24",
     "openai": ">= 1.63",
     "opencv-contrib-python": "== 4.10.0.84",
@@ -79,11 +80,12 @@ DEP_SPECS = {
 }
 
 REQUIRED_DEPS = [
+    "aistudio_sdk",
     "chardet",
     "colorlog",
     "filelock",
-    "gitpython",
     "huggingface_hub",
+    "modelscope",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional

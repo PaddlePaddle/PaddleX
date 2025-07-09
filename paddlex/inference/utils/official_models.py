@@ -22,16 +22,14 @@ import huggingface_hub as hf_hub
 
 hf_hub.logging.set_verbosity_error()
 
+import aistudio_sdk
+import modelscope
 import requests
-from git import Repo
 
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
 from ...utils.flags import MODEL_SOURCE
-
-# import modelscope.hub as ms_hub
-
 
 ALL_MODELS = [
     "ResNet18",
@@ -388,14 +386,14 @@ OCR_MODELS = [
 class _BaseModelHoster(ABC):
     root_url = None
     _available_check_timeout = 1
-    MODEL_LIST = []
+    model_list = []
 
     def __init__(self, save_dir):
         self._save_dir = save_dir
 
     def get_model(self, model_name):
         assert (
-            model_name in self.MODEL_LIST
+            model_name in self.model_list
         ), f"The model {model_name} is not supported on hosting {self.__class__.__name__}!"
         model_dir = self._save_dir / f"{model_name}"
         self._download(model_name, model_dir)
@@ -417,7 +415,7 @@ class _BaseModelHoster(ABC):
 
 
 class _BosModelHoster(_BaseModelHoster):
-    MODEL_LIST = ALL_MODELS
+    model_list = ALL_MODELS
     alias = "bos"
 
     URL_PREFIX = "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/"
@@ -429,9 +427,6 @@ class _BosModelHoster(_BaseModelHoster):
         "whisper_tiny": "whisper_tiny.tar",
     }
 
-    def __init__(self, save_dir):
-        super().__init__(save_dir)
-
     def _download(self, model_name, save_dir):
         if model_name in self.special_model_fn:
             fn = self.special_model_fn[model_name]
@@ -442,64 +437,67 @@ class _BosModelHoster(_BaseModelHoster):
 
 
 class _HuggingFaceModelHoster(_BaseModelHoster):
-    MODEL_LIST = OCR_MODELS
+    model_list = OCR_MODELS
     alias = "huggingface"
     root_url = "https://huggingface.co"
 
-    def __init__(self, save_dir):
-        super().__init__(save_dir)
-
     def _download(self, model_name, save_dir):
-        if os.path.exists(save_dir):
+        def _clone(local_dir):
             hf_hub.snapshot_download(
-                repo_id=f"PaddlePaddle/{model_name}", local_dir=save_dir
+                repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
             )
-        else:
-            with tempfile.TemporaryDirectory() as td:
-                temp_dir = os.path.join(td, "temp_dir")
-                hf_hub.snapshot_download(
-                    repo_id=f"PaddlePaddle/{model_name}", local_dir=temp_dir
-                )
-                shutil.move(temp_dir, save_dir)
 
-
-class _ModelScopeModelHoster(_BaseModelHoster):
-    MODEL_LIST = OCR_MODELS
-    alias = "modelscope"
-    root_url = "https://www.modelscope.cn"
-
-    def __init__(self, save_dir):
-        super().__init__(save_dir)
-
-    def _download(self, model_name, save_dir):
-        def _clone(target_dir):
-            try:
-                repo = Repo(target_dir)
-                repo.git.reset("--hard")
-                repo.git.clean("-fd")
-                head_ref = repo.remotes.origin.refs.HEAD
-                default_branch = (
-                    str(head_ref.reference).replace("origin/", "")
-                    if hasattr(head_ref, "reference")
-                    else "master"
-                )
-                repo.git.checkout(default_branch)
-                repo.remotes.origin.pull()
-            except Exception as e:
-                shutil.rmtree(target_dir)
-                Repo.clone_from(repo_url, target_dir)
-
-        repo_url = f"{self.root_url}/PaddlePaddle/{model_name}"
         if os.path.exists(save_dir):
             _clone(save_dir)
         else:
             with tempfile.TemporaryDirectory() as td:
                 temp_dir = os.path.join(td, "temp_dir")
-                Repo.clone_from(repo_url, temp_dir)
+                _clone(temp_dir)
+                shutil.move(temp_dir, save_dir)
+
+
+class _ModelScopeModelHoster(_BaseModelHoster):
+    model_list = OCR_MODELS
+    alias = "modelscope"
+    root_url = "https://www.modelscope.cn"
+
+    def _download(self, model_name, save_dir):
+        def _clone(local_dir):
+            modelscope.snapshot_download(
+                repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
+            )
+
+        if os.path.exists(save_dir):
+            _clone(save_dir)
+        else:
+            with tempfile.TemporaryDirectory() as td:
+                temp_dir = os.path.join(td, "temp_dir")
+                _clone(temp_dir)
+                shutil.move(temp_dir, save_dir)
+
+
+class _AIStudioModelHoster(_BaseModelHoster):
+    model_list = OCR_MODELS
+    alias = "aistudio"
+    root_url = "https://git.aistudio.baidu.com"
+
+    def _download(self, model_name, save_dir):
+        def _clone(local_dir):
+            aistudio_sdk.snapshot_download(
+                repo_id=f"PaddleX/{model_name}", local_dir=local_dir
+            )
+
+        if os.path.exists(save_dir):
+            _clone(save_dir)
+        else:
+            with tempfile.TemporaryDirectory() as td:
+                temp_dir = os.path.join(td, "temp_dir")
+                _clone(temp_dir)
                 shutil.move(temp_dir, save_dir)
 
 
 class _ModelManager:
+    model_list = ALL_MODELS
     _save_dir = Path(CACHE_DIR) / "official_models"
 
     def __init__(self) -> None:
@@ -509,6 +507,7 @@ class _ModelManager:
         hosters = []
         for hoster_cls in [
             _HuggingFaceModelHoster,
+            _AIStudioModelHoster,
             _ModelScopeModelHoster,
             _BosModelHoster,
         ]:
@@ -530,7 +529,7 @@ class _ModelManager:
 
     def _download_from_hoster(self, hosters, model_name):
         for hoster in hosters:
-            if model_name in hoster.MODEL_LIST:
+            if model_name in hoster.model_list:
                 try:
                     return hoster.get_model(model_name)
                 except Exception as e:
@@ -547,7 +546,7 @@ class _ModelManager:
                     )
 
     def __contains__(self, model_name):
-        return model_name in ALL_MODELS
+        return model_name in self.model_list
 
     def __getitem__(self, model_name):
         return self._get_model_local_path(model_name)
