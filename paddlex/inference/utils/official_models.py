@@ -22,9 +22,12 @@ import huggingface_hub as hf_hub
 
 hf_hub.logging.set_verbosity_error()
 
-import aistudio_sdk
+import socket
+
 import modelscope
-import requests
+
+os.environ["AISTUDIO_LOG"] = "critical"
+from aistudio_sdk.snapshot_download import snapshot_download as aistudio_download
 
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
@@ -384,9 +387,11 @@ OCR_MODELS = [
 
 
 class _BaseModelHoster(ABC):
-    root_url = None
-    _available_check_timeout = 1
+    alias = ""
     model_list = []
+    healthcheck_url = None
+    _healthcheck_port = 443
+    _healthcheck_timeout = 1
 
     def __init__(self, save_dir):
         self._save_dir = save_dir
@@ -405,18 +410,23 @@ class _BaseModelHoster(ABC):
 
     @classmethod
     def is_available(cls):
-        if cls.root_url is None:
+        if cls.healthcheck_url is None:
             return True
         try:
-            response = requests.get(cls.root_url, timeout=cls._available_check_timeout)
-            return response.ok == True
-        except requests.exceptions.RequestException as e:
+            with socket.create_connection(
+                (cls.healthcheck_url, cls._healthcheck_port),
+                timeout=cls._healthcheck_timeout,
+            ):
+                return True
+        except Exception:
+            logging.debug(f"The model hosting platform({cls.__name__}) is unreachable!")
             return False
 
 
 class _BosModelHoster(_BaseModelHoster):
     model_list = ALL_MODELS
     alias = "bos"
+    healthcheck_url = "paddle-model-ecology.bj.bcebos.com"
 
     URL_PREFIX = "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/"
     special_model_fn = {
@@ -439,7 +449,7 @@ class _BosModelHoster(_BaseModelHoster):
 class _HuggingFaceModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "huggingface"
-    root_url = "https://huggingface.co"
+    healthcheck_url = "huggingface.co"
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
@@ -459,7 +469,7 @@ class _HuggingFaceModelHoster(_BaseModelHoster):
 class _ModelScopeModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "modelscope"
-    root_url = "https://www.modelscope.cn"
+    healthcheck_url = "modelscope.cn"
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
@@ -479,13 +489,11 @@ class _ModelScopeModelHoster(_BaseModelHoster):
 class _AIStudioModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "aistudio"
-    root_url = "https://git.aistudio.baidu.com"
+    healthcheck_url = "aistudio.baidu.com"
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
-            aistudio_sdk.snapshot_download(
-                repo_id=f"PaddleX/{model_name}", local_dir=local_dir
-            )
+            aistudio_download(repo_id=f"PaddleX/{model_name}", local_dir=local_dir)
 
         if os.path.exists(save_dir):
             _clone(save_dir)
@@ -518,17 +526,28 @@ class _ModelManager:
                 if hoster_cls.is_available():
                     hosters.append(hoster_cls(self._save_dir))
         if len(hosters) == 0:
-            logging.warning("No model hoster is available!")
+            logging.warning(
+                f"""No model hoster is available! Please check your network connection to one of the following model hosts:
+HuggingFace ({_HuggingFaceModelHoster.healthcheck_url}),
+ModelScope ({_ModelScopeModelHoster.healthcheck_url}),
+AIStudio ({_AIStudioModelHoster.healthcheck_url}), or
+BOS ({_BosModelHoster.healthcheck_url}).
+Otherwise, only local models can be used."""
+            )
         return hosters
 
     def _get_model_local_path(self, model_name):
         logging.info(
             f"Using official model ({model_name}), the model files will be automatically downloaded and saved in {self._save_dir}."
         )
+        if len(self._hosters) == 0:
+            msg = "No available model hosting platforms detected. Please check your network connection."
+            logging.error(msg)
+            raise Exception(msg)
         return self._download_from_hoster(self._hosters, model_name)
 
     def _download_from_hoster(self, hosters, model_name):
-        for hoster in hosters:
+        for idx, hoster in enumerate(hosters):
             if model_name in hoster.model_list:
                 try:
                     return hoster.get_model(model_name)
@@ -536,14 +555,14 @@ class _ModelManager:
                     logging.warning(
                         f"Encounter exception when download model from {hoster.alias}: \n{e}."
                     )
-                    if len(hosters) > 1:
-                        logging.warning(
-                            f"PaddleX would try to download from other model sources."
+                    if len(hosters) <= 1:
+                        raise Exception(
+                            f"No model source is available! Please check network or use local model files!"
                         )
-                        return self._download_from_hoster(hosters[1:], model_name)
-                    raise Exception(
-                        f"No model source is available! Please check network or use local model files!"
+                    logging.warning(
+                        f"PaddleX would try to download from other model sources."
                     )
+                    return self._download_from_hoster(hosters[idx + 1 :], model_name)
 
     def __contains__(self, model_name):
         return model_name in self.model_list
