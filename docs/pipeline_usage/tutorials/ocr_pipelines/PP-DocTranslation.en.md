@@ -1603,181 +1603,181 @@ The following is the API reference for basic Serving and examples of multilingua
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>Refer to the description of the <code>use_doc_orientation_classify</code>parameter in the <code>predict</code>method of the pipeline object.</td>
+<td>Refer to the description of the <code>use_doc_orientation_classify</code>parameter in the <code>visual_predict</code>method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>Refer to the description of the <code>use_doc_unwarping</code>parameter in the <code>predict</code>method of the pipeline object.</td>
+<td>Refer to the description of the <code>use_doc_unwarping</code>parameter in the <code>visual_predict</code>method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useTextlineOrientation</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>Refer to the description of the <code>use_textline_orientation</code>parameter in the <code>predict</code>method of the pipeline object.</td>
+<td>Refer to the description of the <code>use_textline_orientation</code>parameter in the <code>visual_predict</code>method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>See the description of the <code>use_seal_recognition</code> parameter for the <code>predict</code> method in the pipeline object.</td>
+<td>See the description of the <code>use_seal_recognition</code> parameter for the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useTableRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>See the description of the <code>use_table_recognition</code> parameter for the <code>predict</code> method in the pipeline object.</td>
+<td>See the description of the <code>use_table_recognition</code> parameter for the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useFormulaRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>See the description of the <code>use_formula_recognition</code> parameter for the <code>predict</code> method in the pipeline object.</td>
+<td>See the description of the <code>use_formula_recognition</code> parameter for the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useChartRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>See the description of the <code>use_chart_recognition</code> parameter for the <code>predict</code> method in the pipeline object.</td>
+<td>See the description of the <code>use_chart_recognition</code> parameter for the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useRegionDetection</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>See the description of the <code>use_region_detection</code> parameter for the <code>predict</code> method in the pipeline object.</td>
+<td>See the description of the <code>use_region_detection</code> parameter for the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
 <td><code>number</code>|<code>object</code>|<code>null</code></td>
-<td>Refer to the description of the <code>predict</code> method's <code>layout_threshold</code> parameter in the pipeline object.</td>
+<td>Refer to the description of the <code>visual_predict</code> method's <code>layout_threshold</code> parameter in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutNms</code></td>
 <td><code>boolean</code>|<code>null</code></td>
-<td>Refer to the description of the <code>predict</code> method's <code>layout_nms</code> parameter in the pipeline object.</td>
+<td>Refer to the description of the <code>visual_predict</code> method's <code>layout_nms</code> parameter in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutUnclipRatio</code></td>
 <td><code>number</code>|<code>array</code>|<code>object</code>|<code>null</code></td>
-<td>Refer to the description of the <code>predict</code> method's <code>layout_unclip_ratio</code> parameter in the pipeline object.</td>
+<td>Refer to the description of the <code>visual_predict</code> method's <code>layout_unclip_ratio</code> parameter in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code>|<code>object</code>|<code>null</code></td>
-<td>Refer to the description of the <code>predict</code> method's <code>layout_merge_bboxes_mode</code> parameter in the pipeline object.</td>
+<td>Refer to the description of the <code>visual_predict</code> method's <code>layout_merge_bboxes_mode</code> parameter in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code>|<code>null</code></td>
-<td>Refer to the description of the <code>predict</code> method's <code>text_det_limit_side_len</code> parameter in the pipeline object.</td>
+<td>Refer to the description of the <code>visual_predict</code> method's <code>text_det_limit_side_len</code> parameter in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code>|<code>null</code></td>
-<td>Refer to the description of the <code>text_det_limit_type</code> parameter of the <code>predict</code> method in the pipeline object.</td>
+<td>Refer to the description of the <code>text_det_limit_type</code> parameter of the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the description of the <code>text_det_thresh</code> parameter of the <code>predict</code> method in the pipeline object.</td>
+<td>Refer to the description of the <code>text_det_thresh</code> parameter of the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the description of the <code>text_det_box_thresh</code> parameter of the <code>predict</code> method in the pipeline object.</td>
+<td>Refer to the description of the <code>text_det_box_thresh</code> parameter of the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the description of the <code>text_det_unclip_ratio</code> parameter of the <code>predict</code> method in the pipeline object.</td>
+<td>Refer to the description of the <code>text_det_unclip_ratio</code> parameter of the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the description of the <code>text_rec_score_thresh</code> parameter of the <code>predict</code> method in the pipeline object.</td>
+<td>Refer to the description of the <code>text_rec_score_thresh</code> parameter of the <code>visual_predict</code> method in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetLimitSideLen</code></td>
 <td><code>integer</code>|<code>null</code></td>
-<td>Refer to the description in the pipeline object<code>predict</code>method<code>seal_det_limit_side_len</code>parameter description.</td>
+<td>Refer to the description in the pipeline object<code>visual_predict</code>method<code>seal_det_limit_side_len</code>parameter description.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetLimitType</code></td>
 <td><code>string</code>|<code>null</code></td>
-<td>Refer to the parameter description of <code>predict</code>method's<code>seal_det_limit_type</code> in the pipeline object.</td>
+<td>Refer to the parameter description of <code>visual_predict</code>method's<code>seal_det_limit_type</code> in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetThresh</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the parameter description of <code>predict</code>method's<code>seal_det_thresh</code> in the pipeline object.</td>
+<td>Refer to the parameter description of <code>visual_predict</code>method's<code>seal_det_thresh</code> in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetBoxThresh</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the parameter description of <code>predict</code>method's<code>seal_det_box_thresh</code> in the pipeline object.</td>
+<td>Refer to the parameter description of <code>visual_predict</code>method's<code>seal_det_box_thresh</code> in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetUnclipRatio</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the parameter description of <code>predict</code>method's<code>seal_det_unclip_ratio</code> in the pipeline object.</td>
+<td>Refer to the parameter description of <code>visual_predict</code>method's<code>seal_det_unclip_ratio</code> in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealRecScoreThresh</code></td>
 <td><code>number</code>|<code>null</code></td>
-<td>Refer to the parameter description of <code>predict</code>method's<code>seal_rec_score_thresh</code>Parameter description.</td>
+<td>Refer to the parameter description of <code>visual_predict</code>method's<code>seal_rec_score_thresh</code>Parameter description.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useWiredTableCellsTransToHtml</code></td>
 <td><code>boolean</code></td>
-<td>Refer to the parameter description of <code>use_wired_table_cells_trans_to_html</code> in the <code>predict</code> method of the pipeline object.</td>
+<td>Refer to the parameter description of <code>use_wired_table_cells_trans_to_html</code> in the <code>visual_predict</code> method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useWirelessTableCellsTransToHtml</code></td>
 <td><code>boolean</code></td>
-<td>Refer to the parameter description of <code>use_wireless_table_cells_trans_to_html</code> in the <code>predict</code> method of the pipeline object.</td>
+<td>Refer to the parameter description of <code>use_wireless_table_cells_trans_to_html</code> in the <code>visual_predict</code> method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useTableOrientationClassify</code></td>
 <td><code>boolean</code></td>
-<td>Refer to the parameter description of <code>use_table_orientation_classify</code> in the <code>predict</code> method of the pipeline object.</td>
+<td>Refer to the parameter description of <code>use_table_orientation_classify</code> in the <code>visual_predict</code> method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useOcrResultsWithTableCells</code></td>
 <td><code>boolean</code></td>
-<td>Refer to the parameter description of <code>use_ocr_results_with_table_cells</code> in the <code>predict</code> method of the pipeline object.</td>
+<td>Refer to the parameter description of <code>use_ocr_results_with_table_cells</code> in the <code>visual_predict</code> method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useE2eWiredTableRecModel</code></td>
 <td><code>boolean</code></td>
-<td>Refer to the parameter description of <code>use_e2e_wired_table_rec_model</code> in the <code>predict</code> method of the pipeline object.</td>
+<td>Refer to the parameter description of <code>use_e2e_wired_table_rec_model</code> in the <code>visual_predict</code> method of the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useE2eWirelessTableRecModel</code></td>
 <td><code>boolean</code></td>
-<td>Refer to the <code>predict</code>method's <code>use_e2e_wireless_table_rec_model</code>parameter description in the pipeline object.</td>
+<td>Refer to the <code>visual_predict</code>method's <code>use_e2e_wireless_table_rec_model</code>parameter description in the pipeline object.</td>
 <td>No</td>
 </tr>
 <tr>
