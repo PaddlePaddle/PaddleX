@@ -436,7 +436,7 @@ if sys.version_info[0] == 3:
 
 extras_require["pyonly"] = [
     "pillow<10.0.0",
-    "pandas>=0.25.0,<=1.3.5",
+    "pandas>=0.25.0,<=1.4.5",
     "pycocotools",
     "matplotlib",
     "chinese_calendar",
