@@ -723,9 +723,15 @@ class HPInfer(StaticInfer):
                 )
                 kwargs["trt_dynamic_shape_input_data"] = trt_dynamic_shape_input_data
         pp_option = PaddlePredictorOption(**kwargs)
+        pp_option.setdefault_by_model_name(model_name=self._config.pdx_model_name)
         logging.info("Using Paddle Inference backend")
         logging.info("Paddle predictor option: %s", pp_option)
-        return PaddleInfer(self._model_dir, self._model_file_prefix, option=pp_option)
+        return PaddleInfer(
+            self._config.pdx_model_name,
+            self._model_dir,
+            self._model_file_prefix,
+            option=pp_option,
+        )
 
     def _build_ui_runtime(self, backend, backend_config, ui_option=None):
         # TODO: Validate the compatibility of backends with device types
