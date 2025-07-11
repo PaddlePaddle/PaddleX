@@ -181,7 +181,11 @@ class Benchmark:
     def time_methods(self, cls):
         black_list = ["inintial_predictor"]
         for attr_name, attr_value in cls.__dict__.items():
-            if callable(attr_value) and not attr_name.startswith("__"):
+            if (
+                callable(attr_value)
+                and not attr_name.startswith("__")
+                and attr_name not in black_list
+            ):
                 setattr(cls, attr_name, self.timeit(attr_value))
         return cls
 
