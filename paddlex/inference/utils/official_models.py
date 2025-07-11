@@ -425,7 +425,10 @@ class _BosModelHoster(_BaseModelHoster):
     alias = "bos"
     healthcheck_url = "https://paddle-model-ecology.bj.bcebos.com"
 
-    URL_PREFIX = "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/"
+    version = "paddle3.0.0"
+    base_url = (
+        "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model"
+    )
     special_model_fn = {
         "whisper_large": "whisper_large.tar",
         "whisper_base": "whisper_base.tar",
@@ -439,7 +442,7 @@ class _BosModelHoster(_BaseModelHoster):
             fn = self.special_model_fn[model_name]
         else:
             fn = f"{model_name}_infer.tar"
-        url = self.URL_PREFIX + "/" + fn
+        url = f"{self.base_url}/{self.version}/{fn}"
         download_and_extract(url, save_dir.parent, model_name, overwrite=False)
 
 
