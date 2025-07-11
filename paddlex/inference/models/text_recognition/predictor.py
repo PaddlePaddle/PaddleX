@@ -111,7 +111,7 @@ class TextRecPredictor(BasePredictor):
         return None, None
 
     def get_vis_font(self):
-        if self.model_name.startswith("PP-OCR"):
+        if self.model_name.startswith(("PP-OCR", "en_PP-OCR")):
             return SIMFANG_FONT
 
         if self.model_name in (
