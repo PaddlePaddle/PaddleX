@@ -482,7 +482,9 @@ class Benchmark:
                 ops_all_time += op_all_time
 
             if i > 0:
-                new_summary_list.append([level, "Core", ops_all_time])
+                new_summary_list.append(["", "", ""])
+                new_summary_list.append([level, "Layer", np.sum(level_time_list[i])])
+                new_summary_list.append(["", "Core", ops_all_time])
                 new_summary_list.append(
                     ["", "Other", np.sum(level_time_list[i]) - ops_all_time]
                 )
