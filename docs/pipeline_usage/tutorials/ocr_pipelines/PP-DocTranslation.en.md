@@ -710,7 +710,7 @@ After executing the above code, you will obtain the parsed results of the origin
 
 # PP-DocTranslation Prediction Process, API Description, and Output Description
 
-<details><summary>(1) Instantiation<code>create_pipeline</code>Instantiate a pipeline object, with specific parameter descriptions as follows:</summary>
+<details><summary>(1) Instantiation <code>create_pipeline</code> Instantiate a pipeline object, with specific parameter descriptions as follows:</summary>
 <table>
 <thead>
 <tr>
@@ -754,7 +754,7 @@ After executing the above code, you will obtain the parsed results of the origin
 </tbody>
 </table>
 </details>
-<details><summary>(2) Call the <code>visual_predict()</code>method of the PP-DocTranslation pipeline object to obtain visual prediction results. This method will return a <code>generator</code>. Below are the parameters and descriptions of the <code>visual_predict()</code>method:</summary>
+<details><summary>(2) Call the <code>visual_predict()</code> method of the PP-DocTranslation pipeline object to obtain visual prediction results. This method will return a <code>generator</code>. Below are the parameters and descriptions of the <code>visual_predict()</code>method:</summary>
 <table>
 <thead>
 <tr>
@@ -1299,7 +1299,7 @@ After executing the above code, you will obtain the parsed results of the origin
 - Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, it will save the layout region detection visualization image, global OCR visualization image, layout reading order visualization image, etc. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to directly specify a specific file path; otherwise, multiple images will be overwritten, and only the last image will be retained.)
 - Calling the `save_to_markdown()` method will save the converted Markdown file to the specified `save_path`. The saved file path will be `save_path/{your_img_basename}.md`. If the input is a PDF file, it is recommended to directly specify a directory; otherwise, multiple markdown files will be overwritten.
 - Calling the `concatenate_markdown_pages()` method will merge the multi-page Markdown content `markdown_list` output by the PP-DocTranslation pipeline into a single complete document and return the merged Markdown content.</details>
-<details><summary>(4) Call<code>translate()</code>method to perform document translation. This method will return the original markdown text and the translated text, which is a markdown object. You can save the required parts locally by executing the<code>save_to_markdown()</code>method. The following are the descriptions of the relevant parameters of the<code>translate()</code>method:</summary>
+<details><summary>(4) Call <code>translate()</code> method to perform document translation. This method will return the original markdown text and the translated text, which is a markdown object. You can save the required parts locally by executing the <code>save_to_markdown()</code> method. The following are the descriptions of the relevant parameters of the <code>translate()</code> method:</summary>
 <table>
 <thead>
 <tr>
