@@ -17,6 +17,7 @@ import copy
 import csv
 import functools
 import inspect
+import sys
 import time
 import uuid
 from pathlib import Path
@@ -42,6 +43,7 @@ _is_measuring_time = False
 
 step_var = contextvars.ContextVar("step", default=0)
 level_var = contextvars.ContextVar("level", default=0)
+top_func_var = contextvars.ContextVar("top_func", default=None)
 
 
 class Benchmark:
@@ -135,6 +137,22 @@ class Benchmark:
                     def _wrapper(*args, **kwargs):
                         step_var.set(step_var.get() + 1)
                         level_var.set(level_var.get() + 1)
+
+                        if level_var.get() == 1:
+                            if top_func_var.get() is None:
+                                top_func_var.set(f"{name}@{location}")
+                            else:
+                                logging.error(
+                                    f"Multiple top-level function calls detected:\n"
+                                    f"  Function 1: {top_func_var.get().split('@')[0]}\n"
+                                    f"    Location: {top_func_var.get().split('@')[1]}\n"
+                                    f"  Function 2: {name}\n"
+                                    f"    Location: {location}\n"
+                                    "Only one top-level function can be tracked at a time.\n"
+                                    "Please call 'benchmark.reset()' between top-level function calls."
+                                )
+                                sys.exit(3)
+
                         operation_name = (
                             f"{step_var.get()}@{level_var.get()}@{name}@{location}"
                         )
@@ -163,11 +181,7 @@ class Benchmark:
     def time_methods(self, cls):
         black_list = ["inintial_predictor"]
         for attr_name, attr_value in cls.__dict__.items():
-            if (
-                callable(attr_value)
-                and not attr_name.startswith("__")
-                and attr_name not in black_list
-            ):
+            if callable(attr_value) and not attr_name.startswith("__"):
                 setattr(cls, attr_name, self.timeit(attr_value))
         return cls
 
@@ -207,6 +221,8 @@ class Benchmark:
                     yield item
                 except StopIteration:
                     break
+
+            level_var.set(level_var.get() - 1)
 
         return wrapper()
 
@@ -425,6 +441,7 @@ class Benchmark:
         operation_list = set()
         summary_list = []
         max_level = 0
+        loop_num = 0
 
         for name, time_list in self.logs.items():
             op_time = np.sum(time_list)
@@ -440,7 +457,10 @@ class Benchmark:
             operation_list.add((operation_name, location))
             max_level = max(level, max_level)
 
-            if level != 1:
+            if level == 1:
+                loop_num += 1
+                format_operation_name = operation_name
+            else:
                 format_operation_name = "    " * int(level - 1) + "-> " + operation_name
             info_list.append(
                 (step, level, operation_name, format_operation_name, op_time)
@@ -448,8 +468,18 @@ class Benchmark:
 
         operation_list = list(operation_list)
         info_list.sort(key=lambda x: x[0])
+        step_num = int(len(info_list) / loop_num)
+        for idx in range(step_num):
+            step = info_list[idx][0]
+            format_operation_name = info_list[idx][3]
+            op_time = (
+                np.sum(
+                    [info_list[pos][4] for pos in range(idx, len(info_list), step_num)]
+                )
+                / loop_num
+            )
+            detail_list.append([step, format_operation_name, op_time])
 
-        detail_list = [[info[0], info[3], info[4]] for info in info_list]
         level_time_list = [[0] for _ in range(max_level)]
         for idx, info in enumerate(info_list):
             step = info[0]
@@ -477,16 +507,18 @@ class Benchmark:
             ops_all_time = 0.0
             op_info_list = []
             for idx, (name, time_list) in enumerate(op_dict.items()):
-                op_all_time = np.sum(time_list)
+                op_all_time = np.sum(time_list) / loop_num
                 op_info_list.append([level if i + idx == 0 else "", name, op_all_time])
                 ops_all_time += op_all_time
 
             if i > 0:
                 new_summary_list.append(["", "", ""])
-                new_summary_list.append([level, "Layer", np.sum(level_time_list[i])])
+                new_summary_list.append(
+                    [level, "Layer", np.sum(level_time_list[i]) / loop_num]
+                )
                 new_summary_list.append(["", "Core", ops_all_time])
                 new_summary_list.append(
-                    ["", "Other", np.sum(level_time_list[i]) - ops_all_time]
+                    ["", "Other", np.sum(level_time_list[i]) / loop_num - ops_all_time]
                 )
             new_summary_list += op_info_list
 
