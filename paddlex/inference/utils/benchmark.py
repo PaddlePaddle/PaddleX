@@ -420,12 +420,14 @@ class Benchmark:
                     writer.writerows(csv_data)
 
     def gather_pipeline(self):
+        info_list = []
         detail_list = []
         operation_list = set()
         summary_list = []
+        max_level = 0
 
         for name, time_list in self.logs.items():
-            all_time = np.sum(time_list)
+            op_time = np.sum(time_list)
 
             parts = name.split("@")
             step = int(parts[0])
@@ -436,24 +438,38 @@ class Benchmark:
                 location = "Unknown"
 
             operation_list.add((operation_name, location))
+            max_level = max(level, max_level)
 
+            if level != 1:
+                format_operation_name = "    " * int(level - 1) + "-> " + operation_name
+            info_list.append(
+                (step, level, operation_name, format_operation_name, op_time)
+            )
+
+        operation_list = list(operation_list)
+        info_list.sort(key=lambda x: x[0])
+
+        detail_list = [[info[0], info[3], info[4]] for info in info_list]
+        level_time_list = [[0] for _ in range(max_level)]
+        for idx, info in enumerate(info_list):
+            step = info[0]
+            level = info[1]
+            operation_name = info[2]
+            op_time = info[4]
+
+            # The total time consumed by all operations on this layer
+            if level > info_list[idx - 1][1]:
+                level_time_list[level - 1].append(info_list[idx - 1][4])
+
+            # The total time consumed by each operation on this layer
             while len(summary_list) < level:
                 summary_list.append([len(summary_list) + 1, {}])
             if summary_list[level - 1][1].get(operation_name, None) is None:
-                summary_list[level - 1][1][operation_name] = [all_time]
+                summary_list[level - 1][1][operation_name] = [op_time]
             else:
-                summary_list[level - 1][1][operation_name].append(all_time)
-
-            if level != 1:
-                operation_name = "    " * int(level - 1) + "-> " + operation_name
-
-            detail_list.append((step, operation_name, all_time))
-
-        operation_list = list(operation_list)
-        detail_list.sort(key=lambda x: x[0])
+                summary_list[level - 1][1][operation_name].append(op_time)
 
         new_summary_list = []
-        all_time_backup = 0.0
         for i in range(len(summary_list)):
             level = summary_list[i][0]
             op_dict = summary_list[i][1]
@@ -467,10 +483,10 @@ class Benchmark:
 
             if i > 0:
                 new_summary_list.append([level, "Core", ops_all_time])
-                new_summary_list.append(["", "Other", all_time_backup - ops_all_time])
+                new_summary_list.append(
+                    ["", "Other", np.sum(level_time_list[i]) - ops_all_time]
+                )
             new_summary_list += op_info_list
-
-            all_time_backup = ops_all_time
 
         return detail_list, new_summary_list, operation_list
 
