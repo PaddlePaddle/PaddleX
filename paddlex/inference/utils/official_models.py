@@ -22,9 +22,8 @@ import huggingface_hub as hf_hub
 
 hf_hub.logging.set_verbosity_error()
 
-import socket
-
 import modelscope
+import requests
 
 os.environ["AISTUDIO_LOG"] = "critical"
 from aistudio_sdk.snapshot_download import snapshot_download as aistudio_download
@@ -390,7 +389,6 @@ class _BaseModelHoster(ABC):
     alias = ""
     model_list = []
     healthcheck_url = None
-    _healthcheck_port = 443
     _healthcheck_timeout = 1
 
     def __init__(self, save_dir):
@@ -413,11 +411,10 @@ class _BaseModelHoster(ABC):
         if cls.healthcheck_url is None:
             return True
         try:
-            with socket.create_connection(
-                (cls.healthcheck_url, cls._healthcheck_port),
-                timeout=cls._healthcheck_timeout,
-            ):
-                return True
+            response = requests.head(
+                cls.healthcheck_url, timeout=cls._healthcheck_timeout
+            )
+            return response.ok == True
         except Exception:
             logging.debug(f"The model hosting platform({cls.__name__}) is unreachable!")
             return False
@@ -426,7 +423,7 @@ class _BaseModelHoster(ABC):
 class _BosModelHoster(_BaseModelHoster):
     model_list = ALL_MODELS
     alias = "bos"
-    healthcheck_url = "paddle-model-ecology.bj.bcebos.com"
+    healthcheck_url = "https://paddle-model-ecology.bj.bcebos.com"
 
     URL_PREFIX = "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/"
     special_model_fn = {
@@ -449,7 +446,7 @@ class _BosModelHoster(_BaseModelHoster):
 class _HuggingFaceModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "huggingface"
-    healthcheck_url = "huggingface.co"
+    healthcheck_url = "https://huggingface.co"
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
@@ -469,7 +466,7 @@ class _HuggingFaceModelHoster(_BaseModelHoster):
 class _ModelScopeModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "modelscope"
-    healthcheck_url = "modelscope.cn"
+    healthcheck_url = "https://modelscope.cn"
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
@@ -489,7 +486,7 @@ class _ModelScopeModelHoster(_BaseModelHoster):
 class _AIStudioModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "aistudio"
-    healthcheck_url = "aistudio.baidu.com"
+    healthcheck_url = "https://aistudio.baidu.com"
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
