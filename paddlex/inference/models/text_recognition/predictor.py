@@ -73,7 +73,7 @@ class TextRecPredictor(BasePredictor):
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
         batch_preds = self.infer(x=x)
-        texts, scores = self.post_op(batch_preds)
+        texts, scores = self.post_op(batch_preds, return_word_box=True)
         return {
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,

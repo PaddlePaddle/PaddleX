@@ -14,6 +14,7 @@
 
 from .base_result import BaseResult, CVResult
 from .convert_points_and_boxes import convert_points_to_boxes
+from .cal_ocr_word_box import cal_ocr_word_box
 from .crop_image_regions import CropByBoxes, CropByPolys
 from .sort_boxes import SortPolyBoxes, SortQuadBoxes
 from .warp_image import rotate_image

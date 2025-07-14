@@ -72,6 +72,8 @@ class OCRResult(BaseCVResult):
         Returns:
             Dict[Image.Image]: A dictionary containing two images: 'doc_preprocessor_res' and 'ocr_res_img'.
         """
+        # if "text_word_region" in self:
+             
         boxes = self["rec_polys"]
         txts = self["rec_texts"]
         image = self["doc_preprocessor_res"]["output_img"]

@@ -21,6 +21,7 @@ from .common import (
     SortPolyBoxes,
     SortQuadBoxes,
     convert_points_to_boxes,
+    cal_ocr_word_box,
     rotate_image,
 )
 from .faisser import FaissBuilder, FaissIndexer, IndexData

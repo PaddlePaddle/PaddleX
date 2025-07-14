@@ -30,6 +30,7 @@ from ..components import (
     SortQuadBoxes,
     convert_points_to_boxes,
     rotate_image,
+    cal_ocr_word_box
 )
 from .result import OCRResult
 
@@ -435,10 +436,19 @@ class _OCRPipeline(BasePipeline):
                     ):
                         sub_img_id = sorted_subs_info[i]["sub_img_id"]
                         sub_img_info_list[sub_img_id]["rec_res"] = rec_res
+                    return_word_box = True
                     for sno in range(len(sub_img_info_list)):
                         rec_res = sub_img_info_list[sno]["rec_res"]
                         if rec_res["rec_score"] >= text_rec_score_thresh:
-                            res["rec_texts"].append(rec_res["rec_text"])
+                            if return_word_box:
+                                word_box_content_list, word_box_list = cal_ocr_word_box(
+                                    rec_res["rec_text"][0], dt_polys[sno], rec_res["rec_text"][1]
+                                )
+                                res["text_word"] = word_box_content_list
+                                res["text_word_region"] = word_box_list
+                                res["rec_texts"].append(rec_res["rec_text"][0])
+                            else:
+                                res["rec_texts"].append(rec_res["rec_text"])
                             res["rec_scores"].append(rec_res["rec_score"])
                             res["vis_fonts"].append(rec_res["vis_font"])
                             res["rec_polys"].append(dt_polys[sno])
@@ -447,6 +457,9 @@ class _OCRPipeline(BasePipeline):
                 if self.text_type == "general":
                     rec_boxes = convert_points_to_boxes(res["rec_polys"])
                     res["rec_boxes"] = rec_boxes
+                    # if return_word_box:
+                    #     word_boxes = cal_ocr_word_box(rec_boxes)
+                    #     res["word_boxes"] = word_boxes
                 else:
                     res["rec_boxes"] = np.array([])
 
