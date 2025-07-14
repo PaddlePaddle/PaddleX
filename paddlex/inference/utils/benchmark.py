@@ -141,7 +141,7 @@ class Benchmark:
                         if level_var.get() == 1:
                             if top_func_var.get() is None:
                                 top_func_var.set(f"{name}@{location}")
-                            else:
+                            elif top_func_var.get() != f"{name}@{location}":
                                 logging.error(
                                     f"Multiple top-level function calls detected:\n"
                                     f"  Function 1: {top_func_var.get().split('@')[0]}\n"
@@ -234,6 +234,7 @@ class Benchmark:
         self._elapses = {}
         step_var.set(0)
         level_var.set(0)
+        top_func_var.set(None)
 
     def _update(self, elapse, name):
         elapse = elapse * 1000
