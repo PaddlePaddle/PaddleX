@@ -387,10 +387,7 @@ Python 客户端目前支持的 Python 版本为 3.8 至 3.12。
       "shape": [1, 1],
       "datatype": "BYTES",
       "data": [
-        {
-          "file": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png",
-          "visualize": false
-        }
+        "{\"file\":\"https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png\",\"visualize\":false}"
       ]
     }
   ],
