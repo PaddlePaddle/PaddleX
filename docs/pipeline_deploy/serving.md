@@ -387,10 +387,7 @@ Python 客户端目前支持的 Python 版本为 3.8 至 3.12。
       "shape": [1, 1],
       "datatype": "BYTES",
       "data": [
-        {
-          "file": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png",
-          "visualize": false
-        }
+        "{\"file\":\"https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png\",\"visualize\":false}"
       ]
     }
   ],
@@ -410,7 +407,7 @@ Python 客户端目前支持的 Python 版本为 3.8 至 3.12。
 # 假设 `REQUEST_JSON` 为上一步骤中构造的请求体
 curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
     -H 'Content-Type: application/json' \
-    -d "${REQUEST_JSON}"
+    -d "$REQUEST_JSON"
 ```
 
 最后，需要解析服务的响应。响应体的原始结构如下：
