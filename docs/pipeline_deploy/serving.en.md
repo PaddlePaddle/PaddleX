@@ -389,10 +389,7 @@ Taking the general OCR pipeline as an example, the constructed request body is a
       "shape": [1, 1],
       "datatype": "BYTES",
       "data": [
-        {
-          "file": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png",
-          "visualize": false
-        }
+        "{\"file\":\"https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png\",\"visualize\":false}"
       ]
     }
   ],
