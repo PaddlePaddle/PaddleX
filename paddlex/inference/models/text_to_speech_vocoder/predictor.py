@@ -61,7 +61,11 @@ class PwganPredictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-        mel = batch_data[0]
+        input_data = batch_data[0]
+        if type(input_data) is str:
+            mel = np.load(input_data)
+        else:
+            mel = input_data
         wav = self.infer([mel])
         result = np.array(wav).reshape(1,-1)
         return {

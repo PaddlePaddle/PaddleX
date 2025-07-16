@@ -15,7 +15,7 @@ Global:
 Predict:
   batch_size: 1
   model_dir: "pwgan_csmsc"
-  input: "今天天气真不错"
+  input: "./mel.npy"
   lang: zh
   speaker_id: 0
   kernel_option:
