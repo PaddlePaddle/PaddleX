@@ -21,6 +21,7 @@ from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -31,6 +32,7 @@ from .result import LayoutParsingResult
 from .utils import get_sub_regions_ocr_res, sorted_layout_boxes
 
 
+@benchmark.time_methods
 class _LayoutParsingPipeline(BasePipeline):
     """Layout Parsing Pipeline"""
 

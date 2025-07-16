@@ -235,6 +235,9 @@ class Benchmark:
         step_var.set(0)
         level_var.set(0)
         top_func_var.set(None)
+        self._detail_list = []
+        self._summary_list = []
+        self._operation_list = []
 
     def _update(self, elapse, name):
         elapse = elapse * 1000

@@ -21,6 +21,7 @@ import numpy as np
 from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import MarkDownBatchSampler
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -33,6 +34,7 @@ from .utils import (
 )
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("trans")
 class PP_DocTranslation_Pipeline(BasePipeline):
     """
