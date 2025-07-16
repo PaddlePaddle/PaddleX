@@ -45,8 +45,15 @@ class DocVLMPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
         self.device = kwargs.get("device", None)
         if self.device is None and self.pp_option is not None:
-            if self.pp_option.device_type is not None and self.pp_option.device_type != "cpu":
-                self.device = constr_device(self.pp_option.device_type, str(self.pp_option.device_id))
+            if self.pp_option.device_type is not None:
+                self.device = constr_device(
+                    self.pp_option.device_type,
+                    (
+                        str(self.pp_option.device_id)
+                        if self.pp_option.device_type != "cpu"
+                        else None
+                    ),
+                )
         self.dtype = (
             "bfloat16"
             if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
