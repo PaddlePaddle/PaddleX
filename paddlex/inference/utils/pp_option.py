@@ -137,8 +137,8 @@ class PaddlePredictorOption(object):
             )
 
         if run_mode.startswith("mkldnn") and not is_mkldnn_available():
-            logging.warning("MKL-DNN is not available. Using `paddle` instead.")
-            run_mode = "paddle"
+            raise ValueError("MKL-DNN is not available")
+
         self._update("run_mode", run_mode)
 
     @property
