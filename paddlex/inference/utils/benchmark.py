@@ -176,14 +176,14 @@ class Benchmark:
     def timeit(self, func_or_cls):
         return self.timeit_with_options()(func_or_cls)
 
-    def is_pep8_public_method(self, name):
-        return name.islower() and not name.startswith("_")
+    def _is_public_method(self, name):
+        return not name.startswith("_")
 
     def time_methods(self, cls):
         for name, func in cls.__dict__.items():
             if (
                 callable(func)
-                and self.is_pep8_public_method(name)
+                and self._is_public_method(name)
                 and not name.startswith("__")
                 and name not in _pipeline_func_black_list
             ):
