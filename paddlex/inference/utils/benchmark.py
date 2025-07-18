@@ -39,10 +39,10 @@ _inference_operations = []
 
 _is_measuring_time = False
 
-_pipeline_func_black_list = ["inintial_predictor"]
-step = 0
-level = 0
-top_func = None
+PIPELINE_FUNC_BLACK_LIST = ["inintial_predictor"]
+_step = 0
+_level = 0
+_top_func = None
 
 
 class Benchmark:
@@ -134,26 +134,26 @@ class Benchmark:
 
                     @functools.wraps(func)
                     def _wrapper(*args, **kwargs):
-                        global step, level, top_func
+                        global _step, _level, _top_func
 
-                        step += 1
-                        level += 1
+                        _step += 1
+                        _level += 1
 
-                        if level == 1:
-                            if top_func is None:
-                                top_func = f"{name}@{location}"
-                            elif top_func != f"{name}@{location}":
+                        if _level == 1:
+                            if _top_func is None:
+                                _top_func = f"{name}@{location}"
+                            elif _top_func != f"{name}@{location}":
                                 raise RuntimeError(
                                     f"Multiple top-level function calls detected:\n"
-                                    f"  Function 1: {top_func.split('@')[0]}\n"
-                                    f"    Location: {top_func.split('@')[1]}\n"
+                                    f"  Function 1: {_top_func.split('@')[0]}\n"
+                                    f"    Location: {_top_func.split('@')[1]}\n"
                                     f"  Function 2: {name}\n"
                                     f"    Location: {location}\n"
                                     "Only one top-level function can be tracked at a time.\n"
                                     "Please call 'benchmark.reset()' between top-level function calls."
                                 )
 
-                        operation_name = f"{step}@{level}@{name}@{location}"
+                        operation_name = f"{_step}@{_level}@{name}@{location}"
 
                         tic = time.perf_counter()
                         output = func(*args, **kwargs)
@@ -161,7 +161,7 @@ class Benchmark:
                             return self.watch_generator_simple(output, operation_name)
                         else:
                             self._update(time.perf_counter() - tic, operation_name)
-                            level -= 1
+                            _level -= 1
 
                         return output
 
@@ -185,7 +185,7 @@ class Benchmark:
                 callable(func)
                 and self._is_public_method(name)
                 and not name.startswith("__")
-                and name not in _pipeline_func_black_list
+                and name not in PIPELINE_FUNC_BLACK_LIST
             ):
                 setattr(cls, name, self.timeit(func))
         return cls
@@ -218,7 +218,7 @@ class Benchmark:
     def watch_generator_simple(self, generator, name):
         @functools.wraps(generator)
         def wrapper():
-            global level
+            global _level
 
             while True:
                 tic = time.perf_counter()
@@ -229,16 +229,16 @@ class Benchmark:
                 self._update(time.perf_counter() - tic, name)
                 yield item
 
-            level -= 1
+            _level -= 1
 
         return wrapper()
 
     def reset(self):
-        global step, level, top_func
+        global _step, _level, _top_func
 
-        step = 0
-        level = 0
-        top_func = None
+        _step = 0
+        _level = 0
+        _top_func = None
         self._elapses = {}
         self._detail_list = []
         self._summary_list = []
