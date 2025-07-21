@@ -33,4 +33,4 @@ class BaseAudioResult(BaseResult, AudioMixin):
         """
 
         super().__init__(data)
-        AudioMixin.__init__(self,'wav')
+        AudioMixin.__init__(self, "wav")

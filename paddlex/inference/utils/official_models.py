@@ -364,9 +364,9 @@ eslav_PP-OCRv5_mobile_rec_infer.tar",
     "PP-DocBee2-3B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar",
     "latin_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/latin_PP-OCRv5_mobile_rec_infer.tar",
     "korean_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/korean_PP-OCRv5_mobile_rec_infer.tar",
-    "G2PWModel": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel_1.1.tar",
-    "fastspeech2_csmsc": "https://paddlespeech.bj.bcebos.com/tmp/fastspeech2_csmsc.tar",
-    "pwgan_csmsc": "https://paddlespeech.bj.bcebos.com/tmp/pwgan_csmsc.tar",
+    "G2PWModel": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel.tar",
+    "fastspeech2_csmsc": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/fastspeech2_csmsc.tar",
+    "pwgan_csmsc": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/pwgan_csmsc.tar",
 }
 
 
