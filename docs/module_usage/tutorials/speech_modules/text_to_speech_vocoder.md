@@ -21,7 +21,7 @@ comments: true
   </tr>
   <tr>
     <td>pwgan_csmsc</td>
-    <td><a href="https://paddlespeech.bj.bcebos.com/tmp/pwgan_csmsc.tar">pwgan_csmsc</a></td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/pwgan_csmsc.tar">pwgan_csmsc</a></td>
     <td>\\</td>
     <td>5.1M</td>
     <td rowspan="1">Parallel WaveGAN（PWGAN）是日本名古屋大学开发的端到端语音合成声码器，具备高效稳定的波形生成能力。它采用生成对抗网络架构，能实现快速高保真的语音重建，适用于TTS系统后端处理、语音增强等多种场景。</td>
@@ -30,7 +30,7 @@ comments: true
 
 ## 三、快速集成
 在快速集成前，首先需要安装 PaddleX 的 wheel 包，wheel的安装方式请参考[PaddleX本地安装教程](../../../installation/installation.md)。完成 wheel 包的安装后，几行代码即可完成多语种语音合成声学模块的推理，可以任意切换该模块下的模型，您也可以将多语种语音合成模块中的模型推理集成到您的项目中。
-<!-- 运行以下代码前，请您下载[示例语音](https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav)到本地。 -->
+运行以下代码前，请您下载[示例npy](https://paddlespeech.bj.bcebos.com/demos/paddlex/mel.npy)到本地。
 
 ```python
 from paddlex import create_model

@@ -20,7 +20,7 @@ comments: true
   </tr>
   <tr>
     <td>fastspeech2_csmsc</td>
-    <td><a href="https://paddlespeech.bj.bcebos.com/tmp/fastspeech2_csmsc.tar">fastspeech2_csmsc</a></td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/fastspeech2_csmsc.tar">fastspeech2_csmsc</a></td>
     <td>\\</td>
     <td>157M</td>
     <td rowspan="1">FastSpeech2 是微软开发的端到端文本转语音（TTS）模型，具备高效稳定的韵律控制能力。它采用非自回归架构，能实现快速高质量的语音合成，适用于虚拟助手、有声读物等多种场景。</td>

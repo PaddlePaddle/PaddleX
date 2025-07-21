@@ -18,7 +18,7 @@ Text to Pinyin is commonly used in the frontend of TTS to convert input Chinese 
   </tr>
   <tr>
     <td>G2PWModel</td>
-    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel_1.1.tar">G2PWModel</a></td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel.tar">G2PWModel</a></td>
     <td>606M</td>
     <td rowspan="5"> g2pW is an open-source text to pinyin model, commonly used in the frontend of TTS. It converts input Chinese text into a tonal Pinyin sequence, providing pronunciation basis for subsequent acoustic models and audio generation</td>
   </tr>

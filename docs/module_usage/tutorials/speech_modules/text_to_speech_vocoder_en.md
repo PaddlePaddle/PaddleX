@@ -20,7 +20,7 @@ The speech synthesis vocoder is a key component of speech synthesis technology. 
   </tr>
   <tr>
     <td>pwgan_csmsc</td>
-    <td><a href="https://paddlespeech.bj.bcebos.com/tmp/pwgan_csmsc.tar">pwgan_csmsc</a></td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/pwgan_csmsc.tar">pwgan_csmsc</a></td>
     <td>\\</td>
     <td>5.1M</td>
     <td rowspan="1">Parallel WaveGAN (PWGAN) is an end-to-end speech synthesis vocoder developed by Nagoya University, Japan, featuring efficient and stable waveform generation capabilities. It adopts a generative adversarial network architecture that enables fast and high-fidelity speech reconstruction, suitable for various scenarios such as TTS system backend processing and speech enhancement.</td>

@@ -18,7 +18,7 @@ comments: true
   </tr>
   <tr>
     <td>G2PWModel</td>
-    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel_1.1.tar">G2PWModel</a></td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel.tar">G2PWModel</a></td>
     <td>606M</td>
     <td rowspan="5"> g2pW 开源的文本到拼音模型，常用于语音合成的前端，将输入的中文文本转换为带声调的拼音序列，为后续的声学模型和模型生成提供发音依据</td>
   </tr>
