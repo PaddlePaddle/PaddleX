@@ -29,7 +29,7 @@ The speech synthesis vocoder is a key component of speech synthesis technology. 
 
 ## III. Quick Integration
 Before quick integration, first install the PaddleX wheel package. For wheel installation methods, please refer to [PaddleX Local Installation Tutorial](../../../installation/installation.md). After installing the wheel package, inference for the multilingual speech synthesis acoustic module can be completed with just a few lines of code. You can freely switch models within this module, or integrate model inference from the multilingual speech synthesis module into your project.
-<!-- Before running the following code, please download the [sample audio](https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav){target="_blank"} to your local machine. -->
+Before running the following code, please download the [sample npy](https://paddlespeech.bj.bcebos.com/demos/paddlex/mel.npy){target="_blank"} to your local machine. 
 
 ```python
 from paddlex import create_model
