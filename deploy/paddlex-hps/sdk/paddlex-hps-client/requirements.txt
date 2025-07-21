@@ -1,0 +1,3 @@
+numpy >= 1.24
+# XXX: Not sure about the backward compatibility
+tritonclient [grpc] >= 2.15.0

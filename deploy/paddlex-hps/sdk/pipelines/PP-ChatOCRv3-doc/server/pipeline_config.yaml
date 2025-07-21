@@ -1,0 +1,151 @@
+
+pipeline_name: PP-ChatOCRv3-doc
+
+use_layout_parser: True
+
+SubModules:
+  LLM_Chat:
+    module_name: chat_bot
+    model_name: ernie-3.5-8k
+    base_url: "https://qianfan.baidubce.com/v2"
+    api_type: openai
+    api_key: "api_key" # Set this to a real API key
+
+  LLM_Retriever:
+    module_name: retriever
+    model_name: embedding-v1
+    base_url: "https://qianfan.baidubce.com/v2"
+    api_type: qianfan
+    api_key: "api_key" # Set this to a real API key
+
+
+  PromptEngneering:
+    KIE_CommonText:
+      module_name: prompt_engneering
+      task_type: text_kie_prompt_v1
+
+      task_description: '你现在的任务是从OCR文字识别的结果中提取关键词列表中每一项对应的关键信息。
+          OCR的文字识别结果使用```符号包围，包含所识别出来的文字，顺序在原始图片中从左至右、从上至下。
+          我指定的关键词列表使用[]符号包围。请注意OCR的文字识别结果可能存在长句子换行被切断、不合理的分词、
+          文字被错误合并等问题，你需要结合上下文语义进行综合判断，以抽取准确的关键信息。'
+
+      rules_str:
+
+      output_format: '在返回结果时使用JSON格式，包含多个key-value对，key值为我指定的问题，value值为该问题对应的答案。
+          如果认为OCR识别结果中，对于问题key，没有答案，则将value赋值为"未知"。请只输出json格式的结果，
+          并做json格式校验后返回，不要包含其它多余文字！'
+
+      few_shot_demo_text_content:
+
+      few_shot_demo_key_value_list:
+          
+    KIE_Table:
+      module_name: prompt_engneering
+      task_type: table_kie_prompt_v1
+
+      task_description: '你现在的任务是从输入的表格内容中提取关键词列表中每一项对应的关键信息,
+          表格内容用```符号包围，我指定的关键词列表使用[]符号包围。你需要结合上下文语义进行综合判断，以抽取准确的关键信息。'
+      
+      rules_str:
+
+      output_format: '在返回结果时使用JSON格式，包含多个key-value对，key值为我指定的关键词，value值为所抽取的结果。
+          如果认为表格识别结果中没有关键词key对应的value，则将value赋值为"未知"。请只输出json格式的结果，
+          并做json格式校验后返回，不要包含其它多余文字！'
+      
+      few_shot_demo_text_content:
+
+      few_shot_demo_key_value_list:
+
+SubPipelines:
+  LayoutParser:
+    pipeline_name: layout_parsing
+
+    use_doc_preprocessor: True
+    use_general_ocr: True
+    use_seal_recognition: True
+    use_table_recognition: True
+    use_formula_recognition: False
+
+    SubModules:
+      LayoutDetection:
+        module_name: layout_detection
+        model_name: RT-DETR-H_layout_3cls
+        model_dir: null
+
+    SubPipelines:
+      DocPreprocessor:
+        pipeline_name: doc_preprocessor
+        use_doc_orientation_classify: True
+        use_doc_unwarping: True
+        SubModules:
+          DocOrientationClassify:
+            module_name: doc_text_orientation
+            model_name: PP-LCNet_x1_0_doc_ori
+            model_dir: null
+          DocUnwarping:
+            module_name: image_unwarping
+            model_name: UVDoc
+            model_dir: null
+
+      GeneralOCR:
+        pipeline_name: OCR
+        text_type: general
+        use_doc_preprocessor: False
+        use_textline_orientation: False
+        SubModules:
+          TextDetection:
+            module_name: text_detection
+            model_name: PP-OCRv4_server_det
+            model_dir: null
+            limit_side_len: 960
+            limit_type: max
+            max_side_limit: 4000
+            thresh: 0.3
+            box_thresh: 0.6
+            unclip_ratio: 1.5
+            
+          TextRecognition:
+            module_name: text_recognition
+            model_name: PP-OCRv4_server_rec
+            model_dir: null
+            batch_size: 6
+            score_thresh: 0
+
+      TableRecognition:
+        pipeline_name: table_recognition
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        use_ocr_model: False
+        SubModules:
+          TableStructureRecognition:
+            module_name: table_structure_recognition
+            model_name: SLANet_plus
+            model_dir: null
+
+      SealRecognition:
+        pipeline_name: seal_recognition
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        SubPipelines:
+          SealOCR:
+            pipeline_name: OCR
+            text_type: seal
+            use_doc_preprocessor: False
+            use_textline_orientation: False
+            SubModules:
+              TextDetection:
+                module_name: seal_text_detection
+                model_name: PP-OCRv4_server_seal_det
+                model_dir: null
+                limit_side_len: 736
+                limit_type: min
+                max_side_limit: 4000
+                thresh: 0.2
+                box_thresh: 0.6
+                unclip_ratio: 0.5
+              TextRecognition:
+                module_name: text_recognition
+                model_name: PP-OCRv4_server_rec
+                model_dir: null
+                batch_size: 1
+                score_thresh: 0

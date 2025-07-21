@@ -1,0 +1,10 @@
+pipeline_name: object_detection
+
+SubModules:
+  ObjectDetection:
+    module_name: object_detection
+    model_name: PicoDet-S
+    model_dir: null
+    batch_size: 1
+    img_size: null
+    threshold: null

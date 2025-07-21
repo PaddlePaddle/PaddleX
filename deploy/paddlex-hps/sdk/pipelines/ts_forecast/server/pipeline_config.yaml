@@ -1,0 +1,8 @@
+pipeline_name: ts_forecast
+
+SubModules:
+  TSForecast:
+    module_name: ts_forecast
+    model_name: DLinear
+    model_dir: null
+    batch_size: 1   

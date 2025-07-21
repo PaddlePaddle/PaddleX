@@ -1,0 +1,17 @@
+pipeline_name: human_keypoint_detection
+
+SubModules:
+  ObjectDetection:
+    module_name: object_detection
+    model_name: PP-YOLOE-S_human
+    model_dir: null
+    batch_size: 1
+    threshold: null
+    img_size: null
+  KeypointDetection:
+    module_name: keypoint_detection
+    model_name: PP-TinyPose_128x96
+    model_dir: null
+    batch_size: 1
+    flip: False
+    use_udp: null
