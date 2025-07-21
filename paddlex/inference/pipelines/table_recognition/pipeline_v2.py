@@ -27,6 +27,7 @@ from ....utils.deps import (
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -46,6 +47,7 @@ if is_dep_available("scikit-learn"):
     from sklearn.cluster import KMeans
 
 
+@benchmark.time_methods
 class _TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
 

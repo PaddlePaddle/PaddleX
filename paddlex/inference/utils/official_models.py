@@ -359,7 +359,11 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
 PP-OCRv5_server_rec_infer.tar",
     "PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 PP-OCRv5_mobile_rec_infer.tar",
+    "eslav_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+eslav_PP-OCRv5_mobile_rec_infer.tar",
     "PP-DocBee2-3B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar",
+    "latin_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/latin_PP-OCRv5_mobile_rec_infer.tar",
+    "korean_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/korean_PP-OCRv5_mobile_rec_infer.tar",
 }
 
 
@@ -372,11 +376,14 @@ HUGGINGFACE_MODELS = [
     "devanagari_PP-OCRv3_mobile_rec",
     "en_PP-OCRv3_mobile_rec",
     "en_PP-OCRv4_mobile_rec",
+    "eslav_PP-OCRv5_mobile_rec",
     "japan_PP-OCRv3_mobile_rec",
     "ka_PP-OCRv3_mobile_rec",
     "korean_PP-OCRv3_mobile_rec",
+    "korean_PP-OCRv5_mobile_rec",
     "LaTeX_OCR_rec",
     "latin_PP-OCRv3_mobile_rec",
+    "latin_PP-OCRv5_mobile_rec",
     "PicoDet_layout_1x",
     "PicoDet_layout_1x_table",
     "PicoDet-L_layout_17cls",
@@ -384,6 +391,7 @@ HUGGINGFACE_MODELS = [
     "PicoDet-S_layout_17cls",
     "PicoDet-S_layout_3cls",
     "PP-DocBee2-3B",
+    "PP-Chart2Table",
     "PP-DocBee-2B",
     "PP-DocBee-7B",
     "PP-DocBlockLayout",

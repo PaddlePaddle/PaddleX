@@ -20,7 +20,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
-from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font, create_font_vertical
+from ....utils.fonts import SIMFANG_FONT, create_font, create_font_vertical
 from ...common.result import BaseCVResult, JsonMixin
 
 if is_dep_available("opencv-contrib-python"):
@@ -81,6 +81,9 @@ class OCRResult(BaseCVResult):
         img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
         random.seed(0)
         draw_left = ImageDraw.Draw(img_left)
+        vis_font = SIMFANG_FONT
+        if self["vis_fonts"]:
+            vis_font = self["vis_fonts"][0]
         for idx, (box, txt) in enumerate(zip(boxes, txts)):
             try:
                 color = (
@@ -100,9 +103,7 @@ class OCRResult(BaseCVResult):
                     box_pts = [(int(x), int(y)) for x, y in box.tolist()]
                     draw_left.polygon(box_pts, fill=color)
 
-                img_right_text = draw_box_txt_fine(
-                    (w, h), box, txt, SIMFANG_FONT_FILE_PATH
-                )
+                img_right_text = draw_box_txt_fine((w, h), box, txt, vis_font.path)
                 pts = np.array(box, np.int32).reshape((-1, 1, 2))
                 cv2.polylines(img_right_text, [pts], True, color, 1)
                 img_right = cv2.bitwise_and(img_right, img_right_text)

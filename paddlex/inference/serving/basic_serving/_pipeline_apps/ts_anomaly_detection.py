@@ -39,7 +39,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     async def _infer(request: InferRequest) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
-
+        visualize_enabled = (
+            request.visualize if request.visualize is not None else ctx.config.visualize
+        )
         file_bytes = await serving_utils.get_raw_bytes_async(
             request.csv, aiohttp_session
         )
@@ -50,7 +52,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         output_csv = serving_utils.base64_encode(
             serving_utils.data_frame_to_bytes(result["anomaly"])
         )
-        if ctx.config.visualize:
+        if visualize_enabled:
             output_image = serving_utils.base64_encode(
                 serving_utils.image_to_bytes(result.img["res"].convert("RGB"))
             )

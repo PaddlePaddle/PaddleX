@@ -114,6 +114,7 @@ class PipelineWrapper(Generic[PipelineT]):
         if not self._closed:
             self._queue.put(None)
             await call_async(self._thread.join)
+            self._closed = True
 
     def _worker(self):
         while not self._closed:

@@ -13,33 +13,35 @@ Keypoint detection algorithms mainly include two approaches: Top-Down and Bottom
 
 <table>
   <tr>
-    <th>Model</th>
+    <th>Model</th><th>Model Download Link</th>
     <th>Approach</th>
     <th>Input Size</th>
     <th>AP(0.5:0.95)</th>
     <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-    <th>CPU Inference Time (ms)</th>
-    <th>Model Size (M)</th>
+    <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+    <th>Model Storage Size (MB)</th>
     <th>Introduction</th>
   </tr>
   <tr>
     <td>PP-TinyPose_128x96</td>
-    <td>Top-Down</td>
-    <td>128x96</td>
-    <td>58.4</td>
-    <td></td>
-    <td></td>
-    <td>4.9</td>
-    <td rowspan="2">PP-TinyPose is a real-time keypoint detection model optimized for mobile devices developed by the Baidu PaddlePaddle Vision Team. It can smoothly perform multi-person pose estimation tasks on mobile devices.</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TinyPose_128x96_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_128x96_pretrained.pdparams">Train Model</a></td>
+<td>Top-Down</td>
+<td>128x96</td>
+<td>58.4</td>
+<td>24.22 / 4.34</td>
+<td>- / 6.19</td>
+<td>4.9</td>
+<td rowspan="2">PP-TinyPose is a real-time keypoint detection model optimized for mobile devices developed by the Baidu PaddlePaddle Vision Team. It can smoothly perform multi-person pose estimation tasks on mobile devices.</td>
   </tr>
   <tr>
     <td>PP-TinyPose_256x192</td>
-    <td>Top-Down</td>
-    <td>256x192</td>
-    <td>68.3</td>
-    <td></td>
-    <td></td>
-    <td>4.9</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-TinyPose_256x192_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_256x192_pretrained.pdparams">Train Model</a></td>
+<td>Top-Down</td>
+<td>256x192</td>
+<td>68.3</td>
+<td>21.73 / 3.59</td>
+<td>- / 10.18</td>
+<td>4.9</td>
   </tr>
 </table>
 
@@ -49,12 +51,18 @@ Keypoint detection algorithms mainly include two approaches: Top-Down and Bottom
       <li><b>Performance Test Environment</b>
           <ul>
            <li><strong>Test Dataset：</strong>The above accuracy metrics are based on the COCO dataset AP(0.5:0.95) using ground truth annotations for bounding boxes.</li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>

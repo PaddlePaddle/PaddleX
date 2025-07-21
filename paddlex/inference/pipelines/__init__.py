@@ -42,6 +42,7 @@ from .ocr import OCRPipeline
 from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
 from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
 from .pp_chatocr import PP_ChatOCRv3_Pipeline, PP_ChatOCRv4_Pipeline
+from .pp_doctranslation import PP_DocTranslation_Pipeline
 from .pp_shitu_v2 import ShiTuV2Pipeline
 from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .seal_recognition import SealRecognitionPipeline

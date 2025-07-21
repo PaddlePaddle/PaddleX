@@ -597,6 +597,8 @@ class VideoMixin:
 class MarkdownMixin:
     """Mixin class for adding Markdown handling capabilities."""
 
+    MARKDOWN_SAVE_KEYS = ["markdown_texts"]
+
     def __init__(self, *args: list, **kwargs: dict):
         """Initializes the Markdown writer and appends the save_to_markdown method to the save functions.
 
@@ -696,7 +698,7 @@ class MarkdownMixin:
         if data is None:
             return
         for key, value in data.items():
-            if isinstance(value, str):
+            if key in self.MARKDOWN_SAVE_KEYS:
                 save_mkd_func(save_path.as_posix(), value, *args, **kwargs)
             if isinstance(value, dict):
                 base_save_path = save_path.parent

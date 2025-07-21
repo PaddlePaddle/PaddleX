@@ -40,7 +40,7 @@ PaddleX provides 1 end-to-end anomaly detection models. For details, refer to th
 <tr>
 <th>Model</th>
 <th>mIoU</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>

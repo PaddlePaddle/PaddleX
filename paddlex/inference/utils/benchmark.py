@@ -29,6 +29,7 @@ from ...utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_OUTPUT_DIR,
     INFER_BENCHMARK_USE_CACHE_FOR_READ,
+    PIPELINE_BENCHMARK,
 )
 
 ENTRY_POINT_NAME = "_entry_point_"
@@ -38,12 +39,20 @@ _inference_operations = []
 
 _is_measuring_time = False
 
+PIPELINE_FUNC_BLACK_LIST = ["inintial_predictor"]
+_step = 0
+_level = 0
+_top_func = None
+
 
 class Benchmark:
     def __init__(self, enabled):
         self._enabled = enabled
         self._elapses = {}
         self._warmup = False
+        self._detail_list = []
+        self._summary_list = []
+        self._operation_list = []
 
     def timeit_with_options(self, name=None, is_read_operation=False):
         # TODO: Refactor
@@ -97,27 +106,63 @@ class Benchmark:
                     return output
 
             else:
+                if INFER_BENCHMARK:
 
-                @functools.wraps(func)
-                def _wrapper(*args, **kwargs):
-                    global _is_measuring_time
-                    operation_name = f"{name}@{location}"
-                    if _is_measuring_time:
-                        raise RuntimeError(
-                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
-                        )
-                    if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
-                        _is_measuring_time = True
-                    tic = time.perf_counter()
-                    try:
-                        output = func(*args, **kwargs)
-                    finally:
+                    @functools.wraps(func)
+                    def _wrapper(*args, **kwargs):
+                        global _is_measuring_time
+                        operation_name = f"{name}@{location}"
+                        if _is_measuring_time:
+                            raise RuntimeError(
+                                "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                            )
                         if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
-                            _is_measuring_time = False
-                    if isinstance(output, GeneratorType):
-                        return self.watch_generator(output, operation_name)
-                    else:
-                        self._update(time.perf_counter() - tic, operation_name)
+                            _is_measuring_time = True
+                        tic = time.perf_counter()
+                        try:
+                            output = func(*args, **kwargs)
+                        finally:
+                            if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                                _is_measuring_time = False
+                        if isinstance(output, GeneratorType):
+                            return self.watch_generator(output, operation_name)
+                        else:
+                            self._update(time.perf_counter() - tic, operation_name)
+                            return output
+
+                elif PIPELINE_BENCHMARK:
+
+                    @functools.wraps(func)
+                    def _wrapper(*args, **kwargs):
+                        global _step, _level, _top_func
+
+                        _step += 1
+                        _level += 1
+
+                        if _level == 1:
+                            if _top_func is None:
+                                _top_func = f"{name}@{location}"
+                            elif _top_func != f"{name}@{location}":
+                                raise RuntimeError(
+                                    f"Multiple top-level function calls detected:\n"
+                                    f"  Function 1: {_top_func.split('@')[0]}\n"
+                                    f"    Location: {_top_func.split('@')[1]}\n"
+                                    f"  Function 2: {name}\n"
+                                    f"    Location: {location}\n"
+                                    "Only one top-level function can be tracked at a time.\n"
+                                    "Please call 'benchmark.reset()' between top-level function calls."
+                                )
+
+                        operation_name = f"{_step}@{_level}@{name}@{location}"
+
+                        tic = time.perf_counter()
+                        output = func(*args, **kwargs)
+                        if isinstance(output, GeneratorType):
+                            return self.watch_generator_simple(output, operation_name)
+                        else:
+                            self._update(time.perf_counter() - tic, operation_name)
+                            _level -= 1
+
                         return output
 
             if isinstance(func_or_cls, type):
@@ -130,6 +175,20 @@ class Benchmark:
 
     def timeit(self, func_or_cls):
         return self.timeit_with_options()(func_or_cls)
+
+    def _is_public_method(self, name):
+        return not name.startswith("_")
+
+    def time_methods(self, cls):
+        for name, func in cls.__dict__.items():
+            if (
+                callable(func)
+                and self._is_public_method(name)
+                and not name.startswith("__")
+                and name not in PIPELINE_FUNC_BLACK_LIST
+            ):
+                setattr(cls, name, self.timeit(func))
+        return cls
 
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
@@ -156,8 +215,34 @@ class Benchmark:
 
         return wrapper()
 
+    def watch_generator_simple(self, generator, name):
+        @functools.wraps(generator)
+        def wrapper():
+            global _level
+
+            while True:
+                tic = time.perf_counter()
+                try:
+                    item = next(generator)
+                except StopIteration:
+                    break
+                self._update(time.perf_counter() - tic, name)
+                yield item
+
+            _level -= 1
+
+        return wrapper()
+
     def reset(self):
+        global _step, _level, _top_func
+
+        _step = 0
+        _level = 0
+        _top_func = None
         self._elapses = {}
+        self._detail_list = []
+        self._summary_list = []
+        self._operation_list = []
 
     def _update(self, elapse, name):
         elapse = elapse * 1000
@@ -363,6 +448,174 @@ class Benchmark:
                     writer = csv.writer(file)
                     writer.writerows(csv_data)
 
+    def gather_pipeline(self):
+        info_list = []
+        detail_list = []
+        operation_list = set()
+        summary_list = []
+        max_level = 0
+        loop_num = 0
+
+        for name, time_list in self.logs.items():
+            op_time = np.sum(time_list)
+
+            parts = name.split("@")
+            step = int(parts[0])
+            level = int(parts[1])
+            operation_name = parts[2]
+            location = parts[3]
+            if ":" not in location:
+                location = "Unknown"
+
+            operation_list.add((operation_name, location))
+            max_level = max(level, max_level)
+
+            if level == 1:
+                loop_num += 1
+                format_operation_name = operation_name
+            else:
+                format_operation_name = "    " * int(level - 1) + "-> " + operation_name
+            info_list.append(
+                (step, level, operation_name, format_operation_name, op_time)
+            )
+
+        operation_list = list(operation_list)
+        info_list.sort(key=lambda x: x[0])
+        step_num = int(len(info_list) / loop_num)
+        for idx in range(step_num):
+            step = info_list[idx][0]
+            format_operation_name = info_list[idx][3]
+            op_time = (
+                np.sum(
+                    [info_list[pos][4] for pos in range(idx, len(info_list), step_num)]
+                )
+                / loop_num
+            )
+            detail_list.append([step, format_operation_name, op_time])
+
+        level_time_list = [[0] for _ in range(max_level)]
+        for idx, info in enumerate(info_list):
+            step = info[0]
+            level = info[1]
+            operation_name = info[2]
+            op_time = info[4]
+
+            # The total time consumed by all operations on this layer
+            if level > info_list[idx - 1][1]:
+                level_time_list[level - 1].append(info_list[idx - 1][4])
+
+            # The total time consumed by each operation on this layer
+            while len(summary_list) < level:
+                summary_list.append([len(summary_list) + 1, {}])
+            if summary_list[level - 1][1].get(operation_name, None) is None:
+                summary_list[level - 1][1][operation_name] = [op_time]
+            else:
+                summary_list[level - 1][1][operation_name].append(op_time)
+
+        new_summary_list = []
+        for i in range(len(summary_list)):
+            level = summary_list[i][0]
+            op_dict = summary_list[i][1]
+
+            ops_all_time = 0.0
+            op_info_list = []
+            for idx, (name, time_list) in enumerate(op_dict.items()):
+                op_all_time = np.sum(time_list) / loop_num
+                op_info_list.append([level if i + idx == 0 else "", name, op_all_time])
+                ops_all_time += op_all_time
+
+            if i > 0:
+                new_summary_list.append(["", "", ""])
+                new_summary_list.append(
+                    [level, "Layer", np.sum(level_time_list[i]) / loop_num]
+                )
+                new_summary_list.append(["", "Core", ops_all_time])
+                new_summary_list.append(
+                    ["", "Other", np.sum(level_time_list[i]) / loop_num - ops_all_time]
+                )
+            new_summary_list += op_info_list
+
+        return detail_list, new_summary_list, operation_list
+
+    def _initialize_pipeline_data(self):
+        if not (self._operation_list and self._detail_list and self._summary_list):
+            self._detail_list, self._summary_list, self._operation_list = (
+                self.gather_pipeline()
+            )
+
+    def print_pipeline_data(self):
+        self._initialize_pipeline_data()
+        self.print_operation_info()
+        self.print_detail_data()
+        self.print_summary_data()
+
+    def print_operation_info(self):
+        self._initialize_pipeline_data()
+        operation_head = [
+            "Operation",
+            "Source Code Location",
+        ]
+        table = PrettyTable(operation_head)
+        table.add_rows(self._operation_list)
+        table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+        logging.info(table_title)
+        logging.info(table)
+
+    def print_detail_data(self):
+        self._initialize_pipeline_data()
+        detail_head = [
+            "Step",
+            "Operation",
+            "Time",
+        ]
+        table = PrettyTable(detail_head)
+        table.add_rows(self._detail_list)
+        table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+        table.align["Operation"] = "l"
+        table.align["Time"] = "l"
+        logging.info(table_title)
+        logging.info(table)
+
+    def print_summary_data(self):
+        self._initialize_pipeline_data()
+        summary_head = [
+            "Level",
+            "Operation",
+            "Time",
+        ]
+        table = PrettyTable(summary_head)
+        table.add_rows(self._summary_list)
+        table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+        table.align["Operation"] = "l"
+        table.align["Time"] = "l"
+        logging.info(table_title)
+        logging.info(table)
+
+    def save_pipeline_data(self, save_path):
+        self._initialize_pipeline_data()
+        save_dir = Path(save_path)
+        save_dir.mkdir(parents=True, exist_ok=True)
+
+        detail_head = [
+            "Step",
+            "Operation",
+            "Time",
+        ]
+        csv_data = [detail_head, *self._detail_list]
+        with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(csv_data)
+
+        summary_head = [
+            "Level",
+            "Operation",
+            "Time",
+        ]
+        csv_data = [summary_head, *self._summary_list]
+        with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(csv_data)
+
 
 def get_inference_operations():
     return _inference_operations
@@ -373,7 +626,7 @@ def set_inference_operations(val):
     _inference_operations = val
 
 
-if INFER_BENCHMARK:
+if INFER_BENCHMARK or PIPELINE_BENCHMARK:
     benchmark = Benchmark(enabled=True)
 else:
     benchmark = Benchmark(enabled=False)

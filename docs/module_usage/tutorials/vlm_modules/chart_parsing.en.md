@@ -23,12 +23,13 @@ Multimodal chart parsing is a cutting-edge technology in the OCR field, focusing
 <td>PP-Chart2Table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.tar">Inference Model</a></td>
 <td>0.58</td>
 <td>1.4</td>
-<th>75.98</th>
-<td>PP-Chart2Table is a self-developed multimodal model by the PaddlePaddle team, focusing on chart parsing, demonstrating outstanding performance in both Chinese and English chart parsing tasks. The team adopted a carefully designed data generation strategy, constructing a high-quality multimodal dataset of nearly 700,000 entries covering common chart types like pie charts, bar charts, stacked area charts, and various application scenarios. They also designed a two-stage training method, utilizing large model distillation to fully leverage massive unlabeled OOD data. In internal business tests in both Chinese and English scenarios, PP-Chart2Table not only achieved the SOTA level among models of the same parameter scale but also reached accuracy comparable to 7B parameter scale VLM models in critical scenarios.</td>
+<th>80.60</th>
+<td>PP-Chart2Table is a SOTA multimodal model developed by the PaddlePaddle team, specializing in chart parsing for both Chinese and English. Its high performance is driven by a novel "Shuffled Chart Data Retrieval" training task, which, combined with a refined token masking strategy, significantly improves its efficiency in converting charts to data tables. The model is further strengthened by an advanced data synthesis pipeline that uses high-quality seed data, RAG, and LLMs persona design to create a richer, more diverse training set. To address the challenge of large-scale unlabeled, out-of-distribution (OOD) data, the team implemented a two-stage distillation process, ensuring robust adaptability and generalization on real-world data. In-house benchmarks demonstrate that PP-Chart2Table not only outperforms models of a similar scale but also achieves accuracy on par with 7-billion parameter Vision Language Models (VLMs) in critical applications.</td>
 </tr>
 </table>
 
 <b>Note: The above model scores are the results of internal evaluation set model testing, with a total of 1801 data points, including various chart types such as bar charts, line charts, and pie charts for testing samples under various scenarios such as financial reports, laws and regulations, contracts, etc. There are currently no plans to make them public.</b>
+> ❗ <b>Note</b>：The PP-Chart2Table model was upgraded on June 27, 2025. If you need to use the weights from the previous version of the model, please click the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.bak.tar">download link</a>
 
 
 

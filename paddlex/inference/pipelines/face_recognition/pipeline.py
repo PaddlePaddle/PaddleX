@@ -15,10 +15,12 @@
 import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
+from ...utils.benchmark import benchmark
 from ..pp_shitu_v2 import ShiTuV2Pipeline
 from .result import FaceRecResult
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("cv")
 class FaceRecPipeline(ShiTuV2Pipeline):
     """Face Recognition Pipeline"""

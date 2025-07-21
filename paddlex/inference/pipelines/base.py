@@ -99,8 +99,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         # TODO(gaotingquan): support to specify pp_option by model in pipeline
         if self.pp_option is not None:
             pp_option = self.pp_option.copy()
-            pp_option.model_name = config["model_name"]
-            pp_option.run_mode = self.pp_option.run_mode
         else:
             pp_option = None
 

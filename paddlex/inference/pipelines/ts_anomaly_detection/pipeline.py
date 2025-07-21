@@ -18,11 +18,13 @@ import pandas as pd
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.ts_anomaly_detection.result import TSAdResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("ts")
 class TSAnomalyDetPipeline(BasePipeline):
     """TSAnomalyDetPipeline Pipeline"""

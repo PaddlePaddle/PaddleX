@@ -84,6 +84,7 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
                     "uniform_output_enabled", True
                 ),
                 "export_with_pir": export_with_pir,
+                "ips": self.train_config.get("dist_ips", None)
             }
         )
 

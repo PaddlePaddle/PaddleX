@@ -17,10 +17,10 @@ The 3D multimodal fusion detection module is a key component in the fields of co
 <th>Introduction</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">Training Model</a></td>
+<td>BEVFusion</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/BEVFusion_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">Training Model</a></td>
 <td>53.9</td>
 <td>60.9</td>
-
 <td rowspan="2">BEVFusion is a multimodal fusion model in the Bird's Eye View (BEV) perspective. It uses two branches to process data from different modalities to obtain features of lidar and camera in the BEV perspective. The camera branch uses the LSS (Lift, Splat, and Scatter) bottom-up approach to explicitly generate image BEV features, while the lidar branch uses a classic point cloud detection network. Finally, the BEV features of the two modalities are aligned and fused for application in detection heads or segmentation heads.</td>
 </tr>
 <tr>
@@ -32,12 +32,18 @@ The 3D multimodal fusion detection module is a key component in the fields of co
       <li><b>Performance Test Environment</b>
           <ul>
           <li><strong>Test Dataset：</strong>The above accuracy metrics are based on the <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set with mAP(0.5:0.95) and NDS 60.9, and the precision type is FP32.</li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>

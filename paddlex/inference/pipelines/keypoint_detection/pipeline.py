@@ -18,6 +18,7 @@ import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.keypoint_detection.result import KptResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -26,6 +27,7 @@ from ..base import BasePipeline
 Number = Union[int, float]
 
 
+@benchmark.time_methods
 class _KeypointDetectionPipeline(BasePipeline):
     """Keypoint Detection pipeline"""
 

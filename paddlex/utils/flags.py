@@ -21,6 +21,7 @@ __all__ = [
     "CHECK_OPTS",
     "EAGER_INITIALIZATION",
     "INFER_BENCHMARK",
+    "PIPELINE_BENCHMARK",
     "INFER_BENCHMARK_ITERS",
     "INFER_BENCHMARK_WARMUP",
     "INFER_BENCHMARK_OUTPUT_DIR",
@@ -65,6 +66,7 @@ MODEL_SOURCE = os.environ.get("PADDLE_PDX_MODEL_SOURCE", "huggingface")
 
 # Inference Benchmark
 INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)
+PIPELINE_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_PIPELINE_BENCHMARK", False)
 INFER_BENCHMARK_WARMUP = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_WARMUP", 0, int
 )

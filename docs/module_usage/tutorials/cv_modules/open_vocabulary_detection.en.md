@@ -15,25 +15,27 @@ Open-vocabulary object detection is an advanced object detection technology aime
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">Inference Model</a></td>
+<td>GroundingDINO-T</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">Inference Model</a></td>
 <td>49.4</td>
 <td>64.4</td>
-<td>253.72</td>
-<td>1807.4</td>
+<td>- / -</td>
+<td>- / -</td>
 <td>658.3</td>
 <td rowspan="1">This is an open-vocabulary object detection model trained on the O365, GoldG, and Cap4M datasets. It uses Bert for text encoding and DINO for the visual model, with additional cross-modal fusion modules, achieving good performance in open-vocabulary object detection.</td>
 </tr>
 <tr>
-<td>YOLO-Worldv2-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">Inference Model</a></td>
+<td>YOLO-Worldv2-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">Inference Model</a></td>
 <td>44.4</td>
 <td>59.8</td>
-<td>24.32</td>
-<td>374.89</td>
+<td>- / -</td>
+<td>292.14 / 292.14</td>
 <td>421.4</td>
 <td rowspan="1">This is an open-vocabulary object detection model trained on the O365 and GoldG datasets. It uses CLIP for text encoding and YOLOv8 for the visual model, with additional light-weight cross-modal fusion modules, achieving a good balance between speed and performance.</td>
 </tr>
@@ -45,12 +47,18 @@ Open-vocabulary object detection is an advanced object detection technology aime
       <li><b>Performance Test Environment</b>
           <ul>
               <li><strong>Test Dataset：</strong>  Based on the open vocabulary object detection model trained on the three datasets: O365, GoldG, and Cap4M.</li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>

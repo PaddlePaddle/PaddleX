@@ -22,15 +22,15 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
 <th>mAP(0.5)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M）</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_det</td>
 <td>41.5</td>
 <td>62.0</td>
-<td>12.79 / 4.51</td>
-<td>44.14 / 44.14</td>
+<td>11.81 / 4.53</td>
+<td>43.03 / 25.31</td>
 <td>27.54</td>
 <td>基于PicoDet_LCNet_x2_5的主体检测模型，模型可能会同时检测出多个常见主体。</td>
 </tr>
@@ -43,30 +43,30 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
 <th>recall@1 (%)</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec</td>
 <td>84.2</td>
-<td>3.48 / 0.55</td>
-<td>8.04 / 4.04</td>
-<td>16.3 M</td>
+<td>3.91 / 1.06</td>
+<td>6.82 / 2.89</td>
+<td>16.3</td>
 <td rowspan="3">PP-ShiTuV2是一个通用图像特征系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
-<td>12.94 / 2.88</td>
-<td>58.36 / 58.36</td>
-<td>306.6 M</td>
+<td>12.57 / 11.62</td>
+<td>67.09 / 67.09</td>
+<td>306.6</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
 <td>91.03</td>
-<td>51.65 / 11.18</td>
-<td>255.78 / 255.78</td>
-<td>1.05 G</td>
+<td>49.85 / 49.85</td>
+<td>229.14 / 229.14</td>
+<td>1050</td>
 </tr>
 </table>
 
@@ -86,7 +86,12 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>
                       <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+              <li><strong>软件环境：</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
                   </ul>
               </li>
           </ul>
@@ -899,6 +904,23 @@ data_root             # 数据集根目录，目录名称可以改变
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>topk</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>是否返回可视化结果图以及处理过程中的中间图像等。
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>传入 <code>true</code>：返回图像。</li>
+<li>传入 <code>false</code>：不返回图像。</li>
+<li>若请求体中未提供该参数或传入 <code>null</code>：遵循产线配置文件<code>Serving.visualize</code> 的设置。</li>
+</ul>
+<br/>例如，在产线配置文件中添加如下字段：<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
+</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -985,7 +1007,7 @@ import sys
 
 import requests
 
-API_BASE_URL = "http://0.0.0.0:8080"
+API_BASE_URL = "http://127.0.0.1:8080"
 
 base_image_label_pairs = [
     {"image": "./demo0.jpg", "label": "兔子"},

@@ -100,9 +100,9 @@ def convert_labelme_dataset(input_dir):
                 if not os.path.exists(img_path):
                     logging.info("%s is not existed, skip this image" % img_path)
                     continue
-                img_name = img_path.split("/")[-1]
+                img_name = osp.basename(img_path)
                 img_file_list.append(f"images/{img_name}")
-                label_img_name = annotated_img_path.split("/")[-1]
+                label_img_name = osp.basename(annotated_img_path)
                 label_file_list.append(f"annotations/{label_img_name}")
 
                 img = np.asarray(cv2.imread(img_path))

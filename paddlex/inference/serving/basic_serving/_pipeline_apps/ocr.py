@@ -44,7 +44,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         pipeline = ctx.pipeline
 
         log_id = serving_utils.generate_log_id()
-
+        visualize_enabled = (
+            request.visualize if request.visualize is not None else ctx.config.visualize
+        )
         images, data_info = await ocr_common.get_images(request, ctx)
 
         result = await pipeline.infer(
@@ -63,7 +65,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         ocr_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
-            if ctx.config.visualize:
+            if visualize_enabled:
                 output_imgs = item.img
                 imgs = {
                     "input_img": img,

@@ -22,7 +22,7 @@ import numpy as np
 
 from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
-from .....utils.fonts import PINGFANG_FONT_FILE_PATH
+from .....utils.fonts import PINGFANG_FONT
 from .....utils.logging import warning
 
 if is_dep_available("opencv-contrib-python"):
@@ -128,7 +128,7 @@ def deep_analyse(dataset_path, output, datatype="FormulaRecDataset"):
     if os_system == "windows":
         plt.rcParams["font.sans-serif"] = "FangSong"
     else:
-        font = font_manager.FontProperties(fname=PINGFANG_FONT_FILE_PATH, size=15)
+        font = font_manager.FontProperties(fname=PINGFANG_FONT.path, size=15)
 
     fig, ax = plt.subplots(figsize=(15, 9), dpi=120)
     xlabel_name = "公式长度区间"

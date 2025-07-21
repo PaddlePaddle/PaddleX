@@ -19,7 +19,7 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
@@ -46,9 +46,7 @@ class DetVideoResult(BaseVideoResult):
             image = Image.fromarray(video[i].asnumpy())
             image.size
             font_size = int(0.018 * int(image.width)) + 2
-            font = ImageFont.truetype(
-                PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8"
-            )
+            font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
             draw_thickness = int(max(image.size) * 0.002)
             draw = ImageDraw.Draw(image)
             results = self["result"][i]
