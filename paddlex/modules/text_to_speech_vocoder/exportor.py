@@ -17,11 +17,11 @@ from ..base import BaseExportor
 from ...utils.errors import UnsupportedAPIError
 
 
-class TextToPinyinExportor(BaseExportor):
-    """Instance G2PWModel Model Exportor"""
+class TextToSpeechVocoderExportor(BaseExportor):
+    """Instance PWGanModel Model Exportor"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
-        raise UnsupportedAPIError("G2PWModel model not support export for now.")
+        raise UnsupportedAPIError("PWGanModel model not support export for now.")

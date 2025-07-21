@@ -17,11 +17,11 @@ from ..base import BaseEvaluator
 from ...utils.errors import UnsupportedAPIError
 
 
-class TextToPinyinEvaluator(BaseEvaluator):
-    """Instance G2PWModel Model Evaluator"""
+class TextToSpeechVocoderEvaluator(BaseEvaluator):
+    """Instance PWGan Model Model Evaluator"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
-        raise UnsupportedAPIError("G2PWModel model not support evaluate for now.")
+        raise UnsupportedAPIError("PWGan model not support evaluate for now.")

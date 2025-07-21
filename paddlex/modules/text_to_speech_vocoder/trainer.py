@@ -17,14 +17,14 @@ from ..base import BaseTrainer
 from ...utils.errors import UnsupportedAPIError
 
 
-class TextToPinyinTrainer(BaseTrainer):
-    """Instance G2PWModel Model Trainer"""
+class TextToSpeechVocoderTrainer(BaseTrainer):
+    """Instance PWGanModel Model Trainer"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
-        raise UnsupportedAPIError("G2PWModel model not support train for now.")
+        raise UnsupportedAPIError("PWGanModel model not support train for now.")
 
     def update_config(self):
         """update training config"""

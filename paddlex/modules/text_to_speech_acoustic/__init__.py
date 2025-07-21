@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import TextToSpeechAcousticDatasetChecker
-# from .trainer import TextToSpeechTrainer
-# from .evaluator import TextToSpeechEvaluator
-# from .exportor import TextToSpeechExportor
+from .trainer import TextToSpeechAcousticTrainer
+from .evaluator import TextToSpeechAcousticEvaluator
+from .exportor import TextToSpeechAcousticExportor
