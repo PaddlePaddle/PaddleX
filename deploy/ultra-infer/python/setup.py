@@ -312,6 +312,7 @@ class cmake_build(setuptools.Command):
                 "-DPY_EXT_SUFFIX={}".format(
                     sysconfig.get_config_var("EXT_SUFFIX") or ""
                 ),
+                "-DCUDA_VERSION={}".format(os.getenv("CUDA_VERSION")),
             ]
             cmake_args.append("-DCMAKE_BUILD_TYPE=%s" % build_type)
             for k, v in setup_configs.items():
