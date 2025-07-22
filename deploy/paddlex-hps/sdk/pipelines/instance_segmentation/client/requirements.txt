@@ -1,3 +1,0 @@
-# paddlex-hps-client
-protobuf == 3.19.6
-tritonclient [grpc] == 2.15
