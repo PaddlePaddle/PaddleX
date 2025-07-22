@@ -1,0 +1,9 @@
+pipeline_name: video_classification
+
+SubModules:
+  VideoClassification:
+    module_name: video_classification
+    model_name: PP-TSMv2-LCNetV2_8frames_uniform
+    model_dir: null
+    batch_size: 1    
+    topk: 1

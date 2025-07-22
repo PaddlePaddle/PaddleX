@@ -114,7 +114,7 @@ paddlex --serve --pipeline image_classification --use_hpip
 
 ### 2.1 下载高稳定性服务化部署 SDK
 
-在下表中找到产线对应的高稳定性服务化部署 SDK 并下载：
+在下表中找到产线对应的高稳定性服务化部署 SDK 并下载，如需手动打包可参考[HPS](../../deploy/hps/README.md#2-产线-sdk-打包及调用)项目文档：
 
 <details>
 <summary>👉 点击查看</summary>
@@ -317,7 +317,7 @@ paddlex --serve --pipeline image_classification --use_hpip
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.1-cpu
     ```
 
-准备好镜像后，切换到 `server` 目录，执行如下命令运行服务器：
+如需自定义构建镜像可参考[HPS](../../deploy/hps/README.md#11-构建依赖收集镜像)项目文档。准备好镜像后，切换到 `server` 目录，执行如下命令运行服务器：
 
 ```bash
 docker run \

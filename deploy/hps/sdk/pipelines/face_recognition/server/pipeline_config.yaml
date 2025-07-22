@@ -1,0 +1,18 @@
+pipeline_name: face_recognition
+
+index: None
+det_threshold: 0.6
+rec_threshold: 0.4
+rec_topk: 5
+
+SubModules:
+  Detection:
+    module_name: face_detection
+    model_name: PP-YOLOE_plus-S_face
+    model_dir: null
+    batch_size: 1 
+  Recognition:
+    module_name: face_feature
+    model_name: ResNet50_face
+    model_dir: null
+    batch_size: 1

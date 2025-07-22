@@ -1,0 +1,2 @@
+paddle2onnx == 2.0.2rc3
+ultra-infer-gpu-python @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/new_hpi/v1.1.1/ultra_infer_gpu_python-1.1.1-cp310-cp310-linux_x86_64.whl

@@ -9,6 +9,10 @@ repos:
     -   id: check-symlinks
     -   id: detect-private-key
     -   id: end-of-file-fixer
+        exclude: |
+            (?x)^(
+              deploy/hps/server_env/requirements/.*\.txt
+            )$
     -   id: trailing-whitespace
         files: \.(md|c|cc|cxx|cpp|cu|h|hpp|hxx|py)$
 -   repo: https://github.com/Lucas-C/pre-commit-hooks
