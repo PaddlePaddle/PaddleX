@@ -104,6 +104,6 @@ python install_script.py --file main.py --nvidia true
 
 ## 常见问题
 
-- 如果出报错信息出现<code>RuntimeError: xxx requires additional dependencies</code>，确认已按照环境准备部分说明正确安装环境。
+- 如果出报错信息出现 <code>RuntimeError: xxx requires additional dependencies</code> ，确认已按照环境准备部分说明正确安装环境。
 
-- 如果报错信息出现 CUDA、cuDNN 相关动态链接库找不到时，请检查系统环境变量中是否正确添加NVIDIA相关库路径或者考虑在运行安装脚本时添加<code>--nvidia true</code>，将NVIDIA相关依赖打包进可执行文件目录中。
+- 如果报错信息出现 CUDA、cuDNN 相关动态链接库找不到时，请检查系统环境变量中是否正确添加NVIDIA相关库路径或者考虑在运行安装脚本时添加 <code>--nvidia true</code> ，将NVIDIA相关依赖打包进可执行文件目录中。
