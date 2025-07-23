@@ -6,8 +6,7 @@
 
 ## 准备环境
 
-- **根据[PaddleX安装文档](../installation/installation.md)完成安装**
-
+- **根据[PaddleX安装文档](../installation/installation.md)完成PaddleX安装**
 - **安装PyInstaller**
 
 安装PyInstaller：
@@ -15,11 +14,11 @@
 ```bash
 pip install pyinstaller
 ```
-> 请确认用于打包的环境与当前准备环境一致，以避免因依赖差异导致打包后的程序出现异常。
+> 请确认当前准备环境中安装有待打包的Python脚本所需的全部依赖，以避免缺少依赖差异导致打包后的可执行程序出现异常。
 
-## 打包脚本
+## 执行打包脚本
 
-将下方python脚本拷贝后存成py文件，文件名可以为install_script.py。
+将下方Python脚本拷贝后存成`py`文件，文件名可以为`install_script.py`。
 
 ```python
 import paddlex
@@ -30,7 +29,7 @@ import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--file', required=True, help='Your file name, e.g. main.py.')
-parser.add_argument('--nvidia', action='store_true', help='Whether to include NVIDIA CUDA and cuDNN dependencies. Default is false.')
+parser.add_argument('--nvidia', action='store_true', help='Include NVIDIA CUDA and cuDNN dependencies.')
 
 args = parser.parse_args()
 
@@ -41,65 +40,60 @@ deps_all = list(paddlex.utils.deps.DEP_SPECS.keys())
 deps_need = [dep for dep in user_deps if dep in deps_all]
 
 cmd = [
-    f"pyinstaller {main_file}",
-    "--collect-data paddlex",
-    "--collect-binaries paddle"
+    "pyinstaller", main_file,
+    "--collect-data", "paddlex",
+    "--collect-binaries", "paddle"
 ]
+
 if args.nvidia:
-    cmd.append("--collect-binaries nvidia")
+    cmd += ["--collect-binaries", "nvidia"]
 
 for dep in deps_need:
-    cmd.append(f"--copy-metadata {dep}")
+    cmd += ["--copy-metadata", dep]
 
-final_cmd = " ".join(cmd)
-print(final_cmd)
+print("PyInstaller command:", " ".join(cmd))
 
 try:
-    result = subprocess.run((final_cmd), check=True)
+    result = subprocess.run(cmd, check=True)
 except subprocess.CalledProcessError as e:
     print("Installation failed:", e)
     sys.exit(1)
 ```
 
 
-### 打包脚本参数
+**打包脚本支持的参数如下：**
 
-| 参数         | 是否必需 | 说明                                                                                                               | 默认值   |
-|--------------|----------|--------------------------------------------------------------------------------------------------------------------|---------|
-| --file   | 必须     | 你的打包文件名（如 main.py）。                                                                                        |       |
-| --nvidia     | 可选     | 是否将NVIDIA的CUDA、cuDNN相关依赖库一同打包到可执行文件目录下。如果系统环境变量路径已包含NVIDIA的CUDA、cuDNN相关依赖库则无需开启。 | False   |
+| 参数         | 是否必需 | 说明                                                                                                               |
+|--------------|------------------------------------------------------------------------------------------------------------------------------|---------|
+| --file   | 必须     | 你的打包文件名（如 main.py）。
+| --nvidia     | 可选     | 将NVIDIA的CUDA、cuDNN相关依赖库一同打包到可执行文件的同级目录中。如果系统环境变量路径已包含NVIDIA的CUDA、cuDNN相关依赖库则无需开启。
 
-### 打包脚本调用示例
+**打包脚本调用示例如下：**
 
 ```bash
 python install_script.py --file main.py
-python install_script.py --file main.py --nvidia
+python install_script.py --file main.py --nvidia  # 将NVIDIA的CUDA、cuDNN相关依赖库打包至可执行文件的同级目录中。
 ```
 
-### 运行结果
+**运行结果**
 
 - 安转脚本将执行类似如下命令：
 
-    pyinstaller main.py --collect-data paddlex --collect-binaries paddle [--copy-metadata xxx …]，其中--copy-metadata xxx 会根据当前环境已安装的PaddleX需要的依赖动态添加。
+    `pyinstaller main.py --collect-data paddlex --collect-binaries paddle [--copy-metadata xxx …]`，其中`--copy-metadata xxx`会根据当前环境已安装的PaddleX需要的依赖动态添加包的元信息。
 
-- 可执行文件将生成在当前路径的dist文件夹中，包含可执行文件和相关打包依赖库。
+- 可执行文件将生成在当前路径的`dist`文件夹中，包含可执行文件和相关打包依赖库。
 
 ## 附录
 
-### 测试环境
+**以上打包流程在如下环境中测试：**
 
 - **操作系统：Win 11**
-
 - **Python：3.10.18**
-
 - **PaddlePaddle：3.0.0**
-
 - **PaddleX：3.1.3**
-
 - **PyInstaller：6.14.2**
 
-### 常见问题
+**常见问题**
 
-- 如果出报错信息出现 <code>RuntimeError: xxx requires additional dependencies</code> ，请确认已按照准备环境部分说明正确安装环境。
-
-- 如果报错信息出现CUDA、cuDNN相关动态链接库找不到，请检查系统环境变量中是否正确添加NVIDIA的CUDA、cuDNN相关依赖库路径或者考虑在运行打包脚本时添加 <code>--nvidia</code> ，将NVIDIA的CUDA、cuDNN相关依赖库打包进可执行文件目录中。
+- 在运行可执行文件时，出现报错信息 `RuntimeError: xxx requires additional dependencies`，说明当前打包环境缺少相关依赖，请确认已按照准备环境部分说明正确安装环境。
+- 在运行可执行文件时，出现报错信息提示CUDA、cuDNN相关动态链接库找不到，请检查系统环境变量中是否正确添加NVIDIA的CUDA、cuDNN相关依赖库路径或者考虑在运行打包脚本时添加 `--nvidia`，将NVIDIA的CUDA、cuDNN相关依赖库打包进可执行文件的同级目录中。
