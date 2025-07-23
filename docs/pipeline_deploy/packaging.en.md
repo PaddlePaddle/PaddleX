@@ -1,4 +1,4 @@
-# Package PaddleX Project Guide
+# Package PaddleX Projects
 
 This guide applies to packaging PaddleX projects using PyInstaller.
 
