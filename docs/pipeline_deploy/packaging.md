@@ -18,7 +18,7 @@ pip install pyinstaller
 
 ## 执行打包脚本
 
-将下方Python脚本拷贝后存成`py`文件，文件名可以为`install_script.py`。
+将下方Python脚本拷贝后存成`py`文件，文件名可以为`package.py`。
 
 ```python
 import paddlex
@@ -65,14 +65,15 @@ except subprocess.CalledProcessError as e:
 
 | 参数         | 是否必需 | 说明                                                                                                               |
 |--------------|------------------------------------------------------------------------------------------------------------------------------|---------|
-| --file   | 必须     | 你的打包文件名（如 main.py）。
-| --nvidia     | 可选     | 将NVIDIA的CUDA、cuDNN相关依赖库一同打包到可执行文件的同级目录中。如果系统环境变量路径已包含NVIDIA的CUDA、cuDNN相关依赖库则无需开启。
+| --file   | 是     | 你的待打包文件名（如`main.py`）。
+| --nvidia     | 否     | 将NVIDIA的CUDA、cuDNN相关依赖库一同打包到可执行文件的同级目录中。如果系统环境变量路径已包含NVIDIA的CUDA、cuDNN相关依赖库或者不需要使用CUDA、cuDNN相关依赖库，则无需开启。
 
 **打包脚本调用示例如下：**
 
 ```bash
-python install_script.py --file main.py
-python install_script.py --file main.py --nvidia  # 将NVIDIA的CUDA、cuDNN相关依赖库打包至可执行文件的同级目录中。
+python package.py --file main.py
+# 将NVIDIA的CUDA、cuDNN相关依赖库打包至可执行文件的同级目录中。
+python package.py --file main.py --nvidia
 ```
 
 **运行结果**
@@ -87,11 +88,11 @@ python install_script.py --file main.py --nvidia  # 将NVIDIA的CUDA、cuDNN相�
 
 **以上打包流程在如下环境中测试：**
 
-- **操作系统：Win 11**
-- **Python：3.10.18**
-- **PaddlePaddle：3.0.0**
-- **PaddleX：3.1.3**
-- **PyInstaller：6.14.2**
+- 操作系统：**Win 11**
+- Python：**3.10.18**
+- PaddlePaddle：**3.0.0**
+- PaddleX：**3.1.3**
+- PyInstaller：**6.14.2**
 
 **常见问题**
 
