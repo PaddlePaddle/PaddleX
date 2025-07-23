@@ -6,19 +6,20 @@ This guide applies to packaging PaddleX projects using PyInstaller.
 
 ## Preparing the Environment
 
-- **Complete the PaddleX installation according to the [PaddleX Installation Documentation](../installation/installation.en.md)**
-- **Install PyInstaller**
+- **Complete the PaddleX installation according to the [PaddleX Installation Documentation](../installation/installation.en.md).**
+- **Install PyInstaller.**
 
 Install PyInstaller:
 
 ```bash
 pip install pyinstaller
 ```
+
 > Ensure that all dependencies required by the Python script to be packaged are installed in the current environment to prevent anomalies in the packaged executable due to missing dependencies.
 
 ## Running the Packaging Script
 
-Copy the Python script below and save it as a `.py` file, for example, `package.py`.
+Copy the Python script below and save it as a `py` file, for example, `package.py`.
 
 ```python
 import paddlex
@@ -66,7 +67,7 @@ except subprocess.CalledProcessError as e:
 | Parameter         | Required | Description                                                                                                               |
 |--------------|------------------------------------------------------------------------------------------------------------------------------|---------|
 | --file   | Yes     | The name of the file to be packaged (e.g., `main.py`).
-| --nvidia     | No     | Packages NVIDIA CUDA and cuDNN related dependencies into the same directory as the executable. If the system environment paths already include NVIDIA CUDA and cuDNN dependencies or if CUDA and cuDNN dependencies are not required, this option can be omitted.
+| --nvidia     | No     | Packages NVIDIA CUDA and cuDNN related dependencies into the same directory as the executable. If the system environment paths already include CUDA and cuDNN dependencies or if CUDA and cuDNN dependencies are not required, this option can be omitted.
 
 **Example Usage of the Packaging Script:**
 
@@ -82,7 +83,7 @@ python package.py --file main.py --nvidia
 
     `pyinstaller main.py --collect-data paddlex --collect-binaries paddle [--copy-metadata xxx …]`, where `--copy-metadata xxx` dynamically adds package metadata based on the dependencies required by PaddleX installed in the current environment.
 
-- The executable file will be generated in the `dist` folder in the current directory, containing the executable and related packaged dependencies.
+- The executable file and related dependency libraries will be generated in the `dist` folder.
 
 ## Appendix
 
@@ -97,4 +98,4 @@ python package.py --file main.py --nvidia
 **Common Issues**
 
 - When running the executable, if you encounter an error message like `RuntimeError: xxx requires additional dependencies`, it indicates that the current packaging environment lacks the necessary dependencies. Please ensure that the environment is set up correctly as described in the Preparations section.
-- When running the executable, if an error message indicates that CUDA or cuDNN related dynamic link libraries cannot be found, please check whether the system environment variables correctly include the paths to NVIDIA CUDA and cuDNN dependencies, or consider adding `--nvidia` when running the packaging script to include NVIDIA CUDA and cuDNN dependencies in the same directory as the executable.
+- When running the executable, if an error message indicates that CUDA or cuDNN related dynamic link libraries cannot be found, please check whether the system environment variables correctly include the paths to NVIDIA CUDA and cuDNN dependencies, or consider adding `--nvidia` when running the packaging script to include CUDA and cuDNN dependencies in the same directory as the executable.

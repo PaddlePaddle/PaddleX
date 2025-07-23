@@ -14,7 +14,8 @@
 ```bash
 pip install pyinstaller
 ```
-> 请确认当前准备环境中安装有待打包的Python脚本所需的全部依赖，以避免缺少依赖差异导致打包后的可执行程序出现异常。
+
+> 请确认当前准备环境中安装有待打包的Python脚本所需的全部依赖，以避免缺少依赖导致打包后的可执行程序出现异常。
 
 ## 执行打包脚本
 
@@ -66,7 +67,7 @@ except subprocess.CalledProcessError as e:
 | 参数         | 是否必需 | 说明                                                                                                               |
 |--------------|------------------------------------------------------------------------------------------------------------------------------|---------|
 | --file   | 是     | 你的待打包文件名（如`main.py`）。
-| --nvidia     | 否     | 将NVIDIA的CUDA、cuDNN相关依赖库一同打包到可执行文件的同级目录中。如果系统环境变量路径已包含NVIDIA的CUDA、cuDNN相关依赖库或者不需要使用CUDA、cuDNN相关依赖库，则无需开启。
+| --nvidia     | 否     | 将NVIDIA的CUDA、cuDNN相关依赖库一同打包到可执行文件的同级目录中。如果系统环境变量路径已包含CUDA、cuDNN相关依赖库或者不需要使用CUDA、cuDNN相关依赖库，则无需开启。
 
 **打包脚本调用示例如下：**
 
@@ -82,7 +83,7 @@ python package.py --file main.py --nvidia
 
     `pyinstaller main.py --collect-data paddlex --collect-binaries paddle [--copy-metadata xxx …]`，其中`--copy-metadata xxx`会根据当前环境已安装的PaddleX需要的依赖动态添加包的元信息。
 
-- 可执行文件将生成在当前路径的`dist`文件夹中，包含可执行文件和相关打包依赖库。
+- 可执行文件和相关依赖库将生成到`dist`文件夹中。
 
 ## 附录
 
@@ -97,4 +98,4 @@ python package.py --file main.py --nvidia
 **常见问题**
 
 - 在运行可执行文件时，出现报错信息 `RuntimeError: xxx requires additional dependencies`，说明当前打包环境缺少相关依赖，请确认已按照准备环境部分说明正确安装环境。
-- 在运行可执行文件时，出现报错信息提示CUDA、cuDNN相关动态链接库找不到，请检查系统环境变量中是否正确添加NVIDIA的CUDA、cuDNN相关依赖库路径或者考虑在运行打包脚本时添加 `--nvidia`，将NVIDIA的CUDA、cuDNN相关依赖库打包进可执行文件的同级目录中。
+- 在运行可执行文件时，出现报错信息提示CUDA、cuDNN相关动态链接库找不到，请检查系统环境变量中是否正确添加NVIDIA的CUDA、cuDNN相关依赖库路径或者考虑在运行打包脚本时添加 `--nvidia`，将CUDA、cuDNN相关依赖库打包进可执行文件的同级目录中。
