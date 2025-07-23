@@ -1,9 +1,18 @@
+# 1. Should I use `syntax` parser directive?
+# 2. Can I use `COPY --link` to optimize caching?
+# 3. Create a non-root user for deployment?
+# 4. Should I use APT repository mirrors?
+# 5. Use cache mounts for `pip`?
+
 ARG DEVICE_TYPE=gpu
 ARG ENV_TYPE=prod
 ARG PIP_INDEX_URL=https://pypi.org/simple
 
 # GPU base
-
+# nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu20.04
+# We use the `devel` version because the CUDA toolchain is needed for JIT.
+# However, can we use a smaller base image by not including tools and
+# libraries that are not required?
 FROM nvcr.io/nvidia/cuda@sha256:03681bbd11fea044ff3e3a5d65e190a6f935af30c56e03e740b27e4563f61e0f AS gpu-base
 
 # CPU base
@@ -14,6 +23,8 @@ FROM ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2faf
 FROM ${DEVICE_TYPE}-base AS base
 
 ARG PIP_INDEX_URL
+
+# Should I add `SHELL ["/bin/bash", "-c"]`?
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -34,10 +45,16 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
+
 # Requirement collection
 FROM base AS rc
 RUN python -m pip install pip-tools==7.4.1
 
+# `ENTRYPOINT` and `CMD`?
+
+
+# Build stage 1
+# Can we use another base image?
 FROM base AS gpu-build1
 ARG DEVICE_TYPE=gpu
 
@@ -83,6 +100,7 @@ COPY ./paddlex-hps-server /paddlex/paddlex_hps_libs/paddlex-hps-server
 RUN python -m pip wheel -w /paddlex/paddlex_hps_wheels --no-deps /paddlex/paddlex_hps_libs/paddlex-hps-server
 
 
+
 FROM ${DEVICE_TYPE}-build1 AS build2
 ARG DEVICE_TYPE
 ARG ENV_TYPE
@@ -120,20 +138,24 @@ FROM base AS cpu-deployment
 # Deployment
 FROM ${DEVICE_TYPE}-deployment AS deployment
 
-
+# Should we use an environment variable to store the version?
 RUN groupadd -g 1000 paddlex \
     && useradd -m -s /bin/bash -u 1000 -g 1000 paddlex
 
+# Not sure if all these deps are necessary
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libre2-5 libssl1.1 libb64-0d libnuma1 libarchive13 python3.10-dev libgl1-mesa-glx libglib2.0-0 libgomp1 ccache binutils build-essential texlive texlive-latex-base texlive-latex-extra \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build2 --chown=paddlex:paddlex /paddlex/libs /paddlex/libs
+
+# Should I use `ldconfig`?
 ENV LD_LIBRARY_PATH="/paddlex/libs:${LD_LIBRARY_PATH}"
 
 COPY --from=build2 --chown=paddlex:paddlex /paddlex/tritonserver /opt/tritonserver
 ENV PATH="/opt/tritonserver/bin:${PATH}"
 
+# Is the merging safe?
 COPY --from=build2 --chown=paddlex:paddlex /paddlex/py310 /paddlex/py310
 
 RUN mkdir /paddlex/var \

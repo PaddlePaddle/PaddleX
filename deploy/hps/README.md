@@ -4,19 +4,19 @@ comments: true
 
 # PaddleX 高稳定性服务化部署
 
-本项目提供一套高稳定性部署服务，它由 server_env 与 sdk 两个目录组成。server_env 部分用于构建包含 Triton Inference Server 的多种镜像，为后续模型产线 server 提供运行环境；sdk 部分用于打包产线 SDK，提供各模型产线的 server 和 client 代码。如下图所示：
+本项目提供一套高稳定性服务化部署方案，它由 `server_env` 与 `sdk` 两个目录组成，`server_env` 部分用于构建包含 Triton Inference Server 的多种镜像，为后续模型产线 server 提供运行环境。`sdk` 部分用于打包产线 SDK，提供各模型产线的 server 和 client 代码 ，便于快速调用模型服务。如下图所示：
 
 <img src="https://github.com/boomercat/doc_image/blob/main/hps_project.drawio.png?raw=true" />
 
 **请注意，本项目依赖于如下环境配置：**
 - **操作系统**：Linux
-- **Docker**：`>= 23.0`，用于镜像构建和部署
+- **Docker**：`>= 20.10.0`，用于镜像构建和部署
 - **CPU 架构**：x86-64 
 
-本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署，整体流程分为两个阶段：
+本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署环境搭建与物料打包。整体流程分为两个阶段：
 
-1. 镜像构建：构建包含 Triton Inference Server 的镜像，并锁定依赖版本，提升部署镜像构建的可重现性。
-2. 产线 SDK 打包及调用：将各模型产线的 `client` 和 `server` 代码打包为 SDK，方便用户快速集成和调用。
+1. 镜像构建：构建包含 Triton Inference Server 的镜像。在这一阶段中，依赖版本被锁定以提升部署镜像构建的可重现性。
+2. 产线 SDK 打包及调用：将各模型产线的 client 和 server 代码打包到 SDK，方便用户快速集成和调用。
 
 ## 1. 镜像构建
 
@@ -30,13 +30,13 @@ comments: true
 
 ### 1.1 构建依赖收集镜像
 
-执行 server_env 文件夹下的依赖收集脚本。
+执行 `server_env` 文件夹下的依赖收集脚本。
 
 ```bash
 ./scripts/prepare_rc_image.sh
 ```
 
-该脚本会构建一个用于依赖收集的镜像，包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖](./README.md#12-锁定依赖)将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认为 https://pypi.org/simple。
+该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖](./README.md#12-锁定依赖) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认使用 https://pypi.org/simple。
 
 ### 1.2 锁定依赖
 
@@ -46,11 +46,11 @@ comments: true
 ./script/freeze_requirements.sh
 ```
 
-执行 `freeze_requirements.sh` 脚本实际调用 `_freeze_requirements.sh`。该脚本调用 `pip-tools compile` 解析依赖源文件，并最终生成一系列 `.txt` 文件（如 `requirements/gpu.txt`、`requirements/cpu.txt` 等），这些文件将为 [1.3 镜像构建](./README.md#13-镜像构建)提供依赖版本约束。
+该脚本调用 `pip-tools compile` 解析依赖源文件，并最终生成一系列 `.txt` 文件（如 `requirements/gpu.txt`、`requirements/cpu.txt` 等），这些文件将为 [1.3 镜像构建](./README.md#13-镜像构建) 提供依赖版本约束。
 
 ### 1.3 镜像构建
 
-在完成 1.2 锁定依赖后，如需构建GPU镜像，需提前将 [cuDNN8.9.7-CUDA11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6.1.6-Ubuntu20.04 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
+在完成 1.2 锁定依赖后，如需构建GPU镜像，需提前将 [cuDNN 8.9.7-CUDA 11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6.1.6-Ubuntu 20.04 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu 
@@ -68,15 +68,15 @@ comments: true
 <tbody>
 <tr>
 <td><code>-k</code></td>
-<td>指定镜像的设备类型，可选值为 <code>gpu</code> 或 <code>cpu</code></td>
+<td>指定镜像的设备类型，可选值为 <code>gpu</code> 或 <code>cpu</code>。</td>
 </tr>
 <tr>
 <td><code>-t</code></td>
-<td>镜像标签，默认为 <code>latest:${DEVICE}</code> </td>
+<td>镜像标签，默认为 <code>latest:${DEVICE}</code>。</td>
 </tr>
 <tr>
 <td><code>-p</code></td>
-<td>Python 包索引 URL，如不指定默认为 <code>https://pypi.org/simple</code></td>
+<td>Python 包索引 URL，如不指定默认为 <code>https://pypi.org/simple</code>。</td>
 </tr>
 </tbody>
 </table>
@@ -98,14 +98,13 @@ comments: true
 
 ## 2. 产线 SDK 打包及调用
 
-本阶段主要介绍 `server_env` 目录下多个模型产线提供统一的打包功能。同时，该目录为每个产线提供对应的 `client` 和 `server` 代码实现：
+本阶段主要介绍 `sdk` 目录下多个模型产线提供统一的打包功能。同时，该目录为每个产线提供对应的 client 和 server 代码实现：
 
-- `client` 部分：用于调用模型服务，提供统一的 SDK 接口。
-- `server` 部分：基于 [1. 镜像构建](#1-镜像构建) 阶段构建的镜像作为运行环境，用于部署模型服务。
-
+- `client` 部分：用于调用模型服务。
+- `server` 部分：以 [1. 镜像构建](#1-镜像构建) 阶段构建的镜像作为运行环境，用于部署模型服务。
 ### 2.1 SDK 打包
 
-为了便于发布与部署，SDK 模块支持将不同产线的 `client` 和 `server` 代码打包。打包可通过 `scripts/assemble.sh` 脚本执行，以打包通用 OCR 产线为例：
+为了便于发布与部署，本项目支持将不同产线的 `client` 和 `server` 代码打包。打包可通过 `scripts/assemble.sh` 脚本执行，以打包通用 OCR 产线为例：
 
 ```bash
 ./scripts/assemble.sh OCR
@@ -131,36 +130,32 @@ comments: true
 </tr>
 <tr>
 <td><code>--no-server</code></td>
-<td>不打包产线中的<code>server</code>代码。</td>
+<td>不打包产线中的 server 代码。</td>
 </tr>
 <tr>
 <td><code>--no-client</code></td>
-<td>不打包产线中的<code>client</code>代码。</td>
+<td>不打包产线中的 client 代码。</td>
 </tr>
 </tbody>
 </table>
 
-调用后存储到当前目录/output路径下。
+调用后存储到当前目录 `/output` 路径下。
 
 ### 2.2 产线调用
 
-可参考[PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器)了解如何启动服务器与调用产线服务。
+可参考[ PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器) 了解如何启动服务器与调用产线服务。
 
 ## 3.FAQ
 
 #### 1. 构建镜像时无法拉取 Docker 基础镜像？
 
-可能由于网络问题或镜像源限制，导致从 Docker Hub 拉取基础镜像失败。可尝试配置镜像源加速，在本地 Docker 配置文件 `/etc/docker/daemon.json` 中添加国内可信镜像仓库地址，以提升镜像下载速度和稳定性，或尝试直接手动拉取镜像。
+由于网络连接问题或镜像源访问限制，可能会导致从 Docker Hub 拉取基础镜像失败。可尝试在本地 Docker 配置文件 `/etc/docker/daemon.json` 中添加国内可信镜像仓库地址，以提升镜像下载速度和稳定性。如果上述方法仍无法解决，可尝试从官方或可信第三方渠道手动下载镜像文件。
 
 
 #### 2. 镜像构建过程中出现安装 Python 依赖时超时？
 
-可能由于网络问题，pip 从官方源下载依赖速度过慢或连接失败。在执行依赖收集或构建镜像时，使用 `-p` 参数指定国内 Python 包索引 URL，例如清华源镜像：
+可能由于网络问题，pip 从官方源下载依赖速度过慢或连接失败。在执行依赖收集或构建镜像时，使用 `-p` 参数指定国内 Python 包索引 URL，例如清华镜像源：
 
 ```bash
 ./scripts/prepare_rc_image.sh -p https://mirrors.aliyun.com/pypi/simple/
 ```
-
-
-
-
