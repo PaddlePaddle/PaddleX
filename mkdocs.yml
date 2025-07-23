@@ -184,7 +184,7 @@ plugins:
             PaddleX时序任务模型配置文件参数说明: PaddleX Time Series Module Config Parameters
             模型产线部署: Pipeline Deploy
             高性能推理: High Performance Inference
-            打包可执行文件: Package Executable File.
+            打包可执行文件: Package Executable File
             服务化部署: Serving
             端侧部署: On-Device Deployment
             获取 ONNX 模型: Obtaining ONNX Models
