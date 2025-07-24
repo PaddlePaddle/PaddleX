@@ -11,6 +11,9 @@ comments: true
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/doc_preprocessor/02.jpg">
 
 <b>通用文档图像预处理</b><b>产线中包含可选用的文档图像方向分类模块和文本图像矫正模块</b>包含的模型如下。
+
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
+
 <p><b>文档图像方向分类模块（可选）：</b></p>
 <table>
 <thead>

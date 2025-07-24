@@ -12,6 +12,8 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 <b>The Human Keypoint Detection Pipeline includes pedestrian detection and human keypoint detection modules</b>, with several models available. You can choose the model based on the benchmark data below. <b>If you prioritize model accuracy, choose a model with higher accuracy; if you prioritize inference speed, choose a model with faster inference speed; if you prioritize storage size, choose a model with a smaller storage size</b>.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary> 👉Model List Details</summary>
 <b>Pedestrian Detection Module:</b>
 <table>

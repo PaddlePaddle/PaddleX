@@ -13,6 +13,8 @@ The general video classification pipeline is used to solve video classification 
 
 <b>The general video classification pipeline includes a video classification module. If you prioritize model accuracy, choose a model with higher accuracy; if you prioritize inference speed, choose a model with faster inference speed; if you prioritize storage size, choose a model with a smaller storage size.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>

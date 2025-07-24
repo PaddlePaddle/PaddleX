@@ -9,6 +9,8 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>

@@ -9,6 +9,7 @@ The image classification module is a crucial component in computer vision system
 
 ## II. List of Supported Models
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <tr>

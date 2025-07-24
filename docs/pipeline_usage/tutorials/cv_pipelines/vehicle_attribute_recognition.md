@@ -10,6 +10,7 @@ comments: true
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/vehicle_attribute_1.jpg"/>
 <b>车辆属性识别产线中包含了车辆检测模块和车辆属性识别模块</b>，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
 
 <p><b>车辆检测模块：</b></p>
 <table>

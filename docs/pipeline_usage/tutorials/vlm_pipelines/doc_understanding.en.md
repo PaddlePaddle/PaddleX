@@ -10,6 +10,8 @@ The Document Understanding Pipeline is an advanced document processing technolog
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a faster model; if you are concerned about storage size, choose a model with a smaller storage footprint.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Document-based Vision-Language Model Modules (Optional):</b></p>
 
 <table>

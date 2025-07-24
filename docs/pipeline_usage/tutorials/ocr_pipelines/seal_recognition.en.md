@@ -13,6 +13,9 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <b>The seal text recognition</b> pipeline includes a seal text detection module and a text recognition module, as well as optional layout detection module, document image orientation classification module, and text image correction module.
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference speed. If you prioritize model storage size, choose a model with smaller storage size.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Layout Region Detection Module (Optional):</b></p>
 
 * <b>Layout detection model, including 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, chart title, table, table title, seal, chart title, chart, header image, footer image, sidebar text</b>

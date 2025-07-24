@@ -13,6 +13,8 @@ Rotated object detection is a variant of the object detection module, specifical
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Image Rotated Object Detection Module (Optional):</b></p>
 
 <table>

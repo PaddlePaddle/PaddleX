@@ -14,6 +14,8 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster model; if you care about model size, choose a smaller model.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary>👉Model List Details</summary>
 
 <p><b>Table Structure Recognition Module Models:</b></p>

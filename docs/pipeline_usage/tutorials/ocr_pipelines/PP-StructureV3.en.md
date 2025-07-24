@@ -10,6 +10,9 @@ Layout parsing is a technology that extracts structured information from documen
 <b>The PP-StructureV3 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize model inference speed, choose a faster inference model; if you prioritize model storage size, choose a smaller storage model.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary>👉 Model List Details</summary>
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>

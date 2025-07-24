@@ -9,6 +9,8 @@ The 3D multimodal fusion detection module is a key component in the fields of co
 
 ## II. List of Supported Models
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>

@@ -9,6 +9,7 @@ Table structure recognition is a crucial component in table recognition systems,
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <tr>

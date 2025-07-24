@@ -13,6 +13,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/pp_shitu_v2.jpg"/>
 <b>The General Image Recognition Pipeline includes the mainbody detection module and the image feature module</b>, with several models to choose. You can select the model to use based on the benchmark data below. <b>If you prioritize model precision, choose a model with higher precision. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size</b>.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <b>Mainbody Detection Module:</b>
 <table>

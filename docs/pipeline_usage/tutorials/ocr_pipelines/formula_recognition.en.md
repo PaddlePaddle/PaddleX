@@ -15,6 +15,9 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <b>The formula recognition pipeline includes a mandatory formula recognition module,</b> as well as optional layout detection, document image orientation classification, and text image unwarping modules. The document image orientation classification module and the text image unwarping module are integrated into the formula recognition pipeline as a document preprocessing sub-pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a model with higher precision; if you care more about inference speed, choose a faster model; if you are concerned about model storage size, choose a smaller model.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>

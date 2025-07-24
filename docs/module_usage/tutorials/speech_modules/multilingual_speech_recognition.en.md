@@ -9,6 +9,8 @@ Speech recognition is an advanced tool that can automatically convert human-spok
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 ### Whisper Model
 Demo Link | Training Data | Size | Descriptions | CER | Model
 :-----------: | :-----:| :-------: | :-----: | :-----: |:---------:|

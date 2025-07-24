@@ -6,6 +6,8 @@ The document visual-language model is a cutting-edge multimodal processing techn
 
 ## 2. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Download Link</th>

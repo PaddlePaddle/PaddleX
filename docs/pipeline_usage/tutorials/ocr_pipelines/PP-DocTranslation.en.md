@@ -13,6 +13,8 @@ The General Document Translation Pipeline (PP-DocTranslation) is a document inte
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize model inference speed, choose a faster inference model; if you prioritize model storage size, choose a smaller storage model.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary>👉Details of model list</summary>
 <p><b>Document image orientation classification module:</b></p>
 <table>

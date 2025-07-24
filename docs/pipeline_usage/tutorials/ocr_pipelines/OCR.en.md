@@ -14,6 +14,9 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <b>The General OCR pipeline includes mandatory text detection and text recognition modules, as well as optional document image orientation classification, text image correction, and text line orientation classification modules.</b> The document image orientation classification and text image correction modules are integrated as a document preprocessing sub-line into the General OCR pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster inference model; if you care about model storage size, choose a smaller model.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>

@@ -15,6 +15,8 @@ The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve t
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary> 👉Model List Details</summary>
 
 <p><b>Table Structure Recognition Module Models:</b></p>

@@ -9,6 +9,8 @@ The primary purpose of Text Image Unwarping is to perform geometric transformati
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>

@@ -12,6 +12,8 @@ The document image preprocessing pipeline integrates two major functions: docume
 
 **The general document image preprocessing pipeline includes optional document image orientation classification module and document image correction module** with the following models included.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
