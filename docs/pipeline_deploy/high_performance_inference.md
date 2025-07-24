@@ -150,7 +150,7 @@ paddlex --install hpi-gpu
 
 对于 PaddleX CLI，指定 `--use_hpip`，即可启用高性能推理插件。
 
-**在启用高性能推理插件前，建议安装 [Paddle2ONNX 插件](./paddle2onnx.md)，否则 PaddleX 将无法进行 PaddlePaddle 模型至 ONNX 模型的转换，从而无法使用ONNX Runtime、TensorRT等推理后端**。若您直接使用 ONNX 模型，则无需安装 Paddle2ONNX 插件。
+**在启用高性能推理插件前，建议安装 [Paddle2ONNX 插件](./paddle2onnx.md) ，否则 PaddleX 将无法进行 PaddlePaddle 模型至 ONNX 模型的转换，从而无法使用 ONNX Runtime、TensorRT 等推理后端**。若您直接使用 ONNX 模型，则无需安装 Paddle2ONNX 插件。
 
 通用图像分类产线：
 
@@ -561,7 +561,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 **1. 为什么开启高性能推理插件前后，感觉推理速度没有明显提升？**
 
-高性能推理插件通过智能选择和配置后端来实现推理加速。首先，由于模型结构复杂或存在不支持算子等情况，部分模型可能无法实现加速。其次，如果未安装 [Paddle2ONNX 插件](./paddle2onnx.md)，会导致 PaddleX 无法进行 PaddlePaddle 模型至 ONNX 模型的转换，从而无法使用 ONNX Runtime、TensorRT 等推理后端进行加速。此时，PaddleX 会在日志中给出相应提示。可以使用 [PaddleX benchmark 功能](../module_usage/instructions/benchmark.md) 测量模块中各部分的推理耗时情况，以便更准确地评估性能。此外，对于产线而言，推理的性能瓶颈可能不在模型推理上，而在串联逻辑上，这也可能导致加速效果不明显。
+高性能推理插件通过智能选择和配置后端来实现推理加速。首先，由于模型结构复杂或存在不支持算子等情况，部分模型可能无法实现加速。其次，如果未安装 [Paddle2ONNX 插件](./paddle2onnx.md) ，会导致 PaddleX 无法进行 PaddlePaddle 模型至 ONNX 模型的转换，从而无法使用 ONNX Runtime、TensorRT 等推理后端进行加速。此时，PaddleX 会在日志中给出相应提示。可以使用 [PaddleX benchmark 功能](../module_usage/instructions/benchmark.md) 测量模块中各部分的推理耗时情况，以便更准确地评估性能。此外，对于产线而言，推理的性能瓶颈可能不在模型推理上，而在串联逻辑上，这也可能导致加速效果不明显。
 
 **2. 是否所有产线与模块均支持高性能推理？**
 

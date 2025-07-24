@@ -150,6 +150,8 @@ Below are examples of enabling the high-performance inference plugin in both the
 
 For the PaddleX CLI, specify `--use_hpip` to enable the high-performance inference plugin.
 
+**Before enabling high-performance inference plugins, it is recommended to install the [Paddle2ONNX plugin](./paddle2onnx.en.md).  Otherwise, PaddleX will be unable to convert PaddlePaddle models to ONNX models, preventing the use of ONNX Runtime, TensorRT, and other inference backends.** If you are directly using an ONNX model, there is no need to install the Paddle2ONNX plugin.
+
 **General Image Classification Pipeline:**
 
 ```bash
