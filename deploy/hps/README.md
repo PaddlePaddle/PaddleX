@@ -4,13 +4,13 @@ comments: true
 
 # PaddleX 高稳定性服务化部署
 
-本项目提供一套高稳定性服务化部署方案，它由 `server_env` 与 `sdk` 两个目录组成，`server_env` 部分用于构建包含 Triton Inference Server 的多种镜像，为后续模型产线 server 提供运行环境。`sdk` 部分用于打包产线 SDK，提供各模型产线的 server 和 client 代码 ，便于快速调用模型服务。如下图所示：
+本项目提供一套高稳定性服务化部署方案，它由 `server_env` 与 `sdk` 两个目录组成。`server_env` 部分用于构建包含 Triton Inference Server 的多种镜像，为后续模型产线 server 提供运行环境；`sdk` 部分用于打包产线 SDK，提供各模型产线的 server 和 client 代码。如下图所示：
 
-<img src="https://github.com/boomercat/doc_image/blob/main/hps_project.drawio.png?raw=true" />
+<img src="https://github.com/boomercat/PaddleX_doc_images/blob/main/images/hps/hps_workflow.png?raw=true" />
 
 **请注意，本项目依赖于如下环境配置：**
 - **操作系统**：Linux
-- **Docker**：`>= 20.10.0`，用于镜像构建和部署
+- **Docker 版本**：`>= 20.10.0`，用于镜像构建和部署
 - **CPU 架构**：x86-64 
 
 本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署环境搭建与物料打包。整体流程分为两个阶段：
@@ -30,7 +30,7 @@ comments: true
 
 ### 1.1 构建依赖收集镜像
 
-执行 `server_env` 文件夹下的依赖收集脚本。
+执行 `server_env` 目录下的依赖收集脚本。
 
 ```bash
 ./scripts/prepare_rc_image.sh
@@ -50,7 +50,7 @@ comments: true
 
 ### 1.3 镜像构建
 
-在完成 1.2 锁定依赖后，如需构建GPU镜像，需提前将 [cuDNN 8.9.7-CUDA 11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6.1.6-Ubuntu 20.04 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
+在完成 1.2 锁定依赖后，如需构建 GPU 镜像，需提前将 [cuDNN 8.9.7-CUDA 11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6.1.6-Ubuntu 20.04 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu 
@@ -102,6 +102,7 @@ comments: true
 
 - `client` 部分：用于调用模型服务。
 - `server` 部分：以 [1. 镜像构建](#1-镜像构建) 阶段构建的镜像作为运行环境，用于部署模型服务。
+
 ### 2.1 SDK 打包
 
 为了便于发布与部署，本项目支持将不同产线的 `client` 和 `server` 代码打包。打包可通过 `scripts/assemble.sh` 脚本执行，以打包通用 OCR 产线为例：
@@ -126,7 +127,7 @@ comments: true
 </tr>
 <tr>
 <td><code>--all</code></td>
-<td>打包全部产线，与<code>pipeline_names</code>不可共用。</td>
+<td>打包全部产线，与 <code>pipeline_names</code> 不可共用。</td>
 </tr>
 <tr>
 <td><code>--no-server</code></td>
@@ -143,7 +144,7 @@ comments: true
 
 ### 2.2 产线调用
 
-可参考[ PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器) 了解如何启动服务器与调用产线服务。
+可参考 [PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器) 了解如何启动服务器与调用产线服务。
 
 ## 3.FAQ
 
@@ -154,7 +155,7 @@ comments: true
 
 #### 2. 镜像构建过程中出现安装 Python 依赖时超时？
 
-可能由于网络问题，pip 从官方源下载依赖速度过慢或连接失败。在执行依赖收集或构建镜像时，使用 `-p` 参数指定国内 Python 包索引 URL，例如清华镜像源：
+可能由于网络问题，pip 从官方源下载依赖速度过慢或连接失败。在执行构建镜像脚本时，使用 `-p` 参数指定国内 Python 包索引 URL，以构建依赖收集镜像脚本使用清华镜像源为例：
 
 ```bash
 ./scripts/prepare_rc_image.sh -p https://mirrors.aliyun.com/pypi/simple/
