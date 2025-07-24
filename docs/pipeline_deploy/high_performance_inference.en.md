@@ -108,7 +108,7 @@ paddlex --install hpi-cpu
 
 **To install the GPU version of the high-performance inference plugin:**
 
-Before installation, please ensure that CUDA and cuDNN are installed in your environment. The official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9, so please ensure that the installed versions of CUDA and cuDNN are compatible with the compiled versions. Below are the installation documentation links for CUDA 11.8 and cuDNN 8.9:
+Before installation, please ensure that CUDA and cuDNN are installed in your environment. The official PaddleX currently provides precompiled packages for CUDA 11.8 + cuDNN 8.9 and CUDA 12.6 + cuDNN 9.5, so please ensure that the installed versions of CUDA and cuDNN are compatible with the compiled versions. Below are the installation documentation links for CUDA and cuDNN:
 
 - [Install CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 - [Install cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)

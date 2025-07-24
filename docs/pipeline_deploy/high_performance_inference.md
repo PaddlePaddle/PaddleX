@@ -108,7 +108,7 @@ paddlex --install hpi-cpu
 
 **安装 GPU 版本的高性能推理插件：**
 
-在安装前，需要确保环境中安装有 CUDA 与 cuDNN。目前 PaddleX 官方提供 CUDA 11.8 + cuDNN 8.9 和 CUDA 12.6 + cuDNN 9.5 的预编译包，请保证安装的 CUDA 和 cuDNN 版本与编译版本兼容。以下分别是 CUDA 11.8 和 cuDNN 8.9 的安装说明文档：
+在安装前，需要确保环境中安装有 CUDA 与 cuDNN。目前 PaddleX 官方提供 CUDA 11.8 + cuDNN 8.9 和 CUDA 12.6 + cuDNN 9.5 的预编译包，请保证安装的 CUDA 和 cuDNN 版本与编译版本兼容。以下分别是 CUDA 和 cuDNN 的安装说明文档：
 
 - [安装 CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 - [安装 cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
