@@ -140,7 +140,7 @@ Please refer to the [Ascend NPU High-Performance Inference Tutorial](../practica
 
 **Note:**
 
-1. **Currently, the precompiled package of CUDA 12.6 + cuDNN 9.5  provided by PaddleX only supports the OpenVINO and ONNXRuntime backends and does not yet support the TensorRT backend.**
+1. **Currently, the precompiled package of CUDA 12.6 + cuDNN 9.5  provided by PaddleX only supports the OpenVINO and ONNX Runtime backends and does not yet support the TensorRT backend.**
 2. Only one version of the high-performance inference plugin should exist in the same environment.
 3. For Windows systems, it is currently recommended to install and use the high-performance inference plugin within a Docker container or in [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) environments.
 
@@ -561,7 +561,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 **1. Why does the inference speed not appear to improve noticeably before and after enabling the high-performance inference plugin?**
 
-The high-performance inference plugin achieves inference acceleration by intelligently selecting and configuring the backend. However, due to the complex structure of some models or the presence of unsupported operators, not all models may be able to be accelerated. In these cases, PaddleX will provide corresponding prompts in the log. You can use the [PaddleX benchmark feature](../module_usage/instructions/benchmark.en.md) to measure the inference duration of each module component, thereby facilitating a more accurate performance evaluation. Moreover, for pipelines, the performance bottleneck of inference may not lie in the model inference, but rather in the surrounding logic, which could also result in limited acceleration gains.
+The high-performance inference plugin achieves inference acceleration by intelligently selecting and configuring the backend. Firstly, due to the complex structure of some models or the presence of unsupported operators, not all models may be able to be accelerated. Secondly, if the [Paddle2ONNX plugin](./paddle2onnx.en.md) is not installed, PaddleX will be unable to convert PaddlePaddle models to ONNX models, thereby preventing the use of ONNX Runtime, TensorRT, and other inference backends for acceleration. In these cases, PaddleX will provide corresponding prompts in the log. You can use the [PaddleX benchmark feature](../module_usage/instructions/benchmark.en.md) to measure the inference duration of each module component, thereby facilitating a more accurate performance evaluation. Moreover, for pipelines, the performance bottleneck of inference may not lie in the model inference, but rather in the surrounding logic, which could also result in limited acceleration gains.
 
 **2. Do all pipelines and modules support high-performance inference?**
 
