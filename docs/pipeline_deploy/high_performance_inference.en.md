@@ -38,15 +38,19 @@ Currently, the supported processor architectures, operating systems, device type
     <th>Python Version</th>
   </tr>
   <tr>
-    <td rowspan="5">Linux</td>
-    <td rowspan="4">x86-64</td>
+    <td rowspan="6">Linux</td>
+    <td rowspan="5">x86-64</td>
   </tr>
   <tr>
     <td>CPU</td>
     <td>3.8–3.12</td>
   </tr>
   <tr>
-    <td>GPU&nbsp;(CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.9)</td>
+    <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.9）</td>
+    <td>3.8–3.12</td>
+  </tr>
+  <tr>
+    <td>GPU&nbsp;（CUDA&nbsp;12.6&nbsp;+&nbsp;cuDNN&nbsp;9.5）</td>
     <td>3.8–3.12</td>
   </tr>
   <tr>
@@ -108,6 +112,8 @@ Before installation, please ensure that CUDA and cuDNN are installed in your env
 
 - [Install CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 - [Install cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
+- [Install CUDA 12.6](https://developer.nvidia.com/cuda-12-6-0-download-archive)
+- [Install cuDNN 9.5](https://docs.nvidia.com/deeplearning/cudnn/backend/v9.5.0/installation/linux.html)
 
 If you are using the official PaddlePaddle image, the CUDA and cuDNN versions in the image already meet the requirements, so there is no need for a separate installation.
 
@@ -120,7 +126,7 @@ pip list | grep nvidia-cuda
 pip list | grep nvidia-cudnn
 ```
 
-If you wish to use the Paddle Inference TensorRT subgraph engine, you will need to install TensorRT additionally. Please refer to the related instructions in the [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md). Note that because the underlying inference library of the high-performance inference plugin also integrates TensorRT, it is recommended to install the same version of TensorRT to avoid version conflicts. Currently, the TensorRT version integrated into the high-performance inference plugin's underlying inference library is 8.6.1.6. If you are using the official PaddlePaddle image, you do not need to worry about version conflicts.
+If you wish to use the Paddle Inference TensorRT subgraph engine, you will need to install TensorRT additionally. Please refer to the related instructions in the [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md). Note that because the underlying inference library of the high-performance inference plugin also integrates TensorRT, it is recommended to install the same version of TensorRT to avoid version conflicts. Currently, the TensorRT version integrated into the CUDA 11.8 high-performance inference plugin's underlying inference library is 8.6.1.6. If you are using the official PaddlePaddle image, you do not need to worry about version conflicts.
 
 After confirming that the correct versions of CUDA, cuDNN, and TensorRT (optional) are installed, run:
 
@@ -134,7 +140,7 @@ Please refer to the [Ascend NPU High-Performance Inference Tutorial](../practica
 
 **Note:**
 
-1. **Currently, the official PaddleX only provides precompiled packages for CUDA 11.8 + cuDNN 8.9**; support for CUDA 12 is in progress.
+1. **Currently, the precompiled package of CUDA 12.6 + cuDNN 9.5  provided by PaddleX only supports the OpenVINO and ONNXRuntime backends and does not yet support the TensorRT backend.**
 2. Only one version of the high-performance inference plugin should exist in the same environment.
 3. For Windows systems, it is currently recommended to install and use the high-performance inference plugin within a Docker container or in [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) environments.
 
@@ -561,15 +567,11 @@ The high-performance inference plugin achieves inference acceleration by intelli
 
 All pipelines and modules that use static graph models support enabling the high-performance inference plugin; however, in certain scenarios, some models might not be able to achieve accelerated inference. For detailed reasons, please refer to Question 1.
 
-**3. Why does the installation of the high-performance inference plugin fail with a log message stating: “You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin.”?**
-
-For the GPU version of the high-performance inference plugin, the official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9. The support for CUDA 12 is in progress.
-
-**4. Why does the program freeze during runtime or display some "WARNING" and "ERROR" messages after using the high-performance inference feature? What should be done in such cases?**
+**3. Why does the program freeze during runtime or display some "WARNING" and "ERROR" messages after using the high-performance inference feature? What should be done in such cases?**
 
 When initializing the model, operations such as subgraph optimization may take longer and may generate some "WARNING" and "ERROR" messages. However, as long as the program does not exit automatically, it is recommended to wait patiently, as the program usually continues to run to completion.
 
-**5. When using GPU for inference, enabling the high-performance inference plugin increases memory usage and causes OOM. How can this be resolved?**
+**4. When using GPU for inference, enabling the high-performance inference plugin increases memory usage and causes OOM. How can this be resolved?**
 
 Some acceleration methods trade off memory usage to support a broader range of inference scenarios. If memory becomes a bottleneck, consider the following optimization strategies:
 
