@@ -38,8 +38,8 @@ comments: true
     <th>Python 版本</th>
   </tr>
   <tr>
-    <td rowspan="5">Linux</td>
-    <td rowspan="4">x86-64</td>
+    <td rowspan="6">Linux</td>
+    <td rowspan="5">x86-64</td>
   </tr>
   <tr>
     <td>CPU</td>
@@ -47,6 +47,10 @@ comments: true
   </tr>
   <tr>
     <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.9）</td>
+    <td>3.8–3.12</td>
+  </tr>
+  <tr>
+    <td>GPU&nbsp;（CUDA&nbsp;12.6&nbsp;+&nbsp;cuDNN&nbsp;9.5）</td>
     <td>3.8–3.12</td>
   </tr>
   <tr>
@@ -104,10 +108,12 @@ paddlex --install hpi-cpu
 
 **安装 GPU 版本的高性能推理插件：**
 
-在安装前，需要确保环境中安装有 CUDA 与 cuDNN。目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包，请保证安装的 CUDA 和 cuDNN 版本与编译版本兼容。以下分别是 CUDA 11.8 和 cuDNN 8.9 的安装说明文档：
+在安装前，需要确保环境中安装有 CUDA 与 cuDNN。目前 PaddleX 官方提供 CUDA 11.8 + cuDNN 8.9 和 CUDA 12.6 + cuDNN 9.5 的预编译包，请保证安装的 CUDA 和 cuDNN 版本与编译版本兼容。以下分别是 CUDA 11.8 和 cuDNN 8.9 的安装说明文档：
 
 - [安装 CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 - [安装 cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
+- [安装 CUDA 12.6](https://developer.nvidia.com/cuda-12-6-0-download-archive)
+- [安装 cuDNN 9.5](https://docs.nvidia.com/deeplearning/cudnn/backend/v9.5.0/installation/linux.html)
 
 如果使用的是飞桨框架官方镜像，则镜像中的 CUDA 和 cuDNN 版本已经是满足要求的，无需额外安装。
 
@@ -120,7 +126,7 @@ pip list | grep nvidia-cuda
 pip list | grep nvidia-cudnn
 ```
 
-如果希望使用 Paddle Inference TensorRT 子图引擎，需额外安装 TensorRT。请参考 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md) 中的相关说明。需要注意的是，由于高性能推理插件的底层推理库也集成了 TensorRT，建议安装相同版本的 TensorRT 以避免版本冲突。目前，高性能推理插件的底层推理库集成的 TensorRT 版本为 8.6.1.6。如果使用的是飞桨框架官方镜像，则无需关心版本冲突问题。
+如果希望使用 Paddle Inference TensorRT 子图引擎，需额外安装 TensorRT。请参考 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md) 中的相关说明。需要注意的是，由于高性能推理插件的底层推理库也集成了 TensorRT，建议安装相同版本的 TensorRT 以避免版本冲突。目前，CUDA 11.8 的高性能推理插件底层推理库集成的 TensorRT 版本为 8.6.1.6。如果使用的是飞桨框架官方镜像，则无需关心版本冲突问题。
 
 确认安装了正确版本的 CUDA、cuDNN、以及 TensorRT （可选）后，执行：
 
@@ -134,7 +140,7 @@ paddlex --install hpi-gpu
 
 **注意：**
 
-1. **目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包**。CUDA 12 已经在支持中。
+1. **目前 PaddleX 提供的 CUDA 12.6 + cuDNN 9.5 的预编译包仅支持 OpenVINO 和 ONNXRuntime 后端，暂不支持TensorRT 后端。**
 
 2. 同一环境中只应该存在一个版本的高性能推理插件。
 
@@ -561,15 +567,11 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 所有使用静态图模型的产线与模块都支持启用高性能推理插件，但部分模型在某些情况下可能无法获得推理加速，具体原因可以参考问题1。
 
-**3. 为什么安装高性能推理插件会失败，日志显示：“You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin.”？**
-
-对于 GPU 版本的高性能推理插件，目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包。CUDA 12 目前正在支持中。
-
-**4. 为什么使用高性能推理功能后，程序在运行过程中会卡住或者显示一些“WARNING”和“ERROR”信息？这种情况下应该如何处理？**
+**3. 为什么使用高性能推理功能后，程序在运行过程中会卡住或者显示一些“WARNING”和“ERROR”信息？这种情况下应该如何处理？**
 
 在初始化模型时，子图优化等操作可能会导致程序耗时较长，并生成一些“WARNING”和“ERROR”信息。然而，只要程序没有自动退出，建议耐心等待，程序通常会继续运行至完成。
 
-**5. 使用 GPU 推理时，启用高性能推理插件后显存占用增大并导致 OOM，如何解决？**
+**4. 使用 GPU 推理时，启用高性能推理插件后显存占用增大并导致 OOM，如何解决？**
 
 部分提速手段会以牺牲显存为代价，以支持更广泛的推理场景。如果显存成为瓶颈，可参考以下优化思路：
 
