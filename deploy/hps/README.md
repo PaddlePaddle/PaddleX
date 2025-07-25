@@ -9,6 +9,7 @@ comments: true
 <img src="https://github.com/boomercat/PaddleX_doc_images/blob/main/images/hps/hps_workflow.png?raw=true" />
 
 **请注意，本项目依赖于如下环境配置：**
+
 - **操作系统**：Linux
 - **Docker 版本**：`>= 20.10.0`，用于镜像构建和部署
 - **CPU 架构**：x86-64 
