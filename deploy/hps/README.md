@@ -19,7 +19,7 @@ comments: true
 1. 镜像构建：构建包含 Triton Inference Server 的镜像。在这一阶段中，依赖版本被锁定以提升部署镜像构建的可重现性。
 2. 产线物料打包：将各模型产线的客户端和服务端代码进行打包，便于后续部署与集成使用。
 
-如需了解如何调用已打包的产线，或启动服务端进行推理调用可参考 [PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器) 获取详细操作说明。
+如需了解如何使用构建好的镜像与打包好的 SDK 启动服务器和调用服务，可参考 [PaddleX 服务化部署指南](https://github.com/PaddlePaddle/PaddleX/blob/release/3.1/docs/pipeline_deploy/serving.md#23-运行服务器)。
 
 ## 1. 镜像构建
 
@@ -99,7 +99,7 @@ comments: true
 ./srcipts/prepare_deployment_images.sh
 ```
 
-## 2. 产线 SDK 打包
+## 2. 产线物料打包
 
 本阶段主要介绍 `sdk` 目录下为多个模型产线提供统一的打包功能。同时，该目录为每个产线提供对应的 client 和 server 代码实现：
 
@@ -147,12 +147,12 @@ comments: true
 
 ## 3.FAQ
 
-#### 1. 构建镜像时无法拉取 Docker 基础镜像？
+**1. 构建镜像时无法拉取 Docker 基础镜像**
 
 由于网络连接问题或镜像源访问限制，可能会导致从 Docker Hub 拉取基础镜像失败。可尝试在本地 Docker 配置文件 `/etc/docker/daemon.json` 中添加国内可信镜像仓库地址，以提升镜像下载速度和稳定性。如果上述方法仍无法解决，可尝试从官方或可信第三方渠道手动下载镜像文件。
 
 
-#### 2. 镜像构建过程中出现安装 Python 依赖时超时？
+**2. 镜像构建过程中出现安装 Python 依赖时超时？**
 
 可能由于网络问题，pip 从官方源下载依赖速度过慢或连接失败。在执行构建镜像脚本时，使用 `-p` 参数指定国内 Python 包索引 URL，以构建依赖收集镜像脚本使用清华镜像源为例：
 

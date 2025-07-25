@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# PaddleX High Stability Service Deployment
+# PaddleX High Stability Serving
 
-This project provides a high-stability, service-oriented deployment solution, consisting of two main components: `server_env` and `sdk`.`server_env` is responsible for building multiple Docker images that include Triton Inference Server, providing the runtime environment for pipeline servers.`sdk` is used to package the pipeline SDK, including both server and client code for various model pipelines.As shown in the following figure:
+This project provides a high-stability serving solution, consisting of two main components: `server_env` and `sdk`.`server_env` is responsible for building multiple Docker images that include Triton Inference Server, providing the runtime environment for pipeline servers.`sdk` is used to package the pipeline SDK, including both server and client code for various model pipelines.As shown in the following figure:
 
 <img src="https://github.com/cuicheng01/PaddleX_doc_images/blob/main/images/hps/hps_workflow_en.png?raw=true"/>
 
@@ -15,13 +15,13 @@ This project provides a high-stability, service-oriented deployment solution, co
 - **Docker Version**: `>= 20.10.0` (Used for image building and deployment)
 - **CPU Architecture**: x86-64
 
-This  document  mainly introduces how to set up a high stability service-oriented deployment environment and package related materials using the scripts provided by this project.The overall process consists of two main stages:
+This  document  mainly introduces how to set up a high stability serving environment and package related materials using the scripts provided by this project.The overall process consists of two main stages:
 
 1. Image Building: Build Docker images that include Triton Inference Server. In this stage, requirement versions are locked to ensure reproducibility and stability of the deployment images.
 
-2. Pipeline Material Packaging:Package the client and server code for each model pipeline, making it easier for subsequent deployment and integration.
+2. Pipeline Material Packaging: Package the client and server code for each model pipeline, making it easier for subsequent deployment and integration.
 
-To learn how to run a packaged pipeline or start the server for inference, please refer to the [PaddleX Serving Guide](../../docs/pipeline_deploy/serving.en.md#23-run-the-server) for detailed instructions.
+To learn how to start the server and invoke services using the built images and packaged SDK, please refer to the [PaddleX Serving Guide](https://github.com/PaddlePaddle/PaddleX/blob/release/3.1/docs/pipeline_deploy/serving.en.md#23-run-the-server) for detailed instructions.
 
 
 ## 1. Image Building
@@ -57,8 +57,7 @@ This script uses `pip-tools compile` to parse the source requirement files and g
 
 ## 1.3 Building Image
 
-After completing Step 1.2: Freeze Requirement, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6.1.6-Ubuntu 20.04 TAR Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download).For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required.
-To build a GPU image , run the following command:
+After completing Step 1.2: Freeze Requirement, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6.1.6-Ubuntu 20.04 Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download).For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required.To build a GPU image , run the following command:
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu
@@ -104,7 +103,7 @@ To build both GPU and CPU images  run the following command:
 ./scripts/prepare_deployment_images.sh
 ```
 
-## 2. Pipeline SDK Packaging
+## 2. Pipeline Material Packaging
 
 This stage mainly introduces the unified packaging function provided by the `sdk` directory  for multiple  pipelines. Meanwhile, this directory provides corresponding client and server code implementations for each pipeline:
 
@@ -133,7 +132,7 @@ The parameters for the packaging script are described as follows:
 </tr>
 <tr>
 <td><code>--all</code></td>
-<td>Packages all pipelines. Cannot be used together with  <code>pipeline_names</code>.</td>
+<td>Packages all pipelines. Cannot be used together with <code>pipeline_names</code>.</td>
 </tr>
 <tr>
 <td><code>--no-server</code></td>
@@ -150,12 +149,12 @@ After run successfully, the packaged  will be stored in the `/output` directory.
 
 ## 3. FAQ
 
-#### 1. Failed to pull the base Docker image during build?
+**1. Failed to pull the base Docker image during build?**
 
 This issue may occur due to network connectivity problems or restricted access to Docker Hub. You can add trusted domestic mirror registry URLs to your local Docker configuration file at `/etc/docker/daemon.json` to improve download speed and stability.If this does not resolve the issue, consider manually downloading the base image from the official source or other trusted third-party source.
 
 
-#### 2. Timeout when installing Python dependencies during image build?
+**2. Timeout when installing Python requirement during image build?**
 
 Network issues may cause slow download speeds or connection failures when pip retrieves packages from the official source.
 When running the image build scripts, you can use the `-p` parameter to specify an alternative Python package index URL. For example, to use the Tsinghua mirror for the requirement collection image:
