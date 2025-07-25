@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# PaddleX High Stability Service  Deployment
+# PaddleX High Stability Service Deployment
 
 This project provides a high-stability, service-oriented deployment solution, consisting of two main components: `server_env` and `sdk`.`server_env` is responsible for building multiple Docker images that include Triton Inference Server, providing the runtime environment for pipeline servers.`sdk` is used to package the pipeline SDK, including both server and client code for various model pipelines.As shown in the following figure:
 
