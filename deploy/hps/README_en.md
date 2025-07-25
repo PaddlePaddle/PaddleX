@@ -21,7 +21,7 @@ This  document  mainly introduces how to set up a high stability serving environ
 
 2. Pipeline Material Packaging: Package the client and server code for each model pipeline, making it easier for subsequent deployment and integration.
 
-To learn how to start the server and invoke services using the built images and packaged SDK, please refer to the [PaddleX Serving Guide](https://github.com/PaddlePaddle/PaddleX/blob/release/3.1/docs/pipeline_deploy/serving.en.md#23-run-the-server) for detailed instructions.
+To learn how to start the server and invoke services using the built images and packaged SDK, please refer to the [PaddleX Serving Guide](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/serving.html) for detailed instructions.
 
 
 ## 1. Image Building

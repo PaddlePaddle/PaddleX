@@ -19,7 +19,7 @@ comments: true
 1. 镜像构建：构建包含 Triton Inference Server 的镜像。在这一阶段中，依赖版本被锁定以提升部署镜像构建的可重现性。
 2. 产线物料打包：将各模型产线的客户端和服务端代码进行打包，便于后续部署与集成使用。
 
-如需了解如何使用构建好的镜像与打包好的 SDK 启动服务器和调用服务，可参考 [PaddleX 服务化部署指南](https://github.com/PaddlePaddle/PaddleX/blob/release/3.1/docs/pipeline_deploy/serving.md#23-运行服务器)。
+如需了解如何使用构建好的镜像与打包好的 SDK 启动服务器和调用服务，可参考 [PaddleX 服务化部署指南](https://paddlepaddle.github.io/PaddleX/latest/pipeline_deploy/serving.html)。
 
 ## 1. 镜像构建
 
