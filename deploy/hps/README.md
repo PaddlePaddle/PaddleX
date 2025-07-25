@@ -16,7 +16,9 @@ comments: true
 本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署环境搭建与物料打包。整体流程分为两个阶段：
 
 1. 镜像构建：构建包含 Triton Inference Server 的镜像。在这一阶段中，依赖版本被锁定以提升部署镜像构建的可重现性。
-2. 产线 SDK 打包及调用：将各模型产线的 client 和 server 代码打包到 SDK，方便用户快速集成和调用。
+2. 产线物料打包：将各模型产线的客户端和服务端代码进行打包，便于后续部署与集成使用。
+
+如需了解如何调用已打包的产线，或启动服务端进行推理调用可参考 [PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器) 获取详细操作说明。
 
 ## 1. 镜像构建
 
@@ -96,16 +98,14 @@ comments: true
 ./srcipts/prepare_deployment_images.sh
 ```
 
-## 2. 产线 SDK 打包及调用
+## 2. 产线 SDK 打包
 
-本阶段主要介绍 `sdk` 目录下多个模型产线提供统一的打包功能。同时，该目录为每个产线提供对应的 client 和 server 代码实现：
+本阶段主要介绍 `sdk` 目录下为多个模型产线提供统一的打包功能。同时，该目录为每个产线提供对应的 client 和 server 代码实现：
 
 - `client` 部分：用于调用模型服务。
 - `server` 部分：以 [1. 镜像构建](#1-镜像构建) 阶段构建的镜像作为运行环境，用于部署模型服务。
 
-### 2.1 SDK 打包
-
-为了便于发布与部署，本项目支持将不同产线的 `client` 和 `server` 代码打包。打包可通过 `scripts/assemble.sh` 脚本执行，以打包通用 OCR 产线为例：
+打包可通过 `scripts/assemble.sh` 脚本执行，以打包通用 OCR 产线为例：
 
 ```bash
 ./scripts/assemble.sh OCR
@@ -142,9 +142,7 @@ comments: true
 
 调用后存储到当前目录 `/output` 路径下。
 
-### 2.2 产线调用
 
-可参考 [PaddleX 服务化部署指南](../../docs/pipeline_deploy/serving.md#23-运行服务器) 了解如何启动服务器与调用产线服务。
 
 ## 3.FAQ
 
@@ -158,5 +156,5 @@ comments: true
 可能由于网络问题，pip 从官方源下载依赖速度过慢或连接失败。在执行构建镜像脚本时，使用 `-p` 参数指定国内 Python 包索引 URL，以构建依赖收集镜像脚本使用清华镜像源为例：
 
 ```bash
-./scripts/prepare_rc_image.sh -p https://mirrors.aliyun.com/pypi/simple/
+./scripts/prepare_rc_image.sh -p https://pypi.tuna.tsinghua.edu.cn/simple
 ```

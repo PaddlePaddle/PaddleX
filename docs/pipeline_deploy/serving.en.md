@@ -258,6 +258,7 @@ Find the high-stability serving SDK corresponding to the pipeline in the table b
 </table>
 </details>
 
+For manual packaging, please refer to the [hps Project Documentation](../../deploy/hps/README_en.md#2-pipeline-sdk-packaging)
 ### 2.2 Adjust Configurations
 
 The `server/pipeline_config.yaml` file of the the high-stability serving SDK is the pipeline configuration file. Users can modify this file to set the model directory to use, etc.
@@ -316,6 +317,8 @@ First, pull the Docker image as needed:
     ```bash
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.1-cpu
     ```
+
+If you need to customize the build image, please refer [hps Project Documentation](../../deploy/hps/README_en.md#1-image-building)
 
 With the image prepared, navigate to the `server` directory and execute the following command to run the server:
 

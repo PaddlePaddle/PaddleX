@@ -258,7 +258,7 @@ paddlex --serve --pipeline image_classification --use_hpip
 </table>
 </details>
 
-如需手动打包可参考 [hps 项目文档](../../deploy/hps/README.md#2-产线-sdk-打包及调用)。
+如需手动打包可参考 [hps 项目文档](../../deploy/hps/README.md#2-产线-sdk-打包)。
 
 ### 2.2 调整配置
 
