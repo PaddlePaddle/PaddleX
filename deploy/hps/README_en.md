@@ -44,7 +44,7 @@ Run follow script in the `server_env` directory to build the requirement collect
 ./scripts/prepare_rc_image.sh
 ```
 
-This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools). [1.2 Freeze Requirement (Optional)](./README_en.md#11-build-the-requirement-collection-image-optional) will be based on this image. After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated. If you encounter network issues, you can specify other pip sources through the `-p` parameter. If not specified, the default source https://pypi.org/simple will be used.
+This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools). [1.2 Freeze Requirement (Optional)](./README_en.md#12-freeze-requirement-optional) will be based on this image. After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated. If you encounter network issues, you can specify other pip sources through the `-p` parameter. If not specified, the default source https://pypi.org/simple will be used.
 
 ## 1.2 Freeze Requirement (Optional)
 
