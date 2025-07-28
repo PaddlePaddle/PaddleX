@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX High Stability Serving
 
-This project provides a high-stability serving solution, consisting of two main components: `server_env` and `sdk`.`server_env` is responsible for building multiple Docker images that include Triton Inference Server, providing the runtime environment for pipeline servers.`sdk` is used to package the pipeline SDK, including both server and client code for various model pipelines.As shown in the following figure:
+This project provides a high-stability serving solution, consisting of two main components: `server_env` and `sdk`.`server_env` is responsible for building multiple Docker images that include Triton Inference Server, providing the runtime environment for pipeline servers.`sdk` is used to package the pipeline SDK, including both server and client code for various model pipelines. As shown in the following figure:
 
 <img src="https://github.com/cuicheng01/PaddleX_doc_images/blob/main/images/hps/hps_workflow_en.png?raw=true"/>
 
@@ -15,7 +15,7 @@ This project provides a high-stability serving solution, consisting of two main 
 - **Docker Version**: `>= 20.10.0` (Used for image building and deployment)
 - **CPU Architecture**: x86-64
 
-This  document  mainly introduces how to set up a high stability serving environment and package related materials using the scripts provided by this project.The overall process consists of two main stages:
+This  document  mainly introduces how to set up a high stability serving environment and package related materials using the scripts provided by this project. The overall process consists of two main stages:
 
 1. Image Building: Build Docker images that include Triton Inference Server. In this stage, requirement versions are locked to ensure reproducibility and stability of the deployment images.
 
@@ -30,13 +30,13 @@ This stage mainly introduces the overall process and key steps of image building
 
 Image Building Steps:
 
-1. Build a requirement collection image.(Optional)
+1. Build a requirement collection image. (Optional)
 2. Freeze requirement versions to improve the reproducibility of deployment image building. (Optional)
 3. Build the deployment image based on the frozen requirement information to generate the final deployment image and provide image support for subsequent pipeline execution. 
 
 **If you do not need to modify requirement-related information, you can skip to [1.3 Building Image](./README_en.md#13-building-image) to build the deployment image using cached requirement information.**
 
-## 1.1 Build the Requirement Collection Image(Optional)
+## 1.1 Build the Requirement Collection Image (Optional)
 
 Run the requirement collection script located in the `server_env` directory:
 
@@ -44,11 +44,11 @@ Run the requirement collection script located in the `server_env` directory:
 ./scripts/prepare_rc_image.sh
 ```
 
-This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools).[1.2 Freeze requirement](./README_en.md#12-freeze-requirement) will be based on this image.After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated.If you encounter network issues, you can specify other pip sources through the `-p` parameter.If not specified, the default source https://pypi.org/simple will be used.
+This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools). [1.2 Freeze requirement](./README_en.md#12-freeze-requirement-optional) will be based on this image. After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated. If you encounter network issues, you can specify other pip sources through the `-p` parameter. If not specified, the default source https://pypi.org/simple will be used.
 
-## 1.2 Freeze Requirement(Optional)
+## 1.2 Freeze Requirement (Optional)
 
-To enhance the reproducibility of the build, this step freeze requirement to exact versions. run the following script:
+To enhance the reproducibility of the build, this step freeze requirement to exact versions, run the following script:
 
 ```bash
 ./scripts/freeze_requirements.sh
@@ -58,7 +58,7 @@ This script uses `pip-tools compile` to parse the source requirement files and g
 
 ## 1.3 Building Image
 
-Based on the requirement information in the `requirements` directory, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6-Linux x86_64 GA Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download). For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required. To build a GPU image, run the following command:
+If you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6-Linux x86_64 GA Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download). For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required. To build a GPU image, run the following command:
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu
@@ -152,7 +152,7 @@ After run successfully, the packaged  will be stored in the `/output` directory.
 
 **1. Failed to pull the base Docker image during build?**
 
-This issue may occur due to network connectivity problems or restricted access to Docker Hub. You can add trusted domestic mirror registry URLs to your local Docker configuration file at `/etc/docker/daemon.json` to improve download speed and stability.If this does not resolve the issue, consider manually downloading the base image from the official source or other trusted third-party source.
+This issue may occur due to network connectivity problems or restricted access to Docker Hub. You can add trusted domestic mirror registry URLs to your local Docker configuration file at `/etc/docker/daemon.json` to improve download speed and stability. If this does not resolve the issue, consider manually downloading the base image from the official source or other trusted third-party source.
 
 
 **2. Timeout when installing Python requirement during image build?**

@@ -31,7 +31,7 @@ comments: true
 2. 锁定依赖版本，提升部署镜像构建的可重现性。（可选）
 3. 构建部署镜像，基于已锁定的依赖信息，构建最终的部署镜像，为后续的产线运行提供镜像支持。
 
-**如不需修改依赖相关信息，可跳转 [1.3 构建部署镜像](./README.md#13-镜像构建) 根据缓存依赖信息直接构建部署镜像**。
+**如不需修改依赖相关信息，可跳转 [1.3 构建部署镜像](./README.md#13-镜像构建) 根据缓存的依赖信息直接构建部署镜像**。
 
 ### 1.1 构建依赖收集镜像（可选）
 
@@ -41,7 +41,7 @@ comments: true
 ./scripts/prepare_rc_image.sh
 ```
 
-该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖版本](./README.md#12-锁定依赖可选) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认使用 https://pypi.org/simple。
+该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖版本](./README.md#12-锁定依赖版本可选) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认使用 https://pypi.org/simple。
 
 ### 1.2 锁定依赖版本（可选）
 
@@ -55,7 +55,7 @@ comments: true
 
 ### 1.3 镜像构建
 
-根据 `requirements` 目录下的依赖信息，如需构建 GPU 镜像，需提前将 [cuDNN 8.9.7-CUDA 11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6-Linux x86_64 GA 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
+如需构建 GPU 镜像，需提前将 [cuDNN 8.9.7-CUDA 11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6-Linux x86_64 GA 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu 
