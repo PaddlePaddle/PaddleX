@@ -38,7 +38,7 @@ Image Building Steps:
 
 ## 1.1 Build the Requirement Collection Image (Optional)
 
-Run the requirement collection script located in the `server_env` directory:
+Run follow script in the `server_env` directory to build the requirement collection image. 
 
 ```bash
 ./scripts/prepare_rc_image.sh
