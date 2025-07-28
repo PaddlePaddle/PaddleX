@@ -30,12 +30,13 @@ This stage mainly introduces the overall process and key steps of image building
 
 Image Building Steps:
 
-1. Build a requirement collection image.
-2. Freeze requirement versions to improve the reproducibility of deployment image building. 
+1. Build a requirement collection image.(Optional)
+2. Freeze requirement versions to improve the reproducibility of deployment image building. (Optional)
 3. Build the deployment image based on the frozen requirement information to generate the final deployment image and provide image support for subsequent pipeline execution. 
 
+**If you do not need to modify requirement-related information, you can directly proceed to [1.3 Building Image](./README_en.md#13-building-image) to build the deployment image using the cached requirement information.**
 
-## 1.1 Build the Requirement Collection Image
+## 1.1 Build the Requirement Collection Image(Optional)
 
 Run the requirement collection script located in the `server_env` directory:
 
@@ -45,7 +46,7 @@ Run the requirement collection script located in the `server_env` directory:
 
 This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools).[1.2 Freeze requirement](./README_en.md#12-freeze-requirement) will be based on this image.After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated.If you encounter network issues, you can specify other pip sources through the `-p` parameter.If not specified, the default source https://pypi.org/simple will be used.
 
-## 1.2 Freeze Requirement
+## 1.2 Freeze Requirement(Optional)
 
 To enhance the reproducibility of the build, this step freeze requirement to exact versions. run the following script:
 
@@ -57,7 +58,7 @@ This script uses `pip-tools compile` to parse the source requirement files and g
 
 ## 1.3 Building Image
 
-After completing Step 1.2: Freeze Requirement, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6.1.6-Ubuntu 20.04 Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download).For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required.To build a GPU image , run the following command:
+After completing Step 1.2: Freeze Requirement, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6-Linux x86_64 GA Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download).For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required.To build a GPU image , run the following command:
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu
