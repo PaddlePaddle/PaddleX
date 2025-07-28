@@ -34,7 +34,7 @@ Image Building Steps:
 2. Freeze requirement versions to improve the reproducibility of deployment image building. (Optional)
 3. Build the deployment image based on the frozen requirement information to generate the final deployment image and provide image support for subsequent pipeline execution. 
 
-**If you do not need to modify requirement-related information, you can directly proceed to [1.3 Building Image](./README_en.md#13-building-image) to build the deployment image using the cached requirement information.**
+**If you do not need to modify requirement-related information, you can skip to [1.3 Building Image](./README_en.md#13-building-image) to build the deployment image using cached requirement information.**
 
 ## 1.1 Build the Requirement Collection Image(Optional)
 
@@ -58,7 +58,7 @@ This script uses `pip-tools compile` to parse the source requirement files and g
 
 ## 1.3 Building Image
 
-After completing Step 1.2: Freeze Requirement, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6-Linux x86_64 GA Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download).For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required.To build a GPU image , run the following command:
+Based on the requirement information in the `requirements` directory, if you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6-Linux x86_64 GA Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download). For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required. To build a GPU image, run the following command:
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu
