@@ -505,7 +505,7 @@ When the `auto_paddle2onnx` option is enabled, an `inference.onnx` file may be a
 
 ### 2.6 Customizing the Model Inference Library
 
-`ultra-infer` is the model inference library that the high-performance inference plugin depends on. It is maintained as a sub-project under the `PaddleX/libs/ultra-infer` directory. PaddleX provides a build script for `ultra-infer`, located at `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh`. The build script, by default, builds the GPU version of `ultra-infer` and integrates three inference backends: OpenVINO, TensorRT, and ONNX Runtime.
+`ultra-infer` is the model inference library that the high-performance inference plugin depends on. It is maintained as a sub-project under the `PaddleX/deploy/ultra-infer` directory. PaddleX provides a build script for `ultra-infer`, located at `PaddleX/deploy/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh`. The build script, by default, builds the GPU version of `ultra-infer` and integrates three inference backends: OpenVINO, TensorRT, and ONNX Runtime.
 
 If you need to customize the build of `ultra-infer`, you can modify the following options in the build script according to your requirements:
 
@@ -548,7 +548,7 @@ Example:
 
 ```bash
 # Build
-cd PaddleX/libs/ultra-infer/scripts/linux
+cd PaddleX/deploy/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...
 # export WITH_GPU=...
 # export ENABLE_ORT_BACKEND=...

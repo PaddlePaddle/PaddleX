@@ -503,7 +503,7 @@ SubModules:
 
 ### 2.6 定制模型推理库
 
-`ultra-infer` 是高性能推理底层依赖的模型推理库，在 `PaddleX/libs/ultra-infer` 目录以子项目形式维护。PaddleX 提供 `ultra-infer` 的构建脚本，位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` 。编译脚本默认构建 GPU 版本的 `ultra-infer`，集成 OpenVINO、TensorRT、ONNX Runtime 三种推理后端。
+`ultra-infer` 是高性能推理底层依赖的模型推理库，在 `PaddleX/deploy/ultra-infer` 目录以子项目形式维护。PaddleX 提供 `ultra-infer` 的构建脚本，位于 `PaddleX/deploy/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` 。编译脚本默认构建 GPU 版本的 `ultra-infer`，集成 OpenVINO、TensorRT、ONNX Runtime 三种推理后端。
 
 如果需要自定义构建 `ultra-infer`，可根据需求修改构建脚本的如下选项：
 
@@ -546,7 +546,7 @@ SubModules:
 
 ```bash
 # 构建
-cd PaddleX/libs/ultra-infer/scripts/linux
+cd PaddleX/deploy/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...
 # export WITH_GPU=...
 # export ENABLE_ORT_BACKEND=...

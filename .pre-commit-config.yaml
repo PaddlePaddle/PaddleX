@@ -55,7 +55,7 @@ repos:
     -   id: isort
         args:
             - --profile=black
-        exclude: ^libs/ultra-infer/python/ultra_infer/
+        exclude: ^deploy/ultra-infer/python/ultra_infer/
 
 # check license
 -   repo: local
