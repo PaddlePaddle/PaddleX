@@ -218,13 +218,13 @@ class _TableRecognitionPipeline(BasePipeline):
         if input_params["use_doc_preprocessor"]:
             use_doc_orientation_classify = input_params["use_doc_orientation_classify"]
             use_doc_unwarping = input_params["use_doc_unwarping"]
-            doc_preprocessor_res = next(
+            doc_preprocessor_res = list(
                 self.doc_preprocessor_pipeline(
                     image_array,
                     use_doc_orientation_classify=use_doc_orientation_classify,
                     use_doc_unwarping=use_doc_unwarping,
                 )
-            )
+            )[0]
             doc_preprocessor_image = doc_preprocessor_res["output_img"]
         else:
             doc_preprocessor_res = {}
@@ -252,7 +252,7 @@ class _TableRecognitionPipeline(BasePipeline):
             # Extract and round up the coordinates of the bounding box.
             x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
             # Perform OCR on the defined region of the image and get the recognized text.
-            rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+            rec_te = list(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))[0]
             # Concatenate the texts and append them to the texts_list.
             texts_list.append("".join(rec_te["rec_texts"]))
         # Return the list of recognized texts from each cell.
@@ -279,7 +279,7 @@ class _TableRecognitionPipeline(BasePipeline):
             # Extract and round up the coordinates of the bounding box.
             x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
             # Perform OCR on the defined region of the image and get the recognized text.
-            rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+            rec_te = list(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))[0]
             # Concatenate the texts and append them to the texts_list.
             texts_list.append("".join(rec_te["rec_texts"]))
         # Return the list of recognized texts from each cell.
@@ -308,7 +308,7 @@ class _TableRecognitionPipeline(BasePipeline):
         Returns:
             SingleTableRecognitionResult: single table recognition result.
         """
-        table_structure_pred = next(self.table_structure_model(image_array))
+        table_structure_pred = list(self.table_structure_model(image_array))[0]
         if use_ocr_results_with_table_cells == True:
             table_cells_result = table_structure_pred["bbox"]
             table_cells_result = [
@@ -395,20 +395,20 @@ class _TableRecognitionPipeline(BasePipeline):
             image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_res = list(
                     self.doc_preprocessor_pipeline(
                         image_array,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
-                )
+                )[0]
             else:
                 doc_preprocessor_res = {"output_img": image_array}
 
             doc_preprocessor_image = doc_preprocessor_res["output_img"]
 
             if model_settings["use_ocr_model"]:
-                overall_ocr_res = next(
+                overall_ocr_res = list(
                     self.general_ocr_pipeline(
                         doc_preprocessor_image,
                         text_det_limit_side_len=text_det_limit_side_len,
@@ -418,7 +418,7 @@ class _TableRecognitionPipeline(BasePipeline):
                         text_det_unclip_ratio=text_det_unclip_ratio,
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
-                )
+                )[0]
             elif use_ocr_results_with_table_cells == True:
                 assert self.general_ocr_config_bak != None
                 self.general_ocr_pipeline = self.create_pipeline(
@@ -444,7 +444,9 @@ class _TableRecognitionPipeline(BasePipeline):
                 table_region_id += 1
             else:
                 if model_settings["use_layout_detection"]:
-                    layout_det_res = next(self.layout_det_model(doc_preprocessor_image))
+                    layout_det_res = list(
+                        self.layout_det_model(doc_preprocessor_image)
+                    )[0]
 
                 for box_info in layout_det_res["boxes"]:
                     if box_info["label"].lower() in ["table"]:

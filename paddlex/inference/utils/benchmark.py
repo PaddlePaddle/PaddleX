@@ -220,16 +220,17 @@ class Benchmark:
         def wrapper():
             global _level
 
-            while True:
-                tic = time.perf_counter()
-                try:
-                    item = next(generator)
-                except StopIteration:
-                    break
-                self._update(time.perf_counter() - tic, name)
-                yield item
-
-            _level -= 1
+            try:
+                while True:
+                    tic = time.perf_counter()
+                    try:
+                        item = next(generator)
+                    except StopIteration:
+                        break
+                    self._update(time.perf_counter() - tic, name)
+                    yield item
+            finally:
+                _level -= 1
 
         return wrapper()
 

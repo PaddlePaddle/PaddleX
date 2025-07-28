@@ -181,7 +181,7 @@ class TextLine(object):
                             int(bbox[1]) : int(bbox[3]),
                             int(bbox[0]) : int(bbox[2]),
                         ]
-                        crop_img_rec_res = next(text_rec_model([crop_img]))
+                        crop_img_rec_res = list(text_rec_model([crop_img]))[0]
                         crop_img_rec_score = crop_img_rec_res["rec_score"]
                         crop_img_rec_text = crop_img_rec_res["rec_text"]
                         span.text = crop_img_rec_text

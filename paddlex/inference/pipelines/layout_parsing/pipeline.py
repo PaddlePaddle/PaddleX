@@ -256,7 +256,7 @@ class _LayoutParsingPipeline(BasePipeline):
                     box = layout_parsing_res[idx]["block_bbox"]
                     x1, y1, x2, y2 = [int(i) for i in box]
                     wht_im[y1:y2, x1:x2, :] = image[y1:y2, x1:x2, :]
-                    sub_ocr_res = next(
+                    sub_ocr_res = list(
                         self.general_ocr_pipeline(
                             wht_im,
                             text_det_limit_side_len=text_det_limit_side_len,
@@ -266,7 +266,7 @@ class _LayoutParsingPipeline(BasePipeline):
                             text_det_unclip_ratio=text_det_unclip_ratio,
                             text_rec_score_thresh=text_rec_score_thresh,
                         )
-                    )
+                    )[0]
                     layout_parsing_res[idx]["block_content"] = "\n".join(
                         sub_ocr_res["rec_texts"]
                     )
@@ -443,19 +443,19 @@ class _LayoutParsingPipeline(BasePipeline):
             image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_res = list(
                     self.doc_preprocessor_pipeline(
                         image_array,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
-                )
+                )[0]
             else:
                 doc_preprocessor_res = {"output_img": image_array}
 
             doc_preprocessor_image = doc_preprocessor_res["output_img"]
 
-            layout_det_res = next(
+            layout_det_res = list(
                 self.layout_det_model(
                     doc_preprocessor_image,
                     threshold=layout_threshold,
@@ -463,9 +463,9 @@ class _LayoutParsingPipeline(BasePipeline):
                     layout_unclip_ratio=layout_unclip_ratio,
                     layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                 )
-            )
+            )[0]
 
-            overall_ocr_res = next(
+            overall_ocr_res = list(
                 self.general_ocr_pipeline(
                     doc_preprocessor_image,
                     use_textline_orientation=use_textline_orientation,
@@ -476,10 +476,10 @@ class _LayoutParsingPipeline(BasePipeline):
                     text_det_unclip_ratio=text_det_unclip_ratio,
                     text_rec_score_thresh=text_rec_score_thresh,
                 )
-            )
+            )[0]
 
             if model_settings["use_table_recognition"]:
-                table_res_all = next(
+                table_res_all = list(
                     self.table_recognition_pipeline(
                         doc_preprocessor_image,
                         use_doc_orientation_classify=False,
@@ -489,13 +489,13 @@ class _LayoutParsingPipeline(BasePipeline):
                         overall_ocr_res=overall_ocr_res,
                         layout_det_res=layout_det_res,
                     )
-                )
+                )[0]
                 table_res_list = table_res_all["table_res_list"]
             else:
                 table_res_list = []
 
             if model_settings["use_seal_recognition"]:
-                seal_res_all = next(
+                seal_res_all = list(
                     self.seal_recognition_pipeline(
                         doc_preprocessor_image,
                         use_doc_orientation_classify=False,
@@ -509,13 +509,13 @@ class _LayoutParsingPipeline(BasePipeline):
                         seal_det_unclip_ratio=seal_det_unclip_ratio,
                         seal_rec_score_thresh=seal_rec_score_thresh,
                     )
-                )
+                )[0]
                 seal_res_list = seal_res_all["seal_res_list"]
             else:
                 seal_res_list = []
 
             if model_settings["use_formula_recognition"]:
-                formula_res_all = next(
+                formula_res_all = list(
                     self.formula_recognition_pipeline(
                         doc_preprocessor_image,
                         use_layout_detection=False,
@@ -523,7 +523,7 @@ class _LayoutParsingPipeline(BasePipeline):
                         use_doc_unwarping=False,
                         layout_det_res=layout_det_res,
                     )
-                )
+                )[0]
                 formula_res_list = formula_res_all["formula_res_list"]
             else:
                 formula_res_list = []

@@ -451,7 +451,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 crop_box = layout_det_res["boxes"][layout_box_idx]["coordinate"]
                 x1, y1, x2, y2 = [int(i) for i in crop_box]
                 crop_img = np.array(image)[y1:y2, x1:x2]
-                crop_img_rec_res = next(text_rec_model([crop_img]))
+                crop_img_rec_res = list(text_rec_model([crop_img]))[0]
                 crop_img_dt_poly = get_bbox_intersection(
                     crop_box, crop_box, return_format="poly"
                 )
