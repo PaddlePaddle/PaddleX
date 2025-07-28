@@ -41,7 +41,7 @@ comments: true
 ./scripts/prepare_rc_image.sh
 ```
 
-该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖版本](./README.md#12-锁定依赖版本可选) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认使用 https://pypi.org/simple。
+该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖版本（可选）](./README.md#12-锁定依赖版本可选) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认使用 https://pypi.org/simple。
 
 ### 1.2 锁定依赖版本（可选）
 
