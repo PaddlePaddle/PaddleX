@@ -35,17 +35,17 @@ comments: true
 
 ### 1.1 构建依赖收集镜像（可选）
 
-执行 `server_env` 目录下的构建依赖收集镜像脚本。
+切换至 `server_env` 目录，执行该目录下的构建依赖收集镜像脚本。
 
 ```bash
 ./scripts/prepare_rc_image.sh
 ```
 
-该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖版本（可选）](./README.md#12-锁定依赖版本可选) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源。如果不指定，默认使用 https://pypi.org/simple。
+该脚本会为每种设备类型构建一个用于依赖收集的镜像，镜像包含 Python 3.10 以及 [pip-tools](https://github.com/jazzband/pip-tools) 工具。[1.2 锁定依赖版本（可选）](./README.md#12-锁定依赖版本可选) 将基于该镜像完成。构建完成后，将分别生成 `paddlex-hps-rc:gpu` 和 `paddlex-hps-rc:cpu` 两个镜像。如果遇到网络问题，可以通过 `-p` 参数指定其他 pip 源；如果不指定，则默认使用 `https://pypi.org/simple`。若在构建过程中遇到基础镜像无法拉取的问题，请参考 [FAQ](./README.md#3faq) 中的相关解决方案。
 
 ### 1.2 锁定依赖版本（可选）
 
-为了使构建结果的可重现性更强，本步骤将依赖锁定到精确版本。执行如下脚本：
+为了使构建结果的可重现性更强，本步骤将依赖锁定到精确版本。请切换至 `server_env` 目录执行如下脚本：
 
 ```bash
 ./script/freeze_requirements.sh
@@ -55,7 +55,34 @@ comments: true
 
 ### 1.3 镜像构建
 
-如需构建 GPU 镜像，需提前将 [cuDNN 8.9.7-CUDA 11.x 安装包](https://developer.nvidia.cn/rdp/cudnn-archive) 和 [TensorRT 8.6-Linux x86_64 GA 安装包](https://developer.nvidia.com/nvidia-tensorrt-8x-download) 放在 `server_env` 目录下。对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，执行以下命令：
+如需构建 GPU 镜像，需提前将以下两个安装包放在 `server_env` 目录下:
+
+<table>
+  <thead>
+    <tr>
+      <th>安装包名称</th>
+      <th>版本</th>
+      <th>下载地址</th>
+      <th>下载文件名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>cuDNN</strong></td>
+      <td>v8.9.7-CUDA 11.x</td>
+      <td><a href="https://developer.nvidia.cn/rdp/cudnn-archive">NVIDIA cuDNN Archive</a></td>
+      <td>Local Installer for Linux x86_64 (Tar)</td>
+    </tr>
+    <tr>
+      <td><strong>TensorRT</strong></td>
+      <td>8.6-GA</td>
+      <td><a href="https://developer.nvidia.com/nvidia-tensorrt-8x-download">TensorRT 8.x Download Page</a></td>
+      <td>TensorRT 8.6 GA for Linux x86_64 and CUDA 11.x TAR Package</td>
+    </tr>
+  </tbody>
+</table>
+
+对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，在 `server_env` 目录下执行以下命令：
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu 
@@ -86,6 +113,8 @@ comments: true
 </tbody>
 </table>
 
+如果遇到无法拉取基础镜像的情况，可参考 FAQ 中的解决方案。
+
 执行成功后，命令行会输出以下提示信息：
 
 ```text
@@ -103,12 +132,12 @@ comments: true
 
 ## 2. 产线物料打包
 
-本阶段主要介绍 `sdk` 目录下为多个模型产线提供统一的打包功能。同时，该目录为每个产线提供对应的 client 和 server 代码实现：
+本阶段主要介绍如何进行产线物料打包，该功能在 `sdk` 目录中提供，`sdk` 目录为每个产线提供对应的 client 和 server 代码实现：
 
 - `client` 部分：用于调用模型服务。
 - `server` 部分：以 [1. 镜像构建](#1-镜像构建) 阶段构建的镜像作为运行环境，用于部署模型服务。
 
-打包可通过 `scripts/assemble.sh` 脚本执行，以打包通用 OCR 产线为例：
+产线物料打包前需切换到 `sdk` 目录，并通过该目录下的 `scripts/assemble.sh` 脚本执行打包操作，以打包通用 OCR 产线为例：
 
 ```bash
 ./scripts/assemble.sh OCR
@@ -144,8 +173,6 @@ comments: true
 </table>
 
 调用后存储到当前目录 `/output` 路径下。
-
-
 
 ## 3.FAQ
 
