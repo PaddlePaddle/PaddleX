@@ -38,17 +38,17 @@ Image Building Steps:
 
 ## 1.1 Build the Requirement Collection Image (Optional)
 
-Run follow script in the `server_env` directory to build the requirement collection image. 
+Navigate to the `server_env` directory and run follow script for building the requirement collection image in this directory. 
 
 ```bash
 ./scripts/prepare_rc_image.sh
 ```
 
-This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools). [1.2 Freeze Requirement (Optional)](./README_en.md#12-freeze-requirement-optional) will be based on this image. After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated. If you encounter network issues, you can specify other pip sources through the `-p` parameter. If not specified, the default source https://pypi.org/simple will be used.
+This script builds a requirement collection image for each device type. The image includes Python 3.10 and [pip-tools](https://github.com/jazzband/pip-tools). [1.2 Freeze Requirement (Optional)](./README_en.md#12-freeze-requirement-optional) will be based on this image. After the build is complete, two images: `paddlex-hps-rc:gpu` and `paddlex-hps-rc:cpu` will be generated. If you encounter network issues, you can specify other pip sources through the `-p` parameter. If not specified, the default source https://pypi.org/simple will be used.If you encounter issues pulling the base image during the build process, please refer to the relevant solutions in the [FAQ](./README_en.md#3-faq).
 
 ## 1.2 Freeze Requirement (Optional)
 
-To enhance the reproducibility of the build, this step freeze requirement to exact versions, run the following script:
+To enhance the reproducibility of the build, this step freeze requirement to exact versions. Please switch to the `server_env` directory and run the following script:
 
 ```bash
 ./scripts/freeze_requirements.sh
@@ -58,7 +58,34 @@ This script uses `pip-tools compile` to parse the source requirement files and g
 
 ## 1.3 Building Image
 
-If you need to build the GPU image, make sure to place the following installation packages in the `server_env` directory in advance:[cuDNN 8.9.7-CUDA 11.x Tar](https://developer.nvidia.cn/rdp/cudnn-archive) and [TensorRT 8.6-Linux x86_64 GA Tar Package](https://developer.nvidia.com/nvidia-tensorrt-8x-download). For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required. To build a GPU image, run the following command:
+If you need to build the GPU image, make sure to place the following two installation packages in the `server_env` directory in advance:
+
+<table>
+  <thead>
+    <tr>
+      <th>Package Name</th>
+      <th>Version</th>
+      <th>Download URL</th>
+      <th>File Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>cuDNN</strong></td>
+      <td>v8.9.7-CUDA 11.x</td>
+      <td><a href="https://developer.nvidia.cn/rdp/cudnn-archive">NVIDIA cuDNN Archive</a></td>
+      <td>Local Installer for Linux x86_64 (Tar)</td>
+    </tr>
+    <tr>
+      <td><strong>TensorRT</strong></td>
+      <td>8.6-GA</td>
+      <td><a href="https://developer.nvidia.com/nvidia-tensorrt-8x-download">TensorRT 8.x Download Page</a></td>
+      <td>TensorRT 8.6 GA for Linux x86_64 and CUDA 11.x TAR Package</td>
+    </tr>
+  </tbody>
+</table>
+
+For Triton Inference Server, a precompiled version will be automatically downloaded during the build process, so manual download is not required. To build a GPU image, run the following command:
 
 ```bash
 ./scripts/build_deployment_image.sh -k gpu -t latest-gpu
@@ -89,6 +116,8 @@ Build image script supports the following configuration options:
 </tbody>
 </table>
 
+If the basic image cannot be pulled, please refer to the solutions in the [FAQ](./README_en.md#3-faq).
+
 After run successfully, the command line will display the following message:
 
 ```text
@@ -106,12 +135,12 @@ To build both GPU and CPU images  run the following command:
 
 ## 2. Pipeline Material Packaging
 
-This stage mainly introduces the unified packaging function provided by the `sdk` directory  for multiple  pipelines. Meanwhile, this directory provides corresponding client and server code implementations for each pipeline:
+This stage mainly introduces how to package pipeline materials. This function is provided in the `sdk` directory, which offers corresponding client and server code implementations for each pipeline:
 
-`client`: Responsible for invoking the model services.
-`server`: Deployed using the images built in [1. Image Building](./README_en.md#1-image-building), serving as the runtime environment for model services.
+- `client`: Responsible for invoking the model services.
+- `server`: Deployed using the images built in [1. Image Building](./README_en.md#1-image-building), serving as the runtime environment for model services.
 
-Packaging can be performed using the `scripts/assemble.sh` script. For example, to package the general OCR pipeline, run:
+Before packaging the pipeline materials, you need to switch to the `sdk` directory and run the `scripts/assemble.sh` script in this directory for  packaging. For example, to package the general OCR pipeline, run:
 
 ```bash
 ./scripts/assemble.sh OCR
