@@ -16,11 +16,13 @@ from typing import Any, Dict, Optional, Union
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.doc_vlm.result import DocVLMResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("multimodal")
 class DocUnderstandingPipeline(BasePipeline):
     """Doc Understanding Pipeline"""

@@ -23,7 +23,7 @@ Benchmark 功能会统计模型在端到端推理过程中，所有操作的每�
 **注意**：
 
 * `PADDLE_PDX_INFER_BENCHMARK_WARMUP` 或 `PADDLE_PDX_INFER_BENCHMARK_ITERS` 需要至少设置一个大于零的值，否则无法使用 benchmark 功能。
-* Benchmark 功能目前不适用于模型产线。
+* 产线推理 Benchmark 功能参考 [产线推理 Benchmark](../../pipeline_usage/instructions/benchmark.md)。
 
 ## 2. 使用示例
 

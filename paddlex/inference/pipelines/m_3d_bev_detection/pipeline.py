@@ -18,11 +18,13 @@ import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.m_3d_bev_detection.result import BEV3DDetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("cv")
 class BEVDet3DPipeline(BasePipeline):
     """3D Detection Pipeline"""

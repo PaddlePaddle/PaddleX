@@ -18,12 +18,14 @@ import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.image_classification.result import TopkResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 
 
+@benchmark.time_methods
 class _ImageClassificationPipeline(BasePipeline):
     """Image Classification Pipeline"""
 

@@ -1,0 +1,8 @@
+faiss-cpu >= 1.8
+numpy >= 1.24
+# HACK: For compatibility with `paddlex`
+opencv-contrib-python == 4.10.0.84
+paddlex [base] == 3.1.3
+pycocotools >= 2
+pydantic >= 2
+typing-extensions >= 4.11

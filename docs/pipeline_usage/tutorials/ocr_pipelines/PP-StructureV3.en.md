@@ -985,7 +985,7 @@ In the above Python script, the following steps are executed:
 <li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
-<td><code>False</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_doc_unwarping</code></td>
@@ -997,7 +997,7 @@ In the above Python script, the following steps are executed:
 <li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
-<td><code>False</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_textline_orientation</code></td>
@@ -1069,7 +1069,7 @@ In the above Python script, the following steps are executed:
 <li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
 </ul>
 </td>
-<td><code>False</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_region_detection</code></td>

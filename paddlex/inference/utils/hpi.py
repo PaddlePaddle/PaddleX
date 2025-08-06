@@ -25,11 +25,7 @@ from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
 from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
-from ...utils.env import (
-    get_paddle_cuda_version,
-    get_paddle_cudnn_version,
-    get_paddle_version,
-)
+from ...utils.env import get_paddle_cuda_version, get_paddle_version
 from ...utils.flags import USE_PIR_TRT
 from .misc import is_mkldnn_available
 from .model_paths import ModelPaths
@@ -160,7 +156,9 @@ def suggest_inference_backend_and_config(
         return None, f"Inference backend {repr(hpi_config.backend)} is unavailable."
 
     paddle_version = get_paddle_version()
-    if paddle_version != (3, 0, 0, None):
+    if (3, 0) <= paddle_version[:2] <= (3, 1) and paddle_version[3] is None:
+        paddle_version = f"paddle{paddle_version[0]}{paddle_version[1]}"
+    else:
         return (
             None,
             f"{paddle_version} is not a supported Paddle version.",
@@ -179,12 +177,8 @@ def suggest_inference_backend_and_config(
         cuda_version = get_paddle_cuda_version()
         if not cuda_version:
             return None, "No CUDA version was found."
-        cuda_version = "".join(map(str, cuda_version))
-        cudnn_version = get_paddle_cudnn_version()
-        if not cudnn_version:
-            return None, "No cuDNN version was found."
-        cudnn_version = "".join(map(str, cudnn_version[:-1]))
-        key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
+        cuda_version = cuda_version[0]
+        key = f"gpu_cuda{cuda_version}"
     else:
         return None, f"{repr(hpi_config.device_type)} is not a supported device type."
 
@@ -192,7 +186,7 @@ def suggest_inference_backend_and_config(
 
     if key not in hpi_model_info_collection:
         return None, "No prior knowledge can be utilized."
-    hpi_model_info_collection_for_env = hpi_model_info_collection[key]
+    hpi_model_info_collection_for_env = hpi_model_info_collection[key][paddle_version]
 
     if hpi_config.pdx_model_name not in hpi_model_info_collection_for_env:
         return None, f"{repr(hpi_config.pdx_model_name)} is not a known model."

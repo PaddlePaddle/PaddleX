@@ -23,7 +23,7 @@ To enable the benchmark feature, you must set the following environment variable
 **Note**:
 
 * At least one of `PADDLE_PDX_INFER_BENCHMARK_WARMUP` or `PADDLE_PDX_INFER_BENCHMARK_ITERS` must be set to a value greater than zero; otherwise, the benchmark feature cannot be used.
-* The benchmark feature does not currently apply to model pipelines.
+* For the pipeline inference benchmark feature, refer to [Pipeline Benchmark](../../pipeline_usage/instructions/benchmark.en.md).
 
 ## 2. Usage Examples
 

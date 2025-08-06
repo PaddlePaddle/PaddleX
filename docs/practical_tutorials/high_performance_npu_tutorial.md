@@ -60,7 +60,7 @@ paddlex --install hpi-npu
 * 手动编译安装
 
 ```bash
-cd PaddleX/libs/ultra-infer/python
+cd PaddleX/deploy/ultra-infer/python
 unset http_proxy https_proxy
 # 使能om，onnx后端，禁用paddle后端，禁用gpu
 export ENABLE_OM_BACKEND=ON ENABLE_ORT_BACKEND=ON ENABLE_PADDLE_BACKEND=OFF WITH_GPU=OFF DEVICE_TYPE=NPU

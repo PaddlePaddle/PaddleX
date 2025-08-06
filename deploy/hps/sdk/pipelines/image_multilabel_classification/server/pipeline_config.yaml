@@ -1,0 +1,9 @@
+
+pipeline_name: image_multilabel_classification
+
+SubModules:
+  ImageMultiLabelClassification:
+    module_name: image_multilabel_classification
+    model_name: PP-HGNetV2-B6_ML
+    model_dir: null
+    batch_size: 4    

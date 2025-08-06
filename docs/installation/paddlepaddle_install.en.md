@@ -76,13 +76,12 @@ python -c "import paddle; print(paddle.__version__)"
 If the installation is successful, the following content will be output:
 
 ```bash
-3.0.0-rc0
+3.0.0
 ```
 
 If you want to use the [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.cn/documentation/docs/en/guides/paddle_v3_features/paddle_trt_en.html), after installing Paddle, you need to refer to the [TensorRT Documentation](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html) to install the corresponding version of TensorRT:
 
 - For PaddlePaddle with CUDA 11.8, the compatible TensorRT version is 8.x (where x >= 6). PaddleX has completed compatibility tests of Paddle-TensorRT on TensorRT 8.6.1.6, so it is **strongly recommended to install TensorRT 8.6.1.6**.
-- For PaddlePaddle with CUDA 12.6, the compatible TensorRT version is 10.x (where x >= 5), and it is recommended to install TensorRT 10.5.0.18.
 
 Below is an example of installing TensorRT 8.6.1.6 using the "Tar File Installation" method in a CUDA 11.8 environment:
 

@@ -258,6 +258,8 @@ Find the high-stability serving SDK corresponding to the pipeline in the table b
 </table>
 </details>
 
+For manual packaging, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README_en.md#2-pipeline-material-packaging).
+
 ### 2.2 Adjust Configurations
 
 The `server/pipeline_config.yaml` file of the the high-stability serving SDK is the pipeline configuration file. Users can modify this file to set the model directory to use, etc.
@@ -316,6 +318,8 @@ First, pull the Docker image as needed:
     ```bash
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.1-cpu
     ```
+
+If you need to build the image on your own, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README_en.md#1-image-building)
 
 With the image prepared, navigate to the `server` directory and execute the following command to run the server:
 
@@ -389,10 +393,7 @@ Taking the general OCR pipeline as an example, the constructed request body is a
       "shape": [1, 1],
       "datatype": "BYTES",
       "data": [
-        {
-          "file": "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png",
-          "visualize": false
-        }
+        "{\"file\":\"https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png\",\"visualize\":false}"
       ]
     }
   ],

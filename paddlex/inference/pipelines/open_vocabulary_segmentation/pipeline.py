@@ -18,6 +18,7 @@ import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.open_vocabulary_segmentation.results import SAMSegResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -25,6 +26,7 @@ from ..base import BasePipeline
 Number = Union[int, float]
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("multimodal")
 class OpenVocabularySegmentationPipeline(BasePipeline):
     """Open Vocabulary Segmentation pipeline"""
