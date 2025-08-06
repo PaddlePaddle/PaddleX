@@ -1183,9 +1183,7 @@ class GreedyDecoder(TokenDecoder):
                 ],
             )
 
-        logprobs = paddle.nn.functional.log_softmax(
-            logits, axis=-1, dtype=paddle.float32
-        )
+        logprobs = paddle.nn.functional.log_softmax(logits, axis=-1, dtype="float32")
         current_logprobs = logprobs[paddle.arange(logprobs.shape[0]), next_tokens]
         sum_logprobs += current_logprobs * paddle.to_tensor(
             (tokens[:, -1] != self.eot), dtype=paddle.float32
