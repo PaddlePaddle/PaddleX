@@ -12,14 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-
+from ....modules.text_to_speech_acoustic.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-
 from ..base import BasePredictor
 from .result import Fastspeech2Result
-from ....modules.text_to_speech_acoustic.model_list import MODELS
-
 
 
 class Fastspeech2Predictor(BasePredictor):
@@ -35,6 +31,7 @@ class Fastspeech2Predictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.infer = self.create_static_infer()
+
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
 
@@ -66,4 +63,3 @@ class Fastspeech2Predictor(BasePredictor):
         return {
             "result": mel,
         }
-

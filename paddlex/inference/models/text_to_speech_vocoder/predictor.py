@@ -14,12 +14,10 @@
 
 import numpy as np
 
-from ....utils.func_register import FuncRegister
+from ....modules.text_to_speech_vocoder.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-
 from ..base import BasePredictor
 from .result import PwganResult
-from ....modules.text_to_speech_vocoder.model_list import MODELS
 
 
 class PwganPredictor(BasePredictor):
@@ -35,6 +33,7 @@ class PwganPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.infer = self.create_static_infer()
+
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
 
@@ -67,8 +66,7 @@ class PwganPredictor(BasePredictor):
         else:
             mel = input_data
         wav = self.infer([mel])
-        result = np.array(wav).reshape(1,-1)
+        result = np.array(wav).reshape(1, -1)
         return {
             "result": result,
         }
-

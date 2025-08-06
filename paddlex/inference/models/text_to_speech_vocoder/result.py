@@ -19,5 +19,6 @@ class PwganResult(BaseAudioResult):
 
     def __init__(self, data: dict) -> None:
         super().__init__(data)
+
     def _to_audio(self):
         return {"res": self}
