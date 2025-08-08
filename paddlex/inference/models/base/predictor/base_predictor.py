@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import warnings
 from abc import ABC, abstractmethod
 from copy import deepcopy
 from pathlib import Path
@@ -34,8 +35,10 @@ from ....common.batch_sampler import BaseBatchSampler
 from ....utils.benchmark import ENTRY_POINT_NAME, benchmark
 from ....utils.hpi import HPIConfig, HPIInfo
 from ....utils.io import YAMLReader
+from ....utils.model_paths import get_model_paths
 from ....utils.pp_option import PaddlePredictorOption
 from ...common import HPInfer, PaddleInfer
+from ...common.genai import GenAIClient, GenAIConfig, need_local_model
 
 
 class PredictionWrap:
@@ -79,7 +82,7 @@ class BasePredictor(
 
     def __init__(
         self,
-        model_dir: str,
+        model_dir: Optional[str] = None,
         config: Optional[Dict[str, Any]] = None,
         *,
         device: Optional[str] = None,
@@ -87,11 +90,13 @@ class BasePredictor(
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        genai_config: Optional[GenAIConfig] = None,
     ) -> None:
         """Initializes the BasePredictor.
 
         Args:
-            model_dir (str): The directory where the model files are stored.
+            model_dir (Optional[str], optional): The directory where the model
+                files are stored.
             config (Optional[Dict[str, Any]], optional): The model configuration
                 dictionary. Defaults to None.
             device (Optional[str], optional): The device to run the inference
@@ -105,11 +110,29 @@ class BasePredictor(
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The high-performance inference configuration dictionary.
                 Defaults to None.
+            genai_config (Optional[GenAIConfig]], optional): The generative AI
+                configuration. Defaults to None.
         """
         super().__init__()
 
-        self.model_dir = Path(model_dir)
-        self.config = config if config else self.load_config(self.model_dir)
+        if need_local_model(genai_config):
+            if self.model_dir is None:
+                raise ValueError(
+                    "`model_dir` should not be `None`, as a local model is needed."
+                )
+            self.model_dir = Path(model_dir)
+            self.config = config if config else self.load_config(self.model_dir)
+        else:
+            if model_dir is not None:
+                warnings.warn("`model_dir` will be ignored, as it is not needed.")
+            self.model_dir = None
+            self.config = config
+            self._genai_config = genai_config
+            assert genai_config.server_url is not None
+            self._genai_client = GenAIClient(
+                base_url=genai_config.server_url, **(genai_config.client_kwargs or {})
+            )
+
         self.batch_sampler = self._build_batch_sampler()
         self.result_class = self._get_result_class()
 
@@ -117,12 +140,16 @@ class BasePredictor(
         self.predict = self.__call__
 
         self.batch_sampler.batch_size = batch_size
-        self._use_hpip = use_hpip
-        if not use_hpip:
-            self._pp_option = self._prepare_pp_option(pp_option, device)
+
+        if self.model_dir and get_model_paths(self.model_dir, self.MODEL_FILE_PREFIX):
+            self._use_hpip = use_hpip
+            if not use_hpip:
+                self._pp_option = self._prepare_pp_option(pp_option, device)
+            else:
+                require_hpip()
+                self._hpi_config = self._prepare_hpi_config(hpi_config, device)
         else:
-            require_hpip()
-            self._hpi_config = self._prepare_hpi_config(hpi_config, device)
+            self._use_hpip = False
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
 
@@ -161,6 +188,12 @@ class BasePredictor(
     @property
     def use_hpip(self) -> bool:
         return self._use_hpip
+
+    @property
+    def genai_config(self) -> GenAIConfig:
+        if not hasattr(self, "_genai_config"):
+            raise AttributeError(f"{repr(self)} has no attribute 'genai_config'.")
+        return self._genai_config
 
     def __call__(
         self,
@@ -240,7 +273,6 @@ class BasePredictor(
         try:
             return HPIInfo.model_validate(self.config["Hpi"])
         except ValidationError as e:
-            logging.exception("The HPI info in the model config file is invalid.")
             raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
 
     def create_static_infer(self):
@@ -290,6 +322,10 @@ class BasePredictor(
             Dict[str, List[Any]]: The prediction result.
         """
         raise NotImplementedError
+
+    def close(self) -> None:
+        if hasattr(self, "_genai_client"):
+            self._genai_client.close()
 
     @classmethod
     def get_config_path(cls, model_dir) -> str:

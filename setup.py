@@ -20,9 +20,7 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-DEP_SPECS = {
-    "aiohttp": ">= 3.9",
-    "bce-python-sdk": ">= 0.9",
+BASE_DEP_SPECS = {
     "beautifulsoup4": "",
     "chardet": "",
     "chinese-calendar": "",
@@ -30,9 +28,7 @@ DEP_SPECS = {
     "decord": "== 0.6.0; (platform_machine == 'x86_64' or platform_machine == 'AMD64') and sys_platform != 'darwin'",
     "einops": "",
     "faiss-cpu": "",
-    "fastapi": ">= 0.110",
     "filelock": "",
-    "filetype": ">= 1.2",
     "ftfy": "",
     "GPUtil": ">= 1.4",
     "huggingface_hub": "",
@@ -67,14 +63,11 @@ DEP_SPECS = {
     "scikit-learn": "",
     "shapely": "",
     "soundfile": "",
-    "starlette": ">= 0.36",
     "tiktoken": "",
     "tokenizers": ">= 0.19",
     "tqdm": "",
     "typing-extensions": "",
     "ujson": "",
-    "uvicorn": ">= 0.16",
-    "yarl": ">= 1.9",
 }
 
 REQUIRED_DEPS = [
@@ -188,14 +181,34 @@ EXTRAS = {
         ],
     },
     "plugins": {
+        "genai-client": [
+            "openai >= 1.63",
+        ],
+        "genai-sglang-server": [
+            "sglang [all] == 0.4.10",
+        ],
+        "genai-vllm-server": [
+            "einops",
+            "flash-attn",
+            "torch",
+            "transformers",
+            "uvloop",
+            "vllm == 0.10.0",
+            "xformers",
+        ],
+        "paddle2onnx": [
+            "paddle2onnx == 2.0.2rc3",
+        ],
         "serving": [
-            "aiohttp",
-            "bce-python-sdk",
-            "fastapi",
-            "filetype",
-            "starlette",
-            "uvicorn",
-            "yarl",
+            "aiohttp >= 3.9",
+            "bce-python-sdk >= 0.9",
+            "fastapi >= 0.110",
+            "filetype >= 1.2",
+            "opencv-contrib-python == 4.10.0.84",
+            "pypdfium2 >= 4",
+            "starlette >= 0.36",
+            "uvicorn >= 0.16",
+            "yarl >= 1.9",
         ],
     },
 }
@@ -204,7 +217,7 @@ EXTRAS = {
 def _get_dep_specs(deps):
     dep_specs = []
     for dep in deps:
-        val = DEP_SPECS[dep]
+        val = BASE_DEP_SPECS[dep]
         if not isinstance(val, list):
             val = [val]
         for v in val:
@@ -232,16 +245,17 @@ def dependencies():
 
 def extras():
     dic = {}
-    all_dep_specs = set()
-    for group_name, group in EXTRAS.items():
-        group_dep_specs = set()
-        for extra_name, extra_deps in group.items():
-            extra_dep_specs = _get_dep_specs(extra_deps)
-            dic[extra_name] = _sort_dep_specs(extra_dep_specs)
-            group_dep_specs.update(extra_dep_specs)
-            dic[group_name] = _sort_dep_specs(group_dep_specs)
-            all_dep_specs.update(group_dep_specs)
-    dic["all"] = _sort_dep_specs(all_dep_specs)
+
+    base_dep_specs = set()
+    for extra_name, extra_deps in EXTRAS["base"].items():
+        extra_dep_specs = _get_dep_specs(extra_deps)
+        dic[extra_name] = _sort_dep_specs(extra_dep_specs)
+        base_dep_specs.update(extra_dep_specs)
+    dic["base"] = _sort_dep_specs(base_dep_specs)
+
+    for extra_name, extra_dep_specs in EXTRAS["plugins"].items():
+        dic[extra_name] = _sort_dep_specs(extra_dep_specs)
+
     return dic
 
 
@@ -323,6 +337,7 @@ if __name__ == "__main__":
         entry_points={
             "console_scripts": [
                 "paddlex = paddlex.__main__:console_entry",
+                "paddlex_genai_server = paddlex.inference.genai.server:run_genai_server",
             ],
         },
         # PyPI package information
