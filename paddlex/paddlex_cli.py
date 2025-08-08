@@ -232,6 +232,7 @@ def install(args):
         except Exception:
             logging.error("Installation failed", exc_info=True)
             sys.exit(1)
+        logging.info("Successfully installed the serving plugin")
 
     def _install_paddle2onnx_deps():
         try:
@@ -239,6 +240,7 @@ def install(args):
         except Exception:
             logging.error("Installation failed", exc_info=True)
             sys.exit(1)
+        logging.info("Successfully installed the Paddle2ONNX plugin")
 
     def _install_hpi_deps(device_type):
         SUPPORTED_DEVICE_TYPES = ["cpu", "gpu", "npu"]
@@ -310,6 +312,8 @@ def install(args):
                 logging.error("Installation failed", exc_info=True)
                 sys.exit(1)
 
+        logging.info("Successfully installed the high-performance inference plugin")
+
         if not is_paddle2onnx_plugin_available():
             logging.info(
                 "The Paddle2ONNX plugin is not available. It is recommended to run `paddlex --install paddle2onnx` to install the Paddle2ONNX plugin to use the full functionality of high-performance inference."
@@ -361,6 +365,11 @@ def install(args):
         except Exception:
             logging.error("Installation failed", exc_info=True)
             sys.exit(1)
+
+        logging.info(
+            "Successfully installed the generative AI plugin"
+            + ("s" if len(plugin_types) > 1 else "")
+        )
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
