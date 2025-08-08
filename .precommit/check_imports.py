@@ -45,7 +45,7 @@ MOD_TO_DEP = {
     "flash_attn": "flash-attn",
     "ftfy": "ftfy",
     "GPUtil": "GPUtil",
-    "huggingface_hub": "huggingface_hub",
+    "huggingface_hub": "huggingface-hub",
     "imagesize": "imagesize",
     "jinja2": "Jinja2",
     "joblib": "joblib",

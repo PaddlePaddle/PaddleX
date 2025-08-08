@@ -31,7 +31,7 @@ BASE_DEP_SPECS = {
     "filelock": "",
     "ftfy": "",
     "GPUtil": ">= 1.4",
-    "huggingface_hub": "",
+    "huggingface-hub": "",
     "imagesize": "",
     "Jinja2": "",
     "joblib": "",
@@ -74,7 +74,7 @@ REQUIRED_DEPS = [
     "chardet",
     "colorlog",
     "filelock",
-    "huggingface_hub",
+    "huggingface-hub",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
