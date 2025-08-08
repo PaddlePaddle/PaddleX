@@ -186,11 +186,11 @@ EXTRAS = {
         ],
         "genai-sglang-server": [
             "sglang [all] == 0.4.10",
+            "torch == 2.8.0",
         ],
         "genai-vllm-server": [
             "einops",
-            "flash-attn",
-            "torch",
+            "torch == 2.7.1",
             "transformers",
             "uvloop",
             "vllm == 0.10.0",
@@ -338,6 +338,9 @@ if __name__ == "__main__":
             "console_scripts": [
                 "paddlex = paddlex.__main__:console_entry",
                 "paddlex_genai_server = paddlex.inference.genai.server:run_genai_server",
+            ],
+            "vllm.general_plugins": [
+                "register_paddlex_genai_models = paddlex.inference.genai.backends.vllm:register_models"
             ],
         },
         # PyPI package information

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import weakref
 from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, model_validator
@@ -37,9 +38,9 @@ class GenAIConfig(BaseModel):
 
 
 def need_local_model(genai_config):
-    if genai_config is not None and not genai_config.backend in SERVER_BACKENDS:
-        return True
-    return False
+    if genai_config is not None and genai_config.backend in SERVER_BACKENDS:
+        return False
+    return True
 
 
 @class_requires_deps("openai")
@@ -56,6 +57,8 @@ class GenAIClient(object):
         models = self._client.models.list()
         self._model = models.data[0].id
 
+        self._finalizer = weakref.finalize(self, self._close, self._client)
+
     @property
     def openai_client(self):
         return self._client
@@ -68,10 +71,14 @@ class GenAIClient(object):
         )
 
     def close(self):
-        self._client.close()
+        self._close(self._client)
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc, exc_tb):
         self.close()
+
+    @staticmethod
+    def _close(client):
+        client.close()

@@ -92,6 +92,7 @@ def create_predictor(
         use_hpip=use_hpip,
         hpi_config=hpi_config,
         genai_config=genai_config,
+        model_name=model_name,
         *args,
         **kwargs,
     )

@@ -42,7 +42,6 @@ MOD_TO_DEP = {
     "fastapi": "fastapi",
     "filelock": "filelock",
     "filetype": "filetype",
-    "flash_attn": "flash-attn",
     "ftfy": "ftfy",
     "GPUtil": "GPUtil",
     "huggingface_hub": "huggingface-hub",

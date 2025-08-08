@@ -278,10 +278,6 @@ def is_genai_engine_plugin_available(backend="any"):
         return False
 
 
-def is_genai_client_plugin_available():
-    return is_extra_available("genai-client")
-
-
 def require_genai_engine_plugin(backend="any"):
     if not is_genai_engine_plugin_available(backend):
         if backend == "any":
@@ -289,6 +285,17 @@ def require_genai_engine_plugin(backend="any"):
         else:
             prefix = f"The generative AI {repr(backend)} engine plugin is"
         raise RuntimeError(f"{prefix} not available. Please install it properly.")
+
+
+def is_genai_client_plugin_available():
+    return is_extra_available("genai-client")
+
+
+def require_genai_client_plugin():
+    if not is_genai_client_plugin_available():
+        raise RuntimeError(
+            "The generative AI client plugin is not available. Please install it properly."
+        )
 
 
 def get_genai_fastdeploy_spec(device_type):

@@ -18,7 +18,7 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
-from ....utils.deps import is_dep_available
+from paddlex.utils.deps import is_dep_available
 
 if is_dep_available("torch"):
     import torch
@@ -47,7 +47,13 @@ if is_dep_available("vllm"):
         default_weight_loader,
         maybe_remap_kv_scale_name,
     )
-    from vllm.model_executor.models.ernie45 import Ernie4_5ForCausalLM
+
+    try:
+        from vllm.model_executor.models.ernie45 import Ernie4_5_ForCausalLM
+    except ImportError:
+        from vllm.model_executor.model.ernie45 import (
+            Ernie4_5ForCausalLM as Ernie4_5_ForCausalLM,
+        )
     from vllm.model_executor.models.interfaces import SupportsMultiModal
     from vllm.model_executor.models.utils import (
         AutoWeightsLoader,
@@ -126,7 +132,7 @@ def smart_resize(
     return h_bar, w_bar
 
 
-if is_dep_available("torch", "vllm"):
+if is_dep_available("torch") and is_dep_available("vllm"):
 
     class PPOCRVLProcessingInfo(BaseProcessingInfo):
 
@@ -552,7 +558,7 @@ if is_dep_available("torch", "vllm"):
 
             # Detect attention implementation.
             self.attn_backend: _Backend = get_vit_attn_backend(support_fa=True)
-            if self.attn_backend not in {_Backend.FLASH_ATTN, _Backend.XFORMERS}:
+            if self.attn_backend not in {_Backend.XFORMERS}:
                 raise RuntimeError(
                     f"Keye-VL does not support {self.attn_backend} backend now."
                 )
@@ -606,24 +612,7 @@ if is_dep_available("torch", "vllm"):
                     self.head_dim,
                 )
 
-            if self.attn_backend == _Backend.FLASH_ATTN:
-                from flash_attn import flash_attn_varlen_func
-
-                q, k, v = (rearrange(x, "b s ... -> (b s) ...") for x in [q, k, v])
-
-                output = flash_attn_varlen_func(
-                    q,
-                    k,
-                    v,
-                    cu_seqlens_q=cu_seqlens,
-                    cu_seqlens_k=cu_seqlens,
-                    max_seqlen_q=max_seqlen,
-                    max_seqlen_k=max_seqlen,
-                    causal=False,
-                    softmax_scale=self.scale,
-                )
-                context_layer = rearrange(output, "(b s) ... -> b s ...", b=batch_size)
-            elif self.attn_backend == _Backend.XFORMERS:
+            if self.attn_backend == _Backend.XFORMERS:
                 from xformers import ops as xops
                 from xformers.ops.fmha.attn_bias import BlockDiagonalMask
 
@@ -1080,7 +1069,7 @@ if is_dep_available("torch", "vllm"):
         info=PPOCRVLProcessingInfo,
         dummy_inputs=PPOCRVLDummyInputsBuilder,
     )
-    class PPOCRVLForConditionalGeneration(Ernie4_5ForCausalLM, SupportsMultiModal):
+    class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM, SupportsMultiModal):
 
         def __init__(self, *, vllm_config: VllmConfig, prefix: str = ""):
             super().__init__(vllm_config=vllm_config, prefix=prefix)

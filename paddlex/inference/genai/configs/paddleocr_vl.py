@@ -18,6 +18,7 @@ from pathlib import Path
 def get_config(backend, model_dir):
     if backend == "vllm":
         return {
+            "trust_remote_code": True,
             "gpu-memory-utilization": 0.3,
             "chat-template": str(Path(model_dir, "chat_template.jinja")),
         }

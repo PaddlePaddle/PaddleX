@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
 import copy
+import io
 import os
 import warnings
+from concurrent.futures import ThreadPoolExecutor
 from typing import List
 
 from ....modules.doc_vlm.model_list import MODELS
+from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ....utils.env import get_device_type
 from ...common.batch_sampler import DocVLMBatchSampler
@@ -40,18 +44,20 @@ class DocVLMPredictor(BasePredictor):
             *args: Arbitrary positional arguments passed to the superclass.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
-        import paddle
-
         super().__init__(*args, **kwargs)
-        self.device = kwargs.get("device", None)
-        self.dtype = (
-            "bfloat16"
-            if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
-            and (self.device is None or "cpu" not in self.device)
-            else "float32"
-        )
 
-        self.infer, self.processor = self._build(**kwargs)
+        if self._use_local_model:
+            import paddle
+
+            self.device = kwargs.get("device", None)
+            self.dtype = (
+                "bfloat16"
+                if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
+                and (self.device is None or "cpu" not in self.device)
+                else "float32"
+            )
+
+            self.infer, self.processor = self._build(**kwargs)
 
     def _build_batch_sampler(self):
         """Builds and returns an DocVLMBatchSampler instance.
@@ -134,17 +140,24 @@ class DocVLMPredictor(BasePredictor):
         """
         assert all(isinstance(i, dict) for i in data)
 
-        src_data = copy.copy(data)
-        # preprocess
-        data = self.processor.preprocess(data)
-        data = self._switch_inputs_to_device(data)
+        if self._use_local_model:
+            src_data = copy.copy(data)
+            # preprocess
+            data = self.processor.preprocess(data)
+            data = self._switch_inputs_to_device(data)
 
-        # do infer
-        with TemporaryDeviceChanger(self.device):
-            preds = self.infer.generate(data, **kwargs)
+            # do infer
+            with TemporaryDeviceChanger(self.device):
+                preds = self.infer.generate(data, **kwargs)
 
-        # postprocess
-        preds = self.processor.postprocess(preds)
+            # postprocess
+            preds = self.processor.postprocess(preds)
+        else:
+            require_genai_client_plugin()
+
+            src_data = data
+
+            preds = self._genai_client_process(data)
 
         result_dict = self._format_result_dict(preds, src_data)
         return result_dict
@@ -251,3 +264,41 @@ class DocVLMPredictor(BasePredictor):
             for k in input_dict
         }
         return rst_dict
+
+    def _genai_client_process(self, data):
+        def _process(item):
+            image = item["image"]
+            if isinstance(image, str):
+                if image.startswith("http://") or image.startswith("https://"):
+                    image_url = image
+                else:
+                    from PIL import Image
+
+                    with Image.open(image) as img:
+                        with io.BytesIO() as buf:
+                            img.save(buf, format="JPEG")
+                            image_url = "data:image/jpeg;base64," + base64.b64encode(
+                                buf.getvalue()
+                            ).decode("ascii")
+            else:
+                raise TypeError(f"Not supported image type: {type(image)}")
+            chat_completion = self._genai_client.create_chat_completion(
+                [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": item["query"]},
+                            {"type": "image_url", "image_url": {"url": image_url}},
+                        ],
+                    }
+                ]
+            )
+            return chat_completion.choices[0].message.content
+
+        batch_size = len(data)
+        if batch_size == 1:
+            return _process(data[0])
+        else:
+            # TODO: Concurrency control
+            with ThreadPoolExecutor(max_workers=batch_size) as executor:
+                return list(executor.map(_process, data))

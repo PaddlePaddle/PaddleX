@@ -22,14 +22,14 @@ def load_backend_config(config_path):
 
 
 def update_backend_config(config, **kwargs):
-    for k, v in kwargs:
+    for k, v in kwargs.items():
         config[k] = v
 
 
 def backend_config_to_args(config):
     # Limited support
     args = []
-    for k, v in config:
+    for k, v in config.items():
         opt = "--" + k
         args.append(opt)
         if not isinstance(v, bool):

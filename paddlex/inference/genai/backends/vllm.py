@@ -12,15 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....utils.deps import require_genai_engine_plugin
+from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
 from ..configs.utils import backend_config_to_args, update_backend_config
+from ..models import ALL_MODEL_NAMES, get_network_class
 
 
-def run_vllm_server(host, port, config, model):
-    require_genai_engine_plugin("vllm")
+def register_models():
+    from vllm import ModelRegistry
+
+    if is_genai_engine_plugin_available("vllm-server"):
+        for model_name in ALL_MODEL_NAMES:
+            if model_name not in ModelRegistry.get_supported_archs():
+                net_cls = get_network_class(model_name, "vllm")
+                ModelRegistry.register_model(net_cls.__name__, net_cls)
+
+
+def run_vllm_server(host, port, model_dir, config):
+    require_genai_engine_plugin("vllm-server")
 
     import uvloop
-    from vllm import ModelRegistry
     from vllm.entrypoints.openai.api_server import (
         FlexibleArgumentParser,
         cli_env_setup,
@@ -29,14 +39,15 @@ def run_vllm_server(host, port, config, model):
         validate_parsed_serve_args,
     )
 
-    ModelRegistry.register_model(model.name, model.net)
-
     cli_env_setup()
     parser = FlexibleArgumentParser()
     parser = make_arg_parser(parser)
 
     update_backend_config(
-        config, model=str(model.path), host=host, port=port, **model.default_config
+        config,
+        model=model_dir,
+        host=host,
+        port=port,
     )
     args = backend_config_to_args(config)
     args = parser.parse_args(args)

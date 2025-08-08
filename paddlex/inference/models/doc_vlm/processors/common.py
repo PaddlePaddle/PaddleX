@@ -418,7 +418,7 @@ def process_vision_info(
         if "image" in vision_info or "image_url" in vision_info:
             image_inputs.append(fetch_image(vision_info))
         else:
-            raise ValueError("image, image_url should in content.")
+            raise ValueError("image, image_url should be in content.")
     if len(image_inputs) == 0:
         image_inputs = None
     return image_inputs

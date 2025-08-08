@@ -17,9 +17,9 @@ import sys
 
 from ...utils import logging
 from ...utils.deps import is_genai_engine_plugin_available
-from .configs.utils import load_backend_config
+from .configs.utils import load_backend_config, update_backend_config
 from .constants import DEFAULT_BACKEND, SUPPORTED_BACKENDS
-from .models.factory import build_model
+from .models import get_default_config, get_model_dir
 
 
 def get_arg_parser():
@@ -41,15 +41,11 @@ def run_genai_server(args=None):
     parser = get_arg_parser()
     args = parser.parse_args(args=args)
 
-    if not is_genai_engine_plugin_available(f"{args.backend}-serving"):
-        sys.exit(
-            f"The '{args.backend}-serving' plugin is not available. Please install it first."
+    plugin_name = f"{args.backend}-server"
+    if not is_genai_engine_plugin_available(plugin_name):
+        logging.error(
+            f"The '{plugin_name}' plugin is not available. Please install it first."
         )
-
-    try:
-        model = build_model(args.model_name, args.backend, args.model_dir or None)
-    except Exception:
-        logging.error("Failed to build the model", exc_info=True)
         sys.exit(1)
 
     if args.backend == "fastdeploy":
@@ -67,18 +63,40 @@ def run_genai_server(args=None):
     else:
         raise AssertionError
 
+    if args.model_dir:
+        model_dir = args.model_dir
+    else:
+        try:
+            model_dir = get_model_dir(args.model_name, args.backend)
+        except Exception:
+            logging.error("Failed to get model directory", exc_info=True)
+            sys.exit(1)
+
     if args.backend_config:
         try:
             backend_config = load_backend_config(args.backend_config)
         except Exception:
             logging.error(
-                f"Failed to load backend configuration from file: {args.backend_config}"
+                f"Failed to load backend configuration from file: {args.backend_config}",
+                exc_info=True,
             )
             sys.exit(1)
     else:
         backend_config = {}
 
-    run_server_func(args.host, args.port, backend_config, model)
+    try:
+        default_config = get_default_config(args.model_name, args.backend, model_dir)
+    except Exception:
+        logging.error(
+            f"Failed to get default configuration for the model", exc_info=True
+        )
+        sys.exit(1)
+    update_backend_config(
+        backend_config,
+        **default_config,
+    )
+
+    run_server_func(args.host, args.port, model_dir, backend_config)
 
 
 if __name__ == "__main__":

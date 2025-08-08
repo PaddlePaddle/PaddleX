@@ -91,6 +91,7 @@ class BasePredictor(
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         genai_config: Optional[GenAIConfig] = None,
+        model_name: Optional[str] = None,
     ) -> None:
         """Initializes the BasePredictor.
 
@@ -112,16 +113,19 @@ class BasePredictor(
                 Defaults to None.
             genai_config (Optional[GenAIConfig]], optional): The generative AI
                 configuration. Defaults to None.
+            model_name (Optional[str], optional): Optional model name.
+                Defaults to None.
         """
         super().__init__()
 
         if need_local_model(genai_config):
-            if self.model_dir is None:
+            if model_dir is None:
                 raise ValueError(
                     "`model_dir` should not be `None`, as a local model is needed."
                 )
             self.model_dir = Path(model_dir)
             self.config = config if config else self.load_config(self.model_dir)
+            self._use_local_model = True
         else:
             if model_dir is not None:
                 warnings.warn("`model_dir` will be ignored, as it is not needed.")
@@ -132,6 +136,13 @@ class BasePredictor(
             self._genai_client = GenAIClient(
                 base_url=genai_config.server_url, **(genai_config.client_kwargs or {})
             )
+            self._use_local_model = False
+
+        if model_name:
+            if self.config:
+                if self.config["Global"]["model_name"] != model_name:
+                    raise ValueError("`model_name` is not consistent with `config`")
+            self._model_name = model_name
 
         self.batch_sampler = self._build_batch_sampler()
         self.result_class = self._get_result_class()
@@ -171,7 +182,13 @@ class BasePredictor(
         Returns:
             str: The model name.
         """
-        return self.config["Global"]["model_name"]
+        if self.config:
+            return self.config["Global"]["model_name"]
+        else:
+            if hasattr(self, "_model_name"):
+                return self._model_name
+            else:
+                raise AttributeError(f"{repr(self)} has no attribute 'model_name'.")
 
     @property
     def pp_option(self) -> PaddlePredictorOption:
@@ -454,6 +471,3 @@ class BasePredictor(
             device_id = device_ids[0]
         else:
             device_id = None
-        if device_ids and len(device_ids) > 1:
-            logging.debug("Got multiple device IDs. Using the first one: %d", device_id)
-        return device_type, device_id
