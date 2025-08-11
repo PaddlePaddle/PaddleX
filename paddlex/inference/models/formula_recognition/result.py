@@ -27,7 +27,7 @@ from PIL import Image, ImageDraw, ImageFont
 from ....utils import logging
 from ....utils.deps import function_requires_deps, is_dep_available
 from ....utils.file_interface import custom_open
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 
 if is_dep_available("opencv-contrib-python"):
@@ -256,25 +256,28 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
         np.ndarray: The resulting image as a NumPy array, or None if the PDF is not single-page.
     """
     pdfDoc = pdfium.PdfDocument(pdf_path)
-    if len(pdfDoc) != 1:
-        return None
-    for page in pdfDoc:
-        rotate = int(0)
-        zoom = 2
-        img = page.render(scale=zoom, rotation=rotate).to_pil()
-        img = img.convert("RGB")
-        img = np.array(img)
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        xywh = crop_white_area(img)
+    try:
+        if len(pdfDoc) != 1:
+            return None
+        for page in pdfDoc:
+            rotate = int(0)
+            zoom = 2
+            img = page.render(scale=zoom, rotation=rotate).to_pil()
+            img = img.convert("RGB")
+            img = np.array(img)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            xywh = crop_white_area(img)
 
-        if xywh is not None:
-            x, y, w, h = xywh
-            img = img[y : y + h, x : x + w]
-            if is_padding:
-                img = cv2.copyMakeBorder(
-                    img, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=(255, 255, 255)
-                )
-            return img
+            if xywh is not None:
+                x, y, w, h = xywh
+                img = img[y : y + h, x : x + w]
+                if is_padding:
+                    img = cv2.copyMakeBorder(
+                        img, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=(255, 255, 255)
+                    )
+                return img
+    finally:
+        pdfDoc.close()
     return None
 
 
@@ -308,7 +311,7 @@ def draw_formula_module(
             return formula_img
         else:
             img_right_text = draw_box_txt_fine(
-                img_size, box, "Rendering Failed", PINGFANG_FONT_FILE_PATH
+                img_size, box, "Rendering Failed", PINGFANG_FONT.path
             )
         return img_right_text
 

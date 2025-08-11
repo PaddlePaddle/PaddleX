@@ -21,6 +21,7 @@ from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -29,6 +30,7 @@ from ..components import CropByBoxes
 from .result import FormulaRecognitionResult
 
 
+@benchmark.time_methods
 class _FormulaRecognitionPipeline(BasePipeline):
     """Formula Recognition Pipeline"""
 
@@ -266,7 +268,7 @@ class _FormulaRecognitionPipeline(BasePipeline):
                     layout_det_results = []
                     for _ in doc_preprocessor_images:
                         try:
-                            layout_det_res = next(external_layout_det_results)
+                            layout_det_res = list(external_layout_det_results)[0]
                         except StopIteration:
                             raise ValueError("No more layout det results")
                         layout_det_results.append(layout_det_res)

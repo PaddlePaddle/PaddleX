@@ -24,22 +24,22 @@ SubPipelines:
 SubModules:
   TextDetection:
     module_name: text_detection
-    model_name: PP-OCRv4_mobile_det
+    model_name: PP-OCRv5_server_det
     model_dir: null
-    limit_side_len: 960
-    limit_type: max
+    limit_side_len: 64
+    limit_type: min
     max_side_limit: 4000
     thresh: 0.3
     box_thresh: 0.6
     unclip_ratio: 1.5
   TextLineOrientation:
     module_name: textline_orientation
-    model_name: PP-LCNet_x0_25_textline_ori 
+    model_name: PP-LCNet_x1_0_textline_ori 
     model_dir: null
     batch_size: 6    
   TextRecognition:
     module_name: text_recognition
-    model_name: PP-OCRv4_mobile_rec 
+    model_name: PP-OCRv5_server_rec 
     model_dir: null
     batch_size: 6
     score_thresh: 0.0

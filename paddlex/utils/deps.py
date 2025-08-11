@@ -73,7 +73,7 @@ def _get_dep_specs():
 DEP_SPECS = _get_dep_specs()
 
 
-def _get_dep_version(dep):
+def get_dep_version(dep):
     try:
         return importlib.metadata.version(dep)
     except importlib.metadata.PackageNotFoundError:
@@ -101,7 +101,7 @@ def is_dep_available(dep, /, check_version=None):
             check_version = True
         else:
             check_version = False
-    version = _get_dep_version(dep)
+    version = get_dep_version(dep)
     if version is None:
         return False
     if check_version:
@@ -246,4 +246,4 @@ def require_paddle2onnx_plugin():
 
 
 def get_paddle2onnx_spec():
-    return "paddle2onnx == 2.0.2rc1"
+    return "paddle2onnx == 2.0.2rc3"

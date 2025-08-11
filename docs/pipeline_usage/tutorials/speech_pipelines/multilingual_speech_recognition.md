@@ -13,7 +13,7 @@ comments: true
      <th >模型</th>
      <th >模型下载链接</th>
      <th >训练数据</th>
-     <th >模型大小</th>
+     <th>模型存储大小（MB）</th>
      <th >词错率</th>
      <th >介绍</th>
    </tr>
@@ -21,7 +21,7 @@ comments: true
      <td>whisper_large</td>
      <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_large.tar">whisper_large</a></td>
      <td >680kh</td>
-     <td>5.8G</td>
+     <td>5800</td>
      <td>2.7 (Librispeech)</td>
      <td rowspan="5">Whisper 是 OpenAI 开发的多语言自动语音识别模型，具备高精度和鲁棒性。它采用端到端架构，能处理嘈杂环境音频，适用于语音助理、实时字幕等多种应用。</td>
    </tr>
@@ -29,28 +29,28 @@ comments: true
      <td>whisper_medium</td>
      <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_medium.tar">whisper_medium</a></td>
      <td>680kh</td>
-     <td>2.9G</td>
+     <td>2900</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
      <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_small.tar">whisper_small</a></td>
      <td>680kh</td>
-     <td>923M</td>
+     <td>923</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_base</td>
      <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_base.tar">whisper_base</a></td>
      <td>680kh</td>
-     <td>277M</td>
+     <td>277</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
      <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">whisper_tiny</a></td>
      <td>680kh</td>
-     <td>145M</td>
+     <td>145</td>
      <td>-</td>
    </tr>
  </table>
@@ -160,23 +160,6 @@ for res in output:
 <ul>
   <li><b>文件路径</b>，如语音文件的本地路径：<code>/root/data/audio.wav</code></li>
   <li><b>URL链接</b>，如语音文件的网络URL：<a href = "https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav">示例</a></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>产线推理设备</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
-  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
-  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
-  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
-  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
-  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -528,5 +511,5 @@ print(result)
 </details>
 <br/>
 
-📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
+📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/on_device_deployment.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

@@ -55,7 +55,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     async def _infer(request: InferRequest) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
-
+        visualize_enabled = (
+            request.visualize if request.visualize is not None else ctx.config.visualize
+        )
         file_bytes = await serving_utils.get_raw_bytes_async(
             request.image, aiohttp_session
         )
@@ -74,7 +76,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         ]
         mask_infos = result["mask_infos"]
 
-        if ctx.config.visualize:
+        if visualize_enabled:
             output_image_base64 = serving_utils.base64_encode(
                 serving_utils.image_to_bytes(result.img["res"])
             )

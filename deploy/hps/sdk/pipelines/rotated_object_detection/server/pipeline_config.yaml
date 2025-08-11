@@ -1,0 +1,10 @@
+
+pipeline_name: rotated_object_detection
+
+SubModules:
+  RotatedObjectDetection:
+    module_name: rotated_object_detection
+    model_name: PP-YOLOE-R-L
+    model_dir: null
+    batch_size: 1
+    threshold: 0.5

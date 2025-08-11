@@ -25,6 +25,7 @@ INFER_ENDPOINT: Final[str] = "/time-series-forecasting"
 
 class InferRequest(BaseModel):
     csv: str
+    visualize: Optional[bool] = None
 
 
 class InferResult(BaseModel):

@@ -1,0 +1,52 @@
+
+pipeline_name: seal_recognition
+
+use_doc_preprocessor: True
+use_layout_detection: True
+
+SubModules:
+  LayoutDetection:
+    module_name: layout_detection
+    model_name: PP-DocLayout-L
+    model_dir: null
+    threshold: 0.5
+    layout_nms: True
+    layout_unclip_ratio: 1.0
+    layout_merge_bboxes_mode: "large"
+
+SubPipelines:
+  DocPreprocessor:
+    pipeline_name: doc_preprocessor
+    use_doc_orientation_classify: True
+    use_doc_unwarping: True
+    SubModules:
+      DocOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null
+      DocUnwarping:
+        module_name: image_unwarping
+        model_name: UVDoc
+        model_dir: null
+  SealOCR:
+    pipeline_name: OCR
+    text_type: seal
+    use_doc_preprocessor: False
+    use_textline_orientation: False
+    SubModules:
+      TextDetection:
+        module_name: seal_text_detection
+        model_name: PP-OCRv4_server_seal_det
+        model_dir: null
+        limit_side_len: 736
+        limit_type: min
+        max_side_len: 4000
+        thresh: 0.2
+        box_thresh: 0.6
+        unclip_ratio: 0.5
+      TextRecognition:
+        module_name: text_recognition
+        model_name: PP-OCRv4_server_rec
+        model_dir: null
+        batch_size: 1
+        score_thresh: 0

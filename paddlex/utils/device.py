@@ -15,8 +15,6 @@
 import os
 from contextlib import ContextDecorator
 
-import GPUtil
-
 from . import logging
 from .custom_device_list import (
     DCU_WHITELIST,
@@ -41,18 +39,12 @@ def constr_device(device_type, device_ids):
 
 
 def get_default_device():
-    avail_gpus = GPUtil.getAvailable()
-    if not avail_gpus:
-        # maybe edge devices like Jetson
-        if os.path.exists("/etc/nv_tegra_release"):
-            avail_gpus = [0]
-            logging.info(
-                "Detected that the current device is a Jetson edge device. The default behavior will be to use GPU: 0"
-            )
-    if not avail_gpus:
-        return "cpu"
+    import paddle
+
+    if paddle.device.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0:
+        return constr_device("gpu", [0])
     else:
-        return constr_device("gpu", [avail_gpus[0]])
+        return "cpu"
 
 
 def parse_device(device):
@@ -125,7 +117,10 @@ def set_env_for_device_type(device_type):
         }
         _set(envs)
     if device_type.lower() == "mlu":
-        envs = {"FLAGS_use_stride_kernel": "0"}
+        envs = {
+            "FLAGS_use_stride_kernel": "0",
+            "FLAGS_use_stream_safe_cuda_allocator": "0",
+        }
         _set(envs)
     if device_type.lower() == "gcu":
         envs = {"FLAGS_use_stride_kernel": "0"}

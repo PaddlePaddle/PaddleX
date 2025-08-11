@@ -24,7 +24,7 @@ from PIL import Image, ImageDraw
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.fonts import PINGFANG_FONT
 from ...common.result import BaseCVResult, JsonMixin
 from ...models.formula_recognition.result import (
     crop_white_area,
@@ -277,6 +277,6 @@ def draw_box_formula_fine(
             )
         else:
             img_right_text = draw_box_txt_fine(
-                img_size, box, "Rendering Failed", PINGFANG_FONT_FILE_PATH
+                img_size, box, "Rendering Failed", PINGFANG_FONT.path
             )
         return img_right_text

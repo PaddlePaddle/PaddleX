@@ -33,6 +33,7 @@ INFER_ENDPOINT: Final[str] = "/small-object-detection"
 class InferRequest(BaseModel):
     image: str
     threshold: Optional[Union[float, Dict[int, float]]] = None
+    visualize: Optional[bool] = None
 
 
 class DetectedObject(BaseModel):

@@ -18,11 +18,13 @@ import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("multimodal")
 class OpenVocabularyDetectionPipeline(BasePipeline):
     """Open Vocabulary Detection Pipeline"""

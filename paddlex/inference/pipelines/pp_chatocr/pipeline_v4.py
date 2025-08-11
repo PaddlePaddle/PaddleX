@@ -30,6 +30,7 @@ from ....utils.deps import (
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..components.chat_server import BaseChat
@@ -40,6 +41,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("ie")
 class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     """PP-ChatOCRv4 Pipeline"""
@@ -249,6 +251,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
+        use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Optional[bool] = None,
         use_table_recognition: Optional[bool] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
@@ -279,6 +282,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
                                                                         numpy array of an image, or list of numpy arrays.
             use_doc_orientation_classify (bool): Flag to use document orientation classification.
             use_doc_unwarping (bool): Flag to use document unwarping.
+            use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
             use_seal_recognition (bool): Flag to use seal recognition.
             use_table_recognition (bool): Flag to use table recognition.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
@@ -320,6 +324,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             input,
             use_doc_orientation_classify=use_doc_orientation_classify,
             use_doc_unwarping=use_doc_unwarping,
+            use_textline_orientation=use_textline_orientation,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
             layout_threshold=layout_threshold,
@@ -635,7 +640,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
 
         for image_array in self.img_reader([input]):
 
-            image_string = cv2.imencode(".jpg", image_array)[1].tostring()
+            image_string = cv2.imencode(".jpg", image_array)[1].tobytes()
             image_base64 = base64.b64encode(image_string).decode("utf-8")
             result = {}
             for key in key_list:

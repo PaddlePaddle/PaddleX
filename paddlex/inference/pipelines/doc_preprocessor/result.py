@@ -16,7 +16,7 @@ from typing import Dict
 
 from PIL import Image, ImageDraw
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
+from ....utils.fonts import PINGFANG_FONT, create_font
 from ...common.result import BaseCVResult, JsonMixin
 
 
@@ -55,7 +55,7 @@ class DocPreprocessorResult(BaseCVResult):
         beg_w_list = [0, w1, w1 + w2]
         for tno in range(len(txt_list)):
             txt = txt_list[tno]
-            font = create_font(txt, (region_w_list[tno], 20), PINGFANG_FONT_FILE_PATH)
+            font = create_font(txt, (region_w_list[tno], 20), PINGFANG_FONT.path)
             draw_text.text(
                 [10 + beg_w_list[tno], h + 2], txt, fill=(0, 0, 0), font=font
             )

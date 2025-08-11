@@ -474,6 +474,8 @@ def restructured_boxes(
         ymin = max(0, ymin)
         xmax = min(w, xmax)
         ymax = min(h, ymax)
+        if xmax <= xmin or ymax <= ymin:
+            continue
         box_list.append(
             {
                 "cls_id": int(box[0]),

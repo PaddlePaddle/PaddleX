@@ -1,0 +1,8 @@
+pipeline_name: ts_classification
+
+SubModules:
+  TSClassification:
+    module_name: ts_classification
+    model_name: TimesNet_cls
+    model_dir: null
+    batch_size: 1   

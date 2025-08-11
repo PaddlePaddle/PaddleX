@@ -42,9 +42,10 @@ ANALYZE_IMAGES_ENDPOINT: Final[str] = "/chatocr-visual"
 class AnalyzeImagesRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
+    useTextlineOrientation: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
+    layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
     layoutMergeBboxesMode: Optional[Union[str, dict]] = None
@@ -60,6 +61,7 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
+    visualize: Optional[bool] = None
 
 
 class LayoutParsingResult(BaseModel):
@@ -79,8 +81,8 @@ BUILD_VECTOR_STORE_ENDPOINT: Final[str] = "/chatocr-vector"
 
 class BuildVectorStoreRequest(BaseModel):
     visualInfo: List[dict]
-    minCharacters: Optional[int] = None
-    blockSize: Optional[int] = None
+    minCharacters: int = 3500
+    blockSize: int = 300
     retrieverConfig: Optional[dict] = None
 
 
@@ -107,9 +109,9 @@ CHAT_ENDPOINT: Final[str] = "/chatocr-chat"
 class ChatRequest(BaseModel):
     keyList: List[str]
     visualInfo: List[dict]
-    useVectorRetrieval: Optional[bool] = None
+    useVectorRetrieval: bool = True
     vectorInfo: Optional[dict] = None
-    minCharacters: Optional[int] = None
+    minCharacters: int = 3500
     textTaskDescription: Optional[str] = None
     textOutputFormat: Optional[str] = None
     textRulesStr: Optional[str] = None
@@ -121,7 +123,7 @@ class ChatRequest(BaseModel):
     tableFewShotDemoTextContent: Optional[str] = None
     tableFewShotDemoKeyValueList: Optional[str] = None
     mllmPredictInfo: Optional[dict] = None
-    mllmIntegrationStrategy: Optional[str] = None
+    mllmIntegrationStrategy: str = "integration"
     chatBotConfig: Optional[dict] = None
     retrieverConfig: Optional[dict] = None
 

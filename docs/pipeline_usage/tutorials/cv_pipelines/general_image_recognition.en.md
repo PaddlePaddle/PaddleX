@@ -22,15 +22,15 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <th>mAP(0.5)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_det</td>
 <td>41.5</td>
 <td>62.0</td>
-<td>12.79 / 4.51</td>
-<td>44.14 / 44.14</td>
+<td>11.81 / 4.53</td>
+<td>43.03 / 25.31</td>
 <td>27.54</td>
 <td>An mainbody detection model based on PicoDet_LCNet_x2_5, which may detect multiple common objects simultaneously.</td>
 </tr>
@@ -44,30 +44,30 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <th>Recall@1 (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec</td>
 <td>84.2</td>
-<td>3.48 / 0.55</td>
-<td>8.04 / 4.04</td>
-<td>16.3 M</td>
+<td>3.91 / 1.06</td>
+<td>6.82 / 2.89</td>
+<td>16.3</td>
 <td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: mainbody detection, feature extraction, and vector retrieval. These models are part of the feature extraction module, and different models can be selected based on system requirements.</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
-<td>12.94 / 2.88</td>
-<td>58.36 / 58.36</td>
-<td>306.6 M</td>
+<td>12.57 / 11.62</td>
+<td>67.09 / 67.09</td>
+<td>306.6</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
 <td>91.03</td>
-<td>51.65 / 11.18</td>
-<td>255.78 / 255.78</td>
-<td>1.05 G</td>
+<td>49.85 / 49.85</td>
+<td>229.14 / 229.14</td>
+<td>1050</td>
 </tr>
 </table>
 
@@ -82,12 +82,18 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
                 <li>Image Feature Model: AliProducts Dataset.</li>
               </ul>
             </li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>
@@ -901,6 +907,26 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -986,7 +1012,7 @@ import sys
 
 import requests
 
-API_BASE_URL = "http://0.0.0.0:8080"
+API_BASE_URL = "http://127.0.0.1:8080"
 
 base_image_label_pairs = [
     {"image": "./demo0.jpg", "label": "Rabbit"},
@@ -1060,7 +1086,7 @@ pprint.pp(result_infer["detectedObjects"])
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+📱 <b>On-Device Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
 You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
 ## 4. Custom Development

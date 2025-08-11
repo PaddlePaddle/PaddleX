@@ -12,11 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import shutil
+import tempfile
+from functools import lru_cache
 from pathlib import Path
+
+import huggingface_hub as hf_hub
+
+hf_hub.logging.set_verbosity_error()
+
+import requests
 
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
+from ...utils.flags import MODEL_SOURCE
 
 OFFICIAL_MODELS = {
     "ResNet18": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet18_infer.tar",
@@ -37,6 +48,7 @@ OFFICIAL_MODELS = {
     "PP-LCNet_x0_75": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_75_infer.tar",
     "PP-LCNet_x1_0": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_infer.tar",
     "PP-LCNet_x1_0_doc_ori": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar",
+    "PP-LCNet_x1_0_textline_ori": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_textline_ori_infer.tar",
     "PP-LCNet_x1_5": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_5_infer.tar",
     "PP-LCNet_x2_5": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x2_5_infer.tar",
     "PP-LCNet_x2_0": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x2_0_infer.tar",
@@ -347,21 +359,141 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
 PP-OCRv5_server_rec_infer.tar",
     "PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 PP-OCRv5_mobile_rec_infer.tar",
+    "eslav_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+eslav_PP-OCRv5_mobile_rec_infer.tar",
     "PP-DocBee2-3B": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee2-3B_infer.tar",
+    "latin_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/latin_PP-OCRv5_mobile_rec_infer.tar",
+    "korean_PP-OCRv5_mobile_rec": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/korean_PP-OCRv5_mobile_rec_infer.tar",
 }
+
+
+HUGGINGFACE_MODELS = [
+    "arabic_PP-OCRv3_mobile_rec",
+    "chinese_cht_PP-OCRv3_mobile_rec",
+    "ch_RepSVTR_rec",
+    "ch_SVTRv2_rec",
+    "cyrillic_PP-OCRv3_mobile_rec",
+    "devanagari_PP-OCRv3_mobile_rec",
+    "en_PP-OCRv3_mobile_rec",
+    "en_PP-OCRv4_mobile_rec",
+    "eslav_PP-OCRv5_mobile_rec",
+    "japan_PP-OCRv3_mobile_rec",
+    "ka_PP-OCRv3_mobile_rec",
+    "korean_PP-OCRv3_mobile_rec",
+    "korean_PP-OCRv5_mobile_rec",
+    "LaTeX_OCR_rec",
+    "latin_PP-OCRv3_mobile_rec",
+    "latin_PP-OCRv5_mobile_rec",
+    "PicoDet_layout_1x",
+    "PicoDet_layout_1x_table",
+    "PicoDet-L_layout_17cls",
+    "PicoDet-L_layout_3cls",
+    "PicoDet-S_layout_17cls",
+    "PicoDet-S_layout_3cls",
+    "PP-DocBee2-3B",
+    "PP-Chart2Table",
+    "PP-DocBee-2B",
+    "PP-DocBee-7B",
+    "PP-DocBlockLayout",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout_plus-L",
+    "PP-DocLayout-S",
+    "PP-FormulaNet-L",
+    "PP-FormulaNet_plus-L",
+    "PP-FormulaNet_plus-M",
+    "PP-FormulaNet_plus-S",
+    "PP-FormulaNet-S",
+    "PP-LCNet_x0_25_textline_ori",
+    "PP-LCNet_x1_0_doc_ori",
+    "PP-LCNet_x1_0_table_cls",
+    "PP-LCNet_x1_0_textline_ori",
+    "PP-OCRv3_mobile_det",
+    "PP-OCRv3_mobile_rec",
+    "PP-OCRv3_server_det",
+    "PP-OCRv4_mobile_det",
+    "PP-OCRv4_mobile_rec",
+    "PP-OCRv4_mobile_seal_det",
+    "PP-OCRv4_server_det",
+    "PP-OCRv4_server_rec_doc",
+    "PP-OCRv4_server_rec",
+    "PP-OCRv4_server_seal_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_mobile_rec",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_server_rec",
+    "RT-DETR-H_layout_17cls",
+    "RT-DETR-H_layout_3cls",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "SLANet",
+    "SLANet_plus",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "ta_PP-OCRv3_mobile_rec",
+    "te_PP-OCRv3_mobile_rec",
+    "UniMERNet",
+    "UVDoc",
+]
+
+
+@lru_cache(1)
+def is_huggingface_accessible():
+    try:
+        response = requests.get("https://huggingface.co", timeout=1)
+        return response.ok == True
+    except requests.exceptions.RequestException as e:
+        return False
 
 
 class OfficialModelsDict(dict):
     """Official Models Dict"""
 
+    _save_dir = Path(CACHE_DIR) / "official_models"
+
     def __getitem__(self, key):
-        url = super().__getitem__(key)
-        save_dir = Path(CACHE_DIR) / "official_models"
+        def _download_from_bos():
+            url = super(OfficialModelsDict, self).__getitem__(key)
+            download_and_extract(url, self._save_dir, f"{key}", overwrite=False)
+            return self._save_dir / f"{key}"
+
+        def _download_from_hf():
+            local_dir = self._save_dir / f"{key}"
+            try:
+                if os.path.exists(local_dir):
+                    hf_hub.snapshot_download(
+                        repo_id=f"PaddlePaddle/{key}", local_dir=local_dir
+                    )
+                else:
+                    with tempfile.TemporaryDirectory() as td:
+                        temp_dir = os.path.join(td, "temp_dir")
+                        hf_hub.snapshot_download(
+                            repo_id=f"PaddlePaddle/{key}", local_dir=temp_dir
+                        )
+                        shutil.move(temp_dir, local_dir)
+            except Exception as e:
+                logging.warning(
+                    f"Encounter exception when download model from huggingface: \n{e}.\nPaddleX would try to download from BOS."
+                )
+                return _download_from_bos()
+            return local_dir
+
         logging.info(
-            f"Using official model ({key}), the model files will be automatically downloaded and saved in {save_dir}."
+            f"Using official model ({key}), the model files will be automatically downloaded and saved in {self._save_dir}."
         )
-        download_and_extract(url, save_dir, f"{key}", overwrite=False)
-        return save_dir / f"{key}"
+
+        if (
+            MODEL_SOURCE.lower() == "huggingface"
+            and is_huggingface_accessible()
+            and key in HUGGINGFACE_MODELS
+        ):
+            return _download_from_hf()
+        elif MODEL_SOURCE.lower() == "modelscope":
+            raise Exception(
+                f"ModelScope is not supported! Please use `HuggingFace` or `BOS`."
+            )
+        else:
+            return _download_from_bos()
 
 
 official_models = OfficialModelsDict(OFFICIAL_MODELS)

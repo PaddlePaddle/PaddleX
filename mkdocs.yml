@@ -184,12 +184,14 @@ plugins:
             PaddleX时序任务模型配置文件参数说明: PaddleX Time Series Module Config Parameters
             模型产线部署: Pipeline Deploy
             高性能推理: High Performance Inference
+            打包PaddleX项目: Package PaddleX Projects
             服务化部署: Serving
-            端侧部署: Edge Deployment
+            端侧部署: On-Device Deployment
+            获取 ONNX 模型: Obtaining ONNX Models
             多硬件使用: Multi-Device Usage
             多硬件使用指南: Multi-Device Usage Guide
             飞桨多硬件安装: PaddlePaddle Installation on Multiple Devices
-            海光 DCU 飞桨安装教程: Haiguang DCU PaddlePaddle Installation Guide
+            海光 DCU 飞桨安装教程: HYGON DCU PaddlePaddle Installation Guide
             寒武纪 MLU 飞桨安装教程: Cambricon MLU PaddlePaddle Installation Guide
             昇腾 NPU 飞桨安装教程: Ascend NPU PaddlePaddle Installation Guide
             昆仑 XPU 飞桨安装教程: Kunlun XPU PaddlePaddle Installation Guide
@@ -237,6 +239,7 @@ plugins:
             心跳监测时序数据分类应用教程: Heartbeat Monitoring Time Series Data Classification Application Tutorial
             用电量长期预测应用教程: Long-term Electricity Consumption Forecasting Application Tutorial
             多语种语音识别模块: Multilingual Speech Recognition Task
+            可视化工具: VisualDL
             FAQ: FAQ
             近期更新: Recently Update
       repository: PaddlePaddle/PaddleX #仓库名称
@@ -367,7 +370,7 @@ nav:
        - 说明文件: 
          - PaddleX产线命令行使用说明: pipeline_usage/instructions/pipeline_CLI_usage.md
          - PaddleX产线Python脚本使用说明: pipeline_usage/instructions/pipeline_python_API.md
-         - 产线并行推理: pipline_usage/instructions/parallel_inference.md
+         - 产线并行推理: pipeline_usage/instructions/parallel_inference.md
   - 单功能模块使用教程:
        - OCR:
          - 文本检测模块: module_usage/tutorials/ocr_modules/text_detection.md
@@ -419,11 +422,13 @@ nav:
          - PaddleX通用模型配置文件参数说明: module_usage/instructions/config_parameters_common.md
          - PaddleX时序任务模型配置文件参数说明: module_usage/instructions/config_parameters_time_series.md
          - 模型推理 Benchmark: module_usage/instructions/benchmark.md
+         - 产线推理 Benchmark: pipeline_usage/instructions/benchmark.md
   - 模型产线部署:
        - 高性能推理: pipeline_deploy/high_performance_inference.md
        - 服务化部署: pipeline_deploy/serving.md
-       - 端侧部署: pipeline_deploy/edge_deploy.md
+       - 端侧部署: pipeline_deploy/on_device_deployment.md
        - 获取 ONNX 模型: pipeline_deploy/paddle2onnx.md
+       - 打包PaddleX项目: pipeline_deploy/packaging.md
   - 多硬件使用:
        - 多硬件使用指南: other_devices_support/multi_devices_use_guide.md
        - 飞桨多硬件安装:
@@ -479,5 +484,6 @@ nav:
        - 心跳监测时序数据分类应用实践教程: practical_tutorials/ts_classification.md
        - 用电量长期预测应用实践教程: practical_tutorials/ts_forecast.md
        - 产线部署实践教程: practical_tutorials/deployment_tutorial.md
+  - 可视化工具: VisualDL.md
   - FAQ: FAQ.md
   - 近期更新: CHANGELOG.md

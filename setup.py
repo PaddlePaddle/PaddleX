@@ -23,6 +23,7 @@ from setuptools import find_packages, setup
 DEP_SPECS = {
     "aiohttp": ">= 3.9",
     "bce-python-sdk": ">= 0.9",
+    "beautifulsoup4": "",
     "chardet": "",
     "chinese-calendar": "",
     "colorlog": "",
@@ -34,30 +35,28 @@ DEP_SPECS = {
     "filetype": ">= 1.2",
     "ftfy": "",
     "GPUtil": ">= 1.4",
+    "huggingface_hub": "",
     "imagesize": "",
     "Jinja2": "",
     "joblib": "",
-    "langchain": "== 0.2.17",
-    "langchain-community": "== 0.2.17",
+    "langchain": ">= 0.2",
+    "langchain-community": ">= 0.2",
     "langchain-core": "",
-    "langchain-openai": "== 0.1.25",
+    "langchain-openai": ">= 0.1",
     "lxml": "",
     "matplotlib": "",
-    "numpy": [
-        "== 1.24.4; python_version < '3.12'",
-        "== 1.26.4; python_version >= '3.12'",
-    ],
-    "openai": "== 1.63.2",
+    "numpy": ">= 1.24",
+    "openai": ">= 1.63",
     "opencv-contrib-python": "== 4.10.0.84",
     "openpyxl": "",
     "packaging": "",
-    "pandas": "<= 1.5.3",
+    "pandas": ">= 1.3",
     "pillow": "",
     "premailer": "",
     "prettytable": "",
     "py-cpuinfo": "",
     "pyclipper": "",
-    "pycocotools": "",
+    "pycocotools": "<=2.0.8",  # pycocotools upgrade incompatible since 2.0.9
     "pydantic": ">= 2",
     "pypdfium2": ">= 4",
     "PyYAML": "== 6.0.2",
@@ -70,7 +69,7 @@ DEP_SPECS = {
     "soundfile": "",
     "starlette": ">= 0.36",
     "tiktoken": "",
-    "tokenizers": "== 0.19.1",
+    "tokenizers": ">= 0.19",
     "tqdm": "",
     "typing-extensions": "",
     "ujson": "",
@@ -82,7 +81,7 @@ REQUIRED_DEPS = [
     "chardet",
     "colorlog",
     "filelock",
-    "GPUtil",
+    "huggingface_hub",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
@@ -112,6 +111,7 @@ EXTRAS = {
         "multimodal": [
             "einops",
             "ftfy",
+            "GPUtil",
             "Jinja2",
             "opencv-contrib-python",
             # For the same reason as in `cv`
@@ -137,10 +137,12 @@ EXTRAS = {
             "shapely",
             "tokenizers",
         ],
-        "ocr": [
+        "trans": [
+            "beautifulsoup4",
             "ftfy",
             "imagesize",
             "lxml",
+            "openai",
             "opencv-contrib-python",
             "openpyxl",
             "premailer",
@@ -148,6 +150,23 @@ EXTRAS = {
             "pypdfium2",
             "scikit-learn",
             "shapely",
+            "tokenizers",
+        ],
+        "ocr": [
+            "einops",
+            "ftfy",
+            "imagesize",
+            "Jinja2",
+            "lxml",
+            "opencv-contrib-python",
+            "openpyxl",
+            "premailer",
+            "pyclipper",
+            "pypdfium2",
+            "regex",
+            "scikit-learn",
+            "shapely",
+            "tiktoken",
             "tokenizers",
         ],
         "speech": [
@@ -276,6 +295,7 @@ def packages_and_package_data():
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
     pkg_data.append("hpip_links.html")
+    pkg_data.append("hpip_links_cu12.html")
     pkg_data.append("inference/utils/hpi_model_info_collection.json")
     ops_file_dir = "paddlex/ops"
     ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]

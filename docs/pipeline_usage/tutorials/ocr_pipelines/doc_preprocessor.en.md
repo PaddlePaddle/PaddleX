@@ -13,47 +13,52 @@ The document image preprocessing pipeline integrates two major functions: docume
 **The general document image preprocessing pipeline includes optional document image orientation classification module and document image correction module** with the following models included.
 
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
-<th>Model</th><th>Model download link</th>
-<th>Top-1 Acc（%）</th>
+<th>Model</th><th>Model Download Link</th>
+<th>Top-1 Acc (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU inference time (ms)</th>
-<th>Model storage size（M)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">                Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Train Model</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.62 / 0.59</td>
+<td>3.24 / 1.19</td>
 <td>7</td>
-<td>A document image classification model based on PP-LCNet_x1_0, containing four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
+<td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
 </tr>
 </tbody>
 </table>
 
-<p><b>Text Image Unwarping Module (Optional)：</b></p>
+<p><b>Text Image Correction Module (Optional):</b></p>
 
 <table>
 <thead>
 <tr>
-<th>Model</th><th>Model download link</th>
-<th>CER </th>
-<th>Model storage size（M)</th>
-<th>Introduction</th>
+<th>Model</th><th>Model Download Link</th>
+<th>CER</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Train Model</a></td>
+<td>UVDoc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
 <td>0.179</td>
-<td>30.3 M</td>
-<td>High-Precision Text Image Correction Model</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
+<td>30.3</td>
+<td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>
 </table>
@@ -69,12 +74,18 @@ The document image preprocessing pipeline integrates two major functions: docume
                           <li>Text Image Rectification Module: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>.</li>
                         </ul>
                     </li>
-              <li><strong>Hardware Configuration：</strong>
+              <li><strong>Hardware Configuration:</strong>
                   <ul>
                       <li>GPU: NVIDIA Tesla T4</li>
                       <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
                   </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
               </li>
           </ul>
       </li>
@@ -125,7 +136,10 @@ paddlex --pipeline doc_preprocessor \
         --save_path ./output \
         --device gpu:0
 ```
-You can refer to the parameter descriptions in [2.1.2 Python Script Integration](#212-python-script-integration) for related parameter details. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to [Pipeline Parallel Inference](../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices).
+
+<b>Note: </b>The official models would be download from HuggingFace by default. If can't access to HuggingFace, please set the environment variable `PADDLE_PDX_MODEL_SOURCE="BOS"` to change the model source to BOS. In the future, more model sources will be supported.
+
+You can refer to the parameter descriptions in [2.1.2 Python Script Integration](#212-python-script-integration) for related parameter details. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
 After running, the results will be printed to the terminal as follows:
 
@@ -226,23 +240,6 @@ In the above Python script, the following steps were executed:
   <li><b>Python Var</b>: Such as image data represented by <code>numpy.ndarray</code></li>
   <li><b>str</b>: Such as the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>As URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_doc_preprocessor_002.png">example</a>; <b>As a local directory</b>, which should contain images to be predicted, such as a local path: <code>/root/data/</code> (currently does not support directory prediction for PDFs, PDF files need to be specified to the specific file path)</li>
   <li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
-</ul>
-</td>
-<td><code>None</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>Inference device for the pipeline</td>
-<td><code>str|None</code></td>
-<td>
-<ul>
-  <li><b>CPU</b>: Like <code>cpu</code>, indicating inference using CPU;</li>
-  <li><b>GPU</b>: Like <code>gpu:0</code>, indicating inference using the first GPU;</li>
-  <li><b>NPU</b>: Like <code>npu:0</code>, indicating inference using the first NPU;</li>
-  <li><b>XPU</b>: Like <code>xpu:0</code>, indicating inference using the first XPU;</li>
-  <li><b>MLU</b>: Like <code>mlu:0</code>, indicating inference using the first MLU;</li>
-  <li><b>DCU</b>: Like <code>dcu:0</code>, indicating inference using the first DCU;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU device 0, if none, then the CPU device;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -528,6 +525,26 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -613,6 +630,404 @@ for i, res in enumerate(result["docPreprocessingResults"]):
     with open(output_img_path, "wb") as f:
         f.write(base64.b64decode(res["outputImage"]))
     print(f"Output image saved at {output_img_path}")
+</code></pre></details>
+
+<details><summary>C++</summary>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
+
+int main() {
+
+    httplib::Client client("localhost", 8080);
+    const std::string filePath = "./demo.jpg";
+    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
+    if (!file) {
+        std::cerr << "Error opening file: " << filePath << std::endl;
+        return 1;
+    }
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<char> buffer(size);
+    if (!file.read(buffer.data(), size)) {
+        std::cerr << "Error reading file." << std::endl;
+        return 1;
+    }
+
+    std::string bufferStr(buffer.data(), static_cast<size_t>(size));
+    std::string encodedFile = base64::to_base64(bufferStr);
+
+    nlohmann::json jsonObj;
+    jsonObj["file"] = encodedFile;
+    jsonObj["fileType"] = 1;
+
+    auto response = client.Post("/document-preprocessing", jsonObj.dump(), "application/json");
+
+    if (response && response->status == 200) {
+        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
+        auto result = jsonResponse["result"];
+
+        if (!result.is_object() || !result["docPreprocessingResults"].is_array()) {
+            std::cerr << "Unexpected response format." << std::endl;
+            return 1;
+        }
+
+        for (size_t i = 0; i < result["docPreprocessingResults"].size(); ++i) {
+            auto res = result["docPreprocessingResults"][i];
+
+            if (res.contains("prunedResult")) {
+                std::cout << "Preprocessed result: " << res["prunedResult"].dump() << std::endl;
+            }
+
+            if (res.contains("outputImage")) {
+                std::string outputImgPath = "out_" + std::to_string(i) + ".png";
+                std::string decodedImage = base64::from_base64(res["outputImage"].get<std::string>());
+
+                std::ofstream outFile(outputImgPath, std::ios::binary);
+                if (outFile.is_open()) {
+                    outFile.write(decodedImage.c_str(), decodedImage.size());
+                    outFile.close();
+                    std::cout << "Saved image: " << outputImgPath << std::endl;
+                } else {
+                    std::cerr << "Failed to write image: " << outputImgPath << std::endl;
+                }
+            }
+        }
+    } else {
+        std::cerr << "Request failed." << std::endl;
+        if (response) {
+            std::cerr << "HTTP status: " << response->status << std::endl;
+            std::cerr << "Response body: " << response->body << std::endl;
+        }
+        return 1;
+    }
+
+    return 0;
+}
+
+</code></pre></details>
+
+<details><summary>Java</summary>
+
+<pre><code class="language-java">import okhttp3.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        String API_URL = "http://localhost:8080/document-preprocessing";
+        String imagePath = "./demo.jpg";
+
+        File file = new File(imagePath);
+        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
+        String base64Image = Base64.getEncoder().encodeToString(fileContent);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode payload = objectMapper.createObjectNode();
+        payload.put("file", base64Image);
+        payload.put("fileType", 1);
+
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, payload.toString());
+
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                JsonNode root = objectMapper.readTree(responseBody);
+                JsonNode result = root.get("result");
+
+                JsonNode docPreprocessingResults = result.get("docPreprocessingResults");
+                for (int i = 0; i < docPreprocessingResults.size(); i++) {
+                    JsonNode item = docPreprocessingResults.get(i);
+                    int finalI = i;
+
+                    JsonNode prunedResult = item.get("prunedResult");
+                    System.out.println("Pruned Result [" + i + "]: " + prunedResult.toString());
+
+                    String outputImgBase64 = item.get("outputImage").asText();
+                    byte[] outputImgBytes = Base64.getDecoder().decode(outputImgBase64);
+                    String outputImgPath = "out_" + finalI + ".png";
+                    try (FileOutputStream fos = new FileOutputStream(outputImgPath)) {
+                        fos.write(outputImgBytes);
+                        System.out.println("Saved output image: " + outputImgPath);
+                    }
+
+                    JsonNode inputImageNode = item.get("inputImage");
+                    if (inputImageNode != null && !inputImageNode.isNull()) {
+                        String inputImageBase64 = inputImageNode.asText();
+                        byte[] inputImageBytes = Base64.getDecoder().decode(inputImageBase64);
+                        String inputImgPath = "inputImage_" + i + ".jpg";
+                        try (FileOutputStream fos = new FileOutputStream(inputImgPath)) {
+                            fos.write(inputImageBytes);
+                            System.out.println("Saved input image to: " + inputImgPath);
+                        }
+                    }
+                }
+            } else {
+                System.err.println("Request failed with HTTP code: " + response.code());
+            }
+        }
+    }
+}
+</code></pre></details>
+
+<details><summary>Go</summary>
+
+<pre><code class="language-go">package main
+
+import (
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "os"
+)
+
+func main() {
+    API_URL := "http://localhost:8080/document-preprocessing"
+    filePath := "./demo.jpg"
+
+    fileBytes, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        fmt.Printf("Error reading file: %v\n", err)
+        return
+    }
+    fileData := base64.StdEncoding.EncodeToString(fileBytes)
+
+    payload := map[string]interface{}{
+        "file":     fileData,
+        "fileType": 1,
+    }
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Printf("Error marshaling payload: %v\n", err)
+        return
+    }
+
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Printf("Error creating request: %v\n", err)
+        return
+    }
+    req.Header.Set("Content-Type", "application/json")
+
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Printf("Error sending request: %v\n", err)
+        return
+    }
+    defer res.Body.Close()
+
+    if res.StatusCode != http.StatusOK {
+        fmt.Printf("Unexpected status code: %d\n", res.StatusCode)
+        return
+    }
+
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Printf("Error reading response body: %v\n", err)
+        return
+    }
+
+    type DocPreprocessingResult struct {
+        PrunedResult         map[string]interface{} `json:"prunedResult"`
+        OutputImage          string                 `json:"outputImage"`
+        DocPreprocessingImage *string               `json:"docPreprocessingImage"`
+        InputImage           *string                `json:"inputImage"`
+    }
+
+    type Response struct {
+        Result struct {
+            DocPreprocessingResults []DocPreprocessingResult `json:"docPreprocessingResults"`
+            DataInfo                interface{}              `json:"dataInfo"`
+        } `json:"result"`
+    }
+
+    var respData Response
+    if err := json.Unmarshal(body, &respData); err != nil {
+        fmt.Printf("Error unmarshaling response: %v\n", err)
+        return
+    }
+
+    for i, res := range respData.Result.DocPreprocessingResults {
+        fmt.Printf("Result %d - prunedResult: %+v\n", i, res.PrunedResult)
+
+        imgBytes, err := base64.StdEncoding.DecodeString(res.OutputImage)
+        if err != nil {
+            fmt.Printf("Error decoding outputImage at index %d: %v\n", i, err)
+            continue
+        }
+
+        filename := fmt.Sprintf("out_%d.png", i)
+        if err := os.WriteFile(filename, imgBytes, 0644); err != nil {
+            fmt.Printf("Error saving image %s: %v\n", filename, err)
+            continue
+        }
+        fmt.Printf("Saved output image to %s\n", filename)
+    }
+}
+</code></pre></details>
+
+<details><summary>C#</summary>
+
+<pre><code class="language-csharp">using System;
+using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
+class Program
+{
+    static readonly string API_URL = "http://localhost:8080/document-preprocessing";
+    static readonly string inputFilePath = "./demo.jpg";
+
+    static async Task Main(string[] args)
+    {
+        var httpClient = new HttpClient();
+
+        byte[] fileBytes = File.ReadAllBytes(inputFilePath);
+        string fileData = Convert.ToBase64String(fileBytes);
+
+        var payload = new JObject
+        {
+            { "file", fileData },
+            { "fileType", 1 }
+        };
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
+        response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        JObject jsonResponse = JObject.Parse(responseBody);
+
+        JArray docPreResults = (JArray)jsonResponse["result"]["docPreprocessingResults"];
+        for (int i = 0; i < docPreResults.Count; i++)
+        {
+            var res = docPreResults[i];
+            Console.WriteLine($"[{i}] prunedResult:\n{res["prunedResult"]}");
+
+            string base64Image = res["outputImage"]?.ToString();
+            if (!string.IsNullOrEmpty(base64Image))
+            {
+                string outputPath = $"out_{i}.png";
+                byte[] imageBytes = Convert.FromBase64String(base64Image);
+                File.WriteAllBytes(outputPath, imageBytes);
+                Console.WriteLine($"Output image saved at {outputPath}");
+            }
+            else
+            {
+                Console.WriteLine($"outputImage at index {i} is null.");
+            }
+        }
+    }
+}
+</code></pre></details>
+
+<details><summary>Node.js</summary>
+
+<pre><code class="language-js">const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+
+const API_URL = 'http://localhost:8080/document-preprocessing';
+const imagePath = './demo.jpg';
+
+function encodeImageToBase64(filePath) {
+  const bitmap = fs.readFileSync(filePath);
+  return Buffer.from(bitmap).toString('base64');
+}
+
+const payload = {
+  file: encodeImageToBase64(imagePath),
+  fileType: 1
+};
+
+axios.post(API_URL, payload, {
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  maxBodyLength: Infinity
+})
+.then((response) => {
+  const results = response.data.result.docPreprocessingResults;
+
+  results.forEach((res, index) => {
+    console.log(`\n[${index}] prunedResult:`);
+    console.log(res.prunedResult);
+
+    const base64Image = res.outputImage;
+    if (base64Image) {
+      const outputImagePath = `out_${index}.png`;
+      const imageBuffer = Buffer.from(base64Image, 'base64');
+      fs.writeFileSync(outputImagePath, imageBuffer);
+      console.log(`Output image saved at ${outputImagePath}`);
+    } else {
+      console.log(`outputImage at index ${index} is null.`);
+    }
+  });
+})
+.catch((error) => {
+  console.error('API error:', error.message);
+});
+</code></pre></details>
+
+<details><summary>PHP</summary>
+
+<pre><code class="language-php">&lt;?php
+
+$API_URL = "http://localhost:8080/document-preprocessing";
+$image_path = "./demo.jpg";
+$output_image_path = "./out_0.png";
+
+$image_data = base64_encode(file_get_contents($image_path));
+$payload = array("file" => $image_data, "fileType" => 1);
+
+$ch = curl_init($API_URL);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+
+$result = json_decode($response, true)["result"]["docPreprocessingResults"];
+
+foreach ($result as $i => $item) {
+    echo "[$i] prunedResult:\n";
+    print_r($item["prunedResult"]);
+
+    if (!empty($item["outputImage"])) {
+        $output_image_path = "out_" . $i . ".png";
+        file_put_contents($output_image_path, base64_decode($item["outputImage"]));
+        echo "Output image saved at $output_image_path\n";
+    } else {
+        echo "No outputImage found for item $i\n";
+    }
+}
+?&gt;
 </code></pre></details>
 </details>
 <br/>

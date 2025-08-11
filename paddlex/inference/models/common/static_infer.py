@@ -22,8 +22,13 @@ import numpy as np
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps
-from ....utils.device import constr_device
-from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
+from ....utils.device import check_supported_device_type
+from ....utils.flags import (
+    DEBUG,
+    DISABLE_MKLDNN_MODEL_BL,
+    DISABLE_TRT_MODEL_BL,
+    USE_PIR_TRT,
+)
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import (
     HPIConfig,
@@ -33,16 +38,15 @@ from ...utils.hpi import (
     TensorRTConfig,
     suggest_inference_backend_and_config,
 )
+from ...utils.mkldnn_blocklist import MKLDNN_BLOCKLIST
 from ...utils.model_paths import get_model_paths
-from ...utils.pp_option import PaddlePredictorOption
+from ...utils.pp_option import PaddlePredictorOption, get_default_run_mode
+from ...utils.trt_blocklist import TRT_BLOCKLIST
 from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 
 CACHE_DIR = ".cache"
 
 INFERENCE_OPERATIONS = [
-    "PaddleCopyToDevice",
-    "PaddleCopyToHost",
-    "PaddleModelInfer",
     "PaddleInferChainLegacy",
     "MultiBackendInfer",
 ]
@@ -233,47 +237,6 @@ def _sort_inputs(inputs, names):
     return inputs
 
 
-def _concatenate(*callables):
-    def _chain(x):
-        for c in callables:
-            x = c(x)
-        return x
-
-    return _chain
-
-
-@benchmark.timeit
-class PaddleCopyToDevice:
-    def __init__(self, device_type, device_id):
-        self.device_type = device_type
-        self.device_id = device_id
-
-    def __call__(self, arrs):
-        import paddle
-
-        device_id = [self.device_id] if self.device_id is not None else self.device_id
-        device = constr_device(self.device_type, device_id)
-        paddle_tensors = [paddle.to_tensor(i, place=device) for i in arrs]
-        return paddle_tensors
-
-
-@benchmark.timeit
-class PaddleCopyToHost:
-    def __call__(self, paddle_tensors):
-        arrs = [i.numpy() for i in paddle_tensors]
-        return arrs
-
-
-@benchmark.timeit
-class PaddleModelInfer:
-    def __init__(self, predictor):
-        super().__init__()
-        self.predictor = predictor
-
-    def __call__(self, x):
-        return self.predictor.run(x)
-
-
 # FIXME: Name might be misleading
 @benchmark.timeit
 class PaddleInferChainLegacy:
@@ -308,24 +271,18 @@ class StaticInfer(metaclass=abc.ABCMeta):
 class PaddleInfer(StaticInfer):
     def __init__(
         self,
+        model_name: str,
         model_dir: Union[str, PathLike],
         model_file_prefix: str,
         option: PaddlePredictorOption,
     ) -> None:
         super().__init__()
+        self._model_name = model_name
         self.model_dir = Path(model_dir)
         self.model_file_prefix = model_file_prefix
         self._option = option
         self.predictor = self._create()
-        if INFER_BENCHMARK_USE_NEW_INFER_API:
-            device_type = self._option.device_type
-            device_type = "gpu" if device_type == "dcu" else device_type
-            copy_to_device = PaddleCopyToDevice(device_type, self._option.device_id)
-            copy_to_host = PaddleCopyToHost()
-            model_infer = PaddleModelInfer(self.predictor)
-            self.infer = _concatenate(copy_to_device, model_infer, copy_to_host)
-        else:
-            self.infer = PaddleInferChainLegacy(self.predictor)
+        self.infer = PaddleInferChainLegacy(self.predictor)
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
         names = self.predictor.get_input_names()
@@ -340,22 +297,35 @@ class PaddleInfer(StaticInfer):
         pred = self.infer(x)
         return pred
 
-    def _create(
-        self,
-    ):
-        """_create"""
-        import paddle
-        import paddle.inference
-
-        model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
-        if "paddle" not in model_paths:
-            raise RuntimeError("No valid PaddlePaddle model found")
-        model_file, params_file = model_paths["paddle"]
-
+    def _check_run_mode(self):
+        # TODO: Check if trt is available
+        # check avaliable for trt
         if (
-            self._option.model_name == "LaTeX_OCR_rec"
+            not DISABLE_TRT_MODEL_BL
+            and self._option.run_mode.startswith("trt")
+            and self._model_name in TRT_BLOCKLIST
+            and self._option.device_type == "gpu"
+        ):
+            logging.warning(
+                f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
+            )
+            self._option.run_mode = "paddle"
+
+        # check avaliable for mkldnn
+        elif (
+            not DISABLE_MKLDNN_MODEL_BL
+            and self._option.run_mode.startswith("mkldnn")
+            and self._model_name in MKLDNN_BLOCKLIST
             and self._option.device_type == "cpu"
         ):
+            logging.warning(
+                f"The model({self._model_name}) is not supported to run in MKLDNN mode! Using `paddle` instead!"
+            )
+            self._option.run_mode = "paddle"
+            return "paddle"
+
+        # check avaliable for model
+        if self._model_name == "LaTeX_OCR_rec" and self._option.device_type == "cpu":
             import cpuinfo
 
             if (
@@ -366,7 +336,22 @@ class PaddleInfer(StaticInfer):
                     "Now, the `LaTeX_OCR_rec` model only support `mkldnn` mode when running on Intel CPU devices. So using `mkldnn` instead."
                 )
             self._option.run_mode = "mkldnn"
-            logging.debug("`run_mode` updated to 'mkldnn'")
+
+    def _create(
+        self,
+    ):
+        """_create"""
+        import paddle
+        import paddle.inference
+
+        model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
+        if "paddle" not in model_paths:
+            raise RuntimeError("No valid PaddlePaddle model found")
+
+        check_supported_device_type(self._option.device_type, self._model_name)
+        self._check_run_mode()
+
+        model_file, params_file = model_paths["paddle"]
 
         if self._option.device_type == "cpu" and self._option.device_id is not None:
             self._option.device_id = None
@@ -381,7 +366,10 @@ class PaddleInfer(StaticInfer):
 
         # for TRT
         if self._option.run_mode.startswith("trt"):
-            assert self._option.device_type == "gpu"
+            assert self._option.device_type.lower() == "gpu", (
+                f"`{self._option.run_mode}` is only available on GPU devices, "
+                f"but got device_type='{self._option.device_type}'."
+            )
             cache_dir = self.model_dir / CACHE_DIR / "paddle"
             config = self._configure_trt(
                 model_file,
@@ -402,6 +390,7 @@ class PaddleInfer(StaticInfer):
                     if self._option.run_mode == "paddle_fp16"
                     else PrecisionType.Float32
                 )
+                config.disable_mkldnn()
                 config.enable_use_gpu(100, self._option.device_id, precision)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
@@ -459,15 +448,10 @@ class PaddleInfer(StaticInfer):
                 assert self._option.device_type == "cpu"
                 config.disable_gpu()
                 if "mkldnn" in self._option.run_mode:
-                    try:
-                        config.enable_mkldnn()
-                        if "bf16" in self._option.run_mode:
-                            config.enable_mkldnn_bfloat16()
-                    except Exception:
-                        logging.warning(
-                            "MKL-DNN is not available. We will disable MKL-DNN."
-                        )
-                    config.set_mkldnn_cache_capacity(-1)
+                    config.enable_mkldnn()
+                    if "bf16" in self._option.run_mode:
+                        config.enable_mkldnn_bfloat16()
+                    config.set_mkldnn_cache_capacity(self._option.mkldnn_cache_capacity)
                 else:
                     if hasattr(config, "disable_mkldnn"):
                         config.disable_mkldnn()
@@ -691,10 +675,19 @@ class HPInfer(StaticInfer):
                 )
             backend_config = self._config.backend_config or {}
 
-        if backend == "paddle" and not backend_config:
-            logging.warning(
-                "The Paddle Inference backend is selected with the default configuration. This may not provide optimal performance."
-            )
+        if backend == "paddle":
+            if not backend_config:
+                is_default_config = True
+            elif backend_config.keys() != {"run_mode"}:
+                is_default_config = False
+            else:
+                is_default_config = backend_config["run_mode"] == get_default_run_mode(
+                    self._config.pdx_model_name, self._config.device_type
+                )
+            if is_default_config:
+                logging.warning(
+                    "The Paddle Inference backend is selected with the default configuration. This may not provide optimal performance."
+                )
 
         return backend, backend_config
 
@@ -729,12 +722,20 @@ class HPInfer(StaticInfer):
                     trt_dynamic_shape_input_data,
                 )
                 kwargs["trt_dynamic_shape_input_data"] = trt_dynamic_shape_input_data
-        pp_option = PaddlePredictorOption(self._config.pdx_model_name, **kwargs)
+        pp_option = PaddlePredictorOption(**kwargs)
+        pp_option.setdefault_by_model_name(model_name=self._config.pdx_model_name)
         logging.info("Using Paddle Inference backend")
         logging.info("Paddle predictor option: %s", pp_option)
-        return PaddleInfer(self._model_dir, self._model_file_prefix, option=pp_option)
+        return PaddleInfer(
+            self._config.pdx_model_name,
+            self._model_dir,
+            self._model_file_prefix,
+            option=pp_option,
+        )
 
     def _build_ui_runtime(self, backend, backend_config, ui_option=None):
+        # TODO: Validate the compatibility of backends with device types
+
         from ultra_infer import ModelFormat, Runtime, RuntimeOption
 
         if ui_option is None:

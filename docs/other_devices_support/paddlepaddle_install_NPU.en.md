@@ -28,7 +28,7 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 * Download and install the Python wheel installation package
 ```bash
 # Note: You need to install the CPU version of PaddlePaddle first
-python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddlepaddle==3.0.0.dev20250430 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
 python -m pip install paddle-custom-npu -i https://www.paddlepaddle.org.cn/packages/nightly/npu
 ```
 * CANN-8.0.RC2 does not support some versions of numpy and opencv, it is recommended to install the specified versions.

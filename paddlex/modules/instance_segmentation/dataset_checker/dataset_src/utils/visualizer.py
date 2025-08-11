@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from ......utils import logging
 from ......utils.deps import function_requires_deps, is_dep_available
-from ......utils.fonts import PINGFANG_FONT_FILE_PATH
+from ......utils.fonts import PINGFANG_FONT
 
 if is_dep_available("pycocotools"):
     from pycocotools.coco import COCO
@@ -124,7 +124,7 @@ def draw_bbox(image, coco_info: "COCO", img_id):
         font_size = int(0.024 * int(image_info["width"])) + 2
     except:
         font_size = 12
-    font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+    font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
 
     image = image.convert("RGB")
     draw = ImageDraw.Draw(image)

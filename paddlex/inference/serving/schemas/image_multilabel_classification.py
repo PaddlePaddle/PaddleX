@@ -32,6 +32,7 @@ INFER_ENDPOINT: Final[str] = "/multilabel-image-classification"
 
 class InferRequest(BaseModel):
     image: str
+    visualize: Optional[bool] = None
     threshold: Optional[
         Union[float, Dict[Union[Literal["default"], int], float], List[float]]
     ] = None

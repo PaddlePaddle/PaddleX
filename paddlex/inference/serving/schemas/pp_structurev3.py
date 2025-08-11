@@ -22,7 +22,6 @@ from .shared import ocr
 __all__ = [
     "INFER_ENDPOINT",
     "InferRequest",
-    "MarkdownData",
     "LayoutParsingResult",
     "InferResult",
     "PRIMARY_OPERATIONS",
@@ -32,15 +31,15 @@ INFER_ENDPOINT: Final[str] = "/layout-parsing"
 
 
 class InferRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = False
-    useDocUnwarping: Optional[bool] = False
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
     useTextlineOrientation: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
-    useChartRecognition: Optional[bool] = False
+    useChartRecognition: Optional[bool] = None
     useRegionDetection: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
+    layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
     layoutMergeBboxesMode: Optional[Union[str, dict]] = None
@@ -62,18 +61,12 @@ class InferRequest(ocr.BaseInferRequest):
     useOcrResultsWithTableCells: bool = True
     useE2eWiredTableRecModel: bool = False
     useE2eWirelessTableRecModel: bool = True
-
-
-class MarkdownData(BaseModel):
-    text: str
-    images: Dict[str, str]
-    isStart: bool
-    isEnd: bool
+    visualize: Optional[bool] = None
 
 
 class LayoutParsingResult(BaseModel):
     prunedResult: dict
-    markdown: MarkdownData
+    markdown: ocr.MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
 
