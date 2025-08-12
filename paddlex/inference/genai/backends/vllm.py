@@ -13,8 +13,12 @@
 # limitations under the License.
 
 from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
-from ..configs.utils import backend_config_to_args, update_backend_config
-from ..models import ALL_MODEL_NAMES, get_network_class
+from ..configs.utils import (
+    backend_config_to_args,
+    set_config_defaults,
+    update_backend_config,
+)
+from ..models import ALL_MODEL_NAMES, get_model_components
 
 
 def register_models():
@@ -23,11 +27,11 @@ def register_models():
     if is_genai_engine_plugin_available("vllm-server"):
         for model_name in ALL_MODEL_NAMES:
             if model_name not in ModelRegistry.get_supported_archs():
-                net_cls = get_network_class(model_name, "vllm")
+                net_cls, _ = get_model_components(model_name, "vllm")
                 ModelRegistry.register_model(net_cls.__name__, net_cls)
 
 
-def run_vllm_server(host, port, model_dir, config):
+def run_vllm_server(host, port, model_name, model_dir, config, chat_template_path):
     require_genai_engine_plugin("vllm-server")
 
     import uvloop
@@ -43,12 +47,18 @@ def run_vllm_server(host, port, model_dir, config):
     parser = FlexibleArgumentParser()
     parser = make_arg_parser(parser)
 
+    if chat_template_path:
+        set_config_defaults(config, {"chat-template": str(chat_template_path)})
+
     update_backend_config(
         config,
-        model=model_dir,
-        host=host,
-        port=port,
+        {
+            "model": model_dir,
+            "host": host,
+            "port": port,
+        },
     )
+
     args = backend_config_to_args(config)
     args = parser.parse_args(args)
     validate_parsed_serve_args(args)

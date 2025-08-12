@@ -12,24 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-def get_network_class(backend):
-    if backend == "vllm":
-        from ._vllm import PPOCRVLForConditionalGeneration
-
-        return PPOCRVLForConditionalGeneration
-    elif backend == "sglang":
-        from ._sglang import PPOCRVLForConditionalGeneration
-
-        return PPOCRVLForConditionalGeneration
-    else:
-        raise ValueError(f"Unsupported backend: {backend}")
-
-
-def get_processor_class(backend):
-    if backend == "sglang":
-        from ._sglang import PPOCRVLImageProcessor
-
-        return PPOCRVLImageProcessor
-    else:
-        raise ValueError(f"Unsupported backend: {backend}")
+from .network import PPOCRVLForConditionalGeneration
+from .processor import PPOCRVLImageProcessor

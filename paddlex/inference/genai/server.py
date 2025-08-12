@@ -19,7 +19,7 @@ from ...utils import logging
 from ...utils.deps import is_genai_engine_plugin_available
 from .configs.utils import load_backend_config, update_backend_config
 from .constants import DEFAULT_BACKEND, SUPPORTED_BACKENDS
-from .models import get_default_config, get_model_dir
+from .models import get_chat_template_path, get_default_config, get_model_dir
 
 
 def get_arg_parser():
@@ -85,7 +85,7 @@ def run_genai_server(args=None):
         backend_config = {}
 
     try:
-        default_config = get_default_config(args.model_name, args.backend, model_dir)
+        default_config = get_default_config(args.model_name, args.backend)
     except Exception:
         logging.error(
             f"Failed to get default configuration for the model", exc_info=True
@@ -93,10 +93,20 @@ def run_genai_server(args=None):
         sys.exit(1)
     update_backend_config(
         backend_config,
-        **default_config,
+        default_config,
     )
 
-    run_server_func(args.host, args.port, model_dir, backend_config)
+    with get_chat_template_path(
+        args.model_name, args.backend, model_dir
+    ) as chat_template_path:
+        run_server_func(
+            args.host,
+            args.port,
+            args.model_name,
+            model_dir,
+            backend_config,
+            chat_template_path,
+        )
 
 
 if __name__ == "__main__":

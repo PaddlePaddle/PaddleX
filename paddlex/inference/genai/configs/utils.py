@@ -21,9 +21,15 @@ def load_backend_config(config_path):
     return config
 
 
-def update_backend_config(config, **kwargs):
-    for k, v in kwargs.items():
+def update_backend_config(config, overrides):
+    for k, v in overrides.items():
         config[k] = v
+
+
+def set_config_defaults(config, defaults):
+    for k, v in defaults.items():
+        if k not in config:
+            config[k] = v
 
 
 def backend_config_to_args(config):

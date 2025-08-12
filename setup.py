@@ -185,8 +185,10 @@ EXTRAS = {
             "openai >= 1.63",
         ],
         "genai-sglang-server": [
-            "sglang [all] == 0.4.10",
-            "torch == 2.8.0",
+            "einops",
+            "sglang [all] == 0.4.10.post2",
+            "torch == 2.7.1",
+            "transformers",
         ],
         "genai-vllm-server": [
             "einops",
@@ -298,19 +300,22 @@ def packages_and_package_data():
     for p in itertools.chain(
         _recursively_find("paddlex/configs/*", exts=[".yml", ".yaml"]),
     ):
-        if Path(p).suffix in (".pyc", ".pyo"):
-            continue
         pkg_data.append(Path(p).relative_to("paddlex").as_posix())
     pipeline_config = [
         Path(p).relative_to("paddlex").as_posix()
         for p in glob.glob("paddlex/pipelines/*.yaml")
     ]
-    pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
+    pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.append(".version")
     pkg_data.append("hpip_links.html")
     pkg_data.append("hpip_links_cu12.html")
     pkg_data.append("inference/utils/hpi_model_info_collection.json")
+    genai_chat_templates = [
+        Path(p).relative_to("paddlex").as_posix()
+        for p in glob.glob("paddlex/inference/genai/chat_templates/*.jinja")
+    ]
+    pkg_data.extend("inference/genai/models/")
     ops_file_dir = "paddlex/ops"
     ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]
     return pkgs, {
@@ -349,7 +354,6 @@ if __name__ == "__main__":
             "Intended Audience :: Developers",
             "Intended Audience :: Education",
             "Intended Audience :: Science/Research",
-            "License :: OSI Approved :: Apache Software License",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
@@ -362,6 +366,7 @@ if __name__ == "__main__":
             "Topic :: Software Development :: Libraries",
             "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-        license="Apache 2.0",
+        license="Apache-2.0",
+        license_files=["LICENSE", "THIRD_PARTY_LICENSES/*/LICENSE"],
         keywords=["paddlepaddle"],
     )

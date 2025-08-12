@@ -12,269 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import math
-from collections.abc import Iterable, Mapping, Sequence
+
+from collections.abc import Iterable
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
-from .....utils.deps import is_dep_available
+from ......utils.deps import is_dep_available
 
-if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
-
+if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
     import torch
     import torch.nn as nn
     from einops import rearrange
-    from transformers import BatchFeature
+    from sglang.srt.distributed import get_tensor_model_parallel_world_size
+    from sglang.srt.layers.activation import get_act_fn
+    from sglang.srt.layers.linear import (
+        ColumnParallelLinear,
+        QKVParallelLinear,
+        RowParallelLinear,
+    )
+    from sglang.srt.layers.quantization.base_config import QuantizationConfig
+    from sglang.srt.managers.mm_utils import (
+        MultiModalityDataPaddingPatternMultimodalTokens,
+        general_mm_embed_routine,
+    )
+    from sglang.srt.managers.schedule_batch import MultimodalDataItem, MultimodalInputs
+    from sglang.srt.model_executor.forward_batch_info import ForwardBatch
+    from sglang.srt.model_loader.weight_utils import (
+        default_weight_loader,
+        maybe_remap_kv_scale_name,
+    )
     from transformers.activations import GELUActivation
     from transformers.modeling_outputs import (
         BaseModelOutput,
         BaseModelOutputWithPooling,
     )
     from transformers.utils import torch_int
-    from vllm.config import VllmConfig
-    from vllm.distributed import get_tensor_model_parallel_world_size
-    from vllm.model_executor.layers.activation import get_act_fn
-    from vllm.model_executor.layers.linear import (
-        ColumnParallelLinear,
-        QKVParallelLinear,
-        RowParallelLinear,
-    )
-    from vllm.model_executor.layers.quantization import QuantizationConfig
-    from vllm.model_executor.model_loader.weight_utils import (
-        default_weight_loader,
-        maybe_remap_kv_scale_name,
-    )
 
-    try:
-        from vllm.model_executor.models.ernie45 import Ernie4_5_ForCausalLM
-    except ImportError:
-        from vllm.model_executor.model.ernie45 import (
-            Ernie4_5ForCausalLM as Ernie4_5_ForCausalLM,
-        )
-    from vllm.model_executor.models.interfaces import SupportsMultiModal
-    from vllm.model_executor.models.utils import (
-        AutoWeightsLoader,
-        is_pp_missing_parameter,
-        merge_multimodal_embeddings,
-    )
-    from vllm.model_executor.models.vision import get_vit_attn_backend
-    from vllm.multimodal import MULTIMODAL_REGISTRY
-    from vllm.multimodal.inputs import (
-        MultiModalDataDict,
-        MultiModalFieldConfig,
-        MultiModalKwargs,
-        NestedTensors,
-    )
-    from vllm.multimodal.parse import (
-        ImageProcessorItems,
-        ImageSize,
-        MultiModalDataItems,
-    )
-    from vllm.multimodal.processing import (
-        BaseMultiModalProcessor,
-        BaseProcessingInfo,
-        PromptReplacement,
-        PromptUpdate,
-    )
-    from vllm.multimodal.profiling import BaseDummyInputsBuilder
-    from vllm.platforms import _Backend
-    from vllm.sequence import IntermediateTensors
-
-    def smart_resize(
-        height: int,
-        width: int,
-        factor: int = 28,
-        min_pixels: int = 28 * 28 * 130,
-        max_pixels: int = 28 * 28 * 1280,
-    ):
-        """Rescales the image so that the following conditions are met:
-
-        1. Both dimensions (height and width) are divisible by 'factor'.
-
-        2. The total number of pixels is within the range ['min_pixels', 'max_pixels'].
-
-        3. The aspect ratio of the image is maintained as closely as possible.
-
-        """
-        # if height < factor or width < factor:
-        #    raise ValueError(f"height:{height} or width:{width} must be larger than factor:{factor}")
-        # if int(height < factor//4) + int(width < factor//4):
-        #     raise ValueError(f"height:{height} or width:{width} must be larger than factor:{factor//4}")
-
-        if height < factor:
-            print(
-                f"smart_resize: height={height} < factor={factor}, reset height=factor"
-            )
-            width = round((width * factor) / height)
-            height = factor
-
-        if width < factor:
-            print(f"smart_resize: width={width} < factor={factor}, reset width=factor")
-            height = round((height * factor) / width)
-            width = factor
-
-        if max(height, width) / min(height, width) > 200:
-            raise ValueError(
-                f"absolute aspect ratio must be smaller than 200, got {max(height, width) / min(height, width)}"
-            )
-        h_bar = round(height / factor) * factor
-        w_bar = round(width / factor) * factor
-        if h_bar * w_bar > max_pixels:
-            beta = math.sqrt((height * width) / max_pixels)
-            h_bar = math.floor(height / beta / factor) * factor
-            w_bar = math.floor(width / beta / factor) * factor
-        elif h_bar * w_bar < min_pixels:
-            beta = math.sqrt(min_pixels / (height * width))
-            h_bar = math.ceil(height * beta / factor) * factor
-            w_bar = math.ceil(width * beta / factor) * factor
-        return h_bar, w_bar
-
-    class PPOCRVLProcessingInfo(BaseProcessingInfo):
-
-        def get_hf_config(self):
-            return self.ctx.get_hf_config()
-
-        def get_hf_processor(self, **kwargs: object):
-            return self.ctx.get_hf_processor(**kwargs)
-
-        def get_image_processor(self, **kwargs: object):
-            return self.get_hf_processor(**kwargs).image_processor
-
-        def get_supported_mm_limits(self):
-            return {"image": None}
-
-        def get_num_image_tokens(
-            self,
-            *,
-            image_width: int,
-            image_height: int,
-        ) -> int:
-            image_processor = self.get_image_processor()
-
-            do_resize = True
-            hf_config = self.get_hf_config()
-            vision_config = hf_config.vision_config
-            patch_size = vision_config.patch_size
-            merge_size = vision_config.spatial_merge_size
-
-            if do_resize:
-                resized_height, resized_width = smart_resize(
-                    height=image_height,
-                    width=image_width,
-                    factor=patch_size * merge_size,
-                    min_pixels=image_processor.min_pixels,
-                    max_pixels=image_processor.max_pixels,
-                )
-                preprocessed_size = ImageSize(
-                    width=resized_width, height=resized_height
-                )
-            else:
-                preprocessed_size = ImageSize(width=image_width, height=image_height)
-
-            grid_t = 1
-            grid_h = preprocessed_size.height // patch_size
-            grid_w = preprocessed_size.width // patch_size
-
-            num_patches = grid_t * grid_h * grid_w
-            num_image_tokens = num_patches // (merge_size**2)
-
-            return num_image_tokens
-
-        def get_image_size_with_most_features(self) -> ImageSize:
-            hf_config = self.get_hf_config()
-            image_size = hf_config.vision_config.image_size
-            return ImageSize(height=image_size, width=image_size)
-
-    class PPOCRVLDummyInputsBuilder(BaseDummyInputsBuilder[PPOCRVLProcessingInfo]):
-
-        def get_dummy_text(self, mm_counts: Mapping[str, int]) -> str:
-            num_images = mm_counts.get("image", 0)
-
-            processor = self.info.get_hf_processor()
-            image_token = processor.image_token
-
-            return image_token * num_images
-
-        def get_dummy_mm_data(
-            self,
-            seq_len: int,
-            mm_counts: Mapping[str, int],
-        ) -> MultiModalDataDict:
-            num_images = mm_counts.get("image", 0)
-
-            (target_width, target_height) = (
-                self.info.get_image_size_with_most_features()
-            )
-
-            return {
-                "image": self._get_dummy_images(
-                    width=target_width, height=target_height, num_images=num_images
-                )
-            }
-
-    class PPOCRVLMultiModalProcessor(BaseMultiModalProcessor[PPOCRVLProcessingInfo]):
-
-        def _call_hf_processor(
-            self,
-            prompt: str,
-            mm_data: Mapping[str, object],
-            mm_kwargs: Mapping[str, object],
-            tok_kwargs: Mapping[str, object],
-        ) -> BatchFeature:
-            if mm_data:
-                processed_outputs = self.info.ctx.call_hf_processor(
-                    self.info.get_hf_processor(**mm_kwargs),
-                    dict(text=prompt, **mm_data),
-                    dict(**mm_kwargs, **tok_kwargs),
-                )
-                processed_outputs["pixel_values"] = processed_outputs[
-                    "pixel_values"
-                ].unsqueeze(0)
-            else:
-                tokenizer = self.info.get_tokenizer()
-                processed_outputs = tokenizer(
-                    prompt, add_special_tokens=True, return_tensors="pt"
-                )
-            return processed_outputs
-
-        def _get_mm_fields_config(
-            self,
-            hf_inputs: BatchFeature,
-            hf_processor_mm_kwargs: Mapping[str, object],
-        ) -> Mapping[str, MultiModalFieldConfig]:
-            return dict(
-                pixel_values=MultiModalFieldConfig.batched("image"),
-                image_grid_thw=MultiModalFieldConfig.batched("image"),
-            )
-
-        def _get_prompt_updates(
-            self,
-            mm_items: MultiModalDataItems,
-            hf_processor_mm_kwargs: Mapping[str, object],
-            out_mm_kwargs: MultiModalKwargs,
-        ) -> Sequence[PromptUpdate]:
-            hf_config = self.info.get_hf_config()
-            image_token_id = hf_config.image_token_id
-
-            def get_replacement(item_idx: int):
-                images = mm_items.get_items("image", ImageProcessorItems)
-
-                image_size = images.get_image_size(item_idx)
-                num_image_tokens = self.info.get_num_image_tokens(
-                    image_width=image_size.width,
-                    image_height=image_size.height,
-                )
-
-                return [image_token_id] * num_image_tokens
-
-            return [
-                PromptReplacement(
-                    modality="image",
-                    target=[image_token_id],
-                    replacement=get_replacement,
-                ),
-            ]
+    from .ernie4 import Ernie4_5_ForCausalLM
 
     class Projector(nn.Module):
 
@@ -497,13 +272,9 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
         cos: torch.Tensor,
         sin: torch.Tensor,
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        cos = cos.chunk(2, dim=-1)[0].contiguous()
-        sin = sin.chunk(2, dim=-1)[0].contiguous()
+        from sglang.srt.layers.rotary_embedding import apply_rotary_pos_emb
 
-        from vllm.vllm_flash_attn.layers.rotary import apply_rotary_emb
-
-        q_embed = apply_rotary_emb(q.float(), cos.float(), sin.float()).type_as(q)
-        k_embed = apply_rotary_emb(k.float(), cos.float(), sin.float()).type_as(k)
+        q_embed, k_embed = apply_rotary_pos_emb(q, k, cos, sin)
         return q_embed, k_embed
 
     class SiglipAttention(nn.Module):
@@ -552,12 +323,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                 prefix=f"{prefix}.out_proj",
             )
 
-            # Detect attention implementation.
-            self.attn_backend: _Backend = get_vit_attn_backend(support_fa=True)
-            if self.attn_backend not in {_Backend.XFORMERS}:
-                raise RuntimeError(
-                    f"Keye-VL does not support {self.attn_backend} backend now."
-                )
+            self.attn_backend = "xformers"
 
         def forward(
             self,
@@ -608,7 +374,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                     self.head_dim,
                 )
 
-            if self.attn_backend == _Backend.XFORMERS:
+            if self.attn_backend == "xformers":
                 from xformers import ops as xops
                 from xformers.ops.fmha.attn_bias import BlockDiagonalMask
 
@@ -663,12 +429,9 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
 
             self.config = config
             self.activation_fn = get_act_fn(config.hidden_act)
-            # Special handling for BNB and torchao quantization
             if quant_config and quant_config.get_name() in ["bitsandbytes", "torchao"]:
                 quantizable = True
             else:
-                # For other quantization, we require the hidden size to be a
-                # multiple of 64
                 quantizable = (
                     config.hidden_size % 64 == 0 and config.intermediate_size % 64 == 0
                 )
@@ -1036,8 +799,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                     name = name.replace(weight_name, param_name)
                     if name.endswith(".bias") and name not in params_dict:
                         continue
-                    if is_pp_missing_parameter(name, self):
-                        continue
+
                     param = params_dict[name]
                     weight_loader = param.weight_loader
                     weight_loader(param, loaded_weight, shard_id)
@@ -1048,8 +810,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                     name = maybe_remap_kv_scale_name(name, params_dict)
                     if name is None:
                         continue
-                    if is_pp_missing_parameter(name, self):
-                        continue
+
                     param = params_dict[name]
                     weight_loader = getattr(
                         param,
@@ -1060,62 +821,35 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                 loaded_params.add(name)
             return loaded_params
 
-    @MULTIMODAL_REGISTRY.register_processor(
-        PPOCRVLMultiModalProcessor,
-        info=PPOCRVLProcessingInfo,
-        dummy_inputs=PPOCRVLDummyInputsBuilder,
-    )
-    class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM, SupportsMultiModal):
+    class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM):
 
-        def __init__(self, *, vllm_config: VllmConfig, prefix: str = ""):
-            super().__init__(vllm_config=vllm_config, prefix=prefix)
+        def __init__(self, *, config, quant_config=None, prefix: str = ""):
+            super().__init__(config=config, prefix=prefix)
             config = self.config
 
             self.mlp_AR = Projector(config, config.vision_config)
             self.visual = SiglipVisionModel(config=config.vision_config)
-            self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+            if not hasattr(self.model, "get_input_embeddings"):
+                import types
 
-        def compute_logits(
-            self,
-            hidden_states,
-            sampling_metadata,
-        ) -> Optional[torch.Tensor]:
-            return self.lm_head(hidden_states)
+                self.model.get_input_embeddings = types.MethodType(
+                    get_input_embeddings, self.model
+                )
 
-        @property
-        def language_model(self):
-            return self.model
+        def pad_input_ids(self, input_ids: List[int], mm_inputs: MultimodalInputs):
+            pattern = MultiModalityDataPaddingPatternMultimodalTokens()
+            return pattern.pad_input_tokens(input_ids, mm_inputs)
 
-        def forward(
-            self,
-            input_ids: torch.Tensor,
-            positions: torch.Tensor,
-            intermediate_tensors: Optional[IntermediateTensors] = None,
-            inputs_embeds: Optional[torch.Tensor] = None,
-            **kwargs,
-        ):
-            if intermediate_tensors is not None:
-                inputs_embeds = None
+        def get_input_embeddings(self):
+            return self.model.embed_tokens
 
-            elif inputs_embeds is None:
-                vision_embeddings = self.get_multimodal_embeddings(**kwargs)
-                inputs_embeds = self.get_input_embeddings(input_ids, vision_embeddings)
-                input_ids = None
-
-            return self.language_model(
-                input_ids, positions, intermediate_tensors, inputs_embeds
+        def get_image_feature(self, items: List[MultimodalDataItem]) -> torch.Tensor:
+            pixel_values = torch.cat([item.feature for item in items], dim=0).type(
+                self.visual.dtype
             )
-
-        @classmethod
-        def get_placeholder_str(cls, modality: str, i: int) -> Optional[str]:
-            if modality.startswith("image"):
-                return "<|vision_start|><|image_pad|><|vision_end|>"
-
-            raise ValueError("Only image modality is supported")
-
-        def get_multimodal_embeddings(self, **kwargs):
-            pixel_values = kwargs["pixel_values"]
-            image_grid_thw = kwargs["image_grid_thw"]
+            image_grid_thw = torch.concat(
+                [item.image_grid_thw for item in items], dim=0
+            )
 
             if pixel_values.ndim == 6:
                 pixel_values = pixel_values.squeeze(1)
@@ -1166,25 +900,61 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
 
             return image_embeds
 
-        def get_input_embeddings(
+        def forward(
             self,
             input_ids: torch.Tensor,
-            multimodal_embeddings: Optional[NestedTensors] = None,
-        ) -> torch.Tensor:
-            inputs_embeds = self.language_model.get_input_embeddings(input_ids)
+            positions: torch.Tensor,
+            forward_batch: ForwardBatch,
+            get_embedding: bool = False,
+        ):
+            hidden_states = general_mm_embed_routine(
+                input_ids=input_ids,
+                forward_batch=forward_batch,
+                language_model=self.model,
+                multimodal_model=self,
+                positions=positions,
+            )
 
-            if multimodal_embeddings is not None and len(multimodal_embeddings) != 0:
-                inputs_embeds = merge_multimodal_embeddings(
-                    input_ids,
-                    inputs_embeds,
-                    multimodal_embeddings,
-                    self.config.image_token_id,
-                )
-
-            return inputs_embeds
+            return self.logits_processor(
+                input_ids, hidden_states, self.lm_head, forward_batch
+            )
 
         def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
+            stacked_params_mapping = [
+                # (param_name, weight_name, shard_id)
+                (".qkv_proj", ".q_proj", "q"),
+                (".qkv_proj", ".k_proj", "k"),
+                (".qkv_proj", ".v_proj", "v"),
+                (".gate_up_proj", ".gate_proj", 0),
+                (".gate_up_proj", ".up_proj", 1),
+            ]
+            params_dict = dict(self.named_parameters())
+            for name, loaded_weight in weights:
+                if "rotary_emb.inv_freq" in name:
+                    continue
+                if "head.attention" in name or "head.layernorm" in name:
+                    continue
+                if "head.mlp" in name or "head.probe" in name:
+                    continue
 
-            loader = AutoWeightsLoader(self)
-            autoloaded_weights = loader.load_weights(weights)
-            return autoloaded_weights
+                for param_name, weight_name, shard_id in stacked_params_mapping:
+                    if weight_name not in name:
+                        continue
+                    name = name.replace(weight_name, param_name)
+                    param = params_dict[name]
+                    weight_loader = param.weight_loader
+                    weight_loader(param, loaded_weight, shard_id)
+                    break
+                else:
+                    if name in params_dict.keys():
+                        param = params_dict[name]
+                        weight_loader = getattr(
+                            param, "weight_loader", default_weight_loader
+                        )
+                        weight_loader(param, loaded_weight)
+                    else:
+                        raise KeyError(f"Parameter '{name}' not found in model.")
+
+    # monkey patch for v0.4.10
+    def get_input_embeddings(self) -> nn.Embedding:
+        return self.embed_tokens

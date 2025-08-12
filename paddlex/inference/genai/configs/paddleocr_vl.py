@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
 
-
-def get_config(backend, model_dir):
+def get_config(backend):
     if backend == "vllm":
         return {
-            "trust_remote_code": True,
+            "trust-remote-code": True,
             "gpu-memory-utilization": 0.3,
-            "chat-template": str(Path(model_dir, "chat_template.jinja")),
+        }
+    elif backend == "sglang":
+        return {
+            "trust-remote-code": True,
         }
     else:
         raise ValueError(f"Unsupported backend: {backend}")
