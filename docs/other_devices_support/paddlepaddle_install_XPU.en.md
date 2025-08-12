@@ -4,7 +4,8 @@ comments: true
 
 # Kunlun XPU PaddlePaddle Installation Tutorial
 
-Currently, PaddleX supports Kunlun R200/R300 and other chips. Considering environmental differences, we recommend using the <b>Kunlun XPU development image officially released by PaddlePaddle</b>, which is pre-installed with the Kunlun basic runtime environment library (XRE).
+Currently, PaddleX supports Kunlun R200/R300/P800 and other chips. Considering environmental differences, we recommend using the <b>Kunlun XPU development image officially released by PaddlePaddle</b>, which is pre-installed with the Kunlun basic runtime environment library (XRE).
+If you are using the P800 chip, please refer to the PaddlePaddle official documentation for installation: [P800 Installation Guide](https://www.paddlepaddle.org.cn/documentation/docs/zh/hardware_support/xpu/xpu-p800_install_cn.html).
 
 ## 1. Docker Environment Preparation
 Pull the image. This image is only for the development environment and does not include a pre-compiled PaddlePaddle installation package.
