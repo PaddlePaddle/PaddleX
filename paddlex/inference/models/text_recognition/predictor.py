@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import numpy as np
+
 from ....modules.text_recognition.model_list import MODELS
 from ....utils.fonts import (
     ARABIC_FONT,
@@ -39,9 +41,10 @@ class TextRecPredictor(BasePredictor):
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, *args, input_shape=None, **kwargs):
+    def __init__(self, *args, input_shape=None, return_word_box=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.input_shape = input_shape
+        self.return_word_box = return_word_box
         self.vis_font = self.get_vis_font()
         self.pre_tfs, self.infer, self.post_op = self._build()
 
@@ -68,12 +71,37 @@ class TextRecPredictor(BasePredictor):
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op
 
-    def process(self, batch_data):
+    def process(self, batch_data, return_word_box=False):
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
+        width_list = []
+        for img in batch_raw_imgs:
+            width_list.append(img.shape[1] / float(img.shape[0]))
+        indices = np.argsort(np.array(width_list))
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
         batch_preds = self.infer(x=x)
-        texts, scores = self.post_op(batch_preds)
+        batch_num = self.batch_sampler.batch_size
+        img_num = len(batch_raw_imgs)
+        rec_image_shape = next(
+            op["RecResizeImg"]["image_shape"]
+            for op in self.config["PreProcess"]["transform_ops"]
+            if "RecResizeImg" in op
+        )
+        imgC, imgH, imgW = rec_image_shape[:3]
+        max_wh_ratio = imgW / imgH
+        end_img_no = min(img_num, batch_num)
+        wh_ratio_list = []
+        for ino in range(0, end_img_no):
+            h, w = batch_raw_imgs[indices[ino]].shape[0:2]
+            wh_ratio = w * 1.0 / h
+            max_wh_ratio = max(max_wh_ratio, wh_ratio)
+            wh_ratio_list.append(wh_ratio)
+        texts, scores = self.post_op(
+            batch_preds,
+            return_word_box=return_word_box or self.return_word_box,
+            wh_ratio_list=wh_ratio_list,
+            max_wh_ratio=max_wh_ratio,
+        )
         return {
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,
