@@ -22,6 +22,7 @@ def get_config(backend):
     elif backend == "sglang":
         return {
             "trust-remote-code": True,
+            "mem-fraction-static": 0.3,
         }
     else:
         raise ValueError(f"Unsupported backend: {backend}")
