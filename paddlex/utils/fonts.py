@@ -108,6 +108,8 @@ if Path(str(LOCAL_FONT_FILE_PATH)).is_file():
 PINGFANG_FONT = Font(font_name="PingFang-SC-Regular.ttf")
 SIMFANG_FONT = Font(font_name="simfang.ttf")
 LATIN_FONT = Font(font_name="latin.ttf")
+TH_FONT = Font(font_name="th.ttf")
+EL_FONT = Font(font_name="el.ttf")
 KOREAN_FONT = Font(font_name="korean.ttf")
 ARABIC_FONT = Font(font_name="arabic.ttf")
 CYRILLIC_FONT = Font(font_name="cyrillic.ttf")

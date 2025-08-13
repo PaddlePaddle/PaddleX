@@ -312,6 +312,9 @@ ALL_MODELS = [
     "PP-DocBee2-3B",
     "latin_PP-OCRv5_mobile_rec",
     "korean_PP-OCRv5_mobile_rec",
+    "th_PP-OCRv5_mobile_rec",
+    "el_PP-OCRv5_mobile_rec",
+    "en_PP-OCRv5_mobile_rec",
 ]
 
 
@@ -332,6 +335,9 @@ OCR_MODELS = [
     "LaTeX_OCR_rec",
     "latin_PP-OCRv3_mobile_rec",
     "latin_PP-OCRv5_mobile_rec",
+    "en_PP-OCRv5_mobile_rec",
+    "th_PP-OCRv5_mobile_rec",
+    "el_PP-OCRv5_mobile_rec",
     "PicoDet_layout_1x",
     "PicoDet_layout_1x_table",
     "PicoDet-L_layout_17cls",

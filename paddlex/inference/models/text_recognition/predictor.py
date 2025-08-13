@@ -17,12 +17,14 @@ from ....utils.fonts import (
     ARABIC_FONT,
     CYRILLIC_FONT,
     DEVANAGARI_FONT,
+    EL_FONT,
     KANNADA_FONT,
     KOREAN_FONT,
     LATIN_FONT,
     SIMFANG_FONT,
     TAMIL_FONT,
     TELUGU_FONT,
+    TH_FONT,
 )
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
@@ -131,6 +133,12 @@ class TextRecPredictor(BasePredictor):
             "korean_PP-OCRv5_mobile_rec",
         ):
             return KOREAN_FONT
+
+        if self.model_name == "th_PP-OCRv5_mobile_rec":
+            return TH_FONT
+
+        if self.model_name == "el_PP-OCRv5_mobile_rec":
+            return EL_FONT
 
         if self.model_name == "arabic_PP-OCRv3_mobile_rec":
             return ARABIC_FONT
