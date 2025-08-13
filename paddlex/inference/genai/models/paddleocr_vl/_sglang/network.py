@@ -843,6 +843,46 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
         def get_input_embeddings(self):
             return self.model.embed_tokens
 
+        def encode_image(self, pixel_values, image_grid_thw):
+            pixel_values = pixel_values.type(self.visual.dtype)
+            siglip_position_ids = list()
+            image_grid_hws = list()
+            sample_indices = list()
+            cu_seqlens = [0]
+
+            for idx, thw in enumerate(image_grid_thw):
+                thw_tuple = tuple(thw.detach().cpu().numpy().tolist())
+                numel = np.prod(thw_tuple)
+                image_grid_hws.append(thw_tuple)
+                image_position_ids = torch.arange(numel) % np.prod(thw_tuple[1:])
+                siglip_position_ids.append(image_position_ids)
+                sample_indices.append(torch.full((numel,), idx, dtype=torch.int64))
+                cu_seqlens.append(cu_seqlens[-1] + numel)
+
+            siglip_position_ids = torch.concat(siglip_position_ids, dim=0).to(
+                pixel_values.device
+            )
+            cu_seqlens = torch.tensor(cu_seqlens, dtype=torch.int32).to(
+                pixel_values.device
+            )
+            sample_indices = torch.concat(sample_indices, dim=0).to(pixel_values.device)
+            vision_outputs = self.visual(
+                pixel_values=pixel_values,
+                image_grid_thw=image_grid_hws,
+                position_ids=siglip_position_ids,
+                vision_return_embed_list=True,
+                interpolate_pos_encoding=True,
+                sample_indices=sample_indices,
+                cu_seqlens=cu_seqlens,
+                return_pooler_output=False,
+                use_rope=True,
+                window_size=-1,
+            )
+            image_embeds = self.mlp_AR(vision_outputs, image_grid_thw)
+            image_embeds = torch.stack(image_embeds, dim=0)
+
+            return image_embeds
+
         def get_image_feature(self, items: List[MultimodalDataItem]) -> torch.Tensor:
             pixel_values = torch.cat([item.feature for item in items], dim=0).type(
                 self.visual.dtype
@@ -850,53 +890,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
             image_grid_thw = torch.concat(
                 [item.image_grid_thw for item in items], dim=0
             )
-
-            if pixel_values.ndim == 6:
-                pixel_values = pixel_values.squeeze(1)
-            if image_grid_thw.ndim == 3:
-                image_grid_thw = image_grid_thw.squeeze(1)
-            if pixel_values is not None:
-                pixel_values = pixel_values.type(self.visual.dtype)
-                # pixel_values = pixel_values.unsqueeze(0)
-                siglip_position_ids = list()
-                image_grid_hws = list()
-                sample_indices = list()
-                cu_seqlens = [0]
-
-                for idx, thw in enumerate(image_grid_thw):
-                    thw_tuple = tuple(thw.detach().cpu().numpy().tolist())
-                    numel = np.prod(thw_tuple)
-                    image_grid_hws.append(thw_tuple)
-                    image_position_ids = torch.arange(numel) % np.prod(thw_tuple[1:])
-                    siglip_position_ids.append(image_position_ids)
-                    sample_indices.append(torch.full((numel,), idx, dtype=torch.int64))
-                    cu_seqlens.append(cu_seqlens[-1] + numel)
-
-                siglip_position_ids = torch.concat(siglip_position_ids, dim=0).to(
-                    pixel_values.device
-                )
-                cu_seqlens = torch.tensor(cu_seqlens, dtype=torch.int32).to(
-                    pixel_values.device
-                )
-                sample_indices = torch.concat(sample_indices, dim=0).to(
-                    pixel_values.device
-                )
-
-                vision_outputs = self.visual(
-                    pixel_values=pixel_values,
-                    image_grid_thw=image_grid_hws,
-                    position_ids=siglip_position_ids,
-                    vision_return_embed_list=True,
-                    interpolate_pos_encoding=True,
-                    sample_indices=sample_indices,
-                    cu_seqlens=cu_seqlens,
-                    return_pooler_output=False,
-                    use_rope=True,
-                    window_size=-1,
-                )
-
-                image_embeds = self.mlp_AR(vision_outputs, image_grid_thw)
-                image_embeds = torch.stack(image_embeds, dim=0)
+            image_embeds = self.encode_image(pixel_values, image_grid_thw)
 
             return image_embeds
 
