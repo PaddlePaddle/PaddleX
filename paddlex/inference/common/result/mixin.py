@@ -34,6 +34,7 @@ from ...utils.io import (
     TextWriter,
     VideoWriter,
     XlsxWriter,
+    AudioWriter,
 )
 
 
@@ -592,6 +593,67 @@ class VideoMixin:
                     f"The result has multiple video files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             video_writer.write(save_path, video[list(video.keys())[0]], *args, **kwargs)
+
+class AudioMixin:
+    """Mixin class for adding Audio handling capabilities."""
+
+    def __init__(self, backend, *args: List, **kwargs: Dict) -> None:
+        """Initializes AudioMixin.
+
+        Args:
+            *args: Additional positional arguments to pass to the AudioWriter.
+            **kwargs: Additional keyword arguments to pass to the AudioWriter.
+        """
+        self._backend = backend
+        self._save_funcs.append(self.save_to_audio)
+
+    @abstractmethod
+    def _to_audio(self) -> Dict[str, np.array]:
+        """Abstract method to convert the result to a audio.
+
+        Returns:
+            Dict[str, np.array]: The audio representation result.
+        """
+        raise NotImplementedError
+
+    @property
+    def audio(self) -> Dict[str, np.array]:
+        """Property to get the audio representation of the result.
+
+        Returns:
+            Dict[str, np.array]: The audio representation of the result.
+        """
+        return self._to_audio()
+
+    def save_to_audio(self, save_path: str, *args: List, **kwargs: Dict) -> None:
+        """Saves the audio representation of the result to the specified path.
+
+        Args:
+            save_path (str): The path to save the audio. If the save path does not end with .mp4 or .avi, it appends the input path's stem and suffix to the save path.
+            *args: Additional positional arguments that will be passed to the audio writer.
+            **kwargs: Additional keyword arguments that will be passed to the audio writer.
+        """
+
+        def _is_audio_file(file_path):
+            mime_type, _ = mimetypes.guess_type(file_path)
+            return mime_type is not None and mime_type.startswith("audio/")
+    
+        audio_writer = AudioWriter(backend=self._backend, *args, **kwargs)
+        audio = self._to_audio()
+        if not _is_audio_file(save_path):
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
+            suffix = fn.suffix if _is_audio_file(fn) else ".mp4"
+            base_save_path = Path(save_path)
+            for key in audio:
+                save_path = base_save_path / f"{stem}_{key}{suffix}"
+                audio_writer.write(save_path.as_posix(), audio[key], *args, **kwargs)
+        else:
+            if len(audio) > 1:
+                logging.warning(
+                    f"The result has multiple audio files need to be saved. But the `save_path` has been specified as `{save_path}`!"
+                )
+            audio_writer.write(save_path, audio[list(audio.keys())[0]], *args, **kwargs)
 
 
 class MarkdownMixin:
