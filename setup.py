@@ -189,6 +189,7 @@ EXTRAS = {
             "sglang [all] == 0.4.10.post2",
             "torch == 2.7.1",
             "transformers",
+            "xformers",
         ],
         "genai-vllm-server": [
             "einops",
