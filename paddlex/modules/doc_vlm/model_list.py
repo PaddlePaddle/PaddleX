@@ -18,5 +18,5 @@ MODELS = [
     "PP-DocBee-7B",
     "PP-Chart2Table",
     "PP-DocBee2-3B",
-    "paddleocr_vl",
+    "PaddleOCR-VL",
 ]

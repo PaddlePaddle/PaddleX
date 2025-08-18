@@ -485,6 +485,12 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
             rope_deltas=self.rope_deltas,
         )
 
+    def generate(self, inputs, **kwargs):
+        kwargs = {**inputs, **kwargs}
+        with paddle.no_grad():
+            generated_ids = super().generate(**kwargs)
+        return generated_ids
+
     def prepare_inputs_for_generation(
         self,
         input_ids,

@@ -25,12 +25,12 @@ import paddle.nn as nn
 from ....common.vlm.activations import ACT2FN
 from ....common.vlm.generation import GenerationMixin
 from ....common.vlm.transformers import PretrainedModel
+from ....common.vlm.transformers.masking_utils import create_causal_mask
 from ....common.vlm.transformers.model_outputs import (
     BaseModelOutputWithPast,
     CausalLMOutputWithPast,
 )
 from ._config import PPOCRVLConfig
-from ._transformers import create_causal_mask
 
 
 class Ernie4_5RotaryEmbedding(nn.Layer):

@@ -187,6 +187,7 @@ class DocVLMPredictor(BasePredictor):
             PPChart2TableProcessor,
             PPDocBee2Processor,
             PPDocBeeProcessor,
+            PPOCRVLProcessor,
             Qwen2_5_VLImageProcessor,
             Qwen2VLImageProcessor,
             SiglipImageProcessor,
@@ -216,7 +217,9 @@ class DocVLMPredictor(BasePredictor):
             tokenizer = LlamaTokenizer.from_pretrained(
                 self.model_dir, vocab_file=vocab_file
             )
-            return
+            return PPOCRVLProcessor(
+                image_processor=image_processor, tokenizer=tokenizer
+            )
         else:
             raise NotImplementedError
 

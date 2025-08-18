@@ -125,6 +125,7 @@ class SiglipImageProcessor(object):
         do_normalize: bool = True,
         image_mean: Optional[Union[float, List[float]]] = None,
         image_std: Optional[Union[float, List[float]]] = None,
+        do_convert_rgb: bool = True,
         min_pixels: int = 28 * 28 * 130,
         max_pixels: int = 28 * 28 * 1280,
         patch_size: int = 14,
@@ -146,6 +147,7 @@ class SiglipImageProcessor(object):
         self.temporal_patch_size = temporal_patch_size
         self.merge_size = merge_size
         self.size = {"min_pixels": min_pixels, "max_pixels": max_pixels}  # not used
+        self.do_convert_rgb = do_convert_rgb
 
     @classmethod
     def from_pretrained(cls, pretrained_model_dir):
@@ -158,10 +160,10 @@ class SiglipImageProcessor(object):
     def _preprocess(
         self,
         images,
-        do_resize: bool = None,
-        do_rescale: bool = None,
-        rescale_factor: float = None,
-        do_normalize: bool = None,
+        do_resize: Optional[bool] = None,
+        do_rescale: Optional[bool] = None,
+        rescale_factor: Optional[float] = None,
+        do_normalize: Optional[bool] = None,
         image_mean: Optional[Union[float, List[float]]] = None,
         image_std: Optional[Union[float, List[float]]] = None,
         do_convert_rgb: Optional[bool] = None,
