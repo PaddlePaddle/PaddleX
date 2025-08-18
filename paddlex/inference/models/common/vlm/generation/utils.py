@@ -894,9 +894,9 @@ class GenerationMixin(object):
                 # ['是的', '嗯嗯']
         """
         if generation_config is None:
-            if (
-                self.generation_config is None
-                or self.generation_config._from_model_config
+            if self.generation_config is None or (
+                self.generation_config._from_model_config
+                and self.config._has_non_default_generation_parameters()
             ):
                 new_generation_config = GenerationConfig.from_model_config(self.config)
                 if new_generation_config != self.generation_config:
@@ -1239,7 +1239,6 @@ class GenerationMixin(object):
         synced_gpus=False,
         **model_kwargs,
     ):
-        model_kwargs["use_cache"] = model_kwargs.get("use_cache", True)
         logits_processors = (
             logits_processors
             if logits_processors is not None
@@ -1362,7 +1361,6 @@ class GenerationMixin(object):
         synced_gpus=False,
         **model_kwargs,
     ):
-        model_kwargs["use_cache"] = model_kwargs.get("use_cache", True)
 
         logits_processors = (
             logits_processors
@@ -1751,8 +1749,6 @@ class GenerationMixin(object):
         synced_gpus=False,
         **model_kwargs,
     ):
-        model_kwargs["use_cache"] = model_kwargs.get("use_cache", True)
-
         logits_processors = (
             logits_processors
             if logits_processors is not None
@@ -1958,7 +1954,6 @@ class GenerationMixin(object):
         synced_gpus=False,
         **model_kwargs,
     ):
-        model_kwargs["use_cache"] = model_kwargs.get("use_cache", True)
         logits_processors = (
             logits_processors
             if logits_processors is not None

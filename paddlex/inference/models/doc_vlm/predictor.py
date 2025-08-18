@@ -18,6 +18,7 @@ import io
 import os
 import warnings
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from typing import List
 
 from ....modules.doc_vlm.model_list import MODELS
@@ -36,6 +37,7 @@ class DocVLMPredictor(BasePredictor):
         "PP-DocBee": {"PP-DocBee-2B", "PP-DocBee-7B"},
         "PP-DocBee2": {"PP-DocBee2-3B"},
         "PP-Chart2Table": {"PP-Chart2Table"},
+        "PaddleOCR-VL": {"PaddleOCR-VL"},
     }
 
     def __init__(self, *args, **kwargs):
@@ -86,6 +88,7 @@ class DocVLMPredictor(BasePredictor):
             PPChart2TableInference,
             PPDocBee2Inference,
             PPDocBeeInference,
+            PPOCRVLForConditionalGeneration,
         )
 
         # build processor
@@ -119,6 +122,16 @@ class DocVLMPredictor(BasePredictor):
                 )
             with TemporaryDeviceChanger(self.device):
                 model = PPDocBee2Inference.from_pretrained(
+                    self.model_dir,
+                    dtype=self.dtype,
+                )
+        elif self.model_name in self.model_group["PaddleOCR-VL"]:
+            if kwargs.get("use_hpip", False):
+                warnings.warn(
+                    "The PaddelOCR-VL series does not support `use_hpip=True` for now."
+                )
+            with TemporaryDeviceChanger(self.device):
+                model = PPOCRVLForConditionalGeneration.from_pretrained(
                     self.model_dir,
                     dtype=self.dtype,
                 )
@@ -164,6 +177,7 @@ class DocVLMPredictor(BasePredictor):
 
     def build_processor(self, **kwargs):
         from ..common.tokenizer import (
+            LlamaTokenizer,
             MIXQwen2_5_Tokenizer,
             MIXQwen2Tokenizer,
             QWenTokenizer,
@@ -175,6 +189,7 @@ class DocVLMPredictor(BasePredictor):
             PPDocBeeProcessor,
             Qwen2_5_VLImageProcessor,
             Qwen2VLImageProcessor,
+            SiglipImageProcessor,
         )
 
         if self.model_name in self.model_group["PP-DocBee"]:
@@ -195,6 +210,13 @@ class DocVLMPredictor(BasePredictor):
             return PPDocBee2Processor(
                 image_processor=image_processor, tokenizer=tokenizer
             )
+        elif self.model_name in self.model_group["PaddleOCR-VL"]:
+            image_processor = SiglipImageProcessor.from_pretrained(self.model_dir)
+            vocab_file = str(Path(self.model_dir, "tokenizer.model"))
+            tokenizer = LlamaTokenizer.from_pretrained(
+                self.model_dir, vocab_file=vocab_file
+            )
+            return
         else:
             raise NotImplementedError
 

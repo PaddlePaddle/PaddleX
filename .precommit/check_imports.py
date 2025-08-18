@@ -75,6 +75,7 @@ MOD_TO_DEP = {
     "ruamel.yaml": "ruamel.yaml",
     "skimage": "scikit-image",
     "sklearn": "scikit-learn",
+    "sentencepiece": "sentencepiece",
     "sglang": "sglang",
     "shapely": "shapely",
     "soundfile": "soundfile",

@@ -61,6 +61,7 @@ BASE_DEP_SPECS = {
     "ruamel.yaml": "",
     "scikit-image": "",
     "scikit-learn": "",
+    "sentencepiece": "",
     "shapely": "",
     "soundfile": "",
     "tiktoken": "",
@@ -110,6 +111,7 @@ EXTRAS = {
             # For the same reason as in `cv`
             "pypdfium2",
             "regex",
+            "sentencepiece",
             "tiktoken",
         ],
         "ie": [
@@ -158,6 +160,7 @@ EXTRAS = {
             "pypdfium2",
             "regex",
             "scikit-learn",
+            "sentencepiece",
             "shapely",
             "tiktoken",
             "tokenizers",
