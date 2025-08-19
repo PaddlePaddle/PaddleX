@@ -8,6 +8,8 @@ The Document Understanding Pipeline is an advanced document processing technolog
 
 <b>The Document Understanding Pipeline includes document-based vision-language model modules. You can choose the model to use based on the benchmark test data below.</b>
 
+### 1.1 Model benchmark data
+
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a faster model; if you are concerned about storage size, choose a model with a smaller storage footprint.</b>
 
 > The inference time only includes the model inference time and does not include the time for pre- or post-processing.
@@ -42,7 +44,7 @@ The Document Understanding Pipeline is an advanced document processing technolog
 
 <b>Note: The total scores of the above models are based on the test results from the internal evaluation set. All images in the internal evaluation set have a resolution (height, width) of (1680, 1204), with a total of 1,196 data entries. These entries cover various scenarios such as financial reports, laws and regulations, science and engineering papers, instruction manuals, liberal arts papers, contracts, research reports, etc. There are currently no plans to make this dataset publicly available.</b>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -403,7 +405,7 @@ The Document Understanding Pipeline is an advanced document processing technolog
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 

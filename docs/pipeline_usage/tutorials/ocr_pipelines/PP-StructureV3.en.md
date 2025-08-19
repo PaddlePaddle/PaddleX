@@ -7,7 +7,9 @@ comments: true
 ## 1. Introduction to PP-StructureV3 pipeline
 Layout parsing is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout parsing can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout detection, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The PP-StructureV3 pipeline, based on the v1 pipeline, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This pipeline also provides flexible serving deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this pipeline offers the capability for custom development; you can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
-<b>The PP-StructureV3 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition.
+<b>The PP-StructureV3 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
+
+### 1.1 Model benchmark data
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize model inference speed, choose a faster inference model; if you prioritize model storage size, choose a smaller storage model.</b>
 
@@ -772,7 +774,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 
 </details>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -1314,7 +1316,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 All the model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python on your local machine to experience the effect of the PP-StructureV3 pipeline.

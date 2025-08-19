@@ -10,7 +10,9 @@ comments: true
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/doc_preprocessor/02.jpg">
 
-<b>通用文档图像预处理</b><b>产线中包含可选用的文档图像方向分类模块和文本图像矫正模块</b>包含的模型如下。
+<b>通用文档图像预处理</b><b>产线中包含可选用的文档图像方向分类模块和文本图像矫正模块</b>，每个模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型。
+
+### 1.1 模型基准测试数据
 
 > 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
 
@@ -118,7 +120,7 @@ comments: true
     </tbody>
 </table>
 
-### 1.1 产线基准测试数据
+### 1.2 产线基准测试数据
 
 <details>
 <summary>点击展开/折叠表格</summary>
@@ -479,7 +481,7 @@ comments: true
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * 备注：
-    * 由于我们未采用 NPU 和 XPU 的设备内存监测工具，因此未能统计相关设备的内存数据。
+    * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 
 ## 2. 快速开始
 PaddleX 支持在本地使用命令行或 Python 体验文档图像预处理产线的效果。

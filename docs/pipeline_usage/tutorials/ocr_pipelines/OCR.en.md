@@ -13,6 +13,8 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 
 <b>The General OCR pipeline includes mandatory text detection and text recognition modules, as well as optional document image orientation classification, text image correction, and text line orientation classification modules.</b> The document image orientation classification and text image correction modules are integrated as a document preprocessing sub-line into the General OCR pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
+### 1.1 Model benchmark data
+
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster inference model; if you care about model storage size, choose a smaller model.</b>
 
 > The inference time only includes the model inference time and does not include the time for pre- or post-processing.
@@ -652,7 +654,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     </tbody>
 </table>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -1821,7 +1823,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the general OCR pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the general OCR pipeline.

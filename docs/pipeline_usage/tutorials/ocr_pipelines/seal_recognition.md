@@ -11,7 +11,9 @@ comments: true
 
 
 <img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png"/>
-<b>印章文本识别</b>产线中包含印章印章文本检测模块和文本识别模块，以及可选的版面检测模块、文档图像方向分类模块、文本图像矫正模块。
+<b>印章文本识别</b>产线中包含印章印章文本检测模块和文本识别模块，以及可选的版面检测模块、文档图像方向分类模块、文本图像矫正模块。每个模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型。
+
+### 1.1 模型基准测试数据
 
 <b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
@@ -654,7 +656,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
     </tbody>
 </table>
 
-### 1.1 产线基准测试数据
+### 1.2 产线基准测试数据
 
 <details>
 <summary>点击展开/折叠表格</summary>
@@ -1354,7 +1356,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * 备注：
-    * 由于我们未采用 NPU 和 XPU 的设备内存监测工具，因此未能统计相关设备的内存数据。
+    * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验印章文本识别产线的效果，也可以在本地使用命令行或 Python 体验印章文本识别产线的效果。

@@ -11,7 +11,9 @@ The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve t
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/>
 
-<b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>
+<b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>Each module contains multiple models, and you can choose the model based on the benchmark test data below.
+
+### 1.1 Model benchmark data
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
 
@@ -771,7 +773,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 
 </details>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -1096,7 +1098,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.

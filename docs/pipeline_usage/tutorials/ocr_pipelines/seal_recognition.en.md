@@ -10,7 +10,9 @@ Seal text recognition is a technology that automatically extracts and recognizes
 The seal text recognition pipeline is used to recognize the text content of seals, extracting the text information from seal images and outputting it in text form. This pipeline integrates the industry-renowned end-to-end OCR system PP-OCRv4, supporting the detection and recognition of curved seal text. Additionally, this pipeline integrates an optional layout region localization module, which can accurately locate the layout position of the seal within the entire document. It also includes optional document image orientation correction and distortion correction functions. Based on this pipeline, millisecond-level accurate text content prediction can be achieved on a CPU. This pipeline also provides flexible service deployment methods, supporting the use of multiple programming languages on various hardware. Moreover, it offers custom development capabilities, allowing you to train and fine-tune on your own dataset based on this pipeline, and the trained model can be seamlessly integrated.
 
 <img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png" style="width: 70%"/>
-<b>The seal text recognition</b> pipeline includes a seal text detection module and a text recognition module, as well as optional layout detection module, document image orientation classification module, and text image correction module.
+<b>The seal text recognition</b> pipeline includes a seal text detection module and a text recognition module, as well as optional layout detection module, document image orientation classification module, and text image correction module. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
+
+### 1.1 Model benchmark data
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference speed. If you prioritize model storage size, choose a model with smaller storage size.</b>
 
@@ -635,7 +637,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     </tbody>
 </table>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -1335,7 +1337,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the seal text recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the seal text recognition pipeline.

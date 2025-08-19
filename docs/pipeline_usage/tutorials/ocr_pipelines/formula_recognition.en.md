@@ -14,6 +14,8 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 
 <b>The formula recognition pipeline includes a mandatory formula recognition module,</b> as well as optional layout detection, document image orientation classification, and text image unwarping modules. The document image orientation classification module and the text image unwarping module are integrated into the formula recognition pipeline as a document preprocessing sub-pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
+### 1.1 Model benchmarkBenchmark dataData
+
 <b>If you prioritize model accuracy, choose a model with higher precision; if you care more about inference speed, choose a faster model; if you are concerned about model storage size, choose a smaller model.</b>
 
 > The inference time only includes the model inference time and does not include the time for pre- or post-processing.
@@ -398,7 +400,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
     </tbody>
 </table>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -1187,7 +1189,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the formula recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the formula recognition pipeline.

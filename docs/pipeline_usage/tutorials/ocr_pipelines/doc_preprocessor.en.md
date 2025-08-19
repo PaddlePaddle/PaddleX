@@ -10,7 +10,9 @@ The document image preprocessing pipeline integrates two major functions: docume
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/doc_preprocessor/02.jpg">
 
-**The general document image preprocessing pipeline includes optional document image orientation classification module and document image correction module** with the following models included.
+**The general document image preprocessing pipeline includes optional document image orientation classification module and document image correction module**. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
+
+### 1.1 Model benchmark data
 
 > The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
@@ -119,7 +121,7 @@ The document image preprocessing pipeline integrates two major functions: docume
     </tbody>
 </table>
 
-### 1.1 Pipeline benchmark data
+### 1.2 Pipeline benchmark data
 
 <details>
 <summary>Click to expand/collapse the table</summary>
@@ -480,7 +482,7 @@ The document image preprocessing pipeline integrates two major functions: docume
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 
 * Note:
-    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 
