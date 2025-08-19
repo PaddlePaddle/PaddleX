@@ -96,7 +96,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             None
         """
 
-        self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
+        if (
+            config.get("use_doc_preprocessor", True)
+            or config.get("use_doc_orientation_classify", True)
+            or config.get("use_doc_unwarping", True)
+        ):
+            self.use_doc_preprocessor = True
+        else:
+            self.use_doc_preprocessor = False
         self.use_table_recognition = config.get("use_table_recognition", True)
         self.use_seal_recognition = config.get("use_seal_recognition", True)
         self.use_region_detection = config.get(
