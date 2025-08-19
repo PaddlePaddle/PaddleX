@@ -6,6 +6,32 @@ comments: true
 
 ## Latest Version Information
 
+### PaddleX v3.2.0(8.19/2025)
+
+- **Deployment Capability Upgrades:**
+    - **Fully supports PaddlePaddle framework versions 3.1.0 and 3.1.1.**
+    - **High-performance inference supports CUDA 12, with backend options including Paddle Inference and ONNX Runtime.**
+    - **High-stability serving solution is fully open-sourced, enabling users to customize Docker images and SDKs as needed.**
+    - High-stability serving solution supports invocation via manually constructed HTTP requests, allowing client applications to be developed in any programming language.
+
+- **Key Model Additions:**
+    - Added training, inference, and deployment support for PP-OCRv5 English, Thai, and Greek recognition models. **The PP-OCRv5 English model delivers an 11% improvement over the main PP-OCRv5 model in English scenarios, with the Thai model achieving an accuracy of 82.68% and the Greek model 89.28%.**
+
+- **Benchmark Enhancements:**
+    - **All pipelines support fine-grained benchmarking, enabling the measurement of end-to-end inference time as well as per-layer and per-module latency data to assist with performance analysis.**
+    - **Added key metrics such as inference latency and memory usage for commonly used configurations on mainstream hardware to the documentation, providing deployment reference for users.**
+
+- **Bug Fixes:**
+    - Fixed an issue where invalid input image file formats could cause recursive calls.
+    - Resolved ineffective parameter settings for chart recognition, seal recognition, and document pre-processing in the configuration files for the PP-DocTranslation and PP-StructureV3 pipelines.
+    - Fixed an issue where PDF files were not properly closed after inference.
+
+- **Other Updates:**
+    - **Added support for Windows users with NVIDIA 50-series graphics cards; users can install the corresponding PaddlePaddle framework version as per the installation guide.**
+    - **The PP-OCR model series now supports returning coordinates for individual characters.**
+    - The `model_name` parameter in `PaddlePredictorOption` has been moved to `PaddleInfer`, improving usability.
+    - Refactored the official model download logic, with new support for multiple model hosting platforms such as AIStudio and ModelScope.
+
 ### PaddleX v3.1.0(6.28/2025)
 
 - **Key Models:**
