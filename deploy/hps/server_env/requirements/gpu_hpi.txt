@@ -52,7 +52,7 @@ tqdm==4.67.1
     # via
     #   -c requirements/gpu.txt
     #   ultra-infer-gpu-python
-ultra-infer-gpu-python @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/new_hpi/v1.1.1/ultra_infer_gpu_python-1.1.1-cp310-cp310-linux_x86_64.whl
+ultra-infer-gpu-python @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/new_hpi/v1.2.0/ultra_infer_gpu_python-1.2.0-cp310-cp310-linux_x86_64.whl
     # via -r requirements/gpu_hpi.in
 urllib3==2.3.0
     # via

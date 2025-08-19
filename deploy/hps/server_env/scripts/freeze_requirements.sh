@@ -8,7 +8,7 @@ for device_type in 'gpu' 'cpu'; do
         -e DEVICE_TYPE="${device_type}" \
         -e OUID="$(id -u)" \
         -e OGID="$(id -g)" \
-        -v "$(pwd)/../..":/workspace \
+        -v "$(pwd)/../../..":/workspace \
         -w /workspace/deploy/hps/server_env \
         --rm \
         "paddlex-hps-rc:${device_type}" \

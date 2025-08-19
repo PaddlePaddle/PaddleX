@@ -70,7 +70,7 @@ tqdm==4.67.1
     # via
     #   -c requirements/cpu.txt
     #   ultra-infer-python
-ultra-infer-python @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/new_hpi/v1.1.1/ultra_infer_python-1.1.1-cp310-cp310-linux_x86_64.whl
+ultra-infer-python @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/new_hpi/v1.2.0/ultra_infer_python-1.2.0-cp310-cp310-linux_x86_64.whl
     # via -r requirements/cpu_hpi.in
 urllib3==2.3.0
     # via
