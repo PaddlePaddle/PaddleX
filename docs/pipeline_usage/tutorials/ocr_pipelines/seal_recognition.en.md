@@ -635,7 +635,707 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     </tbody>
 </table>
 
+### 1.1 Pipeline benchmark data
 
+<details>
+<summary>Click to expand/collapse the table</summary>
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (ms)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
+<tr>
+<td rowspan="9">seal_recognition-default</td>
+<td>Intel 6271C</td>
+<td>1441.99</td>
+<td>1013.50</td>
+<td>1005.77</td>
+<td>2850.27</td>
+<td>2593.21</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>1303.84</td>
+<td>1010.40</td>
+<td>970.29</td>
+<td>2797.28</td>
+<td>2550.80</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>102.05</td>
+<td>115.80</td>
+<td>112.72</td>
+<td>1647.39</td>
+<td>1636.58</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>67.80</td>
+<td>117.90</td>
+<td>115.03</td>
+<td>1519.09</td>
+<td>1501.98</td>
+<td>42</td>
+<td>36.22</td>
+<td>2508.00</td>
+<td>2245.78</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>115.01</td>
+<td>117.80</td>
+<td>115.16</td>
+<td>1425.80</td>
+<td>1402.56</td>
+<td>49</td>
+<td>40.27</td>
+<td>1862.00</td>
+<td>1700.93</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>77.40</td>
+<td>117.40</td>
+<td>111.64</td>
+<td>1721.26</td>
+<td>1706.75</td>
+<td>64</td>
+<td>54.90</td>
+<td>2502.00</td>
+<td>2316.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>79.64</td>
+<td>125.80</td>
+<td>118.96</td>
+<td>1727.16</td>
+<td>1711.59</td>
+<td>60</td>
+<td>48.55</td>
+<td>2212.00</td>
+<td>2042.91</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>1543.47</td>
+<td>104.70</td>
+<td>101.57</td>
+<td>4526.11</td>
+<td>2082.03</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>155.57</td>
+<td>110.20</td>
+<td>108.01</td>
+<td>1690.79</td>
+<td>1667.58</td>
+<td>82</td>
+<td>70.95</td>
+<td>1564.00</td>
+<td>1397.90</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp</td>
+<td>Intel 6271C</td>
+<td>1109.72</td>
+<td>1014.70</td>
+<td>1009.28</td>
+<td>3062.18</td>
+<td>2793.37</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>1203.15</td>
+<td>1012.60</td>
+<td>1006.68</td>
+<td>3079.39</td>
+<td>2766.63</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>119.58</td>
+<td>116.90</td>
+<td>115.51</td>
+<td>1608.80</td>
+<td>1608.61</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>76.98</td>
+<td>118.90</td>
+<td>117.49</td>
+<td>1440.84</td>
+<td>1433.75</td>
+<td>51</td>
+<td>45.50</td>
+<td>2586.00</td>
+<td>2302.80</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>124.81</td>
+<td>119.80</td>
+<td>117.69</td>
+<td>1451.77</td>
+<td>1440.18</td>
+<td>53</td>
+<td>46.24</td>
+<td>2078.00</td>
+<td>1900.35</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>102.76</td>
+<td>117.90</td>
+<td>111.53</td>
+<td>1722.02</td>
+<td>1711.42</td>
+<td>72</td>
+<td>67.92</td>
+<td>2438.00</td>
+<td>2247.23</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>95.30</td>
+<td>120.80</td>
+<td>118.38</td>
+<td>1642.00</td>
+<td>1628.48</td>
+<td>63</td>
+<td>59.62</td>
+<td>2430.00</td>
+<td>2239.23</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>2343.35</td>
+<td>104.30</td>
+<td>101.47</td>
+<td>4436.23</td>
+<td>2145.62</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>199.46</td>
+<td>109.80</td>
+<td>107.97</td>
+<td>1628.87</td>
+<td>1614.33</td>
+<td>82</td>
+<td>76.56</td>
+<td>1844.00</td>
+<td>1662.80</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-nolayout</td>
+<td>Intel 6271C</td>
+<td>662.30</td>
+<td>1021.40</td>
+<td>1014.05</td>
+<td>2541.84</td>
+<td>2317.52</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>765.66</td>
+<td>1013.70</td>
+<td>1009.71</td>
+<td>2558.11</td>
+<td>2321.48</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>102.32</td>
+<td>113.90</td>
+<td>112.78</td>
+<td>1556.05</td>
+<td>1555.78</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>63.93</td>
+<td>122.90</td>
+<td>120.53</td>
+<td>1323.04</td>
+<td>1314.25</td>
+<td>51</td>
+<td>44.89</td>
+<td>1814.00</td>
+<td>1814.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>97.27</td>
+<td>123.80</td>
+<td>121.95</td>
+<td>1349.10</td>
+<td>1344.00</td>
+<td>55</td>
+<td>48.31</td>
+<td>1208.00</td>
+<td>1208.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>97.39</td>
+<td>116.90</td>
+<td>113.28</td>
+<td>1620.22</td>
+<td>1601.19</td>
+<td>74</td>
+<td>65.77</td>
+<td>1850.00</td>
+<td>1850.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>81.86</td>
+<td>123.50</td>
+<td>120.70</td>
+<td>1477.95</td>
+<td>1465.51</td>
+<td>68</td>
+<td>56.82</td>
+<td>1570.00</td>
+<td>1570.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>2045.01</td>
+<td>103.60</td>
+<td>101.33</td>
+<td>4115.47</td>
+<td>2480.96</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>174.25</td>
+<td>112.10</td>
+<td>109.61</td>
+<td>1477.02</td>
+<td>1466.66</td>
+<td>88</td>
+<td>78.00</td>
+<td>976.00</td>
+<td>976.00</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-lightweight</td>
+<td>Intel 6271C</td>
+<td>647.56</td>
+<td>1015.50</td>
+<td>1010.90</td>
+<td>1701.61</td>
+<td>1682.21</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>600.89</td>
+<td>1011.70</td>
+<td>1004.39</td>
+<td>1794.69</td>
+<td>1702.02</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>71.31</td>
+<td>120.90</td>
+<td>118.70</td>
+<td>1601.37</td>
+<td>1592.34</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>61.25</td>
+<td>123.90</td>
+<td>121.47</td>
+<td>1483.47</td>
+<td>1471.42</td>
+<td>25</td>
+<td>22.38</td>
+<td>926.00</td>
+<td>926.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>90.24</td>
+<td>125.80</td>
+<td>124.22</td>
+<td>1410.70</td>
+<td>1399.48</td>
+<td>27</td>
+<td>24.00</td>
+<td>724.00</td>
+<td>724.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>49.11</td>
+<td>131.90</td>
+<td>124.07</td>
+<td>1820.23</td>
+<td>1809.12</td>
+<td>29</td>
+<td>25.00</td>
+<td>940.00</td>
+<td>940.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>62.53</td>
+<td>131.80</td>
+<td>129.06</td>
+<td>1668.08</td>
+<td>1656.94</td>
+<td>38</td>
+<td>31.33</td>
+<td>680.00</td>
+<td>680.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>696.42</td>
+<td>106.60</td>
+<td>104.71</td>
+<td>1176.22</td>
+<td>1155.02</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>89.92</td>
+<td>120.80</td>
+<td>117.79</td>
+<td>1492.52</td>
+<td>1481.60</td>
+<td>49</td>
+<td>44.25</td>
+<td>490.00</td>
+<td>490.00</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-lightweightlayout</td>
+<td>Intel 6271C</td>
+<td>256.55</td>
+<td>1018.90</td>
+<td>1012.30</td>
+<td>2759.20</td>
+<td>2417.41</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>294.96</td>
+<td>1017.60</td>
+<td>1009.56</td>
+<td>2718.50</td>
+<td>2400.95</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>55.61</td>
+<td>136.30</td>
+<td>128.47</td>
+<td>1565.15</td>
+<td>1564.68</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>39.48</td>
+<td>115.90</td>
+<td>115.12</td>
+<td>1313.98</td>
+<td>1305.40</td>
+<td>42</td>
+<td>31.33</td>
+<td>2896.00</td>
+<td>2896.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>60.79</td>
+<td>119.80</td>
+<td>117.14</td>
+<td>1268.04</td>
+<td>1257.68</td>
+<td>54</td>
+<td>32.00</td>
+<td>1956.00</td>
+<td>1956.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>48.73</td>
+<td>119.00</td>
+<td>111.67</td>
+<td>1735.01</td>
+<td>1709.83</td>
+<td>66</td>
+<td>55.43</td>
+<td>2394.00</td>
+<td>2394.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>46.02</td>
+<td>118.90</td>
+<td>118.48</td>
+<td>1596.27</td>
+<td>1585.00</td>
+<td>63</td>
+<td>42.83</td>
+<td>2376.00</td>
+<td>2376.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>789.23</td>
+<td>112.40</td>
+<td>102.80</td>
+<td>6106.27</td>
+<td>2249.03</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>79.36</td>
+<td>111.90</td>
+<td>108.66</td>
+<td>1510.57</td>
+<td>1502.12</td>
+<td>83</td>
+<td>53.82</td>
+<td>1714.00</td>
+<td>1714.00</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-nolayout-lightweight</td>
+<td>Intel 6271C</td>
+<td>149.97</td>
+<td>1027.50</td>
+<td>1022.43</td>
+<td>1245.17</td>
+<td>1206.22</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>126.58</td>
+<td>1024.70</td>
+<td>1014.78</td>
+<td>1211.13</td>
+<td>1194.93</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>57.79</td>
+<td>131.70</td>
+<td>128.79</td>
+<td>1532.17</td>
+<td>1513.78</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>42.42</td>
+<td>133.00</td>
+<td>129.92</td>
+<td>1169.25</td>
+<td>1167.00</td>
+<td>13</td>
+<td>12.17</td>
+<td>610.00</td>
+<td>610.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>68.18</td>
+<td>132.70</td>
+<td>128.90</td>
+<td>1269.38</td>
+<td>1264.15</td>
+<td>13</td>
+<td>11.44</td>
+<td>488.00</td>
+<td>488.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>39.22</td>
+<td>134.90</td>
+<td>128.48</td>
+<td>1530.35</td>
+<td>1520.96</td>
+<td>12</td>
+<td>11.00</td>
+<td>690.00</td>
+<td>681.67</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>47.19</td>
+<td>141.90</td>
+<td>139.48</td>
+<td>1458.07</td>
+<td>1454.14</td>
+<td>16</td>
+<td>13.57</td>
+<td>398.00</td>
+<td>398.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>275.15</td>
+<td>110.30</td>
+<td>109.19</td>
+<td>1100.36</td>
+<td>1097.53</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>68.63</td>
+<td>125.90</td>
+<td>123.15</td>
+<td>1389.43</td>
+<td>1379.54</td>
+<td>32</td>
+<td>30.44</td>
+<td>254.00</td>
+<td>254.00</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>description</th></tr>
+<tr>
+<td>seal_recognition-default</td>
+<td>Default configuration</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp</td>
+<td>Based on the default configuration, document image preprocessing is disabled</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-nolayout</td>
+<td>Based on the default configuration, document image preprocessing is disabled</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-lightweight</td>
+<td>Based on the default configuration, document image preprocessing is disabled, and lightweight models PP-OCRv4_mobile_seal_det and PP-OCRv4_mobile_rec are used</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-lightweightlayout</td>
+<td>Based on the default configuration, document image preprocessing is disabled, and the lightweight layout region detection model PP-DocLayout-S is used</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-nolayout-lightweight</td>
+<td>Based on the default configuration, document image preprocessing and layout region detection are disabled, and lightweight models PP-OCRv4_mobile_seal_det and PP-OCRv4_mobile_rec are used</td>
+</tr>
+</table>
+</details>
+
+
+* Test environment:
+    * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
+    * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
+    * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
+
+* Note:
+    * Since we did not utilize device memory monitoring tools for NPU and XPU, we were unable to collect the corresponding device memory data.
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the seal text recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the seal text recognition pipeline.

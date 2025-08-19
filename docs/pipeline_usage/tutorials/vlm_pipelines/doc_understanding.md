@@ -45,6 +45,58 @@ comments: true
 
 <b>注：以上模型总分为内部评估集模型测试结果，内部评估集所有图像分辨率 (height, width) 为 (1680,1204)，共1196条数据，包括了财报、法律法规、理工科论文、说明书、文科论文、合同、研报等场景，暂时未有计划公开。</b>
 
+### 1.1 产线基准测试数据
+
+<details>
+<summary>点击展开/折叠表格</summary>
+
+<table border="1">
+<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (ms)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
+<tr>
+<td rowspan="2">doc_understanding-default</td>
+<td>Hygon 7490 + P800</td>
+<td>26614.69</td>
+<td>101.90</td>
+<td>100.07</td>
+<td>3112.36</td>
+<td>3112.27</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>16887.80</td>
+<td>101.70</td>
+<td>100.09</td>
+<td>2959.31</td>
+<td>2959.25</td>
+<td>100</td>
+<td>42.85</td>
+<td>17254.00</td>
+<td>17252.01</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>description</th></tr>
+<tr>
+<td>doc_understanding-default</td>
+<td>默认配置</td>
+</tr>
+</table>
+</details>
+
+
+* 测试环境：
+    * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
+    * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
+    * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
+
+* 备注：
+    * 由于我们未采用 NPU 和 XPU 的设备内存监测工具，因此未能统计相关设备的内存数据。
 
 ## 2. 快速开始
 
