@@ -65,7 +65,7 @@ The core task of structure analysis is to parse and segment the content of input
 </table>
 
 
-* <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure caption, table, table caption, seal, figure title, figure, header image, footer image, and sidebar text</b>
+* <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure title, table, table title, seal, chart title, chart, header image, footer image, and sidebar text</b>
 <table>
 <thead>
 <tr>
