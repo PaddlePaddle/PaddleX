@@ -480,7 +480,7 @@ comments: true
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 * 测试数据：
-    * [test_data_doc_preprocessor.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_doc_preprocessor.tar)，其中包含文档方向分类和图像形变的34张图像。
+    * 测试数据包含文档方向分类和图像形变的34张图像。
 * 测试策略：
     * 使用 20 个样本进行预热，然后对整个数据集重复 5 次以进行速度性能测试。
 * 备注：

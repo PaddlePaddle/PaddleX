@@ -94,7 +94,7 @@ The Document Understanding Pipeline is an advanced document processing technolog
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 * Test data:
-    * [test_data_doc_understanding.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_doc_understanding.tar), which contains one document parsing sample and one chatQA sample, each sample contains both image and JSON formats.
+    * Test data containing one document parsing sample and one chatQA sample, each sample contains both image and JSON formats.
 * Test strategy:
     * Warm up with 2 samples, then repeat the full dataset 20 times for performance testing.
 * Note:

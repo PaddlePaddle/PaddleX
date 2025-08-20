@@ -1190,7 +1190,7 @@ comments: true
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 * 测试数据：
-    * [test_data_formula_recognition.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_formula_recognition.tar)，其中包含中文文档公式、英文文档公式、中文公式和带有公式的表格的4张图像和1个pdf。
+    * 测试数据包含中文文档公式、英文文档公式、中文公式和带有公式的表格的4张图像和1个pdf。
 * 测试策略：
     * 使用 3 个样本进行预热，然后对整个数据集重复 20 次以进行速度性能测试。
 * 备注：

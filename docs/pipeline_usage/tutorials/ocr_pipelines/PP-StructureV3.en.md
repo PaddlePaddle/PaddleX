@@ -1315,7 +1315,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 * Test data:
-    * [test_data_PP-StructureV3.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_PP-StructureV3.tar), which contains 280 images including tables, seals, formulas, and charts.
+    * Test data containing 280 images including tables, seals, formulas, and charts.
 * Test strategy:
     * Warm up with 20 samples, then repeat the full dataset once for performance testing.
 * Note:

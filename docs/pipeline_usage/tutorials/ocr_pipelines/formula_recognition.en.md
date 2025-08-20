@@ -1188,7 +1188,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
 * Test data:
-    * [test_data_formula_recognition.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_formula_recognition.tar), which contains 4 images and 1 PDF, including Chinese document formulas, English document formulas, standalone Chinese formulas, and tables with embedded formulas.
+    * Test data containing 4 images and 1 PDF, including Chinese document formulas, English document formulas, standalone Chinese formulas, and tables with embedded formulas.
 * Test strategy:
     * Warm up with 3 samples, then repeat the full dataset 20 times for performance testing.
 * Note:
