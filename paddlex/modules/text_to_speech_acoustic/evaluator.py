@@ -18,10 +18,10 @@ from ...utils.errors import UnsupportedAPIError
 
 
 class TextToSpeechAcousticEvaluator(BaseEvaluator):
-    """Instance Fastspeech2Model Model Evaluator"""
+    """Instance Fastspeech2 Model Evaluator"""
 
     entities = MODELS
 
     def __init__(self, config):
         # not support for now
-        raise UnsupportedAPIError("Fastspeech2Model model not support evaluate for now.")
+        raise UnsupportedAPIError("Fastspeech2 model not support evaluate for now.")

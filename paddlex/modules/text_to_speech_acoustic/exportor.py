@@ -23,6 +23,5 @@ class TextToSpeechAcousticExportor(BaseExportor):
     entities = MODELS
 
     def __init__(self, config):
-            """
         # not support for now
         raise UnsupportedAPIError("Fastspeech2Model model not support export for now.")
