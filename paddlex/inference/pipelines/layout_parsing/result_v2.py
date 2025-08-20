@@ -230,6 +230,18 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
+        parsing_res_list: List[LayoutBlock] = self["parsing_res_list"]
+        parsing_res_list = [
+            {
+                "block_label": parsing_res.label,
+                "block_content": parsing_res.content,
+                "block_bbox": parsing_res.bbox,
+                "block_id": parsing_res.index,
+                "block_order": parsing_res.order_index,
+            }
+            for parsing_res in parsing_res_list
+        ]
+        data["parsing_res_list"] = parsing_res_list
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["layout_det_res"] = self["layout_det_res"].str["res"]
@@ -271,12 +283,14 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
-        parsing_res_list = self["parsing_res_list"]
+        parsing_res_list: List[LayoutBlock] = self["parsing_res_list"]
         parsing_res_list = [
             {
                 "block_label": parsing_res.label,
                 "block_content": parsing_res.content,
                 "block_bbox": parsing_res.bbox,
+                "block_id": parsing_res.index,
+                "block_order": parsing_res.order_index,
             }
             for parsing_res in parsing_res_list
         ]

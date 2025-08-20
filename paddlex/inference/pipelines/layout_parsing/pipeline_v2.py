@@ -830,11 +830,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         parsing_res_list = self.sort_layout_parsing_blocks(layout_parsing_page)
 
-        index = 1
-        for block in parsing_res_list:
+        order_index = 1
+        for index, block in enumerate(parsing_res_list):
+            block.index = index
             if block.label in BLOCK_LABEL_MAP["visualize_index_labels"]:
-                block.order_index = index
-                index += 1
+                block.order_index = order_index
+                order_index += 1
 
         return parsing_res_list
 
