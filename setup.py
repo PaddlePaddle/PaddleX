@@ -76,7 +76,7 @@ BASE_DEP_SPECS = {
 }
 
 REQUIRED_DEPS = [
-    "aistudio_sdk",
+    "aistudio-sdk",
     "chardet",
     "colorlog",
     "filelock",

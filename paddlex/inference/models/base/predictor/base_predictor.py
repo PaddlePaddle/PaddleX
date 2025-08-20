@@ -400,6 +400,7 @@ class BasePredictor(
             device_info = None
         if pp_option is None:
             pp_option = PaddlePredictorOption()
+
         if device_info:
             pp_option.device_type = device_info[0]
             pp_option.device_id = device_info[1]
@@ -473,3 +474,6 @@ class BasePredictor(
             device_id = device_ids[0]
         else:
             device_id = None
+        if device_ids and len(device_ids) > 1:
+            logging.debug("Got multiple device IDs. Using the first one: %d", device_id)
+        return device_type, device_id
