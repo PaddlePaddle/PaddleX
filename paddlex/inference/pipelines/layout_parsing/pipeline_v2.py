@@ -96,7 +96,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             None
         """
 
-        self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
+        if (
+            config.get("use_doc_preprocessor", True)
+            or config.get("use_doc_orientation_classify", True)
+            or config.get("use_doc_unwarping", True)
+        ):
+            self.use_doc_preprocessor = True
+        else:
+            self.use_doc_preprocessor = False
         self.use_table_recognition = config.get("use_table_recognition", True)
         self.use_seal_recognition = config.get("use_seal_recognition", True)
         self.use_region_detection = config.get(
@@ -195,16 +202,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 formula_recognition_config,
             )
 
-        if self.use_chart_recognition:
-            chart_recognition_config = config.get("SubModules", {}).get(
-                "ChartRecognition",
-                {
-                    "model_config_error": "config error for block_region_detection_model!"
-                },
-            )
-            self.chart_recognition_model = self.create_model(
-                chart_recognition_config,
-            )
+        # TODO(gaotingquan): init the model at any time
+        chart_recognition_config = config.get("SubModules", {}).get(
+            "ChartRecognition",
+            {"model_config_error": "config error for block_region_detection_model!"},
+        )
+        self.chart_recognition_model = self.create_model(
+            chart_recognition_config,
+        )
 
         return
 
@@ -453,7 +458,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 crop_box = layout_det_res["boxes"][layout_box_idx]["coordinate"]
                 x1, y1, x2, y2 = [int(i) for i in crop_box]
                 crop_img = np.array(image)[y1:y2, x1:x2]
-                crop_img_rec_res = next(text_rec_model([crop_img]))
+                crop_img_rec_res = list(text_rec_model([crop_img]))[0]
                 crop_img_dt_poly = get_bbox_intersection(
                     crop_box, crop_box, return_format="poly"
                 )
@@ -892,13 +897,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
-        use_doc_orientation_classify: Union[bool, None] = False,
-        use_doc_unwarping: Union[bool, None] = False,
+        use_doc_orientation_classify: Union[bool, None] = None,
+        use_doc_unwarping: Union[bool, None] = None,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
-        use_chart_recognition: Union[bool, None] = False,
+        use_chart_recognition: Union[bool, None] = None,
         use_region_detection: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,

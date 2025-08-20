@@ -1,0 +1,9 @@
+
+pipeline_name: 3d_bev_detection
+
+SubModules:
+  3DBEVDetection:
+    module_name: 3d_bev_detection
+    model_name: BEVFusion
+    model_dir: null
+    batch_size: 1

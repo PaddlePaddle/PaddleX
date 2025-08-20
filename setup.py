@@ -21,6 +21,9 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 BASE_DEP_SPECS = {
+    "aiohttp": ">= 3.9",
+    "aistudio-sdk": ">=0.3.5",
+    "bce-python-sdk": ">= 0.9",
     "beautifulsoup4": "",
     "chardet": "",
     "chinese-calendar": "",
@@ -41,6 +44,7 @@ BASE_DEP_SPECS = {
     "langchain-openai": ">= 0.1",
     "lxml": "",
     "matplotlib": "",
+    "modelscope": ">=1.28.0",
     "numpy": ">= 1.24",
     "openai": ">= 1.63",
     "opencv-contrib-python": "== 4.10.0.84",
@@ -72,10 +76,12 @@ BASE_DEP_SPECS = {
 }
 
 REQUIRED_DEPS = [
+    "aistudio_sdk",
     "chardet",
     "colorlog",
     "filelock",
     "huggingface-hub",
+    "modelscope",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
@@ -146,6 +152,13 @@ EXTRAS = {
             "scikit-learn",
             "shapely",
             "tokenizers",
+        ],
+        "ocr-core": [
+            "imagesize",
+            "opencv-contrib-python",
+            "pyclipper",
+            "pypdfium2",
+            "shapely",
         ],
         "ocr": [
             "einops",

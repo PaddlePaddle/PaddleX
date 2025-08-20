@@ -128,7 +128,7 @@ class _KeypointDetectionPipeline(BasePipeline):
             single_img_res = {"input_path": img_path, "input_img": ori_img, "boxes": []}
             for box in det_res["boxes"]:
                 center, scale = self._box_xyxy2cs(box["coordinate"])
-                kpt_res = next(
+                kpt_res = list(
                     self.kpt_model(
                         {
                             "img": ori_img,
@@ -136,7 +136,7 @@ class _KeypointDetectionPipeline(BasePipeline):
                             "scale": scale,
                         }
                     )
-                )
+                )[0]
                 single_img_res["boxes"].append(
                     {
                         "coordinate": box["coordinate"],

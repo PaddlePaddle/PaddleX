@@ -157,7 +157,12 @@ def suggest_inference_backend_and_config(
 
     paddle_version = get_paddle_version()
     if (3, 0) <= paddle_version[:2] <= (3, 1) and paddle_version[3] is None:
-        paddle_version = f"paddle{paddle_version[0]}{paddle_version[1]}"
+        if paddle_version[2] == 0:
+            paddle_version = f"paddle{paddle_version[0]}{paddle_version[1]}"
+        else:
+            paddle_version = (
+                f"paddle{paddle_version[0]}{paddle_version[1]}{paddle_version[2]}"
+            )
     else:
         return (
             None,

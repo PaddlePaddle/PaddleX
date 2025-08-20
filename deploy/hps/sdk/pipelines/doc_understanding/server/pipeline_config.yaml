@@ -1,0 +1,9 @@
+
+pipeline_name: doc_understanding
+
+SubModules:
+  DocUnderstanding:
+    module_name: doc_vlm
+    model_name: PP-DocBee2-3B
+    model_dir: null
+    batch_size: 1

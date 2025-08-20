@@ -199,7 +199,7 @@ class _DocPreprocessorPipeline(BasePipeline):
                 yield DocPreprocessorResult(single_img_res)
 
 
-@pipeline_requires_extra("ocr")
+@pipeline_requires_extra("ocr", alt="ocr-core")
 class DocPreprocessorPipeline(AutoParallelImageSimpleInferencePipeline):
     entities = "doc_preprocessor"
 

@@ -9,6 +9,7 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <tr>

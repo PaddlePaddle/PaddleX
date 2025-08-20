@@ -11,6 +11,8 @@ Time series classification is a technique that categorizes time-series data into
 
 <b>The General Time Series Classification Pipeline includes a Time Series Classification module.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>

@@ -89,6 +89,11 @@ PIPELINE_ARGUMENTS = {
             "type": float,
             "help": "Sets the score threshold for text recognition.",
         },
+        {
+            "name": "--return_word_box",
+            "type": bool,
+            "help": "Determines whether to return word box",
+        },
     ],
     "object_detection": [
         {

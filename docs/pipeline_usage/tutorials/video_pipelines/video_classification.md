@@ -12,7 +12,7 @@ comments: true
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/01.jpg">
 <b>通用视频分类产线中包含了视频分类模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
-
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
 
 <table>
 <tr>

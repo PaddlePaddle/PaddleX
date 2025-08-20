@@ -36,4 +36,7 @@ MODELS = [
     "latin_PP-OCRv5_mobile_rec",
     "eslav_PP-OCRv5_mobile_rec",
     "korean_PP-OCRv5_mobile_rec",
+    "en_PP-OCRv5_mobile_rec",
+    "el_PP-OCRv5_mobile_rec",
+    "th_PP-OCRv5_mobile_rec",
 ]

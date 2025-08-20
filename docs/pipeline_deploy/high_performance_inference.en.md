@@ -126,7 +126,7 @@ pip list | grep nvidia-cuda
 pip list | grep nvidia-cudnn
 ```
 
-If you wish to use the Paddle Inference TensorRT subgraph engine, you will need to install TensorRT additionally. Please refer to the related instructions in the [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md). Note that because the underlying inference library of the high-performance inference plugin also integrates TensorRT, it is recommended to install the same version of TensorRT to avoid version conflicts. Currently, the TensorRT version integrated into the CUDA 11.8 high-performance inference plugin's underlying inference library is 8.6.1.6. If you are using the official PaddlePaddle image, you do not need to worry about version conflicts.
+If you wish to use the Paddle Inference TensorRT subgraph engine, you will need to install TensorRT additionally. Please refer to the related instructions in the [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md). Note that because the underlying inference library of the high-performance inference plugin also integrates TensorRT, it is recommended to install the same version of TensorRT to avoid version conflicts. Currently, the TensorRT version integrated into the CUDA 11.8 high-performance inference plugin's underlying inference library is 8.6.1.6. If you are using the official PaddlePaddle 3.0 Docker image, you do not need to worry about version conflicts.
 
 After confirming that the correct versions of CUDA, cuDNN, and TensorRT (optional) are installed, run:
 
@@ -505,7 +505,7 @@ When the `auto_paddle2onnx` option is enabled, an `inference.onnx` file may be a
 
 ### 2.6 Customizing the Model Inference Library
 
-`ultra-infer` is the model inference library that the high-performance inference plugin depends on. It is maintained as a sub-project under the `PaddleX/libs/ultra-infer` directory. PaddleX provides a build script for `ultra-infer`, located at `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh`. The build script, by default, builds the GPU version of `ultra-infer` and integrates three inference backends: OpenVINO, TensorRT, and ONNX Runtime.
+`ultra-infer` is the model inference library that the high-performance inference plugin depends on. It is maintained as a sub-project under the `PaddleX/deploy/ultra-infer` directory. PaddleX provides a build script for `ultra-infer`, located at `PaddleX/deploy/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh`. The build script, by default, builds the GPU version of `ultra-infer` and integrates three inference backends: OpenVINO, TensorRT, and ONNX Runtime.
 
 If you need to customize the build of `ultra-infer`, you can modify the following options in the build script according to your requirements:
 
@@ -548,7 +548,7 @@ Example:
 
 ```bash
 # Build
-cd PaddleX/libs/ultra-infer/scripts/linux
+cd PaddleX/deploy/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...
 # export WITH_GPU=...
 # export ENABLE_ORT_BACKEND=...

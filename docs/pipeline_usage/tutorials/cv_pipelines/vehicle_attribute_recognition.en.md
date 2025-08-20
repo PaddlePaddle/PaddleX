@@ -10,6 +10,8 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg"/>
 <b>The vehicle attribute recognition pipeline includes a vehicle detection module and a vehicle attribute recognition module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Vehicle Detection Module</b>:</p>
 <table>
 <tr>

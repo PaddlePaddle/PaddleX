@@ -124,7 +124,7 @@ pip list | grep nvidia-cuda
 pip list | grep nvidia-cudnn
 ```
 
-如果希望使用 Paddle Inference TensorRT 子图引擎，需额外安装 TensorRT。请参考 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md) 中的相关说明。需要注意的是，由于高性能推理插件的底层推理库也集成了 TensorRT，建议安装相同版本的 TensorRT 以避免版本冲突。目前，CUDA 11.8 的高性能推理插件底层推理库集成的 TensorRT 版本为 8.6.1.6。如果使用的是飞桨框架官方镜像，则无需关心版本冲突问题。
+如果希望使用 Paddle Inference TensorRT 子图引擎，需额外安装 TensorRT。请参考 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md) 中的相关说明。需要注意的是，由于高性能推理插件的底层推理库也集成了 TensorRT，建议安装相同版本的 TensorRT 以避免版本冲突。目前，CUDA 11.8 的高性能推理插件底层推理库集成的 TensorRT 版本为 8.6.1.6。如果使用的是飞桨框架 PaddlePaddle 3.0 的官方镜像，则无需关心版本冲突问题。
 
 确认安装了正确版本的 CUDA、cuDNN、以及 TensorRT （可选）后，执行：
 
@@ -503,7 +503,7 @@ SubModules:
 
 ### 2.6 定制模型推理库
 
-`ultra-infer` 是高性能推理底层依赖的模型推理库，在 `PaddleX/libs/ultra-infer` 目录以子项目形式维护。PaddleX 提供 `ultra-infer` 的构建脚本，位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` 。编译脚本默认构建 GPU 版本的 `ultra-infer`，集成 OpenVINO、TensorRT、ONNX Runtime 三种推理后端。
+`ultra-infer` 是高性能推理底层依赖的模型推理库，在 `PaddleX/deploy/ultra-infer` 目录以子项目形式维护。PaddleX 提供 `ultra-infer` 的构建脚本，位于 `PaddleX/deploy/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` 。编译脚本默认构建 GPU 版本的 `ultra-infer`，集成 OpenVINO、TensorRT、ONNX Runtime 三种推理后端。
 
 如果需要自定义构建 `ultra-infer`，可根据需求修改构建脚本的如下选项：
 
@@ -546,7 +546,7 @@ SubModules:
 
 ```bash
 # 构建
-cd PaddleX/libs/ultra-infer/scripts/linux
+cd PaddleX/deploy/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...
 # export WITH_GPU=...
 # export ENABLE_ORT_BACKEND=...

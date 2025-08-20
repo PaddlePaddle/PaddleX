@@ -12,6 +12,8 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 
 <b>The image anomaly detection pipeline includes an unsupervised anomaly detection module, with the following model benchmarks</b>:
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>

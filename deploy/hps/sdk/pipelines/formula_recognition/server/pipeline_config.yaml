@@ -1,0 +1,39 @@
+
+pipeline_name: formula_recognition
+
+use_layout_detection: True
+use_doc_preprocessor: True
+
+SubModules:
+  LayoutDetection:
+    module_name: layout_detection
+    model_name: PP-DocLayout_plus-L
+    model_dir: null
+    threshold: 0.5
+    layout_nms: True
+    layout_unclip_ratio: 1.0
+    layout_merge_bboxes_mode: "large"
+    batch_size: 1
+
+  FormulaRecognition:
+    module_name: formula_recognition
+    model_name: PP-FormulaNet_plus-M
+    model_dir: null
+    batch_size: 5
+
+SubPipelines:
+  DocPreprocessor:
+    pipeline_name: doc_preprocessor
+    use_doc_orientation_classify: True
+    use_doc_unwarping: True
+    SubModules:
+      DocOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null
+        batch_size: 1
+      DocUnwarping:
+        module_name: image_unwarping
+        model_name: UVDoc
+        model_dir: null
+        batch_size: 1
