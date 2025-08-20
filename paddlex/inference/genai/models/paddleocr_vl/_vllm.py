@@ -58,7 +58,6 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
         is_pp_missing_parameter,
         merge_multimodal_embeddings,
     )
-    from vllm.model_executor.models.vision import get_vit_attn_backend
     from vllm.multimodal import MULTIMODAL_REGISTRY
     from vllm.multimodal.inputs import (
         MultiModalDataDict,
@@ -552,12 +551,13 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                 prefix=f"{prefix}.out_proj",
             )
 
-            # Detect attention implementation.
-            self.attn_backend: _Backend = get_vit_attn_backend(support_fa=True)
-            if self.attn_backend not in {_Backend.XFORMERS}:
-                raise RuntimeError(
-                    f"Keye-VL does not support {self.attn_backend} backend now."
-                )
+            # TODO: Detect attention implementation.
+            self.attn_backend = _Backend.XFORMERS
+            # self.attn_backend: _Backend = get_vit_attn_backend(support_fa=True)
+            # if self.attn_backend not in {_Backend.XFORMERS}:
+            #     raise RuntimeError(
+            #         f"Keye-VL does not support {self.attn_backend} backend now."
+            #     )
 
         def forward(
             self,

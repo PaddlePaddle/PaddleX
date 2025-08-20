@@ -70,6 +70,8 @@ def run_sglang_server(host, port, model_name, model_dir, config, chat_template_p
     multimodal_model_archs.append(network_class.__name__)
     PROCESSOR_MAPPING[network_class] = processor_class
 
+    set_config_defaults(config, {{"served-model-name": model_name}})
+
     if chat_template_path:
         set_config_defaults(config, {{"chat-template": chat_template_path}})
 

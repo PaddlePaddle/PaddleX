@@ -45,7 +45,7 @@ def need_local_model(genai_config):
 
 @class_requires_deps("openai")
 class GenAIClient(object):
-    def __init__(self, base_url, **kwargs):
+    def __init__(self, base_url, model_name=None, **kwargs):
         from openai import OpenAI
 
         super().__init__()
@@ -54,8 +54,16 @@ class GenAIClient(object):
             kwargs["api_key"] = "null"
 
         self._client = OpenAI(base_url=base_url, **kwargs)
-        models = self._client.models.list()
-        self._model = models.data[0].id
+        if model_name is not None:
+            self._model = model_name
+        else:
+            try:
+                models = self._client.models.list()
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to get the model list from the OpenAI-compatible server: {e}"
+                ) from e
+            self._model = models.data[0].id
 
         self._finalizer = weakref.finalize(self, self._close, self._client)
 

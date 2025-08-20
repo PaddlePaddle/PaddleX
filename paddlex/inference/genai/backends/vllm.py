@@ -47,6 +47,8 @@ def run_vllm_server(host, port, model_name, model_dir, config, chat_template_pat
     parser = FlexibleArgumentParser()
     parser = make_arg_parser(parser)
 
+    set_config_defaults(config, {"served-model-name": model_name})
+
     if chat_template_path:
         set_config_defaults(config, {"chat-template": str(chat_template_path)})
 
