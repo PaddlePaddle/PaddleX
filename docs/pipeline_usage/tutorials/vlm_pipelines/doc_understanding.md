@@ -53,11 +53,11 @@ comments: true
 <summary>点击展开/折叠表格</summary>
 
 <table border="1">
-<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (ms)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
+<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (s)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
 <tr>
 <td rowspan="2">doc_understanding-default</td>
 <td>Hygon 7490 + P800</td>
-<td>26614.69</td>
+<td>26.61</td>
 <td>101.90</td>
 <td>100.07</td>
 <td>3112.36</td>
@@ -69,7 +69,7 @@ comments: true
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>16887.80</td>
+<td>16.89</td>
 <td>101.70</td>
 <td>100.09</td>
 <td>2959.31</td>
@@ -96,7 +96,10 @@ comments: true
     * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
-
+* 测试数据：
+    * [test_data_doc_understanding.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_doc_understanding.tar)，其中包含一个文档解析和一个chatQA的样本，每个样本包含图像、json两种形式。
+* 测试策略：
+    * 使用 2 个样本进行预热，然后对整个数据集重复 20 次以进行速度性能测试。
 * 备注：
     * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 

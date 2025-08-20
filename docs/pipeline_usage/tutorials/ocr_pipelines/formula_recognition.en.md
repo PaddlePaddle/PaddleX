@@ -406,11 +406,11 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <summary>Click to expand/collapse the table</summary>
 
 <table border="1">
-<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (ms)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
+<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (s)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
 <tr>
 <td rowspan="9">formula_recognition-default</td>
 <td>Intel 6271C</td>
-<td>26270.51</td>
+<td>26.27</td>
 <td>1039.70</td>
 <td>1003.86</td>
 <td>3093.11</td>
@@ -422,7 +422,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>18242.94</td>
+<td>18.24</td>
 <td>1048.60</td>
 <td>893.64</td>
 <td>3029.64</td>
@@ -434,7 +434,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>5971.78</td>
+<td>5.97</td>
 <td>120.80</td>
 <td>101.63</td>
 <td>2255.59</td>
@@ -446,7 +446,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>1441.69</td>
+<td>1.44</td>
 <td>111.60</td>
 <td>103.08</td>
 <td>2145.61</td>
@@ -458,7 +458,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>2028.69</td>
+<td>2.03</td>
 <td>129.80</td>
 <td>104.93</td>
 <td>2231.39</td>
@@ -470,7 +470,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>1167.13</td>
+<td>1.17</td>
 <td>109.90</td>
 <td>102.93</td>
 <td>2509.55</td>
@@ -482,7 +482,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>1581.55</td>
+<td>1.58</td>
 <td>115.90</td>
 <td>103.61</td>
 <td>2442.22</td>
@@ -494,7 +494,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>10159.43</td>
+<td>10.16</td>
 <td>126.60</td>
 <td>107.78</td>
 <td>3135.38</td>
@@ -506,7 +506,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>2420.85</td>
+<td>2.42</td>
 <td>115.00</td>
 <td>102.81</td>
 <td>2350.60</td>
@@ -519,7 +519,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td rowspan="9">formula_recognition-nopp</td>
 <td>Intel 6271C</td>
-<td>24857.99</td>
+<td>24.86</td>
 <td>1050.30</td>
 <td>1009.22</td>
 <td>2715.87</td>
@@ -531,7 +531,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>17002.42</td>
+<td>17.00</td>
 <td>1046.60</td>
 <td>891.66</td>
 <td>2701.11</td>
@@ -543,7 +543,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>2428.21</td>
+<td>2.43</td>
 <td>112.90</td>
 <td>102.75</td>
 <td>1972.57</td>
@@ -555,7 +555,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>1363.52</td>
+<td>1.36</td>
 <td>106.90</td>
 <td>102.16</td>
 <td>2167.37</td>
@@ -567,7 +567,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>1933.41</td>
+<td>1.93</td>
 <td>112.30</td>
 <td>103.38</td>
 <td>1878.44</td>
@@ -579,7 +579,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>1089.64</td>
+<td>1.09</td>
 <td>108.80</td>
 <td>102.04</td>
 <td>2276.06</td>
@@ -591,7 +591,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>1457.44</td>
+<td>1.46</td>
 <td>106.30</td>
 <td>102.23</td>
 <td>1972.24</td>
@@ -603,7 +603,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>13516.34</td>
+<td>13.52</td>
 <td>131.60</td>
 <td>107.52</td>
 <td>2502.56</td>
@@ -615,7 +615,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>2273.27</td>
+<td>2.27</td>
 <td>108.00</td>
 <td>101.84</td>
 <td>1942.30</td>
@@ -628,7 +628,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td rowspan="8">formula_recognition-nolayout</td>
 <td>Intel 8350C</td>
-<td>65371.52</td>
+<td>65.37</td>
 <td>1068.60</td>
 <td>1022.44</td>
 <td>2566.70</td>
@@ -640,7 +640,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>16886.29</td>
+<td>16.89</td>
 <td>118.90</td>
 <td>100.37</td>
 <td>2239.15</td>
@@ -652,7 +652,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>10305.23</td>
+<td>10.31</td>
 <td>109.90</td>
 <td>100.34</td>
 <td>2139.89</td>
@@ -664,7 +664,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>15867.71</td>
+<td>15.87</td>
 <td>118.80</td>
 <td>100.76</td>
 <td>2280.21</td>
@@ -676,7 +676,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>6451.56</td>
+<td>6.45</td>
 <td>109.90</td>
 <td>100.38</td>
 <td>2348.35</td>
@@ -688,7 +688,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>10484.44</td>
+<td>10.48</td>
 <td>113.90</td>
 <td>100.44</td>
 <td>2348.49</td>
@@ -700,7 +700,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>42118.26</td>
+<td>42.12</td>
 <td>149.50</td>
 <td>128.97</td>
 <td>2437.94</td>
@@ -712,7 +712,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>13954.69</td>
+<td>13.95</td>
 <td>114.90</td>
 <td>100.56</td>
 <td>2346.36</td>
@@ -725,7 +725,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td rowspan="8">formula_recognition-nopp-nolayout</td>
 <td>Intel 8350C</td>
-<td>56834.33</td>
+<td>56.83</td>
 <td>1067.80</td>
 <td>1023.31</td>
 <td>2173.72</td>
@@ -737,7 +737,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>16577.80</td>
+<td>16.58</td>
 <td>104.90</td>
 <td>100.18</td>
 <td>2017.30</td>
@@ -749,7 +749,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>9084.45</td>
+<td>9.08</td>
 <td>102.90</td>
 <td>100.19</td>
 <td>1747.94</td>
@@ -761,7 +761,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>13967.21</td>
+<td>13.97</td>
 <td>116.80</td>
 <td>100.45</td>
 <td>1864.97</td>
@@ -773,7 +773,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>6454.01</td>
+<td>6.45</td>
 <td>107.00</td>
 <td>100.19</td>
 <td>2163.71</td>
@@ -785,7 +785,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>9151.06</td>
+<td>9.15</td>
 <td>103.00</td>
 <td>100.24</td>
 <td>1998.28</td>
@@ -797,7 +797,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>39774.40</td>
+<td>39.77</td>
 <td>149.80</td>
 <td>129.49</td>
 <td>2098.33</td>
@@ -809,7 +809,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>11566.69</td>
+<td>11.57</td>
 <td>103.00</td>
 <td>100.37</td>
 <td>1995.27</td>
@@ -822,7 +822,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td rowspan="9">formula_recognition-nopp-lightweight</td>
 <td>Intel 6271C</td>
-<td>6538.36</td>
+<td>6.54</td>
 <td>1023.60</td>
 <td>1007.63</td>
 <td>2097.84</td>
@@ -834,7 +834,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>4720.90</td>
+<td>4.72</td>
 <td>1028.60</td>
 <td>926.98</td>
 <td>2089.03</td>
@@ -846,7 +846,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>761.03</td>
+<td>0.76</td>
 <td>116.90</td>
 <td>107.99</td>
 <td>1909.78</td>
@@ -858,7 +858,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>489.65</td>
+<td>0.49</td>
 <td>109.90</td>
 <td>105.51</td>
 <td>1789.37</td>
@@ -870,7 +870,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>665.85</td>
+<td>0.67</td>
 <td>116.80</td>
 <td>109.35</td>
 <td>1751.75</td>
@@ -882,7 +882,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>417.60</td>
+<td>0.42</td>
 <td>112.90</td>
 <td>105.16</td>
 <td>2249.38</td>
@@ -894,7 +894,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>521.10</td>
+<td>0.52</td>
 <td>108.90</td>
 <td>105.69</td>
 <td>1903.01</td>
@@ -906,7 +906,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>6153.89</td>
+<td>6.15</td>
 <td>116.00</td>
 <td>105.42</td>
 <td>2048.00</td>
@@ -918,7 +918,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>720.11</td>
+<td>0.72</td>
 <td>110.50</td>
 <td>105.53</td>
 <td>1912.62</td>
@@ -931,7 +931,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td rowspan="9">formula_recognition-nopp-lightweightlayout</td>
 <td>Intel 6271C</td>
-<td>7562.69</td>
+<td>7.56</td>
 <td>1052.60</td>
 <td>1015.57</td>
 <td>2214.38</td>
@@ -943,7 +943,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>5462.90</td>
+<td>5.46</td>
 <td>1056.60</td>
 <td>940.86</td>
 <td>2217.84</td>
@@ -955,7 +955,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>1264.31</td>
+<td>1.26</td>
 <td>115.80</td>
 <td>103.72</td>
 <td>1937.91</td>
@@ -967,7 +967,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>695.32</td>
+<td>0.70</td>
 <td>107.90</td>
 <td>102.54</td>
 <td>1740.03</td>
@@ -979,7 +979,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>1014.42</td>
+<td>1.01</td>
 <td>114.00</td>
 <td>104.15</td>
 <td>1760.52</td>
@@ -991,7 +991,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>561.21</td>
+<td>0.56</td>
 <td>107.80</td>
 <td>102.41</td>
 <td>2073.04</td>
@@ -1003,7 +1003,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>727.13</td>
+<td>0.73</td>
 <td>108.90</td>
 <td>102.77</td>
 <td>1952.25</td>
@@ -1015,7 +1015,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>2866.01</td>
+<td>2.87</td>
 <td>124.10</td>
 <td>113.46</td>
 <td>2467.97</td>
@@ -1027,7 +1027,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>1042.95</td>
+<td>1.04</td>
 <td>108.00</td>
 <td>102.42</td>
 <td>1928.40</td>
@@ -1040,7 +1040,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td rowspan="9">formula_recognition-nopp-nolayout-lightweight</td>
 <td>Intel 6271C</td>
-<td>2798.43</td>
+<td>2.80</td>
 <td>1047.60</td>
 <td>1031.25</td>
 <td>1534.17</td>
@@ -1052,7 +1052,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>2315.28</td>
+<td>2.32</td>
 <td>1052.60</td>
 <td>1034.39</td>
 <td>1523.69</td>
@@ -1064,7 +1064,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>1000.18</td>
+<td>1.00</td>
 <td>104.90</td>
 <td>101.83</td>
 <td>1859.66</td>
@@ -1076,7 +1076,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>586.57</td>
+<td>0.59</td>
 <td>103.90</td>
 <td>102.00</td>
 <td>1633.84</td>
@@ -1088,7 +1088,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>792.55</td>
+<td>0.79</td>
 <td>108.90</td>
 <td>103.25</td>
 <td>1658.45</td>
@@ -1100,7 +1100,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>473.62</td>
+<td>0.47</td>
 <td>108.00</td>
 <td>102.07</td>
 <td>2023.42</td>
@@ -1112,7 +1112,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>623.90</td>
+<td>0.62</td>
 <td>103.00</td>
 <td>101.00</td>
 <td>1918.49</td>
@@ -1124,7 +1124,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>M4</td>
-<td>1567.94</td>
+<td>1.57</td>
 <td>119.50</td>
 <td>117.72</td>
 <td>1489.78</td>
@@ -1136,7 +1136,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>825.00</td>
+<td>0.83</td>
 <td>105.00</td>
 <td>101.98</td>
 <td>1934.31</td>
@@ -1187,7 +1187,10 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
     * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
-
+* Test data:
+    * [test_data_formula_recognition.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_formula_recognition.tar), which contains 4 images and 1 PDF, including Chinese document formulas, English document formulas, standalone Chinese formulas, and tables with embedded formulas.
+* Test strategy:
+    * Warm up with 3 samples, then repeat the full dataset 20 times for performance testing.
 * Note:
     * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 

@@ -50,333 +50,31 @@ The Document Understanding Pipeline is an advanced document processing technolog
 <summary>Click to expand/collapse the table</summary>
 
 <table border="1">
-<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (ms)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
+<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (s)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
 <tr>
-<td rowspan="9">doc_preprocessor-default</td>
-<td>Intel 6271C</td>
-<td>1127.85</td>
-<td>1012.50</td>
-<td>789.07</td>
-<td>1913.89</td>
-<td>1650.30</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 8350C</td>
-<td>764.23</td>
-<td>1003.70</td>
-<td>782.77</td>
-<td>1916.81</td>
-<td>1655.66</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
+<td rowspan="2">doc_understanding-default</td>
 <td>Hygon 7490 + P800</td>
-<td>96.74</td>
-<td>174.70</td>
-<td>135.91</td>
-<td>2023.54</td>
-<td>1963.53</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 8350C + A100</td>
-<td>76.66</td>
-<td>148.90</td>
-<td>125.73</td>
-<td>1748.06</td>
-<td>1683.35</td>
-<td>11</td>
-<td>5.86</td>
-<td>828.00</td>
-<td>828.00</td>
-</tr>
-<tr>
-<td>Intel 6271C + V100</td>
-<td>114.96</td>
-<td>168.60</td>
-<td>131.05</td>
-<td>1837.66</td>
-<td>1707.50</td>
-<td>26</td>
-<td>11.65</td>
-<td>694.00</td>
-<td>694.00</td>
-</tr>
-<tr>
-<td>Intel 8563C + H20</td>
-<td>69.34</td>
-<td>140.90</td>
-<td>122.80</td>
-<td>1992.86</td>
-<td>1911.34</td>
-<td>11</td>
-<td>7.75</td>
-<td>890.00</td>
-<td>890.00</td>
-</tr>
-<tr>
-<td>Intel 8350C + A10</td>
-<td>81.65</td>
-<td>146.40</td>
-<td>125.37</td>
-<td>1896.46</td>
-<td>1825.98</td>
-<td>14</td>
-<td>5.93</td>
-<td>586.00</td>
-<td>586.00</td>
-</tr>
-<tr>
-<td>M4</td>
-<td>368.93</td>
-<td>118.20</td>
-<td>103.40</td>
-<td>1973.23</td>
-<td>1756.00</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 6271C + T4</td>
-<td>122.40</td>
-<td>156.90</td>
-<td>123.75</td>
-<td>1874.29</td>
-<td>1727.01</td>
-<td>73</td>
-<td>23.81</td>
-<td>450.00</td>
-<td>450.00</td>
-</tr>
-<tr>
-<td rowspan="9">doc_preprocessor-clsonly</td>
-<td>Intel 6271C</td>
-<td>55.12</td>
-<td>1085.60</td>
-<td>1057.12</td>
-<td>1254.27</td>
-<td>1203.36</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 8350C</td>
-<td>59.48</td>
-<td>1051.60</td>
-<td>1043.39</td>
-<td>1263.88</td>
-<td>1206.67</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Hygon 7490 + P800</td>
-<td>47.44</td>
-<td>202.70</td>
-<td>173.75</td>
-<td>1868.11</td>
-<td>1810.80</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 8350C + A100</td>
-<td>43.27</td>
-<td>167.80</td>
-<td>150.56</td>
-<td>1347.92</td>
-<td>1325.32</td>
-<td>2</td>
-<td>1.25</td>
-<td>514.00</td>
-<td>514.00</td>
-</tr>
-<tr>
-<td>Intel 6271C + V100</td>
-<td>53.72</td>
-<td>202.70</td>
-<td>170.72</td>
-<td>1404.16</td>
-<td>1352.74</td>
-<td>2</td>
-<td>1.20</td>
-<td>394.00</td>
-<td>394.00</td>
-</tr>
-<tr>
-<td>Intel 8563C + H20</td>
-<td>41.89</td>
-<td>153.80</td>
-<td>141.46</td>
-<td>1590.48</td>
-<td>1540.25</td>
-<td>2</td>
-<td>1.12</td>
-<td>578.00</td>
-<td>578.00</td>
-</tr>
-<tr>
-<td>Intel 8350C + A10</td>
-<td>44.61</td>
-<td>179.80</td>
-<td>156.96</td>
-<td>1569.85</td>
-<td>1514.64</td>
-<td>2</td>
-<td>0.88</td>
-<td>302.00</td>
-<td>302.00</td>
-</tr>
-<tr>
-<td>M4</td>
-<td>34.12</td>
-<td>127.60</td>
-<td>123.24</td>
-<td>1459.06</td>
-<td>1386.33</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 6271C + T4</td>
-<td>51.81</td>
-<td>180.80</td>
-<td>154.34</td>
-<td>1515.43</td>
-<td>1465.99</td>
-<td>4</td>
-<td>2.89</td>
-<td>160.00</td>
-<td>160.00</td>
-</tr>
-<tr>
-<td rowspan="9">doc_preprocessor-unwarponly</td>
-<td>Intel 6271C</td>
-<td>1092.82</td>
-<td>1002.10</td>
-<td>749.82</td>
-<td>1875.45</td>
-<td>1680.20</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 8350C</td>
-<td>747.32</td>
-<td>951.30</td>
-<td>754.01</td>
-<td>1843.54</td>
-<td>1645.73</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Hygon 7490 + P800</td>
-<td>95.22</td>
-<td>101.20</td>
-<td>100.08</td>
-<td>1960.48</td>
-<td>1863.72</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr>
-<td>Intel 8350C + A100</td>
-<td>78.05</td>
-<td>100.90</td>
-<td>100.15</td>
-<td>1570.25</td>
-<td>1446.01</td>
-<td>9</td>
-<td>5.57</td>
-<td>788.00</td>
-<td>788.00</td>
-</tr>
-<tr>
-<td>Intel 6271C + V100</td>
-<td>130.84</td>
-<td>100.90</td>
-<td>100.25</td>
-<td>1561.52</td>
-<td>1459.73</td>
-<td>24</td>
-<td>11.35</td>
-<td>656.00</td>
-<td>656.00</td>
-</tr>
-<tr>
-<td>Intel 8563C + H20</td>
-<td>68.62</td>
-<td>106.90</td>
-<td>100.62</td>
-<td>1808.00</td>
-<td>1715.35</td>
-<td>6</td>
-<td>4.83</td>
-<td>684.00</td>
-<td>684.00</td>
-</tr>
-<tr>
-<td>Intel 8350C + A10</td>
-<td>84.19</td>
+<td>26.61</td>
 <td>101.90</td>
-<td>100.14</td>
-<td>1848.25</td>
-<td>1719.24</td>
-<td>19</td>
-<td>7.73</td>
-<td>544.00</td>
-<td>544.00</td>
-</tr>
-<tr>
-<td>M4</td>
-<td>295.15</td>
-<td>102.40</td>
-<td>100.76</td>
-<td>1957.42</td>
-<td>1734.67</td>
+<td>100.07</td>
+<td>3112.36</td>
+<td>3112.27</td>
 <td>N/A</td>
 <td>N/A</td>
 <td>N/A</td>
 <td>N/A</td>
 </tr>
 <tr>
-<td>Intel 6271C + T4</td>
-<td>117.25</td>
-<td>101.80</td>
-<td>100.36</td>
-<td>1674.25</td>
-<td>1605.14</td>
-<td>48</td>
-<td>26.45</td>
-<td>412.00</td>
-<td>412.00</td>
+<td>Intel 8350C + A10</td>
+<td>16.89</td>
+<td>101.70</td>
+<td>100.09</td>
+<td>2959.31</td>
+<td>2959.25</td>
+<td>100</td>
+<td>42.85</td>
+<td>17254.00</td>
+<td>17252.01</td>
 </tr>
 </table>
 
@@ -384,16 +82,8 @@ The Document Understanding Pipeline is an advanced document processing technolog
 <table border="1">
 <tr><th>Pipeline configuration</th><th>description</th></tr>
 <tr>
-<td>doc_preprocessor-default</td>
+<td>doc_understanding-default</td>
 <td>Default configuration</td>
-</tr>
-<tr>
-<td>doc_preprocessor-clsonly</td>
-<td>Based on the default configuration, only document image orientation classification is enabled</td>
-</tr>
-<tr>
-<td>doc_preprocessor-unwarponly</td>
-<td>Based on the default configuration, only text image rectification is enabled</td>
 </tr>
 </table>
 </details>
@@ -403,7 +93,10 @@ The Document Understanding Pipeline is an advanced document processing technolog
     * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
-
+* Test data:
+    * [test_data_doc_understanding.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_doc_understanding.tar), which contains one document parsing sample and one chatQA sample, each sample contains both image and JSON formats.
+* Test strategy:
+    * Warm up with 2 samples, then repeat the full dataset 20 times for performance testing.
 * Note:
     * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 

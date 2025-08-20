@@ -662,11 +662,11 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <summary>点击展开/折叠表格</summary>
 
 <table border="1">
-<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (ms)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
+<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (s)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
 <tr>
 <td rowspan="9">seal_recognition-default</td>
 <td>Intel 6271C</td>
-<td>1441.99</td>
+<td>1.44</td>
 <td>1013.50</td>
 <td>1005.77</td>
 <td>2850.27</td>
@@ -678,7 +678,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>1303.84</td>
+<td>1.30</td>
 <td>1010.40</td>
 <td>970.29</td>
 <td>2797.28</td>
@@ -690,7 +690,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>102.05</td>
+<td>0.10</td>
 <td>115.80</td>
 <td>112.72</td>
 <td>1647.39</td>
@@ -702,7 +702,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>67.80</td>
+<td>0.07</td>
 <td>117.90</td>
 <td>115.03</td>
 <td>1519.09</td>
@@ -714,7 +714,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>115.01</td>
+<td>0.12</td>
 <td>117.80</td>
 <td>115.16</td>
 <td>1425.80</td>
@@ -726,7 +726,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>77.40</td>
+<td>0.08</td>
 <td>117.40</td>
 <td>111.64</td>
 <td>1721.26</td>
@@ -738,7 +738,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>79.64</td>
+<td>0.08</td>
 <td>125.80</td>
 <td>118.96</td>
 <td>1727.16</td>
@@ -750,7 +750,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>M4</td>
-<td>1543.47</td>
+<td>1.54</td>
 <td>104.70</td>
 <td>101.57</td>
 <td>4526.11</td>
@@ -762,7 +762,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>155.57</td>
+<td>0.16</td>
 <td>110.20</td>
 <td>108.01</td>
 <td>1690.79</td>
@@ -775,7 +775,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <tr>
 <td rowspan="9">seal_recognition-nopp</td>
 <td>Intel 6271C</td>
-<td>1109.72</td>
+<td>1.11</td>
 <td>1014.70</td>
 <td>1009.28</td>
 <td>3062.18</td>
@@ -787,7 +787,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>1203.15</td>
+<td>1.20</td>
 <td>1012.60</td>
 <td>1006.68</td>
 <td>3079.39</td>
@@ -799,7 +799,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>119.58</td>
+<td>0.12</td>
 <td>116.90</td>
 <td>115.51</td>
 <td>1608.80</td>
@@ -811,7 +811,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>76.98</td>
+<td>0.08</td>
 <td>118.90</td>
 <td>117.49</td>
 <td>1440.84</td>
@@ -823,7 +823,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>124.81</td>
+<td>0.12</td>
 <td>119.80</td>
 <td>117.69</td>
 <td>1451.77</td>
@@ -835,7 +835,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>102.76</td>
+<td>0.10</td>
 <td>117.90</td>
 <td>111.53</td>
 <td>1722.02</td>
@@ -847,7 +847,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>95.30</td>
+<td>0.10</td>
 <td>120.80</td>
 <td>118.38</td>
 <td>1642.00</td>
@@ -859,7 +859,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>M4</td>
-<td>2343.35</td>
+<td>2.34</td>
 <td>104.30</td>
 <td>101.47</td>
 <td>4436.23</td>
@@ -871,7 +871,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>199.46</td>
+<td>0.20</td>
 <td>109.80</td>
 <td>107.97</td>
 <td>1628.87</td>
@@ -884,7 +884,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <tr>
 <td rowspan="9">seal_recognition-nopp-nolayout</td>
 <td>Intel 6271C</td>
-<td>662.30</td>
+<td>0.66</td>
 <td>1021.40</td>
 <td>1014.05</td>
 <td>2541.84</td>
@@ -896,7 +896,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>765.66</td>
+<td>0.77</td>
 <td>1013.70</td>
 <td>1009.71</td>
 <td>2558.11</td>
@@ -908,7 +908,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>102.32</td>
+<td>0.10</td>
 <td>113.90</td>
 <td>112.78</td>
 <td>1556.05</td>
@@ -920,7 +920,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>63.93</td>
+<td>0.06</td>
 <td>122.90</td>
 <td>120.53</td>
 <td>1323.04</td>
@@ -932,7 +932,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>97.27</td>
+<td>0.10</td>
 <td>123.80</td>
 <td>121.95</td>
 <td>1349.10</td>
@@ -944,7 +944,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>97.39</td>
+<td>0.10</td>
 <td>116.90</td>
 <td>113.28</td>
 <td>1620.22</td>
@@ -956,7 +956,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>81.86</td>
+<td>0.08</td>
 <td>123.50</td>
 <td>120.70</td>
 <td>1477.95</td>
@@ -968,7 +968,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>M4</td>
-<td>2045.01</td>
+<td>2.05</td>
 <td>103.60</td>
 <td>101.33</td>
 <td>4115.47</td>
@@ -980,7 +980,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>174.25</td>
+<td>0.17</td>
 <td>112.10</td>
 <td>109.61</td>
 <td>1477.02</td>
@@ -993,7 +993,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <tr>
 <td rowspan="9">seal_recognition-nopp-lightweight</td>
 <td>Intel 6271C</td>
-<td>647.56</td>
+<td>0.65</td>
 <td>1015.50</td>
 <td>1010.90</td>
 <td>1701.61</td>
@@ -1005,7 +1005,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>600.89</td>
+<td>0.60</td>
 <td>1011.70</td>
 <td>1004.39</td>
 <td>1794.69</td>
@@ -1017,7 +1017,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>71.31</td>
+<td>0.07</td>
 <td>120.90</td>
 <td>118.70</td>
 <td>1601.37</td>
@@ -1029,7 +1029,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>61.25</td>
+<td>0.06</td>
 <td>123.90</td>
 <td>121.47</td>
 <td>1483.47</td>
@@ -1041,7 +1041,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>90.24</td>
+<td>0.09</td>
 <td>125.80</td>
 <td>124.22</td>
 <td>1410.70</td>
@@ -1053,7 +1053,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>49.11</td>
+<td>0.05</td>
 <td>131.90</td>
 <td>124.07</td>
 <td>1820.23</td>
@@ -1065,7 +1065,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>62.53</td>
+<td>0.06</td>
 <td>131.80</td>
 <td>129.06</td>
 <td>1668.08</td>
@@ -1077,7 +1077,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>M4</td>
-<td>696.42</td>
+<td>0.70</td>
 <td>106.60</td>
 <td>104.71</td>
 <td>1176.22</td>
@@ -1089,7 +1089,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>89.92</td>
+<td>0.09</td>
 <td>120.80</td>
 <td>117.79</td>
 <td>1492.52</td>
@@ -1102,7 +1102,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <tr>
 <td rowspan="9">seal_recognition-nopp-lightweightlayout</td>
 <td>Intel 6271C</td>
-<td>256.55</td>
+<td>0.26</td>
 <td>1018.90</td>
 <td>1012.30</td>
 <td>2759.20</td>
@@ -1114,7 +1114,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>294.96</td>
+<td>0.29</td>
 <td>1017.60</td>
 <td>1009.56</td>
 <td>2718.50</td>
@@ -1126,7 +1126,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>55.61</td>
+<td>0.06</td>
 <td>136.30</td>
 <td>128.47</td>
 <td>1565.15</td>
@@ -1138,7 +1138,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>39.48</td>
+<td>0.04</td>
 <td>115.90</td>
 <td>115.12</td>
 <td>1313.98</td>
@@ -1150,7 +1150,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>60.79</td>
+<td>0.06</td>
 <td>119.80</td>
 <td>117.14</td>
 <td>1268.04</td>
@@ -1162,7 +1162,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>48.73</td>
+<td>0.05</td>
 <td>119.00</td>
 <td>111.67</td>
 <td>1735.01</td>
@@ -1174,7 +1174,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>46.02</td>
+<td>0.05</td>
 <td>118.90</td>
 <td>118.48</td>
 <td>1596.27</td>
@@ -1186,7 +1186,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>M4</td>
-<td>789.23</td>
+<td>0.79</td>
 <td>112.40</td>
 <td>102.80</td>
 <td>6106.27</td>
@@ -1198,7 +1198,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>79.36</td>
+<td>0.08</td>
 <td>111.90</td>
 <td>108.66</td>
 <td>1510.57</td>
@@ -1211,7 +1211,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <tr>
 <td rowspan="9">seal_recognition-nopp-nolayout-lightweight</td>
 <td>Intel 6271C</td>
-<td>149.97</td>
+<td>0.15</td>
 <td>1027.50</td>
 <td>1022.43</td>
 <td>1245.17</td>
@@ -1223,7 +1223,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>126.58</td>
+<td>0.13</td>
 <td>1024.70</td>
 <td>1014.78</td>
 <td>1211.13</td>
@@ -1235,7 +1235,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>57.79</td>
+<td>0.06</td>
 <td>131.70</td>
 <td>128.79</td>
 <td>1532.17</td>
@@ -1247,7 +1247,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>42.42</td>
+<td>0.04</td>
 <td>133.00</td>
 <td>129.92</td>
 <td>1169.25</td>
@@ -1259,7 +1259,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>68.18</td>
+<td>0.07</td>
 <td>132.70</td>
 <td>128.90</td>
 <td>1269.38</td>
@@ -1271,7 +1271,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>39.22</td>
+<td>0.04</td>
 <td>134.90</td>
 <td>128.48</td>
 <td>1530.35</td>
@@ -1283,7 +1283,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>47.19</td>
+<td>0.05</td>
 <td>141.90</td>
 <td>139.48</td>
 <td>1458.07</td>
@@ -1295,7 +1295,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>M4</td>
-<td>275.15</td>
+<td>0.28</td>
 <td>110.30</td>
 <td>109.19</td>
 <td>1100.36</td>
@@ -1307,7 +1307,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>68.63</td>
+<td>0.07</td>
 <td>125.90</td>
 <td>123.15</td>
 <td>1389.43</td>
@@ -1354,7 +1354,10 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
     * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
-
+* 测试数据：
+    * [test_data_seal_recognition.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_seal_recognition.tar)，其中包含130张印章图像。
+* 测试策略：
+    * 使用 20 个样本进行预热，然后对整个数据集重复 1 次以进行速度性能测试。
 * 备注：
     * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 

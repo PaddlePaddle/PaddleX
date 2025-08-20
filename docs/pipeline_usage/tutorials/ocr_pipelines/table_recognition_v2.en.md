@@ -779,11 +779,11 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <summary>Click to expand/collapse the table</summary>
 
 <table border="1">
-<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (ms)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
+<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (s)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
 <tr>
 <td rowspan="7">table_recognition_v2-default</td>
 <td>Intel 6271C</td>
-<td>4682.50</td>
+<td>4.68</td>
 <td>1150.80</td>
 <td>1005.33</td>
 <td>4391.37</td>
@@ -795,7 +795,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>4737.37</td>
+<td>4.74</td>
 <td>1009.60</td>
 <td>945.16</td>
 <td>4370.65</td>
@@ -807,7 +807,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>683.64</td>
+<td>0.68</td>
 <td>120.40</td>
 <td>107.35</td>
 <td>1936.46</td>
@@ -819,7 +819,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>785.91</td>
+<td>0.79</td>
 <td>246.70</td>
 <td>137.46</td>
 <td>1814.86</td>
@@ -831,7 +831,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>512.60</td>
+<td>0.51</td>
 <td>533.50</td>
 <td>260.91</td>
 <td>2544.58</td>
@@ -843,7 +843,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>579.97</td>
+<td>0.58</td>
 <td>131.80</td>
 <td>4.18</td>
 <td>2044.72</td>
@@ -855,7 +855,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>M4</td>
-<td>4316.55</td>
+<td>4.32</td>
 <td>226.00</td>
 <td>103.48</td>
 <td>4951.52</td>
@@ -868,7 +868,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <td rowspan="8">table_recognition_v2-nopp</td>
 <td>Intel 6271C</td>
-<td>6124.28</td>
+<td>6.12</td>
 <td>1027.40</td>
 <td>1001.08</td>
 <td>4333.77</td>
@@ -880,7 +880,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>5976.96</td>
+<td>5.98</td>
 <td>1010.70</td>
 <td>940.00</td>
 <td>4297.76</td>
@@ -892,7 +892,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>778.48</td>
+<td>0.78</td>
 <td>109.90</td>
 <td>104.26</td>
 <td>1975.51</td>
@@ -904,7 +904,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>915.91</td>
+<td>0.92</td>
 <td>107.80</td>
 <td>102.97</td>
 <td>1725.44</td>
@@ -916,7 +916,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>568.28</td>
+<td>0.57</td>
 <td>107.80</td>
 <td>101.55</td>
 <td>2115.62</td>
@@ -928,7 +928,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>665.59</td>
+<td>0.67</td>
 <td>105.90</td>
 <td>102.23</td>
 <td>1966.66</td>
@@ -940,7 +940,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>M4</td>
-<td>5354.34</td>
+<td>5.35</td>
 <td>106.70</td>
 <td>103.34</td>
 <td>4906.53</td>
@@ -952,7 +952,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>970.53</td>
+<td>0.97</td>
 <td>105.30</td>
 <td>101.99</td>
 <td>1945.11</td>
@@ -965,7 +965,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <td rowspan="9">table_recognition_v2-slanet</td>
 <td>Intel 6271C</td>
-<td>3828.52</td>
+<td>3.83</td>
 <td>1178.40</td>
 <td>1013.64</td>
 <td>3617.43</td>
@@ -977,7 +977,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C</td>
-<td>3800.14</td>
+<td>3.80</td>
 <td>1034.60</td>
 <td>986.05</td>
 <td>3629.65</td>
@@ -989,7 +989,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Hygon 7490 + P800</td>
-<td>675.10</td>
+<td>0.68</td>
 <td>120.90</td>
 <td>107.85</td>
 <td>1747.88</td>
@@ -1001,7 +1001,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C + A100</td>
-<td>544.97</td>
+<td>0.54</td>
 <td>374.60</td>
 <td>153.89</td>
 <td>1900.24</td>
@@ -1013,7 +1013,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 6271C + V100</td>
-<td>774.21</td>
+<td>0.77</td>
 <td>253.70</td>
 <td>139.34</td>
 <td>1636.04</td>
@@ -1025,7 +1025,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8563C + H20</td>
-<td>503.17</td>
+<td>0.50</td>
 <td>963.00</td>
 <td>427.93</td>
 <td>2051.32</td>
@@ -1037,7 +1037,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 8350C + A10</td>
-<td>567.63</td>
+<td>0.57</td>
 <td>135.20</td>
 <td>108.01</td>
 <td>1930.06</td>
@@ -1049,7 +1049,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>M4</td>
-<td>5562.14</td>
+<td>5.56</td>
 <td>223.10</td>
 <td>103.73</td>
 <td>4456.39</td>
@@ -1061,7 +1061,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 <tr>
 <td>Intel 6271C + T4</td>
-<td>784.60</td>
+<td>0.78</td>
 <td>412.90</td>
 <td>178.49</td>
 <td>1839.10</td>
@@ -1096,7 +1096,10 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
     * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
     * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
     * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
-
+* Test data:
+    * [test_data_table_recognition_v2.tar](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/pipeline_infer_bench/input_data/test_data_table_recognition_v2.tar), which contains 5 images of various categories, such as large tables, small tables, bordered tables, and borderless tables.
+* Test strategy:
+    * Warm up with 3 samples, then repeat the full dataset 20 times for performance testing.
 * Note:
     * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
