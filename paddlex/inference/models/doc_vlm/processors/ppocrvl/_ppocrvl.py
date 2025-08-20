@@ -170,7 +170,9 @@ class PPOCRVLProcessor(object):
         Post process adapt for PaddleX
         """
         return self.tokenizer.batch_decode(
-            model_pred[0], skip_special_tokens=True, clean_up_tokenization_spaces=False
+            model_pred[0],
+            skip_special_tokens=True,
+            spaces_between_special_tokens=False,
         )
 
     def batch_decode(self, *args, **kwargs):

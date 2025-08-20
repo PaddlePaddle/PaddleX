@@ -21,6 +21,8 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List
 
+import numpy as np
+
 from ....modules.doc_vlm.model_list import MODELS
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
@@ -305,6 +307,15 @@ class DocVLMPredictor(BasePredictor):
                             image_url = "data:image/jpeg;base64," + base64.b64encode(
                                 buf.getvalue()
                             ).decode("ascii")
+            elif isinstance(image, np.ndarray):
+                import cv2
+
+                ret, buf = cv2.imencode(".jpg", image)
+                if not ret:
+                    raise ValueError("Failed to encode the image")
+                image_url = "data:image/jpeg;base64," + base64.b64encode(buf).decode(
+                    "ascii"
+                )
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
             chat_completion = self._genai_client.create_chat_completion(
