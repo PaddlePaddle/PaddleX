@@ -6,7 +6,7 @@ comments: true
 
 ## Latest Version Information
 
-### PaddleX v3.2.0(8.19/2025)
+### PaddleX v3.2.0(8.20/2025)
 
 - **Deployment Capability Upgrades:**
     - **Fully supports PaddlePaddle framework versions 3.1.0 and 3.1.1.**
