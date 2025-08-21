@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-paddlex_version="$(cat ../../paddlex/.version)"
+paddlex_version="$(cat ../../../paddlex/.version)"
 
 for device_type in 'gpu' 'cpu'; do
     version="$(cat "${device_type}_version.txt")"
