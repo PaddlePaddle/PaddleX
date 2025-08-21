@@ -436,6 +436,8 @@ class PaddleInfer(StaticInfer):
             elif self._option.device_type == "dcu":
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
+                    if self._option.enable_new_ir and self._option.enable_cinn:
+                        config.enable_cinn()
                 config.enable_use_gpu(100, self._option.device_id)
                 config.disable_mkldnn()
                 if hasattr(config, "enable_new_executor"):
