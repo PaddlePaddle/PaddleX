@@ -9,6 +9,7 @@ The image feature module is one of the important tasks in computer vision, prima
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <tr>

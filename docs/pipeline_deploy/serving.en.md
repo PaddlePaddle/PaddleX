@@ -128,131 +128,131 @@ Find the high-stability serving SDK corresponding to the pipeline in the table b
 <tbody>
 <tr>
 <td>PP-ChatOCR-doc v3</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_PP-ChatOCRv3-doc_sdk.tar.gz">paddlex_hps_PP-ChatOCRv3-doc_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_PP-ChatOCRv3-doc_sdk.tar.gz">paddlex_hps_PP-ChatOCRv3-doc_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General image classification</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_image_classification_sdk.tar.gz">paddlex_hps_image_classification_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_image_classification_sdk.tar.gz">paddlex_hps_image_classification_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General object detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_object_detection_sdk.tar.gz">paddlex_hps_object_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_object_detection_sdk.tar.gz">paddlex_hps_object_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General instance segmentation</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_instance_segmentation_sdk.tar.gz">paddlex_hps_instance_segmentation_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_instance_segmentation_sdk.tar.gz">paddlex_hps_instance_segmentation_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General semantic segmentation</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_semantic_segmentation_sdk.tar.gz">paddlex_hps_semantic_segmentation_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_semantic_segmentation_sdk.tar.gz">paddlex_hps_semantic_segmentation_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Image multi-label classification</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_image_multilabel_classification_sdk.tar.gz">paddlex_hps_image_multilabel_classification_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_image_multilabel_classification_sdk.tar.gz">paddlex_hps_image_multilabel_classification_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General image recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_PP-ShiTuV2_sdk.tar.gz">paddlex_hps_PP-ShiTuV2_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_PP-ShiTuV2_sdk.tar.gz">paddlex_hps_PP-ShiTuV2_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Pedestrian attribute recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_pedestrian_attribute_recognition_sdk.tar.gz">paddlex_hps_pedestrian_attribute_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_pedestrian_attribute_recognition_sdk.tar.gz">paddlex_hps_pedestrian_attribute_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Vehicle attribute recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_vehicle_attribute_recognition_sdk.tar.gz">paddlex_hps_vehicle_attribute_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_vehicle_attribute_recognition_sdk.tar.gz">paddlex_hps_vehicle_attribute_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Face recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_face_recognition_sdk.tar.gz">paddlex_hps_face_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_face_recognition_sdk.tar.gz">paddlex_hps_face_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Small object detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_small_object_detection_sdk.tar.gz">paddlex_hps_small_object_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_small_object_detection_sdk.tar.gz">paddlex_hps_small_object_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Image anomaly detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_anomaly_detection_sdk.tar.gz">paddlex_hps_anomaly_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_anomaly_detection_sdk.tar.gz">paddlex_hps_anomaly_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Human keypoint detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_human_keypoint_detection_sdk.tar.gz">paddlex_hps_human_keypoint_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_human_keypoint_detection_sdk.tar.gz">paddlex_hps_human_keypoint_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Open vocabulary detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_open_vocabulary_detection_sdk.tar.gz">paddlex_hps_open_vocabulary_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_open_vocabulary_detection_sdk.tar.gz">paddlex_hps_open_vocabulary_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Open vocabulary segmentation</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_open_vocabulary_segmentation_sdk.tar.gz">paddlex_hps_open_vocabulary_segmentation_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_open_vocabulary_segmentation_sdk.tar.gz">paddlex_hps_open_vocabulary_segmentation_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Rotated object detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_rotated_object_detection_sdk.tar.gz">paddlex_hps_rotated_object_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_rotated_object_detection_sdk.tar.gz">paddlex_hps_rotated_object_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>3D multi-modal fusion detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_3d_bev_detection_sdk.tar.gz">paddlex_hps_3d_bev_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_3d_bev_detection_sdk.tar.gz">paddlex_hps_3d_bev_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General OCR</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_OCR_sdk.tar.gz">paddlex_hps_OCR_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_OCR_sdk.tar.gz">paddlex_hps_OCR_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General table recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_table_recognition_sdk.tar.gz">paddlex_hps_table_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_table_recognition_sdk.tar.gz">paddlex_hps_table_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General table recognition v2</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_table_recognition_v2_sdk.tar.gz">paddlex_hps_table_recognition_v2_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_table_recognition_v2_sdk.tar.gz">paddlex_hps_table_recognition_v2_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General layout parsing</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_layout_parsing_sdk.tar.gz">paddlex_hps_layout_parsing_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_layout_parsing_sdk.tar.gz">paddlex_hps_layout_parsing_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>PP-StructureV3</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_PP-StructureV3_sdk.tar.gz">paddlex_hps_PP-StructureV3_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_PP-StructureV3_sdk.tar.gz">paddlex_hps_PP-StructureV3_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Formula recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_formula_recognition_sdk.tar.gz">paddlex_hps_formula_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_formula_recognition_sdk.tar.gz">paddlex_hps_formula_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Seal text recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_seal_recognition_sdk.tar.gz">paddlex_hps_seal_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_seal_recognition_sdk.tar.gz">paddlex_hps_seal_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Document image preprocessing</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_doc_preprocessor_sdk.tar.gz">paddlex_hps_doc_preprocessor_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_doc_preprocessor_sdk.tar.gz">paddlex_hps_doc_preprocessor_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Time series forecasting</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_ts_forecast_sdk.tar.gz">paddlex_hps_ts_forecast_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_ts_forecast_sdk.tar.gz">paddlex_hps_ts_forecast_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Time series anomaly detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_ts_anomaly_detection_sdk.tar.gz">paddlex_hps_ts_anomaly_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_ts_anomaly_detection_sdk.tar.gz">paddlex_hps_ts_anomaly_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Time series classification</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_ts_classification_sdk.tar.gz">paddlex_hps_ts_classification_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_ts_classification_sdk.tar.gz">paddlex_hps_ts_classification_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Multilingual speech recognition</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_multilingual_speech_recognition_sdk.tar.gz">paddlex_hps_multilingual_speech_recognition_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_multilingual_speech_recognition_sdk.tar.gz">paddlex_hps_multilingual_speech_recognition_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General video classification</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_video_classification_sdk.tar.gz">paddlex_hps_video_classification_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_video_classification_sdk.tar.gz">paddlex_hps_video_classification_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General video detection</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_video_detection_sdk.tar.gz">paddlex_hps_video_detection_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_video_detection_sdk.tar.gz">paddlex_hps_video_detection_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>Document understanding</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.1/paddlex_hps_doc_understanding_sdk.tar.gz">paddlex_hps_doc_understanding_sdk.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.2/paddlex_hps_doc_understanding_sdk.tar.gz">paddlex_hps_doc_understanding_sdk.tar.gz</a></td>
 </tr>
 </tbody>
 </table>
@@ -310,13 +310,13 @@ First, pull the Docker image as needed:
 - Image supporting deployment with NVIDIA GPU (the machine must have NVIDIA drivers that support CUDA 11.8 installed):
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.1-gpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.2-gpu
     ```
 
 - CPU-only Image:
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.1-cpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.2-cpu
     ```
 
 If you need to build the image on your own, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README_en.md#1-image-building)
@@ -354,7 +354,7 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ### 2.4 Invoke the Service
 
-Users can call the pipeline service through the Python client provided by the SDK or by manually constructing HTTP requests (with no restriction on client programming languages). 
+Users can call the pipeline service through the Python client provided by the SDK or by manually constructing HTTP requests (with no restriction on client programming languages).
 
 
 The services deployed using the high-stability serving solution offer the primary operations that match those of the basic serving solution. For each primary operation, the endpoint names and the request and response data fields are consistent with the basic serving solution. Please refer to the "Development Integration/Deployment" section in the tutorials for each pipeline. The tutorials for each pipeline can be found [here](../pipeline_usage/pipeline_develop_guide.en.md).

@@ -44,13 +44,8 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 
 * 注：更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。
 
-在刚刚启动的 `paddlex` 容器中执行下面指令安装 TensorRT，即可使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)：
-
-```bash
-python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x86_64.whl
-```
-
 ## 基于 pip 安装飞桨
+
 <b>若您通过 pip 安装</b>，请参考下述命令，用 pip 在当前环境中安装飞桨 PaddlePaddle：
 
 ```bash
@@ -58,7 +53,7 @@ python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x
 python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）
- python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
 # GPU 版本，需显卡驱动程序版本 ≥550.54.14（Linux）或 ≥550.54.14（Windows）
  python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
@@ -79,21 +74,53 @@ python -c "import paddle; print(paddle.__version__)"
 3.0.0
 ```
 
-如果想要使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)，在安装paddle后需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html) 安装相应版本的 TensorRT：
+### Windows 系统适配 NVIDIA 50 系显卡的 PaddlePaddle wheel 包安装
 
-- 对于 CUDA 11.8 版本的飞桨，兼容的 TensorRT 版本为 8.x（x>=6）。PaddleX 已在 TensorRT 8.6.1.6 上完成了 Paddle-TensorRT 的兼容性测试，因此**强烈建议安装 TensorRT 8.6.1.6**。
+通过以上方式安装的 PaddlePaddle 在 Windows 操作系统下无法正常支持 NVIDIA 50 系显卡。因此，我们提供了专门适配该硬件环境的 PaddlePaddle 安装包。请根据您的 Python 版本选择对应的 wheel 文件进行安装。
 
-下面是在 CUDA 11.8 环境下使用 "Tar File Installation" 方式安装 TensoRT 8.6.1.6 的例子：
 
 ```bash
-# 下载 TensorRT tar 文件
-wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/8.6.1/tars/TensorRT-8.6.1.6.Linux.x86_64-gnu.cuda-11.8.tar.gz
-# 解压 TensorRT tar 文件
-tar xvf TensorRT-8.6.1.6.Linux.x86_64-gnu.cuda-11.8.tar.gz
-# 安装 TensorRT wheel 包
-python -m pip install TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
-# 添加 TensorRT 的 `lib` 目录的绝对路径到 LD_LIBRARY_PATH 中
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:TensorRT-8.6.1.6/lib"
+# python 3.9
+python -m pip install https://paddle-qa.bj.bcebos.com/paddle-pipeline/Develop-TagBuild-Training-Windows-Gpu-Cuda12.9-Cudnn9.9-Trt10.5-Mkl-Avx-VS2019-SelfBuiltPypiUse/86d658f56ebf3a5a7b2b33ace48f22d10680d311/paddlepaddle_gpu-3.0.0.dev20250717-cp39-cp39-win_amd64.whl
+
+# python 3.10
+python -m pip install https://paddle-qa.bj.bcebos.com/paddle-pipeline/Develop-TagBuild-Training-Windows-Gpu-Cuda12.9-Cudnn9.9-Trt10.5-Mkl-Avx-VS2019-SelfBuiltPypiUse/86d658f56ebf3a5a7b2b33ace48f22d10680d311/paddlepaddle_gpu-3.0.0.dev20250717-cp310-cp310-win_amd64.whl
+
+# python 3.11
+python -m pip install https://paddle-qa.bj.bcebos.com/paddle-pipeline/Develop-TagBuild-Training-Windows-Gpu-Cuda12.9-Cudnn9.9-Trt10.5-Mkl-Avx-VS2019-SelfBuiltPypiUse/86d658f56ebf3a5a7b2b33ace48f22d10680d311/paddlepaddle_gpu-3.0.0.dev20250717-cp311-cp311-win_amd64.whl
+
+# python 3.12
+python -m https://paddle-qa.bj.bcebos.com/paddle-pipeline/Develop-TagBuild-Training-Windows-Gpu-Cuda12.9-Cudnn9.9-Trt10.5-Mkl-Avx-VS2019-SelfBuiltPypiUse/86d658f56ebf3a5a7b2b33ace48f22d10680d311/paddlepaddle_gpu-3.0.0.dev20250717-cp312-cp312-win_amd64.whl
 ```
+
+**注：** 当前发布的适用于 Windows 系统 50 系显卡的 PaddlePaddle wheel 包，其文本识别模型的训练存在已知问题，相关功能仍在持续适配和完善中。
+
+
+## 安装 TensorRT 子图引擎
+
+如果想要使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)：
+
+1. 若您使用的是 PaddlePaddle 3.0 的官方镜像，需在启动的容器中执行下面指令安装 TensorRT：
+
+    ```bash
+    python -m pip install /usr/local/TensorRT-*/python/tensorrt-*-cp310-none-linux_x86_64.whl
+    ```
+
+2. 若您使用的是 PaddlePaddle 3.1 及以上版本的官方镜像或使用 pip 安装的 PaddlePaddle，需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html) 安装相应版本的 TensorRT：
+
+    - 对于 CUDA 11.8 版本的飞桨，兼容的 TensorRT 版本为 8.x（x>=6）。PaddleX 已在 TensorRT 8.6.1.6 上完成了 Paddle-TensorRT 的兼容性测试，因此**强烈建议安装 TensorRT 8.6.1.6**。
+
+    下面是在 CUDA 11.8 环境下使用 "Tar File Installation" 方式安装 TensoRT 8.6.1.6 的例子：
+
+    ```bash
+    # 下载 TensorRT tar 文件
+    wget https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/8.6.1/tars/TensorRT-8.6.1.6.Linux.x86_64-gnu.cuda-11.8.tar.gz
+    # 解压 TensorRT tar 文件
+    tar xvf TensorRT-8.6.1.6.Linux.x86_64-gnu.cuda-11.8.tar.gz
+    # 安装 TensorRT wheel 包
+    python -m pip install TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
+    # 添加 TensorRT 的 `lib` 目录的绝对路径到 LD_LIBRARY_PATH 中
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:TensorRT-8.6.1.6/lib"
+    ```
 
 > ❗ <b>注</b>：如果在安装的过程中，出现任何问题，欢迎在Paddle仓库中[提Issue](https://github.com/PaddlePaddle/Paddle/issues)。

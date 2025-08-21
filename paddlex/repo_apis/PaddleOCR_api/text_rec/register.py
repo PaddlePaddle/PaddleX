@@ -241,3 +241,30 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "en_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "en_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "th_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "th_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "el_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "el_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)

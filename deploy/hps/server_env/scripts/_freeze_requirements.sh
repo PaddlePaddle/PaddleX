@@ -13,7 +13,9 @@ python -m piptools compile \
     --strip-extras \
     --no-emit-index-url \
     --no-emit-trusted-host \
-    requirements/app.in "requirements/${DEVICE_TYPE}.in" paddlex-hps-server/pyproject.toml 
+    --extra 'base' \
+    --extra 'serving' \
+    requirements/app.in "requirements/${DEVICE_TYPE}.in" paddlex-hps-server/pyproject.toml ../../../setup.py
 chown "${OUID}":"${OGID}" "requirements/${DEVICE_TYPE}.txt"
 
 python -m piptools compile \

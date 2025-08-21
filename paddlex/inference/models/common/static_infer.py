@@ -437,6 +437,7 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
                 config.enable_use_gpu(100, self._option.device_id)
+                config.disable_mkldnn()
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 # XXX: is_compiled_with_rocm() must be True on dcu platform ?

@@ -9,6 +9,8 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 <b>人体关键点检测产线中包含了行人检测模块和人体关键点检测模块</b>，有若干模型可供选择，您可以根据下边的 benchmark 数据来选择使用的模型。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
+
 <details><summary> 👉模型列表详情</summary>
 <b>行人检测模块：</b>
 <table>

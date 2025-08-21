@@ -9,6 +9,8 @@ comments: true
 
 ## 二、支持模型列表
 
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -225,6 +227,16 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <th>介绍</th>
 </tr>
 <tr>
+<td>en_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+en_PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv5_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td> 85.25</td>
+<td>-</td>
+<td>-</td>
+<td>7.5</td>
+<td>基于PP-OCRv5识别模型训练得到的超轻量英文识别模型，支持英文、数字识别</td>
+</tr>
+<tr>
 <td>en_PP-OCRv4_mobile_rec</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
 en_PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
@@ -286,6 +298,25 @@ eslav_PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-mo
 <td>21.20 / 5.32</td>
 <td>14</td>
 <td>基于PP-OCRv5识别模型训练得到的东斯拉夫语言识别模型， 支持东斯拉夫语言、英文和数字识别</td>
+</tr>
+<td>th_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+th_PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/th_PP-OCRv5_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>82.68</td>
+<td>-</td>
+<td>-</td>
+<td>7.5</td>
+<td>基于PP-OCRv5识别模型训练得到的泰语识别模型， 支持泰语、英文和数字识别</td>
+</tr>
+<tr>
+<td>el_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+el_PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/el_PP-OCRv5_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>89.28</td>
+<td>-</td>
+<td>-</td>
+<td>7.5</td>
+<td>基于PP-OCRv5识别模型训练得到的希腊语识别模型， 支持希腊语、英文和数字识别</td>
 </tr>
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td>
@@ -470,7 +501,7 @@ for res in output:
     res.save_to_json(save_path="./output/res.json")
 ```
 
-<b>注：</b>PaddleX 官方模型默认从 HuggingFace 获取，如运行环境访问 HuggingFace 不便，可通过环境变量修改模型源为 BOS：`PADDLE_PDX_MODEL_SOURCE="BOS"`，未来将支持更多主流模型源；
+<b>注：</b>PaddleX 支持多个模型托管平台，官方模型默认优先从 HuggingFace 下载。PaddleX 也支持通过环境变量 `PADDLE_PDX_MODEL_SOURCE` 设置优先使用的托管平台，目前支持 `huggingface`、`aistudio`、`bos`、`modelscope`，如优先使用 `bos`：`PADDLE_PDX_MODEL_SOURCE="bos"`；
 
 运行后，得到的结果为：
 ```bash

@@ -38,11 +38,11 @@ SubPipelines:
 
     batch_size: 8
 
-    use_doc_preprocessor: True
-    use_seal_recognition: True
+    use_doc_preprocessor: False
+    use_seal_recognition: False
     use_table_recognition: True
     use_formula_recognition: True
-    use_chart_recognition: True
+    use_chart_recognition: False
     use_region_detection: True
 
     SubModules:

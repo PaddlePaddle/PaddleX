@@ -10,6 +10,7 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/01.jpg"/>
 <b>The pedestrian attribute recognition pipeline includes a pedestrian detection module and a pedestrian attribute recognition module</b>, with several models in each module. Which models to use specifically can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <p><b>Pedestrian Detection Module</b>:</p>
 <table>

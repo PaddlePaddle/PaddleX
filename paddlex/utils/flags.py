@@ -61,7 +61,7 @@ ENABLE_MKLDNN_BYDEFAULT = get_flag_from_env_var(
     "PADDLE_PDX_ENABLE_MKLDNN_BYDEFAULT", True
 )
 
-MODEL_SOURCE = os.environ.get("PADDLE_PDX_MODEL_SOURCE", "huggingface")
+MODEL_SOURCE = os.environ.get("PADDLE_PDX_MODEL_SOURCE", "huggingface").lower()
 
 
 # Inference Benchmark

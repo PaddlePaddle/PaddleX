@@ -9,6 +9,7 @@ Human detection is a subtask of object detection, which utilizes computer vision
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <tr>

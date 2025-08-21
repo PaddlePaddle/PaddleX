@@ -96,6 +96,8 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         super().__init__(data)
         HtmlMixin.__init__(self)
         XlsxMixin.__init__(self)
+        if self["layout_det_res"] is None:
+            self["layout_det_res"] = {}
 
     def _get_input_fn(self):
         fn = super()._get_input_fn()

@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "paddlex-hps-server"
 version = "0.2.2"
+# `paddlex` is not included here
 dependencies = [
     "colorlog >= 6.9",
-    "paddlex [base, serving] >= 3.0.1",
     "pydantic >= 2",
 ]
 

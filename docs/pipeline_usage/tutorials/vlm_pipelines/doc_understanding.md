@@ -11,7 +11,11 @@ comments: true
 
 <b>文档理解产线中包含了文档类视觉语言模型模块，您可以根据下方的基准测试数据选择使用的模型</b>。
 
+### 1.1 模型基准测试数据
+
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
+
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
 
 <p><b>文档类视觉语言模型模块（可选）：</b></p>
 
@@ -43,6 +47,61 @@ comments: true
 
 <b>注：以上模型总分为内部评估集模型测试结果，内部评估集所有图像分辨率 (height, width) 为 (1680,1204)，共1196条数据，包括了财报、法律法规、理工科论文、说明书、文科论文、合同、研报等场景，暂时未有计划公开。</b>
 
+### 1.2 产线基准测试数据
+
+<details>
+<summary>点击展开/折叠表格</summary>
+
+<table border="1">
+<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (s)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
+<tr>
+<td rowspan="2">doc_understanding-default</td>
+<td>Hygon 7490 + P800</td>
+<td>26.61</td>
+<td>101.90</td>
+<td>100.07</td>
+<td>3112.36</td>
+<td>3112.27</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>16.89</td>
+<td>101.70</td>
+<td>100.09</td>
+<td>2959.31</td>
+<td>2959.25</td>
+<td>100</td>
+<td>42.85</td>
+<td>17254.00</td>
+<td>17252.01</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>description</th></tr>
+<tr>
+<td>doc_understanding-default</td>
+<td>默认配置</td>
+</tr>
+</table>
+</details>
+
+
+* 测试环境：
+    * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
+    * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
+    * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
+* 测试数据：
+    * 测试数据包含一个文档解析和一个chatQA的样本，每个样本包含图像、json两种形式。
+* 测试策略：
+    * 使用 2 个样本进行预热，然后对整个数据集重复 20 次以进行速度性能测试。
+* 备注：
+    * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 
 ## 2. 快速开始
 

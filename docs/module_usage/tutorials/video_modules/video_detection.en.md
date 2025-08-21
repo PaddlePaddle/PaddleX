@@ -11,6 +11,8 @@ The output of the video detection module includes bounding boxes and class label
 
 ## II. List of Supported Models
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>

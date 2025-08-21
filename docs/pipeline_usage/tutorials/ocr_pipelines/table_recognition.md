@@ -14,6 +14,8 @@ comments: true
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
 
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
+
 <details><summary> 👉模型列表详情</summary>
 
 <p><b>表格结构识别模块模型：</b></p>
@@ -654,7 +656,7 @@ paddlex --pipeline table_recognition \
         --device gpu:0
 ```
 
-<b>注：</b>PaddleX 官方模型默认从 HuggingFace 获取，如运行环境访问 HuggingFace 不便，可通过环境变量修改模型源为 BOS：`PADDLE_PDX_MODEL_SOURCE="BOS"`，未来将支持更多主流模型源；
+<b>注：</b>PaddleX 支持多个模型托管平台，官方模型默认优先从 HuggingFace 下载。PaddleX 也支持通过环境变量 `PADDLE_PDX_MODEL_SOURCE` 设置优先使用的托管平台，目前支持 `huggingface`、`aistudio`、`bos`、`modelscope`，如优先使用 `bos`：`PADDLE_PDX_MODEL_SOURCE="bos"`；
 
 相关的参数说明可以参考[2.2 Python脚本方式](#22-python脚本方式集成)中的参数说明。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
 

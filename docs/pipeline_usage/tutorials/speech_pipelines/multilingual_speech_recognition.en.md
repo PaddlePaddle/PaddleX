@@ -7,6 +7,8 @@ comments: true
 ## 1. Introduction to Multilingual Speech Recognition pipeline
 Speech recognition is an advanced tool that can automatically convert spoken languages into corresponding text or commands. This technology plays an important role in various fields such as intelligent customer service, voice assistants, and meeting records. Multilingual speech recognition supports automatic language detection and recognition of multiple languages.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Multilingual Speech Recognition Models (Optional):</b></p>
 <table>
    <tr>

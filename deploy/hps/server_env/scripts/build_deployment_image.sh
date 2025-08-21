@@ -47,4 +47,4 @@ args=(
 [[ -n $pip_index_url ]] && args+=( --build-arg PIP_INDEX_URL="${pip_index_url}" )
 
 
-DOCKER_BUILDKIT=1 docker build "${args[@]}" .
+DOCKER_BUILDKIT=1 docker build "${args[@]}" ../../..

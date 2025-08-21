@@ -21,11 +21,6 @@ for mod in _SPECIAL_MODS:
     if mod in sys.modules:
         _loaded_special_mods.append(mod)
 
-from . import version
-from .inference import create_pipeline, create_predictor
-from .model import create_model
-from .modules import build_dataset_checker, build_evaluator, build_trainer
-
 
 def _initialize():
     from . import repo_apis, repo_manager
@@ -43,10 +38,17 @@ def _initialize():
         repo_manager.initialize()
 
 
+_initialize()
+
+
+from . import version
+
 __version__ = version.get_pdx_version()
 
 
-_initialize()
+from .inference import create_pipeline, create_predictor
+from .model import create_model
+from .modules import build_dataset_checker, build_evaluator, build_trainer
 
 for mod in _SPECIAL_MODS:
     if mod in sys.modules and mod not in _loaded_special_mods:

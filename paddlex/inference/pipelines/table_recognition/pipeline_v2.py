@@ -1263,7 +1263,6 @@ class _TableRecognitionPipelineV2(BasePipeline):
                         new_x1, new_y1 = img_height - tby2, tbx1
                         new_x2, new_y2 = img_height - tby1, tbx2
                     table_box = [new_x1, new_y1, new_x2, new_y2]
-                layout_det_res = {}
                 single_table_rec_res = self.predict_single_table_recognition_res(
                     doc_preprocessor_image,
                     overall_ocr_res,

@@ -8,7 +8,11 @@ The Document Understanding Pipeline is an advanced document processing technolog
 
 <b>The Document Understanding Pipeline includes document-based vision-language model modules. You can choose the model to use based on the benchmark test data below.</b>
 
+### 1.1 Model benchmark data
+
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a faster model; if you are concerned about storage size, choose a model with a smaller storage footprint.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <p><b>Document-based Vision-Language Model Modules (Optional):</b></p>
 
@@ -40,6 +44,61 @@ The Document Understanding Pipeline is an advanced document processing technolog
 
 <b>Note: The total scores of the above models are based on the test results from the internal evaluation set. All images in the internal evaluation set have a resolution (height, width) of (1680, 1204), with a total of 1,196 data entries. These entries cover various scenarios such as financial reports, laws and regulations, science and engineering papers, instruction manuals, liberal arts papers, contracts, research reports, etc. There are currently no plans to make this dataset publicly available.</b>
 
+### 1.2 Pipeline benchmark data
+
+<details>
+<summary>Click to expand/collapse the table</summary>
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (s)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
+<tr>
+<td rowspan="2">doc_understanding-default</td>
+<td>Hygon 7490 + P800</td>
+<td>26.61</td>
+<td>101.90</td>
+<td>100.07</td>
+<td>3112.36</td>
+<td>3112.27</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>16.89</td>
+<td>101.70</td>
+<td>100.09</td>
+<td>2959.31</td>
+<td>2959.25</td>
+<td>100</td>
+<td>42.85</td>
+<td>17254.00</td>
+<td>17252.01</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>description</th></tr>
+<tr>
+<td>doc_understanding-default</td>
+<td>Default configuration</td>
+</tr>
+</table>
+</details>
+
+
+* Test environment:
+    * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
+    * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
+    * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
+* Test data:
+    * Test data containing one document parsing sample and one chatQA sample, each sample contains both image and JSON formats.
+* Test strategy:
+    * Warm up with 2 samples, then repeat the full dataset 20 times for performance testing.
+* Note:
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 

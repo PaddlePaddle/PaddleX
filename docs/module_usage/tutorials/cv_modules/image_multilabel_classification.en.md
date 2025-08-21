@@ -9,6 +9,7 @@ The image multi-label classification module is a crucial component in computer v
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <tr>

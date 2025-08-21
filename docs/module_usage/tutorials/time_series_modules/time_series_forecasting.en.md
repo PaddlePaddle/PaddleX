@@ -9,6 +9,8 @@ Time series forecasting aims to predict the possible values or states at a futur
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>
