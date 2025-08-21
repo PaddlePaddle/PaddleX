@@ -87,9 +87,21 @@ class TextToSpeechPipeline(BasePipeline):
         Returns:
             WhisperResult: The predicted whisper results, support str and json output.
         """
-        text_to_pinyin_res = get_text_to_pinyin_result(input)
-        text_to_speech_acoustic_res = get_text_to_speech_acoustic_result(text_to_pinyin_res)
-        yield from self.text_to_speech_vocoder_model(text_to_speech_acoustic_res)
+        if type(input) == str:
+            if input.endswith("txt"):
+                if os.path.exists(input):
+                    with open(input, "r", encoding="utf-8") as f:
+                        sentences = f.readlines()
+            else:
+                sentences = [input]
+        elif type(input) == list:
+            sentences = input
+        else:
+            raise TypeError("Input must be string or list of strings.")
+        for sentence in sentences:
+            text_to_pinyin_res = get_text_to_pinyin_result(sentence)
+            text_to_speech_acoustic_res = get_text_to_speech_acoustic_result(text_to_pinyin_res)
+            yield from self.text_to_speech_vocoder_model(text_to_speech_acoustic_res)
 
     def get_text_to_pinyin_result(self, input: Union[str, List[str]]
     ) -> TextToPinyinResult:
