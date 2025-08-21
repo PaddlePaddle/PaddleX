@@ -567,13 +567,13 @@ class Benchmark:
         detail_head = [
             "Step",
             "Operation",
-            "Time",
+            "Time (ms)",
         ]
         table = PrettyTable(detail_head)
         table.add_rows(self._detail_list)
         table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
         table.align["Operation"] = "l"
-        table.align["Time"] = "l"
+        table.align["Time (ms)"] = "l"
         logging.info(table_title)
         logging.info(table)
 
@@ -582,13 +582,13 @@ class Benchmark:
         summary_head = [
             "Level",
             "Operation",
-            "Time",
+            "Time (ms)",
         ]
         table = PrettyTable(summary_head)
         table.add_rows(self._summary_list)
         table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
         table.align["Operation"] = "l"
-        table.align["Time"] = "l"
+        table.align["Time (ms)"] = "l"
         logging.info(table_title)
         logging.info(table)
 
@@ -600,7 +600,7 @@ class Benchmark:
         detail_head = [
             "Step",
             "Operation",
-            "Time",
+            "Time (ms)",
         ]
         csv_data = [detail_head, *self._detail_list]
         with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
@@ -610,7 +610,7 @@ class Benchmark:
         summary_head = [
             "Level",
             "Operation",
-            "Time",
+            "Time (ms)",
         ]
         csv_data = [summary_head, *self._summary_list]
         with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
