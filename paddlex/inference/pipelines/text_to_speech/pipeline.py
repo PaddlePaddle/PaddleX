@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,9 @@
 # limitations under the License.
 
 from typing import Any, Dict, List, Optional, Union
-git config --global url."https://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@github.com/".insteadOf "https://github.com/"
+
 import numpy as np
 
-from ....utils.deps import pipeline_requires_extra
 from ...models.text_to_speech_vocoder.result import PwganResult
 from ...models.text_to_speech_acoustic.result import Fastspeech2Result
 from ...models.text_to_pinyin.result import TextToPinyinResult
@@ -91,6 +90,7 @@ class TextToSpeechPipeline(BasePipeline):
         text_to_pinyin_res = get_text_to_pinyin_result(input)
         text_to_speech_acoustic_res = get_text_to_speech_acoustic_result(text_to_pinyin_res)
         yield from self.text_to_speech_vocoder_model(text_to_speech_acoustic_res)
+
     def get_text_to_pinyin_result(self, input: Union[str, List[str]]
     ) -> TextToPinyinResult:
         """Get the result of text to pinyin conversion.
