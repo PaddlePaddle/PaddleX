@@ -146,6 +146,8 @@ class PPOCRVLConfig(PretrainedConfig):
         self.video_token_id = video_token_id
         self.vision_start_token_id = vision_start_token_id
         self.head_dim = head_dim
+        if hidden_act != "silu":
+            raise NotImplementedError
         self.hidden_act = hidden_act
         self.hidden_size = hidden_size
         self.use_bias = use_bias
@@ -157,4 +159,22 @@ class PPOCRVLConfig(PretrainedConfig):
         self.compression_ratio = compression_ratio
         self.num_key_value_heads = num_key_value_heads
         self.max_sequence_length = max_sequence_length
+
         super().__init__(tie_word_embeddings=tie_word_embeddings, **kwargs)
+
+        # Currently, these configuration items are hard-coded
+        self.fuse_rms_norm = True
+        self.use_sparse_flash_attn = True
+        self.use_var_len_flash_attn = False
+        self.scale_qk_coeff = 1.0
+        self.fuse_softmax_mask = False
+        self.use_sparse_head_and_loss_fn = False
+        self.use_recompute_loss_fn = False
+        self.use_fused_head_and_loss_fn = False
+        self.fuse_linear = False
+        self.token_balance_seqlen = False
+        self.use_rmsnorm = True
+        self.fuse_ln = False
+        self.fuse_rope = False
+        self.cachekv_quant = False
+        self.fuse_swiglu = False
