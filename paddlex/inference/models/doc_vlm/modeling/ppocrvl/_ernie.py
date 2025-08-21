@@ -167,7 +167,7 @@ def eager_attention_forward(
         attn_weights, p=dropout, training=layer.training
     )
     attn_output = paddle.matmul(attn_weights, value_states)
-    attn_output = attn_output.transpose((0, 2, 1, 3))
+    attn_output = attn_output.transpose((0, 2, 1, 3)).contiguous()
 
     return attn_output, attn_weights
 
@@ -259,7 +259,7 @@ class Ernie4_5Attention(nn.Layer):
             **kwargs,
         )
 
-        attn_output = attn_output.reshape((*input_shape, -1))
+        attn_output = attn_output.reshape((*input_shape, -1)).contiguous()
         attn_output = self.o_proj(attn_output)
         return attn_output, attn_weights
 

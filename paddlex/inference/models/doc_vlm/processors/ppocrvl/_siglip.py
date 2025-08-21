@@ -30,13 +30,13 @@
 # TODO: Support videos
 
 import json
-import logging
 import math
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 import numpy as np
 
+from ......utils import logging
 from ..common import (
     BatchFeature,
     convert_to_rgb,

@@ -368,7 +368,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
         >>> tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
         "The image shows a street scene with a red stop sign in the foreground. In the background, there is a large red gate with Chinese characters ..."
         ```"""
-
         output_attentions = (
             output_attentions
             if output_attentions is not None

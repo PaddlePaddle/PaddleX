@@ -108,7 +108,7 @@ def eager_attention_forward(
     attn_weights = F.dropout(attn_weights, p=dropout, training=module.training)
 
     attn_output = paddle.matmul(attn_weights, value)
-    attn_output = attn_output.transpose((0, 2, 1, 3))
+    attn_output = attn_output.transpose((0, 2, 1, 3)).contiguous()
 
     return attn_output, attn_weights
 
@@ -168,7 +168,7 @@ class SiglipAttention(nn.Layer):
             scaling=self.scale,
             dropout=0.0 if not self.training else self.dropout,
         )
-        attn_output = attn_output.reshape([B, L, D])
+        attn_output = attn_output.reshape([B, L, D]).contiguous()
 
         attn_output = self.out_proj(attn_output)
 
