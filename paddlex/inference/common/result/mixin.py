@@ -593,6 +593,7 @@ class VideoMixin:
                 )
             video_writer.write(save_path, video[list(video.keys())[0]], *args, **kwargs)
 
+
 class MarkdownMixin:
     """Mixin class for adding Markdown handling capabilities."""
 
