@@ -23,5 +23,5 @@ output = pipeline.predict(
 for res in output:
     print(res)
     res.print()
-    res.save_to_audio("./output")
+    res.save_to_audio("./output/test.wav")
     res.save_to_json("./output")

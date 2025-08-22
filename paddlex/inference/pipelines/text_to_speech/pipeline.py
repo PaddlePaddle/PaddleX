@@ -57,19 +57,19 @@ class TextToSpeechPipeline(BasePipeline):
         )
 
         text_to_pinyin_model_config = config["SubModules"][
-            "text_to_pinyin"
+            "TextToPinyin"
         ]
         self.text_to_pinyin_model = self.create_model(
             text_to_pinyin_model_config
         )
         text_to_speech_acoustic_model_config = config["SubModules"][
-            "text_to_speech_acoustic"
+            "TextToSpeechAcoustic"
         ]
         self.text_to_speech_acoustic_model = self.create_model(
             text_to_speech_acoustic_model_config
         )
         text_to_speech_vocoder_model_config = config["SubModules"][
-            "text_to_speech_vocoder"
+            "TextToSpeechVocoder"
         ]
         self.text_to_speech_vocoder_model = self.create_model(
             text_to_speech_vocoder_model_config
@@ -77,7 +77,7 @@ class TextToSpeechPipeline(BasePipeline):
 
     def predict(
         self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
-    ) -> WhisperResult:
+    ) -> PwganResult:
         """Predicts speech recognition results for the given input.
 
         Args:
@@ -99,8 +99,8 @@ class TextToSpeechPipeline(BasePipeline):
         else:
             raise TypeError("Input must be string or list of strings.")
         for sentence in sentences:
-            text_to_pinyin_res = get_text_to_pinyin_result(sentence)
-            text_to_speech_acoustic_res = get_text_to_speech_acoustic_result(text_to_pinyin_res)
+            text_to_pinyin_res = [self.get_text_to_pinyin_result(sentence)['result']['phone_ids']]
+            text_to_speech_acoustic_res = [self.get_text_to_speech_acoustic_result(text_to_pinyin_res)['result']]
             yield from self.text_to_speech_vocoder_model(text_to_speech_acoustic_res)
 
     def get_text_to_pinyin_result(self, input: Union[str, List[str]]
