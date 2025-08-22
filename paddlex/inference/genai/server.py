@@ -95,6 +95,7 @@ def run_genai_server(args=None):
         default_config,
         backend_config,
     )
+    backend_config = default_config
 
     with get_chat_template_path(
         args.model_name, args.backend, model_dir
