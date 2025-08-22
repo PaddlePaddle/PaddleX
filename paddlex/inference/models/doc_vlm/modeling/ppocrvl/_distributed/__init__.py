@@ -13,8 +13,11 @@
 # limitations under the License.
 
 """
-Distributed utils.
+Distributed utils
 """
+
+# TODO: Support XPU
+
 import paddle
 
 from .common_dist_utils import (

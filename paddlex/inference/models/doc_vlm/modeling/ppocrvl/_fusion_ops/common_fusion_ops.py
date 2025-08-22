@@ -13,8 +13,10 @@
 # limitations under the License.
 
 """
-Common fusion operators
+Common fusion operators.
 """
+
+# TODO: Support XPU
 
 import paddle
 import paddle.nn.functional as F
@@ -63,7 +65,7 @@ def _fusion_flash_attention(
         ValueError: If invalid combination of mask inputs is provided
     """
 
-    # version = paddle.version.full_version
+    version = paddle.version.full_version
     if attn_mask_start_row_indices is not None:
         if use_sparse_flash_attn:
             if rr_flash_attn is None:

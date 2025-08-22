@@ -175,6 +175,5 @@ class PPOCRVLConfig(PretrainedConfig):
         self.token_balance_seqlen = False
         self.use_rmsnorm = True
         self.fuse_ln = False
-        self.fuse_rope = False
         self.cachekv_quant = False
         self.fuse_swiglu = False
