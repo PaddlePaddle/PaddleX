@@ -51,6 +51,7 @@ from .ts_forecasting import TSFcPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
 
+
 def create_predictor(
     model_name: str,
     model_dir: Optional[str] = None,
