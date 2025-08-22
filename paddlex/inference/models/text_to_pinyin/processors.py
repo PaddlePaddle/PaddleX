@@ -723,7 +723,9 @@ class G2PWOnnxConverter:
         )
         if len(texts) == 0:
             # sentences no polyphonic words
-            return partial_results
+            phones = self._pinyin2p(partial_results[0], sentences)
+            phone_ids = self._p2id(phones[0])
+            return {"phones": phones[0], "phone_ids": phone_ids, "pinyins": partial_results[0]}
 
         onnx_input = prepare_onnx_input(
             tokenizer=self.tokenizer,
