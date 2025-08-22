@@ -92,8 +92,8 @@ def run_genai_server(args=None):
         )
         sys.exit(1)
     update_backend_config(
-        backend_config,
         default_config,
+        backend_config,
     )
 
     with get_chat_template_path(
