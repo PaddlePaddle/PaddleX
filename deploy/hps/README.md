@@ -172,7 +172,7 @@ comments: true
 </tbody>
 </table>
 
-调用后存储到当前目录 `/output` 路径下。
+调用后存储到当前目录 `output` 路径下。
 
 ## 3.FAQ
 

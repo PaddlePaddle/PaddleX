@@ -140,7 +140,7 @@ This stage mainly introduces how to package pipeline materials. This function is
 - `client`: Responsible for invoking the model services.
 - `server`: Deployed using the images built in [1. Image Building](./README_en.md#1-image-building), serving as the runtime environment for model services.
 
-Before packaging the pipeline materials, you need to switch to the `sdk` directory and run the `scripts/assemble.sh` script in this directory for  packaging. For example, to package the general OCR pipeline, run:
+Before packaging the pipeline materials, you need to switch to the `sdk` directory and run the `scripts/assemble.sh` script in this directory for packaging. For example, to package the general OCR pipeline, run:
 
 ```bash
 ./scripts/assemble.sh OCR
@@ -175,7 +175,7 @@ The parameters for the packaging script are described as follows:
 </tbody>
 </table>
 
-After run successfully, the packaged  will be stored in the `/output` directory.
+After run successfully, the packaged  will be stored in the `output` directory.
 
 ## 3. FAQ
 
