@@ -339,11 +339,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             pixel_values_videos = None
             position_ids = position_ids[:, -1:]
 
-        # TODO: Support `use_cache=True`
-        # Also note that the use_cache option does not seem to work in PaddleX
-        if use_cache:
-            raise NotImplementedError
-
         # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
         if inputs_embeds is not None and past_key_values is None:
             model_inputs = {"inputs_embeds": inputs_embeds}

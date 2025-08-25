@@ -1097,6 +1097,8 @@ class GenerationMixin(object):
         if "logits_processors" in model_kwargs:
             model_kwargs.pop("logits_processors")
 
+        model_kwargs["use_cache"] = generation_config.use_cache
+
         stopping_criteria = (
             stopping_criteria
             if stopping_criteria is not None
