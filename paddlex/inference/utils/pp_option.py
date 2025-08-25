@@ -18,7 +18,7 @@ from typing import Dict, List
 
 from ...utils import logging
 from ...utils.device import get_default_device, parse_device, set_env_for_device_type
-from ...utils.flags import ENABLE_MKLDNN_BYDEFAULT, USE_PIR_TRT
+from ...utils.flags import ENABLE_MKLDNN_BYDEFAULT, USE_PIR_TRT, DISABLE_DEVICE_FALLBACK
 from .misc import is_mkldnn_available
 from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
@@ -80,6 +80,23 @@ class PaddlePredictorOption(object):
     def setdefault_by_model_name(self, model_name):
         for k, v in self._get_default_config(model_name).items():
             self._cfg.setdefault(k, v)
+
+        if self.device_type == "gpu":
+            import paddle
+
+            if not (paddle.device.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0):
+                if DISABLE_DEVICE_FALLBACK:
+                    raise RuntimeError(
+                        "Device fallback is disabled and the specified device (GPU) is not available. "
+                        "To fall back to CPU instead, unset the PADDLE_PDX_DISABLE_DEVICE_FALLBACK environment variable."
+                    )
+                else:
+                    logging.warning(
+                        "The specified device (GPU) is not available! Switching to CPU instead."
+                    )
+                self.device_type = "cpu"
+                self.run_mode = get_default_run_mode(model_name, "cpu")
+                self.device_id = None
 
         # for trt
         if self.run_mode in ("trt_int8", "trt_fp32", "trt_fp16"):
