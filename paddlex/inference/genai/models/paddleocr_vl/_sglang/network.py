@@ -49,7 +49,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
     )
     from transformers.utils import torch_int
 
-    from .ernie4 import Ernie4_5ForCausalLM
+    from .ernie4 import Ernie4_5_ForCausalLM
 
     class Projector(nn.Module):
 
@@ -821,7 +821,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
                 loaded_params.add(name)
             return loaded_params
 
-    class PPOCRVLForConditionalGeneration(Ernie4_5ForCausalLM):
+    class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM):
 
         def __init__(self, *, config, quant_config=None, prefix: str = ""):
             super().__init__(config=config, prefix=prefix)
