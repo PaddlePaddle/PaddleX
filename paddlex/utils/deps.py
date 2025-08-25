@@ -90,8 +90,7 @@ def get_dep_version(dep):
 
 
 @lru_cache()
-def is_dep_available(dep, /, check_version=None):
-    DEPS_DEFAULT_CHECK_VERSION = ["paddle2onnx"]
+def is_dep_available(dep, /, check_version=False):
     if (
         dep in ("paddlepaddle", "paddle-custom-device", "ultra-infer", "fastdeploy")
         and check_version
@@ -108,11 +107,6 @@ def is_dep_available(dep, /, check_version=None):
         return importlib.util.find_spec("ultra_infer") is not None
     elif dep == "fastdeploy":
         return importlib.util.find_spec("fastdeploy") is not None
-    if check_version is None:
-        if dep in DEPS_DEFAULT_CHECK_VERSION:
-            check_version = True
-        else:
-            check_version = False
     version = get_dep_version(dep)
     if version is None:
         return False
