@@ -1540,7 +1540,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>

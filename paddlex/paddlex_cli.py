@@ -553,6 +553,9 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
             shutil.copy(src_path, dst_path)
             logging.info(f"Copied {src_path} to {dst_path}")
 
+    if not paddle_model_dir:
+        sys.exit("PaddlePaddle model directory must be specified")
+
     paddle_model_dir = Path(paddle_model_dir)
     if not onnx_model_dir:
         onnx_model_dir = paddle_model_dir
