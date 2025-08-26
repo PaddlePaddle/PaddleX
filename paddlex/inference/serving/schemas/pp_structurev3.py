@@ -39,6 +39,7 @@ class InferRequest(ocr.BaseInferRequest):
     useFormulaRecognition: Optional[bool] = None
     useChartRecognition: Optional[bool] = None
     useRegionDetection: Optional[bool] = None
+    saveMarkdownContent: Optional[bool] = None
     layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None

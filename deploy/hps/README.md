@@ -12,7 +12,7 @@ comments: true
 
 - **操作系统**：Linux
 - **Docker 版本**：`>= 20.10.0`，用于镜像构建和部署
-- **CPU 架构**：x86-64 
+- **CPU 架构**：x86-64
 
 本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署环境搭建与物料打包。整体流程分为两个阶段：
 
@@ -85,7 +85,7 @@ comments: true
 对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，在 `server_env` 目录下执行以下命令：
 
 ```bash
-./scripts/build_deployment_image.sh -k gpu -t latest-gpu 
+./scripts/build_deployment_image.sh -k gpu -t latest-gpu
 ```
 
 构建镜像的参数配置项包括
@@ -118,10 +118,10 @@ comments: true
 执行成功后，命令行会输出以下提示信息：
 
 ```text
- => => exporting to image                                                         
- => => exporting layers                                                      
- => => writing image  sha256:ba3d0b2b079d63ee0239a99043fec7e25f17bf2a7772ec2fc80503c1582b3459   
- => => naming to ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:latest-gpu   
+ => => exporting to image
+ => => exporting layers
+ => => writing image  sha256:ba3d0b2b079d63ee0239a99043fec7e25f17bf2a7772ec2fc80503c1582b3459
+ => => naming to ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:latest-gpu
 ```
 
 如需批量构建 GPU 和 CPU 镜像，可以执行以下命令：
