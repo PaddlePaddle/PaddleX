@@ -112,7 +112,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                 use_formula_recognition=input.useFormulaRecognition,
                 use_chart_recognition=input.useChartRecognition,
                 use_region_detection=input.useRegionDetection,
-                save_markdown_content=input.saveMarkdownContent,
+                format_block_content=input.formatBlockContent,
                 layout_threshold=input.layoutThreshold,
                 layout_nms=input.layoutNms,
                 layout_unclip_ratio=input.layoutUnclipRatio,
