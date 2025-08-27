@@ -1956,6 +1956,7 @@ for item in markdown_images:
         - `use_seal_recognition`: `(bool)` 控制是否启用印章识别子产线
         - `use_table_recognition`: `(bool)` 控制是否启用表格识别子产线
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
+        - `format_block_content`: `(bool)` 控制是否将 `block_content` 中的内容格式化为Markdown格式
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果字典，仅当`use_doc_preprocessor=True`时存在
         - `input_path`: `(str)` 文档预处理子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`，此处为`None`

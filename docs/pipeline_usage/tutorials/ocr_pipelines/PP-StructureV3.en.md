@@ -1994,6 +1994,7 @@ In the above Python script, the following steps are executed:
         - `use_seal_recognition`: `(bool)` Controls whether to enable the seal recognition sub-line.
         - `use_table_recognition`: `(bool)` Controls whether to enable the table recognition sub-line.
         - `use_formula_recognition`: `(bool)` Controls whether to enable the formula recognition sub-line.
+        - `format_block_content`: `(bool)` Controls whether to format the `block_content` into Markdown format
 
     - `parsing_res_list`: `(List[Dict])` A list of parsing results, where each element is a dictionary. The order of the list is the reading order after parsing.
         - `block_bbox`: `(np.ndarray)` The bounding box of the layout area.
