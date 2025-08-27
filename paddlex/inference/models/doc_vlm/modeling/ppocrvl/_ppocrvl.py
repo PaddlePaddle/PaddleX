@@ -36,16 +36,19 @@
 # TODO: Support caching
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import paddle
 import paddle.nn as nn
 
 from ....common.vlm.generation import GenerationMixin
-from ....common.vlm.transformers.model_outputs import ModelOutput
+from ....common.vlm.transformers.model_outputs import (
+    CausalLMOutputWithCrossAttentions,
+    ModelOutput,
+)
 from ._config import PPOCRVLConfig
-from ._ernie import Ernie4_5Model, Ernie4_5PreTrainedModel
+from ._ernie import Ernie4_5Model, Ernie4_5PretrainedModel
 from ._projector import Projector
 from ._siglip import SiglipVisionModel
 
@@ -60,10 +63,10 @@ class PPOCRVLCausalLMOutputWithPast(ModelOutput):
     rope_deltas: Optional[paddle.Tensor] = None
 
 
-class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
+class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
     _tied_weights_keys = ["lm_head.weight"]
     config_class = PPOCRVLConfig
-    _no_split_modules = ["Ernie4_5_DecoderLayer", "SiglipEncoderLayer"]
+    _no_split_modules = ["Ernie4_5DecoderLayer", "SiglipEncoderLayer"]
 
     base_model_prefix = ""
 
@@ -309,6 +312,104 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
 
             return position_ids, mrope_position_deltas
 
+    def prepare_attention_mask_for_generation(
+        self, input_ids, pad_token_id, eos_token_id
+    ):
+        """Avoid using attention_mask with flash_attn on generation."""
+        if self.config.use_flash_attention:
+            return None
+        return super().prepare_attention_mask_for_generation(
+            input_ids, pad_token_id, eos_token_id
+        )
+
+    def prepare_inputs_for_generation(
+        self,
+        input_ids,
+        use_cache=False,
+        past_key_values=None,
+        inputs_embeds=None,
+        pixel_values=None,
+        pixel_values_videos=None,
+        position_ids=None,
+        **kwargs,
+    ):
+        if past_key_values:
+            input_ids = input_ids[:, -1:]
+            pixel_values = None
+            pixel_values_videos = None
+            position_ids = position_ids[:, -1:]
+
+        # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
+        if inputs_embeds is not None and past_key_values is None:
+            model_inputs = {"inputs_embeds": inputs_embeds}
+        else:
+            model_inputs = {"input_ids": input_ids}
+
+        model_inputs.update(
+            {
+                "past_key_values": past_key_values,
+                "use_cache": use_cache,
+                "pixel_values": pixel_values,
+                "pixel_values_videos": pixel_values_videos,
+                "position_ids": position_ids,
+                **kwargs,
+            }
+        )
+
+        return model_inputs
+
+    def update_model_kwargs_for_generation(
+        self, outputs, model_kwargs, is_encoder_decoder=False
+    ):
+        """
+        Updates model kwargs for generation.
+
+        Args:
+            outputs (Any): Model outputs.
+            model_kwargs (dict): Current model kwargs.
+            is_encoder_decoder (bool): Whether using encoder-decoder architecture.
+
+        Returns:
+            dict: Updated model kwargs.
+        """
+        # update cache
+        if (
+            isinstance(outputs, tuple)
+            and len(outputs) > 1
+            and not isinstance(outputs[1], paddle.Tensor)
+        ):
+            model_kwargs["past_key_values"] = outputs[1]
+
+        if (
+            isinstance(outputs, CausalLMOutputWithCrossAttentions)
+            and "past_key_values" in outputs
+        ):
+            model_kwargs["past_key_values"] = outputs.past_key_values
+
+        if (
+            not is_encoder_decoder
+            and model_kwargs.get("attention_mask", None) is not None
+        ):
+            # update attention mask
+            attention_mask = model_kwargs["attention_mask"]
+            model_kwargs["attention_mask"] = paddle.concat(
+                [
+                    attention_mask,
+                    paddle.ones(
+                        [attention_mask.shape[0], 1], dtype=attention_mask.dtype
+                    ),
+                ],
+                axis=-1,
+            )
+
+        if "position_ids" in model_kwargs and model_kwargs["position_ids"] is not None:
+            position_ids = model_kwargs["position_ids"]
+            model_kwargs["position_ids"] = paddle.concat(
+                [position_ids, position_ids[..., -1:] + 1], axis=-1
+            )
+
+        return model_kwargs
+
     def forward(
         self,
         input_ids: paddle.Tensor = None,
@@ -326,48 +427,9 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
         image_grid_thw: Optional[paddle.Tensor] = None,
         video_grid_thw: Optional[paddle.Tensor] = None,
         rope_deltas: Optional[paddle.Tensor] = None,
-        cache_position: Optional[paddle.Tensor] = None,
         second_per_grid_ts: Optional[paddle.Tensor] = None,
         **kwargs,
     ) -> Union[Tuple, PPOCRVLCausalLMOutputWithPast]:
-        r"""
-            labels (`paddle.Tensor` of shape `(batch_size, sequence_length)`, *optional*):
-                Labels for computing the masked language modeling loss. Indices should either be in `[0, ...,
-                config.vocab_size]` or -100 (see `input_ids` docstring). Tokens with indices set to `-100` are ignored
-                (masked), the loss is only computed for the tokens with labels in `[0, ..., config.vocab_size]`.
-
-        Returns:
-
-        Example:
-
-        ```python
-        >>> from PIL import Image
-        >>> import requests
-        >>> from transformers import AutoProcessor, KeyeForConditionalGeneration
-
-        >>> model = KeyeForConditionalGeneration.from_pretrained("Keye/Keye-8B-Instruct")
-        >>> processor = AutoProcessor.from_pretrained("Keye/Keye-8B-Instruct")
-
-        >>> messages = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image"},
-                    {"type": "text", "text": "What is shown in this image?"},
-                ],
-            },
-        ]
-        >>> url = "https://www.ilankelman.org/stopsigns/australia.jpg"
-        >>> image = Image.open(requests.get(url, stream=True).raw)
-
-        >>> text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        >>> inputs = processor(text=[text], images=[image], vision_infos=[vision_infos])
-
-        >>> # Generate
-        >>> generate_ids = model.generate(inputs.input_ids, max_length=30)
-        >>> tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
-        "The image shows a street scene with a red stop sign in the foreground. In the background, there is a large red gate with Chinese characters ..."
-        ```"""
         output_attentions = (
             output_attentions
             if output_attentions is not None
@@ -442,6 +504,9 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
 
                 inputs_embeds = inputs_embeds.masked_scatter(image_mask, image_embeds)
 
+        if attention_mask is not None and attention_mask.dtype != paddle.bool:
+            attention_mask = paddle.cast(attention_mask, paddle.bool)
+
         outputs = self.model(
             input_ids=None,
             position_ids=position_ids,
@@ -491,19 +556,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
             generated_ids = super().generate(**kwargs)
         return generated_ids
 
-    def prepare_inputs_for_generation(
-        self,
-        input_ids,
-        **kwargs,
-    ):
-        if kwargs.get("use_cache"):
-            raise NotImplementedError("`use_cache=True` is not supported yet")
-
-        model_inputs = super().prepare_inputs_for_generation(input_ids)
-        model_inputs.update(kwargs)
-
-        return model_inputs
-
     def _get_image_nums_and_video_nums(
         self,
         input_ids: Optional[paddle.Tensor],
@@ -532,112 +584,3 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PreTrainedModel, GenerationMixin):
         video_nums = paddle.sum(vision_first_mask & video_mask, axis=1)
 
         return image_nums, video_nums
-
-    def _expand_inputs_for_generation(
-        self,
-        expand_size: int = 1,
-        is_encoder_decoder: bool = False,
-        input_ids: Optional[paddle.Tensor] = None,
-        **model_kwargs,
-    ) -> Tuple[paddle.Tensor, Dict[str, Any]]:
-        # Overwritten -- Support for expanding tensors without a batch size dimension
-        # e.g., pixel_values, image_grid_thw, pixel_values_videos, video_grid_thw, second_per_grid_t
-        # pixel_values.shape[0] is sum(seqlen_images for samples)
-        # image_grid_thw.shape[0] is sum(num_images for samples)
-
-        if expand_size == 1:
-            return input_ids, model_kwargs
-
-        visual_keys = [
-            "pixel_values",
-            "image_grid_thw",
-            "pixel_values_videos",
-            "video_grid_thw",
-            "second_per_grid_ts",
-        ]
-
-        def _expand_dict_for_generation_visual(dict_to_expand):
-            image_grid_thw = model_kwargs.get("image_grid_thw", None)
-            video_grid_thw = model_kwargs.get("video_grid_thw", None)
-            image_nums, video_nums = self._get_image_nums_and_video_nums(input_ids)
-
-            def _repeat_interleave_samples(x, lengths, repeat_times):
-                samples = paddle.split(x, lengths)
-                repeat_args = [repeat_times] + [1] * (x.dim() - 1)
-                result = paddle.concat(
-                    [sample.repeat(*repeat_args) for sample in samples], axis=0
-                )
-                return result
-
-            for key in dict_to_expand:
-                if key == "pixel_values":
-                    # split images into samples
-                    samples = paddle.split(image_grid_thw, list(image_nums))
-                    # compute the sequence length of images for each sample
-                    lengths = [paddle.prod(sample, axis=1).sum() for sample in samples]
-                    dict_to_expand[key] = _repeat_interleave_samples(
-                        dict_to_expand[key], lengths=lengths, repeat_times=expand_size
-                    )
-                elif key == "image_grid_thw":
-                    # get the num of images for each sample
-                    lengths = list(image_nums)
-                    dict_to_expand[key] = _repeat_interleave_samples(
-                        dict_to_expand[key], lengths=lengths, repeat_times=expand_size
-                    )
-                elif key == "pixel_values_videos":
-                    samples = paddle.split(video_grid_thw, list(video_nums))
-                    lengths = [paddle.prod(sample, axis=1).sum() for sample in samples]
-                    dict_to_expand[key] = _repeat_interleave_samples(
-                        dict_to_expand[key], lengths=lengths, repeat_times=expand_size
-                    )
-                elif key == "video_grid_thw":
-                    lengths = list(video_nums)
-                    dict_to_expand[key] = _repeat_interleave_samples(
-                        dict_to_expand[key], lengths=lengths, repeat_times=expand_size
-                    )
-                elif key == "second_per_grid_ts":
-                    if not isinstance(dict_to_expand[key], list):
-                        raise TypeError(
-                            f"Expected value for key '{key}' to be a list, but got {type(dict_to_expand[key])} instead."
-                        )
-                    tensor = paddle.Tensor(dict_to_expand[key])
-                    lengths = list(video_nums)
-                    tensor = _repeat_interleave_samples(
-                        tensor, lengths=lengths, repeat_times=expand_size
-                    )
-                    dict_to_expand[key] = tensor.tolist()
-            return dict_to_expand
-
-        def _expand_dict_for_generation(dict_to_expand):
-            for key in dict_to_expand:
-                if (
-                    key != "cache_position"
-                    and dict_to_expand[key] is not None
-                    and isinstance(dict_to_expand[key], paddle.Tensor)
-                    and key not in visual_keys
-                ):
-                    dict_to_expand[key] = dict_to_expand[key].repeat_interleave(
-                        expand_size, axis=0
-                    )
-            return dict_to_expand
-
-        # input_ids is required for expanding visual inputs
-        # If input_ids is unavailable, visual inputs will not be used; therefore, there is no need to expand visual inputs.
-        if input_ids is not None and input_ids.numel() != 0:
-            model_kwargs = _expand_dict_for_generation_visual(model_kwargs)
-
-        if input_ids is not None:
-            input_ids = input_ids.repeat_interleave(expand_size, axis=0)
-
-        model_kwargs = _expand_dict_for_generation(model_kwargs)
-
-        if is_encoder_decoder:
-            if model_kwargs.get("encoder_outputs") is None:
-                raise ValueError(
-                    "If `is_encoder_decoder` is True, make sure that `encoder_outputs` is defined."
-                )
-            model_kwargs["encoder_outputs"] = _expand_dict_for_generation(
-                model_kwargs["encoder_outputs"]
-            )
-
-        return input_ids, model_kwargs
