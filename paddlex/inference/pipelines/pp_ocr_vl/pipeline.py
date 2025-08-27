@@ -31,7 +31,7 @@ from ..layout_parsing.utils import gather_imgs
 from .result import PPOCRVLBlock, PPOCRVLResult
 from .uilts import filter_overlap_boxes, merge_blocks
 
-IMAGE_LABELS = ["image", "header_image", "footer_image", "chart","seal"]
+IMAGE_LABELS = ["image", "header_image", "footer_image", "chart", "seal"]
 
 
 @benchmark.time_methods
@@ -156,38 +156,62 @@ class _PPOCRVLPipeline(BasePipeline):
 
         return True
 
-    def get_layout_parsing_res(self, image, layout_det_res):
+    def get_layout_parsing_results(self, images, layout_det_results):
+        layout_det_results = [
+            filter_overlap_boxes(
+                layout_det_res,
+            )
+            for layout_det_res in layout_det_results
+        ]
 
-        parsing_res_list = []
-        vl_rec_res_list = []
-        table_res_list = []
-        layout_det_res = filter_overlap_boxes(
-            layout_det_res,
-        )
-        boxes = layout_det_res["boxes"]
-        blocks = self.crop_by_boxes(image, boxes)
-        blocks = merge_blocks(blocks, non_merge_labels=IMAGE_LABELS)
-        for block in blocks:
-            block_img = block["img"]
-            block_bbox = block["box"]
-            block_label = block["label"]
-            block_content = ""
-            if block_label not in IMAGE_LABELS and block_img is not None:
-                text_prompt = "OCR"
-                if block_label == "table":
-                    text_prompt = "Table Recognition:"
-                elif "formula" in block_label:
-                    text_prompt = "Formula Recognition:"
-                vl_rec_result = next(
-                    self.vl_rec_model.predict(
+        blocks = []
+        for image, layout_det_res in zip(images, layout_det_results):
+            boxes = layout_det_res["boxes"]
+            blocks_for_img = self.crop_by_boxes(image, boxes)
+            blocks_for_img = merge_blocks(blocks_for_img, non_merge_labels=IMAGE_LABELS)
+            blocks.append(blocks_for_img)
+
+        vl_rec_input_flat_list = []
+        chunk_indices = [0]
+        for blocks_for_img in blocks:
+            for block in blocks_for_img:
+                block_img = block["img"]
+                block_label = block["label"]
+                if block_label not in IMAGE_LABELS and block_img is not None:
+                    text_prompt = "OCR"
+                    if block_label == "table":
+                        text_prompt = "Table Recognition:"
+                    elif "formula" in block_label:
+                        text_prompt = "Formula Recognition:"
+                    vl_rec_input_flat_list.append(
                         {
                             "image": block_img,
                             "query": text_prompt,
-                        }
+                        },
                     )
-                )
+            chunk_indices.append(len(vl_rec_input_flat_list))
+
+        vl_rec_res_flat_list = list(
+            self.vl_rec_model.predict(
+                vl_rec_input_flat_list,
+                use_cache=True,
+            )
+        )
+
+        parsing_res_lists = []
+        vl_rec_res_lists = []
+        table_res_lists = []
+        for blocks_for_img, idx_st, idx_ed in zip(
+            blocks, chunk_indices, chunk_indices[1:]
+        ):
+            vl_rec_res_list = vl_rec_res_flat_list[idx_st:idx_ed]
+            parsing_res_list = []
+            table_res_list = []
+            for block, vl_rec_result in zip(blocks_for_img, vl_rec_res_list):
+                block_bbox = block["box"]
+                block_img = block["img"]
+                block_label = block["label"]
                 vl_rec_result["image"] = block_img
-                vl_rec_res_list.append(vl_rec_result)
                 result_str = vl_rec_result.get("result", "")
                 if ("\\(" in result_str and "\\)" in result_str) or (
                     "\\[" in result_str and "\\]" in result_str
@@ -203,21 +227,26 @@ class _PPOCRVLPipeline(BasePipeline):
 
                 block_content = result_str
 
-            block_info = PPOCRVLBlock(
-                label=block_label,
-                bbox=block_bbox,
-                content=block_content,
-            )
-            if block_label in IMAGE_LABELS and block_img is not None:
-                x_min, y_min, x_max, y_max = list(map(int, block_bbox))
-                img_path = (
-                    f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                block_info = PPOCRVLBlock(
+                    label=block_label,
+                    bbox=block_bbox,
+                    content=block_content,
                 )
-                block_info.image = {"path": img_path, "img": Image.fromarray(block_img)}
+                if block_label in IMAGE_LABELS and block_img is not None:
+                    x_min, y_min, x_max, y_max = list(map(int, block_bbox))
+                    img_path = f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                    block_info.image = {
+                        "path": img_path,
+                        "img": Image.fromarray(block_img),
+                    }
 
-            parsing_res_list.append(block_info)
+                parsing_res_list.append(block_info)
 
-        return parsing_res_list, vl_rec_res_list, table_res_list
+            parsing_res_lists.append(parsing_res_list)
+            vl_rec_res_lists.append(vl_rec_res_list)
+            table_res_lists.append(table_res_list)
+
+        return parsing_res_lists, vl_rec_res_lists, table_res_lists
 
     def predict(
         self,
@@ -291,12 +320,22 @@ class _PPOCRVLPipeline(BasePipeline):
                 for img, res in zip(doc_preprocessor_images, layout_det_results)
             ]
 
+            parsing_res_lists, vl_rec_res_lists, table_res_lists = (
+                self.get_layout_parsing_results(
+                    doc_preprocessor_images,
+                    layout_det_results,
+                )
+            )
+
             for (
                 input_path,
                 page_index,
                 doc_preprocessor_image,
                 doc_preprocessor_res,
                 layout_det_res,
+                table_res_list,
+                vl_rec_res_list,
+                parsing_res_list,
                 imgs_in_doc_for_img,
             ) in zip(
                 batch_data.input_paths,
@@ -304,15 +343,11 @@ class _PPOCRVLPipeline(BasePipeline):
                 doc_preprocessor_images,
                 doc_preprocessor_results,
                 layout_det_results,
+                table_res_lists,
+                vl_rec_res_lists,
+                parsing_res_lists,
                 imgs_in_doc,
             ):
-                parsing_res_list, vl_rec_res_list, table_res_list = (
-                    self.get_layout_parsing_res(
-                        doc_preprocessor_image,
-                        layout_det_res,
-                    )
-                )
-
                 single_img_res = {
                     "input_path": input_path,
                     "page_index": page_index,

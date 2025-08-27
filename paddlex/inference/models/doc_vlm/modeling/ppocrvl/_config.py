@@ -163,7 +163,13 @@ class PPOCRVLConfig(PretrainedConfig):
         super().__init__(tie_word_embeddings=tie_word_embeddings, **kwargs)
 
         # Currently, these configuration items are hard-coded
-        self.fuse_rms_norm = True
+        from ......utils.env import get_paddle_cuda_version
+
+        cuda_version = get_paddle_cuda_version()
+        if cuda_version and cuda_version[0] > 11:
+            self.fuse_rms_norm = True
+        else:
+            self.fuse_rms_norm = False
         self.use_sparse_flash_attn = True
         self.use_var_len_flash_attn = False
         self.scale_qk_coeff = 1.0

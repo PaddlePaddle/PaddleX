@@ -1,0 +1,40 @@
+
+pipeline_name: PP-OCR-VL
+
+batch_size: 8
+
+use_doc_preprocessor: False
+
+SubModules:
+  LayoutDetection:
+    module_name: layout_detection
+    # model_name: PP-DocLayout_plus-L #PP-DocLayoutV2-L PP-DocLayout_plus-L
+    # model_dir: null
+    model_name: PP-DocLayoutV2-L #PP-DocLayoutV2-L PP-DocLayout_plus-L
+    model_dir: /paddle/project/PaddleX/pp_ocr_vl_eval_tools/models/order/01/inference
+    batch_size: 8
+  VLRecognition:
+    module_name: vl_recognition
+    model_name: PaddleOCR-VL
+    # model_dir: /paddle/project/PaddleX/checkpoint-exp9
+    batch_size: 1 
+    genai_config:
+      backend: vllm-server
+      server_url: http://10.214.40.12:8000/v1
+
+SubPipelines:
+  DocPreprocessor:
+    pipeline_name: doc_preprocessor
+    batch_size: 8
+    use_doc_orientation_classify: True
+    use_doc_unwarping: True
+    SubModules:
+      DocOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null
+        batch_size: 8
+      DocUnwarping:
+        module_name: image_unwarping
+        model_name: UVDoc
+        model_dir: null
