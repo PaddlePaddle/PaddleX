@@ -172,6 +172,7 @@ indicating that no pretrained model to be used."
                         pretrained_model.replace(".pdparams", "")
                     )
                 self.update([f"Global.pretrained_model={pretrained_model}"])
+                self.update(["Arch.pretrained=False"])
 
     def update_num_classes(self, num_classes: int):
         """update classes number
