@@ -32,6 +32,8 @@ def register_models():
 
 
 def run_vllm_server(host, port, model_name, model_dir, config, chat_template_path):
+    # TODO: Set `max_new_tokens` to align with the local native predictor
+
     require_genai_engine_plugin("vllm-server")
 
     import uvloop
