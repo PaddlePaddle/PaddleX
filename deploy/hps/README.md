@@ -10,9 +10,9 @@ comments: true
 
 **请注意，本项目依赖于如下环境配置：**
 
-- **操作系统**：Linux
-- **Docker 版本**：`>= 20.10.0`，用于镜像构建和部署
 - **CPU 架构**：x86-64
+- **操作系统**：Linux
+- **Docker Engine 版本**：`>= 20.10.0`，用于镜像构建和部署
 
 本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署环境搭建与物料打包。整体流程分为两个阶段：
 
@@ -48,7 +48,7 @@ comments: true
 为了使构建结果的可重现性更强，本步骤将依赖锁定到精确版本。请切换至 `server_env` 目录执行如下脚本：
 
 ```bash
-./script/freeze_requirements.sh
+./scripts/freeze_requirements.sh
 ```
 
 该脚本调用 `pip-tools compile` 解析依赖源文件，并最终生成一系列 `.txt` 文件（如 `requirements/gpu.txt`、`requirements/cpu.txt` 等），这些文件将为 [1.3 镜像构建](./README.md#13-镜像构建) 提供依赖版本约束。
@@ -172,7 +172,7 @@ comments: true
 </tbody>
 </table>
 
-调用后存储到当前目录 `/output` 路径下。
+调用后存储到当前目录 `output` 路径下。
 
 ## 3.FAQ
 
