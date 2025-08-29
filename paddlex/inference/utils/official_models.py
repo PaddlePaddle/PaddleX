@@ -405,7 +405,15 @@ class _BaseModelHoster(ABC):
             model_name in self.model_list
         ), f"The model {model_name} is not supported on hosting {self.__class__.__name__}!"
         model_dir = self._save_dir / f"{model_name}"
-        self._download(model_name, model_dir)
+        if os.path.exists(model_dir):
+            logging.info(
+                f"Model files already exist. Using cached files. To redownload, please delete the directory manually: `{model_dir}`."
+            )
+        else:
+            logging.info(
+                f"Using official model ({model_name}), the model files will be automatically downloaded and saved in `{model_dir}`."
+            )
+            self._download(model_name, model_dir)
         return model_dir
 
     @abstractmethod
@@ -543,9 +551,6 @@ Otherwise, only local models can be used."""
         return hosters
 
     def _get_model_local_path(self, model_name):
-        logging.info(
-            f"Using official model ({model_name}), the model files will be automatically downloaded and saved in {self._save_dir}."
-        )
         if len(self._hosters) == 0:
             msg = "No available model hosting platforms detected. Please check your network connection."
             logging.error(msg)
