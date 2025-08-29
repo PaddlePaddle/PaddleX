@@ -55,7 +55,7 @@ repos:
     -   id: isort
         args:
             - --profile=black
-        exclude: ^deploy/ultra-infer/python/ultra_infer/
+        files: ^paddlex/
 
 # check license
 -   repo: local
