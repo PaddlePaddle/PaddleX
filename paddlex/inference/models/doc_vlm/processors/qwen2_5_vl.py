@@ -539,10 +539,16 @@ class PPDocBee2Processor(Qwen2_5_VLProcessor):
         return rst_inputs
 
     @benchmark.timeit
-    def postprocess(self, model_pred, *args, **kwargs) -> List[str]:
+    def postprocess(self, model_pred, **kwargs) -> List[str]:
         """
         Post process adapt for PaddleX
         """
+        if kwargs.get("skip_special_tokens") is not None:
+            skip_special_tokens = kwargs["skip_special_tokens"]
+        else:
+            skip_special_tokens = True
         return self.tokenizer.batch_decode(
-            model_pred[0], skip_special_tokens=True, clean_up_tokenization_spaces=False
+            model_pred[0],
+            skip_special_tokens=skip_special_tokens,
+            clean_up_tokenization_spaces=False,
         )

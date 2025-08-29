@@ -43,7 +43,9 @@ from ..common import BatchFeature, fetch_image
 
 class PPOCRVLProcessor(object):
     def __init__(
-        self, image_processor=None, tokenizer=None, chat_template=None, **kwargs
+        self,
+        image_processor=None,
+        tokenizer=None,
     ):
         self.image_token = (
             "<|image_pad|>"
@@ -57,7 +59,6 @@ class PPOCRVLProcessor(object):
         )
         self.image_processor = image_processor
         self.tokenizer = tokenizer
-        self.chat_template = chat_template
 
     @benchmark.timeit
     def preprocess(
@@ -66,8 +67,16 @@ class PPOCRVLProcessor(object):
     ):
         images = [fetch_image(input_dict["image"]) for input_dict in input_dicts]
 
-        prompt = "<|begin_of_sentence|>User: <|vision_start|><|image_pad|><|vision_end|>{query}\nAssistant: "
-        text = [prompt.format(query=input_dict["query"]) for input_dict in input_dicts]
+        text = []
+        for input_dict in input_dicts:
+            messages = [
+                {
+                    "role": "user",
+                    "content": input_dict["query"],
+                }
+            ]
+            prompt = self.tokenizer.apply_chat_template(messages, tokenize=False)
+            text.append(prompt)
 
         videos = None
         kwargs = {}
@@ -165,13 +174,14 @@ class PPOCRVLProcessor(object):
         return BatchFeature(data={**text_inputs, **image_inputs, **videos_inputs})
 
     @benchmark.timeit
-    def postprocess(self, model_pred, *args, **kwargs) -> List[str]:
-        """
-        Post process adapt for PaddleX
-        """
+    def postprocess(self, model_pred, **kwargs) -> List[str]:
+        if kwargs.get("skip_special_tokens") is not None:
+            skip_special_tokens = kwargs["skip_special_tokens"]
+        else:
+            skip_special_tokens = True
         return self.tokenizer.batch_decode(
             model_pred[0],
-            skip_special_tokens=True,
+            skip_special_tokens=skip_special_tokens,
             spaces_between_special_tokens=False,
         )
 

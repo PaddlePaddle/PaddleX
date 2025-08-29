@@ -550,7 +550,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
         )
 
     def generate(self, inputs, **kwargs):
-        kwargs.setdefault("max_new_tokens", 8192)
         kwargs = {**inputs, **kwargs}
         with paddle.no_grad():
             generated_ids = super().generate(**kwargs)

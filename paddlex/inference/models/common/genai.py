@@ -45,15 +45,17 @@ def need_local_model(genai_config):
 
 @class_requires_deps("openai")
 class GenAIClient(object):
-    def __init__(self, base_url, model_name=None, **kwargs):
+    def __init__(self, backend, base_url, model_name=None, **kwargs):
         from openai import OpenAI
 
         super().__init__()
 
+        self.backend = backend
+
         if "api_key" not in kwargs:
             kwargs["api_key"] = "null"
-
         self._client = OpenAI(base_url=base_url, **kwargs)
+
         if model_name is not None:
             self._model = model_name
         else:

@@ -19,7 +19,7 @@ import os
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -142,17 +142,25 @@ class DocVLMPredictor(BasePredictor):
 
         return model, processor
 
-    def process(self, data: List[dict], **kwargs):
+    def process(
+        self,
+        data: List[dict],
+        use_cache: Optional[bool] = None,
+        skip_special_tokens: Optional[bool] = None,
+        **kwargs,
+    ):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
 
         Args:
             data (List[dict]): A batch of input data, must be a dict (e.g. {"image": /path/to/image, "query": some question}).
-            kwargs (Optional[dict]): Arbitrary keyword arguments passed to model.generate.
 
         Returns:
             dict: A dictionary containing the raw sample information and prediction results for every instance of the batch.
         """
+        # TODO: Sampling settings
+        # FIXME: When `skip_special_tokens` is `True`, the results from different backends may differ.
+
         assert all(isinstance(i, dict) for i in data)
 
         if self._use_local_model:
@@ -163,16 +171,20 @@ class DocVLMPredictor(BasePredictor):
 
             # do infer
             with TemporaryDeviceChanger(self.device):
-                preds = self.infer.generate(data, **kwargs)
+                preds = self.infer.generate(data, use_cache=use_cache)
 
             # postprocess
-            preds = self.processor.postprocess(preds)
+            preds = self.processor.postprocess(
+                preds, skip_special_tokens=skip_special_tokens
+            )
         else:
             require_genai_client_plugin()
 
             src_data = data
 
-            preds = self._genai_client_process(data)
+            preds = self._genai_client_process(
+                data, skip_special_tokens=skip_special_tokens
+            )
 
         result_dict = self._format_result_dict(preds, src_data)
         return result_dict
@@ -184,6 +196,7 @@ class DocVLMPredictor(BasePredictor):
             MIXQwen2Tokenizer,
             QWenTokenizer,
         )
+        from ..common.tokenizer.tokenizer_utils import ChatTemplate
         from .processors import (
             GOTImageProcessor,
             PPChart2TableProcessor,
@@ -219,8 +232,14 @@ class DocVLMPredictor(BasePredictor):
             tokenizer = LlamaTokenizer.from_pretrained(
                 self.model_dir, vocab_file=vocab_file
             )
+            # HACK
+            chat_template_file = Path(self.model_dir, "chat_template.jinja")
+            tokenizer.chat_template = ChatTemplate._compile_jinja_template(
+                chat_template_file.read_text(encoding="utf-8")
+            )
             return PPOCRVLProcessor(
-                image_processor=image_processor, tokenizer=tokenizer
+                image_processor=image_processor,
+                tokenizer=tokenizer,
             )
         else:
             raise NotImplementedError
@@ -292,7 +311,7 @@ class DocVLMPredictor(BasePredictor):
         }
         return rst_dict
 
-    def _genai_client_process(self, data):
+    def _genai_client_process(self, data, skip_special_tokens):
         def _process(item):
             image = item["image"]
             if isinstance(image, str):
@@ -318,6 +337,21 @@ class DocVLMPredictor(BasePredictor):
                 )
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
+
+            kwargs = {
+                "temperature": 0,
+            }
+            kwargs["extra_body"] = {}
+            if skip_special_tokens is not None:
+                if self._genai_client.backend in (
+                    "vllm-server",
+                    "sglang-server",
+                    "fastdeploy-server",
+                ):
+                    kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
+                else:
+                    raise ValueError("Not supported")
+
             chat_completion = self._genai_client.create_chat_completion(
                 [
                     {
@@ -327,7 +361,8 @@ class DocVLMPredictor(BasePredictor):
                             {"type": "image_url", "image_url": {"url": image_url}},
                         ],
                     }
-                ]
+                ],
+                **kwargs,
             )
             return chat_completion.choices[0].message.content
 
