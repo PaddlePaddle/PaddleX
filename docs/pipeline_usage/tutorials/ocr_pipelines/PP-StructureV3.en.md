@@ -1994,6 +1994,7 @@ In the above Python script, the following steps are executed:
         - `use_seal_recognition`: `(bool)` Controls whether to enable the seal recognition sub-line.
         - `use_table_recognition`: `(bool)` Controls whether to enable the table recognition sub-line.
         - `use_formula_recognition`: `(bool)` Controls whether to enable the formula recognition sub-line.
+        - `format_block_content`: `(bool)` Controls whether to format the `block_content` into Markdown format
 
     - `parsing_res_list`: `(List[Dict])` A list of parsing results, where each element is a dictionary. The order of the list is the reading order after parsing.
         - `block_bbox`: `(np.ndarray)` The bounding box of the layout area.
@@ -2294,6 +2295,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td><code>useRegionDetection</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>use_region_detection</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>formatBlockContent</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>format_block_content</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>

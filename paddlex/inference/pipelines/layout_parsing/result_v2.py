@@ -278,23 +278,108 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             Dict[str, str]: A dictionary containing the object's data in JSON format.
         """
+        if self["model_settings"].get("format_block_content", False):
+            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                )
+            )
+
+            if self["model_settings"].get("use_chart_recognition", False):
+                format_chart_func = format_chart2table_func
+            else:
+                format_chart_func = format_image_func
+
+            if self["model_settings"].get("use_seal_recognition", False):
+                format_seal_func = lambda block: "\n".join(
+                    [format_image_func(block), format_text_func(block)]
+                )
+            else:
+                format_seal_func = format_image_func
+
+            if self["model_settings"].get("use_table_recognition", False):
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
+            else:
+                format_table_func = format_image_func
+
+            if self["model_settings"].get("use_formula_recognition", False):
+                format_formula_func = lambda block: f"$${block.content}$$"
+            else:
+                format_formula_func = format_image_func
+
+            handle_funcs_dict = {
+                "paragraph_title": format_title_func,
+                "abstract_title": format_title_func,
+                "reference_title": format_title_func,
+                "content_title": format_title_func,
+                "doc_title": lambda block: f"# {block.content}".replace(
+                    "-\n",
+                    "",
+                ).replace("\n", " "),
+                "table_title": format_text_func,
+                "figure_title": format_text_func,
+                "chart_title": format_text_func,
+                "vision_footnote": lambda block: block.content.replace(
+                    "\n\n", "\n"
+                ).replace("\n", "\n\n"),
+                "text": lambda block: block.content.replace("\n\n", "\n").replace(
+                    "\n", "\n\n"
+                ),
+                "abstract": partial(
+                    format_first_line_func,
+                    templates=["摘要", "abstract"],
+                    format_func=lambda l: f"## {l}\n",
+                    spliter=" ",
+                ),
+                "content": lambda block: block.content.replace("-\n", "  \n").replace(
+                    "\n", "  \n"
+                ),
+                "image": format_image_func,
+                "chart": format_chart_func,
+                "formula": format_formula_func,
+                "table": format_table_func,
+                "reference": partial(
+                    format_first_line_func,
+                    templates=["参考文献", "references"],
+                    format_func=lambda l: f"## {l}",
+                    spliter="\n",
+                ),
+                "algorithm": lambda block: block.content.strip("\n"),
+                "seal": format_seal_func,
+            }
+
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         parsing_res_list: List[LayoutBlock] = self["parsing_res_list"]
-        parsing_res_list = [
-            {
+        parsing_res_list_json = []
+        for parsing_res in parsing_res_list:
+            res_dict = {
                 "block_label": parsing_res.label,
                 "block_content": parsing_res.content,
                 "block_bbox": parsing_res.bbox,
                 "block_id": parsing_res.index,
                 "block_order": parsing_res.order_index,
             }
-            for parsing_res in parsing_res_list
-        ]
-        data["parsing_res_list"] = parsing_res_list
+            if self["model_settings"].get("format_block_content", False):
+                if handle_funcs_dict.get(parsing_res.label):
+                    res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
+                        parsing_res
+                    )
+                else:
+                    res_dict["block_content"] = parsing_res.content
+
+            parsing_res_list_json.append(res_dict)
+        data["parsing_res_list"] = parsing_res_list_json
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
