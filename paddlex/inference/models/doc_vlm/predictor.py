@@ -146,6 +146,7 @@ class DocVLMPredictor(BasePredictor):
         self,
         data: List[dict],
         use_cache: Optional[bool] = None,
+        max_new_tokens: Optional[int] = None,
         skip_special_tokens: Optional[bool] = None,
         **kwargs,
     ):
@@ -171,7 +172,9 @@ class DocVLMPredictor(BasePredictor):
 
             # do infer
             with TemporaryDeviceChanger(self.device):
-                preds = self.infer.generate(data, use_cache=use_cache)
+                preds = self.infer.generate(
+                    data, use_cache=use_cache, max_new_tokens=max_new_tokens
+                )
 
             # postprocess
             preds = self.processor.postprocess(
