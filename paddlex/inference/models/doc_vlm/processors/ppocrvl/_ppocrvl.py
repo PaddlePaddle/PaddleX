@@ -175,13 +175,9 @@ class PPOCRVLProcessor(object):
 
     @benchmark.timeit
     def postprocess(self, model_pred, **kwargs) -> List[str]:
-        if kwargs.get("skip_special_tokens") is not None:
-            skip_special_tokens = kwargs["skip_special_tokens"]
-        else:
-            skip_special_tokens = True
         return self.tokenizer.batch_decode(
             model_pred[0],
-            skip_special_tokens=skip_special_tokens,
+            skip_special_tokens=kwargs.get("skip_special_tokens", True),
             spaces_between_special_tokens=False,
         )
 

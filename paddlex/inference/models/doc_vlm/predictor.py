@@ -145,9 +145,9 @@ class DocVLMPredictor(BasePredictor):
     def process(
         self,
         data: List[dict],
-        use_cache: Optional[bool] = None,
         max_new_tokens: Optional[int] = None,
         skip_special_tokens: Optional[bool] = None,
+        use_cache: Optional[bool] = None,
         **kwargs,
     ):
         """
@@ -171,22 +171,31 @@ class DocVLMPredictor(BasePredictor):
             data = self._switch_inputs_to_device(data)
 
             # do infer
+            generate_kwargs = {}
+            if max_new_tokens is not None:
+                generate_kwargs["max_new_tokens"] = max_new_tokens
+            if use_cache is not None:
+                generate_kwargs["use_cache"] = use_cache
             with TemporaryDeviceChanger(self.device):
                 preds = self.infer.generate(
-                    data, use_cache=use_cache, max_new_tokens=max_new_tokens
+                    data,
+                    **generate_kwargs,
                 )
 
             # postprocess
-            preds = self.processor.postprocess(
-                preds, skip_special_tokens=skip_special_tokens
-            )
+            postprocess_kwargs = {}
+            if skip_special_tokens is not None:
+                postprocess_kwargs["skip_special_tokens"] = skip_special_tokens
+            preds = self.processor.postprocess(preds, **postprocess_kwargs)
         else:
             require_genai_client_plugin()
 
             src_data = data
 
             preds = self._genai_client_process(
-                data, skip_special_tokens=skip_special_tokens
+                data,
+                max_new_tokens=max_new_tokens,
+                skip_special_tokens=skip_special_tokens,
             )
 
         result_dict = self._format_result_dict(preds, src_data)
@@ -314,7 +323,7 @@ class DocVLMPredictor(BasePredictor):
         }
         return rst_dict
 
-    def _genai_client_process(self, data, skip_special_tokens):
+    def _genai_client_process(self, data, max_new_tokens, skip_special_tokens):
         def _process(item):
             image = item["image"]
             if isinstance(image, str):
@@ -345,6 +354,8 @@ class DocVLMPredictor(BasePredictor):
                 "temperature": 0,
             }
             kwargs["extra_body"] = {}
+            if max_new_tokens is not None:
+                kwargs["max_completion_tokens"] = max_new_tokens
             if skip_special_tokens is not None:
                 if self._genai_client.backend in (
                     "vllm-server",
