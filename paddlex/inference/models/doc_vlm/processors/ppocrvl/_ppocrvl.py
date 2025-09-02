@@ -33,6 +33,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 from typing import List
 
 import paddle
@@ -42,6 +43,15 @@ from ..common import BatchFeature, fetch_image
 
 
 class PPOCRVLProcessor(object):
+    _DEFAULT_TEXT_KWARGS = {
+        "padding": False,
+        "return_tensors": "pd",
+    }
+    _DEFAULT_VIDEO_KWARGS = {
+        "fps": 2.0,
+        "return_tensors": "pd",
+    }
+
     def __init__(
         self,
         image_processor=None,
@@ -79,21 +89,11 @@ class PPOCRVLProcessor(object):
             text.append(prompt)
 
         videos = None
-        kwargs = {}
-
         output_kwargs = {
             "tokenizer_init_kwargs": self.tokenizer.init_kwargs,
-            **kwargs,
+            "text_kwargs": copy.deepcopy(self._DEFAULT_TEXT_KWARGS),
+            "video_kwargs": copy.deepcopy(self._DEFAULT_VIDEO_KWARGS),
         }
-
-        if "text_kwargs" not in kwargs:
-            output_kwargs["text_kwargs"] = {}
-        output_kwargs["text_kwargs"].setdefault("padding", False)
-        output_kwargs["text_kwargs"].setdefault("return_tensors", "pd")
-        if "videos_kwargs" not in kwargs:
-            output_kwargs["videos_kwargs"] = {}
-        output_kwargs["videos_kwargs"].setdefault("fps", 2.0)
-        output_kwargs["videos_kwargs"].setdefault("return_tensors", "pd")
 
         if images is not None:
             image_inputs = self.image_processor(images=images, return_tensors="pd")
