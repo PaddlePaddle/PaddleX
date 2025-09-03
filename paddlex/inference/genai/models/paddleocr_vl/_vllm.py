@@ -40,7 +40,9 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
         QKVParallelLinear,
         RowParallelLinear,
     )
+    from vllm.model_executor.layers.logits_processor import LogitsProcessor
     from vllm.model_executor.layers.quantization import QuantizationConfig
+    from vllm.model_executor.layers.vocab_parallel_embedding import ParallelLMHead
     from vllm.model_executor.model_loader.weight_utils import (
         default_weight_loader,
         maybe_remap_kv_scale_name,
@@ -49,7 +51,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
     try:
         from vllm.model_executor.models.ernie45 import Ernie4_5_ForCausalLM
     except ImportError:
-        from vllm.model_executor.model.ernie45 import (
+        from vllm.model_executor.models.ernie45 import (
             Ernie4_5ForCausalLM as Ernie4_5_ForCausalLM,
         )
     from vllm.model_executor.models.interfaces import SupportsMultiModal
@@ -1073,14 +1075,37 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
 
             self.mlp_AR = Projector(config, config.vision_config)
             self.visual = SiglipVisionModel(config=config.vision_config)
-            self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+            self.lm_head = ParallelLMHead(config.vocab_size, config.hidden_size)
+            self.logits_processor = LogitsProcessor(config.vocab_size)
+
+            self.register()
+
+        def register(self):
+            # HACK: patch for 1d rope
+            import vllm.model_executor.layers.rotary_embedding as rotary_module
+
+            def _apply_rotary_emb_torch(
+                x: torch.Tensor,
+                cos: torch.Tensor,
+                sin: torch.Tensor,
+                is_neox_style: bool,
+            ) -> torch.Tensor:
+                cos = cos.repeat_interleave(2, dim=-1).unsqueeze(-2)
+                sin = sin.repeat_interleave(2, dim=-1).unsqueeze(-2)
+                x = x * cos + rotary_module._rotate_neox(x) * sin
+                return x
+
+            rotary_module._apply_rotary_emb_torch = _apply_rotary_emb_torch
 
         def compute_logits(
             self,
-            hidden_states,
+            hidden_states: torch.Tensor,
             sampling_metadata,
         ) -> Optional[torch.Tensor]:
-            return self.lm_head(hidden_states)
+            logits = self.logits_processor(
+                self.lm_head, hidden_states, sampling_metadata
+            )
+            return logits
 
         @property
         def language_model(self):
