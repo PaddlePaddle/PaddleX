@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="text_to_speech")
 
 output = pipeline.predict(
-    "今天天气真的很好"
+    "根据您的情况，建议低盐饮食配合轻度活动，已为您推荐了健康的食谱"
 )
 
 for res in output:

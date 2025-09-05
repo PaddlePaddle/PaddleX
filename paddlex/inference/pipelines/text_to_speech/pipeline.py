@@ -85,7 +85,7 @@ class TextToSpeechPipeline(BasePipeline):
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
-            WhisperResult: The predicted whisper results, support str and json output.
+            PwganResult: The predicted pwgan results, support str and json output.
         """
         if type(input) == str:
             if input.endswith("txt"):
