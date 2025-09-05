@@ -1,0 +1,10 @@
+
+pipeline_name: instance_segmentation
+
+SubModules:
+  InstanceSegmentation:
+    module_name: instance_segmentation
+    model_name: Mask-RT-DETR-S
+    model_dir: null
+    batch_size: 1
+    threshold: 0.5

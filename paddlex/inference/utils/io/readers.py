@@ -290,12 +290,16 @@ class PDFReaderBackend(_BaseReaderBackend):
         self._scale = zoom
 
     def read_file(self, in_path):
-        for page in pdfium.PdfDocument(in_path):
-            image = page.render(scale=self._scale, rotation=self._rotation).to_pil()
-            image = image.convert("RGB")
-            img_cv = np.array(image)
-            img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
-            yield img_cv
+        doc = pdfium.PdfDocument(in_path)
+        try:
+            for page in doc:
+                image = page.render(scale=self._scale, rotation=self._rotation).to_pil()
+                image = image.convert("RGB")
+                img_cv = np.array(image)
+                img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
+                yield img_cv
+        finally:
+            doc.close()
 
 
 class TXTReaderBackend(_BaseReaderBackend):

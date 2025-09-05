@@ -16,6 +16,8 @@ Please note that the 3D multi-modal fusion detection pipeline currently does not
 
 <b>The 3D multi-modal fusion detection pipeline includes a 3D multi-modal fusion detection module</b>，which contains <b>a BEVFusion model</b>. We provide benchmark data for this model:
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>3D Multi-modal Fusion Detection Module:</b></p>
 <table>
 <tr>

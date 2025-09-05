@@ -9,6 +9,9 @@ Image classification is a technique that assigns images to predefined categories
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_classification/01.png"/>
 <b>The General Image Classification Pipeline includes an image classification module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>

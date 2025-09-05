@@ -21,6 +21,7 @@ import numpy as np
 from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import MarkDownBatchSampler
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -33,6 +34,7 @@ from .utils import (
 )
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("trans")
 class PP_DocTranslation_Pipeline(BasePipeline):
     """
@@ -141,13 +143,13 @@ class PP_DocTranslation_Pipeline(BasePipeline):
     def visual_predict(
         self,
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
-        use_doc_orientation_classify: Optional[bool] = False,
-        use_doc_unwarping: Optional[bool] = False,
+        use_doc_orientation_classify: Optional[bool] = None,
+        use_doc_unwarping: Optional[bool] = None,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Optional[bool] = None,
         use_table_recognition: Optional[bool] = None,
         use_formula_recognition: Optional[bool] = None,
-        use_chart_recognition: Optional[bool] = False,
+        use_chart_recognition: Optional[bool] = None,
         use_region_detection: Optional[bool] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,

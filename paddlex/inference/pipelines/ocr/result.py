@@ -72,8 +72,35 @@ class OCRResult(BaseCVResult):
         Returns:
             Dict[Image.Image]: A dictionary containing two images: 'doc_preprocessor_res' and 'ocr_res_img'.
         """
-        boxes = self["rec_polys"]
-        txts = self["rec_texts"]
+
+        if "text_word_region" in self:
+            boxes = []
+            txts = []
+            text_word_region = [
+                item for sublist in self["text_word_region"] for item in sublist
+            ]
+            text_word = [item for sublist in self["text_word"] for item in sublist]
+            for idx, word_region in enumerate(text_word_region):
+                char_box = word_region
+                box_height = int(
+                    math.sqrt(
+                        (char_box[0][0] - char_box[3][0]) ** 2
+                        + (char_box[0][1] - char_box[3][1]) ** 2
+                    )
+                )
+                box_width = int(
+                    math.sqrt(
+                        (char_box[0][0] - char_box[1][0]) ** 2
+                        + (char_box[0][1] - char_box[1][1]) ** 2
+                    )
+                )
+                if box_height == 0 or box_width == 0:
+                    continue
+                boxes.append(word_region)
+                txts.append(text_word[idx])
+        else:
+            boxes = self["rec_polys"]
+            txts = self["rec_texts"]
         image = self["doc_preprocessor_res"]["output_img"]
         h, w = image.shape[0:2]
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -102,7 +129,8 @@ class OCRResult(BaseCVResult):
                 else:
                     box_pts = [(int(x), int(y)) for x, y in box.tolist()]
                     draw_left.polygon(box_pts, fill=color)
-
+                if isinstance(txt, tuple):
+                    txt = txt[0]
                 img_right_text = draw_box_txt_fine((w, h), box, txt, vis_font.path)
                 pts = np.array(box, np.int32).reshape((-1, 1, 2))
                 cv2.polylines(img_right_text, [pts], True, color, 1)
@@ -149,6 +177,7 @@ class OCRResult(BaseCVResult):
                 self["textline_orientation_angles"]
             )
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
+        data["return_word_box"] = self["return_word_box"]
         data["rec_texts"] = self["rec_texts"]
         data["rec_scores"] = np.array(self["rec_scores"])
         data["rec_polys"] = (
@@ -157,6 +186,9 @@ class OCRResult(BaseCVResult):
             else np.array(self["rec_polys"])
         )
         data["rec_boxes"] = np.array(self["rec_boxes"])
+        if "text_word_boxes" in self:
+            data["text_word_boxes"] = self["text_word_boxes"]
+            data["text_word"] = self["text_word"]
 
         return JsonMixin._to_str(data, *args, **kwargs)
 
@@ -183,10 +215,14 @@ class OCRResult(BaseCVResult):
         if "textline_orientation_angles" in self:
             data["textline_orientation_angles"] = self["textline_orientation_angles"]
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
+        data["return_word_box"] = self["return_word_box"]
         data["rec_texts"] = self["rec_texts"]
         data["rec_scores"] = self["rec_scores"]
         data["rec_polys"] = self["rec_polys"]
         data["rec_boxes"] = self["rec_boxes"]
+        if "text_word_boxes" in self:
+            data["text_word_boxes"] = self["text_word_boxes"]
+            data["text_word"] = self["text_word"]
         return JsonMixin._to_json(data, *args, **kwargs)
 
 

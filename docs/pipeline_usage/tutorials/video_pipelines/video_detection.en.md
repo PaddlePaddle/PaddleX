@@ -12,6 +12,8 @@ Video detection is a technology that identifies and locates specific objects or 
 
 <b>The video detection pipeline</b><b> includes a video detection module</b> with the following models.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <p><b>Video Detection Module (Optional):</b></p>
 
 <table>

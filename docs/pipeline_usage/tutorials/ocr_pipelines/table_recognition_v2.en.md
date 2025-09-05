@@ -11,9 +11,13 @@ The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve t
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/>
 
-<b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>
+<b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>Each module contains multiple models, and you can choose the model based on the benchmark test data below.
+
+### 1.1 Model benchmark data
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <details><summary> 👉Model List Details</summary>
 
@@ -769,6 +773,335 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 
 </details>
 
+### 1.2 Pipeline benchmark data
+
+<details>
+<summary>Click to expand/collapse the table</summary>
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>Hardware</th><th>Avg. inference time (s)</th><th>Peak CPU utilization (%)</th><th>Avg. CPU utilization (%)</th><th>Peak host memory (MB)</th><th>Avg. host memory (MB)</th><th>Peak GPU utilization (%)</th><th>Avg. GPU utilization (%)</th><th>Peak device memory (MB)</th><th>Avg. device memory (MB)</th></tr>
+<tr>
+<td rowspan="7">table_recognition_v2-default</td>
+<td>Intel 6271C</td>
+<td>4.68</td>
+<td>1150.80</td>
+<td>1005.33</td>
+<td>4391.37</td>
+<td>4205.06</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>4.74</td>
+<td>1009.60</td>
+<td>945.16</td>
+<td>4370.65</td>
+<td>4138.29</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.68</td>
+<td>120.40</td>
+<td>107.35</td>
+<td>1936.46</td>
+<td>1917.15</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.79</td>
+<td>246.70</td>
+<td>137.46</td>
+<td>1814.86</td>
+<td>1760.59</td>
+<td>52</td>
+<td>35.45</td>
+<td>2842.00</td>
+<td>2826.70</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.51</td>
+<td>533.50</td>
+<td>260.91</td>
+<td>2544.58</td>
+<td>2497.08</td>
+<td>52</td>
+<td>37.27</td>
+<td>3090.00</td>
+<td>3090.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.58</td>
+<td>131.80</td>
+<td>4.18</td>
+<td>2044.72</td>
+<td>2042.62</td>
+<td>65</td>
+<td>1.88</td>
+<td>3100.00</td>
+<td>3099.56</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>4.32</td>
+<td>226.00</td>
+<td>103.48</td>
+<td>4951.52</td>
+<td>2906.95</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td rowspan="8">table_recognition_v2-nopp</td>
+<td>Intel 6271C</td>
+<td>6.12</td>
+<td>1027.40</td>
+<td>1001.08</td>
+<td>4333.77</td>
+<td>4113.07</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>5.98</td>
+<td>1010.70</td>
+<td>940.00</td>
+<td>4297.76</td>
+<td>4105.37</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.78</td>
+<td>109.90</td>
+<td>104.26</td>
+<td>1975.51</td>
+<td>1947.15</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.92</td>
+<td>107.80</td>
+<td>102.97</td>
+<td>1725.44</td>
+<td>1671.04</td>
+<td>54</td>
+<td>42.65</td>
+<td>2824.00</td>
+<td>2807.55</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.57</td>
+<td>107.80</td>
+<td>101.55</td>
+<td>2115.62</td>
+<td>2063.68</td>
+<td>59</td>
+<td>42.40</td>
+<td>3088.00</td>
+<td>3088.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.67</td>
+<td>105.90</td>
+<td>102.23</td>
+<td>1966.66</td>
+<td>1912.98</td>
+<td>65</td>
+<td>50.91</td>
+<td>3086.00</td>
+<td>3073.18</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>5.35</td>
+<td>106.70</td>
+<td>103.34</td>
+<td>4906.53</td>
+<td>2870.97</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.97</td>
+<td>105.30</td>
+<td>101.99</td>
+<td>1945.11</td>
+<td>1892.37</td>
+<td>84</td>
+<td>67.61</td>
+<td>2588.00</td>
+<td>2572.39</td>
+</tr>
+<tr>
+<td rowspan="9">table_recognition_v2-slanet</td>
+<td>Intel 6271C</td>
+<td>3.83</td>
+<td>1178.40</td>
+<td>1013.64</td>
+<td>3617.43</td>
+<td>3416.37</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>3.80</td>
+<td>1034.60</td>
+<td>986.05</td>
+<td>3629.65</td>
+<td>3416.57</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.68</td>
+<td>120.90</td>
+<td>107.85</td>
+<td>1747.88</td>
+<td>1696.22</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.54</td>
+<td>374.60</td>
+<td>153.89</td>
+<td>1900.24</td>
+<td>1853.48</td>
+<td>44</td>
+<td>30.59</td>
+<td>2462.00</td>
+<td>2444.11</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.77</td>
+<td>253.70</td>
+<td>139.34</td>
+<td>1636.04</td>
+<td>1588.04</td>
+<td>52</td>
+<td>35.92</td>
+<td>2022.00</td>
+<td>2006.51</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.50</td>
+<td>963.00</td>
+<td>427.93</td>
+<td>2051.32</td>
+<td>1987.88</td>
+<td>51</td>
+<td>35.67</td>
+<td>2270.00</td>
+<td>2270.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.57</td>
+<td>135.20</td>
+<td>108.01</td>
+<td>1930.06</td>
+<td>1881.09</td>
+<td>65</td>
+<td>43.36</td>
+<td>2280.00</td>
+<td>2268.72</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>5.56</td>
+<td>223.10</td>
+<td>103.73</td>
+<td>4456.39</td>
+<td>2431.52</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.78</td>
+<td>412.90</td>
+<td>178.49</td>
+<td>1839.10</td>
+<td>1792.16</td>
+<td>81</td>
+<td>58.06</td>
+<td>1750.00</td>
+<td>1734.70</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>description</th></tr>
+<tr>
+<td>table_recognition_v2-default</td>
+<td>Default configuration</td>
+</tr>
+<tr>
+<td>table_recognition_v2-nopp</td>
+<td>Based on the default configuration, document image preprocessing is disabled</td>
+</tr>
+<tr>
+<td>table_recognition_v2-slanet</td>
+<td>Based on the default configuration, the table structure recognition model is replaced with the slanet series</td>
+</tr>
+</table>
+</details>
+
+
+* Test environment:
+    * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
+    * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
+    * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
+* Test data:
+    * Test data containing 5 images of various categories, such as large tables, small tables, bordered tables, and borderless tables.
+* Test strategy:
+    * Warm up with 3 samples, then repeat the full dataset 20 times for performance testing.
+* Note:
+    * Since we did not collect device memory data for NPU and XPU, the corresponding entries in the table are marked as N/A.
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.
@@ -791,7 +1124,7 @@ paddlex --pipeline table_recognition_v2 \
         --device gpu:0
 ```
 
-<b>Note: </b>The official models would be download from HuggingFace by default. If can't access to HuggingFace, please set the environment variable `PADDLE_PDX_MODEL_SOURCE="BOS"` to change the model source to BOS. In the future, more model sources will be supported.
+<b>Note: </b>The official models would be download from HuggingFace by first. PaddleX also support to specify the preferred source by setting the environment variable `PADDLE_PDX_MODEL_SOURCE`. The supported values are `huggingface`, `aistudio`, `bos`, and `modelscope`. For example, to prioritize using `bos`, set: `PADDLE_PDX_MODEL_SOURCE="bos"`.
 
 <details><summary>👉 <b>After running, the result obtained is: (Click to expand)</b></summary>
 

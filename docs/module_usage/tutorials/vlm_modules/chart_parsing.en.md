@@ -11,6 +11,8 @@ Multimodal chart parsing is a cutting-edge technology in the OCR field, focusing
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>

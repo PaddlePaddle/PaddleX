@@ -18,6 +18,7 @@ import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
 from ...models.keypoint_detection.result import KptResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -26,6 +27,7 @@ from ..base import BasePipeline
 Number = Union[int, float]
 
 
+@benchmark.time_methods
 class _KeypointDetectionPipeline(BasePipeline):
     """Keypoint Detection pipeline"""
 
@@ -126,7 +128,7 @@ class _KeypointDetectionPipeline(BasePipeline):
             single_img_res = {"input_path": img_path, "input_img": ori_img, "boxes": []}
             for box in det_res["boxes"]:
                 center, scale = self._box_xyxy2cs(box["coordinate"])
-                kpt_res = next(
+                kpt_res = list(
                     self.kpt_model(
                         {
                             "img": ori_img,
@@ -134,7 +136,7 @@ class _KeypointDetectionPipeline(BasePipeline):
                             "scale": scale,
                         }
                     )
-                )
+                )[0]
                 single_img_res["boxes"].append(
                     {
                         "coordinate": box["coordinate"],

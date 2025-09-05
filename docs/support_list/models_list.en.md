@@ -1586,7 +1586,7 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>4.94 / 1.63</td>
 <td>34.88 / 34.88</td>
 <td>22.5</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/anomaly_detection/STFPM.yaml">STFPM.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/image_anomaly_detection/STFPM.yaml">STFPM.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td></tr>
 </tbody>
 </table>

@@ -30,6 +30,7 @@ from setup import DEP_SPECS, REQUIRED_DEPS
 # 1. It is supported only in Python 3.10+.
 # 2. It requires the packages to be installed, but we are doing a static check.
 MOD_TO_DEP = {
+    "aistudio_sdk": "aistudio_sdk",
     "aiohttp": "aiohttp",
     "baidubce": "bce-python-sdk",
     "bs4": "beautifulsoup4",
@@ -54,6 +55,7 @@ MOD_TO_DEP = {
     "langchain_openai": "langchain-openai",
     "lxml": "lxml",
     "matplotlib": "matplotlib",
+    "modelscope": "modelscope",
     "numpy": "numpy",
     "openai": "openai",
     "cv2": "opencv-contrib-python",

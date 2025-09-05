@@ -27,6 +27,7 @@ from ....utils.deps import (
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -46,6 +47,7 @@ if is_dep_available("scikit-learn"):
     from sklearn.cluster import KMeans
 
 
+@benchmark.time_methods
 class _TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
 
@@ -265,13 +267,13 @@ class _TableRecognitionPipelineV2(BasePipeline):
         if input_params["use_doc_preprocessor"]:
             use_doc_orientation_classify = input_params["use_doc_orientation_classify"]
             use_doc_unwarping = input_params["use_doc_unwarping"]
-            doc_preprocessor_res = next(
+            doc_preprocessor_res = list(
                 self.doc_preprocessor_pipeline(
                     image_array,
                     use_doc_orientation_classify=use_doc_orientation_classify,
                     use_doc_unwarping=use_doc_unwarping,
                 )
-            )
+            )[0]
             doc_preprocessor_image = doc_preprocessor_res["output_img"]
         else:
             doc_preprocessor_res = {}
@@ -684,11 +686,11 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 for box in split_boxes:
                     x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
                     if y2 - y1 > 1 and x2 - x1 > 1:
-                        ocr_result = next(
+                        ocr_result = list(
                             self.general_ocr_pipeline.text_rec_model(
                                 ori_img[y1:y2, x1:x2, :]
                             )
-                        )
+                        )[0]
                         # Extract the recognized text from the OCR result
                         if "rec_text" in ocr_result:
                             result = ocr_result[
@@ -736,7 +738,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
             x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
             # Perform OCR on the defined region of the image and get the recognized text.
             if y2 - y1 > 1 and x2 - x1 > 1:
-                rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+                rec_te = list(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))[0]
                 # Concatenate the texts and append them to the texts_list.
                 texts_list.append("".join(rec_te["rec_texts"]))
         # Return the list of recognized texts from each cell.
@@ -977,7 +979,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
             SingleTableRecognitionResult: single table recognition result.
         """
 
-        table_cls_pred = next(self.table_cls_model(image_array))
+        table_cls_pred = list(self.table_cls_model(image_array))[0]
         table_cls_result = self.extract_results(table_cls_pred, "cls")
         use_e2e_model = False
         cells_trans_to_html = False
@@ -986,33 +988,41 @@ class _TableRecognitionPipelineV2(BasePipeline):
             if use_wired_table_cells_trans_to_html == True:
                 cells_trans_to_html = True
             else:
-                table_structure_pred = next(self.wired_table_rec_model(image_array))
+                table_structure_pred = list(self.wired_table_rec_model(image_array))[0]
             if use_e2e_wired_table_rec_model == True:
                 use_e2e_model = True
                 if cells_trans_to_html == True:
-                    table_structure_pred = next(self.wired_table_rec_model(image_array))
+                    table_structure_pred = list(
+                        self.wired_table_rec_model(image_array)
+                    )[0]
             else:
-                table_cells_pred = next(
+                table_cells_pred = list(
                     self.wired_table_cells_detection_model(image_array, threshold=0.3)
-                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                )[
+                    0
+                ]  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
                 # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
         elif table_cls_result == "wireless_table":
             if use_wireless_table_cells_trans_to_html == True:
                 cells_trans_to_html = True
             else:
-                table_structure_pred = next(self.wireless_table_rec_model(image_array))
+                table_structure_pred = list(self.wireless_table_rec_model(image_array))[
+                    0
+                ]
             if use_e2e_wireless_table_rec_model == True:
                 use_e2e_model = True
                 if cells_trans_to_html == True:
-                    table_structure_pred = next(
+                    table_structure_pred = list(
                         self.wireless_table_rec_model(image_array)
-                    )
+                    )[0]
             else:
-                table_cells_pred = next(
+                table_cells_pred = list(
                     self.wireless_table_cells_detection_model(
                         image_array, threshold=0.3
                     )
-                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                )[
+                    0
+                ]  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
                 # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
 
         if use_e2e_model == False:
@@ -1170,20 +1180,20 @@ class _TableRecognitionPipelineV2(BasePipeline):
             image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
-                doc_preprocessor_res = next(
+                doc_preprocessor_res = list(
                     self.doc_preprocessor_pipeline(
                         image_array,
                         use_doc_orientation_classify=use_doc_orientation_classify,
                         use_doc_unwarping=use_doc_unwarping,
                     )
-                )
+                )[0]
             else:
                 doc_preprocessor_res = {"output_img": image_array}
 
             doc_preprocessor_image = doc_preprocessor_res["output_img"]
 
             if model_settings["use_ocr_model"]:
-                overall_ocr_res = next(
+                overall_ocr_res = list(
                     self.general_ocr_pipeline(
                         doc_preprocessor_image,
                         text_det_limit_side_len=text_det_limit_side_len,
@@ -1193,7 +1203,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
                         text_det_unclip_ratio=text_det_unclip_ratio,
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
-                )
+                )[0]
             elif self.general_ocr_pipeline is None and (
                 (
                     use_ocr_results_with_table_cells == True
@@ -1216,9 +1226,9 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 img_height, img_width = doc_preprocessor_image.shape[:2]
                 table_box = [0, 0, img_width - 1, img_height - 1]
                 if use_table_orientation_classify == True:
-                    table_angle = next(
+                    table_angle = list(
                         self.table_orientation_classify_model(doc_preprocessor_image)
-                    )["label_names"][0]
+                    )[0]["label_names"][0]
                 if table_angle == "90":
                     doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=1)
                 elif table_angle == "180":
@@ -1226,7 +1236,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 elif table_angle == "270":
                     doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=3)
                 if table_angle in ["90", "180", "270"]:
-                    overall_ocr_res = next(
+                    overall_ocr_res = list(
                         self.general_ocr_pipeline(
                             doc_preprocessor_image,
                             text_det_limit_side_len=text_det_limit_side_len,
@@ -1236,7 +1246,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
                             text_det_unclip_ratio=text_det_unclip_ratio,
                             text_rec_score_thresh=text_rec_score_thresh,
                         )
-                    )
+                    )[0]
                     tbx1, tby1, tbx2, tby2 = (
                         table_box[0],
                         table_box[1],
@@ -1253,7 +1263,6 @@ class _TableRecognitionPipelineV2(BasePipeline):
                         new_x1, new_y1 = img_height - tby2, tbx1
                         new_x2, new_y2 = img_height - tby1, tbx2
                     table_box = [new_x1, new_y1, new_x2, new_y2]
-                layout_det_res = {}
                 single_table_rec_res = self.predict_single_table_recognition_res(
                     doc_preprocessor_image,
                     overall_ocr_res,
@@ -1280,7 +1289,9 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 table_region_id += 1
             else:
                 if model_settings["use_layout_detection"]:
-                    layout_det_res = next(self.layout_det_model(doc_preprocessor_image))
+                    layout_det_res = list(
+                        self.layout_det_model(doc_preprocessor_image)
+                    )[0]
                 img_height, img_width = doc_preprocessor_image.shape[:2]
                 for box_info in layout_det_res["boxes"]:
                     if box_info["label"].lower() in ["table"]:
@@ -1291,11 +1302,11 @@ class _TableRecognitionPipelineV2(BasePipeline):
                         table_box = crop_img_info["box"]
                         if use_table_orientation_classify == True:
                             doc_preprocessor_image_copy = doc_preprocessor_image.copy()
-                            table_angle = next(
+                            table_angle = list(
                                 self.table_orientation_classify_model(
                                     crop_img_info["img"]
                                 )
-                            )["label_names"][0]
+                            )[0]["label_names"][0]
                         if table_angle == "90":
                             crop_img_info["img"] = np.rot90(crop_img_info["img"], k=1)
                             doc_preprocessor_image_copy = np.rot90(
@@ -1312,7 +1323,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
                                 doc_preprocessor_image_copy, k=3
                             )
                         if table_angle in ["90", "180", "270"]:
-                            overall_ocr_res = next(
+                            overall_ocr_res = list(
                                 self.general_ocr_pipeline(
                                     doc_preprocessor_image_copy,
                                     text_det_limit_side_len=text_det_limit_side_len,
@@ -1322,7 +1333,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
                                     text_det_unclip_ratio=text_det_unclip_ratio,
                                     text_rec_score_thresh=text_rec_score_thresh,
                                 )
-                            )
+                            )[0]
                             tbx1, tby1, tbx2, tby2 = (
                                 table_box[0],
                                 table_box[1],

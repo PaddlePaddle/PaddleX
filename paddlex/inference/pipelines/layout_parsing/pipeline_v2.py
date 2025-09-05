@@ -25,6 +25,7 @@ from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -48,6 +49,7 @@ from .utils import (
 from .xycut_enhanced import xycut_enhanced
 
 
+@benchmark.time_methods
 class _LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
@@ -94,9 +96,17 @@ class _LayoutParsingPipelineV2(BasePipeline):
             None
         """
 
-        self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
+        if (
+            config.get("use_doc_preprocessor", True)
+            or config.get("use_doc_orientation_classify", True)
+            or config.get("use_doc_unwarping", True)
+        ):
+            self.use_doc_preprocessor = True
+        else:
+            self.use_doc_preprocessor = False
         self.use_table_recognition = config.get("use_table_recognition", True)
         self.use_seal_recognition = config.get("use_seal_recognition", True)
+        self.format_block_content = config.get("format_block_content", False)
         self.use_region_detection = config.get(
             "use_region_detection",
             True,
@@ -193,16 +203,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 formula_recognition_config,
             )
 
-        if self.use_chart_recognition:
-            chart_recognition_config = config.get("SubModules", {}).get(
-                "ChartRecognition",
-                {
-                    "model_config_error": "config error for block_region_detection_model!"
-                },
-            )
-            self.chart_recognition_model = self.create_model(
-                chart_recognition_config,
-            )
+        # TODO(gaotingquan): init the model at any time
+        chart_recognition_config = config.get("SubModules", {}).get(
+            "ChartRecognition",
+            {"model_config_error": "config error for block_region_detection_model!"},
+        )
+        self.chart_recognition_model = self.create_model(
+            chart_recognition_config,
+        )
 
         return
 
@@ -451,7 +459,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 crop_box = layout_det_res["boxes"][layout_box_idx]["coordinate"]
                 x1, y1, x2, y2 = [int(i) for i in crop_box]
                 crop_img = np.array(image)[y1:y2, x1:x2]
-                crop_img_rec_res = next(text_rec_model([crop_img]))
+                crop_img_rec_res = list(text_rec_model([crop_img]))[0]
                 crop_img_dt_poly = get_bbox_intersection(
                     crop_box, crop_box, return_format="poly"
                 )
@@ -823,11 +831,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         parsing_res_list = self.sort_layout_parsing_blocks(layout_parsing_page)
 
-        index = 1
-        for block in parsing_res_list:
+        order_index = 1
+        for index, block in enumerate(parsing_res_list):
+            block.index = index
             if block.label in BLOCK_LABEL_MAP["visualize_index_labels"]:
-                block.order_index = index
-                index += 1
+                block.order_index = order_index
+                order_index += 1
 
         return parsing_res_list
 
@@ -840,6 +849,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
+        format_block_content: Union[bool, None],
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -850,6 +860,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_seal_recognition (Union[bool, None]): Enables seal recognition if True. Defaults to system setting if None.
             use_table_recognition (Union[bool, None]): Enables table recognition if True. Defaults to system setting if None.
             use_formula_recognition (Union[bool, None]): Enables formula recognition if True. Defaults to system setting if None.
+            format_block_content (Union[bool, None]): Enables block content formatting if True. Defaults to system setting if None.
 
         Returns:
             dict: A dictionary containing the model settings.
@@ -878,6 +889,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if use_chart_recognition is None:
             use_chart_recognition = self.use_chart_recognition
 
+        if format_block_content is None:
+            format_block_content = self.format_block_content
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_seal_recognition=use_seal_recognition,
@@ -885,19 +899,21 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition=use_formula_recognition,
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
+            format_block_content=format_block_content,
         )
 
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
-        use_doc_orientation_classify: Union[bool, None] = False,
-        use_doc_unwarping: Union[bool, None] = False,
+        use_doc_orientation_classify: Union[bool, None] = None,
+        use_doc_unwarping: Union[bool, None] = None,
         use_textline_orientation: Optional[bool] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
-        use_chart_recognition: Union[bool, None] = False,
+        use_chart_recognition: Union[bool, None] = None,
         use_region_detection: Union[bool, None] = None,
+        format_block_content: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
@@ -935,6 +951,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_table_recognition (Optional[bool]): Whether to use table recognition.
             use_formula_recognition (Optional[bool]): Whether to use formula recognition.
             use_region_detection (Optional[bool]): Whether to use region detection.
+            format_block_content (Optional[bool]): Whether to format block content.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
             layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
@@ -974,6 +991,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition,
             use_chart_recognition,
             use_region_detection,
+            format_block_content,
         )
 
         if not self.check_model_settings_valid(model_settings):

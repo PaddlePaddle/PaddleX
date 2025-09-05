@@ -1,0 +1,10 @@
+
+pipeline_name: image_classification
+
+SubModules:
+  ImageClassification:
+    module_name: image_classification
+    model_name: PP-LCNet_x0_5
+    model_dir: null
+    batch_size: 4
+    topk: 5 

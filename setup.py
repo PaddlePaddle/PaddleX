@@ -22,6 +22,7 @@ from setuptools import find_packages, setup
 
 DEP_SPECS = {
     "aiohttp": ">= 3.9",
+    "aistudio_sdk": ">=0.3.5",
     "bce-python-sdk": ">= 0.9",
     "beautifulsoup4": "",
     "chardet": "",
@@ -45,6 +46,7 @@ DEP_SPECS = {
     "langchain-openai": ">= 0.1",
     "lxml": "",
     "matplotlib": "",
+    "modelscope": ">=1.28.0",
     "numpy": ">= 1.24",
     "openai": ">= 1.63",
     "opencv-contrib-python": "== 4.10.0.84",
@@ -78,10 +80,12 @@ DEP_SPECS = {
 }
 
 REQUIRED_DEPS = [
+    "aistudio_sdk",
     "chardet",
     "colorlog",
     "filelock",
     "huggingface_hub",
+    "modelscope",
     "numpy",
     "packaging",
     # Currently it is not easy to make `pandas` optional
@@ -151,6 +155,13 @@ EXTRAS = {
             "scikit-learn",
             "shapely",
             "tokenizers",
+        ],
+        "ocr-core": [
+            "imagesize",
+            "opencv-contrib-python",
+            "pyclipper",
+            "pypdfium2",
+            "shapely",
         ],
         "ocr": [
             "einops",
@@ -295,6 +306,7 @@ def packages_and_package_data():
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
     pkg_data.append("hpip_links.html")
+    pkg_data.append("hpip_links_cu12.html")
     pkg_data.append("inference/utils/hpi_model_info_collection.json")
     ops_file_dir = "paddlex/ops"
     ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]

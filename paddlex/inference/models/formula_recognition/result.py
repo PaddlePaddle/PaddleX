@@ -164,18 +164,39 @@ def generate_tex_file(tex_file_path: str, equation: str) -> None:
         equation (str): The LaTeX equation to be written into the file.
     """
     with custom_open(tex_file_path, "w") as fp:
-        start_template = (
-            r"\documentclass[varwidth]{standalone}" + "\n"
-            r"\usepackage{cite}" + "\n"
-            r"\usepackage{amsmath,amssymb,amsfonts,upgreek}" + "\n"
-            r"\usepackage{graphicx}" + "\n"
-            r"\usepackage{textcomp}" + "\n"
-            r"\usepackage{xeCJK}" + "\n"
-            r"\DeclareMathSizes{14}{14}{9.8}{7}" + "\n"
-            r"\pagestyle{empty}" + "\n"
-            r"\begin{document}" + "\n"
-            r"\begin{large}" + "\n"
-        )
+        start_template = r"""
+            \documentclass[varwidth]{standalone}
+            \usepackage{cite}
+            \usepackage{amsmath,amssymb,amsfonts,upgreek}
+            \usepackage{graphicx}
+            \usepackage{textcomp}
+            \usepackage{xeCJK}
+            \DeclareMathSizes{14}{14}{9.8}{7}
+            \pagestyle{empty}
+            \makeatletter
+            \def\x@arrow{\DOTSB\Relbar}
+            \def\xlongequalsignfill@{\arrowfill@\x@arrow\Relbar\x@arrow}
+            \newcommand{\xlongequal}[2][]{\ext@arrow 0099\xlongequalsignfill@{#1}{#2}}
+            \def\xLongleftrightarrowfill@{\arrowfill@\Longleftarrow\Relbar\Longrightarrow}
+            \newcommand{\xLongleftrightarrow}[2][]{\ext@arrow 0099\xLongleftrightarrowfill@{#1}{#2}}
+            \def\xlongleftrightarrowfill@{\arrowfill@\longleftarrow\relbar\longrightarrow}
+            \newcommand{\xlongleftrightarrow}[2][]{\ext@arrow 0099\xlongleftrightarrowfill@{#1}{#2}}
+            \def\xLeftrightarrowfill@{\arrowfill@\Leftarrow\Relbar\Rightarrow}
+            \newcommand{\xLeftrightarrow}[2][]{\ext@arrow 0099\xLeftrightarrowfill@{#1}{#2}}
+            \def\xleftrightarrowfill@{\arrowfill@\leftarrow\relbar\rightarrow}
+            \newcommand{\xleftrightarrow}[2][]{\ext@arrow 0099\xleftrightarrowfill@{#1}{#2}}
+            \def\xLongleftarrowfill@{\arrowfill@\Longleftarrow\Relbar\Relbar}
+            \newcommand{\xLongleftarrow}[2][]{\ext@arrow 0099\xLongleftarrowfill@{#1}{#2}}
+            \def\xLongrightarrowfill@{\arrowfill@\Relbar\Relbar\Longrightarrow}
+            \newcommand{\xLongrightarrow}[2][]{\ext@arrow 0099\xLongrightarrowfill@{#1}{#2}}
+            \def\xlongleftarrowfill@{\arrowfill@\longleftarrow\relbar\relbar}
+            \newcommand{\xlongleftarrow}[2][]{\ext@arrow 0099\xlongleftarrowfill@{#1}{#2}}
+            \def\xlongrightarrowfill@{\arrowfill@\relbar\relbar\longrightarrow}
+            \newcommand{\xlongrightarrow}[2][]{\ext@arrow 0099\xlongrightarrowfill@{#1}{#2}}
+            \makeatother
+            \begin{document}
+            \begin{large}
+        """
         fp.write(start_template)
         equation = add_text_for_zh_formula(equation)
         equation = get_align_equation(equation)
@@ -256,25 +277,28 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
         np.ndarray: The resulting image as a NumPy array, or None if the PDF is not single-page.
     """
     pdfDoc = pdfium.PdfDocument(pdf_path)
-    if len(pdfDoc) != 1:
-        return None
-    for page in pdfDoc:
-        rotate = int(0)
-        zoom = 2
-        img = page.render(scale=zoom, rotation=rotate).to_pil()
-        img = img.convert("RGB")
-        img = np.array(img)
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        xywh = crop_white_area(img)
+    try:
+        if len(pdfDoc) != 1:
+            return None
+        for page in pdfDoc:
+            rotate = int(0)
+            zoom = 2
+            img = page.render(scale=zoom, rotation=rotate).to_pil()
+            img = img.convert("RGB")
+            img = np.array(img)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            xywh = crop_white_area(img)
 
-        if xywh is not None:
-            x, y, w, h = xywh
-            img = img[y : y + h, x : x + w]
-            if is_padding:
-                img = cv2.copyMakeBorder(
-                    img, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=(255, 255, 255)
-                )
-            return img
+            if xywh is not None:
+                x, y, w, h = xywh
+                img = img[y : y + h, x : x + w]
+                if is_padding:
+                    img = cv2.copyMakeBorder(
+                        img, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=(255, 255, 255)
+                    )
+                return img
+    finally:
+        pdfDoc.close()
     return None
 
 

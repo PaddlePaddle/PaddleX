@@ -61,6 +61,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_formula_recognition=request.useFormulaRecognition,
             use_chart_recognition=request.useChartRecognition,
             use_region_detection=request.useRegionDetection,
+            format_block_content=request.formatBlockContent,
             layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,
             layout_unclip_ratio=request.layoutUnclipRatio,

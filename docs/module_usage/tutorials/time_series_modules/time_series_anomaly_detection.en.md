@@ -9,6 +9,8 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>

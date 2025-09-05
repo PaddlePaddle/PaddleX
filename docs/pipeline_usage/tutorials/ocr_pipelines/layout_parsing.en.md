@@ -10,6 +10,9 @@ Layout parsing is a technology that extracts structured information from documen
 The <b>General Layout Parsing Pipeline</b> includes modules for table structure recognition, layout region analysis, text detection, text recognition, formula recognition, seal text detection, text image rectification, and document image orientation classification.
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary> 👉Model List Details</summary>
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>
@@ -746,7 +749,7 @@ paddlex --pipeline layout_parsing \
         --device gpu:0
 ```
 
-<b>Note: </b>The official models would be download from HuggingFace by default. If can't access to HuggingFace, please set the environment variable `PADDLE_PDX_MODEL_SOURCE="BOS"` to change the model source to BOS. In the future, more model sources will be supported.
+<b>Note: </b>The official models would be download from HuggingFace by first. PaddleX also support to specify the preferred source by setting the environment variable `PADDLE_PDX_MODEL_SOURCE`. The supported values are `huggingface`, `aistudio`, `bos`, and `modelscope`. For example, to prioritize using `bos`, set: `PADDLE_PDX_MODEL_SOURCE="bos"`.
 
 For parameter descriptions, refer to the parameter explanations in [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 

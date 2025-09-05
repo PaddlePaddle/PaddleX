@@ -9,6 +9,9 @@ Small object detection is a specialized technique for identifying tiny objects w
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/01.png"/>
 <b>The small object detection pipeline includes a small object detection module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, opt for a model with a smaller storage size.</b>
+
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>

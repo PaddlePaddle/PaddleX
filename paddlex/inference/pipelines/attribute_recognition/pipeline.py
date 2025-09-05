@@ -19,6 +19,7 @@ import numpy as np
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
@@ -27,6 +28,7 @@ from ..components import CropByBoxes
 from .result import AttributeRecResult
 
 
+@benchmark.time_methods
 class _AttributeRecPipeline(BasePipeline):
     """Attribute Rec Pipeline"""
 

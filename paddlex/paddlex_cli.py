@@ -28,12 +28,14 @@ from .inference.utils.model_paths import get_model_paths
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.deps import (
+    get_dep_version,
     get_paddle2onnx_spec,
     get_serving_dep_specs,
+    is_paddle2onnx_plugin_available,
     require_paddle2onnx_plugin,
 )
 from .utils.env import get_paddle_cuda_version
-from .utils.install import install_packages
+from .utils.install import install_packages, uninstall_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 
@@ -241,24 +243,59 @@ def install(args):
             )
             sys.exit(2)
 
-        if device_type == "cpu":
-            package = "ultra-infer-python"
-        elif device_type == "gpu":
+        hpip_links_file = "hpip_links.html"
+        if device_type == "gpu":
             cuda_version = get_paddle_cuda_version()
             if not cuda_version:
                 sys.exit(
                     "No CUDA version found. Please make sure you have installed PaddlePaddle with CUDA enabled."
                 )
-            if cuda_version[0] != 11:
+            if cuda_version[0] == 12:
+                hpip_links_file = "hpip_links_cu12.html"
+            elif cuda_version[0] != 11:
                 sys.exit(
-                    "You are not using PaddlePaddle compiled with CUDA 11. Currently, CUDA versions other than 11.x are not supported by the high-performance inference plugin."
+                    "Currently, only CUDA versions 11.x and 12.x are supported by the high-performance inference plugin."
                 )
-            package = "ultra-infer-gpu-python"
-        elif device_type == "npu":
-            package = "ultra-infer-npu-python"
 
-        with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            install_packages([package], pip_install_opts=["--find-links", str(f)])
+        package_mapping = {
+            "cpu": "ultra-infer-python",
+            "gpu": "ultra-infer-gpu-python",
+            "npu": "ultra-infer-npu-python",
+        }
+        package = package_mapping[device_type]
+        other_packages = set(package_mapping.values()) - {package}
+        for other_package in other_packages:
+            version = get_dep_version(other_package)
+            if version is not None:
+                logging.info(
+                    f"The high-performance inference plugin '{package}' is mutually exclusive with '{other_package}' (version {version} installed). Uninstalling '{other_package}'..."
+                )
+                uninstall_packages([other_package])
+
+        with importlib.resources.path("paddlex", hpip_links_file) as f:
+            version = get_dep_version(package)
+            if version is None:
+                install_packages([package], pip_install_opts=["--find-links", str(f)])
+            else:
+                response = input(
+                    f"The high-performance inference plugin is already installed (version {repr(version)}). Do you want to reinstall it? (y/n):"
+                )
+                if response.lower() in ["y", "yes"]:
+                    uninstall_packages([package])
+                    install_packages(
+                        [package],
+                        pip_install_opts=[
+                            "--find-links",
+                            str(f),
+                        ],
+                    )
+                else:
+                    return
+
+        if not is_paddle2onnx_plugin_available():
+            logging.info(
+                "The Paddle2ONNX plugin is not available. It is recommended to run `paddlex --install paddle2onnx` to install the Paddle2ONNX plugin to use the full functionality of high-performance inference."
+            )
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"

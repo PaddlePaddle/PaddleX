@@ -30,6 +30,7 @@ from ....utils.deps import (
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..components.chat_server import BaseChat
@@ -40,6 +41,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 
 
+@benchmark.time_methods
 @pipeline_requires_extra("ie")
 class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     """PP-ChatOCRv4 Pipeline"""

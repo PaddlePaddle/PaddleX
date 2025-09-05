@@ -184,6 +184,7 @@ plugins:
             PaddleX时序任务模型配置文件参数说明: PaddleX Time Series Module Config Parameters
             模型产线部署: Pipeline Deploy
             高性能推理: High Performance Inference
+            打包PaddleX项目: Package PaddleX Projects
             服务化部署: Serving
             端侧部署: On-Device Deployment
             获取 ONNX 模型: Obtaining ONNX Models
@@ -421,11 +422,13 @@ nav:
          - PaddleX通用模型配置文件参数说明: module_usage/instructions/config_parameters_common.md
          - PaddleX时序任务模型配置文件参数说明: module_usage/instructions/config_parameters_time_series.md
          - 模型推理 Benchmark: module_usage/instructions/benchmark.md
+         - 产线推理 Benchmark: pipeline_usage/instructions/benchmark.md
   - 模型产线部署:
        - 高性能推理: pipeline_deploy/high_performance_inference.md
        - 服务化部署: pipeline_deploy/serving.md
        - 端侧部署: pipeline_deploy/on_device_deployment.md
        - 获取 ONNX 模型: pipeline_deploy/paddle2onnx.md
+       - 打包PaddleX项目: pipeline_deploy/packaging.md
   - 多硬件使用:
        - 多硬件使用指南: other_devices_support/multi_devices_use_guide.md
        - 飞桨多硬件安装:

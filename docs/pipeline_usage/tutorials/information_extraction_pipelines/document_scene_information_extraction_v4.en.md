@@ -13,6 +13,8 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b> Benchmarks for some models are as follows:
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary> 👉Model List Details</summary>
 <p><b>Document Image Orientation Classification Module Models</b>:</p>
 <table>

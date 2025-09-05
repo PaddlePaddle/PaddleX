@@ -90,7 +90,6 @@ class _ModelBasedConfig(_BaseModel):
 
         create_predictor_kwargs = {}
         if kernel_option is not UNSET:
-            kernel_option.setdefault("model_name", self._model_name)
             create_predictor_kwargs["pp_option"] = PaddlePredictorOption(
                 **kernel_option
             )

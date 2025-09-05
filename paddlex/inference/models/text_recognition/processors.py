@@ -129,7 +129,76 @@ class BaseRecLabelDecode:
         """add_special_char"""
         return character_list
 
-    def decode(self, text_index, text_prob=None, is_remove_duplicate=False):
+    def get_word_info(self, text, selection):
+        """
+        Group the decoded characters and record the corresponding decoded positions.
+
+        Args:
+            text: the decoded text
+            selection: the bool array that identifies which columns of features are decoded as non-separated characters
+        Returns:
+            word_list: list of the grouped words
+            word_col_list: list of decoding positions corresponding to each character in the grouped word
+            state_list: list of marker to identify the type of grouping words, including two types of grouping words:
+                        - 'cn': continuous chinese characters (e.g., 你好啊)
+                        - 'en&num': continuous english characters (e.g., hello), number (e.g., 123, 1.123), or mixed of them connected by '-' (e.g., VGG-16)
+                        The remaining characters in text are treated as separators between groups (e.g., space, '(', ')', etc.).
+        """
+        state = None
+        word_content = []
+        word_col_content = []
+        word_list = []
+        word_col_list = []
+        state_list = []
+        valid_col = np.where(selection == True)[0]
+
+        for c_i, char in enumerate(text):
+            if "\u4e00" <= char <= "\u9fff":
+                c_state = "cn"
+            elif bool(re.search("[a-zA-Z0-9]", char)):
+                c_state = "en&num"
+            else:
+                c_state = "symbol"
+
+            if (
+                char == "."
+                and state == "en&num"
+                and c_i + 1 < len(text)
+                and bool(re.search("[0-9]", text[c_i + 1]))
+            ):
+                c_state = "en&num"
+            if char == "-" and state == "en&num":
+                c_state = "en&num"
+
+            if state is None:
+                state = c_state
+
+            if state != c_state:
+                if len(word_content) != 0:
+                    word_list.append(word_content)
+                    word_col_list.append(word_col_content)
+                    state_list.append(state)
+                    word_content = []
+                    word_col_content = []
+                state = c_state
+
+            word_content.append(char)
+            word_col_content.append(int(valid_col[c_i]))
+
+        if len(word_content) != 0:
+            word_list.append(word_content)
+            word_col_list.append(word_col_content)
+            state_list.append(state)
+
+        return word_list, word_col_list, state_list
+
+    def decode(
+        self,
+        text_index,
+        text_prob=None,
+        is_remove_duplicate=False,
+        return_word_box=False,
+    ):
         """convert text-index into text-label."""
         result_list = []
         ignored_tokens = self.get_ignored_tokens()
@@ -156,7 +225,24 @@ class BaseRecLabelDecode:
             if self.reverse:  # for arabic rec
                 text = self.pred_reverse(text)
 
-            result_list.append((text, np.mean(conf_list).tolist()))
+            if return_word_box:
+                word_list, word_col_list, state_list = self.get_word_info(
+                    text, selection
+                )
+                result_list.append(
+                    (
+                        text,
+                        np.mean(conf_list).tolist(),
+                        [
+                            len(text_index[batch_idx]),
+                            word_list,
+                            word_col_list,
+                            state_list,
+                        ],
+                    )
+                )
+            else:
+                result_list.append((text, np.mean(conf_list).tolist()))
         return result_list
 
     def get_ignored_tokens(self):
@@ -186,16 +272,26 @@ class CTCLabelDecode(BaseRecLabelDecode):
     def __init__(self, character_list=None, use_space_char=True):
         super().__init__(character_list, use_space_char=use_space_char)
 
-    def __call__(self, pred):
+    def __call__(self, pred, return_word_box=False, **kwargs):
         """apply"""
         preds = np.array(pred[0])
         preds_idx = preds.argmax(axis=-1)
         preds_prob = preds.max(axis=-1)
-        text = self.decode(preds_idx, preds_prob, is_remove_duplicate=True)
+        text = self.decode(
+            preds_idx,
+            preds_prob,
+            is_remove_duplicate=True,
+            return_word_box=return_word_box,
+        )
+        if return_word_box:
+            for rec_idx, rec in enumerate(text):
+                wh_ratio = kwargs["wh_ratio_list"][rec_idx]
+                max_wh_ratio = kwargs["max_wh_ratio"]
+                rec[2][0] = rec[2][0] * (wh_ratio / max_wh_ratio)
         texts = []
         scores = []
         for t in text:
-            texts.append(t[0])
+            texts.append(t[0] if len(t) <= 2 else (t[0], t[2]))
             scores.append(t[1])
         return texts, scores
 

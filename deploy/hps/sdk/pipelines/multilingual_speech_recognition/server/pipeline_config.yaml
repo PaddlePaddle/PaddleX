@@ -1,0 +1,9 @@
+
+pipeline_name: multilingual_speech_recognition
+
+SubModules:
+  MultilingualSpeechRecognition:
+    module_name: multilingual_speech_recognition
+    model_name: whisper_large
+    model_dir: null
+    batch_size: 1   

@@ -1,0 +1,15 @@
+pipeline_name: pedestrian_attribute_recognition
+
+SubModules:
+  Detection:
+    module_name: object_detection
+    model_name: PP-YOLOE-L_human
+    model_dir: null
+    batch_size: 1
+    threshold: 0.5 
+  Classification:
+    module_name: multilabel_classification
+    model_name: PP-LCNet_x1_0_pedestrian_attribute
+    model_dir: null
+    batch_size: 1
+    threshold: 0.7

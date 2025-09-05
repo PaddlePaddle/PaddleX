@@ -9,6 +9,8 @@ The object detection module is a crucial component in computer vision systems, r
 
 ## II. List of Supported Models
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>

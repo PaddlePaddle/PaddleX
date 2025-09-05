@@ -12,6 +12,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg"/>
 <b>The face recognition pipeline includes a face detection module and a face feature module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model size, choose models with smaller storage requirements</b>.
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <p><b>Face Detection Module</b>:</p>
 <table>
