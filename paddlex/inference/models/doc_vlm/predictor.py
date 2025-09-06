@@ -371,8 +371,8 @@ class DocVLMPredictor(BasePredictor):
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": item["query"]},
                             {"type": "image_url", "image_url": {"url": image_url}},
+                            {"type": "text", "text": item["query"]},
                         ],
                     }
                 ],
