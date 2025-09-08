@@ -14,7 +14,11 @@
 
 
 def get_config(backend):
-    if backend == "vllm":
+    if backend == "fastdeploy":
+        return {
+            "gpu-memory-utilization": 0.3,
+        }
+    elif backend == "vllm":
         return {
             "trust-remote-code": True,
             "gpu-memory-utilization": 0.3,
