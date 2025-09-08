@@ -75,6 +75,8 @@ def run_sglang_server(host, port, model_name, model_dir, config, chat_template_p
     if chat_template_path:
         set_config_defaults(config, {{"chat-template": chat_template_path}})
 
+    set_config_defaults(config, {{"enable-metrics": True}})
+
     update_backend_config(
         config,
         {{
