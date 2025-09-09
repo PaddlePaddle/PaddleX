@@ -241,7 +241,9 @@ class _PPOCRVLPipeline(BasePipeline):
                 block_bbox = block["box"]
                 block_label = block["label"]
                 block_content = ""
-                if vlm_block_ids and vlm_block_ids[curr_vlm_block_idx] == (i, j):
+                if curr_vlm_block_idx < len(vlm_block_ids) and vlm_block_ids[
+                    curr_vlm_block_idx
+                ] == (i, j):
                     vl_rec_result = vl_rec_results[curr_vlm_block_idx]
                     curr_vlm_block_idx += 1
                     vl_rec_result["image"] = block_img

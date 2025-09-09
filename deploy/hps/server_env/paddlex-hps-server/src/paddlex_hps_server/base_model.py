@@ -82,6 +82,7 @@ class BaseTritonPythonModel(object):
     def execute(self, requests):
         batch_id = self._generate_batch_id()
         tokens = logging.set_context_vars(self.id, batch_id)
+        logging.info("Received batch of size %s", len(requests))
         start_time = time.perf_counter()
 
         try:
