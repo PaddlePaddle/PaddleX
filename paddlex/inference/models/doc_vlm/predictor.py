@@ -351,16 +351,18 @@ class DocVLMPredictor(BasePredictor):
                 raise TypeError(f"Not supported image type: {type(image)}")
 
             kwargs = {
-                "temperature": 0,
+                "temperature": (
+                    0 if self._genai_client.backend != "fastdeploy-server" else 1e-5
+                ),
             }
             kwargs["extra_body"] = {}
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
             if skip_special_tokens is not None:
                 if self._genai_client.backend in (
+                    "fastdeploy-server",
                     "vllm-server",
                     "sglang-server",
-                    "fastdeploy-server",
                 ):
                     kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
                 else:
