@@ -18,18 +18,21 @@ def get_config(backend):
         return {
             "gpu-memory-utilization": 0.3,
             "max-model-len": 16384,
+            "max-num-batched-tokens": 16384,
         }
     elif backend == "vllm":
         return {
             "trust-remote-code": True,
             "gpu-memory-utilization": 0.3,
             "max-model-len": 16384,
+            "max-num-batched-tokens": 16384,
         }
     elif backend == "sglang":
         return {
             "trust-remote-code": True,
             "mem-fraction-static": 0.3,
             "context-length": 16384,
+            "max-prefill-tokens": 16384,
         }
     else:
         raise ValueError(f"Unsupported backend: {backend}")

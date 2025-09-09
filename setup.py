@@ -332,6 +332,7 @@ def packages_and_package_data():
         Path(p).relative_to("paddlex").as_posix()
         for p in glob.glob("paddlex/inference/genai/chat_templates/*.jinja")
     ]
+    pkg_data.extend(genai_chat_templates)
     pkg_data.extend("inference/genai/models/")
     ops_file_dir = "paddlex/ops"
     ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]
