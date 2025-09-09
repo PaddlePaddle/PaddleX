@@ -401,7 +401,7 @@ class Ernie4_5RotaryEmbedding(nn.Layer):
         self.original_inv_freq = self.inv_freq
 
     @paddle.no_grad()
-    def forward(self, x, position_ids):
+    def forward(self, position_ids):
         inv_freq_expanded = (
             self.inv_freq[None, :, None]
             .astype("float32")
@@ -2241,7 +2241,9 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
         else:
             causal_attention_mask = None
 
-        position_embeddings = self.rotary_emb(hidden_states, position_ids)
+        if position_ids is None:
+            raise NotImplementedError
+        position_embeddings = self.rotary_emb(position_ids)
 
         # decoder layers
         all_hidden_states = () if output_hidden_states else None

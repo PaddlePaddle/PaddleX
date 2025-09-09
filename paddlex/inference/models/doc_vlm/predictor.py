@@ -19,7 +19,7 @@ import os
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -142,17 +142,26 @@ class DocVLMPredictor(BasePredictor):
 
         return model, processor
 
-    def process(self, data: List[dict], **kwargs):
+    def process(
+        self,
+        data: List[dict],
+        max_new_tokens: Optional[int] = None,
+        skip_special_tokens: Optional[bool] = None,
+        use_cache: Optional[bool] = None,
+        **kwargs,
+    ):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
 
         Args:
             data (List[dict]): A batch of input data, must be a dict (e.g. {"image": /path/to/image, "query": some question}).
-            kwargs (Optional[dict]): Arbitrary keyword arguments passed to model.generate.
 
         Returns:
             dict: A dictionary containing the raw sample information and prediction results for every instance of the batch.
         """
+        # TODO: Sampling settings
+        # FIXME: When `skip_special_tokens` is `True`, the results from different backends may differ.
+
         assert all(isinstance(i, dict) for i in data)
 
         if self._use_local_model:
@@ -162,17 +171,32 @@ class DocVLMPredictor(BasePredictor):
             data = self._switch_inputs_to_device(data)
 
             # do infer
+            generate_kwargs = {}
+            if max_new_tokens is not None:
+                generate_kwargs["max_new_tokens"] = max_new_tokens
+            if use_cache is not None:
+                generate_kwargs["use_cache"] = use_cache
             with TemporaryDeviceChanger(self.device):
-                preds = self.infer.generate(data, **kwargs)
+                preds = self.infer.generate(
+                    data,
+                    **generate_kwargs,
+                )
 
             # postprocess
-            preds = self.processor.postprocess(preds)
+            postprocess_kwargs = {}
+            if skip_special_tokens is not None:
+                postprocess_kwargs["skip_special_tokens"] = skip_special_tokens
+            preds = self.processor.postprocess(preds, **postprocess_kwargs)
         else:
             require_genai_client_plugin()
 
             src_data = data
 
-            preds = self._genai_client_process(data)
+            preds = self._genai_client_process(
+                data,
+                max_new_tokens=max_new_tokens,
+                skip_special_tokens=skip_special_tokens,
+            )
 
         result_dict = self._format_result_dict(preds, src_data)
         return result_dict
@@ -184,6 +208,7 @@ class DocVLMPredictor(BasePredictor):
             MIXQwen2Tokenizer,
             QWenTokenizer,
         )
+        from ..common.tokenizer.tokenizer_utils import ChatTemplate
         from .processors import (
             GOTImageProcessor,
             PPChart2TableProcessor,
@@ -219,8 +244,14 @@ class DocVLMPredictor(BasePredictor):
             tokenizer = LlamaTokenizer.from_pretrained(
                 self.model_dir, vocab_file=vocab_file
             )
+            # HACK
+            chat_template_file = Path(self.model_dir, "chat_template.jinja")
+            tokenizer.chat_template = ChatTemplate._compile_jinja_template(
+                chat_template_file.read_text(encoding="utf-8")
+            )
             return PPOCRVLProcessor(
-                image_processor=image_processor, tokenizer=tokenizer
+                image_processor=image_processor,
+                tokenizer=tokenizer,
             )
         else:
             raise NotImplementedError
@@ -292,7 +323,7 @@ class DocVLMPredictor(BasePredictor):
         }
         return rst_dict
 
-    def _genai_client_process(self, data):
+    def _genai_client_process(self, data, max_new_tokens, skip_special_tokens):
         def _process(item):
             image = item["image"]
             if isinstance(image, str):
@@ -318,16 +349,38 @@ class DocVLMPredictor(BasePredictor):
                 )
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
+
+            kwargs = {
+                "temperature": (
+                    0 if self._genai_client.backend != "fastdeploy-server" else 1e-5
+                ),
+            }
+            kwargs["extra_body"] = {}
+            if max_new_tokens is not None:
+                kwargs["max_completion_tokens"] = max_new_tokens
+            else:
+                kwargs["max_completion_tokens"] = 8192
+            if skip_special_tokens is not None:
+                if self._genai_client.backend in (
+                    "fastdeploy-server",
+                    "vllm-server",
+                    "sglang-server",
+                ):
+                    kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
+                else:
+                    raise ValueError("Not supported")
+
             chat_completion = self._genai_client.create_chat_completion(
                 [
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": item["query"]},
                             {"type": "image_url", "image_url": {"url": image_url}},
+                            {"type": "text", "text": item["query"]},
                         ],
                     }
-                ]
+                ],
+                **kwargs,
             )
             return chat_completion.choices[0].message.content
 

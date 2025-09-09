@@ -550,10 +550,13 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
         )
 
     def generate(self, inputs, **kwargs):
-        kwargs.setdefault("max_new_tokens", 8192)
-        kwargs = {**inputs, **kwargs}
+        gen_kwargs = {
+            "max_new_tokens": kwargs.get("max_new_tokens", 8192),
+            "use_cache": kwargs.get("use_cache", True),
+        }
+        gen_kwargs = {**inputs, **gen_kwargs}
         with paddle.no_grad():
-            generated_ids = super().generate(**kwargs)
+            generated_ids = super().generate(**gen_kwargs)
         return generated_ids
 
     def _get_image_nums_and_video_nums(

@@ -134,6 +134,7 @@ class BasePredictor(
             self._genai_config = genai_config
             assert genai_config.server_url is not None
             self._genai_client = GenAIClient(
+                backend=genai_config.backend,
                 base_url=genai_config.server_url,
                 model_name=model_name,
                 **(genai_config.client_kwargs or {}),

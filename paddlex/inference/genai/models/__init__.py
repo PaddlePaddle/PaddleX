@@ -109,7 +109,7 @@ def get_chat_template_path(model_name, backend, model_dir):
     _check_model_name_and_backend(model_name, backend)
 
     with importlib.resources.path(
-        "paddlex.inference.genai.chat_templates", f"{model_name}_{backend}.jinja"
+        "paddlex.inference.genai.chat_templates", f"{model_name}.jinja"
     ) as chat_template_path:
         if not chat_template_path.exists():
             default_chat_template_path = Path(model_dir, DEFAULT_CHAT_TEMPLATE_FILENAME)
