@@ -35,7 +35,7 @@ from .layout_objects import LayoutBlock, LayoutRegion
 from .result_v2 import LayoutParsingResultV2
 from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
 from .utils import (
-    caculate_bbox_area,
+    calculate_bbox_area,
     calculate_minimum_enclosing_bbox,
     calculate_overlap_ratio,
     convert_formula_res_to_ocr_format,
@@ -331,7 +331,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
             # update the region box and max_block_area according to the layout boxes
             base_region_bbox = update_region_box(box, base_region_bbox)
-            max_block_area = max(max_block_area, caculate_bbox_area(box))
+            max_block_area = max(max_block_area, calculate_bbox_area(box))
 
             # update_layout_order_config_block_index(layout_order_config, label, box_idx)
 
@@ -367,7 +367,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         # check if there is only one paragraph title and without doc_title
         only_one_paragraph_title = len(paragraph_title_list) == 1 and doc_title_num == 0
         if only_one_paragraph_title:
-            paragraph_title_block_area = caculate_bbox_area(
+            paragraph_title_block_area = calculate_bbox_area(
                 layout_det_res["boxes"][paragraph_title_list[0]]["coordinate"]
             )
             title_area_max_block_threshold = BLOCK_SETTINGS.get(
@@ -505,7 +505,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         block_bboxes = [box["coordinate"] for box in layout_det_res["boxes"]]
         region_det_res["boxes"] = sorted(
             region_det_res["boxes"],
-            key=lambda item: caculate_bbox_area(item["coordinate"]),
+            key=lambda item: calculate_bbox_area(item["coordinate"]),
         )
         if len(region_det_res["boxes"]) == 0:
             region_det_res["boxes"] = [

@@ -482,12 +482,12 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                     use_rope=True,
                     window_size=-1,
                 )
+                # paddle.device.cuda.empty_cache()
                 image_embeds = vision_outputs.last_hidden_state
 
                 image_embeds = self.mlp_AR(image_embeds, image_grid_thw)
 
                 n_image_tokens = (input_ids == self.config.image_token_id).sum().item()
-                # image_embeds is a list of tensor, each tensor is a image feature,I want to concat them all into a tensor
                 image_embeds = paddle.concat(image_embeds, axis=0)
                 n_image_features = image_embeds.shape[0]
                 if n_image_tokens != n_image_features:
@@ -519,6 +519,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             return_dict=return_dict,
             **kwargs,
         )
+        # paddle.device.cuda.empty_cache()
 
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
