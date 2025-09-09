@@ -87,6 +87,7 @@ def get_text_height(font):
 def create_image_with_text(
     image_array, result, font_path, initial_font_size=20, line_spacing=4
 ):
+    return image_array
     # 将输入的 NumPy 数组转换为 PIL 图像
     image = Image.fromarray(image_array)
     image_width, image_height = image.size
@@ -316,6 +317,12 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             "text": lambda block: block.content.replace("\n\n", "\n").replace(
                 "\n", "\n\n"
             ),
+            "vertical_text": lambda block: block.content.replace("\n\n", "\n").replace(
+                "\n", "\n\n"
+            ),
+            "reference_content": lambda block: block.content.replace(
+                "\n\n", "\n"
+            ).replace("\n", "\n\n"),
             "abstract": partial(
                 format_first_line_func,
                 templates=["摘要", "abstract"],
@@ -327,7 +334,9 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             ),
             "image": format_image_func,
             "chart": format_image_func,
-            "formula": format_formula_func,
+            "formula": format_text_func,
+            "display_formula": format_text_func,
+            "inline_formula": format_text_func,
             "table": format_table_func,
             "reference": partial(
                 format_first_line_func,

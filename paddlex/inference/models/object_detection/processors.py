@@ -841,7 +841,8 @@ class DetPostProcess:
 
         if boxes.shape[1] == 8:
             # Sort boxes by their order
-            sorted_boxes = boxes[np.argsort(boxes[:, 6])]
+            sorted_idx = np.lexsort((-boxes[:, 7], boxes[:, 6]))
+            sorted_boxes = boxes[sorted_idx]
             boxes = sorted_boxes[:, :6]
 
         if layout_unclip_ratio:

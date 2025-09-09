@@ -29,7 +29,7 @@ from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..layout_parsing.utils import gather_imgs
 from .result import PPOCRVLBlock, PPOCRVLResult
-from .uilts import filter_overlap_boxes, merge_blocks
+from .uilts import convert_otsl_to_html, filter_overlap_boxes, merge_blocks
 
 IMAGE_LABELS = ["image", "header_image", "footer_image", "chart", "seal"]
 
@@ -79,8 +79,10 @@ class _PPOCRVLPipeline(BasePipeline):
             "LayoutDetection",
             {"model_config_error": "config error for layout_det_model!"},
         )
-        # model_name = layout_det_config.get("model_name", None)
-        # assert model_name is not None and model_name == "PP-DocLayoutV2-L", "model_name must be PP-DocLayoutV2-L"
+        model_name = layout_det_config.get("model_name", None)
+        assert (
+            model_name is not None and model_name == "PP-DocLayoutV2-L"
+        ), "model_name must be PP-DocLayoutV2-L"
         layout_kwargs = {}
         if (threshold := layout_det_config.get("threshold", None)) is not None:
             layout_kwargs["threshold"] = threshold
@@ -157,75 +159,109 @@ class _PPOCRVLPipeline(BasePipeline):
         return True
 
     def get_layout_parsing_results(self, images, layout_det_results):
-        layout_det_results = [
-            filter_overlap_boxes(
-                layout_det_res,
-            )
-            for layout_det_res in layout_det_results
-        ]
-
         blocks = []
-        for image, layout_det_res in zip(images, layout_det_results):
+        block_imgs = []
+        text_prompts = []
+        is_table_flags = []
+        vlm_block_ids = []
+        for i, (image, layout_det_res) in enumerate(zip(images, layout_det_results)):
+            layout_det_res = filter_overlap_boxes(layout_det_res)
             boxes = layout_det_res["boxes"]
             blocks_for_img = self.crop_by_boxes(image, boxes)
             blocks_for_img = merge_blocks(blocks_for_img, non_merge_labels=IMAGE_LABELS)
             blocks.append(blocks_for_img)
-
-        vl_rec_input_flat_list = []
-        chunk_indices = [0]
-        for blocks_for_img in blocks:
-            for block in blocks_for_img:
+            for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
                 block_label = block["label"]
                 if block_label not in IMAGE_LABELS and block_img is not None:
-                    text_prompt = "OCR"
+                    text_prompt = "OCR:"
                     if block_label == "table":
                         text_prompt = "Table Recognition:"
                     elif "formula" in block_label:
                         text_prompt = "Formula Recognition:"
-                    vl_rec_input_flat_list.append(
-                        {
-                            "image": block_img,
-                            "query": text_prompt,
-                        },
-                    )
-            chunk_indices.append(len(vl_rec_input_flat_list))
+                    block_imgs.append(block_img)
+                    text_prompts.append(text_prompt)
+                    is_table_flags.append(block_label == "table")
+                    vlm_block_ids.append((i, j))
 
-        vl_rec_res_flat_list = list(
+        use_cache = True
+        max_new_tokens = 4096
+
+        vl_rec_results_table = list(
             self.vl_rec_model.predict(
-                vl_rec_input_flat_list,
-                use_cache=True,
+                [
+                    {
+                        "image": block_img,
+                        "query": text_prompt,
+                    }
+                    for block_img, text_prompt, is_table in zip(
+                        block_imgs, text_prompts, is_table_flags
+                    )
+                    if is_table
+                ],
+                skip_special_tokens=False,
+                use_cache=use_cache,
+                max_new_tokens=max_new_tokens,
             )
         )
+        vl_rec_results_other = list(
+            self.vl_rec_model.predict(
+                [
+                    {
+                        "image": block_img,
+                        "query": text_prompt,
+                    }
+                    for block_img, text_prompt, is_table in zip(
+                        block_imgs, text_prompts, is_table_flags
+                    )
+                    if not is_table
+                ],
+                skip_special_tokens=True,
+                use_cache=use_cache,
+                max_new_tokens=max_new_tokens,
+            )
+        )
+        vl_rec_results = []
+        for is_table in is_table_flags:
+            if is_table:
+                vl_rec_results.append(vl_rec_results_table.pop(0))
+            else:
+                vl_rec_results.append(vl_rec_results_other.pop(0))
 
         parsing_res_lists = []
         vl_rec_res_lists = []
         table_res_lists = []
-        for blocks_for_img, idx_st, idx_ed in zip(
-            blocks, chunk_indices, chunk_indices[1:]
-        ):
-            vl_rec_res_list = vl_rec_res_flat_list[idx_st:idx_ed]
+        curr_vlm_block_idx = 0
+        for i, blocks_for_img in enumerate(blocks):
             parsing_res_list = []
+            vl_rec_res_list = []
             table_res_list = []
-            for block, vl_rec_result in zip(blocks_for_img, vl_rec_res_list):
-                block_bbox = block["box"]
+            for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
+                block_bbox = block["box"]
                 block_label = block["label"]
-                vl_rec_result["image"] = block_img
-                result_str = vl_rec_result.get("result", "")
-                if ("\\(" in result_str and "\\)" in result_str) or (
-                    "\\[" in result_str and "\\]" in result_str
-                ):
-                    result_str = result_str.replace("$", "")
+                block_content = ""
+                if vlm_block_ids and vlm_block_ids[curr_vlm_block_idx] == (i, j):
+                    vl_rec_result = vl_rec_results[curr_vlm_block_idx]
+                    curr_vlm_block_idx += 1
+                    vl_rec_result["image"] = block_img
+                    vl_rec_res_list.append(vl_rec_result)
+                    result_str = vl_rec_result.get("result", "")
+                    if ("\\(" in result_str and "\\)" in result_str) or (
+                        "\\[" in result_str and "\\]" in result_str
+                    ):
+                        result_str = result_str.replace("$", "")
 
-                    result_str = (
-                        result_str.replace("\(", " $ ")
-                        .replace("\\)", " $ ")
-                        .replace("\\[", " ")
-                        .replace("\\]", " ")
-                    )
+                        result_str = (
+                            result_str.replace("\(", " $ ")
+                            .replace("\\)", " $ ")
+                            .replace("\\[", " $$ ")
+                            .replace("\\]", " $$ ")
+                        )
+                    if block_label == "table":
+                        result_str = convert_otsl_to_html(result_str)
 
-                block_content = result_str
+                    block_content = result_str
 
                 block_info = PPOCRVLBlock(
                     label=block_label,
@@ -241,7 +277,6 @@ class _PPOCRVLPipeline(BasePipeline):
                     }
 
                 parsing_res_list.append(block_info)
-
             parsing_res_lists.append(parsing_res_list)
             vl_rec_res_lists.append(vl_rec_res_list)
             table_res_lists.append(table_res_list)
