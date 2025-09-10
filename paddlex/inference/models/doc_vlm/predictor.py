@@ -358,7 +358,7 @@ class DocVLMPredictor(BasePredictor):
             kwargs["extra_body"] = {}
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
-            else:
+            elif self.model_name in self.model_group["PaddleOCR-VL"]:
                 kwargs["max_completion_tokens"] = 8192
             if skip_special_tokens is not None:
                 if self._genai_client.backend in (
