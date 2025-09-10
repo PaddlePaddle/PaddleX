@@ -340,13 +340,15 @@ class DocVLMPredictor(BasePredictor):
                             ).decode("ascii")
             elif isinstance(image, np.ndarray):
                 import cv2
+                from PIL import Image
 
-                ret, buf = cv2.imencode(".jpg", image)
-                if not ret:
-                    raise ValueError("Failed to encode the image")
-                image_url = "data:image/jpeg;base64," + base64.b64encode(buf).decode(
-                    "ascii"
-                )
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(image)
+                with io.BytesIO() as buf:
+                    img.save(buf, format="JPEG")
+                    image_url = "data:image/jpeg;base64," + base64.b64encode(
+                        buf.getvalue()
+                    ).decode("ascii")
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
 
