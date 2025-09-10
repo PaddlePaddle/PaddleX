@@ -1,18 +1,14 @@
 Global:
   model: pwgan_csmsc
   mode: predict # only support predict
+  output: "output"
+
+Predict:
   device: gpu:0
   use_trt: False
   use_mkldnn: False
   cpu_threads: 1
   precision: "fp32"
-  output: "output"
-  model_name: "pwgan_csmsc"
-  speaker_dict: None
-  lang: zh
-  speaker_id: 0
-
-Predict:
   batch_size: 1
   model_dir: "pwgan_csmsc"
   input: "./mel.npy"

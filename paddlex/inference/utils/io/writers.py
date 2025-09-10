@@ -59,6 +59,7 @@ class WriterType(enum.Enum):
     TXT = 10
     AUDIO = 11
 
+
 class _BaseWriter(object):
     """_BaseWriter"""
 
@@ -261,12 +262,14 @@ class MarkdownWriter(_BaseWriter):
         """get type"""
         return WriterType.MARKDOWN
 
+
 class AudioWriter(_BaseWriter):
     """AudioWriter"""
 
     def __init__(self, sample_rate=24000, backend="wav", **bk_args):
         super().__init__(sample_rate=sample_rate, backend=backend, **bk_args)
         self.sample_rate = sample_rate
+
     def write(self, out_path, obj):
         """write"""
         return self._backend.write_obj(str(out_path), obj)
@@ -281,6 +284,7 @@ class AudioWriter(_BaseWriter):
     def get_type(self):
         """get type"""
         return WriterType.AUDIO
+
 
 class _BaseWriterBackend(object):
     """_BaseWriterBackend"""
@@ -484,10 +488,11 @@ class MarkdownWriterBackend(_BaseWriterBackend):
 class AudioWriterBackend(_BaseWriterBackend):
     """AudioWriterBackend"""
 
-    def __init__(self,sample_rate=24000):
+    def __init__(self, sample_rate=24000):
         super().__init__()
         self.sample_rate = sample_rate
+
     def _write_obj(self, out_path, obj):
         """write audio obj"""
-        audio = obj['result']
+        audio = obj["result"]
         sf.write(out_path, audio, self.sample_rate)
