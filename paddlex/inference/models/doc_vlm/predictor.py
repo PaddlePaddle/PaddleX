@@ -340,13 +340,15 @@ class DocVLMPredictor(BasePredictor):
                             ).decode("ascii")
             elif isinstance(image, np.ndarray):
                 import cv2
+                from PIL import Image
 
-                ret, buf = cv2.imencode(".jpg", image)
-                if not ret:
-                    raise ValueError("Failed to encode the image")
-                image_url = "data:image/jpeg;base64," + base64.b64encode(buf).decode(
-                    "ascii"
-                )
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(image)
+                with io.BytesIO() as buf:
+                    img.save(buf, format="JPEG")
+                    image_url = "data:image/jpeg;base64," + base64.b64encode(
+                        buf.getvalue()
+                    ).decode("ascii")
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
 
@@ -358,7 +360,7 @@ class DocVLMPredictor(BasePredictor):
             kwargs["extra_body"] = {}
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
-            else:
+            elif self.model_name in self.model_group["PaddleOCR-VL"]:
                 kwargs["max_completion_tokens"] = 8192
             if skip_special_tokens is not None:
                 if self._genai_client.backend in (
