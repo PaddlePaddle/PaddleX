@@ -352,11 +352,16 @@ class DocVLMPredictor(BasePredictor):
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
 
-            kwargs = {
-                "temperature": (
-                    0 if self._genai_client.backend != "fastdeploy-server" else 1e-5
-                ),
-            }
+            is_fastdeploy_server = self._genai_client.backend == "fastdeploy-server"
+            if is_fastdeploy_server:
+                kwargs = {
+                    "temperature": 1,
+                    "top_p": 0,
+                }
+            else:
+                kwargs = {
+                    "temperature": 0,
+                }
             kwargs["extra_body"] = {}
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
