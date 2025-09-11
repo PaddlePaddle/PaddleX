@@ -89,13 +89,13 @@ from .text_recognition import (
     TextRecTrainer,
 )
 from .text_to_speech_vocoder import (
-    TextToSpeechVocoderDatasetChecker
+    TextToSpeechVocoderDatasetChecker,
     TextToSpeechVocoderEvaluator,
     TextToSpeechVocoderExportor,
     TextToSpeechVocoderTrainer,
 )
 from .text_to_speech_acoustic import (
-    TextToSpeechAcousticDatasetChecker
+    TextToSpeechAcousticDatasetChecker,
     TextToSpeechAcousticEvaluator,
     TextToSpeechAcousticExportor,
     TextToSpeechAcousticTrainer,

@@ -574,6 +574,7 @@ class G2PWOnnxConverter:
 
         self.chars = sorted(list(self.char2phonemes.keys()))
 
+        self.with_erhua = False
         self.polyphonic_chars_new = set(self.chars)
         for char in self.non_polyphonic:
             if char in self.polyphonic_chars_new:
@@ -614,8 +615,6 @@ class G2PWOnnxConverter:
             seg = re.sub('[a-zA-Z]+', '', seg)
             # [(word, pos), ...]
             seg_cut = psg.lcut(seg)
-            # fix wordseg bad case for sandhi
-            # seg_cut = self.tone_modifier.pre_merge_for_modify(seg_cut)
             # 为了多音词获得更好的效果，这里采用整句预测
             phones = []
             initials = []
@@ -632,10 +631,6 @@ class G2PWOnnxConverter:
                     continue
 
                 word_pinyins = pinyins[pre_word_length:now_word_length]
-
-                # 多音字消歧
-                # word_pinyins = self.corrector.correct_pronunciation(
-                #     word, word_pinyins)
 
                 for word_pinyin, char in zip(word_pinyins, word):
                     if word_pinyin is None:
@@ -658,14 +653,6 @@ class G2PWOnnxConverter:
                         sub_finals.append(word_pinyin)
 
                 pre_word_length = now_word_length
-                # # tone sandhi
-                # sub_finals = self.tone_modifier.modified_tone(word, pos,
-                #                                                 sub_finals)
-                # er hua                                
-                # if with_erhua:
-                #     sub_initials, sub_finals = self._merge_erhua(
-                #         sub_initials, sub_finals, word, pos)
-
                 initials.append(sub_initials)
                 finals.append(sub_finals)
             initials = sum(initials, [])
@@ -773,7 +760,7 @@ class G2PWOnnxConverter:
                     )
                 elif char in self.char_bopomofo_dict:
                     partial_result[i] = pypinyin_result[i][0]
-                    # partial_result[i] =  self.style_convert_func(self.char_bopomofo_dict[char][0])
+                    partial_result[i] =  self.style_convert_func(self.char_bopomofo_dict[char][0])
                 else:
                     partial_result[i] = pypinyin_result[i][0]
 
