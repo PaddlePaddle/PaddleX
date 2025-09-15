@@ -19,6 +19,7 @@ import os
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from threading import Lock
 from typing import List, Optional
 
 import numpy as np
@@ -62,6 +63,11 @@ class DocVLMPredictor(BasePredictor):
             )
 
             self.infer, self.processor = self._build(**kwargs)
+        else:
+            if self.batch_sampler.batch_size > 1:
+                self._thread_pool = ThreadPoolExecutor(
+                    max_workers=min(self.batch_sampler.batch_size, os.cpu_count() or 1)
+                )
 
     def _build_batch_sampler(self):
         """Builds and returns an DocVLMBatchSampler instance.
@@ -147,6 +153,7 @@ class DocVLMPredictor(BasePredictor):
         data: List[dict],
         max_new_tokens: Optional[int] = None,
         skip_special_tokens: Optional[bool] = None,
+        repetition_penalty: Optional[float] = None,
         use_cache: Optional[bool] = None,
         **kwargs,
     ):
@@ -174,6 +181,10 @@ class DocVLMPredictor(BasePredictor):
             generate_kwargs = {}
             if max_new_tokens is not None:
                 generate_kwargs["max_new_tokens"] = max_new_tokens
+            elif self.model_name in self.model_group["PaddleOCR-VL"]:
+                generate_kwargs["max_new_tokens"] = 8192
+            if repetition_penalty is not None:
+                generate_kwargs["repetition_penalty"] = repetition_penalty
             if use_cache is not None:
                 generate_kwargs["use_cache"] = use_cache
             with TemporaryDeviceChanger(self.device):
@@ -196,6 +207,7 @@ class DocVLMPredictor(BasePredictor):
                 data,
                 max_new_tokens=max_new_tokens,
                 skip_special_tokens=skip_special_tokens,
+                repetition_penalty=repetition_penalty,
             )
 
         result_dict = self._format_result_dict(preds, src_data)
@@ -255,6 +267,11 @@ class DocVLMPredictor(BasePredictor):
             )
         else:
             raise NotImplementedError
+
+    def close(self):
+        super().close()
+        if hasattr(self, "_thread_pool"):
+            self._thread_pool.shutdown()
 
     def _format_result_dict(self, model_preds, src_data):
         if not isinstance(model_preds, list):
@@ -323,7 +340,11 @@ class DocVLMPredictor(BasePredictor):
         }
         return rst_dict
 
-    def _genai_client_process(self, data, max_new_tokens, skip_special_tokens):
+    def _genai_client_process(
+        self, data, max_new_tokens, skip_special_tokens, repetition_penalty
+    ):
+        lock = Lock()
+
         def _process(item):
             image = item["image"]
             if isinstance(image, str):
@@ -352,11 +373,15 @@ class DocVLMPredictor(BasePredictor):
             else:
                 raise TypeError(f"Not supported image type: {type(image)}")
 
-            kwargs = {
-                "temperature": (
-                    0 if self._genai_client.backend != "fastdeploy-server" else 1e-5
-                ),
-            }
+            if self._genai_client.backend == "fastdeploy-server":
+                kwargs = {
+                    "temperature": 1,
+                    "top_p": 0,
+                }
+            else:
+                kwargs = {
+                    "temperature": 0,
+                }
             kwargs["extra_body"] = {}
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
@@ -371,25 +396,33 @@ class DocVLMPredictor(BasePredictor):
                     kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
                 else:
                     raise ValueError("Not supported")
+            if repetition_penalty is not None:
+                kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
 
-            chat_completion = self._genai_client.create_chat_completion(
-                [
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "image_url", "image_url": {"url": image_url}},
-                            {"type": "text", "text": item["query"]},
-                        ],
-                    }
-                ],
-                **kwargs,
-            )
-            return chat_completion.choices[0].message.content
+            with lock:
+                future = self._genai_client.create_chat_completion(
+                    [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "image_url", "image_url": {"url": image_url}},
+                                {"type": "text", "text": item["query"]},
+                            ],
+                        }
+                    ],
+                    return_future=True,
+                    **kwargs,
+                )
+                return future
 
-        batch_size = len(data)
-        if batch_size == 1:
-            return _process(data[0])
+        if len(data) > 1:
+            futures = list(self._thread_pool.map(_process, data))
         else:
-            # TODO: Concurrency control
-            with ThreadPoolExecutor(max_workers=batch_size) as executor:
-                return list(executor.map(_process, data))
+            futures = [_process(data[0])]
+
+        results = []
+        for future in futures:
+            result = future.result()
+            results.append(result.choices[0].message.content)
+
+        return results

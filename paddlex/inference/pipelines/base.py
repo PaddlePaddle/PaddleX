@@ -148,6 +148,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         )
         return pipeline
 
+    def close(self):
+        pass
+
     def __call__(self, input, **kwargs):
         """
         Calls the predict method with the given input and keyword arguments.

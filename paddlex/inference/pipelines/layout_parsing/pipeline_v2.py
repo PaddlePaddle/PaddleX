@@ -86,6 +86,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
+    def close(self):
+        if getattr(self, "chart_recognition_model"):
+            self.chart_recognition_model.close()
+
     def inintial_predictor(self, config: dict) -> None:
         """Initializes the predictor based on the provided configuration.
 

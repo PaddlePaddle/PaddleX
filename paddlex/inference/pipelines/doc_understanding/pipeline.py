@@ -71,3 +71,6 @@ class DocUnderstandingPipeline(BasePipeline):
             DocVLMResult: The predicted doc understanding results.
         """
         yield from self.doc_understanding_model(input, **kwargs)
+
+    def close(self):
+        self.doc_understanding_model.close()
