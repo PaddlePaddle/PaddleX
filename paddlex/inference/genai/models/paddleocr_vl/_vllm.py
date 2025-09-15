@@ -57,6 +57,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
     from vllm.model_executor.models.interfaces import SupportsMultiModal
     from vllm.model_executor.models.utils import (
         AutoWeightsLoader,
+        PPMissingLayer,
         is_pp_missing_parameter,
         merge_multimodal_embeddings,
     )
@@ -1078,24 +1079,9 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
             self.lm_head = ParallelLMHead(config.vocab_size, config.hidden_size)
             self.logits_processor = LogitsProcessor(config.vocab_size)
 
-            self.register()
-
-        def register(self):
-            # HACK: patch for 1d rope
-            import vllm.model_executor.layers.rotary_embedding as rotary_module
-
-            def _apply_rotary_emb_torch(
-                x: torch.Tensor,
-                cos: torch.Tensor,
-                sin: torch.Tensor,
-                is_neox_style: bool,
-            ) -> torch.Tensor:
-                cos = cos.repeat_interleave(2, dim=-1).unsqueeze(-2)
-                sin = sin.repeat_interleave(2, dim=-1).unsqueeze(-2)
-                x = x * cos + rotary_module._rotate_neox(x) * sin
-                return x
-
-            rotary_module._apply_rotary_emb_torch = _apply_rotary_emb_torch
+            for layer in self.model.layers:
+                if not isinstance(layer, PPMissingLayer):
+                    layer.self_attn.rotary_emb.is_neox_style = True
 
         def compute_logits(
             self,
