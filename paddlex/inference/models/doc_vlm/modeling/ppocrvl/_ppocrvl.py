@@ -33,8 +33,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO: Support caching
-
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
@@ -288,7 +286,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                 mrope_position_deltas.append(
                     llm_positions.max() + 1 - len(total_input_ids[i])
                 )
-            mrope_position_deltas = paddle.Tensor(mrope_position_deltas).unsqueeze(1)
+            mrope_position_deltas = paddle.to_tensor(mrope_position_deltas).unsqueeze(1)
             return position_ids, mrope_position_deltas
         else:
             if attention_mask is not None:
@@ -337,7 +335,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             input_ids = input_ids[:, -1:]
             pixel_values = None
             pixel_values_videos = None
-            position_ids = position_ids[:, -1:]
 
         # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
         if inputs_embeds is not None and past_key_values is None:
@@ -351,7 +348,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                 "use_cache": use_cache,
                 "pixel_values": pixel_values,
                 "pixel_values_videos": pixel_values_videos,
-                "position_ids": position_ids,
+                "position_ids": None,
                 **kwargs,
             }
         )
@@ -402,12 +399,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                 axis=-1,
             )
 
-        if "position_ids" in model_kwargs and model_kwargs["position_ids"] is not None:
-            position_ids = model_kwargs["position_ids"]
-            model_kwargs["position_ids"] = paddle.concat(
-                [position_ids, position_ids[..., -1:] + 1], axis=-1
-            )
-
         return model_kwargs
 
     def forward(
@@ -445,6 +436,8 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
         )
 
         if inputs_embeds is None:
+            if input_ids.shape[0] != 1:
+                raise NotImplementedError
             inputs_embeds = self.model.embed_tokens(input_ids)
             if pixel_values is not None:
                 pixel_values = pixel_values.astype(inputs_embeds.dtype)
@@ -503,9 +496,48 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                 image_embeds = image_embeds.astype(inputs_embeds.dtype)
 
                 inputs_embeds = inputs_embeds.masked_scatter(image_mask, image_embeds)
+        else:
+            if inputs_embeds.shape[0] != 1:
+                raise NotImplementedError
 
         if attention_mask is not None and attention_mask.dtype != paddle.bool:
             attention_mask = paddle.cast(attention_mask, paddle.bool)
+
+        # position_ids = None
+        # if we get 4D attention mask we cannot calculate rope deltas anymore. TODO @raushan fixme
+        if position_ids is None and (
+            attention_mask is None or attention_mask.ndim == 2
+        ):
+            # calculate RoPE index once per generation in the pre-fill stage only
+            if self.rope_deltas is None or (
+                past_key_values is None or past_key_values[0] is None
+            ):
+                position_ids, rope_deltas = self.get_rope_index(
+                    input_ids,
+                    image_grid_thw,
+                    video_grid_thw,
+                    second_per_grid_ts,
+                    attention_mask,
+                )
+                self.rope_deltas = rope_deltas
+            # then use the prev pre-calculated rope-deltas to get the correct position ids
+            else:
+                batch_size, seq_length, _ = inputs_embeds.shape
+                delta = (
+                    (past_key_values[0][0].shape[1] + self.rope_deltas)
+                    if past_key_values is not None and past_key_values[0] is not None
+                    else 0
+                )
+                position_ids = paddle.arange(seq_length)
+                position_ids = position_ids.reshape((1, -1)).expand((batch_size, -1))
+                if (
+                    past_key_values is not None and past_key_values[0] is not None
+                ):  # otherwise `deltas` is an int `0`
+                    delta = delta.repeat_interleave(
+                        batch_size // delta.shape[0], axis=0
+                    )
+                position_ids = position_ids.add(delta)
+                position_ids = position_ids.unsqueeze(0).expand((3, -1, -1))
 
         outputs = self.model(
             input_ids=None,

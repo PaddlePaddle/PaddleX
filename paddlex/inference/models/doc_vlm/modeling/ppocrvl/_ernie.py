@@ -186,58 +186,18 @@ def _rotate_half(x):
     return paddle.concat((-x2, x1), axis=-1)
 
 
-def _apply_rotary_pos_emb(q, k, cos, sin, position_ids=None, unsqueeze_dim=2):
-    # glm rope style (with full dim) and full precision
-    original_dtype = q.dtype
+def _apply_multimodal_rotary_pos_emb(q, k, cos, sin, mrope_section, unsqueeze_dim=1):
+    mrope_section = mrope_section * 2
+    cos = paddle.concat(
+        [m[i % 3] for i, m in enumerate(cos.split(mrope_section, axis=-1))], axis=-1
+    ).unsqueeze(unsqueeze_dim)
+    sin = paddle.concat(
+        [m[i % 3] for i, m in enumerate(sin.split(mrope_section, axis=-1))], axis=-1
+    ).unsqueeze(unsqueeze_dim)
 
-    cos = cos.unsqueeze(unsqueeze_dim)
-    sin = sin.unsqueeze(unsqueeze_dim)
-
-    # Interleave them instead of usual shape
-    cos = cos[..., : cos.shape[-1] // 2].repeat_interleave(2, axis=-1)
-    sin = sin[..., : sin.shape[-1] // 2].repeat_interleave(2, axis=-1)
-
-    q_embed = (q.astype("float32") * cos) + (_rotate_half(q).astype("float32") * sin)
-    k_embed = (k.astype("float32") * cos) + (_rotate_half(k).astype("float32") * sin)
-
-    return q_embed.to(original_dtype), k_embed.to(original_dtype)
-
-
-def _make_causal_mask(input_ids_shape, past_key_values_length):
-    """
-    Make casual mask used for self-attention
-    """
-    batch_size, target_length = input_ids_shape  # target_length: seq_len
-
-    # TODO: Support NPU
-    mask = paddle.tril(paddle.ones((target_length, target_length), dtype="bool"))
-
-    if past_key_values_length > 0:
-        # [tgt_len, tgt_len + past_len]
-        mask = paddle.concat(
-            [paddle.ones([target_length, past_key_values_length], dtype="bool"), mask],
-            axis=-1,
-        )
-
-    # [bs, 1, tgt_len, tgt_len + past_len]
-    return mask[None, None, :, :].expand(
-        [batch_size, 1, target_length, target_length + past_key_values_length]
-    )
-
-
-def _expand_2d_mask(mask, dtype, tgt_length):
-    """
-    Expands attention_mask from `[batch_size, src_length]` to `[batch_size, 1, tgt_length, src_length]`.
-    """
-    batch_size, src_length = mask.shape[0], mask.shape[-1]
-    tgt_length = tgt_length if tgt_length is not None else src_length
-
-    # TODO: Support NPU
-    mask = mask[:, None, None, :].astype("bool")
-    mask.stop_gradient = True
-    expanded_mask = mask.expand([batch_size, 1, tgt_length, src_length])
-
-    return expanded_mask
+    q_embed = (q * cos) + (_rotate_half(q) * sin)
+    k_embed = (k * cos) + (_rotate_half(k) * sin)
+    return q_embed, k_embed
 
 
 class FusedDropoutImpl(nn.Layer):
@@ -373,18 +333,28 @@ class LayerNorm(nn.LayerNorm):
             mark_as_sequence_parallel_parameter(self.bias)
 
 
-class Ernie4_5RotaryEmbedding(nn.Layer):
-    def __init__(self, config):
+class KeyeRotaryEmbedding(nn.Layer):
+    def __init__(self, config: PPOCRVLConfig, device=None):
         super().__init__()
+        self.rope_kwargs = {}
+        if config is None:
+            raise NotImplementedError
+        else:
+            # BC: "rope_type" was originally "type"
+            if config.rope_scaling is not None:
+                self.rope_type = config.rope_scaling.get(
+                    "rope_type", config.rope_scaling.get("type")
+                )
+            else:
+                self.rope_type = "default"
+
         # BC: "rope_type" was originally "type"
-        if hasattr(config, "rope_scaling") and isinstance(config.rope_scaling, dict):
+        if hasattr(config, "rope_scaling") and config.rope_scaling is not None:
             self.rope_type = config.rope_scaling.get(
                 "rope_type", config.rope_scaling.get("type")
             )
         else:
             self.rope_type = "default"
-        self.max_seq_len_cached = config.max_position_embeddings
-        self.original_max_seq_len = config.max_position_embeddings
 
         self.config = config
         if self.rope_type == "default":
@@ -401,25 +371,31 @@ class Ernie4_5RotaryEmbedding(nn.Layer):
         self.original_inv_freq = self.inv_freq
 
     @paddle.no_grad()
-    def forward(self, position_ids):
+    def forward(self, x, position_ids):
+        # Core RoPE block. In contrast to other models, Keye has different position ids for the grids
+        # So we expand the inv_freq to shape (3, ...)
         inv_freq_expanded = (
-            self.inv_freq[None, :, None]
-            .astype("float32")
-            .expand((position_ids.shape[0], -1, 1))
+            self.inv_freq[None, None, :, None]
+            .cast("float32")
+            .expand((3, position_ids.shape[1], -1, 1))
         )
-        position_ids_expanded = position_ids[:, None, :].astype("float32")
-
-        with paddle.amp.auto_cast(enable=False):  # Force float32
+        position_ids_expanded = position_ids[:, :, None, :].cast(
+            "float32"
+        )  # shape (3, bs, 1, positions)
+        with paddle.amp.auto_cast(enable=False):
             freqs = (
-                inv_freq_expanded.astype("float32")
-                @ position_ids_expanded.astype("float32")
-            ).transpose((0, 2, 1))
+                inv_freq_expanded.cast("float32")
+                @ position_ids_expanded.cast("float32")
+            ).transpose((0, 1, 3, 2))
             emb = paddle.concat((freqs, freqs), axis=-1)
-            cos = emb.cos() * self.attention_scaling
-            sin = emb.sin() * self.attention_scaling
+            cos = emb.cos()
+            sin = emb.sin()
 
-        # keeping it in full precision
-        return cos, sin
+        # Advanced RoPE types (e.g. yarn) apply a post-processing scaling factor, equivalent to scaling attention
+        cos = cos * self.attention_scaling
+        sin = sin * self.attention_scaling
+
+        return cos.astype(x.dtype), sin.astype(x.dtype)
 
 
 class Ernie4_5MLP(nn.Layer):
@@ -547,6 +523,8 @@ class Ernie4_5Attention(nn.Layer):
             config.num_key_value_heads is not None
             and config.num_key_value_heads != self.num_heads
         )
+
+        self.rope_scaling = config.rope_scaling
 
         self.freq_allocation = config.get("freq_allocation", 0)
 
@@ -802,6 +780,7 @@ class Ernie4_5Attention(nn.Layer):
 
         if not output_attentions:
             attn_weights = None
+
         return attn_output, attn_weights, past_key_value
 
     def _flash_attention_wrapper(
@@ -944,9 +923,12 @@ class Ernie4_5Attention(nn.Layer):
         query_states = query_states.astype(query_states_dtype)
         key_states = key_states.astype(query_states_dtype)
 
+        if position_ids.dim() == 3 and position_ids.shape[0] > 1:
+            position_ids = position_ids[0:1]
+
         cos, sin = position_embeddings
-        query_states, key_states = _apply_rotary_pos_emb(
-            query_states, key_states, cos, sin
+        query_states, key_states = _apply_multimodal_rotary_pos_emb(
+            query_states, key_states, cos, sin, self.rope_scaling["mrope_section"], 2
         )
 
         if past_key_value is not None:
@@ -2051,7 +2033,7 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
         )
         Norm = RMSNorm if config.use_rmsnorm else LayerNorm
         self.norm = Norm(config)
-        self.rotary_emb = Ernie4_5RotaryEmbedding(config=config)
+        self.rotary_emb = KeyeRotaryEmbedding(config=config)
 
         self.gradient_checkpointing = False
 
@@ -2122,34 +2104,6 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
         )
         return hidden_states
 
-    @staticmethod
-    def _prepare_decoder_attention_mask(
-        attention_mask, input_shape, past_key_values_length, dtype
-    ):
-        # TODO: Support more devices
-        if attention_mask is not None:
-            # [bsz, seq_len] -> [bsz, 1, tgt_seq_len, src_seq_len]
-            assert len(attention_mask.shape) == 2
-            expanded_attn_mask = _expand_2d_mask(
-                attention_mask, dtype, tgt_length=input_shape[-1]
-            )
-            # For decoding phase in generation, seq_length = 1, we don't need to add causal mask
-            if input_shape[-1] > 1:
-                combined_attention_mask = _make_causal_mask(
-                    input_shape, past_key_values_length=past_key_values_length
-                )
-                expanded_attn_mask = expanded_attn_mask & combined_attention_mask
-        else:
-            expanded_attn_mask = _make_causal_mask(
-                input_shape, past_key_values_length=past_key_values_length
-            )
-        # Convert bool attention_mask to float attention mask, which will be added to attention_scores later
-        expanded_attn_mask = paddle.where(
-            expanded_attn_mask.cast("bool"), 0.0, paddle.finfo(dtype).min
-        )
-        expanded_attn_mask = expanded_attn_mask.astype(dtype)
-        return expanded_attn_mask
-
     def forward(
         self,
         input_ids=None,
@@ -2208,13 +2162,16 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
                 "You cannot specify both decoder_input_ids and decoder_inputs_embeds at the same time"
             )
         elif input_ids is not None:
-            _, seq_length = input_ids.shape
+            batch_size, seq_length = input_ids.shape
         elif inputs_embeds is not None:
-            _, seq_length, _ = inputs_embeds.shape
+            batch_size, seq_length, _ = inputs_embeds.shape
         else:
             raise ValueError(
                 "You have to specify either decoder_input_ids or decoder_inputs_embeds"
             )
+
+        if batch_size != 1:
+            raise NotImplementedError
 
         layers = self.layers[: self.config.num_hidden_layers]
 
@@ -2234,16 +2191,18 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
 
         hidden_states = inputs_embeds
 
-        if attention_mask is not None:
-            causal_attention_mask = self._prepare_decoder_attention_mask(
-                attention_mask, hidden_states.shape[:2], kv_seq_len, hidden_states.dtype
-            )
-        else:
-            causal_attention_mask = None
-
-        if position_ids is None:
+        if position_ids is None or position_ids.dim() == 2:
             raise NotImplementedError
-        position_embeddings = self.rotary_emb(position_ids)
+        position_embeddings = self.rotary_emb(hidden_states, position_ids)
+
+        if attention_mask is None:
+            raise NotImplementedError
+        causal_mask = self._update_causal_mask(
+            attention_mask.astype("int64"),
+            inputs_embeds,
+            past_key_values,
+            output_attentions,
+        )
 
         # decoder layers
         all_hidden_states = () if output_hidden_states else None
@@ -2267,7 +2226,7 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
                     decoder_layer,
                     hidden_states,
                     position_embeddings,
-                    causal_attention_mask,
+                    causal_mask,
                     attn_mask_start_row_indices,
                     position_ids,
                     token_type_ids,
@@ -2279,7 +2238,7 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
                 layer_outputs = decoder_layer(
                     hidden_states,
                     position_embeddings,
-                    causal_attention_mask,
+                    causal_mask,
                     attn_mask_start_row_indices,
                     position_ids,
                     token_type_ids,
@@ -2326,3 +2285,79 @@ class Ernie4_5Model(Ernie4_5PretrainedModel):
             attentions=all_self_attns,
             cross_attentions=None,
         )
+
+    def _update_causal_mask(
+        self,
+        attention_mask: paddle.Tensor,
+        input_tensor: paddle.Tensor,
+        past_key_values: Optional[Tuple[Tuple[paddle.Tensor]]],
+        output_attentions: bool = False,
+    ):
+        past_seen_tokens = (
+            past_key_values[0][0].shape[1]
+            if past_key_values is not None and past_key_values[0] is not None
+            else 0
+        )
+
+        dtype = input_tensor.dtype
+        min_dtype = paddle.finfo(dtype).min
+        sequence_length = input_tensor.shape[1]
+        target_length = (
+            attention_mask.shape[-1]
+            if isinstance(attention_mask, paddle.Tensor)
+            else past_seen_tokens + sequence_length + 1
+        )
+        cache_position = paddle.arange(
+            past_seen_tokens, past_seen_tokens + sequence_length
+        )
+
+        # In case the provided `attention` mask is 2D, we generate a causal mask here (4D).
+        causal_mask = self._prepare_4d_causal_attention_mask_with_cache_position(
+            attention_mask,
+            sequence_length=sequence_length,
+            target_length=target_length,
+            dtype=dtype,
+            cache_position=cache_position,
+            batch_size=input_tensor.shape[0],
+        )
+
+        return causal_mask
+
+    @staticmethod
+    def _prepare_4d_causal_attention_mask_with_cache_position(
+        attention_mask,
+        sequence_length: int,
+        target_length: int,
+        dtype,
+        cache_position,
+        batch_size: int,
+    ):
+        if attention_mask is not None and attention_mask.dim() == 4:
+            # In this case we assume that the mask comes already in inverted form and requires no inversion or slicing.
+            causal_mask = attention_mask
+        else:
+            min_dtype = paddle.finfo(dtype).min
+            causal_mask = paddle.full(
+                (sequence_length, target_length), fill_value=min_dtype, dtype=dtype
+            )
+            diagonal_attend_mask = paddle.arange(
+                target_length
+            ) > cache_position.reshape((-1, 1))
+            diagonal_attend_mask = diagonal_attend_mask.astype(causal_mask.dtype)
+            causal_mask *= diagonal_attend_mask
+            causal_mask = causal_mask[None, None, :, :].expand((batch_size, 1, -1, -1))
+            if attention_mask is not None:
+                causal_mask = (
+                    causal_mask.clone()
+                )  # copy to contiguous memory for in-place edit
+                if attention_mask.shape[-1] > target_length:
+                    attention_mask = attention_mask[:, :target_length]
+                mask_length = attention_mask.shape[-1]
+                padding_mask = causal_mask[:, :, :, :mask_length] + attention_mask[
+                    :, None, None, :
+                ].astype(causal_mask.dtype)
+                padding_mask = padding_mask == 0
+                causal_mask[:, :, :, :mask_length] = causal_mask[
+                    :, :, :, :mask_length
+                ].masked_fill(padding_mask, min_dtype)
+        return causal_mask

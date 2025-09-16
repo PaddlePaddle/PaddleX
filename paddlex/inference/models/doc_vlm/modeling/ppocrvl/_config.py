@@ -98,6 +98,7 @@ class PPOCRVLConfig(PretrainedConfig):
         image_token_id=101304,
         video_token_id=101305,
         vision_start_token_id=101306,
+        rope_scaling=None,
         rms_norm_eps=1e-6,
         use_cache=False,
         use_flash_attention=False,
@@ -136,6 +137,7 @@ class PPOCRVLConfig(PretrainedConfig):
         self.max_position_embeddings = max_position_embeddings
         self.num_hidden_layers = num_hidden_layers
         self.num_attention_heads = num_attention_heads
+        self.rope_scaling = rope_scaling
         self.rms_norm_eps = rms_norm_eps
         self.use_cache = use_cache
         self.use_flash_attention = use_flash_attention
@@ -183,3 +185,4 @@ class PPOCRVLConfig(PretrainedConfig):
         self.fuse_ln = False
         self.cachekv_quant = False
         self.fuse_swiglu = False
+        self.freq_allocation = 20
