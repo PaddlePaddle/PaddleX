@@ -16,7 +16,7 @@
 def get_config(backend):
     if backend == "fastdeploy":
         return {
-            "gpu-memory-utilization": 0.9,
+            "gpu-memory-utilization": 0.3,
             "max-model-len": 16384,
             "max-num-batched-tokens": 131072,
             "max-num-seqs": 256,
