@@ -835,6 +835,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
                 self.model.get_input_embeddings = types.MethodType(
                     get_input_embeddings, self.model
                 )
+            self.is_mrope_enabled = "mrope_section" in self.config.rope_scaling
 
         def pad_input_ids(self, input_ids: List[int], mm_inputs: MultimodalInputs):
             pattern = MultiModalityDataPaddingPatternMultimodalTokens()
@@ -901,6 +902,18 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "sglang"))):
             forward_batch: ForwardBatch,
             get_embedding: bool = False,
         ):
+            if self.is_mrope_enabled:
+                positions = forward_batch.mrope_positions
+            if not (
+                forward_batch.forward_mode.is_decode()
+                or not forward_batch.contains_image_inputs()
+            ):
+                if self.is_mrope_enabled:
+                    assert positions.ndim == 2 and positions.size(0) == 3, (
+                        "multimodal section rotary embedding requires "
+                        f"(3, seq_len) positions, but got {positions.size()}"
+                    )
+
             hidden_states = general_mm_embed_routine(
                 input_ids=input_ids,
                 forward_batch=forward_batch,

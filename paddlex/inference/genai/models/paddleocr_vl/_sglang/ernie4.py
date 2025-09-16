@@ -172,7 +172,7 @@ if all(map(is_dep_available, ("torch", "transformers", "sglang"))):
             super().__init__()
             rope_theta = getattr(config, "rope_theta", 10000)
             rope_scaling = getattr(config, "rope_scaling", None)
-            rope_is_neox_style = getattr(config, "rope_is_neox_style", False)
+            rope_is_neox_style = getattr(config, "use_3d_rope", True)
             # Self attention.
             self.self_attn = Ernie4Attention(
                 config=config,
