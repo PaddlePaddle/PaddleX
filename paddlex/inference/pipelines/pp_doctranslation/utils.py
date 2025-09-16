@@ -159,7 +159,6 @@ def translate_code_block(code_block, chunk_size, translate_func, results):
     result = f"{header}\n{translated_code}\n{footer}" if header else translated_code
     results.append(result)
 
-
 def translate_html_block(html_block, chunk_size, translate_func, results):
     """
     Translate a HTML block and append the result to the results list.
@@ -174,8 +173,9 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         None
     """
     from bs4 import BeautifulSoup
+    import copy
 
-    # if this is a short and simple tag, just translate it
+    # 如果是短小标签，直接翻译
     if (
         html_block.count("<") < 5
         and html_block.count(">") < 5
@@ -188,11 +188,52 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
 
     soup = BeautifulSoup(html_block, "html.parser")
 
-    # collect text nodes
+    td_seen = set()
+    td_batch_nodes = []
+    td_batch_texts = []
+
+    # 寻找所有的td和th
+
+    for node in soup.find_all(string=True, recursive=True):
+        parent_td = node.find_parent(["td", "th"])
+        if parent_td and id(parent_td) not in td_seen:
+            td_text = parent_td.decode_contents().strip()
+            if td_text:
+                td_batch_nodes.append(parent_td)
+                td_batch_texts.append(td_text)
+            td_seen.add(id(parent_td))
+            
+    # 分batch处理
+    batch_size = chunk_size
+    i = 0
+    while i < len(td_batch_nodes):
+        # 一个批次里的node，和组装好的待翻译内容
+        batch_nodes = []
+        batch_texts = []
+        current_length = 0
+        while i < len(td_batch_nodes) and current_length + len(td_batch_texts[i]) <= batch_size:
+            batch_nodes.append(td_batch_nodes[i])
+            batch_texts.append(td_batch_texts[i])
+            current_length += len(td_batch_texts[i])
+            i += 1
+        
+        # 翻译之后，切分了，再放回去
+        placeholder = "__TD__"
+        batch_text = placeholder.join(batch_texts)
+        translated_batch = translate_func(batch_text)
+        translated_lines = translated_batch.split(placeholder)
+
+        for td_node, line in zip(batch_nodes, translated_lines):
+            td_node.clear()
+            # 用 div 包裹 line 解析，保留标签
+            frag = BeautifulSoup(line, "html.parser")
+            for child in frag.contents:
+                td_node.append(copy.deepcopy(child))
+
+
     text_nodes = []
     for node in soup.find_all(string=True, recursive=True):
-        text = node.strip()
-        if text:
+        if not node.find_parent(["td", "th"]) and node.strip():
             text_nodes.append(node)
 
     idx = 0
@@ -204,11 +245,7 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         while idx < total:
             node_text = text_nodes[idx].strip()
             if len(node_text) > chunk_size:
-                # if node_text is too long, split it
-                translated_text = split_text_recursive(
-                    node_text, chunk_size, translate_func
-                )
-                # concatenate translated lines with \n
+                translated_text = split_text_recursive(node_text, chunk_size, translate_func)
                 text_nodes[idx].replace_with(translated_text)
                 idx += 1
                 continue
