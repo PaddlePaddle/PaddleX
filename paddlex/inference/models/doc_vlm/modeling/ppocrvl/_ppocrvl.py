@@ -169,9 +169,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             if attention_mask is None:
                 attention_mask = paddle.ones_like(total_input_ids)
             position_ids = paddle.ones(
-                3,
-                input_ids.shape[0],
-                input_ids.shape[1],
+                [3, input_ids.shape[0], input_ids.shape[1]],
                 dtype=input_ids.dtype,
             )
             image_index, video_index = 0, 0
@@ -249,7 +247,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                         * self.config.vision_config.tokens_per_second
                     )
 
-                    time_tensor_long = time_tensor.long()
+                    time_tensor_long = time_tensor.astype("int64")
                     t_index = time_tensor_long.flatten()
 
                     h_index = (
