@@ -18,22 +18,24 @@ def get_config(backend):
         return {
             "gpu-memory-utilization": 0.3,
             "max-model-len": 16384,
-            "max-num-batched-tokens": 16384,
+            "max-num-batched-tokens": 131072,
+            "max-num-seqs": 256,
         }
     elif backend == "vllm":
         return {
             "trust-remote-code": True,
-            "gpu-memory-utilization": 0.3,
+            "gpu-memory-utilization": 0.9,
             "max-model-len": 16384,
-            "max-num-batched-tokens": 16384,
+            "max-num-batched-tokens": 131072,
+            "api-server-count": 4,
             "enforce-eager": True,  # TODO: optimize
         }
     elif backend == "sglang":
         return {
             "trust-remote-code": True,
-            "mem-fraction-static": 0.3,
+            "mem-fraction-static": 0.9,
             "context-length": 16384,
-            "max-prefill-tokens": 16384,
+            "max-prefill-tokens": 131072,
         }
     else:
         raise ValueError(f"Unsupported backend: {backend}")

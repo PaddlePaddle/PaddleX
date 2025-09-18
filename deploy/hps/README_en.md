@@ -32,13 +32,13 @@ Image Building Steps:
 
 1. Build a requirement collection image. (Optional)
 2. Freeze requirement versions to improve the reproducibility of deployment image building. (Optional)
-3. Build the deployment image based on the frozen requirement information to generate the final deployment image and provide image support for subsequent pipeline execution. 
+3. Build the deployment image based on the frozen requirement information to generate the final deployment image and provide image support for subsequent pipeline execution.
 
 **If you do not need to modify requirement-related information, you can skip to [1.3 Building Image](./README_en.md#13-building-image) to build the deployment image using cached requirement information.**
 
 ## 1.1 Build the Requirement Collection Image (Optional)
 
-Navigate to the `server_env` directory and run follow script for building the requirement collection image in this directory. 
+Navigate to the `server_env` directory and run follow script for building the requirement collection image in this directory.
 
 ```bash
 ./scripts/prepare_rc_image.sh
@@ -121,10 +121,10 @@ If the basic image cannot be pulled, please refer to the solutions in the [FAQ](
 After run successfully, the command line will display the following message:
 
 ```text
- => => exporting to image                                                         
- => => exporting layers                                                      
- => => writing image  sha256:ba3d0b2b079d63ee0239a99043fec7e25f17bf2a7772ec2fc80503c1582b3459   
- => => naming to ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:latest-gpu   
+ => => exporting to image
+ => => exporting layers
+ => => writing image  sha256:ba3d0b2b079d63ee0239a99043fec7e25f17bf2a7772ec2fc80503c1582b3459
+ => => naming to ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:latest-gpu
 ```
 
 To build both GPU and CPU images  run the following command:
