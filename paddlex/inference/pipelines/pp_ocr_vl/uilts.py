@@ -18,6 +18,7 @@ from copy import deepcopy
 from typing import Any, Dict, List,Tuple
 
 import numpy as np
+import cv2
 from PIL import Image
 from collections import Counter
 from pydantic import BaseModel, computed_field, model_validator
@@ -386,6 +387,69 @@ def merge_blocks(blocks, non_merge_labels):
         idx += 1
 
     return result_blocks
+
+
+def paint_token(image, box, token_str):
+    """
+    image: numpy.ndarray, 图像
+    box: (x1, y1, x2, y2), 填充的矩形区域
+    token: str, 要写入的内容
+    返回: 修改后的图像
+    """
+    x1, y1, x2, y2 = [int(v) for v in box]
+    img = image.copy()
+    # 填充白色
+    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255,255,255), thickness=-1)
+
+    # 计算区域宽高
+    box_w = x2 - x1
+    box_h = y2 - y1
+
+    # 自动调整字体大小，使文本不会超出box
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 1.0
+    font_thickness = 2
+
+    # 先尝试较大的字体，再逐步减小
+    while font_scale > 0:
+        (text_w, text_h), baseline = cv2.getTextSize(token_str, font, font_scale, font_thickness)
+        if text_w <= box_w * 0.9 and text_h + baseline <= box_h * 0.9:
+            break
+        font_scale -= 0.1
+    if font_scale <= 0:  # 还是放不下，缩小到最小
+        font_scale = 0.2
+        (text_w, text_h), baseline = cv2.getTextSize(token_str, font, font_scale, font_thickness)
+
+    # 计算文本左下角坐标，使其居中
+    text_x = x1 + (box_w - text_w) // 2
+    text_y = y1 + (box_h + text_h) // 2
+
+    # 画文本
+    cv2.putText(img, token_str, (text_x, text_y), font, font_scale, (0,0,0), font_thickness, lineType=cv2.LINE_AA)
+
+    return img
+
+
+def tokenize_figure_of_table(table_block_img, table_box, figures):
+    token_map = {}
+    table_x_min, table_y_min, table_x_max, table_y_max = table_box
+    for figure_id, figure in enumerate(figures):
+        figure_x_min, figure_y_min, figure_x_max, figure_y_max = figure["coordinate"]
+        if figure_x_min >= table_x_min and figure_y_min >= table_y_min and figure_x_max <= table_x_max and figure_y_max <= table_y_max:
+            draw_box = [figure_x_min - table_x_min, figure_y_min - table_y_min, figure_x_max - table_x_min, figure_y_max - table_y_min]
+            token_str = "[F" + str(figure_id) + "]"
+            table_block_img = paint_token(table_block_img, draw_box, token_str)
+            token_map[token_str] = f'<img src="{figure["path"]}" >'
+    return table_block_img, token_map
+
+
+def untokenize_figure_of_table(table_res_str, figure_token_map):
+    def repl(match):
+        token_id = match.group(1)
+        token = f"[F{token_id}]"
+        return figure_token_map.get(token, match.group(0))
+    pattern = r'\[F(\d+)\]'
+    return re.sub(pattern, repl, table_res_str)
 
 
 class TableCell(BaseModel):

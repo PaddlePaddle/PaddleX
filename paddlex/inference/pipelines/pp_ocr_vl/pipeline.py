@@ -29,7 +29,7 @@ from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..layout_parsing.utils import gather_imgs
 from .result import PPOCRVLBlock, PPOCRVLResult
-from .uilts import convert_otsl_to_html, filter_overlap_boxes, merge_blocks,truncate_repetitive_content
+from .uilts import convert_otsl_to_html, filter_overlap_boxes, merge_blocks, truncate_repetitive_content, tokenize_figure_of_table, untokenize_figure_of_table
 
 IMAGE_LABELS = ["image", "header_image", "footer_image", "chart", "seal"]
 
@@ -158,7 +158,7 @@ class _PPOCRVLPipeline(BasePipeline):
 
         return True
 
-    def get_layout_parsing_res(self, image, layout_det_res):
+    def get_layout_parsing_res(self, image, layout_det_res, imgs_in_doc_for_img):
 
         parsing_res_list = []
         vl_rec_res_list = []
@@ -169,7 +169,7 @@ class _PPOCRVLPipeline(BasePipeline):
         boxes = layout_det_res["boxes"]
         blocks = self.crop_by_boxes(image, boxes)
         blocks = merge_blocks(blocks, non_merge_labels=IMAGE_LABELS + ["table"])
-        for block in blocks:
+        for i, block in enumerate(blocks):
             block_img = block["img"]
             block_bbox = block["box"]
             block_label = block["label"]
@@ -180,6 +180,8 @@ class _PPOCRVLPipeline(BasePipeline):
                 if block_label == "table":
                     text_prompt = "Table Recognition:"
                     skip_special_tokens = False
+                    block_img, figure_token_map = tokenize_figure_of_table(block_img, block_bbox, imgs_in_doc_for_img)
+
                 elif "formula" in block_label:
                     text_prompt = "Formula Recognition:"
                 vl_rec_result = next(
@@ -210,6 +212,7 @@ class _PPOCRVLPipeline(BasePipeline):
                     )
                 if block_label == "table":
                     result_str = convert_otsl_to_html(result_str)
+                    result_str = untokenize_figure_of_table(result_str, figure_token_map)
 
                 block_content = result_str
 
@@ -320,6 +323,7 @@ class _PPOCRVLPipeline(BasePipeline):
                     self.get_layout_parsing_res(
                         doc_preprocessor_image,
                         layout_det_res,
+                        imgs_in_doc_for_img,
                     )
                 )
 
