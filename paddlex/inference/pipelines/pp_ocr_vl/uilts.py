@@ -15,10 +15,11 @@ import html
 import itertools
 import re
 from copy import deepcopy
-from typing import Any, Dict, List
+from typing import Any, Dict, List,Tuple
 
 import numpy as np
 from PIL import Image
+from collections import Counter
 from pydantic import BaseModel, computed_field, model_validator
 
 from ..layout_parsing.utils import (
@@ -60,7 +61,7 @@ def filter_overlap_boxes(
 
             # If overlap ratio is significant, mark one of the boxes for removal
             if (
-                overlap_ratio > 0.9
+                overlap_ratio > 0.7
             ):  # Assuming 1 is the threshold for significant overlap
                 # Here we are assuming higher score is preferable, you might want to adjust this logic
                 box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
@@ -782,3 +783,101 @@ def convert_otsl_to_html(otsl_content: str):
     )
 
     return export_to_html(table_data)
+
+
+def find_shortest_repeating_substring(s: str) -> str | None:
+    """
+    Finds the shortest repeating substring that constitutes the ENTIRE string s.
+    e.g., s='abcabcabc' returns 'abc'. s='abab' returns 'ab'. s='abca' returns None.
+    """
+    n = len(s)
+    for i in range(1, n // 2 + 1):
+        if n % i == 0:
+            substring = s[:i]
+            if substring * (n // i) == s:
+                return substring
+    return None
+ 
+# --- NEW FUNCTION: Detects repeating phrases at the end of a string ---
+def find_repeating_suffix(s: str, min_len: int = 8, min_repeats: int = 5) -> Tuple[str, str, int] | None:
+    """
+    Finds if a string ends with a repeating phrase.
+    e.g., s='start...phrase,phrase,phrase,' returns ('start...', 'phrase,', 3)
+    
+    Args:
+        s (str): The input string.
+        min_len (int): The minimum length of the repeating unit to consider.
+        min_repeats (int): The minimum number of repetitions to trigger truncation.
+ 
+    Returns:
+        A tuple (prefix, unit, count) if a repeating suffix is found, otherwise None.
+    """
+    # Iterate through possible lengths of the repeating unit, from longest to shortest.
+    for i in range(len(s) // (min_repeats), min_len - 1, -1):
+        unit = s[-i:]
+        
+        # Quick check: does the string end with the unit repeated at least min_repeats times?
+        if s.endswith(unit * min_repeats):
+            # If so, find the exact number of repetitions
+            count = 0
+            temp_s = s
+            while temp_s.endswith(unit):
+                temp_s = temp_s[:-i]
+                count += 1
+            
+            # Return the non-repeating prefix, the unit, and its count
+            start_index = len(s) - (count * i)
+            return s[:start_index], unit, count
+    return None
+
+def truncate_repetitive_content(content: str, line_threshold: int = 10, char_threshold: int = 10, min_len: int = 10) -> (str, str):
+    """
+    Intelligently detects and truncates character, phrase, or line-level repetitive content.
+    This version uses a more aggressive strategy for suffix repetition: it deletes the entire repeating part.
+    """
+    stripped_content = content.strip()
+    if not stripped_content:
+        return content, ""
+ 
+    # --- MODIFIED LOGIC with AGGRESSIVE DELETION ---
+    # Priority 1: Check for phrase-level suffix repetition in single, long lines.
+    if '\n' not in stripped_content and len(stripped_content) > 100:
+        suffix_match = find_repeating_suffix(stripped_content, min_len=8, min_repeats=5)
+        if suffix_match:
+            prefix, repeating_unit, count = suffix_match
+            # Ensure the repeating part is a significant portion of the whole string
+            if len(repeating_unit) * count > len(stripped_content) * 0.5:
+                # The log message is updated to reflect the new action
+                truncated_info = f"[截断信息: 检测到单行内短语重复，'{repeating_unit}' 在末尾连续出现 {count} 次，已将重复部分完全删除。]"
+                # Return ONLY the non-repeating prefix
+                return prefix, truncated_info
+    # --- END of MODIFIED LOGIC ---
+ 
+    # Priority 2: Check for full-string character-level repetition (e.g., 'ababab')
+    # For this type, keeping one unit is still reasonable (e.g., '----' -> '-')
+    if '\n' not in stripped_content and len(stripped_content) > min_len:
+        repeating_unit = find_shortest_repeating_substring(stripped_content)
+        if repeating_unit:
+            count = len(stripped_content) // len(repeating_unit)
+            if count >= char_threshold:
+                truncated_info = f"[截断信息: 检测到字符级重复，'{repeating_unit}' 共出现 {count} 次，已合并为一次。]"
+                return repeating_unit, truncated_info
+ 
+    # Priority 3: Check for line-level repetition (e.g., the same line repeated many times)
+    # For this type as well, keeping one line is often the desired behavior
+    lines = [line.strip() for line in content.split('\n') if line.strip()]
+    if not lines:
+        return content, ""
+ 
+    total_lines = len(lines)
+    if total_lines < line_threshold:
+        return content, ""
+        
+    line_counts = Counter(lines)
+    most_common_line, count = line_counts.most_common(1)[0]
+    
+    if count >= line_threshold and (count / total_lines) >= 0.8:
+        truncated_info = f"[截断信息: 检测到行级重复，'{most_common_line}' 共出现 {count} 次，已合并为一次。]"
+        return most_common_line, truncated_info
+    
+    return content, ""

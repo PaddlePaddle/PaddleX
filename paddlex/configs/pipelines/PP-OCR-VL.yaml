@@ -72,7 +72,7 @@ SubModules:
     batch_size: 1 
     genai_config:
       backend: vllm-server
-      server_url: http://0.0.0.0:8189/v1
+      server_url: http://10.214.40.11:8189/v1
 
 SubPipelines:
   DocPreprocessor:

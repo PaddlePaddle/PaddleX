@@ -29,7 +29,7 @@ from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..layout_parsing.utils import gather_imgs
 from .result import PPOCRVLBlock, PPOCRVLResult
-from .uilts import convert_otsl_to_html, filter_overlap_boxes, merge_blocks
+from .uilts import convert_otsl_to_html, filter_overlap_boxes, merge_blocks,truncate_repetitive_content
 
 IMAGE_LABELS = ["image", "header_image", "footer_image", "chart", "seal"]
 
@@ -196,6 +196,7 @@ class _PPOCRVLPipeline(BasePipeline):
                 vl_rec_result["image"] = block_img
                 vl_rec_res_list.append(vl_rec_result)
                 result_str = vl_rec_result.get("result", "")
+                result_str,_=truncate_repetitive_content(result_str)
                 if ("\\(" in result_str and "\\)" in result_str) or (
                     "\\[" in result_str and "\\]" in result_str
                 ):

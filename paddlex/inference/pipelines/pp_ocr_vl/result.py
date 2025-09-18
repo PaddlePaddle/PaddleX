@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from functools import partial
 
+import re
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
