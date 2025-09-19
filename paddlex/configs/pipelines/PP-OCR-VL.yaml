@@ -1,7 +1,9 @@
 
 pipeline_name: PP-OCR-VL
 
-batch_size: 8
+batch_size: 64
+
+use_queues: True
 
 use_doc_preprocessor: False
 
@@ -68,11 +70,11 @@ SubModules:
   VLRecognition:
     module_name: vl_recognition
     model_name: PaddleOCR-VL
-    # model_dir: /paddle/project/PaddleX/checkpoint-5774-1drope-pdformers
-    batch_size: 1 
+    # model_dir: /workspace/playground/ppocrvl_paddle/checkpoint-5774-1drope-pdformers
+    batch_size: 1024
     genai_config:
       backend: vllm-server
-      server_url: http://10.214.40.11:8189/v1
+      server_url: http://127.0.0.1:8189/v1
 
 SubPipelines:
   DocPreprocessor:

@@ -167,87 +167,14 @@ class _PPOCRVLPipeline(BasePipeline):
 
         return True
 
-    def get_layout_parsing_res(self, image, layout_det_res, imgs_in_doc_for_img):
-
-        parsing_res_list = []
-        vl_rec_res_list = []
-        table_res_list = []
-        layout_det_res = filter_overlap_boxes(
-            layout_det_res,
-        )
-        boxes = layout_det_res["boxes"]
-        blocks = self.crop_by_boxes(image, boxes)
-        blocks = merge_blocks(blocks, non_merge_labels=IMAGE_LABELS + ["table"])
-        for i, block in enumerate(blocks):
-            block_img = block["img"]
-            block_bbox = block["box"]
-            block_label = block["label"]
-            block_content = ""
-            if block_label not in IMAGE_LABELS and block_img is not None:
-                skip_special_tokens = True
-                text_prompt = "OCR:"
-                if block_label == "table":
-                    text_prompt = "Table Recognition:"
-                    skip_special_tokens = False
-                    block_img, figure_token_map = tokenize_figure_of_table(block_img, block_bbox, imgs_in_doc_for_img)
-
-                elif "formula" in block_label:
-                    text_prompt = "Formula Recognition:"
-                vl_rec_result = next(
-                    self.vl_rec_model.predict(
-                        input={
-                            "image": block_img,
-                            "query": text_prompt,
-                        },
-                        skip_special_tokens=skip_special_tokens,
-                        use_cache=True,
-                        max_new_tokens=4096,
-                    )
-                )
-                vl_rec_result["image"] = block_img
-                vl_rec_res_list.append(vl_rec_result)
-                result_str = vl_rec_result.get("result", "")
-                result_str,_=truncate_repetitive_content(result_str)
-                if ("\\(" in result_str and "\\)" in result_str) or (
-                    "\\[" in result_str and "\\]" in result_str
-                ):
-                    result_str = result_str.replace("$", "")
-
-                    result_str = (
-                        result_str.replace("\(", " $ ")
-                        .replace("\\)", " $ ")
-                        .replace("\\[", " $$ ")
-                        .replace("\\]", " $$ ")
-                    )
-                if block_label == "table":
-                    result_str = convert_otsl_to_html(result_str)
-                    result_str = untokenize_figure_of_table(result_str, figure_token_map)
-
-                block_content = result_str
-
-            block_info = PPOCRVLBlock(
-                label=block_label,
-                bbox=block_bbox,
-                content=block_content,
-            )
-            if block_label in IMAGE_LABELS and block_img is not None:
-                x_min, y_min, x_max, y_max = list(map(int, block_bbox))
-                img_path = (
-                    f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
-                )
-                block_info.image = {"path": img_path, "img": Image.fromarray(block_img)}
-
-            parsing_res_list.append(block_info)
-
-        return parsing_res_list, vl_rec_res_list, table_res_list
-    def get_layout_parsing_results(self, images, layout_det_results, imgs_in_doc_for_img):
+    def get_layout_parsing_results(self, images, layout_det_results, imgs_in_doc):
         blocks = []
         block_imgs = []
         text_prompts = []
         is_table_flags = []
         vlm_block_ids = []
         # figure_token_maps = []
-        for i, (image, layout_det_res) in enumerate(zip(images, layout_det_results)):
+        for i, (image, layout_det_res,imgs_in_doc_for_img) in enumerate(zip(images, layout_det_results,imgs_in_doc)):
             layout_det_res = filter_overlap_boxes(layout_det_res)
             boxes = layout_det_res["boxes"]
             blocks_for_img = self.crop_by_boxes(image, boxes)
@@ -477,6 +404,7 @@ class _PPOCRVLPipeline(BasePipeline):
                 self.get_layout_parsing_results(
                     doc_preprocessor_images,
                     layout_det_results,
+                    imgs_in_doc,
                 )
             )
 
