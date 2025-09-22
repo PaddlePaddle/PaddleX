@@ -18,3 +18,24 @@
 ```
 具体调用方式请查看 pdf_to_md_to_word_test.py
 ```
+
+## pdf_to_json_to_latex.py
+
+- 作用：pdf 解析得到的内容转 latex
+- 详情：和 pad_to_json_word 的逻辑大体一致，重点需要关注公式/特殊符号的转义，对不同的 block 内容按照块类型进行符合 latex 中语法的编辑
+
+```
+具体调用方式请查看 pdf_to_json_to_latex_test.py
+```
+
+## pdf_to_md_to_latex.py
+
+- 作用 1：pdf 版面解析之后，补充页眉页脚，经过模型翻译成为信息完整 md，并转为 word
+
+- 作用 2：如果直接输入 Md ，也可以直接翻译为 word
+
+- 详情：和 pdf_to_md_to_word 的逻辑大体一致。
+
+```
+具体调用方式请查看 pdf_to_md_to_latex_test.py
+```
