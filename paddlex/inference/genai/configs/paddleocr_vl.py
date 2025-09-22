@@ -26,7 +26,6 @@ def get_config(backend):
             "gpu-memory-utilization": 0.3,
             "max-model-len": 16384,
             "max-num-batched-tokens": 16384,
-            "enforce-eager": True,  # TODO: optimize
         }
     elif backend == "sglang":
         return {
