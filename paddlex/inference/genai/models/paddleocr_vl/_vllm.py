@@ -32,6 +32,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
         BaseModelOutputWithPooling,
     )
     from transformers.utils import torch_int
+    from vllm.compilation.decorators import support_torch_compile
     from vllm.config import VllmConfig
     from vllm.distributed import get_tensor_model_parallel_world_size
     from vllm.model_executor.layers.activation import get_act_fn
@@ -1067,6 +1068,15 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
         PPOCRVLMultiModalProcessor,
         info=PPOCRVLProcessingInfo,
         dummy_inputs=PPOCRVLDummyInputsBuilder,
+    )
+    @support_torch_compile(
+        # set dynamic_arg_dims to support mrope
+        dynamic_arg_dims={
+            "input_ids": 0,
+            "positions": -1,
+            "intermediate_tensors": 0,
+            "inputs_embeds": 0,
+        }
     )
     class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM, SupportsMultiModal):
 

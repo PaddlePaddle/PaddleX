@@ -28,7 +28,6 @@ def get_config(backend):
             "max-model-len": 16384,
             "max-num-batched-tokens": 131072,
             "api-server-count": 4,
-            "enforce-eager": True,  # TODO: optimize
         }
     elif backend == "sglang":
         return {
