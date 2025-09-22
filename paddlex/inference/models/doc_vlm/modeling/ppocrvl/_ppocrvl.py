@@ -33,6 +33,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from contextvars import ContextVar
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
@@ -76,7 +77,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
         self.model = Ernie4_5Model(config)
         self.vocab_size = config.vocab_size
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias_attr=False)
-        self.rope_deltas = None
+        self.rope_deltas_var = ContextVar("rope_deltas", default=None)
 
     def get_input_embeddings(self):
         return self.model.embed_tokens
@@ -433,6 +434,8 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             return_dict if return_dict is not None else self.config.use_return_dict
         )
 
+        curr_rope_deltas = self.rope_deltas_var.get()
+
         if inputs_embeds is None:
             if input_ids.shape[0] != 1:
                 raise NotImplementedError
@@ -473,7 +476,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                     use_rope=True,
                     window_size=-1,
                 )
-                # paddle.device.cuda.empty_cache()
                 image_embeds = vision_outputs.last_hidden_state
 
                 image_embeds = self.mlp_AR(image_embeds, image_grid_thw)
@@ -507,7 +509,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             attention_mask is None or attention_mask.ndim == 2
         ):
             # calculate RoPE index once per generation in the pre-fill stage only
-            if self.rope_deltas is None or (
+            if curr_rope_deltas is None or (
                 past_key_values is None or past_key_values[0] is None
             ):
                 position_ids, rope_deltas = self.get_rope_index(
@@ -517,12 +519,12 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
                     second_per_grid_ts,
                     attention_mask,
                 )
-                self.rope_deltas = rope_deltas
+                self.rope_deltas_var.set(rope_deltas)
             # then use the prev pre-calculated rope-deltas to get the correct position ids
             else:
                 batch_size, seq_length, _ = inputs_embeds.shape
                 delta = (
-                    (past_key_values[0][0].shape[1] + self.rope_deltas)
+                    (past_key_values[0][0].shape[1] + curr_rope_deltas)
                     if past_key_values is not None and past_key_values[0] is not None
                     else 0
                 )
@@ -549,7 +551,6 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             return_dict=return_dict,
             **kwargs,
         )
-        # paddle.device.cuda.empty_cache()
 
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
@@ -577,7 +578,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             past_key_values=outputs.past_key_values,
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
-            rope_deltas=self.rope_deltas,
+            rope_deltas=curr_rope_deltas,
         )
 
     def generate(self, inputs, **kwargs):
