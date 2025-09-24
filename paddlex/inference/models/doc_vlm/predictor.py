@@ -142,6 +142,7 @@ class DocVLMPredictor(BasePredictor):
                 model = PPOCRVLForConditionalGeneration.from_pretrained(
                     self.model_dir,
                     dtype=self.dtype,
+                    convert_from_hf=True,
                 )
         else:
             raise NotImplementedError(f"Model {self.model_name} is not supported.")

@@ -75,6 +75,7 @@ MOD_TO_DEP = {
     "regex": "regex",
     "requests": "requests",
     "ruamel.yaml": "ruamel.yaml",
+    "safetensors": "safetensors",
     "skimage": "scikit-image",
     "sklearn": "scikit-learn",
     "sentencepiece": "sentencepiece",
