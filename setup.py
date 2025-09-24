@@ -77,6 +77,7 @@ DEP_SPECS = {
     "ujson": "",
     "uvicorn": ">= 0.16",
     "yarl": ">= 1.9",
+    "python-bidi": "",
 }
 
 REQUIRED_DEPS = [
@@ -179,6 +180,7 @@ EXTRAS = {
             "shapely",
             "tiktoken",
             "tokenizers",
+            "python-bidi",
         ],
         "speech": [
             "ftfy",

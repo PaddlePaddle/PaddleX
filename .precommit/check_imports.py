@@ -86,6 +86,7 @@ MOD_TO_DEP = {
     "ujson": "ujson",
     "uvicorn": "uvicorn",
     "yarl": "yarl",
+    "bidi": "python-bidi",
 }
 assert (
     set(MOD_TO_DEP.values()) == DEP_SPECS.keys()
