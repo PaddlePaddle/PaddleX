@@ -50,8 +50,6 @@ def need_local_model(genai_config):
 
 # TODO: Can we set the event loop externally?
 class _AsyncThreadManager:
-    _SHUTDOWN_TIMEOUT = 10
-
     def __init__(self):
         self.loop = None
         self.thread = None
@@ -62,35 +60,6 @@ class _AsyncThreadManager:
         if self.is_running():
             return
 
-        def _graceful_shutdown():
-            try:
-                self.loop.stop()
-
-                pending_tasks = asyncio.all_tasks(self.loop)
-                if not pending_tasks:
-                    return
-
-                for task in pending_tasks:
-                    task.cancel()
-
-                future = asyncio.gather(*pending_tasks, return_exceptions=True)
-                self.loop.run_until_complete(
-                    asyncio.wait_for(future, timeout=self._SHUTDOWN_TIMEOUT)
-                )
-            except asyncio.TimeoutError:
-                logging.warning(
-                    f"Shutdown timed out after {self._SHUTDOWN_TIMEOUT} seconds. "
-                    "Some tasks may not have completed gracefully."
-                )
-            except Exception as e:
-                logging.error(f"Error during shutdown: {e}")
-            finally:
-                try:
-                    self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-                except Exception as e:
-                    logging.error(f"Error shutting down asyncgens: {e}")
-                self.loop.close()
-
         def _run_loop():
             self.loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self.loop)
@@ -98,19 +67,19 @@ class _AsyncThreadManager:
             try:
                 self.loop.run_forever()
             finally:
-                _graceful_shutdown()
+                self.loop.close()
                 self.stopped = True
 
-        # Should we use a non-daemon thread?
         self.thread = threading.Thread(target=_run_loop, daemon=True)
         self.thread.start()
         self._event_start.wait()
 
     def stop(self):
+        # TODO: Graceful shutdown
         if not self.is_running():
             return
         self.loop.call_soon_threadsafe(self.loop.stop)
-        self.thread.join(timeout=self._SHUTDOWN_TIMEOUT + 1)
+        self.thread.join(timeout=1)
         if self.thread.is_alive():
             logging.warning("Background thread did not terminate in time")
         self.loop = None
@@ -182,6 +151,9 @@ def run_async(coro, return_future=False, timeout=None):
 
 @class_requires_deps("openai")
 class GenAIClient(object):
+    # TODO: Configurable max concurrency
+    MAX_CONCURRENCY = 200
+
     def __init__(self, backend, base_url, model_name=None, **kwargs):
         from openai import AsyncOpenAI
 
@@ -194,6 +166,8 @@ class GenAIClient(object):
             kwargs["api_key"] = "null"
         self._client = AsyncOpenAI(base_url=base_url, **kwargs)
 
+        self._semaphore = asyncio.Semaphore(self.MAX_CONCURRENCY)
+
     @property
     def openai_client(self):
         return self._client
@@ -204,8 +178,16 @@ class GenAIClient(object):
         else:
             model_name = run_async(self._get_model_name(), timeout=10)
             self._model_name = model_name
+
+        async def _create_chat_completion_with_semaphore(*args, **kwargs):
+            async with self._semaphore:
+                return await self._client.chat.completions.create(
+                    *args,
+                    **kwargs,
+                )
+
         return run_async(
-            self._client.chat.completions.create(
+            _create_chat_completion_with_semaphore(
                 model=model_name,
                 messages=messages,
                 **kwargs,

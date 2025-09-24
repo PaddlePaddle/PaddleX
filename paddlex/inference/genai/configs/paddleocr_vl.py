@@ -24,7 +24,7 @@ def get_config(backend):
     elif backend == "vllm":
         return {
             "trust-remote-code": True,
-            "gpu-memory-utilization": 0.9,
+            "gpu-memory-utilization": 0.5,
             "max-model-len": 16384,
             "max-num-batched-tokens": 131072,
             "api-server-count": 4,
@@ -32,7 +32,7 @@ def get_config(backend):
     elif backend == "sglang":
         return {
             "trust-remote-code": True,
-            "mem-fraction-static": 0.9,
+            "mem-fraction-static": 0.5,
             "context-length": 16384,
             "max-prefill-tokens": 131072,
         }
