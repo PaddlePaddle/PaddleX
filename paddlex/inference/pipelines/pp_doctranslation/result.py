@@ -35,5 +35,5 @@ class MarkdownResult(BaseCVResult, MarkdownMixin):
             fn = f"{stem}_{language}{suffix}"
         return fn
 
-    def _to_markdown(self, pretty=True) -> dict:
+    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
         return self

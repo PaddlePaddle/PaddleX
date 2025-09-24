@@ -14,13 +14,12 @@
 import html
 import itertools
 import re
+from collections import Counter
 from copy import deepcopy
-from typing import Any, Dict, List,Tuple
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
-import cv2
 from PIL import Image
-from collections import Counter
 from pydantic import BaseModel, computed_field, model_validator
 
 from ..layout_parsing.utils import (
@@ -305,7 +304,8 @@ def merge_blocks(blocks, non_merge_labels):
             and block_label in ["text"]
             and block_label == prev_label
             and block_bbox[3] >= prev_bbox[1]
-            and abs(block_bbox[1]-prev_bbox[3]) < max(prev_bbox[3] - prev_bbox[1], block_bbox[3] - block_bbox[1]) * 0.5
+            and abs(block_bbox[1] - prev_bbox[3])
+            < max(prev_bbox[3] - prev_bbox[1], block_bbox[3] - block_bbox[1]) * 0.5
             and (
                 is_aligned(block_bbox[0], prev_bbox[0])
                 ^ is_aligned(block_bbox[2], prev_bbox[2])
@@ -396,10 +396,12 @@ def paint_token(image, box, token_str):
     token: str, 要写入的内容
     返回: 修改后的图像
     """
+    import cv2
+
     x1, y1, x2, y2 = [int(v) for v in box]
     img = image.copy()
     # 填充白色
-    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255,255,255), thickness=-1)
+    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255, 255, 255), thickness=-1)
 
     # 计算区域宽高
     box_w = x2 - x1
@@ -412,35 +414,66 @@ def paint_token(image, box, token_str):
 
     # 先尝试较大的字体，再逐步减小
     while font_scale > 0:
-        (text_w, text_h), baseline = cv2.getTextSize(token_str, font, font_scale, font_thickness)
+        (text_w, text_h), baseline = cv2.getTextSize(
+            token_str, font, font_scale, font_thickness
+        )
         if text_w <= box_w * 0.9 and text_h + baseline <= box_h * 0.9:
             break
         font_scale -= 0.1
     if font_scale <= 0:  # 还是放不下，缩小到最小
         font_scale = 0.2
-        (text_w, text_h), baseline = cv2.getTextSize(token_str, font, font_scale, font_thickness)
+        (text_w, text_h), baseline = cv2.getTextSize(
+            token_str, font, font_scale, font_thickness
+        )
 
     # 计算文本左下角坐标，使其居中
     text_x = x1 + (box_w - text_w) // 2
     text_y = y1 + (box_h + text_h) // 2
 
     # 画文本
-    cv2.putText(img, token_str, (text_x, text_y), font, font_scale, (0,0,0), font_thickness, lineType=cv2.LINE_AA)
+    cv2.putText(
+        img,
+        token_str,
+        (text_x, text_y),
+        font,
+        font_scale,
+        (0, 0, 0),
+        font_thickness,
+        lineType=cv2.LINE_AA,
+    )
 
     return img
 
 
 def tokenize_figure_of_table(table_block_img, table_box, figures):
+    import random
+
+    random.seed(1024)
     token_map = {}
     table_x_min, table_y_min, table_x_max, table_y_max = table_box
+    drop_idxes = []
+    random_map = list(range(len(figures)))
+    random.shuffle(random_map)
     for figure_id, figure in enumerate(figures):
         figure_x_min, figure_y_min, figure_x_max, figure_y_max = figure["coordinate"]
-        if figure_x_min >= table_x_min and figure_y_min >= table_y_min and figure_x_max <= table_x_max and figure_y_max <= table_y_max:
-            draw_box = [figure_x_min - table_x_min, figure_y_min - table_y_min, figure_x_max - table_x_min, figure_y_max - table_y_min]
-            token_str = "[F" + str(figure_id) + "]"
+        if (
+            figure_x_min >= table_x_min
+            and figure_y_min >= table_y_min
+            and figure_x_max <= table_x_max
+            and figure_y_max <= table_y_max
+        ):
+            draw_box = [
+                figure_x_min - table_x_min,
+                figure_y_min - table_y_min,
+                figure_x_max - table_x_min,
+                figure_y_max - table_y_min,
+            ]
+            token_str = "[F" + str(random_map[figure_id]) + "]"
             table_block_img = paint_token(table_block_img, draw_box, token_str)
             token_map[token_str] = f'<img src="{figure["path"]}" >'
-    return table_block_img, token_map
+            drop_idxes.append(figure_id)
+    drop_figures = [f["path"] for i, f in enumerate(figures) if i in drop_idxes]
+    return table_block_img, token_map, drop_figures
 
 
 def untokenize_figure_of_table(table_res_str, figure_token_map):
@@ -448,7 +481,8 @@ def untokenize_figure_of_table(table_res_str, figure_token_map):
         token_id = match.group(1)
         token = f"[F{token_id}]"
         return figure_token_map.get(token, match.group(0))
-    pattern = r'\[F(\d+)\]'
+
+    pattern = r"\[F(\d+)\]"
     return re.sub(pattern, repl, table_res_str)
 
 
@@ -549,7 +583,7 @@ OTSL_XCEL = "<xcel>"
 
 NON_CAPTURING_TAG_GROUP = "(?:<fcel>|<ecel>|<nl>|<lcel>|<ucel>|<xcel>)"
 OTSL_FIND_PATTERN = re.compile(
-    f"{NON_CAPTURING_TAG_GROUP}.*?(?={NON_CAPTURING_TAG_GROUP}|$)",flags=re.DOTALL
+    f"{NON_CAPTURING_TAG_GROUP}.*?(?={NON_CAPTURING_TAG_GROUP}|$)", flags=re.DOTALL
 )
 
 
@@ -861,25 +895,28 @@ def find_shortest_repeating_substring(s: str) -> str | None:
             if substring * (n // i) == s:
                 return substring
     return None
- 
+
+
 # --- NEW FUNCTION: Detects repeating phrases at the end of a string ---
-def find_repeating_suffix(s: str, min_len: int = 8, min_repeats: int = 5) -> Tuple[str, str, int] | None:
+def find_repeating_suffix(
+    s: str, min_len: int = 8, min_repeats: int = 5
+) -> Tuple[str, str, int] | None:
     """
     Finds if a string ends with a repeating phrase.
     e.g., s='start...phrase,phrase,phrase,' returns ('start...', 'phrase,', 3)
-    
+
     Args:
         s (str): The input string.
         min_len (int): The minimum length of the repeating unit to consider.
         min_repeats (int): The minimum number of repetitions to trigger truncation.
- 
+
     Returns:
         A tuple (prefix, unit, count) if a repeating suffix is found, otherwise None.
     """
     # Iterate through possible lengths of the repeating unit, from longest to shortest.
     for i in range(len(s) // (min_repeats), min_len - 1, -1):
         unit = s[-i:]
-        
+
         # Quick check: does the string end with the unit repeated at least min_repeats times?
         if s.endswith(unit * min_repeats):
             # If so, find the exact number of repetitions
@@ -888,13 +925,16 @@ def find_repeating_suffix(s: str, min_len: int = 8, min_repeats: int = 5) -> Tup
             while temp_s.endswith(unit):
                 temp_s = temp_s[:-i]
                 count += 1
-            
+
             # Return the non-repeating prefix, the unit, and its count
             start_index = len(s) - (count * i)
             return s[:start_index], unit, count
     return None
 
-def truncate_repetitive_content(content: str, line_threshold: int = 10, char_threshold: int = 10, min_len: int = 10) -> (str, str):
+
+def truncate_repetitive_content(
+    content: str, line_threshold: int = 10, char_threshold: int = 10, min_len: int = 10
+) -> (str, str):
     """
     Intelligently detects and truncates character, phrase, or line-level repetitive content.
     This version uses a more aggressive strategy for suffix repetition: it deletes the entire repeating part.
@@ -902,10 +942,10 @@ def truncate_repetitive_content(content: str, line_threshold: int = 10, char_thr
     stripped_content = content.strip()
     if not stripped_content:
         return content, ""
- 
+
     # --- MODIFIED LOGIC with AGGRESSIVE DELETION ---
     # Priority 1: Check for phrase-level suffix repetition in single, long lines.
-    if '\n' not in stripped_content and len(stripped_content) > 100:
+    if "\n" not in stripped_content and len(stripped_content) > 100:
         suffix_match = find_repeating_suffix(stripped_content, min_len=8, min_repeats=5)
         if suffix_match:
             prefix, repeating_unit, count = suffix_match
@@ -916,32 +956,32 @@ def truncate_repetitive_content(content: str, line_threshold: int = 10, char_thr
                 # Return ONLY the non-repeating prefix
                 return prefix, truncated_info
     # --- END of MODIFIED LOGIC ---
- 
+
     # Priority 2: Check for full-string character-level repetition (e.g., 'ababab')
     # For this type, keeping one unit is still reasonable (e.g., '----' -> '-')
-    if '\n' not in stripped_content and len(stripped_content) > min_len:
+    if "\n" not in stripped_content and len(stripped_content) > min_len:
         repeating_unit = find_shortest_repeating_substring(stripped_content)
         if repeating_unit:
             count = len(stripped_content) // len(repeating_unit)
             if count >= char_threshold:
                 truncated_info = f"[截断信息: 检测到字符级重复，'{repeating_unit}' 共出现 {count} 次，已合并为一次。]"
                 return repeating_unit, truncated_info
- 
+
     # Priority 3: Check for line-level repetition (e.g., the same line repeated many times)
     # For this type as well, keeping one line is often the desired behavior
-    lines = [line.strip() for line in content.split('\n') if line.strip()]
+    lines = [line.strip() for line in content.split("\n") if line.strip()]
     if not lines:
         return content, ""
- 
+
     total_lines = len(lines)
     if total_lines < line_threshold:
         return content, ""
-        
+
     line_counts = Counter(lines)
     most_common_line, count = line_counts.most_common(1)[0]
-    
+
     if count >= line_threshold and (count / total_lines) >= 0.8:
         truncated_info = f"[截断信息: 检测到行级重复，'{most_common_line}' 共出现 {count} 次，已合并为一次。]"
         return most_common_line, truncated_info
-    
+
     return content, ""
