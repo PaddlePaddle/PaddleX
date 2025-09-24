@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import os
-import re
-from bs4 import BeautifulSoup
+import json,os,re
 
 def escape_latex(s: str) -> str:
     """
@@ -149,6 +146,9 @@ def generate_image_latex(block, image_base_path, md_base_path) -> str:
     )
 
 def generate_table_latex(block) -> str:
+    
+    from bs4 import BeautifulSoup
+    
     content = block.get("block_content", "")
     if "<table" in content:
         soup = BeautifulSoup(content, "html.parser")

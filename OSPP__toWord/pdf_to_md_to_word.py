@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from docx import Document
-from docx.shared import Pt, Inches, RGBColor
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx.oxml.ns import qn
-from bs4 import BeautifulSoup
+
 import os, re
 
 def set_paragraph_style(paragraph, bold=False, align="left", font_size=11, color=None):
+    from docx.oxml.ns import qn
+    from docx.shared import Pt
+    from docx.shared import RGBColor
+    from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
     """统一设置段落样式"""
     run = paragraph.runs[0] if paragraph.runs else paragraph.add_run()
     run.font.name = "Times New Roman"
@@ -35,6 +35,8 @@ def set_paragraph_style(paragraph, bold=False, align="left", font_size=11, color
         paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 def add_image(paragraph, src, width_percent):
+    from docx.shared import Inches
+    from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
     """插入图片并缩放"""
     if os.path.exists(src):
         try:
@@ -48,6 +50,8 @@ def add_image(paragraph, src, width_percent):
         paragraph.add_run(f"[图片不存在: {src}]")
 
 def add_table(document, table_html):
+    from bs4 import BeautifulSoup
+    
     """解析 HTML 表格并添加到 Word"""
     soup = BeautifulSoup(table_html, "html.parser")
     table_tag = soup.find("table")
@@ -120,6 +124,8 @@ def json_to_html_with_headfoot(json_list: list, input_path: str) -> Dict:
     return result
 
 def process_md_page(document, md_text ,output_path):
+    from bs4 import BeautifulSoup
+    
     """处理单页内容"""
     lines = md_text.strip().split("\n")
     for line in lines:
@@ -176,6 +182,8 @@ def process_md_page(document, md_text ,output_path):
     
     
 def md_to_word(md_text, output_path , base_name):
+    from bs4 import BeautifulSoup
+    from docx import Document
     
     pages = [p.strip() for p in re.split(r'<sep>1</sep>', md_text) if p.strip()]
     

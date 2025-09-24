@@ -13,13 +13,6 @@
 # limitations under the License.
 
 from typing import List, Dict
-from docx import Document
-from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.section import WD_SECTION
-from docx.oxml.ns import qn
-from PIL import Image
-from bs4 import BeautifulSoup
 import json, os, re, copy
 
 TRANSLATABLE_LABELS = {"chart", "image", "seal", "number"}
@@ -28,18 +21,28 @@ SPLIT_TOKEN = "¥$¥"
 
 # --- 样式设置 ---
 # 设置段落的字体、字号、加粗、对齐方式和首行缩进
-def set_paragraph_style(para, font_name="Times New Roman", font_size_pt=12, bold=False, alignment=WD_ALIGN_PARAGRAPH.LEFT, indent=False):
+def set_paragraph_style(para, font_name="Times New Roman", font_size_pt=12, bold=False, indent=False, alignment = None):
+    from docx.oxml.ns import qn
+    from docx.shared import Inches
+    from docx.shared import Pt
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    
     run = para.runs[0] if para.runs else para.add_run()
     run.font.name = font_name
     run._element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
     run.font.size = Pt(font_size_pt)
     run.bold = bold
+    if alignment is None:
+        alignment = WD_ALIGN_PARAGRAPH.LEFT
     para.alignment = alignment
     if indent:
         para.paragraph_format.first_line_indent = Inches(0.3)
 
 # 设置 run 的字体，包括中英文字体和字号
 def set_run_font(run, font_name_en="Times New Roman", font_name_cn="宋体", font_size_pt=10.5, bold=False):
+    from docx.oxml.ns import qn
+    from docx.shared import Pt
+    
     run.font.name = font_name_en
     run._element.rPr.rFonts.set(qn('w:eastAsia'), font_name_cn)
     run.font.size = Pt(font_size_pt)
@@ -47,6 +50,7 @@ def set_run_font(run, font_name_en="Times New Roman", font_name_cn="宋体", fon
 
 # 清空并设置 section 的页眉或页脚内容，居中显示
 def set_section_part_text(section_part, text):
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
     for _ in range(len(section_part.paragraphs)):
         p = section_part.paragraphs[0]
         p._element.getparent().remove(p._element)
@@ -59,6 +63,7 @@ def set_section_part_text(section_part, text):
 # --- 内容格式 ---
 # 根据块的标签和内容，向文档添加对应格式的段落或标题
 def format_block_style(doc, label, content):
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
     style_map = {
         "doc_title":     {"level": 0, "size": 20, "bold": True, "align": WD_ALIGN_PARAGRAPH.CENTER},
         "header":        {"size": 16, "bold": True, "align": WD_ALIGN_PARAGRAPH.CENTER},
@@ -85,13 +90,14 @@ def format_block_style(doc, label, content):
                         font_name=config.get("font", "Times New Roman"),
                         font_size_pt=config["size"],
                         bold=config.get("bold", False),
-                        alignment=config["align"],
-                        indent=config.get("indent", False))
+                        indent=config.get("indent", False),
+                        alignment=config["align"])
 
 
 # --- 表格解析 ---
 # 解析 HTML 表格字符串，提取为二维文本列表
 def parse_html_table(html):
+    from bs4 import BeautifulSoup
     soup = BeautifulSoup(html, "html.parser")
     return [[cell.get_text(strip=True) for cell in tr.find_all(["td", "th"])]
             for tr in soup.find_all("tr")]
@@ -112,6 +118,8 @@ def get_image_width_from_md(md_path, image_name):
 
 # 向文档插入图片，宽度根据比例缩放，居中显示
 def insert_image(doc, image_path, width_ratio):
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.shared import Inches
     para = doc.add_paragraph()
     run = para.add_run()
     run.add_picture(image_path, width=Inches(5.5 * width_ratio))
@@ -121,6 +129,9 @@ def insert_image(doc, image_path, width_ratio):
 # --- 主流程函数 ---
 # 从 JSON 读取块列表，按页生成 Word 文档，支持页眉页脚、表格、图片等
 def blocks_to_word(json_path, word_output_path, image_base_path, input_path, output_path):
+    from docx import Document
+    from docx.enum.section import WD_SECTION
+    
     with open(json_path, "r", encoding="utf-8") as f:
         blocks = json.load(f)
 

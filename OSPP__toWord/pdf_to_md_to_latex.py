@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import re
-from bs4 import BeautifulSoup
+import os,re
 
 def escape_latex_outside_formula(s: str) -> str:
     """
@@ -64,6 +62,9 @@ def get_image_width_from_md_line(line, default_ratio=0.8):
     return default_ratio
 
 def process_table_html(content) -> str:
+    
+    from bs4 import BeautifulSoup
+    
     """
     表格处理
     """
@@ -112,6 +113,8 @@ def process_paragraph(s: str) -> str:
     return "\n\n".join(processed_paras) + "\n\n"
 
 def process_md_line(line: str) -> str:
+    
+    from bs4 import BeautifulSoup
     """
     单行处理
     """
@@ -161,6 +164,9 @@ def process_md_line(line: str) -> str:
     return process_paragraph(line)
 
 def md_to_latex(md_text: str, output_path: str):
+    
+    from bs4 import BeautifulSoup
+    
     pages = [p.strip() for p in re.split(r'<sep>1</sep>', md_text) if p.strip()]
     if not pages:
         print("❌ 没有有效内容")
