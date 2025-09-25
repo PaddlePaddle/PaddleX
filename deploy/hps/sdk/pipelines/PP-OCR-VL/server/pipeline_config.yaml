@@ -6,6 +6,9 @@ batch_size: 64
 use_queues: True
 
 use_doc_preprocessor: False
+use_layout_detection: True
+use_chart_recognition: False
+format_block_content: False
 
 SubModules:
   LayoutDetection:
@@ -57,7 +60,7 @@ SubModules:
       12: "union" # header
       13: "union" # header
       14: "large" # image
-      15: "large" # formula
+      15: "small" # formula
       16: "union" # number
       17: "large" # paragraph_title
       18: "union" # reference
