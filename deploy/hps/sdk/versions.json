@@ -10,7 +10,7 @@
     "image_multilabel_classification": "0.1.0",
     "instance_segmentation": "0.1.0",
     "layout_parsing": "0.3.0",
-    "PP-StructureV3": "0.3.0",
+    "PP-StructureV3": "0.3.1",
     "multilingual_speech_recognition": "0.2.0",
     "object_detection": "0.1.0",
     "OCR": "0.2.1",
