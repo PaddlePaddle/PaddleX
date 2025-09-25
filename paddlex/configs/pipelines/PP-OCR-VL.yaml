@@ -1,7 +1,9 @@
 
 pipeline_name: PP-OCR-VL
 
-batch_size: 8
+batch_size: 64
+
+use_queues: True
 
 use_doc_preprocessor: False
 
@@ -9,7 +11,7 @@ SubModules:
   LayoutDetection:
     module_name: layout_detection
     model_name: PP-DocLayoutV2-L #PP-DocLayoutV2-L PP-DocLayout_plus-L
-    model_dir: /paddle/project/PaddleX/pp_ocr_vl_eval_tools/models/order/layout0829-order0828/PP-DocLayout_plus-L
+    model_dir: null
     batch_size: 8
     threshold: 
       0: 0.5 # abstract
@@ -68,11 +70,8 @@ SubModules:
   VLRecognition:
     module_name: vl_recognition
     model_name: PaddleOCR-VL
-    model_dir: /paddle/project/PaddleX/checkpoint-5774-1drope-pdformers
-    batch_size: 1 
-    # genai_config:
-    #   backend: vllm-server
-    #   server_url: http://10.214.40.11:8189/v1
+    model_dir: null
+    batch_size: 1
 
 SubPipelines:
   DocPreprocessor:
