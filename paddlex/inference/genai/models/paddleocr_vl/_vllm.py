@@ -20,11 +20,14 @@ import numpy as np
 
 from .....utils.deps import is_dep_available
 
-if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
+if all(
+    map(is_dep_available, ("einops", "torch", "transformers", "vllm", "flash-attn"))
+):
 
     import torch
     import torch.nn as nn
     from einops import rearrange
+    from flash_attn import flash_attn_varlen_func
     from transformers import BatchFeature
     from transformers.activations import GELUActivation
     from transformers.modeling_outputs import (
@@ -81,7 +84,6 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
         PromptUpdate,
     )
     from vllm.multimodal.profiling import BaseDummyInputsBuilder
-    from vllm.platforms import _Backend
     from vllm.sequence import IntermediateTensors
 
     def smart_resize(
@@ -555,14 +557,6 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                 prefix=f"{prefix}.out_proj",
             )
 
-            # TODO: Detect attention implementation.
-            self.attn_backend = _Backend.XFORMERS
-            # self.attn_backend: _Backend = get_vit_attn_backend(support_fa=True)
-            # if self.attn_backend not in {_Backend.XFORMERS}:
-            #     raise RuntimeError(
-            #         f"Keye-VL does not support {self.attn_backend} backend now."
-            #     )
-
         def forward(
             self,
             hidden_states: torch.Tensor,
@@ -571,64 +565,35 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
             cu_seqlens: Optional[list[torch.Tensor]] = None,
             rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
         ) -> torch.Tensor:
-            qkv, _ = self.qkv_proj(hidden_states)
-            q, k, v = qkv.split(
-                [self.q_size, self.kv_size, self.kv_size],
-                dim=-1,
-            )
+            batch_size, seq_length, embed_dim = hidden_states.shape
+
+            qkv_states, _ = self.qkv_proj(hidden_states)
+            queries, keys, values = qkv_states.chunk(3, dim=-1)
+
+            queries = queries.view(seq_length, self.num_heads, self.head_dim)
+            keys = keys.view(seq_length, self.num_heads, self.head_dim)
+            values = values.view(seq_length, self.num_heads, self.head_dim)
+
+            if rope_emb is not None:
+                cos, sin = rope_emb
+                queries, keys = apply_rotary_pos_emb_flashatt(
+                    queries.unsqueeze(0), keys.unsqueeze(0), cos, sin
+                )
+                queries = queries.squeeze(0)
+                keys = keys.squeeze(0)
 
             max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max().item()
-            seqlens = (cu_seqlens[1:] - cu_seqlens[:-1]).tolist()
-            batch_size = q.shape[0]
+            attn_output = flash_attn_varlen_func(
+                queries,
+                keys,
+                values,
+                cu_seqlens_q=cu_seqlens,
+                cu_seqlens_k=cu_seqlens,
+                max_seqlen_q=max_seqlen,
+                max_seqlen_k=max_seqlen,
+            ).reshape(seq_length, -1)
 
-            if rope_emb is None:
-                q = q.view(*q.shape[:-1], self.num_heads, self.head_dim)
-                k = k.view(
-                    *k.shape[:-1],
-                    self.num_kv_heads,
-                    self.head_dim,
-                )
-                v = v.view(
-                    *v.shape[:-1],
-                    self.num_kv_heads,
-                    self.head_dim,
-                )
-            else:
-                if cu_seqlens is None:
-                    raise ValueError(
-                        "cu_seqlens cannot be None when rope_emb is not None."
-                    )
-                cos, sin = rope_emb
-                q = q.view(*q.shape[:-1], self.num_heads, self.head_dim)
-                k = k.view(
-                    *k.shape[:-1],
-                    self.num_kv_heads,
-                    self.head_dim,
-                )
-                q, k = apply_rotary_pos_emb_flashatt(q, k, cos, sin)
-                v = v.view(
-                    *v.shape[:-1],
-                    self.num_kv_heads,
-                    self.head_dim,
-                )
-
-            if self.attn_backend == _Backend.XFORMERS:
-                from xformers import ops as xops
-                from xformers.ops.fmha.attn_bias import BlockDiagonalMask
-
-                attn_bias = BlockDiagonalMask.from_seqlens(
-                    q_seqlen=seqlens, kv_seqlen=None, device=q.device
-                )
-
-                context_layer = xops.memory_efficient_attention_forward(
-                    q, k, v, attn_bias=attn_bias, p=0, scale=None
-                )
-
-            context_layer = rearrange(
-                context_layer, "b s h d -> b s (h d)"
-            ).contiguous()
-
-            output, _ = self.out_proj(context_layer)
+            output, _ = self.out_proj(attn_output)
             return output
 
     class SigLIPRotaryEmbedding(nn.Module):
