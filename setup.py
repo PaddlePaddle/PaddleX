@@ -209,7 +209,6 @@ EXTRAS = {
             "torch == 2.8.0",
             "transformers",
             "xformers",
-            "flash-attn == 2.8.2",
         ],
         "genai-vllm-server": [
             "einops",
@@ -218,7 +217,6 @@ EXTRAS = {
             "uvloop",
             "vllm == 0.10.2",
             "xformers",
-            "flash-attn == 2.8.2",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.0.2rc3",
