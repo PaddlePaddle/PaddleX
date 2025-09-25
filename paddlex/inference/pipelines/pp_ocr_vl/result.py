@@ -142,6 +142,12 @@ def create_image_with_text(
     return new_image
 
 
+def merge_formula_and_number(formula, formula_number):
+    formula = formula.replace("$$", "")
+    merge_formula = r"{} \tag*{{{}}}".format(formula, formula_number)
+    return f"$${merge_formula}$$"
+
+
 class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
     """Layout Parsing Result V2"""
 
@@ -161,7 +167,8 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if model_settings["use_doc_preprocessor"]:
             for key, value in self["doc_preprocessor_res"].img.items():
                 res_img_dict[key] = value
-        res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
+        if self["model_settings"]["use_layout_detection"]:
+            res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
         # for layout ordering image
         image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
@@ -240,8 +247,8 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["model_settings"] = model_settings
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
-        data["layout_det_res"] = self["layout_det_res"].str["res"]
-
+        if self["model_settings"]["use_layout_detection"]:
+            data["layout_det_res"] = self["layout_det_res"].str["res"]
         return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> dict[str, str]:
@@ -262,10 +269,11 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["parsing_res_list"] = parsing_res_list
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
-        data["layout_det_res"] = self["layout_det_res"].json["res"]
+        if self["model_settings"]["use_layout_detection"]:
+            data["layout_det_res"] = self["layout_det_res"].json["res"]
         return JsonMixin._to_json(data, *args, **kwargs)
 
-    def _to_markdown(self, pretty=True) -> dict:
+    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
         """
         Save the parsing result to a Markdown file.
 
@@ -291,6 +299,11 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             format_text_func = lambda block: block.content
             format_image_func = format_image_plain_func
 
+        if self["model_settings"]["use_chart_recognition"]:
+            format_chart_func = format_text_func
+        else:
+            format_chart_func = format_image_func
+
         if pretty:
             format_table_func = lambda block: "\n" + format_text_func(block).replace(
                 "<table>", '<table border="1">'
@@ -298,7 +311,6 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         else:
             format_table_func = lambda block: simplify_table_func("\n" + block.content)
 
-        format_formula_func = lambda block: f"$${block.content}$$"
         handle_funcs_dict = {
             "paragraph_title": format_title_func,
             "abstract_title": format_title_func,
@@ -317,6 +329,9 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             "text": lambda block: block.content.replace("\n\n", "\n").replace(
                 "\n", "\n\n"
             ),
+            "ocr": lambda block: block.content.replace("\n\n", "\n").replace(
+                "\n", "\n\n"
+            ),
             "vertical_text": lambda block: block.content.replace("\n\n", "\n").replace(
                 "\n", "\n\n"
             ),
@@ -333,7 +348,7 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "\n", "  \n"
             ),
             "image": format_image_func,
-            "chart": format_image_func,
+            "chart": format_chart_func,
             "formula": format_text_func,
             "display_formula": format_text_func,
             "inline_formula": format_text_func,
@@ -351,13 +366,24 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         markdown_content = ""
         markdown_info = {}
         markdown_info["markdown_images"] = {}
-        for block in self["parsing_res_list"]:
+        for idx, block in enumerate(self["parsing_res_list"]):
             label = block.label
             if block.image is not None:
                 markdown_info["markdown_images"][block.image["path"]] = block.image[
                     "img"
                 ]
             handle_func = handle_funcs_dict.get(label, None)
+            if (
+                show_formula_number
+                and (label == "display_formula" or label == "formula")
+                and idx != len(self["parsing_res_list"]) - 1
+            ):
+                next_block = self["parsing_res_list"][idx + 1]
+                next_block_label = next_block.label
+                if next_block_label == "formula_number":
+                    block.content = merge_formula_and_number(
+                        block.content, next_block.content
+                    )
             if handle_func:
                 markdown_content += (
                     "\n\n" + handle_func(block)

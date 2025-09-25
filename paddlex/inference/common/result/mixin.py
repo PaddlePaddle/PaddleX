@@ -611,7 +611,9 @@ class MarkdownMixin:
         self._save_funcs.append(self.save_to_markdown)
 
     @abstractmethod
-    def _to_markdown(self, pretty=True) -> Dict[str, Union[str, Dict[str, Any]]]:
+    def _to_markdown(
+        self, pretty=True, show_formula_number=False
+    ) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
         Convert the result to markdown format.
 
@@ -632,7 +634,9 @@ class MarkdownMixin:
         """
         return self._to_markdown()
 
-    def save_to_markdown(self, save_path, pretty=True, *args, **kwargs) -> None:
+    def save_to_markdown(
+        self, save_path, pretty=True, show_formula_number=False, *args, **kwargs
+    ) -> None:
         """Save the markdown data to a file.
 
         Args:
@@ -670,7 +674,7 @@ class MarkdownMixin:
             self._markdown_writer.write,
             self._img_writer.write,
             self.save_path,
-            self._to_markdown(pretty=pretty),
+            self._to_markdown(pretty=pretty, show_formula_number=show_formula_number),
             *args,
             **kwargs,
         )

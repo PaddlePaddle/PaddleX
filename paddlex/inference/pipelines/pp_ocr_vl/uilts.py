@@ -14,8 +14,9 @@
 import html
 import itertools
 import re
+from collections import Counter
 from copy import deepcopy
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
 from PIL import Image
@@ -60,7 +61,7 @@ def filter_overlap_boxes(
 
             # If overlap ratio is significant, mark one of the boxes for removal
             if (
-                overlap_ratio > 0.9
+                overlap_ratio > 0.7
             ):  # Assuming 1 is the threshold for significant overlap
                 # Here we are assuming higher score is preferable, you might want to adjust this logic
                 box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
@@ -82,45 +83,42 @@ def filter_overlap_boxes(
     return layout_det_res_filted
 
 
-def merge_images(images):
-    """
-    Merge a list of images (np.array) into a single image (PIL.Image).
-    """
-    if not images:
-        return None
+# def merge_images(images):
+#     """
+#     Merge a list of images (np.array) into a single image (PIL.Image).
+#     """
+#     if not images:
+#         return None
 
-    # Calculate total height and max width
-    total_height = sum(
-        image.shape[0] for image in images
-    )  # image.shape[0] is the height
-    max_width = max(image.shape[1] for image in images)  # image.shape[1] is the width
+#     # Calculate total height and max width
+#     total_height = sum(
+#         image.shape[0] for image in images
+#     )  # image.shape[0] is the height
+#     max_width = max(image.shape[1] for image in images)  # image.shape[1] is the width
 
-    # Create a new blank image with white background
-    new_image = Image.new("RGB", (max_width, total_height), (255, 255, 255))
+#     # Create a new blank image with white background
+#     new_image = Image.new("RGB", (max_width, total_height), (255, 255, 255))
 
-    current_height = 0
-    for image in images:
-        pil_image = Image.fromarray(image)  # Convert np.array to PIL.Image
-        x_offset = (max_width - pil_image.width) // 2
-        new_image.paste(pil_image, (x_offset, current_height))
-        current_height += pil_image.height
+#     current_height = 0
+#     for image in images:
+#         pil_image = Image.fromarray(image)  # Convert np.array to PIL.Image
+#         x_offset = (max_width - pil_image.width) // 2
+#         new_image.paste(pil_image, (x_offset, current_height))
+#         current_height += pil_image.height
 
-    return np.array(new_image)
-
+#     return np.array(new_image)
 
 # def merge_blocks(blocks, non_merge_labels):
 #     current_group_images = []
-#     current_group_label = None
-#     crossing = False
-#     group_index = 0
+#     group_index = 0  # 当前合并组起始下标
 
 #     for i, block in enumerate(blocks):
 #         block_img = block["img"]
 #         block_bbox = block["box"]
 #         block_label = block["label"]
 
+#         # non_merge_labels 内的直接跳过，不做合并
 #         if block_label in non_merge_labels:
-#             # If the current block's label is in the non-merge list, reset grouping
 #             if current_group_images:
 #                 merged_image = merge_images(current_group_images)
 #                 for j in range(group_index, i):
@@ -128,314 +126,364 @@ def merge_images(images):
 #                         blocks[j]["img"] = merged_image
 #                     else:
 #                         blocks[j]["img"] = None
-#             # Reset for the non-merge block
+#                 current_group_images = []
+#             # 非合并块自己保留
 #             blocks[i]["img"] = block_img
-#             current_group_images = []
-#             current_group_label = None
-#             crossing = False
 #             group_index = i + 1
 #             continue
 
+#         # 第一个可合并块，启动新group
 #         if not current_group_images:
 #             current_group_images = [block_img]
-#             current_group_label = block_label
-#             crossing = False
+#             group_index = i
 #             continue
 
+#         # cross判断逻辑
 #         prev_block = blocks[i - 1]
-#         iou = calculate_projection_overlap_ratio(
-#             block_bbox, prev_block["box"], "horizontal"
+#         prev_bbox = prev_block["box"]
+#         prev_label = prev_block["label"]
+
+#         # 只合并cross：无水平投影重叠 + 下一个block在右侧 + label相同
+#         iou = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
+#         is_cross = (
+#             iou == 0
+#             and block_label == prev_label
+#             and block_bbox[0] > prev_bbox[2]  # 当前左边界大于前一个右边界
 #         )
 
-#         if iou == 0 and block_label == current_group_label:
+#         if is_cross:
 #             current_group_images.append(block_img)
-#             crossing = True
 #         else:
-#             if crossing:
+#             # 只在 cross 合并，其他情况直接分组，当前block自成一组
+#             if len(current_group_images) > 1:
 #                 merged_image = merge_images(current_group_images)
 #                 for j in range(group_index, i):
 #                     if j == group_index:
 #                         blocks[j]["img"] = merged_image
 #                     else:
 #                         blocks[j]["img"] = None
-#                 group_index = i
-#                 current_group_images = [block_img]
-#                 current_group_label = block_label
-#                 crossing = False
 #             else:
-#                 if iou > 0 and block_label == current_group_label:
-#                     current_group_images.append(block_img)
-#                 else:
-#                     merged_image = merge_images(current_group_images)
-#                     for j in range(group_index, i):
-#                         if j == group_index:
-#                             blocks[j]["img"] = merged_image
-#                         else:
-#                             blocks[j]["img"] = None
-#                     group_index = i
-#                     current_group_images = [block_img]
-#                     current_group_label = block_label
-#                     crossing = False
+#                 # 只有一个，不需要合并
+#                 blocks[group_index]["img"] = current_group_images[0]
 
+#             group_index = i
+#             current_group_images = [block_img]
+
+#     # 处理最后一组
 #     if current_group_images:
-#         merged_image = merge_images(current_group_images)
-#         for j in range(group_index, len(blocks)):
-#             if j == group_index:
-#                 blocks[j]["img"] = merged_image
-#             else:
-#                 blocks[j]["img"] = None
+#         if len(current_group_images) > 1:
+#             merged_image = merge_images(current_group_images)
+#             for j in range(group_index, len(blocks)):
+#                 if j == group_index:
+#                     blocks[j]["img"] = merged_image
+#                 else:
+#                     blocks[j]["img"] = None
+#         else:
+#             blocks[group_index]["img"] = current_group_images[0]
 
 #     return blocks
 
 
-def merge_blocks(blocks, non_merge_labels):
-    current_group_images = []
-    group_index = 0  # 当前合并组起始下标
+def to_pil_image(img):
+    return img if isinstance(img, Image.Image) else Image.fromarray(img)
 
-    for i, block in enumerate(blocks):
-        block_img = block["img"]
+
+def to_np_array(img):
+    return np.array(img) if isinstance(img, Image.Image) else img
+
+
+def calc_merged_wh(images):
+    widths = [to_pil_image(img).width for img in images]
+    heights = [to_pil_image(img).height for img in images]
+    w = max(widths)
+    h = sum(heights)
+    return w, h
+
+
+def merge_images(images, aligns="center"):
+    """
+    Merge a list of images (np.array or PIL.Image) into a single image (np.array).
+    aligns: 单个字符串或list，比如["left", "center"]，每步指定对齐方式。
+    """
+    if not images:
+        return None
+    if len(images) == 1:
+        return to_np_array(images[0])
+    # aligns参数标准化
+    if isinstance(aligns, str):
+        aligns = [aligns] * (len(images) - 1)
+    if len(aligns) != len(images) - 1:
+        raise ValueError("aligns长度需等于images数量减一")
+    merged = to_pil_image(images[0])
+    for i in range(1, len(images)):
+        img2 = to_pil_image(images[i])
+        align = aligns[i - 1]
+        w = max(merged.width, img2.width)
+        h = merged.height + img2.height
+        new_img = Image.new("RGB", (w, h), (255, 255, 255))
+        if align == "center":
+            x1 = (w - merged.width) // 2
+            x2 = (w - img2.width) // 2
+        elif align == "right":
+            x1 = w - merged.width
+            x2 = w - img2.width
+        else:  # left
+            x1 = x2 = 0
+        new_img.paste(merged, (x1, 0))
+        new_img.paste(img2, (x2, merged.height))
+        merged = new_img
+    return to_np_array(merged)
+
+
+def merge_blocks(blocks, non_merge_labels):
+    blocks_to_merge = []
+    non_merge_blocks = {}
+    for idx, block in enumerate(blocks):
+        if block["label"] in non_merge_labels:
+            non_merge_blocks[idx] = block
+        else:
+            blocks_to_merge.append((idx, block))
+
+    merged_groups = []
+    current_group = []
+    current_indices = []
+    current_aligns = []
+
+    def is_aligned(a1, a2):
+        return abs(a1 - a2) <= 5
+
+    def get_alignment(block_bbox, prev_bbox):
+        if is_aligned(block_bbox[0], prev_bbox[0]):
+            return "left"
+        elif is_aligned(block_bbox[2], prev_bbox[2]):
+            return "right"
+        else:
+            return "center"
+
+    def overlapwith_other_box(block_idx, prev_idx, blocks):
+        prev_bbox = blocks[prev_idx]["box"]
+        block_bbox = blocks[block_idx]["box"]
+        x1 = min(prev_bbox[0], block_bbox[0])
+        y1 = min(prev_bbox[1], block_bbox[1])
+        x2 = max(prev_bbox[2], block_bbox[2])
+        y2 = max(prev_bbox[3], block_bbox[3])
+        min_box = [x1, y1, x2, y2]
+        for idx, other_block in enumerate(blocks):
+            if idx in [block_idx, prev_idx]:
+                continue
+            other_bbox = other_block["box"]
+            if calculate_overlap_ratio(min_box, other_bbox) > 0:
+                return True
+        return False
+
+    for i, (idx, block) in enumerate(blocks_to_merge):
+        if not current_group:
+            current_group = [block]
+            current_indices = [idx]
+            current_aligns = []
+            continue
+
+        prev_idx, prev_block = blocks_to_merge[i - 1]
+        prev_bbox = prev_block["box"]
+        prev_label = prev_block["label"]
         block_bbox = block["box"]
         block_label = block["label"]
 
-        # non_merge_labels 内的直接跳过，不做合并
-        if block_label in non_merge_labels:
-            if current_group_images:
-                merged_image = merge_images(current_group_images)
-                for j in range(group_index, i):
-                    if j == group_index:
-                        blocks[j]["img"] = merged_image
-                    else:
-                        blocks[j]["img"] = None
-                current_group_images = []
-            # 非合并块自己保留
-            blocks[i]["img"] = block_img
-            group_index = i + 1
-            continue
-
-        # 第一个可合并块，启动新group
-        if not current_group_images:
-            current_group_images = [block_img]
-            group_index = i
-            continue
-
-        # cross判断逻辑
-        prev_block = blocks[i - 1]
-        prev_bbox = prev_block["box"]
-        prev_label = prev_block["label"]
-
-        # 只合并cross：无水平投影重叠 + 下一个block在右侧 + label相同
-        iou = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
+        iou_h = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
         is_cross = (
-            iou == 0
+            iou_h == 0
+            and block_label == "text"
             and block_label == prev_label
-            and block_bbox[0] > prev_bbox[2]  # 当前左边界大于前一个右边界
+            and block_bbox[0] > prev_bbox[2]
+            and block_bbox[1] < prev_bbox[3]
+            and block_bbox[0] - prev_bbox[2]
+            < max(prev_bbox[2] - prev_bbox[0], block_bbox[2] - block_bbox[0]) * 0.3
+        )
+        is_updown_align = (
+            iou_h > 0
+            and block_label in ["text"]
+            and block_label == prev_label
+            and block_bbox[3] >= prev_bbox[1]
+            and abs(block_bbox[1] - prev_bbox[3])
+            < max(prev_bbox[3] - prev_bbox[1], block_bbox[3] - block_bbox[1]) * 0.5
+            and (
+                is_aligned(block_bbox[0], prev_bbox[0])
+                ^ is_aligned(block_bbox[2], prev_bbox[2])
+            )
+            and overlapwith_other_box(idx, prev_idx, blocks)
+        )
+        if is_cross:
+            align_mode = "center"
+        elif is_updown_align:
+            align_mode = get_alignment(block_bbox, prev_bbox)
+        else:
+            align_mode = None
+
+        if is_cross or is_updown_align:
+            current_group.append(block)
+            current_indices.append(idx)
+            current_aligns.append(align_mode)
+        else:
+            merged_groups.append((current_indices, current_group, current_aligns))
+            current_group = [block]
+            current_indices = [idx]
+            current_aligns = []
+    if current_group:
+        merged_groups.append((current_indices, current_group, current_aligns))
+
+    group_ranges = []
+    for group_indices, group, aligns in merged_groups:
+        start, end = min(group_indices), max(group_indices)
+        group_ranges.append((start, end, group_indices, aligns))
+
+    result_blocks = []
+    used_indices = set()
+    idx = 0
+    while idx < len(blocks):
+        group_found = False
+        for (start, end, group_indices, aligns), (g_indices, g_blocks, g_aligns) in zip(
+            group_ranges, merged_groups
+        ):
+            if idx == start and all(i not in used_indices for i in group_indices):
+                group_found = True
+                imgs = [blocks[i]["img"] for i in group_indices]
+                merge_aligns = aligns if aligns else []
+                w, h = calc_merged_wh(imgs)
+                if h == 0 or w == 0:
+                    aspect_ratio = float("inf")
+                else:
+                    aspect_ratio = h / w
+                if aspect_ratio >= 3:
+                    # 不合并，分别处理
+                    for j, block_idx in enumerate(group_indices):
+                        block = blocks[block_idx].copy()
+                        block["img"] = blocks[block_idx]["img"]
+                        block["merge_aligns"] = None
+                        result_blocks.append(block)
+                        used_indices.add(block_idx)
+                else:
+                    merged_img = merge_images(imgs, merge_aligns)
+                    for j, block_idx in enumerate(group_indices):
+                        block = blocks[block_idx].copy()
+                        block["img"] = merged_img if j == 0 else None
+                        block["merge_aligns"] = merge_aligns if j == 0 else None
+                        result_blocks.append(block)
+                        used_indices.add(block_idx)
+                # 插入组内 non_merge 块
+                insert_list = []
+                for n_idx in range(start + 1, end):
+                    if n_idx in non_merge_blocks:
+                        insert_list.append(n_idx)
+                for n_idx in insert_list:
+                    result_blocks.append(non_merge_blocks[n_idx])
+                    used_indices.add(n_idx)
+                idx = end + 1
+                break
+        if group_found:
+            continue
+        if idx in non_merge_blocks and idx not in used_indices:
+            result_blocks.append(non_merge_blocks[idx])
+            used_indices.add(idx)
+        idx += 1
+
+    return result_blocks
+
+
+def paint_token(image, box, token_str):
+    """
+    image: numpy.ndarray, 图像
+    box: (x1, y1, x2, y2), 填充的矩形区域
+    token: str, 要写入的内容
+    返回: 修改后的图像
+    """
+    import cv2
+
+    x1, y1, x2, y2 = [int(v) for v in box]
+    img = image.copy()
+    # 填充白色
+    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255, 255, 255), thickness=-1)
+
+    # 计算区域宽高
+    box_w = x2 - x1
+    box_h = y2 - y1
+
+    # 自动调整字体大小，使文本不会超出box
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 1.0
+    font_thickness = 2
+
+    # 先尝试较大的字体，再逐步减小
+    while font_scale > 0:
+        (text_w, text_h), baseline = cv2.getTextSize(
+            token_str, font, font_scale, font_thickness
+        )
+        if text_w <= box_w * 0.9 and text_h + baseline <= box_h * 0.9:
+            break
+        font_scale -= 0.1
+    if font_scale <= 0:  # 还是放不下，缩小到最小
+        font_scale = 0.2
+        (text_w, text_h), baseline = cv2.getTextSize(
+            token_str, font, font_scale, font_thickness
         )
 
-        if is_cross:
-            current_group_images.append(block_img)
-        else:
-            # 只在 cross 合并，其他情况直接分组，当前block自成一组
-            if len(current_group_images) > 1:
-                merged_image = merge_images(current_group_images)
-                for j in range(group_index, i):
-                    if j == group_index:
-                        blocks[j]["img"] = merged_image
-                    else:
-                        blocks[j]["img"] = None
-            else:
-                # 只有一个，不需要合并
-                blocks[group_index]["img"] = current_group_images[0]
+    # 计算文本左下角坐标，使其居中
+    text_x = x1 + (box_w - text_w) // 2
+    text_y = y1 + (box_h + text_h) // 2
 
-            group_index = i
-            current_group_images = [block_img]
+    # 画文本
+    cv2.putText(
+        img,
+        token_str,
+        (text_x, text_y),
+        font,
+        font_scale,
+        (0, 0, 0),
+        font_thickness,
+        lineType=cv2.LINE_AA,
+    )
 
-    # 处理最后一组
-    if current_group_images:
-        if len(current_group_images) > 1:
-            merged_image = merge_images(current_group_images)
-            for j in range(group_index, len(blocks)):
-                if j == group_index:
-                    blocks[j]["img"] = merged_image
-                else:
-                    blocks[j]["img"] = None
-        else:
-            blocks[group_index]["img"] = current_group_images[0]
-
-    return blocks
+    return img
 
 
-# def merge_images(images, aligns="center"):
-#     """
-#     Merge a list of images (np.array or PIL.Image) into a single image (np.array).
-#     aligns: 单个字符串或list，比如["left", "center"]，每步指定对齐方式。
-#     """
-#     if not images:
-#         return None
-#     if len(images) == 1:
-#         # 只一张图，直接返回array
-#         if isinstance(images[0], Image.Image):
-#             return np.array(images[0])
-#         return images[0]
+def tokenize_figure_of_table(table_block_img, table_box, figures):
+    import random
 
-#     # 兼容aligns为字符串的情况
-#     if isinstance(aligns, str):
-#         aligns = [aligns] * (len(images) - 1)
-#     if len(aligns) != len(images) - 1:
-#         raise ValueError("aligns长度需等于images数量减一")
+    random.seed(1024)
+    token_map = {}
+    table_x_min, table_y_min, table_x_max, table_y_max = table_box
+    drop_idxes = []
+    random_map = list(range(len(figures)))
+    random.shuffle(random_map)
+    for figure_id, figure in enumerate(figures):
+        figure_x_min, figure_y_min, figure_x_max, figure_y_max = figure["coordinate"]
+        if (
+            figure_x_min >= table_x_min
+            and figure_y_min >= table_y_min
+            and figure_x_max <= table_x_max
+            and figure_y_max <= table_y_max
+        ):
+            draw_box = [
+                figure_x_min - table_x_min,
+                figure_y_min - table_y_min,
+                figure_x_max - table_x_min,
+                figure_y_max - table_y_min,
+            ]
+            token_str = "[F" + str(random_map[figure_id]) + "]"
+            table_block_img = paint_token(table_block_img, draw_box, token_str)
+            token_map[token_str] = f'<img src="{figure["path"]}" >'
+            drop_idxes.append(figure_id)
+    drop_figures = [f["path"] for i, f in enumerate(figures) if i in drop_idxes]
+    return table_block_img, token_map, drop_figures
 
-#     # 逐步两两合并
-#     merged = images[0]
-#     for i in range(1, len(images)):
-#         align = aligns[i-1]
-#         merged = merge_two_images(merged, images[i], align)
-#     return merged
 
-# def merge_two_images(img1, img2, align="center"):
-#     """
-#     合并两张图片，img1在上img2在下，按宽度对齐
-#     支持 img1, img2 为 np.array 或 PIL.Image
-#     返回 np.array
-#     """
-#     # 转成PIL
-#     if not isinstance(img1, Image.Image):
-#         img1 = Image.fromarray(img1)
-#     if not isinstance(img2, Image.Image):
-#         img2 = Image.fromarray(img2)
-#     w = max(img1.width, img2.width)
-#     h = img1.height + img2.height
-#     new_image = Image.new("RGB", (w, h), (255, 255, 255))
-#     # 上图/下图对齐方式
-#     if align == "center":
-#         x1 = (w - img1.width) // 2
-#         x2 = (w - img2.width) // 2
-#     elif align == "right":
-#         x1 = w - img1.width
-#         x2 = w - img2.width
-#     else:  # left
-#         x1 = 0
-#         x2 = 0
-#     new_image.paste(img1, (x1, 0))
-#     new_image.paste(img2, (x2, img1.height))
-#     return np.array(new_image)
+def untokenize_figure_of_table(table_res_str, figure_token_map):
+    def repl(match):
+        token_id = match.group(1)
+        token = f"[F{token_id}]"
+        return figure_token_map.get(token, match.group(0))
 
-# # 下面是merge_blocks的重构
-# def merge_blocks(blocks, non_merge_labels):
-#     blocks_to_merge = []
-#     non_merge_blocks = {}
-#     for idx, block in enumerate(blocks):
-#         if block["label"] in non_merge_labels:
-#             non_merge_blocks[idx] = block
-#         else:
-#             blocks_to_merge.append((idx, block))
-
-#     merged_groups = []
-#     current_group = []
-#     current_indices = []
-#     current_aligns = []
-
-#     def is_aligned(a1, a2):
-#         return abs(a1 - a2) <= 5
-
-#     def get_alignment(block_bbox, prev_bbox):
-#         if is_aligned(block_bbox[0], prev_bbox[0]):
-#             return "left"
-#         elif is_aligned(block_bbox[2], prev_bbox[2]):
-#             return "right"
-#         else:
-#             return "center"
-
-#     for i, (idx, block) in enumerate(blocks_to_merge):
-#         if not current_group:
-#             current_group = [block]
-#             current_indices = [idx]
-#             current_aligns = []
-#             continue
-
-#         prev_idx, prev_block = blocks_to_merge[i-1]
-#         prev_bbox = prev_block["box"]
-#         prev_label = prev_block["label"]
-#         block_bbox = block["box"]
-#         block_label = block["label"]
-
-#         iou_h = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
-#         is_cross = (
-#             iou_h == 0
-#             and block_label == prev_label
-#             and block_bbox[0] > prev_bbox[2]
-#         )
-#         is_updown_align = (
-#             iou_h > 0
-#             and block_label == prev_label
-#             and (
-#                 block_bbox[1] >= prev_bbox[3] or prev_bbox[1] >= block_bbox[3]
-#             )
-#             and (is_aligned(block_bbox[0], prev_bbox[0]) ^ is_aligned(block_bbox[2], prev_bbox[2]))
-#         )
-#         if is_cross:
-#             align_mode = "center"
-#         elif is_updown_align:
-#             align_mode = get_alignment(block_bbox, prev_bbox)
-#         else:
-#             align_mode = None
-
-#         if is_cross or is_updown_align:
-#             current_group.append(block)
-#             current_indices.append(idx)
-#             current_aligns.append(align_mode)  # 记录和前一个的合并方式
-#         else:
-#             # 一个组完结，保存组、索引、组内合并方式
-#             merged_groups.append((current_indices, current_group, current_aligns))
-#             current_group = [block]
-#             current_indices = [idx]
-#             current_aligns = []
-#     if current_group:
-#         merged_groups.append((current_indices, current_group, current_aligns))
-
-#     group_ranges = []
-#     for group_indices, group, aligns in merged_groups:
-#         start, end = min(group_indices), max(group_indices)
-#         group_ranges.append((start, end, group_indices, aligns))
-
-#     result_blocks = []
-#     used_indices = set()
-#     idx = 0
-#     while idx < len(blocks):
-#         group_found = False
-#         for (start, end, group_indices, aligns), (g_indices, g_blocks, g_aligns) in zip(group_ranges, merged_groups):
-#             if idx == start and all(i not in used_indices for i in group_indices):
-#                 group_found = True
-#                 imgs = [blocks[i]["img"] for i in group_indices]
-#                 # 组内多步合并，两两合并，每次用aligns中的方式
-#                 merged_img = imgs[0]
-#                 merge_aligns = aligns if aligns else []
-#                 for j in range(1, len(imgs)):
-#                     align = merge_aligns[j-1] if j-1 < len(merge_aligns) and merge_aligns[j-1] else "left"
-#                     merged_img = merge_two_images(merged_img, imgs[j], align)
-#                 # 填充结果
-#                 for j, block_idx in enumerate(group_indices):
-#                     block = blocks[block_idx].copy()
-#                     block["img"] = merged_img if j == 0 else None
-#                     block["merge_aligns"] = merge_aligns if j == 0 else None
-#                     result_blocks.append(block)
-#                     used_indices.add(block_idx)
-#                 # 插入组内 non_merge 块
-#                 insert_list = []
-#                 for n_idx in range(start + 1, end):
-#                     if n_idx in non_merge_blocks:
-#                         insert_list.append(n_idx)
-#                 for n_idx in insert_list:
-#                     result_blocks.append(non_merge_blocks[n_idx])
-#                     used_indices.add(n_idx)
-#                 idx = end + 1
-#                 break
-#         if group_found:
-#             continue
-#         if idx in non_merge_blocks and idx not in used_indices:
-#             result_blocks.append(non_merge_blocks[idx])
-#             used_indices.add(idx)
-#         idx += 1
-
-#     return result_blocks
+    pattern = r"\[F(\d+)\]"
+    return re.sub(pattern, repl, table_res_str)
 
 
 class TableCell(BaseModel):
@@ -532,6 +580,11 @@ OTSL_ECEL = "<ecel>"
 OTSL_LCEL = "<lcel>"
 OTSL_UCEL = "<ucel>"
 OTSL_XCEL = "<xcel>"
+
+NON_CAPTURING_TAG_GROUP = "(?:<fcel>|<ecel>|<nl>|<lcel>|<ucel>|<xcel>)"
+OTSL_FIND_PATTERN = re.compile(
+    f"{NON_CAPTURING_TAG_GROUP}.*?(?={NON_CAPTURING_TAG_GROUP}|$)", flags=re.DOTALL
+)
 
 
 def otsl_extract_tokens_and_text(s: str):
@@ -743,12 +796,81 @@ def export_to_html(table_data: TableData):
     return body
 
 
+def otsl_pad_to_sqr_v2(otsl_str: str) -> str:
+
+    assert isinstance(otsl_str, str)
+
+    otsl_str = otsl_str.strip()
+    if OTSL_NL not in otsl_str:
+        # NOTE 直接当单行表格处理
+        return otsl_str + OTSL_NL
+
+    lines = otsl_str.split(OTSL_NL)
+
+    row_data = []
+    for line in lines:
+        if not line:
+            continue
+
+        # NOTE 拆成单元格表达形式
+        raw_cells = OTSL_FIND_PATTERN.findall(line)
+        if not raw_cells:
+            continue
+
+        total_len = len(raw_cells)  # NOTE 当前行的整体单元格数量
+        # NOTE 需要计算出该行允许的最小单元格数量
+        min_len = 0
+        for i, cell_str in enumerate(raw_cells):
+            if cell_str.startswith(OTSL_FCEL):
+                min_len = i + 1
+
+        row_data.append(
+            {"raw_cells": raw_cells, "total_len": total_len, "min_len": min_len}
+        )
+
+    if not row_data:
+        return OTSL_NL
+
+    global_min_width = max(row["min_len"] for row in row_data) if row_data else 0
+    max_total_len = max(row["total_len"] for row in row_data) if row_data else 0
+
+    search_start = global_min_width
+    search_end = max(global_min_width, max_total_len)
+
+    min_total_cost = float("inf")
+    optimal_width = search_end  # NOTE 默认需要补充到最大长度
+
+    for width in range(search_start, search_end + 1):
+        current_total_cost = sum(abs(row["total_len"] - width) for row in row_data)
+
+        if current_total_cost < min_total_cost:
+            min_total_cost = current_total_cost
+            optimal_width = width
+
+    # NOTE 基于 optimal_width 重建表格
+    repaired_lines = []
+    for row in row_data:
+        cells = row["raw_cells"]
+        current_len = len(cells)
+
+        if current_len > optimal_width:  # NOTE 末尾安全截断
+            new_cells = cells[:optimal_width]
+        else:  # NOTE 补充
+            padding = [OTSL_ECEL] * (optimal_width - current_len)
+            new_cells = cells + padding
+
+        repaired_lines.append("".join(new_cells))
+
+    return OTSL_NL.join(repaired_lines) + OTSL_NL
+
+
 def convert_otsl_to_html(otsl_content: str):
     """NOTE otsl v1.0转换成html，只能有6个tag: <fcel>, <ecel>, <nl>, <lcel>, <ucel>, <xcel>
 
     注意点：
         1. <fcel>之后一定有内容，ecel之后一定没内容，否则会引入乱码
     """
+    otsl_content = otsl_pad_to_sqr_v2(otsl_content)
     tokens, mixed_texts = otsl_extract_tokens_and_text(otsl_content)
     table_cells, split_row_tokens = otsl_parse_texts(mixed_texts, tokens)
 
@@ -759,3 +881,107 @@ def convert_otsl_to_html(otsl_content: str):
     )
 
     return export_to_html(table_data)
+
+
+def find_shortest_repeating_substring(s: str) -> str | None:
+    """
+    Finds the shortest repeating substring that constitutes the ENTIRE string s.
+    e.g., s='abcabcabc' returns 'abc'. s='abab' returns 'ab'. s='abca' returns None.
+    """
+    n = len(s)
+    for i in range(1, n // 2 + 1):
+        if n % i == 0:
+            substring = s[:i]
+            if substring * (n // i) == s:
+                return substring
+    return None
+
+
+# --- NEW FUNCTION: Detects repeating phrases at the end of a string ---
+def find_repeating_suffix(
+    s: str, min_len: int = 8, min_repeats: int = 5
+) -> Tuple[str, str, int] | None:
+    """
+    Finds if a string ends with a repeating phrase.
+    e.g., s='start...phrase,phrase,phrase,' returns ('start...', 'phrase,', 3)
+
+    Args:
+        s (str): The input string.
+        min_len (int): The minimum length of the repeating unit to consider.
+        min_repeats (int): The minimum number of repetitions to trigger truncation.
+
+    Returns:
+        A tuple (prefix, unit, count) if a repeating suffix is found, otherwise None.
+    """
+    # Iterate through possible lengths of the repeating unit, from longest to shortest.
+    for i in range(len(s) // (min_repeats), min_len - 1, -1):
+        unit = s[-i:]
+
+        # Quick check: does the string end with the unit repeated at least min_repeats times?
+        if s.endswith(unit * min_repeats):
+            # If so, find the exact number of repetitions
+            count = 0
+            temp_s = s
+            while temp_s.endswith(unit):
+                temp_s = temp_s[:-i]
+                count += 1
+
+            # Return the non-repeating prefix, the unit, and its count
+            start_index = len(s) - (count * i)
+            return s[:start_index], unit, count
+    return None
+
+
+def truncate_repetitive_content(
+    content: str, line_threshold: int = 10, char_threshold: int = 10, min_len: int = 10
+) -> (str, str):
+    """
+    Intelligently detects and truncates character, phrase, or line-level repetitive content.
+    This version uses a more aggressive strategy for suffix repetition: it deletes the entire repeating part.
+    """
+    stripped_content = content.strip()
+    if not stripped_content:
+        return content, ""
+
+    # --- MODIFIED LOGIC with AGGRESSIVE DELETION ---
+    # Priority 1: Check for phrase-level suffix repetition in single, long lines.
+    if "\n" not in stripped_content and len(stripped_content) > 100:
+        suffix_match = find_repeating_suffix(stripped_content, min_len=8, min_repeats=5)
+        if suffix_match:
+            prefix, repeating_unit, count = suffix_match
+            # Ensure the repeating part is a significant portion of the whole string
+            if len(repeating_unit) * count > len(stripped_content) * 0.5:
+                # The log message is updated to reflect the new action
+                truncated_info = f"[截断信息: 检测到单行内短语重复，'{repeating_unit}' 在末尾连续出现 {count} 次，已将重复部分完全删除。]"
+                # Return ONLY the non-repeating prefix
+                return prefix, truncated_info
+    # --- END of MODIFIED LOGIC ---
+
+    # Priority 2: Check for full-string character-level repetition (e.g., 'ababab')
+    # For this type, keeping one unit is still reasonable (e.g., '----' -> '-')
+    if "\n" not in stripped_content and len(stripped_content) > min_len:
+        repeating_unit = find_shortest_repeating_substring(stripped_content)
+        if repeating_unit:
+            count = len(stripped_content) // len(repeating_unit)
+            if count >= char_threshold:
+                truncated_info = f"[截断信息: 检测到字符级重复，'{repeating_unit}' 共出现 {count} 次，已合并为一次。]"
+                return repeating_unit, truncated_info
+
+    # Priority 3: Check for line-level repetition (e.g., the same line repeated many times)
+    # For this type as well, keeping one line is often the desired behavior
+    lines = [line.strip() for line in content.split("\n") if line.strip()]
+    if not lines:
+        return content, ""
+
+    total_lines = len(lines)
+    if total_lines < line_threshold:
+        return content, ""
+
+    line_counts = Counter(lines)
+    most_common_line, count = line_counts.most_common(1)[0]
+
+    if count >= line_threshold and (count / total_lines) >= 0.8:
+        truncated_info = f"[截断信息: 检测到行级重复，'{most_common_line}' 共出现 {count} 次，已合并为一次。]"
+        return most_common_line, truncated_info
+
+    return content, ""

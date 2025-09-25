@@ -33,9 +33,16 @@ from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..layout_parsing.utils import gather_imgs
 from .result import PPOCRVLBlock, PPOCRVLResult
-from .uilts import convert_otsl_to_html, filter_overlap_boxes, merge_blocks
+from .uilts import (
+    convert_otsl_to_html,
+    filter_overlap_boxes,
+    merge_blocks,
+    tokenize_figure_of_table,
+    truncate_repetitive_content,
+    untokenize_figure_of_table,
+)
 
-IMAGE_LABELS = ["image", "header_image", "footer_image", "chart", "seal"]
+IMAGE_LABELS = ["image", "header_image", "footer_image", "seal"]
 
 
 @benchmark.time_methods
@@ -79,30 +86,38 @@ class _PPOCRVLPipeline(BasePipeline):
                 doc_preprocessor_config
             )
 
-        layout_det_config = config.get("SubModules", {}).get(
-            "LayoutDetection",
-            {"model_config_error": "config error for layout_det_model!"},
-        )
-        model_name = layout_det_config.get("model_name", None)
-        assert (
-            model_name is not None and model_name == "PP-DocLayoutV2-L"
-        ), "model_name must be PP-DocLayoutV2-L"
-        layout_kwargs = {}
-        if (threshold := layout_det_config.get("threshold", None)) is not None:
-            layout_kwargs["threshold"] = threshold
-        if (layout_nms := layout_det_config.get("layout_nms", None)) is not None:
-            layout_kwargs["layout_nms"] = layout_nms
-        if (
-            layout_unclip_ratio := layout_det_config.get("layout_unclip_ratio", None)
-        ) is not None:
-            layout_kwargs["layout_unclip_ratio"] = layout_unclip_ratio
-        if (
-            layout_merge_bboxes_mode := layout_det_config.get(
-                "layout_merge_bboxes_mode", None
+        self.use_layout_detection = config.get("use_layout_detection", True)
+        if self.use_layout_detection:
+            layout_det_config = config.get("SubModules", {}).get(
+                "LayoutDetection",
+                {"model_config_error": "config error for layout_det_model!"},
             )
-        ) is not None:
-            layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
-        self.layout_det_model = self.create_model(layout_det_config, **layout_kwargs)
+            model_name = layout_det_config.get("model_name", None)
+            assert (
+                model_name is not None and model_name == "PP-DocLayoutV2-L"
+            ), "model_name must be PP-DocLayoutV2-L"
+            layout_kwargs = {}
+            if (threshold := layout_det_config.get("threshold", None)) is not None:
+                layout_kwargs["threshold"] = threshold
+            if (layout_nms := layout_det_config.get("layout_nms", None)) is not None:
+                layout_kwargs["layout_nms"] = layout_nms
+            if (
+                layout_unclip_ratio := layout_det_config.get(
+                    "layout_unclip_ratio", None
+                )
+            ) is not None:
+                layout_kwargs["layout_unclip_ratio"] = layout_unclip_ratio
+            if (
+                layout_merge_bboxes_mode := layout_det_config.get(
+                    "layout_merge_bboxes_mode", None
+                )
+            ) is not None:
+                layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
+            self.layout_det_model = self.create_model(
+                layout_det_config, **layout_kwargs
+            )
+
+        self.use_chart_recognition = config.get("use_chart_recognition", True)
 
         vl_rec_config = config.get("SubModules", {}).get(
             "VLRecognition",
@@ -110,6 +125,7 @@ class _PPOCRVLPipeline(BasePipeline):
         )
 
         self.vl_rec_model = self.create_model(vl_rec_config)
+        self.format_block_content = config.get("format_block_content", False)
 
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
@@ -124,6 +140,9 @@ class _PPOCRVLPipeline(BasePipeline):
         self,
         use_doc_orientation_classify: Union[bool, None],
         use_doc_unwarping: Union[bool, None],
+        use_layout_detection: Union[bool, None],
+        use_chart_recognition: Union[bool, None],
+        format_block_content: Union[bool, None],
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -144,8 +163,20 @@ class _PPOCRVLPipeline(BasePipeline):
             else:
                 use_doc_preprocessor = False
 
+        if use_layout_detection is None:
+            use_layout_detection = self.use_layout_detection
+
+        if use_chart_recognition is None:
+            use_chart_recognition = self.use_chart_recognition
+
+        if format_block_content is None:
+            format_block_content = self.format_block_content
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
+            use_layout_detection=use_layout_detection,
+            use_chart_recognition=use_chart_recognition,
+            format_block_content=format_block_content,
         )
 
     def check_model_settings_valid(self, input_params: dict) -> bool:
@@ -167,31 +198,53 @@ class _PPOCRVLPipeline(BasePipeline):
 
         return True
 
-    def get_layout_parsing_results(self, images, layout_det_results):
+    def get_layout_parsing_results(
+        self, images, layout_det_results, imgs_in_doc, use_chart_recognition=False
+    ):
         blocks = []
         block_imgs = []
         text_prompts = []
         is_table_flags = []
         vlm_block_ids = []
-        for i, (image, layout_det_res) in enumerate(zip(images, layout_det_results)):
+        figure_token_maps = []
+        drop_figures_set = set()
+        image_labels = (
+            IMAGE_LABELS if use_chart_recognition else IMAGE_LABELS + ["chart"]
+        )
+        for i, (image, layout_det_res, imgs_in_doc_for_img) in enumerate(
+            zip(images, layout_det_results, imgs_in_doc)
+        ):
             layout_det_res = filter_overlap_boxes(layout_det_res)
             boxes = layout_det_res["boxes"]
             blocks_for_img = self.crop_by_boxes(image, boxes)
-            blocks_for_img = merge_blocks(blocks_for_img, non_merge_labels=IMAGE_LABELS)
+            blocks_for_img = merge_blocks(
+                blocks_for_img, non_merge_labels=image_labels + ["table"]
+            )
             blocks.append(blocks_for_img)
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
                 block_label = block["label"]
-                if block_label not in IMAGE_LABELS and block_img is not None:
+                if block_label not in image_labels and block_img is not None:
+                    figure_token_map = {}
                     text_prompt = "OCR:"
+                    drop_figures = []
                     if block_label == "table":
                         text_prompt = "Table Recognition:"
+                        block_img, figure_token_map, drop_figures = (
+                            tokenize_figure_of_table(
+                                block_img, block["box"], imgs_in_doc_for_img
+                            )
+                        )
+                    elif block_label == "chart" and use_chart_recognition:
+                        text_prompt = "Chart Recognition:"
                     elif "formula" in block_label:
                         text_prompt = "Formula Recognition:"
                     block_imgs.append(block_img)
                     text_prompts.append(text_prompt)
                     is_table_flags.append(block_label == "table")
+                    figure_token_maps.append(figure_token_map)
                     vlm_block_ids.append((i, j))
+                    drop_figures_set.update(drop_figures)
 
         kwargs = {
             "use_cache": True,
@@ -253,10 +306,13 @@ class _PPOCRVLPipeline(BasePipeline):
                     curr_vlm_block_idx
                 ] == (i, j):
                     vl_rec_result = vl_rec_results[curr_vlm_block_idx]
+                    figure_token_map = figure_token_maps[curr_vlm_block_idx]
+                    block_img4vl = block_imgs[curr_vlm_block_idx]
                     curr_vlm_block_idx += 1
-                    vl_rec_result["image"] = block_img
+                    vl_rec_result["image"] = block_img4vl
                     vl_rec_res_list.append(vl_rec_result)
                     result_str = vl_rec_result.get("result", "")
+                    result_str, _ = truncate_repetitive_content(result_str)
                     if ("\\(" in result_str and "\\)" in result_str) or (
                         "\\[" in result_str and "\\]" in result_str
                     ):
@@ -268,8 +324,13 @@ class _PPOCRVLPipeline(BasePipeline):
                             .replace("\\[", " $$ ")
                             .replace("\\]", " $$ ")
                         )
+                        if block_label == "formula_number":
+                            result_str = result_str.replace("$", "")
                     if block_label == "table":
                         result_str = convert_otsl_to_html(result_str)
+                        result_str = untokenize_figure_of_table(
+                            result_str, figure_token_map
+                        )
 
                     block_content = result_str
 
@@ -281,28 +342,33 @@ class _PPOCRVLPipeline(BasePipeline):
                 if block_label in IMAGE_LABELS and block_img is not None:
                     x_min, y_min, x_max, y_max = list(map(int, block_bbox))
                     img_path = f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
-                    block_info.image = {
-                        "path": img_path,
-                        "img": Image.fromarray(block_img),
-                    }
+                    if img_path not in drop_figures_set:
+                        block_info.image = {
+                            "path": img_path,
+                            "img": Image.fromarray(block_img),
+                        }
 
                 parsing_res_list.append(block_info)
             parsing_res_lists.append(parsing_res_list)
             vl_rec_res_lists.append(vl_rec_res_list)
             table_res_lists.append(table_res_list)
 
-        return parsing_res_lists, vl_rec_res_lists, table_res_lists
+        return parsing_res_lists, vl_rec_res_lists, table_res_lists, imgs_in_doc
 
     def predict(
         self,
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
         use_doc_orientation_classify: Union[bool, None] = False,
         use_doc_unwarping: Union[bool, None] = False,
+        use_layout_detection: Union[bool, None] = True,
+        use_chart_recognition: Union[bool, None] = False,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
         use_queues: Optional[bool] = None,
+        prompt_label: Optional[Union[str, None]] = None,
+        format_block_content: Union[bool, None] = None,
         **kwargs,
     ) -> PPOCRVLResult:
         """
@@ -329,6 +395,9 @@ class _PPOCRVLPipeline(BasePipeline):
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
             use_doc_unwarping,
+            use_layout_detection,
+            use_chart_recognition,
+            format_block_content,
         )
 
         if not self.check_model_settings_valid(model_settings):
@@ -336,6 +405,15 @@ class _PPOCRVLPipeline(BasePipeline):
 
         if use_queues is None:
             use_queues = self.use_queues
+
+        if not model_settings["use_layout_detection"]:
+            prompt_label = prompt_label if prompt_label else "ocr"
+            assert prompt_label.lower() in [
+                "ocr",
+                "formula",
+                "table",
+                "chart",
+            ], f"Layout detection is disabled (use_layout_detection=False). 'prompt_label' must be one of ['ocr', 'formula', 'table', 'chart'], but got '{prompt_label}'."
 
         def _process_cv(batch_data, new_batch_size=None):
             if not new_batch_size:
@@ -365,22 +443,46 @@ class _PPOCRVLPipeline(BasePipeline):
                     item["output_img"] for item in doc_preprocessor_results
                 ]
 
-                layout_det_results = list(
-                    self.layout_det_model(
-                        doc_preprocessor_images,
-                        threshold=layout_threshold,
-                        layout_nms=layout_nms,
-                        layout_unclip_ratio=layout_unclip_ratio,
-                        layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+                if model_settings["use_layout_detection"]:
+                    layout_det_results = list(
+                        self.layout_det_model(
+                            doc_preprocessor_images,
+                            threshold=layout_threshold,
+                            layout_nms=layout_nms,
+                            layout_unclip_ratio=layout_unclip_ratio,
+                            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+                        )
                     )
-                )
 
-                imgs_in_doc = [
-                    gather_imgs(doc_pp_img, layout_det_res["boxes"])
-                    for doc_pp_img, layout_det_res in zip(
-                        doc_preprocessor_images, layout_det_results
-                    )
-                ]
+                    imgs_in_doc = [
+                        gather_imgs(doc_pp_img, layout_det_res["boxes"])
+                        for doc_pp_img, layout_det_res in zip(
+                            doc_preprocessor_images, layout_det_results
+                        )
+                    ]
+                else:
+                    layout_det_results = []
+                    for doc_preprocessor_image in doc_preprocessor_images:
+                        layout_det_results.append(
+                            {
+                                "input_path": None,
+                                "page_index": None,
+                                "boxes": [
+                                    {
+                                        "cls_id": 0,
+                                        "label": prompt_label.lower(),
+                                        "score": 1,
+                                        "coordinate": [
+                                            0,
+                                            0,
+                                            doc_preprocessor_image.shape[1],
+                                            doc_preprocessor_image.shape[0],
+                                        ],
+                                    }
+                                ],
+                            }
+                        )
+                    imgs_in_doc = [[] for _ in layout_det_results]
 
                 yield input_paths, page_indexes, doc_preprocessor_images, doc_preprocessor_results, layout_det_results, imgs_in_doc
 
@@ -394,10 +496,12 @@ class _PPOCRVLPipeline(BasePipeline):
                 imgs_in_doc,
             ) = results_cv
 
-            parsing_res_lists, vl_rec_res_lists, table_res_lists = (
+            parsing_res_lists, vl_rec_res_lists, table_res_lists, imgs_in_doc = (
                 self.get_layout_parsing_results(
                     doc_preprocessor_images,
                     layout_det_results,
+                    imgs_in_doc,
+                    model_settings["use_chart_recognition"],
                 )
             )
 
@@ -475,7 +579,12 @@ class _PPOCRVLPipeline(BasePipeline):
                         break
                     try:
                         for results_cv in _process_cv(
-                            item[1], self.layout_det_model.batch_sampler.batch_size
+                            item[1],
+                            (
+                                self.layout_det_model.batch_sampler.batch_size
+                                if model_settings["use_layout_detection"]
+                                else None
+                            ),
                         ):
                             queue_cv.put((True, results_cv))
                     except Exception as e:
