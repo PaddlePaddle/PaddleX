@@ -55,16 +55,24 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             images,
             use_doc_orientation_classify=request.useDocOrientationClassify,
             use_doc_unwarping=request.useDocUnwarping,
+            use_layout_detection=request.useLayoutDetection,
+            use_chart_recognition=request.useChartRecognition,
             layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,
             layout_unclip_ratio=request.layoutUnclipRatio,
             layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
+            prompt_label=request.promptLabel,
+            format_block_content=request.formatBlockContent,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
-            md_data = item.markdown
+            # XXX
+            md_data = item._to_markdown(
+                pretty=request.prettifyMarkdown,
+                show_formula_number=request.showFormulaNumber,
+            )
             md_text = md_data["markdown_texts"]
             md_imgs = await serving_utils.call_async(
                 common.postprocess_images,

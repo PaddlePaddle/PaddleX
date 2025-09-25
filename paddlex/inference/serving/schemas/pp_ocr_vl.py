@@ -33,10 +33,16 @@ INFER_ENDPOINT: Final[str] = "/layout-parsing"
 class InferRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
+    useLayoutDetection: Optional[bool] = None
+    useChartRecognition: Optional[bool] = None
     layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
     layoutMergeBboxesMode: Optional[Union[str, dict]] = None
+    promptLabel: Optional[str] = None
+    formatBlockContent: Optional[bool] = None
+    prettifyMarkdown: bool = True
+    showFormulaNumber: bool = False
     visualize: Optional[bool] = None
 
 

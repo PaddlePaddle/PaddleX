@@ -122,10 +122,14 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 0
                             ].useDocOrientationClassify,
                             use_doc_unwarping=inputs_g[0].useDocUnwarping,
+                            use_layout_detection=inputs_g[0].useLayoutDetection,
+                            use_chart_recognition=inputs_g[0].useChartRecognition,
                             layout_threshold=inputs_g[0].layoutThreshold,
                             layout_nms=inputs_g[0].layoutNms,
                             layout_unclip_ratio=inputs_g[0].layoutUnclipRatio,
                             layout_merge_bboxes_mode=inputs_g[0].layoutMergeBboxesMode,
+                            prompt_label=inputs_g[0].promptLabel,
+                            format_block_content=inputs_g[0].formatBlockContent,
                         )
                     )
 
@@ -149,6 +153,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                             ind_visualize_enabled_lst,
                             ind_preds,
                             log_ids_g,
+                            inputs_g,
                         ),
                     ):
                         result_or_output_dic[i] = result
@@ -165,10 +170,14 @@ class TritonPythonModel(BaseTritonPythonModel):
                 (
                     input.useDocOrientationClassify,
                     input.useDocUnwarping,
+                    input.useLayoutDetection,
+                    input.useChartRecognition,
                     input.layoutThreshold,
                     input.layoutNms,
                     input.layoutUnclipRatio,
                     input.layoutMergeBboxesMode,
+                    input.promptLabel,
+                    input.formatBlockContent,
                 )
             )
 
@@ -217,11 +226,15 @@ class TritonPythonModel(BaseTritonPythonModel):
 
         return images, data_info, visualize_enabled
 
-    def _postprocess(self, images, data_info, visualize_enabled, preds, log_id):
+    def _postprocess(self, images, data_info, visualize_enabled, preds, log_id, input):
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, preds)):
             pruned_res = app_common.prune_result(item.json["res"])
-            md_data = item.markdown
+            # XXX
+            md_data = item._to_markdown(
+                pretty=input.prettifyMarkdown,
+                show_formula_number=input.showFormulaNumber,
+            )
             md_text = md_data["markdown_texts"]
             md_imgs = app_common.postprocess_images(
                 md_data["markdown_images"],
