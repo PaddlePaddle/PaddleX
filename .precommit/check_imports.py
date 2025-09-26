@@ -43,6 +43,7 @@ MOD_TO_DEP = {
     "fastapi": "fastapi",
     "filelock": "filelock",
     "filetype": "filetype",
+    "flash_attn": "flash-attn",
     "ftfy": "ftfy",
     "GPUtil": "GPUtil",
     "huggingface_hub": "huggingface-hub",
@@ -93,7 +94,6 @@ MOD_TO_DEP = {
     "uvicorn": "uvicorn",
     "uvloop": "uvloop",
     "vllm": "vllm",
-    "xformers": "xformers",
     "yarl": "yarl",
 }
 MOD_PATTERN = re.compile(

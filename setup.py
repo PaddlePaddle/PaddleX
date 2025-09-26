@@ -208,7 +208,6 @@ EXTRAS = {
             "sglang [all] == 0.5.2",
             "torch == 2.8.0",
             "transformers",
-            "xformers",
         ],
         "genai-vllm-server": [
             "einops",
@@ -216,7 +215,6 @@ EXTRAS = {
             "transformers",
             "uvloop",
             "vllm == 0.10.2",
-            "xformers",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.0.2rc3",
