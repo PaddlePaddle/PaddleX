@@ -293,11 +293,7 @@ class PDFReaderBackend(_BaseReaderBackend):
         doc = pdfium.PdfDocument(in_path)
         try:
             for page in doc:
-                image = page.render(scale=self._scale, rotation=self._rotation).to_pil()
-                image = image.convert("RGB")
-                img_cv = np.array(image)
-                img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
-                yield img_cv
+                yield page.render(scale=self._scale, rotation=self._rotation).to_numpy()
         finally:
             doc.close()
 
