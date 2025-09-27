@@ -183,14 +183,19 @@ def blocks_to_word(json_path, word_output_path, image_base_path, input_path, out
 
             elif label == "table":
                 rows = parse_html_table(content) if "<table" in content else [
-                    row.split('\t') for row in content.strip().split('\n') if row.strip()]
+                    row.split('\t') for row in content.strip().split('\n') if row.strip()
+                ]
                 if rows:
-                    table = doc.add_table(rows=0, cols=len(rows[0]))
+                    max_cols = max(len(r) for r in rows)  # 考虑每行列数不一样的情况
+                    table = doc.add_table(rows=0, cols=max_cols)
                     table.style = "Table Grid"
                     for row_cells in rows:
                         row = table.add_row().cells
-                        for i, text in enumerate(row_cells):
-                            row[i].text = text.strip()
+                        for i in range(max_cols):
+                            if i < len(row_cells):  # 正常填充
+                                row[i].text = row_cells[i].strip()
+                            else:  # 如果该行缺列，用空字符串补齐
+                                row[i].text = ""
                 continue
 
             if label not in ["header", "footer"]:

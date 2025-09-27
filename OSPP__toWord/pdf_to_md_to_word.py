@@ -57,17 +57,24 @@ def add_table(document, table_html):
     table_tag = soup.find("table")
     if not table_tag:
         return
+
     rows = table_tag.find_all("tr")
     if not rows:
         return
-    cols = rows[0].find_all(["td", "th"])
-    table = document.add_table(rows=len(rows), cols=len(cols))
+
+    # 计算最大列数，保证不会越界
+    max_cols = max(len(row.find_all(["td", "th"])) for row in rows)
+    table = document.add_table(rows=len(rows), cols=max_cols)
     table.style = "Table Grid"
+
     for i, row in enumerate(rows):
         cells = row.find_all(["td", "th"])
-        for j, cell in enumerate(cells):
-            text = cell.get_text(strip=True)
-            table.cell(i, j).text = text
+        for j in range(max_cols):
+            if j < len(cells):
+                text = cells[j].get_text(strip=True)
+                table.cell(i, j).text = text
+            else:
+                table.cell(i, j).text = ""  # 列数不足补空
 
 from typing import Dict        
 def json_to_html_with_headfoot(json_list: list, input_path: str) -> Dict:
