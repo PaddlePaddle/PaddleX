@@ -84,4 +84,4 @@ base_name = os.path.splitext(os.path.basename(input_path))[0]
 with open(f"{output_path}/{base_name}_en.md", "r", encoding="utf-8") as f:
     md_text = f.read()
 
-md_to_latex(md_text, f"{output_path}/{base_name}_md2latex.tex")
+md_to_latex(md_text, f"{output_path}/{base_name}_md2latex.tex",os.path.abspath(output_path))

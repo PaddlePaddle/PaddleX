@@ -112,7 +112,7 @@ def process_paragraph(s: str) -> str:
         processed_paras.append("\\par " + escape_latex_outside_formula(p))
     return "\n\n".join(processed_paras) + "\n\n"
 
-def process_md_line(line: str) -> str:
+def process_md_line(line: str,output_path) -> str:
     
     from bs4 import BeautifulSoup
     """
@@ -143,7 +143,7 @@ def process_md_line(line: str) -> str:
             if div.img:
                 img = div.img
                 src = img.get("src")
-                src = f"/root/wjb/PaddleX-develop/mypaddle/upgit/output/{src}"
+                src = f"{output_path}/{src}"
                 width_ratio = get_image_width_from_md_line(str(img))
                 return (f"\\begin{{figure}}[h]\n\\centering\n"
                         f"\\includegraphics[width={width_ratio:.2f}\\linewidth]{{{src}}}\n"
@@ -163,7 +163,7 @@ def process_md_line(line: str) -> str:
     # 普通段落
     return process_paragraph(line)
 
-def md_to_latex(md_text: str, output_path: str):
+def md_to_latex(md_text: str, output_name: str,output_path):
     
     from bs4 import BeautifulSoup
     
@@ -227,7 +227,7 @@ def md_to_latex(md_text: str, output_path: str):
 
         # 内容处理
         for line in page.splitlines():
-            latex_lines.append(process_md_line(line))
+            latex_lines.append(process_md_line(line,output_path))
 
         # footnote + page number
         if footnotes and idx < len(footnotes) and footnotes[idx]:
@@ -240,8 +240,8 @@ def md_to_latex(md_text: str, output_path: str):
 
     latex_lines.append("\\end{document}")
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
+    os.makedirs(os.path.dirname(output_name), exist_ok=True)
+    with open(output_name, "w", encoding="utf-8") as f:
         f.write("\n".join(latex_lines))
 
-    print(f"✅ LaTeX 文件已生成: {output_path}")
+    print(f"✅ LaTeX 文件已生成: {output_name}")
