@@ -14,6 +14,7 @@
 
 import math
 from collections.abc import Iterable, Mapping, Sequence
+from functools import partial
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
@@ -154,8 +155,10 @@ if all(
             *,
             image_width: int,
             image_height: int,
+            image_processor,
         ) -> int:
-            image_processor = self.get_image_processor()
+            if image_processor is None:
+                image_processor = self.get_image_processor()
 
             do_resize = True
             hf_config = self.get_hf_config()
@@ -259,16 +262,18 @@ if all(
             hf_processor_mm_kwargs: Mapping[str, object],
             out_mm_kwargs: MultiModalKwargs,
         ) -> Sequence[PromptUpdate]:
+            image_processor = self.info.get_image_processor(**hf_processor_mm_kwargs)
             hf_config = self.info.get_hf_config()
             image_token_id = hf_config.image_token_id
 
-            def get_replacement(item_idx: int):
+            def get_replacement(item_idx: int, image_processor):
                 images = mm_items.get_items("image", ImageProcessorItems)
 
                 image_size = images.get_image_size(item_idx)
                 num_image_tokens = self.info.get_num_image_tokens(
                     image_width=image_size.width,
                     image_height=image_size.height,
+                    image_processor=image_processor,
                 )
 
                 return [image_token_id] * num_image_tokens
@@ -277,7 +282,9 @@ if all(
                 PromptReplacement(
                     modality="image",
                     target=[image_token_id],
-                    replacement=get_replacement,
+                    replacement=partial(
+                        get_replacement, image_processor=image_processor
+                    ),
                 ),
             ]
 
