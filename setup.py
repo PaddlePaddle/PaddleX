@@ -361,7 +361,7 @@ if __name__ == "__main__":
         entry_points={
             "console_scripts": [
                 "paddlex = paddlex.__main__:console_entry",
-                "paddlex_genai_server = paddlex.inference.genai.server:run_genai_server",
+                "paddlex_genai_server = paddlex.inference.genai.server:main",
             ],
             "vllm.general_plugins": [
                 "register_paddlex_genai_models = paddlex.inference.genai.backends.vllm:register_models"
