@@ -329,8 +329,6 @@ if all(
         def forward(
             self,
             hidden_states: torch.Tensor,
-            attention_mask: Optional[torch.Tensor] = None,
-            output_attentions: Optional[bool] = False,
             cu_seqlens: Optional[list[torch.Tensor]] = None,
             rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
         ) -> torch.Tensor:
@@ -453,8 +451,6 @@ if all(
         def forward(
             self,
             hidden_states: torch.Tensor,
-            attention_mask: torch.Tensor,
-            output_attentions: Optional[bool] = False,
             cu_seqlens: Optional[list[torch.Tensor]] = None,
             rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
         ) -> tuple[torch.FloatTensor]:
@@ -464,8 +460,6 @@ if all(
             hidden_states = self.layer_norm1(hidden_states)
             hidden_states = self.self_attn(
                 hidden_states=hidden_states,
-                attention_mask=attention_mask,
-                output_attentions=output_attentions,
                 cu_seqlens=cu_seqlens,
                 rope_emb=rope_emb,
             )
@@ -518,9 +512,6 @@ if all(
         def forward(
             self,
             inputs_embeds,
-            attention_mask: Optional[torch.Tensor] = None,
-            output_attentions: Optional[bool] = None,
-            output_hidden_states: Optional[bool] = None,
             cu_seqlens: Optional[list[torch.Tensor]] = None,
             image_grid_thw: Optional[
                 list[
@@ -532,48 +523,39 @@ if all(
             ] = None,
             height_position_ids: Optional[torch.Tensor] = None,
             width_position_ids: Optional[torch.Tensor] = None,
-            use_rope: Optional[bool] = False,
-            window_size: Optional[bool] = -1,
-            vision_or_text: str = "vision",
         ) -> BaseModelOutput:
             device = inputs_embeds.device
             hidden_states = inputs_embeds
-            if use_rope is True:
-                flatten_image_grid_thw = self.flatten_list(image_grid_thw)
+            flatten_image_grid_thw = self.flatten_list(image_grid_thw)
 
-                if width_position_ids is None or height_position_ids is None:
-                    split_hids = list()
-                    split_wids = list()
-                    for t, h, w in flatten_image_grid_thw:
-                        image_pids = torch.arange(t * h * w, device=device) % (h * w)
-                        sample_hids = image_pids // w
-                        sample_wids = image_pids % w
-                        split_hids.append(sample_hids)
-                        split_wids.append(sample_wids)
-                    width_position_ids = torch.concat(split_wids, dim=0)
-                    height_position_ids = torch.concat(split_hids, dim=0)
+            if width_position_ids is None or height_position_ids is None:
+                split_hids = list()
+                split_wids = list()
+                for t, h, w in flatten_image_grid_thw:
+                    image_pids = torch.arange(t * h * w, device=device) % (h * w)
+                    sample_hids = image_pids // w
+                    sample_wids = image_pids % w
+                    split_hids.append(sample_hids)
+                    split_wids.append(sample_wids)
+                width_position_ids = torch.concat(split_wids, dim=0)
+                height_position_ids = torch.concat(split_hids, dim=0)
 
-                pids = torch.stack(
-                    [height_position_ids, width_position_ids],
-                    dim=-1,
-                )
-                max_grid_size = pids.max() + 1
-                rope_emb_max_grid = self.rotary_pos_emb(max_grid_size)
-                rope_emb = rope_emb_max_grid[pids].flatten(1)
-                rope_emb = rope_emb.repeat(1, 2)
-                rope_emb = (rope_emb.cos(), rope_emb.sin())
-            else:
-                rope_emb = None
+            pids = torch.stack(
+                [height_position_ids, width_position_ids],
+                dim=-1,
+            )
+            max_grid_size = pids.max() + 1
+            rope_emb_max_grid = self.rotary_pos_emb(max_grid_size)
+            rope_emb = rope_emb_max_grid[pids].flatten(1)
+            rope_emb = rope_emb.repeat(1, 2)
+            rope_emb = (rope_emb.cos(), rope_emb.sin())
 
             attn_cu_seqlens = cu_seqlens
             hidden_states = inputs_embeds
-            assert attention_mask is None
 
             for encoder_layer in self.layers:
                 hidden_states = encoder_layer(
                     hidden_states,
-                    attention_mask,
-                    output_attentions=output_attentions,
                     cu_seqlens=attn_cu_seqlens,
                     rope_emb=rope_emb,
                 )
@@ -602,18 +584,11 @@ if all(
         def forward(
             self,
             pixel_values,
-            output_attentions: Optional[bool] = None,
-            output_hidden_states: Optional[bool] = None,
             interpolate_pos_encoding: Optional[bool] = False,
-            attention_mask: Optional[torch.Tensor] = None,
-            sample_indices: Optional[torch.Tensor] = None,
-            image_indices: Optional[torch.Tensor] = None,
             position_ids: Optional[torch.Tensor] = None,
             height_position_ids: Optional[torch.Tensor] = None,
             width_position_ids: Optional[torch.Tensor] = None,
             cu_seqlens: Optional[list[torch.Tensor]] = None,
-            padding_mask: Optional[torch.Tensor] = None,
-            vision_return_embed_list: Optional[bool] = False,
             image_grid_thw: Optional[
                 list[
                     Union[
@@ -622,9 +597,6 @@ if all(
                     ]
                 ]
             ] = None,
-            return_pooler_output: Optional[bool] = True,
-            use_rope: Optional[bool] = False,
-            window_size: Optional[bool] = -1,
         ) -> BaseModelOutputWithPooling:
 
             hidden_states = self.embeddings(
@@ -636,16 +608,10 @@ if all(
 
             last_hidden_state = self.encoder(
                 inputs_embeds=hidden_states,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
-                attention_mask=attention_mask,
                 cu_seqlens=cu_seqlens,
                 image_grid_thw=image_grid_thw,
-                use_rope=use_rope,
                 height_position_ids=height_position_ids,
                 width_position_ids=width_position_ids,
-                window_size=window_size,
-                vision_or_text="vision",
             )
 
             last_hidden_state = self.post_layernorm(last_hidden_state)
@@ -697,12 +663,8 @@ if all(
         def forward(
             self,
             pixel_values,
-            sample_indices: Optional[torch.Tensor] = None,
-            output_attentions: Optional[bool] = None,
-            output_hidden_states: Optional[bool] = None,
             interpolate_pos_encoding: bool = False,
             position_ids: Optional[torch.Tensor] = None,
-            vision_return_embed_list: Optional[bool] = False,
             image_grid_thw: Optional[
                 list[
                     Union[
@@ -712,24 +674,14 @@ if all(
                 ]
             ] = None,
             cu_seqlens: Optional[list[torch.Tensor]] = None,
-            return_pooler_output: Optional[bool] = True,
-            use_rope: Optional[bool] = False,
-            window_size: Optional[bool] = -1,
         ) -> BaseModelOutputWithPooling:
 
             return self.vision_model(
                 pixel_values=pixel_values,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
                 interpolate_pos_encoding=interpolate_pos_encoding,
                 position_ids=position_ids,
-                vision_return_embed_list=vision_return_embed_list,
                 image_grid_thw=image_grid_thw,
-                sample_indices=sample_indices,
                 cu_seqlens=cu_seqlens,
-                return_pooler_output=return_pooler_output,
-                use_rope=use_rope,
-                window_size=window_size,
             )
 
         def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
@@ -821,7 +773,6 @@ if all(
             pixel_values = pixel_values.type(self.visual.dtype)
             siglip_position_ids = list()
             image_grid_hws = list()
-            sample_indices = list()
             cu_seqlens = [0]
 
             for idx, thw in enumerate(image_grid_thw):
@@ -830,7 +781,6 @@ if all(
                 image_grid_hws.append(thw_tuple)
                 image_position_ids = torch.arange(numel) % np.prod(thw_tuple[1:])
                 siglip_position_ids.append(image_position_ids)
-                sample_indices.append(torch.full((numel,), idx, dtype=torch.int64))
                 cu_seqlens.append(cu_seqlens[-1] + numel)
 
             siglip_position_ids = torch.concat(siglip_position_ids, dim=0).to(
@@ -839,18 +789,12 @@ if all(
             cu_seqlens = torch.tensor(cu_seqlens, dtype=torch.int32).to(
                 pixel_values.device
             )
-            sample_indices = torch.concat(sample_indices, dim=0).to(pixel_values.device)
             vision_outputs = self.visual(
                 pixel_values=pixel_values,
                 image_grid_thw=image_grid_hws,
                 position_ids=siglip_position_ids,
-                vision_return_embed_list=True,
                 interpolate_pos_encoding=True,
-                sample_indices=sample_indices,
                 cu_seqlens=cu_seqlens,
-                return_pooler_output=False,
-                use_rope=True,
-                window_size=-1,
             )
             image_embeds = self.mlp_AR(vision_outputs, image_grid_thw)
             image_embeds = torch.stack(image_embeds, dim=0)
