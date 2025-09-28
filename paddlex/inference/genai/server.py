@@ -37,10 +37,7 @@ def get_arg_parser():
     return parser
 
 
-def run_genai_server(args=None):
-    parser = get_arg_parser()
-    args = parser.parse_args(args=args)
-
+def run_genai_server(args):
     plugin_name = f"{args.backend}-server"
     if not is_genai_engine_plugin_available(plugin_name):
         logging.error(
@@ -110,5 +107,11 @@ def run_genai_server(args=None):
         )
 
 
+def main(args=None):
+    parser = get_arg_parser()
+    args = parser.parse_args(args=args)
+    run_genai_server(args)
+
+
 if __name__ == "__main__":
-    run_genai_server()
+    main()

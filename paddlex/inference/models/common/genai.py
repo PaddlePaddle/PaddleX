@@ -29,7 +29,9 @@ SERVER_BACKENDS = ["fastdeploy-server", "vllm-server", "sglang-server"]
 
 
 class GenAIConfig(BaseModel):
-    backend: Literal["native", "fastdeploy-server", "vllm-server", "sglang-server"]
+    backend: Literal["native", "fastdeploy-server", "vllm-server", "sglang-server"] = (
+        "native"
+    )
     server_url: Optional[str] = None
     client_kwargs: Optional[Dict[str, Any]] = None
 

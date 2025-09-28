@@ -25,6 +25,7 @@ from typing import List, Optional
 import numpy as np
 
 from ....modules.doc_vlm.model_list import MODELS
+from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ....utils.env import get_device_type
@@ -63,6 +64,12 @@ class DocVLMPredictor(BasePredictor):
             )
 
             self.infer, self.processor = self._build(**kwargs)
+
+            if self.model_name == "PaddleOCR-VL" and self.batch_sampler.batch_size > 1:
+                logging.warning(
+                    "Currently, the PaddleOCR-VL local model only supports batch size of 1. The batch size will be updated to 1."
+                )
+                self.batch_sampler.batch_size = 1
         else:
             if self.batch_sampler.batch_size > 1:
                 self._thread_pool = ThreadPoolExecutor(

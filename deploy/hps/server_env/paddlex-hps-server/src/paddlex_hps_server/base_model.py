@@ -125,6 +125,8 @@ class BaseTritonPythonModel(object):
                                 item,
                                 log_id=log_ids[i],
                             )
+                        else:
+                            outputs[i] = item
 
             assert len(outputs) == len(
                 requests
