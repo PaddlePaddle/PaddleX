@@ -163,6 +163,8 @@ class DocVLMPredictor(BasePredictor):
         skip_special_tokens: Optional[bool] = None,
         repetition_penalty: Optional[float] = None,
         use_cache: Optional[bool] = None,
+        min_pixels: Optional[int] = None,
+        max_pixels: Optional[int] = None,
         **kwargs,
     ):
         """
@@ -216,6 +218,8 @@ class DocVLMPredictor(BasePredictor):
                 max_new_tokens=max_new_tokens,
                 skip_special_tokens=skip_special_tokens,
                 repetition_penalty=repetition_penalty,
+                min_pixels=min_pixels,
+                max_pixels=max_pixels,
             )
 
         result_dict = self._format_result_dict(preds, src_data)
@@ -349,7 +353,13 @@ class DocVLMPredictor(BasePredictor):
         return rst_dict
 
     def _genai_client_process(
-        self, data, max_new_tokens, skip_special_tokens, repetition_penalty
+        self,
+        data,
+        max_new_tokens,
+        skip_special_tokens,
+        repetition_penalty,
+        min_pixels,
+        max_pixels,
     ):
         lock = Lock()
 
@@ -390,11 +400,13 @@ class DocVLMPredictor(BasePredictor):
                 kwargs = {
                     "temperature": 0,
                 }
-            kwargs["extra_body"] = {}
+
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
             elif self.model_name in self.model_group["PaddleOCR-VL"]:
                 kwargs["max_completion_tokens"] = 8192
+
+            kwargs["extra_body"] = {}
             if skip_special_tokens is not None:
                 if self._genai_client.backend in (
                     "fastdeploy-server",
@@ -404,8 +416,35 @@ class DocVLMPredictor(BasePredictor):
                     kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
                 else:
                     raise ValueError("Not supported")
+
             if repetition_penalty is not None:
                 kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
+
+            if min_pixels is not None:
+                if self._genai_client.backend == "vllm-server":
+                    kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
+                        "extra_body"
+                    ].get("mm_processor_kwargs", {})
+                    kwargs["extra_body"]["mm_processor_kwargs"][
+                        "min_pixels"
+                    ] = min_pixels
+                else:
+                    raise ValueError(
+                        f"{self._genai_client.backend} does not support min_pixels!"
+                    )
+
+            if max_pixels is not None:
+                if self._genai_client.backend == "vllm-server":
+                    kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
+                        "extra_body"
+                    ].get("mm_processor_kwargs", {})
+                    kwargs["extra_body"]["mm_processor_kwargs"][
+                        "max_pixels"
+                    ] = max_pixels
+                else:
+                    raise ValueError(
+                        f"{self._genai_client.backend} does not support max_pixels!"
+                    )
 
             with lock:
                 future = self._genai_client.create_chat_completion(
