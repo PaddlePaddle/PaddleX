@@ -24,11 +24,9 @@ from .....utils.deps import is_dep_available
 if all(
     map(is_dep_available, ("einops", "torch", "transformers", "vllm", "flash-attn"))
 ):
-
     import torch
     import torch.nn as nn
-    from einops import rearrange
-    from flash_attn import flash_attn_varlen_func
+    from einops import rearrange, repeat
     from transformers import BatchFeature
     from transformers.activations import GELUActivation
     from transformers.modeling_outputs import (
@@ -52,6 +50,8 @@ if all(
         default_weight_loader,
         maybe_remap_kv_scale_name,
     )
+    from vllm.model_executor.models.vision import get_vit_attn_backend
+    from vllm.platforms import _Backend, current_platform
 
     try:
         from vllm.model_executor.models.ernie45 import Ernie4_5_ForCausalLM
@@ -447,10 +447,10 @@ if all(
             pixel_values: torch.FloatTensor,
             position_ids: Optional[torch.Tensor] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
@@ -502,16 +502,51 @@ if all(
                     f" {pixel_values.dim()}. Expected 4 or 5."
                 )
 
+    def rotate_half(x: torch.Tensor, interleaved: bool = False) -> torch.Tensor:
+        if not interleaved:
+            x1, x2 = x.chunk(2, dim=-1)
+            return torch.cat((-x2, x1), dim=-1)
+        else:
+            x1, x2 = x[..., ::2], x[..., 1::2]
+            return rearrange(
+                torch.stack((-x2, x1), dim=-1), "... d two -> ... (d two)", two=2
+            )
+
+    def apply_rotary_emb_torch(
+        x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor, interleaved: bool = False
+    ) -> torch.Tensor:
+        """
+        x: (batch_size, seqlen, nheads, headdim)
+        cos, sin: (seqlen, rotary_dim / 2) or (batch_size, seqlen, rotary_dim / 2)
+        """
+        ro_dim = cos.shape[-1] * 2
+        assert ro_dim <= x.shape[-1]
+        cos = repeat(
+            cos, "... d -> ... 1 (2 d)" if not interleaved else "... d -> ... 1 (d 2)"
+        )
+        sin = repeat(
+            sin, "... d -> ... 1 (2 d)" if not interleaved else "... d -> ... 1 (d 2)"
+        )
+        return torch.cat(
+            [
+                x[..., :ro_dim] * cos + rotate_half(x[..., :ro_dim], interleaved) * sin,
+                x[..., ro_dim:],
+            ],
+            dim=-1,
+        )
+
     def apply_rotary_pos_emb_flashatt(
         q: torch.Tensor,
         k: torch.Tensor,
         cos: torch.Tensor,
         sin: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         cos = cos.chunk(2, dim=-1)[0].contiguous()
         sin = sin.chunk(2, dim=-1)[0].contiguous()
 
-        from vllm.vllm_flash_attn.layers.rotary import apply_rotary_emb
+        apply_rotary_emb = apply_rotary_emb_torch
+        if current_platform.is_cuda():
+            from vllm.vllm_flash_attn.layers.rotary import apply_rotary_emb
 
         q_embed = apply_rotary_emb(q.float(), cos.float(), sin.float()).type_as(q)
         k_embed = apply_rotary_emb(k.float(), cos.float(), sin.float()).type_as(k)
@@ -563,41 +598,90 @@ if all(
                 prefix=f"{prefix}.out_proj",
             )
 
+            # Detect attention implementation.
+            self.attn_backend: _Backend = get_vit_attn_backend(support_fa=True)
+            if self.attn_backend not in {
+                _Backend.FLASH_ATTN,
+                _Backend.TORCH_SDPA,
+                _Backend.XFORMERS,
+            }:
+                raise RuntimeError(
+                    f"PaddleOCR-VL does not support {self.attn_backend} backend now."
+                )
+
         def forward(
             self,
             hidden_states: torch.Tensor,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
-            rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
+            rope_emb: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
         ) -> torch.Tensor:
             batch_size, seq_length, embed_dim = hidden_states.shape
 
             qkv_states, _ = self.qkv_proj(hidden_states)
-            queries, keys, values = qkv_states.chunk(3, dim=-1)
+            q, k, v = qkv_states.chunk(3, dim=-1)
 
-            queries = queries.view(seq_length, self.num_heads, self.head_dim)
-            keys = keys.view(seq_length, self.num_heads, self.head_dim)
-            values = values.view(seq_length, self.num_heads, self.head_dim)
+            q = q.view(batch_size, seq_length, self.num_heads, self.head_dim)
+            k = k.view(batch_size, seq_length, self.num_heads, self.head_dim)
+            v = v.view(batch_size, seq_length, self.num_heads, self.head_dim)
 
             if rope_emb is not None:
                 cos, sin = rope_emb
-                queries, keys = apply_rotary_pos_emb_flashatt(
-                    queries.unsqueeze(0), keys.unsqueeze(0), cos, sin
+                q, k = apply_rotary_pos_emb_flashatt(q, k, cos, sin)
+
+            if self.attn_backend == _Backend.FLASH_ATTN:
+                from flash_attn import flash_attn_varlen_func
+
+                q, k, v = (rearrange(x, "b s ... -> (b s) ...") for x in [q, k, v])
+                max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max().item()
+                output = flash_attn_varlen_func(
+                    q,
+                    k,
+                    v,
+                    cu_seqlens_q=cu_seqlens,
+                    cu_seqlens_k=cu_seqlens,
+                    max_seqlen_q=max_seqlen,
+                    max_seqlen_k=max_seqlen,
                 )
-                queries = queries.squeeze(0)
-                keys = keys.squeeze(0)
 
-            max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max().item()
-            attn_output = flash_attn_varlen_func(
-                queries,
-                keys,
-                values,
-                cu_seqlens_q=cu_seqlens,
-                cu_seqlens_k=cu_seqlens,
-                max_seqlen_q=max_seqlen,
-                max_seqlen_k=max_seqlen,
-            ).reshape(seq_length, -1)
+                context_layer = rearrange(output, "(b s) ... -> b s ...", b=batch_size)
+            elif self.attn_backend == _Backend.TORCH_SDPA:
+                # Execute attention entry by entry for speed & less VRAM.
+                import torch.nn.functional as F
 
-            output, _ = self.out_proj(attn_output)
+                outputs = []
+                for i in range(1, len(cu_seqlens)):
+                    start_idx = cu_seqlens[i - 1]
+                    end_idx = cu_seqlens[i]
+                    q_i = q[:, start_idx:end_idx]
+                    k_i = k[:, start_idx:end_idx]
+                    v_i = v[:, start_idx:end_idx]
+                    q_i, k_i, v_i = (
+                        rearrange(x, "b s h d -> b h s d") for x in [q_i, k_i, v_i]
+                    )
+                    output_i = F.scaled_dot_product_attention(
+                        q_i, k_i, v_i, dropout_p=0.0
+                    )
+                    output_i = rearrange(output_i, "b h s d -> b s h d ")
+                    outputs.append(output_i)
+                context_layer = torch.cat(outputs, dim=1)
+            elif self.attn_backend == _Backend.XFORMERS:
+                from xformers import ops as xops
+                from xformers.ops.fmha.attn_bias import BlockDiagonalMask
+
+                seqlens = (cu_seqlens[1:] - cu_seqlens[:-1]).tolist()
+                attn_bias = BlockDiagonalMask.from_seqlens(
+                    q_seqlen=seqlens, kv_seqlen=None, device=q.device
+                )
+
+                context_layer = xops.memory_efficient_attention_forward(
+                    q, k, v, attn_bias=attn_bias, p=0, scale=None
+                )
+
+            context_layer = rearrange(
+                context_layer, "b s h d -> b s (h d)"
+            ).contiguous()
+
+            output, _ = self.out_proj(context_layer)
             return output
 
     class SigLIPRotaryEmbedding(nn.Module):
@@ -690,9 +774,9 @@ if all(
         def forward(
             self,
             hidden_states: torch.Tensor,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
-            rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
-        ) -> tuple[torch.FloatTensor]:
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
+            rope_emb: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
+        ) -> Tuple[torch.FloatTensor]:
 
             residual = hidden_states
 
@@ -751,12 +835,12 @@ if all(
         def forward(
             self,
             inputs_embeds,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
@@ -828,12 +912,12 @@ if all(
             position_ids: Optional[torch.Tensor] = None,
             height_position_ids: Optional[torch.Tensor] = None,
             width_position_ids: Optional[torch.Tensor] = None,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
@@ -906,14 +990,14 @@ if all(
             interpolate_pos_encoding: bool = False,
             position_ids: Optional[torch.Tensor] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
         ) -> BaseModelOutputWithPooling:
 
             return self.vision_model(
@@ -924,7 +1008,7 @@ if all(
                 cu_seqlens=cu_seqlens,
             )
 
-        def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
+        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> set[str]:
             stacked_params_mapping = [
                 ("qkv_proj", "q_proj", "q"),
                 ("qkv_proj", "k_proj", "k"),
@@ -1119,7 +1203,7 @@ if all(
 
             return inputs_embeds
 
-        def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
+        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> set[str]:
 
             loader = AutoWeightsLoader(self)
             autoloaded_weights = loader.load_weights(weights)
