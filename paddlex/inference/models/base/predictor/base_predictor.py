@@ -136,6 +136,7 @@ class BasePredictor(
             self._genai_client = GenAIClient(
                 backend=genai_config.backend,
                 base_url=genai_config.server_url,
+                max_concurrency=genai_config.max_concurrency,
                 model_name=model_name,
                 **(genai_config.client_kwargs or {}),
             )

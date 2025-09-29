@@ -33,6 +33,7 @@ class GenAIConfig(BaseModel):
         "native"
     )
     server_url: Optional[str] = None
+    max_concurrency: int = 200
     client_kwargs: Optional[Dict[str, Any]] = None
 
     @model_validator(mode="after")
@@ -153,22 +154,23 @@ def run_async(coro, return_future=False, timeout=None):
 
 @class_requires_deps("openai")
 class GenAIClient(object):
-    # TODO: Configurable max concurrency
-    MAX_CONCURRENCY = 200
 
-    def __init__(self, backend, base_url, model_name=None, **kwargs):
+    def __init__(
+        self, backend, base_url, max_concurrency=200, model_name=None, **kwargs
+    ):
         from openai import AsyncOpenAI
 
         super().__init__()
 
         self.backend = backend
+        self._max_concurrency = max_concurrency
         self._model_name = model_name
 
         if "api_key" not in kwargs:
             kwargs["api_key"] = "null"
         self._client = AsyncOpenAI(base_url=base_url, **kwargs)
 
-        self._semaphore = asyncio.Semaphore(self.MAX_CONCURRENCY)
+        self._semaphore = asyncio.Semaphore(self._max_concurrency)
 
     @property
     def openai_client(self):
