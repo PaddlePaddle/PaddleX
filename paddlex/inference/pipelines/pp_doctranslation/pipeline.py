@@ -355,6 +355,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         glossary: Dict = None,
         llm_request_interval: float = 0.0,
         chat_bot_config: Dict = None,
+        use_flags: bool = False,
         **kwargs,
     ):
         """
@@ -395,7 +396,12 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             and ori_md_info_list[0].get("page_index") is not None
         ):
             # for multi page pdf
-            ori_md_info_list = [self.concatenate_markdown_pages(ori_md_info_list)]
+            if use_flags:
+                ori_md_info_list = [
+                    self.concatenate_markdown_pages_with_flags(ori_md_info_list)
+                ]
+            else:
+                ori_md_info_list = [self.concatenate_markdown_pages(ori_md_info_list)]
 
         if not isinstance(llm_request_interval, float):
             llm_request_interval = float(llm_request_interval)
@@ -476,6 +482,82 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                     "markdown_texts": target_language_texts,
                 }
             )
+
+        # 将下一页的第一句话拼接至上一页， 保证翻译时语义的完整性，并对每页进行分页处理
+
+    def concatenate_markdown_pages_with_flags(self, markdown_list: list) -> tuple:
+
+        markdown_texts = ""
+        previous_page_last_element_paragraph_end_flag = True
+        PAGE_PLACEHOLDER = "<sep>1</sep>"
+        SENTENCE_ENDINGS = "，,。！？.!?"
+
+        if len(markdown_list) == 0:
+            raise ValueError("The length of markdown_list is zero.")
+
+        for res in markdown_list:
+            # Get the paragraph flags for the current page
+            page_first_element_paragraph_start_flag: bool = res[
+                "page_continuation_flags"
+            ][0]
+            page_last_element_paragraph_end_flag: bool = res["page_continuation_flags"][
+                1
+            ]
+
+            # Determine whether to add a space or a newline
+            if (
+                not page_first_element_paragraph_start_flag
+                and not previous_page_last_element_paragraph_end_flag
+            ):
+                # 提取下一页的第一个句子
+                first_sentence_match = re.search(
+                    rf"^[^{SENTENCE_ENDINGS}]*[{SENTENCE_ENDINGS}]?",
+                    res["markdown_texts"],
+                )
+                if first_sentence_match:
+                    front_sentence = first_sentence_match.group()
+                    remaining_text = res["markdown_texts"][first_sentence_match.end() :]
+                else:
+                    front_sentence = res["markdown_texts"]
+                    remaining_text = ""
+
+                last_char_of_markdown = markdown_texts[-1] if markdown_texts else ""
+                first_char_of_handler = (
+                    res["markdown_texts"][0] if res["markdown_texts"] else ""
+                )
+
+                # Check if the last character and the first character are Chinese characters
+                last_is_chinese_char = (
+                    re.match(r"[\u4e00-\u9fff]", last_char_of_markdown)
+                    if last_char_of_markdown
+                    else False
+                )
+                first_is_chinese_char = (
+                    re.match(r"[\u4e00-\u9fff]", first_char_of_handler)
+                    if first_char_of_handler
+                    else False
+                )
+
+                if not (last_is_chinese_char or first_is_chinese_char):
+                    markdown_texts += " " + front_sentence
+                else:
+                    markdown_texts += front_sentence
+                markdown_texts += f"\n\n{PAGE_PLACEHOLDER}\n\n" + remaining_text
+            else:
+                markdown_texts += f"\n\n{PAGE_PLACEHOLDER}\n\n" + res["markdown_texts"]
+                # markdown_texts += "\n\n" + res["markdown_texts"]
+            previous_page_last_element_paragraph_end_flag = (
+                page_last_element_paragraph_end_flag
+            )
+
+        concatenate_result = {
+            "input_path": markdown_list[0]["input_path"],
+            "page_index": None,
+            "page_continuation_flags": (True, True),
+            "markdown_texts": markdown_texts,
+        }
+
+        return MarkdownResult(concatenate_result)
 
     def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
         """
