@@ -26,14 +26,9 @@ if all(
     import torch
     import torch.nn as nn
     from einops import rearrange
-    from flash_attn import flash_attn_varlen_func
-    from sglang.srt.distributed import get_tensor_model_parallel_world_size
     from sglang.srt.layers.activation import get_act_fn
-    from sglang.srt.layers.linear import (
-        ColumnParallelLinear,
-        QKVParallelLinear,
-        RowParallelLinear,
-    )
+    from sglang.srt.layers.attention.vision import VisionAttention
+    from sglang.srt.layers.linear import ColumnParallelLinear, RowParallelLinear
     from sglang.srt.layers.quantization.base_config import QuantizationConfig
     from sglang.srt.managers.mm_utils import (
         MultiModalityDataPaddingPatternMultimodalTokens,
@@ -41,18 +36,14 @@ if all(
     )
     from sglang.srt.managers.schedule_batch import MultimodalDataItem, MultimodalInputs
     from sglang.srt.model_executor.forward_batch_info import ForwardBatch
-    from sglang.srt.model_loader.weight_utils import (
-        default_weight_loader,
-        maybe_remap_kv_scale_name,
-    )
+    from sglang.srt.model_loader.weight_utils import default_weight_loader
+    from sglang.srt.models.ernie4 import Ernie4_5_ForCausalLM
     from transformers.activations import GELUActivation
     from transformers.modeling_outputs import (
         BaseModelOutput,
         BaseModelOutputWithPooling,
     )
     from transformers.utils import torch_int
-
-    from .ernie4 import Ernie4_5_ForCausalLM
 
     class Projector(nn.Module):
 
@@ -93,7 +84,6 @@ if all(
                 for image_feature, image_grid in zip(image_features, image_grid_thw):
                     image_feature = self.pre_norm(image_feature)
                     t, h, w = image_grid
-                    from einops import rearrange
 
                     image_feature = rearrange(
                         image_feature,
@@ -214,10 +204,10 @@ if all(
             pixel_values: torch.FloatTensor,
             position_ids: Optional[torch.Tensor] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
@@ -268,101 +258,6 @@ if all(
                     "Unsupported pixel_values dimension:"
                     f" {pixel_values.dim()}. Expected 4 or 5."
                 )
-
-    def apply_rotary_pos_emb_flashatt(
-        q: torch.Tensor,
-        k: torch.Tensor,
-        cos: torch.Tensor,
-        sin: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-        from sglang.srt.layers.rotary_embedding import apply_rotary_pos_emb
-
-        q_embed, k_embed = apply_rotary_pos_emb(q, k, cos, sin)
-        return q_embed, k_embed
-
-    class SiglipAttention(nn.Module):
-        """Multi-headed attention from 'Attention Is All You
-        Need' paper."""
-
-        def __init__(
-            self,
-            config,
-            quant_config: Optional[QuantizationConfig] = None,
-            prefix: str = "",
-        ):
-            super().__init__()
-            self.config = config
-
-            hidden_size = config.hidden_size
-            self.hidden_size = config.hidden_size
-            tp_size = get_tensor_model_parallel_world_size()
-            self.total_num_heads = config.num_attention_heads
-            assert self.total_num_heads % tp_size == 0
-            self.num_heads = self.total_num_heads // tp_size
-            self.total_num_kv_heads = config.num_attention_heads
-            if self.total_num_kv_heads >= tp_size:
-                assert self.total_num_kv_heads % tp_size == 0
-            else:
-                assert tp_size % self.total_num_kv_heads == 0
-            self.num_kv_heads = max(1, self.total_num_kv_heads // tp_size)
-            self.head_dim = config.hidden_size // self.total_num_heads
-            self.q_size = self.num_heads * self.head_dim
-            self.kv_size = self.num_kv_heads * self.head_dim
-            self.scale = self.head_dim**-0.5
-
-            self.qkv_proj = QKVParallelLinear(
-                hidden_size,
-                self.head_dim,
-                self.total_num_heads,
-                self.total_num_kv_heads,
-                bias=True,
-                quant_config=quant_config,
-                prefix=f"{prefix}.qkv_proj",
-            )
-            self.out_proj = RowParallelLinear(
-                input_size=hidden_size,
-                output_size=hidden_size,
-                quant_config=quant_config,
-                prefix=f"{prefix}.out_proj",
-            )
-
-        def forward(
-            self,
-            hidden_states: torch.Tensor,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
-            rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
-        ) -> torch.Tensor:
-            batch_size, seq_length, embed_dim = hidden_states.shape
-
-            qkv_states, _ = self.qkv_proj(hidden_states)
-            queries, keys, values = qkv_states.chunk(3, dim=-1)
-
-            queries = queries.view(seq_length, self.num_heads, self.head_dim)
-            keys = keys.view(seq_length, self.num_heads, self.head_dim)
-            values = values.view(seq_length, self.num_heads, self.head_dim)
-
-            if rope_emb is not None:
-                cos, sin = rope_emb
-                queries, keys = apply_rotary_pos_emb_flashatt(
-                    queries.unsqueeze(0), keys.unsqueeze(0), cos, sin
-                )
-                queries = queries.squeeze(0)
-                keys = keys.squeeze(0)
-
-            max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max().item()
-
-            attn_output = flash_attn_varlen_func(
-                queries,
-                keys,
-                values,
-                cu_seqlens_q=cu_seqlens,
-                cu_seqlens_k=cu_seqlens,
-                max_seqlen_q=max_seqlen,
-                max_seqlen_k=max_seqlen,
-            ).reshape(seq_length, -1)
-
-            output, _ = self.out_proj(attn_output)
-            return output
 
     class SigLIPRotaryEmbedding(nn.Module):
 
@@ -431,16 +326,13 @@ if all(
             self,
             config,
             quant_config: Optional[QuantizationConfig] = None,
+            attn_implementation: Optional[str] = None,
             prefix: str = "",
         ):
             super().__init__()
             self.embed_dim = config.hidden_size
+            self.num_heads = config.num_attention_heads
             self.layer_norm1 = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_eps)
-            self.self_attn = SiglipAttention(
-                config,
-                quant_config=quant_config,
-                prefix=f"{prefix}.self_attn",
-            )
             self.layer_norm2 = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_eps)
             self.mlp = SiglipMLP(
                 config,
@@ -448,22 +340,49 @@ if all(
                 prefix=f"{prefix}.mlp",
             )
 
+            if attn_implementation is None:
+                softmax_in_single_precision = False
+                qkv_backend = None
+            elif attn_implementation == "sdpa":
+                softmax_in_single_precision = False
+                qkv_backend = "sdpa"
+            elif attn_implementation == "flash_attention_2":
+                softmax_in_single_precision = False
+                qkv_backend = "triton_attn"
+            elif attn_implementation == "eager":
+                softmax_in_single_precision = True
+                qkv_backend = "sdpa"
+            elif attn_implementation == "flash_attention_3":
+                softmax_in_single_precision = False
+                qkv_backend = "fa3"
+
+            self.self_attn = VisionAttention(
+                embed_dim=self.embed_dim,
+                num_heads=self.num_heads,
+                projection_size=self.embed_dim,
+                use_qkv_parallel=True,
+                qkv_backend=qkv_backend,
+                softmax_in_single_precision=softmax_in_single_precision,
+                flatten_batch=True,
+                quant_config=quant_config,
+                prefix=f"{prefix}.self_attn",
+            )
+
         def forward(
             self,
             hidden_states: torch.Tensor,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
-            rope_emb: Optional[tuple[torch.Tensor, torch.Tensor]] = None,
-        ) -> tuple[torch.FloatTensor]:
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
+            rope_emb: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
+        ) -> Tuple[torch.FloatTensor]:
 
             residual = hidden_states
 
             hidden_states = self.layer_norm1(hidden_states)
             hidden_states = self.self_attn(
-                hidden_states=hidden_states,
+                hidden_states,
                 cu_seqlens=cu_seqlens,
-                rope_emb=rope_emb,
+                position_embeddings=rope_emb,
             )
-
             hidden_states = residual + hidden_states
 
             residual = hidden_states
@@ -512,12 +431,12 @@ if all(
         def forward(
             self,
             inputs_embeds,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
@@ -588,12 +507,12 @@ if all(
             position_ids: Optional[torch.Tensor] = None,
             height_position_ids: Optional[torch.Tensor] = None,
             width_position_ids: Optional[torch.Tensor] = None,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
@@ -666,14 +585,14 @@ if all(
             interpolate_pos_encoding: bool = False,
             position_ids: Optional[torch.Tensor] = None,
             image_grid_thw: Optional[
-                list[
+                List[
                     Union[
-                        tuple[int, int, int],
-                        list[tuple[int, int, int]],
+                        Tuple[int, int, int],
+                        List[Tuple[int, int, int]],
                     ]
                 ]
             ] = None,
-            cu_seqlens: Optional[list[torch.Tensor]] = None,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
         ) -> BaseModelOutputWithPooling:
 
             return self.vision_model(
@@ -683,68 +602,6 @@ if all(
                 image_grid_thw=image_grid_thw,
                 cu_seqlens=cu_seqlens,
             )
-
-        def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
-            stacked_params_mapping = [
-                ("qkv_proj", "q_proj", "q"),
-                ("qkv_proj", "k_proj", "k"),
-                ("qkv_proj", "v_proj", "v"),
-            ]
-            params_dict = dict(self.named_parameters(remove_duplicate=False))
-            loaded_params: set[str] = set()
-            for name, loaded_weight in weights:
-                if "rotary_emb.inv_freq" in name:
-                    continue
-                if "head.attention" in name or "head.layernorm" in name:
-                    continue
-                if "head.mlp" in name or "head.probe" in name:
-                    continue
-                if self.quant_config is not None and (
-                    scale_name := self.quant_config.get_cache_scale(name)
-                ):
-                    param = params_dict[scale_name]
-                    weight_loader = getattr(
-                        param,
-                        "weight_loader",
-                        default_weight_loader,
-                    )
-                    loaded_weight = (
-                        loaded_weight if loaded_weight.dim() == 0 else loaded_weight[0]
-                    )
-                    weight_loader(param, loaded_weight)
-                    loaded_params.add(scale_name)
-                    continue
-                for (
-                    param_name,
-                    weight_name,
-                    shard_id,
-                ) in stacked_params_mapping:
-                    if weight_name not in name:
-                        continue
-                    name = name.replace(weight_name, param_name)
-                    if name.endswith(".bias") and name not in params_dict:
-                        continue
-
-                    param = params_dict[name]
-                    weight_loader = param.weight_loader
-                    weight_loader(param, loaded_weight, shard_id)
-                    break
-                else:
-                    if name.endswith(".bias") and name not in params_dict:
-                        continue
-                    name = maybe_remap_kv_scale_name(name, params_dict)
-                    if name is None:
-                        continue
-
-                    param = params_dict[name]
-                    weight_loader = getattr(
-                        param,
-                        "weight_loader",
-                        default_weight_loader,
-                    )
-                    weight_loader(param, loaded_weight)
-                loaded_params.add(name)
-            return loaded_params
 
     class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM):
 
@@ -843,7 +700,7 @@ if all(
                 input_ids, hidden_states, self.lm_head, forward_batch
             )
 
-        def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
+        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> set[str]:
             stacked_params_mapping = [
                 # (param_name, weight_name, shard_id)
                 (".qkv_proj", ".q_proj", "q"),
@@ -865,20 +722,34 @@ if all(
                     if weight_name not in name:
                         continue
                     name = name.replace(weight_name, param_name)
+
+                    # Skip loading extra bias for GPTQ models.
+                    if name.endswith(".bias") and name not in params_dict:
+                        continue
                     param = params_dict[name]
                     weight_loader = param.weight_loader
                     weight_loader(param, loaded_weight, shard_id)
                     break
                 else:
-                    if name in params_dict.keys():
-                        param = params_dict[name]
-                        weight_loader = getattr(
-                            param, "weight_loader", default_weight_loader
-                        )
-                        weight_loader(param, loaded_weight)
-                    else:
-                        raise KeyError(f"Parameter '{name}' not found in model.")
+                    if "visual" in name:
+                        # adapt to VisionAttention
+                        name = name.replace(r"self_attn.qkv.", r"self_attn.qkv_proj.")
+                        name = name.replace(r"self_attn.out_proj.", r"self_attn.proj.")
 
-    # monkey patch for v0.4.10
+                    try:
+                        # Skip loading extra bias for GPTQ models.
+                        if name.endswith(".bias") and name not in params_dict:
+                            continue
+                        param = params_dict[name]
+                    except KeyError:
+                        print(params_dict.keys())
+                        raise
+
+                    weight_loader = getattr(
+                        param, "weight_loader", default_weight_loader
+                    )
+                    weight_loader(param, loaded_weight)
+
+    # monkey patch
     def get_input_embeddings(self) -> nn.Embedding:
         return self.embed_tokens
