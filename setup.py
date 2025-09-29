@@ -215,6 +215,7 @@ EXTRAS = {
             "transformers",
             "uvloop",
             "vllm == 0.10.2",
+            "xformers",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.0.2rc3",

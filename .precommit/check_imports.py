@@ -94,6 +94,7 @@ MOD_TO_DEP = {
     "uvicorn": "uvicorn",
     "uvloop": "uvloop",
     "vllm": "vllm",
+    "xformers": "xformers",
     "yarl": "yarl",
 }
 MOD_PATTERN = re.compile(
