@@ -4,7 +4,7 @@
 
 <p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
+    <a href="https://www.python.org/downloads><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
