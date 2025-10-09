@@ -450,7 +450,7 @@ class _LocalModelHoster(_BaseModelHoster):
             )
         else:
             logging.warning(
-                f"local model ({filename}) not found in {self._save_dir}. "
+                f"local model ({model_name}) not found in {self._save_dir}. "
             )
             logging.info(
                 f"Using official model ({model_name}), the model files will be automatically downloaded and saved in `{model_dir}`."
