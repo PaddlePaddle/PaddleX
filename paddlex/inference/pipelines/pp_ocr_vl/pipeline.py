@@ -242,7 +242,7 @@ class _PPOCRVLPipeline(BasePipeline):
                         )
                     elif block_label == "chart" and use_chart_recognition:
                         text_prompt = "Chart Recognition:"
-                    elif "formula" in block_label:
+                    elif "formula" in block_label and block_label != "formula_number":
                         text_prompt = "Formula Recognition:"
                     block_imgs.append(block_img)
                     text_prompts.append(text_prompt)
@@ -318,7 +318,7 @@ class _PPOCRVLPipeline(BasePipeline):
                     vl_rec_result["image"] = block_img4vl
                     vl_rec_res_list.append(vl_rec_result)
                     result_str = vl_rec_result.get("result", "")
-                    result_str, _ = truncate_repetitive_content(result_str)
+                    result_str = truncate_repetitive_content(result_str)
                     if ("\\(" in result_str and "\\)" in result_str) or (
                         "\\[" in result_str and "\\]" in result_str
                     ):
@@ -333,7 +333,9 @@ class _PPOCRVLPipeline(BasePipeline):
                         if block_label == "formula_number":
                             result_str = result_str.replace("$", "")
                     if block_label == "table":
-                        result_str = convert_otsl_to_html(result_str)
+                        html_str = convert_otsl_to_html(result_str)
+                        if html_str != "":
+                            result_str = html_str
                         result_str = untokenize_figure_of_table(
                             result_str, figure_token_map
                         )
@@ -419,6 +421,8 @@ class _PPOCRVLPipeline(BasePipeline):
 
         if not model_settings["use_layout_detection"]:
             prompt_label = prompt_label if prompt_label else "ocr"
+            if prompt_label.lower() == "chart":
+                model_settings["use_chart_recognition"] = True
             assert prompt_label.lower() in [
                 "ocr",
                 "formula",

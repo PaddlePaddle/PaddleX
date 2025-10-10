@@ -374,6 +374,46 @@ class DocVLMPredictor(BasePredictor):
         }
         return rst_dict
 
+    def crop_margin(self, img):  # 输入是OpenCV图像 (numpy数组)
+        import cv2
+
+        # 如果输入是彩色图像，转换为灰度图
+        if len(img.shape) == 3:
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        else:
+            gray = img.copy()
+
+        # 转换为0-255范围（确保是uint8类型）
+        if gray.dtype != np.uint8:
+            gray = gray.astype(np.uint8)
+
+        max_val = gray.max()
+        min_val = gray.min()
+
+        if max_val == min_val:
+            return img
+
+        # 归一化并二值化（与PIL版本逻辑一致）
+        data = (gray - min_val) / (max_val - min_val) * 255
+        data = data.astype(np.uint8)
+
+        # 创建二值图像（暗色区域为白色，亮色区域为黑色）
+        _, binary = cv2.threshold(data, 200, 255, cv2.THRESH_BINARY_INV)
+
+        # 查找非零像素坐标
+        coords = cv2.findNonZero(binary)
+
+        if coords is None:  # 如果没有找到任何内容，返回原图
+            return img
+
+        # 获取边界框
+        x, y, w, h = cv2.boundingRect(coords)
+
+        # 裁剪图像
+        cropped = img[y : y + h, x : x + w]
+
+        return cropped
+
     def _genai_client_process(
         self,
         data,
@@ -389,6 +429,9 @@ class DocVLMPredictor(BasePredictor):
 
         def _process(item):
             image = item["image"]
+            prompt = item["query"]
+            if prompt == "Formula Recognition:":
+                image = self.crop_margin(image)
             if isinstance(image, str):
                 if image.startswith("http://") or image.startswith("https://"):
                     image_url = image

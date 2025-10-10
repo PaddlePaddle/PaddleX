@@ -11,8 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import html
 import itertools
+import math
 import re
 from collections import Counter
 from copy import deepcopy
@@ -33,37 +35,28 @@ def filter_overlap_boxes(
     layout_det_res: Dict[str, List[Dict]]
 ) -> Dict[str, List[Dict]]:
     """
-    Filter out overlapping boxes from layout detection results based on overlap ratio.
+    Remove overlapping boxes from layout detection results based on a given overlap ratio.
 
     Args:
-        layout_det_res (Dict[str, List[Dict]]): Dictionary containing detection results with 'boxes' key.
+        layout_det_res (Dict[str, List[Dict]]): Layout detection result dict containing a 'boxes' list.
 
     Returns:
-        Dict[str, List[Dict]]: Filtered layout detection results with overlapping boxes removed.
+        Dict[str, List[Dict]]: Filtered dict with overlapping boxes removed.
     """
-    layout_det_res_filted = deepcopy(layout_det_res)
+    layout_det_res_filtered = deepcopy(layout_det_res)
     boxes = [
-        box for box in layout_det_res_filted["boxes"] if box["label"] != "reference"
+        box for box in layout_det_res_filtered["boxes"] if box["label"] != "reference"
     ]
     dropped_indexes = set()
 
-    # Iterate over each pair of boxes to find overlaps
     for i in range(len(boxes)):
         for j in range(i + 1, len(boxes)):
-            # Skip boxes that are already marked for removal
             if i in dropped_indexes or j in dropped_indexes:
                 continue
-
-            # Calculate the overlap ratio
             overlap_ratio = calculate_overlap_ratio(
                 boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
             )
-
-            # If overlap ratio is significant, mark one of the boxes for removal
-            if (
-                overlap_ratio > 0.7
-            ):  # Assuming 1 is the threshold for significant overlap
-                # Here we are assuming higher score is preferable, you might want to adjust this logic
+            if overlap_ratio > 0.7:
                 box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
                 box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
                 if (
@@ -74,125 +67,52 @@ def filter_overlap_boxes(
                     dropped_indexes.add(j)
                 else:
                     dropped_indexes.add(i)
-
-    # Remove marked boxes
-    layout_det_res_filted["boxes"] = [
+    layout_det_res_filtered["boxes"] = [
         box for idx, box in enumerate(boxes) if idx not in dropped_indexes
     ]
-
-    return layout_det_res_filted
-
-
-# def merge_images(images):
-#     """
-#     Merge a list of images (np.array) into a single image (PIL.Image).
-#     """
-#     if not images:
-#         return None
-
-#     # Calculate total height and max width
-#     total_height = sum(
-#         image.shape[0] for image in images
-#     )  # image.shape[0] is the height
-#     max_width = max(image.shape[1] for image in images)  # image.shape[1] is the width
-
-#     # Create a new blank image with white background
-#     new_image = Image.new("RGB", (max_width, total_height), (255, 255, 255))
-
-#     current_height = 0
-#     for image in images:
-#         pil_image = Image.fromarray(image)  # Convert np.array to PIL.Image
-#         x_offset = (max_width - pil_image.width) // 2
-#         new_image.paste(pil_image, (x_offset, current_height))
-#         current_height += pil_image.height
-
-#     return np.array(new_image)
-
-# def merge_blocks(blocks, non_merge_labels):
-#     current_group_images = []
-#     group_index = 0  # 当前合并组起始下标
-
-#     for i, block in enumerate(blocks):
-#         block_img = block["img"]
-#         block_bbox = block["box"]
-#         block_label = block["label"]
-
-#         # non_merge_labels 内的直接跳过，不做合并
-#         if block_label in non_merge_labels:
-#             if current_group_images:
-#                 merged_image = merge_images(current_group_images)
-#                 for j in range(group_index, i):
-#                     if j == group_index:
-#                         blocks[j]["img"] = merged_image
-#                     else:
-#                         blocks[j]["img"] = None
-#                 current_group_images = []
-#             # 非合并块自己保留
-#             blocks[i]["img"] = block_img
-#             group_index = i + 1
-#             continue
-
-#         # 第一个可合并块，启动新group
-#         if not current_group_images:
-#             current_group_images = [block_img]
-#             group_index = i
-#             continue
-
-#         # cross判断逻辑
-#         prev_block = blocks[i - 1]
-#         prev_bbox = prev_block["box"]
-#         prev_label = prev_block["label"]
-
-#         # 只合并cross：无水平投影重叠 + 下一个block在右侧 + label相同
-#         iou = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
-#         is_cross = (
-#             iou == 0
-#             and block_label == prev_label
-#             and block_bbox[0] > prev_bbox[2]  # 当前左边界大于前一个右边界
-#         )
-
-#         if is_cross:
-#             current_group_images.append(block_img)
-#         else:
-#             # 只在 cross 合并，其他情况直接分组，当前block自成一组
-#             if len(current_group_images) > 1:
-#                 merged_image = merge_images(current_group_images)
-#                 for j in range(group_index, i):
-#                     if j == group_index:
-#                         blocks[j]["img"] = merged_image
-#                     else:
-#                         blocks[j]["img"] = None
-#             else:
-#                 # 只有一个，不需要合并
-#                 blocks[group_index]["img"] = current_group_images[0]
-
-#             group_index = i
-#             current_group_images = [block_img]
-
-#     # 处理最后一组
-#     if current_group_images:
-#         if len(current_group_images) > 1:
-#             merged_image = merge_images(current_group_images)
-#             for j in range(group_index, len(blocks)):
-#                 if j == group_index:
-#                     blocks[j]["img"] = merged_image
-#                 else:
-#                     blocks[j]["img"] = None
-#         else:
-#             blocks[group_index]["img"] = current_group_images[0]
-
-#     return blocks
+    return layout_det_res_filtered
 
 
 def to_pil_image(img):
-    return img if isinstance(img, Image.Image) else Image.fromarray(img)
+    """
+    Convert the input to a PIL Image.
+
+    Args:
+        img (PIL.Image or numpy.ndarray): Input image.
+
+    Returns:
+        PIL.Image: PIL Image object.
+    """
+    if isinstance(img, Image.Image):
+        return img
+    return Image.fromarray(img)
 
 
 def to_np_array(img):
-    return np.array(img) if isinstance(img, Image.Image) else img
+    """
+    Convert the input to a numpy array.
+
+    Args:
+        img (PIL.Image or numpy.ndarray): Input image.
+
+    Returns:
+        numpy.ndarray: Numpy array image.
+    """
+    if isinstance(img, Image.Image):
+        return np.array(img)
+    return img
 
 
 def calc_merged_wh(images):
+    """
+    Calculate width (max of all) and height (sum) for a vertical merge of images.
+
+    Args:
+        images (List[PIL.Image or np.ndarray]): List of images.
+
+    Returns:
+        Tuple[int, int]: (width, height) of merged image.
+    """
     widths = [to_pil_image(img).width for img in images]
     heights = [to_pil_image(img).height for img in images]
     w = max(widths)
@@ -202,18 +122,23 @@ def calc_merged_wh(images):
 
 def merge_images(images, aligns="center"):
     """
-    Merge a list of images (np.array or PIL.Image) into a single image (np.array).
-    aligns: 单个字符串或list，比如["left", "center"]，每步指定对齐方式。
+    Merge images vertically with given alignment.
+
+    Args:
+        images (List[PIL.Image or np.ndarray]): List of images to merge.
+        aligns (str or List[str]): Alignment(s) for each merge step ('center', 'right', 'left').
+
+    Returns:
+        np.ndarray: Merged image as numpy array.
     """
     if not images:
         return None
     if len(images) == 1:
         return to_np_array(images[0])
-    # aligns参数标准化
     if isinstance(aligns, str):
         aligns = [aligns] * (len(images) - 1)
     if len(aligns) != len(images) - 1:
-        raise ValueError("aligns长度需等于images数量减一")
+        raise ValueError("The length of aligns must be len(images) - 1")
     merged = to_pil_image(images[0])
     for i in range(1, len(images)):
         img2 = to_pil_image(images[i])
@@ -236,6 +161,16 @@ def merge_images(images, aligns="center"):
 
 
 def merge_blocks(blocks, non_merge_labels):
+    """
+    Merge blocks based on alignment and overlap logic, except for those with labels in non_merge_labels.
+
+    Args:
+        blocks (List[Dict]): List of block dicts.
+        non_merge_labels (List[str]): Block labels that should not be merged.
+
+    Returns:
+        List[Dict]: List of processed (and possibly merged) blocks.
+    """
     blocks_to_merge = []
     non_merge_blocks = {}
     for idx, block in enumerate(blocks):
@@ -349,12 +284,8 @@ def merge_blocks(blocks, non_merge_labels):
                 imgs = [blocks[i]["img"] for i in group_indices]
                 merge_aligns = aligns if aligns else []
                 w, h = calc_merged_wh(imgs)
-                if h == 0 or w == 0:
-                    aspect_ratio = float("inf")
-                else:
-                    aspect_ratio = h / w
+                aspect_ratio = h / w if w != 0 else float("inf")
                 if aspect_ratio >= 3:
-                    # 不合并，分别处理
                     for j, block_idx in enumerate(group_indices):
                         block = blocks[block_idx].copy()
                         block["img"] = blocks[block_idx]["img"]
@@ -369,7 +300,6 @@ def merge_blocks(blocks, non_merge_labels):
                         block["merge_aligns"] = merge_aligns if j == 0 else None
                         result_blocks.append(block)
                         used_indices.add(block_idx)
-                # 插入组内 non_merge 块
                 insert_list = []
                 for n_idx in range(start + 1, end):
                     if n_idx in non_merge_blocks:
@@ -385,52 +315,58 @@ def merge_blocks(blocks, non_merge_labels):
             result_blocks.append(non_merge_blocks[idx])
             used_indices.add(idx)
         idx += 1
-
     return result_blocks
 
 
 def paint_token(image, box, token_str):
     """
-    image: numpy.ndarray, 图像
-    box: (x1, y1, x2, y2), 填充的矩形区域
-    token: str, 要写入的内容
-    返回: 修改后的图像
+    Fill a rectangular area in the image with a white background and write the given token string.
+
+    Args:
+        image (np.ndarray): Image to paint on.
+        box (tuple): (x1, y1, x2, y2) coordinates of rectangle.
+        token_str (str): Token string to write.
+
+    Returns:
+        np.ndarray: Modified image.
     """
     import cv2
 
-    x1, y1, x2, y2 = [int(v) for v in box]
-    img = image.copy()
-    # 填充白色
-    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255, 255, 255), thickness=-1)
+    def get_optimal_font_scale(text, fontFace, square_size, fill_ratio=0.9):
+        # the scale is greater than 0.2 and less than 10,
+        # suitable for square_size is greater than 30 and less than 1000
+        left, right = 0.2, 10
+        optimal_scale = left
+        # search the optimal font scale
+        while right - left > 1e-2:
+            mid = (left + right) / 2
+            (w, h), _ = cv2.getTextSize(text, fontFace, mid, thickness=1)
+            if w < square_size * fill_ratio and h < square_size * fill_ratio:
+                optimal_scale = mid
+                left = mid
+            else:
+                right = mid
+        return optimal_scale, w, h
 
-    # 计算区域宽高
+    x1, y1, x2, y2 = [int(v) for v in box]
     box_w = x2 - x1
     box_h = y2 - y1
 
-    # 自动调整字体大小，使文本不会超出box
+    img = image.copy()
+    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255, 255, 255), thickness=-1)
+
+    # automatically set scale and thickness according to length of the shortest side
     font = cv2.FONT_HERSHEY_SIMPLEX
-    font_scale = 1.0
-    font_thickness = 2
+    thickness_scale_ratio = 4
+    font_scale, text_w, text_h = get_optimal_font_scale(
+        token_str, font, min(box_w, box_h), fill_ratio=0.9
+    )
+    font_thickness = max(1, math.floor(font_scale * thickness_scale_ratio))
 
-    # 先尝试较大的字体，再逐步减小
-    while font_scale > 0:
-        (text_w, text_h), baseline = cv2.getTextSize(
-            token_str, font, font_scale, font_thickness
-        )
-        if text_w <= box_w * 0.9 and text_h + baseline <= box_h * 0.9:
-            break
-        font_scale -= 0.1
-    if font_scale <= 0:  # 还是放不下，缩小到最小
-        font_scale = 0.2
-        (text_w, text_h), baseline = cv2.getTextSize(
-            token_str, font, font_scale, font_thickness
-        )
-
-    # 计算文本左下角坐标，使其居中
+    # calculate center coordinates of the patinting text
     text_x = x1 + (box_w - text_w) // 2
     text_y = y1 + (box_h + text_h) // 2
 
-    # 画文本
     cv2.putText(
         img,
         token_str,
@@ -441,11 +377,24 @@ def paint_token(image, box, token_str):
         font_thickness,
         lineType=cv2.LINE_AA,
     )
-
     return img
 
 
 def tokenize_figure_of_table(table_block_img, table_box, figures):
+    """
+    Replace figures in a table area with tokens, return new image and token map.
+
+    Args:
+        table_block_img (np.ndarray): Table image.
+        table_box (list): Table bounding box [x_min, y_min, x_max, y_max].
+        figures (List[Dict]): List of figure dicts (must contain 'coordinate', 'path').
+
+    Returns:
+        Tuple[np.ndarray, Dict[str, str], List[str]]:
+            - New table image,
+            - Token-to-img HTML map,
+            - List of figure paths dropped.
+    """
     import random
 
     random.seed(1024)
@@ -462,6 +411,10 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
             and figure_x_max <= table_x_max
             and figure_y_max <= table_y_max
         ):
+            drop_idxes.append(figure_id)
+            # the figure is too small to can't be tokenized and recognized when shortest length is less than 25
+            if min(figure_x_max - figure_x_min, figure_y_max - figure_y_min) < 25:
+                continue
             draw_box = [
                 figure_x_min - table_x_min,
                 figure_y_min - table_y_min,
@@ -471,12 +424,22 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
             token_str = "[F" + str(random_map[figure_id]) + "]"
             table_block_img = paint_token(table_block_img, draw_box, token_str)
             token_map[token_str] = f'<img src="{figure["path"]}" >'
-            drop_idxes.append(figure_id)
     drop_figures = [f["path"] for i, f in enumerate(figures) if i in drop_idxes]
     return table_block_img, token_map, drop_figures
 
 
 def untokenize_figure_of_table(table_res_str, figure_token_map):
+    """
+    Replace tokens in a string with their HTML image equivalents.
+
+    Args:
+        table_res_str (str): Table string with tokens.
+        figure_token_map (dict): Mapping from tokens to HTML img tags.
+
+    Returns:
+        str: Untokenized string.
+    """
+
     def repl(match):
         token_id = match.group(1)
         token = f"[F{token_id}]"
@@ -487,8 +450,21 @@ def untokenize_figure_of_table(table_res_str, figure_token_map):
 
 
 class TableCell(BaseModel):
-    """Table
-    Cell."""
+    """
+    TableCell represents a single cell in a table.
+
+    Attributes:
+        row_span (int): Number of rows spanned.
+        col_span (int): Number of columns spanned.
+        start_row_offset_idx (int): Start row index.
+        end_row_offset_idx (int): End row index (exclusive).
+        start_col_offset_idx (int): Start column index.
+        end_col_offset_idx (int): End column index (exclusive).
+        text (str): Cell text content.
+        column_header (bool): Whether this cell is a column header.
+        row_header (bool): Whether this cell is a row header.
+        row_section (bool): Whether this cell is a row section.
+    """
 
     row_span: int = 1
     col_span: int = 1
@@ -504,16 +480,17 @@ class TableCell(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def from_dict_format(cls, data: Any) -> Any:
-        """from_dict_format."""
+        """
+        Create TableCell from dict, extracting 'text' property correctly.
+
+        Args:
+            data (Any): Input data.
+
+        Returns:
+            Any: TableCell-compatible dict.
+        """
         if isinstance(data, Dict):
-            # Check if this is a native BoundingBox or a bbox from docling-ibm-models
-            if (
-                # "bbox" not in data
-                # or data["bbox"] is None
-                # or isinstance(data["bbox"], BoundingBox)
-                "text"
-                in data
-            ):
+            if "text" in data:
                 return data
             text = data["bbox"].get("token", "")
             if not len(text):
@@ -521,15 +498,20 @@ class TableCell(BaseModel):
                 if text_cells:
                     for el in text_cells:
                         text += el["token"] + " "
-
                 text = text.strip()
             data["text"] = text
-
         return data
 
 
-class TableData(BaseModel):  # TBD
-    """BaseTableData."""
+class TableData(BaseModel):
+    """
+    TableData holds a table's cells, row and column counts, and provides a grid property.
+
+    Attributes:
+        table_cells (List[TableCell]): List of table cells.
+        num_rows (int): Number of rows.
+        num_cols (int): Number of columns.
+    """
 
     table_cells: List[TableCell] = []
     num_rows: int = 0
@@ -537,11 +519,13 @@ class TableData(BaseModel):  # TBD
 
     @computed_field
     @property
-    def grid(
-        self,
-    ) -> List[List[TableCell]]:
-        """grid."""
-        # Initialise empty table data grid (only empty cells)
+    def grid(self) -> List[List[TableCell]]:
+        """
+        Returns a 2D grid of TableCell objects for the table.
+
+        Returns:
+            List[List[TableCell]]: Table as 2D grid.
+        """
         table_data = [
             [
                 TableCell(
@@ -555,8 +539,6 @@ class TableData(BaseModel):  # TBD
             ]
             for i in range(self.num_rows)
         ]
-
-        # Overwrite cells in table data for which there is actual cell content.
         for cell in self.table_cells:
             for i in range(
                 min(cell.start_row_offset_idx, self.num_rows),
@@ -567,13 +549,10 @@ class TableData(BaseModel):  # TBD
                     min(cell.end_col_offset_idx, self.num_cols),
                 ):
                     table_data[i][j] = cell
-
         return table_data
 
 
-"""
-OTSL
-"""
+# OTSL tag constants
 OTSL_NL = "<nl>"
 OTSL_FCEL = "<fcel>"
 OTSL_ECEL = "<ecel>"
@@ -588,28 +567,37 @@ OTSL_FIND_PATTERN = re.compile(
 
 
 def otsl_extract_tokens_and_text(s: str):
-    # Pattern to match anything enclosed by < >
-    # (including the angle brackets themselves)
-    # pattern = r"(<[^>]+>)"
+    """
+    Extract OTSL tags and text parts from the input string.
+
+    Args:
+        s (str): OTSL string.
+
+    Returns:
+        Tuple[List[str], List[str]]: (tokens, text_parts)
+    """
     pattern = (
         r"("
         + r"|".join([OTSL_NL, OTSL_FCEL, OTSL_ECEL, OTSL_LCEL, OTSL_UCEL, OTSL_XCEL])
         + r")"
     )
-    # Find all tokens (e.g. "<otsl>", "<loc_140>", etc.)
     tokens = re.findall(pattern, s)
-    # Remove any tokens that start with "<loc_"
-    tokens = [token for token in tokens]
-    # Split the string by those tokens to get the in-between text
     text_parts = re.split(pattern, s)
-    text_parts = [token for token in text_parts]
-    # Remove any empty or purely whitespace strings from text_parts
-    text_parts = [part for part in text_parts if part.strip()]
-
+    text_parts = [token for token in text_parts if token.strip()]
     return tokens, text_parts
 
 
 def otsl_parse_texts(texts, tokens):
+    """
+    Parse OTSL text and tags into TableCell objects and tag structure.
+
+    Args:
+        texts (List[str]): List of tokens and text.
+        tokens (List[str]): List of OTSL tags.
+
+    Returns:
+        Tuple[List[TableCell], List[List[str]]]: (table_cells, split_row_tokens)
+    """
     split_word = OTSL_NL
     split_row_tokens = [
         list(y)
@@ -620,21 +608,16 @@ def otsl_parse_texts(texts, tokens):
     r_idx = 0
     c_idx = 0
 
-    # Check and complete the matrix
+    # Ensure matrix completeness
     if split_row_tokens:
         max_cols = max(len(row) for row in split_row_tokens)
-
-        # Insert additional <ecel> to tags
-        for row_idx, row in enumerate(split_row_tokens):
+        for row in split_row_tokens:
             while len(row) < max_cols:
                 row.append(OTSL_ECEL)
-
-        # Insert additional <ecel> to texts
         new_texts = []
         text_idx = 0
-
-        for row_idx, row in enumerate(split_row_tokens):
-            for col_idx, token in enumerate(row):
+        for row in split_row_tokens:
+            for token in row:
                 new_texts.append(token)
                 if text_idx < len(texts) and texts[text_idx] == token:
                     text_idx += 1
@@ -648,11 +631,9 @@ def otsl_parse_texts(texts, tokens):
                     ]:
                         new_texts.append(texts[text_idx])
                         text_idx += 1
-
             new_texts.append(OTSL_NL)
             if text_idx < len(texts) and texts[text_idx] == OTSL_NL:
                 text_idx += 1
-
         texts = new_texts
 
     def count_right(tokens, c_idx, r_idx, which_tokens):
@@ -677,10 +658,7 @@ def otsl_parse_texts(texts, tokens):
 
     for i, text in enumerate(texts):
         cell_text = ""
-        if text in [
-            OTSL_FCEL,
-            OTSL_ECEL,
-        ]:
+        if text in [OTSL_FCEL, OTSL_ECEL]:
             row_span = 1
             col_span = 1
             right_offset = 1
@@ -688,38 +666,21 @@ def otsl_parse_texts(texts, tokens):
                 cell_text = texts[i + 1]
                 right_offset = 2
 
-            # Check next element(s) for lcel / ucel / xcel,
-            # set properly row_span, col_span
-            next_right_cell = ""
-            if i + right_offset < len(texts):
-                next_right_cell = texts[i + right_offset]
-
+            next_right_cell = (
+                texts[i + right_offset] if i + right_offset < len(texts) else ""
+            )
             next_bottom_cell = ""
             if r_idx + 1 < len(split_row_tokens):
                 if c_idx < len(split_row_tokens[r_idx + 1]):
                     next_bottom_cell = split_row_tokens[r_idx + 1][c_idx]
 
-            if next_right_cell in [
-                OTSL_LCEL,
-                OTSL_XCEL,
-            ]:
-                # we have horisontal spanning cell or 2d spanning cell
+            if next_right_cell in [OTSL_LCEL, OTSL_XCEL]:
                 col_span += count_right(
-                    split_row_tokens,
-                    c_idx + 1,
-                    r_idx,
-                    [OTSL_LCEL, OTSL_XCEL],
+                    split_row_tokens, c_idx + 1, r_idx, [OTSL_LCEL, OTSL_XCEL]
                 )
-            if next_bottom_cell in [
-                OTSL_UCEL,
-                OTSL_XCEL,
-            ]:
-                # we have a vertical spanning cell or 2d spanning cell
+            if next_bottom_cell in [OTSL_UCEL, OTSL_XCEL]:
                 row_span += count_down(
-                    split_row_tokens,
-                    c_idx,
-                    r_idx + 1,
-                    [OTSL_UCEL, OTSL_XCEL],
+                    split_row_tokens, c_idx, r_idx + 1, [OTSL_UCEL, OTSL_XCEL]
                 )
 
             table_cells.append(
@@ -733,13 +694,7 @@ def otsl_parse_texts(texts, tokens):
                     end_col_offset_idx=c_idx + col_span,
                 )
             )
-        if text in [
-            OTSL_FCEL,
-            OTSL_ECEL,
-            OTSL_LCEL,
-            OTSL_UCEL,
-            OTSL_XCEL,
-        ]:
+        if text in [OTSL_FCEL, OTSL_ECEL, OTSL_LCEL, OTSL_UCEL, OTSL_XCEL]:
             c_idx += 1
         if text == OTSL_NL:
             r_idx += 1
@@ -748,145 +703,130 @@ def otsl_parse_texts(texts, tokens):
 
 
 def export_to_html(table_data: TableData):
+    """
+    Export TableData to HTML table.
+
+    Args:
+        table_data (TableData): TableData object.
+
+    Returns:
+        str: HTML string.
+    """
     nrows = table_data.num_rows
     ncols = table_data.num_cols
-
-    text = ""
-
     if len(table_data.table_cells) == 0:
         return ""
-
     body = ""
-
     grid = table_data.grid
     for i in range(nrows):
         body += "<tr>"
         for j in range(ncols):
             cell: TableCell = grid[i][j]
-
-            rowspan, rowstart = (
-                cell.row_span,
-                cell.start_row_offset_idx,
-            )
-            colspan, colstart = (
-                cell.col_span,
-                cell.start_col_offset_idx,
-            )
-
-            if rowstart != i:
+            rowspan, rowstart = (cell.row_span, cell.start_row_offset_idx)
+            colspan, colstart = (cell.col_span, cell.start_col_offset_idx)
+            if rowstart != i or colstart != j:
                 continue
-            if colstart != j:
-                continue
-
             content = html.escape(cell.text.strip())
-            celltag = "td"
-            if cell.column_header:
-                celltag = "th"
-
+            celltag = "th" if cell.column_header else "td"
             opening_tag = f"{celltag}"
             if rowspan > 1:
                 opening_tag += f' rowspan="{rowspan}"'
             if colspan > 1:
                 opening_tag += f' colspan="{colspan}"'
-
             body += f"<{opening_tag}>{content}</{celltag}>"
         body += "</tr>"
-
     body = f"<table>{body}</table>"
     return body
 
 
 def otsl_pad_to_sqr_v2(otsl_str: str) -> str:
+    """
+    Pad OTSL string to a square (rectangular) format, ensuring each row has equal number of cells.
 
+    Args:
+        otsl_str (str): OTSL string.
+
+    Returns:
+        str: Padded OTSL string.
+    """
     assert isinstance(otsl_str, str)
-
     otsl_str = otsl_str.strip()
     if OTSL_NL not in otsl_str:
-        # NOTE 直接当单行表格处理
         return otsl_str + OTSL_NL
-
     lines = otsl_str.split(OTSL_NL)
-
     row_data = []
     for line in lines:
         if not line:
             continue
-
-        # NOTE 拆成单元格表达形式
         raw_cells = OTSL_FIND_PATTERN.findall(line)
         if not raw_cells:
             continue
-
-        total_len = len(raw_cells)  # NOTE 当前行的整体单元格数量
-        # NOTE 需要计算出该行允许的最小单元格数量
+        total_len = len(raw_cells)
         min_len = 0
         for i, cell_str in enumerate(raw_cells):
             if cell_str.startswith(OTSL_FCEL):
                 min_len = i + 1
-
         row_data.append(
             {"raw_cells": raw_cells, "total_len": total_len, "min_len": min_len}
         )
-
     if not row_data:
         return OTSL_NL
-
     global_min_width = max(row["min_len"] for row in row_data) if row_data else 0
     max_total_len = max(row["total_len"] for row in row_data) if row_data else 0
-
     search_start = global_min_width
     search_end = max(global_min_width, max_total_len)
-
     min_total_cost = float("inf")
-    optimal_width = search_end  # NOTE 默认需要补充到最大长度
+    optimal_width = search_end
 
     for width in range(search_start, search_end + 1):
         current_total_cost = sum(abs(row["total_len"] - width) for row in row_data)
-
         if current_total_cost < min_total_cost:
             min_total_cost = current_total_cost
             optimal_width = width
 
-    # NOTE 基于 optimal_width 重建表格
     repaired_lines = []
     for row in row_data:
         cells = row["raw_cells"]
         current_len = len(cells)
-
-        if current_len > optimal_width:  # NOTE 末尾安全截断
+        if current_len > optimal_width:
             new_cells = cells[:optimal_width]
-        else:  # NOTE 补充
+        else:
             padding = [OTSL_ECEL] * (optimal_width - current_len)
             new_cells = cells + padding
-
         repaired_lines.append("".join(new_cells))
-
     return OTSL_NL.join(repaired_lines) + OTSL_NL
 
 
 def convert_otsl_to_html(otsl_content: str):
-    """NOTE otsl v1.0转换成html，只能有6个tag: <fcel>, <ecel>, <nl>, <lcel>, <ucel>, <xcel>
+    """
+    Convert OTSL-v1.0 string to HTML. Only 6 tags allowed: <fcel>, <ecel>, <nl>, <lcel>, <ucel>, <xcel>.
 
-    注意点：
-        1. <fcel>之后一定有内容，ecel之后一定没内容，否则会引入乱码
+    Args:
+        otsl_content (str): OTSL string.
+
+    Returns:
+        str: HTML table.
     """
     otsl_content = otsl_pad_to_sqr_v2(otsl_content)
     tokens, mixed_texts = otsl_extract_tokens_and_text(otsl_content)
     table_cells, split_row_tokens = otsl_parse_texts(mixed_texts, tokens)
-
     table_data = TableData(
         num_rows=len(split_row_tokens),
         num_cols=(max(len(row) for row in split_row_tokens) if split_row_tokens else 0),
         table_cells=table_cells,
     )
-
     return export_to_html(table_data)
 
 
 def find_shortest_repeating_substring(s: str) -> str | None:
     """
-    Finds the shortest repeating substring that constitutes the ENTIRE string s.
-    e.g., s='abcabcabc' returns 'abc'. s='abab' returns 'ab'. s='abca' returns None.
+    Find the shortest substring that repeats to form the entire string.
+
+    Args:
+        s (str): Input string.
+
+    Returns:
+        str or None: Shortest repeating substring, or None if not found.
     """
     n = len(s)
     for i in range(1, n // 2 + 1):
@@ -897,36 +837,28 @@ def find_shortest_repeating_substring(s: str) -> str | None:
     return None
 
 
-# --- NEW FUNCTION: Detects repeating phrases at the end of a string ---
 def find_repeating_suffix(
     s: str, min_len: int = 8, min_repeats: int = 5
 ) -> Tuple[str, str, int] | None:
     """
-    Finds if a string ends with a repeating phrase.
-    e.g., s='start...phrase,phrase,phrase,' returns ('start...', 'phrase,', 3)
+    Detect if string ends with a repeating phrase.
 
     Args:
-        s (str): The input string.
-        min_len (int): The minimum length of the repeating unit to consider.
-        min_repeats (int): The minimum number of repetitions to trigger truncation.
+        s (str): Input string.
+        min_len (int): Minimum length of unit.
+        min_repeats (int): Minimum repeat count.
 
     Returns:
-        A tuple (prefix, unit, count) if a repeating suffix is found, otherwise None.
+        Tuple[str, str, int] or None: (prefix, unit, count) if found, else None.
     """
-    # Iterate through possible lengths of the repeating unit, from longest to shortest.
     for i in range(len(s) // (min_repeats), min_len - 1, -1):
         unit = s[-i:]
-
-        # Quick check: does the string end with the unit repeated at least min_repeats times?
         if s.endswith(unit * min_repeats):
-            # If so, find the exact number of repetitions
             count = 0
             temp_s = s
             while temp_s.endswith(unit):
                 temp_s = temp_s[:-i]
                 count += 1
-
-            # Return the non-repeating prefix, the unit, and its count
             start_index = len(s) - (count * i)
             return s[:start_index], unit, count
     return None
@@ -934,54 +866,49 @@ def find_repeating_suffix(
 
 def truncate_repetitive_content(
     content: str, line_threshold: int = 10, char_threshold: int = 10, min_len: int = 10
-) -> (str, str):
+) -> str:
     """
-    Intelligently detects and truncates character, phrase, or line-level repetitive content.
-    This version uses a more aggressive strategy for suffix repetition: it deletes the entire repeating part.
+    Detect and truncate character-level, phrase-level, or line-level repetition in content.
+
+    Args:
+        content (str): Input text.
+        line_threshold (int): Min lines for line-level truncation.
+        char_threshold (int): Min repeats for char-level truncation.
+        min_len (int): Min length for char-level check.
+
+    Returns:
+        Tuple[str, str]: (truncated_content, info_string)
     """
     stripped_content = content.strip()
     if not stripped_content:
-        return content, ""
+        return content
 
-    # --- MODIFIED LOGIC with AGGRESSIVE DELETION ---
-    # Priority 1: Check for phrase-level suffix repetition in single, long lines.
+    # Priority 1: Phrase-level suffix repetition in long single lines.
     if "\n" not in stripped_content and len(stripped_content) > 100:
         suffix_match = find_repeating_suffix(stripped_content, min_len=8, min_repeats=5)
         if suffix_match:
             prefix, repeating_unit, count = suffix_match
-            # Ensure the repeating part is a significant portion of the whole string
             if len(repeating_unit) * count > len(stripped_content) * 0.5:
-                # The log message is updated to reflect the new action
-                truncated_info = f"[截断信息: 检测到单行内短语重复，'{repeating_unit}' 在末尾连续出现 {count} 次，已将重复部分完全删除。]"
-                # Return ONLY the non-repeating prefix
-                return prefix, truncated_info
-    # --- END of MODIFIED LOGIC ---
+                return prefix
 
-    # Priority 2: Check for full-string character-level repetition (e.g., 'ababab')
-    # For this type, keeping one unit is still reasonable (e.g., '----' -> '-')
+    # Priority 2: Full-string character-level repetition (e.g., 'ababab')
     if "\n" not in stripped_content and len(stripped_content) > min_len:
         repeating_unit = find_shortest_repeating_substring(stripped_content)
         if repeating_unit:
             count = len(stripped_content) // len(repeating_unit)
             if count >= char_threshold:
-                truncated_info = f"[截断信息: 检测到字符级重复，'{repeating_unit}' 共出现 {count} 次，已合并为一次。]"
-                return repeating_unit, truncated_info
+                return repeating_unit
 
-    # Priority 3: Check for line-level repetition (e.g., the same line repeated many times)
-    # For this type as well, keeping one line is often the desired behavior
+    # Priority 3: Line-level repetition (e.g., same line repeated many times)
     lines = [line.strip() for line in content.split("\n") if line.strip()]
     if not lines:
-        return content, ""
-
+        return content
     total_lines = len(lines)
     if total_lines < line_threshold:
-        return content, ""
-
+        return content
     line_counts = Counter(lines)
     most_common_line, count = line_counts.most_common(1)[0]
-
     if count >= line_threshold and (count / total_lines) >= 0.8:
-        truncated_info = f"[截断信息: 检测到行级重复，'{most_common_line}' 共出现 {count} 次，已合并为一次。]"
-        return most_common_line, truncated_info
+        return most_common_line
 
-    return content, ""
+    return content

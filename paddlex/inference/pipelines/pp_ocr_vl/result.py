@@ -56,16 +56,31 @@ class PPOCRVLBlock(object):
         self.image = None
 
     def __str__(self) -> str:
+        """
+        Return a string representation of the block.
+        """
         _str = f"\n\n#################\nlabel:\t{self.label}\nbbox:\t{self.bbox}\ncontent:\t{self.content}\n#################"
         return _str
 
     def __repr__(self) -> str:
+        """
+        Return a string representation of the block.
+        """
         _str = f"\n\n#################\nlabel:\t{self.label}\nbbox:\t{self.bbox}\ncontent:\t{self.content}\n#################"
         return _str
 
 
 def get_text_width(font, text):
-    # Pillow 8.0+ 有 getlength
+    """
+    Get the width of the text with the given font.
+
+    Args:
+        font: The font used for measurement.
+        text: The text to measure.
+
+    Returns:
+        int: The width of the text.
+    """
     if hasattr(font, "getlength"):
         return font.getlength(text)
     elif hasattr(font, "getbbox"):
@@ -76,7 +91,15 @@ def get_text_width(font, text):
 
 
 def get_text_height(font):
-    # 字体高度
+    """
+    Get the height of the font.
+
+    Args:
+        font: The font used for measurement.
+
+    Returns:
+        int: The height of the font.
+    """
     if hasattr(font, "getbbox"):
         bbox = font.getbbox("A")
         return bbox[3] - bbox[1]
@@ -84,57 +107,103 @@ def get_text_height(font):
         return font.getsize("A")[1]
 
 
+def get_text_size(font, text):
+    """
+    Get the width and height of the text with the given font.
+
+    Args:
+        font: The font used for measurement.
+        text: The text to measure.
+
+    Returns:
+        tuple: (width, height) of the text bounding box.
+    """
+    dummy_img = Image.new("RGB", (10, 10))
+    draw = ImageDraw.Draw(dummy_img)
+    bbox = draw.textbbox((0, 0), text, font=font)
+    width = bbox[2] - bbox[0]
+    height = bbox[3] - bbox[1]
+    return width, height
+
+
+def wrap_text_by_width(text, font, max_width):
+    """
+    Wrap text by maximum width line by line, supporting mixed Chinese and English text.
+    Checks width character by character.
+
+    Args:
+        text: The input text to wrap.
+        font: The font used for width calculation.
+        max_width: The maximum width allowed for each line.
+
+    Returns:
+        list: A list of text lines after wrapping.
+    """
+    lines = []
+    line = ""
+    for char in text:
+        if char == "\n":
+            lines.append(line)
+            line = ""
+            continue
+        test_line = line + char
+        w, _ = get_text_size(font, test_line)
+        if w <= max_width:
+            line = test_line
+        else:
+            if line:
+                lines.append(line)
+            line = char
+    if line:
+        lines.append(line)
+    return lines
+
+
 def create_image_with_text(
-    image_array, result, font_path, initial_font_size=20, line_spacing=4
+    image_array, result, font_path, initial_font_size=20, line_spacing=4, margin=2
 ):
+    """
+    Create a new image with original image on the left and text area on the right.
+    Text will be automatically wrapped and displayed completely with adjustable font size.
+
+    Args:
+        image_array: Input image array (numpy format).
+        result: The text content to be displayed.
+        font_path: Path to the font file.
+        initial_font_size: Starting font size (default: 20).
+        line_spacing: Spacing between lines (default: 4).
+        margin: Margin around the text area (default: 5).
+
+    Returns:
+        PIL.Image: The combined image with original image and text.
+    """
     return image_array
-    # 将输入的 NumPy 数组转换为 PIL 图像
     image = Image.fromarray(image_array)
     image_width, image_height = image.size
 
-    # 新图像宽度为原图两倍
-    new_image_width = image_width * 2
+    text_area_width = image_width
+    new_image_width = image_width + text_area_width + margin
     new_image = Image.new("RGB", (new_image_width, image_height), "white")
     new_image.paste(image, (0, 0))
 
-    # 创建绘图对象
-    draw = ImageDraw.Draw(new_image)
-
-    # 最大文本区宽度
-    max_text_width = image_width - 20  # 右侧留边
-
-    # 自动调整字体大小以适应文本区
+    # Try largest font first, reduce size if text is too tall
     font_size = initial_font_size
-    while font_size > 0:
+    while font_size > 10:
         font = ImageFont.truetype(font_path, font_size)
-        # 分行：按最大宽度自动分行
-        lines = []
-        text = result
-        while text:
-            l, r = 1, len(text)
-            while l <= r:
-                m = (l + r) // 2
-                part = text[:m]
-                w = get_text_width(font, part)
-                if w <= max_text_width:
-                    l = m + 1
-                else:
-                    r = m - 1
-            use_len = max(1, r)
-            lines.append(text[:use_len])
-            text = text[use_len:]
-        # 计算总文本高度
-        line_height = get_text_height(font)
-        text_height = len(lines) * (line_height + line_spacing)
-        if text_height <= image_height:
+        lines = wrap_text_by_width(result, font, text_area_width - 2 * margin)
+        _, line_height = get_text_size(
+            font, "中A"
+        )  # Use mixed characters to get proper height
+        text_height = len(lines) * line_height + max(0, len(lines) - 1) * line_spacing
+        if text_height <= image_height - 2 * margin:
             break
         font_size -= 1
 
-    # 计算文本起始坐标
-    text_x = image_width + 10
+    draw = ImageDraw.Draw(new_image)
+    # Calculate starting position for vertical centering
+    text_x = image_width + margin
     text_y = (image_height - text_height) // 2
 
-    # 绘制文本
     for line in lines:
         draw.text((text_x, text_y), line, font=font, fill="black")
         text_y += line_height + line_spacing
@@ -143,16 +212,104 @@ def create_image_with_text(
 
 
 def merge_formula_and_number(formula, formula_number):
+    """
+    Merge a formula and its formula number for display.
+
+    Args:
+        formula (str): The formula string.
+        formula_number (str): The formula number string.
+
+    Returns:
+        str: The merged formula with tag.
+    """
     formula = formula.replace("$$", "")
     merge_formula = r"{} \tag*{{{}}}".format(formula, formula_number)
     return f"$${merge_formula}$$"
 
 
+def build_handle_funcs_dict(
+    *,
+    text_func,
+    image_func,
+    chart_func,
+    table_func,
+    formula_func,
+    seal_func,
+):
+    """
+    Build a dictionary mapping block labels to their formatting functions.
+
+    Args:
+        text_func: Function to format text blocks.
+        image_func: Function to format image blocks.
+        chart_func: Function to format chart blocks.
+        table_func: Function to format table blocks.
+        formula_func: Function to format formula blocks.
+        seal_func: Function to format seal blocks.
+
+    Returns:
+        dict: A mapping from block label to handler function.
+    """
+    return {
+        "paragraph_title": format_title_func,
+        "abstract_title": format_title_func,
+        "reference_title": format_title_func,
+        "content_title": format_title_func,
+        "doc_title": lambda block: f"# {block.content}".replace("-\n", "").replace(
+            "\n", " "
+        ),
+        "table_title": text_func,
+        "figure_title": text_func,
+        "chart_title": text_func,
+        "vision_footnote": lambda block: block.content.replace("\n\n", "\n").replace(
+            "\n", "\n\n"
+        ),
+        "text": lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
+        "ocr": lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
+        "vertical_text": lambda block: block.content.replace("\n\n", "\n").replace(
+            "\n", "\n\n"
+        ),
+        "reference_content": lambda block: block.content.replace("\n\n", "\n").replace(
+            "\n", "\n\n"
+        ),
+        "abstract": partial(
+            format_first_line_func,
+            templates=["摘要", "abstract"],
+            format_func=lambda l: f"## {l}\n",
+            spliter=" ",
+        ),
+        "content": lambda block: block.content.replace("-\n", "  \n").replace(
+            "\n", "  \n"
+        ),
+        "image": image_func,
+        "chart": chart_func,
+        "formula": formula_func,
+        "display_formula": formula_func,
+        "inline_formula": formula_func,
+        "table": table_func,
+        "reference": partial(
+            format_first_line_func,
+            templates=["参考文献", "references"],
+            format_func=lambda l: f"## {l}",
+            spliter="\n",
+        ),
+        "algorithm": lambda block: block.content.strip("\n"),
+        "seal": seal_func,
+    }
+
+
 class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
-    """Layout Parsing Result V2"""
+    """
+    PPOCRVLResult class for holding and formatting OCR/VL parsing results.
+    """
 
     def __init__(self, data) -> None:
-        """Initializes a new instance of the class with the specified data."""
+        """
+        Initializes a new instance of the class with the specified data.
+
+        Args:
+            data: The input data for the parsing result.
+        """
         super().__init__(data)
         HtmlMixin.__init__(self)
         XlsxMixin.__init__(self)
@@ -160,6 +317,12 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         JsonMixin.__init__(self)
 
     def _to_img(self) -> dict[str, np.ndarray]:
+        """
+        Convert the parsing result to a dictionary of images.
+
+        Returns:
+            dict: Keys are names, values are numpy arrays (images).
+        """
         from ..layout_parsing.utils import get_show_color
 
         res_img_dict = {}
@@ -201,10 +364,11 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         return res_img_dict
 
     def _to_html(self) -> dict[str, str]:
-        """Converts the prediction to its corresponding HTML representation.
+        """
+        Converts the prediction to its corresponding HTML representation.
 
         Returns:
-            Dict[str, str]: The str type HTML representation result.
+            dict: The str type HTML representation result.
         """
         res_html_dict = {}
         if len(self["table_res_list"]) > 0:
@@ -216,10 +380,11 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         return res_html_dict
 
     def _to_xlsx(self) -> dict[str, str]:
-        """Converts the prediction HTML to an XLSX file path.
+        """
+        Converts the prediction HTML to an XLSX file path.
 
         Returns:
-            Dict[str, str]: The str type XLSX representation result.
+            dict: The str type XLSX representation result.
         """
         res_xlsx_dict = {}
         if len(self["table_res_list"]) > 0:
@@ -231,14 +396,15 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         return res_xlsx_dict
 
     def _to_str(self, *args, **kwargs) -> dict[str, str]:
-        """Converts the instance's attributes to a dictionary and then to a string.
+        """
+        Converts the instance's attributes to a dictionary and then to a string.
 
         Args:
             *args: Additional positional arguments passed to the base class method.
             **kwargs: Additional keyword arguments passed to the base class method.
 
         Returns:
-            Dict[str, str]: A dictionary with the instance's attributes converted to strings.
+            dict: A dictionary with the instance's attributes converted to strings.
         """
         data = {}
         data["input_path"] = self["input_path"]
@@ -252,6 +418,16 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> dict[str, str]:
+        """
+        Converts the object's data to a JSON dictionary.
+
+        Args:
+            *args: Positional arguments passed to the JsonMixin._to_json method.
+            **kwargs: Keyword arguments passed to the JsonMixin._to_json method.
+
+        Returns:
+            dict: A dictionary containing the object's data in JSON format.
+        """
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
@@ -279,9 +455,10 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         Args:
             pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
+            show_formula_number (bool): whether to show formula numbers.
 
         Returns:
-            Dict
+            dict: Markdown information with text and images.
         """
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
 
@@ -299,10 +476,11 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             format_text_func = lambda block: block.content
             format_image_func = format_image_plain_func
 
-        if self["model_settings"]["use_chart_recognition"]:
-            format_chart_func = format_text_func
-        else:
-            format_chart_func = format_image_func
+        format_chart_func = (
+            format_text_func
+            if self["model_settings"]["use_chart_recognition"]
+            else format_image_func
+        )
 
         if pretty:
             format_table_func = lambda block: "\n" + format_text_func(block).replace(
@@ -311,57 +489,17 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         else:
             format_table_func = lambda block: simplify_table_func("\n" + block.content)
 
-        handle_funcs_dict = {
-            "paragraph_title": format_title_func,
-            "abstract_title": format_title_func,
-            "reference_title": format_title_func,
-            "content_title": format_title_func,
-            "doc_title": lambda block: f"# {block.content}".replace(
-                "-\n",
-                "",
-            ).replace("\n", " "),
-            "table_title": format_text_func,
-            "figure_title": format_text_func,
-            "chart_title": format_text_func,
-            "vision_footnote": lambda block: block.content.replace(
-                "\n\n", "\n"
-            ).replace("\n", "\n\n"),
-            "text": lambda block: block.content.replace("\n\n", "\n").replace(
-                "\n", "\n\n"
-            ),
-            "ocr": lambda block: block.content.replace("\n\n", "\n").replace(
-                "\n", "\n\n"
-            ),
-            "vertical_text": lambda block: block.content.replace("\n\n", "\n").replace(
-                "\n", "\n\n"
-            ),
-            "reference_content": lambda block: block.content.replace(
-                "\n\n", "\n"
-            ).replace("\n", "\n\n"),
-            "abstract": partial(
-                format_first_line_func,
-                templates=["摘要", "abstract"],
-                format_func=lambda l: f"## {l}\n",
-                spliter=" ",
-            ),
-            "content": lambda block: block.content.replace("-\n", "  \n").replace(
-                "\n", "  \n"
-            ),
-            "image": format_image_func,
-            "chart": format_chart_func,
-            "formula": format_text_func,
-            "display_formula": format_text_func,
-            "inline_formula": format_text_func,
-            "table": format_table_func,
-            "reference": partial(
-                format_first_line_func,
-                templates=["参考文献", "references"],
-                format_func=lambda l: f"## {l}",
-                spliter="\n",
-            ),
-            "algorithm": lambda block: block.content.strip("\n"),
-            "seal": format_image_func,
-        }
+        format_formula_func = lambda block: block.content
+        format_seal_func = format_image_func
+
+        handle_funcs_dict = build_handle_funcs_dict(
+            text_func=format_text_func,
+            image_func=format_image_func,
+            chart_func=format_chart_func,
+            table_func=format_table_func,
+            formula_func=format_formula_func,
+            seal_func=format_seal_func,
+        )
 
         markdown_content = ""
         markdown_info = {}
