@@ -372,6 +372,8 @@ class DocVLMPredictor(BasePredictor):
                     from PIL import Image
 
                     with Image.open(image) as img:
+                        if img.mode == "RGBA":
+                            img = img.convert("RGB")
                         with io.BytesIO() as buf:
                             img.save(buf, format="JPEG")
                             image_url = "data:image/jpeg;base64," + base64.b64encode(
