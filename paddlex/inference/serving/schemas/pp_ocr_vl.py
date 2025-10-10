@@ -41,6 +41,11 @@ class InferRequest(ocr.BaseInferRequest):
     layoutMergeBboxesMode: Optional[Union[str, dict]] = None
     promptLabel: Optional[str] = None
     formatBlockContent: Optional[bool] = None
+    repetitionPenalty: Optional[float] = None
+    temperature: Optional[float] = None
+    topP: Optional[float] = None
+    minPixels: Optional[int] = None
+    maxPixels: Optional[int] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
     visualize: Optional[bool] = None

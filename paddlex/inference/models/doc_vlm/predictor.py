@@ -162,9 +162,11 @@ class DocVLMPredictor(BasePredictor):
         max_new_tokens: Optional[int] = None,
         skip_special_tokens: Optional[bool] = None,
         repetition_penalty: Optional[float] = None,
-        use_cache: Optional[bool] = None,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
         min_pixels: Optional[int] = None,
         max_pixels: Optional[int] = None,
+        use_cache: Optional[bool] = None,
         **kwargs,
     ):
         """
@@ -194,7 +196,25 @@ class DocVLMPredictor(BasePredictor):
             elif self.model_name in self.model_group["PaddleOCR-VL"]:
                 generate_kwargs["max_new_tokens"] = 8192
             if repetition_penalty is not None:
-                generate_kwargs["repetition_penalty"] = repetition_penalty
+                warnings.warn(
+                    "`repetition_penalty` is currently not supported by the local model and will be ignored."
+                )
+            if temperature is not None:
+                warnings.warn(
+                    "`temperature` is currently not supported by the local model and will be ignored."
+                )
+            if top_p is not None:
+                warnings.warn(
+                    "`top_p` is currently not supported by the local model and will be ignored."
+                )
+            if min_pixels is not None:
+                warnings.warn(
+                    "`min_pixels` is currently not supported by the local model and will be ignored."
+                )
+            if max_pixels is not None:
+                warnings.warn(
+                    "`max_pixels` is currently not supported by the local model and will be ignored."
+                )
             if use_cache is not None:
                 generate_kwargs["use_cache"] = use_cache
             with TemporaryDeviceChanger(self.device):
@@ -218,6 +238,8 @@ class DocVLMPredictor(BasePredictor):
                 max_new_tokens=max_new_tokens,
                 skip_special_tokens=skip_special_tokens,
                 repetition_penalty=repetition_penalty,
+                temperature=temperature,
+                top_p=top_p,
                 min_pixels=min_pixels,
                 max_pixels=max_pixels,
             )
@@ -358,6 +380,8 @@ class DocVLMPredictor(BasePredictor):
         max_new_tokens,
         skip_special_tokens,
         repetition_penalty,
+        temperature,
+        top_p,
         min_pixels,
         max_pixels,
     ):
@@ -393,13 +417,15 @@ class DocVLMPredictor(BasePredictor):
 
             if self._genai_client.backend == "fastdeploy-server":
                 kwargs = {
-                    "temperature": 1,
-                    "top_p": 0,
+                    "temperature": 1 if temperature is None else temperature,
+                    "top_p": 0 if top_p is None else top_p,
                 }
             else:
                 kwargs = {
-                    "temperature": 0,
+                    "temperature": 0 if temperature is None else temperature,
                 }
+                if top_p is not None:
+                    kwargs["top_p"] = top_p
 
             if max_new_tokens is not None:
                 kwargs["max_completion_tokens"] = max_new_tokens
@@ -429,8 +455,8 @@ class DocVLMPredictor(BasePredictor):
                         "min_pixels"
                     ] = min_pixels
                 else:
-                    raise ValueError(
-                        f"{self._genai_client.backend} does not support min_pixels!"
+                    warnings.warn(
+                        f"{repr(self._genai_client.backend)} does not support `min_pixels`."
                     )
 
             if max_pixels is not None:
@@ -442,8 +468,8 @@ class DocVLMPredictor(BasePredictor):
                         "max_pixels"
                     ] = max_pixels
                 else:
-                    raise ValueError(
-                        f"{self._genai_client.backend} does not support max_pixels!"
+                    warnings.warn(
+                        f"{repr(self._genai_client.backend)} does not support `max_pixels`."
                     )
 
             with lock:

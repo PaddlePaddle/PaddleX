@@ -199,7 +199,12 @@ class _PPOCRVLPipeline(BasePipeline):
         return True
 
     def get_layout_parsing_results(
-        self, images, layout_det_results, imgs_in_doc, use_chart_recognition=False
+        self,
+        images,
+        layout_det_results,
+        imgs_in_doc,
+        use_chart_recognition=False,
+        vlm_kwargs=None,
     ):
         blocks = []
         block_imgs = []
@@ -249,6 +254,7 @@ class _PPOCRVLPipeline(BasePipeline):
         kwargs = {
             "use_cache": True,
             "max_new_tokens": 4096,
+            **(vlm_kwargs or {}),
         }
         vl_rec_results_table = list(
             self.vl_rec_model.predict(
@@ -369,6 +375,11 @@ class _PPOCRVLPipeline(BasePipeline):
         use_queues: Optional[bool] = None,
         prompt_label: Optional[Union[str, None]] = None,
         format_block_content: Union[bool, None] = None,
+        repetition_penalty: Optional[float] = None,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+        min_pixels: Optional[int] = None,
+        max_pixels: Optional[int] = None,
         **kwargs,
     ) -> PPOCRVLResult:
         """
@@ -502,6 +513,13 @@ class _PPOCRVLPipeline(BasePipeline):
                     layout_det_results,
                     imgs_in_doc,
                     model_settings["use_chart_recognition"],
+                    {
+                        "repetition_penalty": repetition_penalty,
+                        "temperature": temperature,
+                        "top_p": top_p,
+                        "min_pixels": min_pixels,
+                        "max_pixels": max_pixels,
+                    },
                 )
             )
 

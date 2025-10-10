@@ -130,6 +130,11 @@ class TritonPythonModel(BaseTritonPythonModel):
                             layout_merge_bboxes_mode=inputs_g[0].layoutMergeBboxesMode,
                             prompt_label=inputs_g[0].promptLabel,
                             format_block_content=inputs_g[0].formatBlockContent,
+                            repetition_penalty=inputs_g[0].repetitionPenalty,
+                            temperature=inputs_g[0].temperature,
+                            top_p=inputs_g[0].topP,
+                            min_pixels=inputs_g[0].minPixels,
+                            max_pixels=inputs_g[0].maxPixels,
                         )
                     )
 
@@ -178,6 +183,11 @@ class TritonPythonModel(BaseTritonPythonModel):
                     input.layoutMergeBboxesMode,
                     input.promptLabel,
                     input.formatBlockContent,
+                    input.repetitionPenalty,
+                    input.temperature,
+                    input.topP,
+                    input.minPixels,
+                    input.maxPixels,
                 )
             )
 
