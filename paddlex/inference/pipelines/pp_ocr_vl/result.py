@@ -227,6 +227,44 @@ def merge_formula_and_number(formula, formula_number):
     return f"$${merge_formula}$$"
 
 
+def format_chart2table_func(block):
+    lines_list = block.content.split("\n")
+    # 提取表头和内容
+    header = lines_list[0].split("|")
+    rows = [line.split("|") for line in lines_list[1:]]
+    # 构造HTML表格
+    html = "<table border=1 style='margin: auto; width: max-content;'>\n"
+    html += (
+        "  <thead><tr>"
+        + "".join(
+            f"<th style='text-align: center;'>{cell.strip()}</th>" for cell in header
+        )
+        + "</tr></thead>\n"
+    )
+    html += "  <tbody>\n"
+    for row in rows:
+        html += (
+            "    <tr>"
+            + "".join(
+                f"<td style='text-align: center;'>{cell.strip()}</td>" for cell in row
+            )
+            + "</tr>\n"
+        )
+    html += "  </tbody>\n"
+    html += "</table>"
+    return html
+
+
+def format_table_center_func(block):
+    tabel_content = block.content
+    tabel_content = tabel_content.replace(
+        "<table>", "<table border=1 style='margin: auto; width: max-content;'>"
+    )
+    tabel_content = tabel_content.replace("<th>", "<th style='text-align: center;'>")
+    tabel_content = tabel_content.replace("<td>", "<td style='text-align: center;'>")
+    return tabel_content
+
+
 def build_handle_funcs_dict(
     *,
     text_func,
@@ -433,16 +471,59 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
+        if self["model_settings"].get("format_block_content", False):
+            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                )
+            )
+
+            if self["model_settings"].get("use_chart_recognition", False):
+                format_chart_func = format_chart2table_func
+            else:
+                format_chart_func = format_image_func
+
+            format_seal_func = format_image_func
+
+            format_table_func = lambda block: "\n" + format_table_center_func(block)
+            format_formula_func = lambda block: block.content
+
+            handle_funcs_dict = build_handle_funcs_dict(
+                text_func=format_text_func,
+                image_func=format_image_func,
+                chart_func=format_chart_func,
+                table_func=format_table_func,
+                formula_func=format_formula_func,
+                seal_func=format_seal_func,
+            )
+
         parsing_res_list = self["parsing_res_list"]
-        parsing_res_list = [
-            {
+        parsing_res_list_json = []
+        order_index = 1
+        for idx, parsing_res in enumerate(parsing_res_list):
+            res_dict = {
                 "block_label": parsing_res.label,
                 "block_content": parsing_res.content,
                 "block_bbox": parsing_res.bbox,
+                "block_id": idx,
+                "block_order": order_index,
             }
-            for parsing_res in parsing_res_list
-        ]
-        data["parsing_res_list"] = parsing_res_list
+            order_index += 1
+            if self["model_settings"].get("format_block_content", False):
+                if handle_funcs_dict.get(parsing_res.label):
+                    res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
+                        parsing_res
+                    )
+                else:
+                    res_dict["block_content"] = parsing_res.content
+
+            parsing_res_list_json.append(res_dict)
+        data["parsing_res_list"] = parsing_res_list_json
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         if self["model_settings"]["use_layout_detection"]:
@@ -477,15 +558,13 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             format_image_func = format_image_plain_func
 
         format_chart_func = (
-            format_text_func
+            format_chart2table_func
             if self["model_settings"]["use_chart_recognition"]
             else format_image_func
         )
 
         if pretty:
-            format_table_func = lambda block: "\n" + format_text_func(block).replace(
-                "<table>", '<table border="1">'
-            )
+            format_table_func = lambda block: "\n" + format_table_center_func(block)
         else:
             format_table_func = lambda block: simplify_table_func("\n" + block.content)
 

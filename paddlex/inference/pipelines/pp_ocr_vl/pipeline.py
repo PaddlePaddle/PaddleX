@@ -355,6 +355,8 @@ class _PPOCRVLPipeline(BasePipeline):
                             "path": img_path,
                             "img": Image.fromarray(block_img),
                         }
+                    else:
+                        continue
 
                 parsing_res_list.append(block_info)
             parsing_res_lists.append(parsing_res_list)

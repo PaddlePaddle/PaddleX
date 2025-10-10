@@ -13,8 +13,8 @@ format_block_content: False
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PP-DocLayoutV2-L #PP-DocLayoutV2-L PP-DocLayout_plus-L
-    model_dir: /paddle/project/PaddleX/pp_ocr_vl_eval_tools/models/order/layout1002_38_1001order/PP-DocLayout_plus-L
+    model_name: PP-DocLayoutV2-L
+    model_dir: null
     batch_size: 8
     threshold: 
       0: 0.5 # abstract
