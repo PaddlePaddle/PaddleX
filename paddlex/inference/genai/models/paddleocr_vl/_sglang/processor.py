@@ -17,17 +17,87 @@ from typing import List, Optional, Tuple, Union
 
 from ......utils.deps import is_dep_available
 
-if is_dep_available("sglang"):
+if all(map(is_dep_available, ("sglang", "torch"))):
+    import asyncio
+    import math
+
     import torch
+    from PIL import Image
     from sglang.srt.multimodal.processors.base_processor import (
         BaseMultimodalProcessor,
         MultimodalSpecialTokens,
     )
 
+    def smart_resize(
+        height: int,
+        width: int,
+        factor: int = 28,
+        min_pixels: int = 28 * 28 * 130,
+        max_pixels: int = 28 * 28 * 1280,
+    ):
+        """Rescales the image so that the following conditions are met:
+
+        1. Both dimensions (height and width) are divisible by 'factor'.
+
+        2. The total number of pixels is within the range ['min_pixels', 'max_pixels'].
+
+        3. The aspect ratio of the image is maintained as closely as possible.
+
+        """
+        if height < factor:
+            print(
+                f"smart_resize: height={height} < factor={factor}, reset height=factor"
+            )
+            width = round((width * factor) / height)
+            height = factor
+
+        if width < factor:
+            print(f"smart_resize: width={width} < factor={factor}, reset width=factor")
+            height = round((height * factor) / width)
+            width = factor
+
+        if max(height, width) / min(height, width) > 200:
+            raise ValueError(
+                f"absolute aspect ratio must be smaller than 200, got {max(height, width) / min(height, width)}"
+            )
+        h_bar = round(height / factor) * factor
+        w_bar = round(width / factor) * factor
+        if h_bar * w_bar > max_pixels:
+            beta = math.sqrt((height * width) / max_pixels)
+            h_bar = math.floor(height / beta / factor) * factor
+            w_bar = math.floor(width / beta / factor) * factor
+        elif h_bar * w_bar < min_pixels:
+            beta = math.sqrt(min_pixels / (height * width))
+            h_bar = math.ceil(height * beta / factor) * factor
+            w_bar = math.ceil(width * beta / factor) * factor
+        return h_bar, w_bar
+
+    def resize_image(image, min_pixels, max_pixels, factor) -> Image.Image:
+        width, height = image.size
+        resized_height, resized_width = smart_resize(
+            height,
+            width,
+            factor=factor,
+            min_pixels=min_pixels,
+            max_pixels=max_pixels,
+        )
+        image = image.resize((resized_width, resized_height))
+        return image
+
+    async def resize_image_async(image, min_pixels, max_pixels, factor):
+        return resize_image(image, min_pixels, max_pixels, factor)
+
     class PPOCRVLImageProcessor(BaseMultimodalProcessor):
 
         def __init__(self, hf_config, server_args, _processor, *args, **kwargs):
             super().__init__(hf_config, server_args, _processor, *args, **kwargs)
+
+            image_processor_config = _processor.image_processor
+            self.MIN_PIXELS = image_processor_config.min_pixels
+            self.MAX_PIXELS = image_processor_config.max_pixels
+            self.IMAGE_FACTOR = (
+                image_processor_config.patch_size * image_processor_config.merge_size
+            )
 
             self.vision_start_token_id = hf_config.vision_start_token_id
             self.mm_tokens = MultimodalSpecialTokens(
@@ -44,14 +114,23 @@ if is_dep_available("sglang"):
             *args,
             **kwargs,
         ):
-            base_out = self.load_mm_data(
+            base_output = self.load_mm_data(
                 prompt=input_text,
                 image_data=image_data,
                 multimodal_tokens=self.mm_tokens,
             )
 
+            if base_output.images and isinstance(base_output.images[0], Image.Image):
+                resize_tasks = [
+                    resize_image_async(
+                        image, self.MIN_PIXELS, self.MAX_PIXELS, self.IMAGE_FACTOR
+                    )
+                    for image in base_output.images
+                ]
+                base_output.images = await asyncio.gather(*resize_tasks)
+
             mm_items, input_ids, ret = self.process_and_combine_mm_data(
-                base_out, self.mm_tokens
+                base_output, self.mm_tokens
             )
 
             input_ids = input_ids.flatten()
