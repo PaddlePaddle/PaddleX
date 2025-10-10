@@ -8,17 +8,20 @@
     {%- set sep_token = "<|end_of_sentence|>" -%}
 {%- endif -%}
 {%- if not image_token is defined -%}
-    {%- set image_token = "<|vision_start|><|image_pad|><|vision_end|>" -%}
+    {%- set image_token = "<|IMAGE_START|><|IMAGE_PLACEHOLDER|><|IMAGE_END|>" -%}
 {%- endif -%}
 {{- cls_token -}}
 {%- for message in messages -%}
     {%- if message["role"] == "user" -%}
         {{- "User: " -}}
         {%- for content in message["content"] -%}
+            {%- if content["type"] == "image" -%}
+                {{ image_token }}
+            {%- endif -%}
+        {%- endfor -%}
+        {%- for content in message["content"] -%}
             {%- if content["type"] == "text" -%}
                 {{ content["text"] }}
-            {%- elif content["type"] == "image" -%}
-                {{ image_token }}
             {%- endif -%}
         {%- endfor -%}
         {{ "\n" -}}
@@ -26,9 +29,7 @@
         {{- "Assistant: " -}}
         {%- for content in message["content"] -%}
             {%- if content["type"] == "text" -%}
-                {{ content["text"] }}
-            {%- elif content["type"] == "image" -%}
-                {{ image_token }}
+                {{ content["text"] + "\n" }}
             {%- endif -%}
         {%- endfor -%}
         {{ sep_token -}}
