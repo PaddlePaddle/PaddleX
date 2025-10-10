@@ -1138,7 +1138,7 @@ if all(
         @classmethod
         def get_placeholder_str(cls, modality: str, i: int) -> Optional[str]:
             if modality.startswith("image"):
-                return "<|vision_start|><|image_pad|><|vision_end|>"
+                return "<|IMAGE_START|><|IMAGE_PLACEHOLDER|><|IMAGE_END|>"
 
             raise ValueError("Only image modality is supported")
 

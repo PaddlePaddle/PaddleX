@@ -101,7 +101,7 @@ if all(map(is_dep_available, ("sglang", "torch"))):
 
             self.vision_start_token_id = hf_config.vision_start_token_id
             self.mm_tokens = MultimodalSpecialTokens(
-                image_token="<|vision_start|><|image_pad|><|vision_end|>",
+                image_token="<|IMAGE_START|><|IMAGE_PLACEHOLDER|><|IMAGE_END|>",
                 image_token_id=hf_config.image_token_id,
                 video_token_id=hf_config.video_token_id,
             ).build(_processor)
