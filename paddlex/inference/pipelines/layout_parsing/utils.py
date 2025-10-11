@@ -727,8 +727,11 @@ def get_show_color(label: str, order_label=False) -> Tuple:
             "vision_footnote": (144, 238, 144, 100),  # Light Green
             # Deep Purple (from 'texts_list')
             "text": (153, 0, 76, 100),
+            "vertical_text": (153, 0, 76, 100),
+            "inline_formula": (153, 0, 76, 100),
             # Bright Green (from 'interequations_list')
             "formula": (0, 255, 0, 100),
+            "display_formula": (0, 255, 0, 100),
             "abstract": (255, 239, 213, 100),  # Papaya Whip
             # Medium Green (from 'lists_list' and 'indexs_list')
             "content": (40, 169, 92, 100),
@@ -743,7 +746,7 @@ def get_show_color(label: str, order_label=False) -> Tuple:
             "chart": (216, 191, 216, 100),  # Thistle
             # Pale Yellow-Green (from 'tables_footnote_list')
             "reference": (229, 255, 204, 100),
-            # "reference_content": (229, 255, 204, 100),
+            "reference_content": (229, 255, 204, 100),
             "algorithm": (255, 250, 240, 100),  # Floral White
         }
     default_color = (158, 158, 158, 100)
