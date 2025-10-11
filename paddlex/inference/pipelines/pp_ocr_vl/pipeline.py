@@ -347,7 +347,7 @@ class _PPOCRVLPipeline(BasePipeline):
                     bbox=block_bbox,
                     content=block_content,
                 )
-                if block_label in IMAGE_LABELS and block_img is not None:
+                if block_label in image_labels and block_img is not None:
                     x_min, y_min, x_max, y_max = list(map(int, block_bbox))
                     img_path = f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
                     if img_path not in drop_figures_set:
