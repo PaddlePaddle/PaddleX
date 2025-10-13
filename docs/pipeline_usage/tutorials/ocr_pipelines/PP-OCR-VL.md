@@ -578,7 +578,7 @@ for item in markdown_images:
 </tr>
 <tr>
 <td><code>use_queues</code></td>
-<td>是否使用队列</td>
+<td>用于控制是否启用内部队列。当设置为 <code>True</code> 时，数据加载（如将 PDF 页面渲染为图像）、版面检测模型处理以及 VLM 推理将分别在独立线程中异步执行，通过队列传递数据，从而提升效率。对于页数较多的 PDF 文档，或是包含大量图像或 PDF 文件的目录，这种方式尤其高效。</td>
 <td><code>bool|None</code></td>
 <td>
 <ul>
@@ -610,6 +610,67 @@ for item in markdown_images:
 <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
 </ul>
 </td>
+</tr>
+<tr>
+<td><code>repetition_penalty</code></td>
+<td>VL模型采样使用的重复惩罚参数</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：任意大于等于<code>0</code>的浮点数；</li>
+<li><b>None</b>：如果设置为<code>None</code>，将使用默认值；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td>VL模型采样使用的温度参数</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：任意大于等于<code>0</code>的浮点数；</li>
+<li><b>None</b>：如果设置为<code>None</code>，将使用默认值；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td>VL模型采样使用的top-p参数</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：取值范围在<code>&#40;0, 1&#93;</code>的浮点数；</li>
+<li><b>None</b>：如果设置为<code>None</code>，将使用默认值；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>min_pixels</code></td>
+<td>VL模型预处理图像时允许的最小像素数</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>：任意大于<code>0</code>的整数；</li>
+<li><b>None</b>：如果设置为<code>None</code>，将使用默认值；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>max_pixels</code></td>
+<td>VL模型预处理图像时允许的最大像素数</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>：任意大于<code>0</code>的整数；</li>
+<li><b>None</b>：如果设置为<code>None</code>，将使用默认值；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
 </table>
 
 </details>
@@ -806,7 +867,168 @@ for res in output:
 ```
 <b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用版面解析v3产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
 
-## 3. 开发集成/部署
+## 3. 使用推理加速框架提升 VLM 推理性能
+
+默认配置下的推理性能未经过充分优化，可能无法满足实际生产需求。PaddleX 支持通过 vLLM、SGLang 等推理加速框架提升 VLM 的推理性能，从而加快产线推理速度。使用流程主要分为两个步骤：
+
+1. 启动 VLM 推理服务；
+2. 配置 PaddleX 产线，作为客户端调用 VLM 推理服务。
+
+### 3.1 启动 VLM 推理服务
+
+#### 3.1.1 使用 Docker 镜像
+
+PaddleX 针对不同推理加速框架提供了相应的 Docker 镜像，用于快速启动 VLM 推理服务：
+
+* **vLLM**：`ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server`
+* **SGLang**：`ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-sglang-server`
+
+以 vLLM 为例，可使用以下命令启动服务：
+
+```bash
+docker run \
+    --rm \
+    --gpus all \
+    --network host \
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server
+```
+
+服务默认监听 **8080** 端口。
+
+启动容器时可传入参数覆盖默认配置，例如：
+
+```bash
+docker run \
+    --rm \
+    --gpus all \
+    --network host \
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server \
+    paddlex_genai_server --model_name PaddleOCR-VL --host 0.0.0.0 --port 8118 --backend vllm
+```
+
+#### 3.1.2 通过 PaddleX CLI 和启动
+
+由于推理加速框架可能与飞桨框架存在依赖冲突，建议在虚拟环境中安装。示例如下：
+
+```bash
+# 创建虚拟环境
+python -m venv .venv
+# 激活环境
+source .venv/bin/activate
+# 安装 PaddleX
+python -m pip install "paddlex[ocr]"
+# 安装 vLLM 服务器插件
+paddlex --install genai-vllm-server
+# 安装 SGLang 服务器插件
+# paddlex --install genai-sglang-server
+```
+
+安装完成后，可通过 `paddlex_genai_server` 命令启动服务：
+
+```bash
+paddlex_genai_server --model_name PaddleOCR-VL --backend vllm --port 8118
+```
+
+该命令支持的参数如下：
+
+| 参数                 | 说明                        |
+| ------------------ | ------------------------- |
+| `--model_name`     | 模型名称                      |
+| `--model_dir`      | 模型目录                      |
+| `--host`           | 服务器主机名                    |
+| `--port`           | 服务器端口号                    |
+| `--backend`        | 后端名称，即使用的推理加速框架名称，可选 `vllm` 或 `sglang` |
+| `--backend_config` | 可指定 YAML 文件，包含后端配置        |
+
+### 3.2 客户端使用方法
+
+启动 VLM 推理服务后，客户端即可通过 PaddleX 调用该服务。在使用前，需要安装客户端插件：
+
+```bash
+paddlex --install genai-client
+```
+
+接着，获取产线配置文件：
+
+```bash
+paddlex --get_pipeline_config PP-OCR-VL
+```
+
+配置文件的默认保存路径为 `PP-OCR-VL.yaml`。将配置文件中的 `VLRecognition.genai_config.backend` 和 `VLRecognition.genai_config.server_url` 字段修改为与此前启动的服务相对应的值，例如：
+
+```yaml
+VLRecognition:
+  ...
+  genai_config:
+    backend: vllm
+    server_url: http://127.0.0.1:8118
+```
+
+之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：
+
+```bash
+paddlex --pipeline PP-OCR-VL.yaml --input pp_ocr_vl_demo.png
+```
+
+或通过 Python API 调用：
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline("PP-OCR-VL.yaml")
+
+for res in pipeline.predict("pp_ocr_vl_demo.png"):
+    res.print()
+```
+
+### 3.3 性能调优
+
+默认配置是在单张 NVIDIA A100 上进行调优的，并假设客户端独占服务，因此可能不适用于其他环境。如果用户在实际使用中遇到性能问题，可以尝试以下优化方法。
+
+#### 3.3.1 服务端参数调整
+
+不同推理加速框架支持的参数不同，可参考各自官方文档了解可用参数及其调整时机：
+
+- [vLLM 官方参数调优指南](https://docs.vllm.ai/en/latest/configuration/optimization.html)
+- [SGLang 超参数调整文档](https://docs.sglang.ai/advanced_features/hyperparameter_tuning.html)
+
+PaddleX VLM 推理服务支持通过配置文件进行调参。以下示例展示如何调整 vLLM 服务器的 `gpu-memory-utilization` 和 `max-num-seqs` 参数：
+
+1. 创建 YAML 文件 `vllm_config.yaml`，内容如下：
+
+   ```yaml
+   gpu-memory-utilization: 0.3
+   max-num-seqs: 128
+   ```
+
+2. 启动服务时指定配置文件路径：
+
+   ```bash
+   paddlex_genai_server --model_name PaddleOCR-VL --backend vllm --backend_config vllm_config.yaml
+   ```
+
+如果使用支持进程替换（process substitution）的 shell（如 Bash），也可以无需创建配置文件，直接在启动服务时传入配置项：
+
+```bash
+paddlex_genai_server --model_name PaddleOCR-VL --backend vllm --backend_config <(echo -e 'gpu-memory-utilization: 0.3\nmax-num-seqs: 128')
+```
+
+#### 3.3.2 客户端参数调整
+
+PaddleX 会将来自单张或多张输入图像中的子图分组并对服务器发起并发请求，因此并发请求数对性能影响显著。用户可通过修改配置文件中 `VLRecognition.genai_config.max_concurrency` 字段设置最大并发请求数。
+
+当客户端与 VLM 推理服务为 1 对 1 且服务端资源充足时，可适当增加并发数以提升性能；若服务端需支持多个客户端或计算资源有限，则应降低并发数，以避免资源过载导致服务异常。
+
+#### 3.3.3 常用硬件性能调优建议
+
+以下配置均针对客户端与 VLM 推理服务为 1 对 1 的场景。
+
+**NVIDIA RTX 3060**
+
+- **服务端**
+  - vLLM：`gpu-memory-utilization=0.8`
+
+## 4. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
 若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 Python脚本方式](#22-python脚本方式集成)中的示例代码。
@@ -923,57 +1145,21 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
-<td><code>useDocOrientationClassify</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_unwarping</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>useTextlineOrientation</code></td>
+<td><code>useLayoutDetection</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_textline_orientation</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>useSealRecognition</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>useTableRecognition</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_recognition</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>useFormulaRecognition</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_formula_recognition</code> 参数相关说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_layout_detection</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useChartRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_chart_recognition</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>useRegionDetection</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_region_detection</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>formatBlockContent</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>format_block_content</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1001,111 +1187,57 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
-<td><code>textDetLimitSideLen</code></td>
-<td><code>integer</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_limit_side_len</code> 参数相关说明。</td>
+<td><code>promptLabel</code></td>
+<td><code>string</code> | <code>object</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>prompt_label</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>textDetLimitType</code></td>
-<td><code>string</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_limit_type</code> 参数相关说明。</td>
+<td><code>formatBlockContent</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>format_block_content</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>textDetThresh</code></td>
+<td><code>repetitionPenalty</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_thresh</code> 参数相关说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>repetition_penalty</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>textDetBoxThresh</code></td>
+<td><code>temperature</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_box_thresh</code> 参数相关说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>temperature</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>textDetUnclipRatio</code></td>
+<td><code>topP</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_unclip_ratio</code> 参数相关说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>top_p</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>textRecScoreThresh</code></td>
+<td><code>minPixels</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_rec_score_thresh</code> 参数相关说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>min_pixels</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>sealDetLimitSideLen</code></td>
-<td><code>integer</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_limit_side_len</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>sealDetLimitType</code></td>
-<td><code>string</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_limit_type</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>sealDetThresh</code></td>
+<td><code>maxPixels</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_thresh</code> 参数相关说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>max_pixels</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>sealDetBoxThresh</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_box_thresh</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>sealDetUnclipRatio</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_unclip_ratio</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>sealRecScoreThresh</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_rec_score_thresh</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>useWiredTableCellsTransToHtml</code></td>
+<td><code>prettifyMarkdown</code></td>
 <td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_wired_table_cells_trans_to_html</code> 参数相关说明。</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>useWirelessTableCellsTransToHtml</code></td>
-<td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_wireless_table_cells_trans_to_html</code> 参数相关说明。</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>useTableOrientationClassify</code></td>
-<td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_orientation_classify</code> 参数相关说明。</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>useOcrResultsWithTableCells</code></td>
-<td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_ocr_results_with_table_cells</code> 参数相关说明。</td>
+<td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>useE2eWiredTableRecModel</code></td>
+<td><code>showFormulaNumber</code></td>
 <td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wired_table_rec_model</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>useE2eWirelessTableRecModel</code></td>
-<td><code>boolean</code></td>
-<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wireless_table_rec_model</code> 参数相关说明。</td>
+<td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1256,6 +1388,7 @@ for i, res in enumerate(result["layoutParsingResults"]):
     print(f"Markdown document saved at {md_dir / 'doc.md'}")
     for img_name, img in res["outputImages"].items():
         img_path = f"{img_name}_{i}.jpg"
+        pathlib.Path(img_path).parent.mkdir(exist_ok=True)
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
@@ -1264,12 +1397,15 @@ for i, res in enumerate(result["layoutParsingResults"]):
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;filesystem&gt;
 #include &lt;fstream&gt;
 #include &lt;vector&gt;
 #include &lt;string&gt;
 #include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
 #include "nlohmann/json.hpp" // https://github.com/nlohmann/json
 #include "base64.hpp" // https://github.com/tobiaslocker/base64
+
+namespace fs = std::filesystem;
 
 int main() {
     httplib::Client client("localhost", 8080);
@@ -1319,6 +1455,12 @@ int main() {
             if (res.contains("outputImages") && res["outputImages"].is_object()) {
                 for (auto& [imgName, imgBase64] : res["outputImages"].items()) {
                     std::string outputPath = imgName + "_" + std::to_string(i) + ".jpg";
+                    fs::path pathObj(outputPath);
+                    fs::path parentDir = pathObj.parent_path();
+                    if (!parentDir.empty() && !fs::exists(parentDir)) {
+                        fs::create_directories(parentDir);
+                    }
+
                     std::string decodedImage = base64::from_base64(imgBase64.get<std::string>());
 
                     std::ofstream outFile(outputPath, std::ios::binary);
@@ -1356,6 +1498,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -1400,7 +1544,15 @@ public class Main {
                             String imgBase64 = outputImages.get(imgName).asText();
                             byte[] imgBytes = Base64.getDecoder().decode(imgBase64);
                             String imgPath = imgName + "_" + finalI + ".jpg";
-                            try (FileOutputStream fos = new FileOutputStream(imgPath)) {
+
+                            File outputFile = new File(imgPath);
+                            File parentDir = outputFile.getParentFile();
+                            if (parentDir != null && !parentDir.exists()) {
+                                parentDir.mkdirs();
+                                System.out.println("Created directory: " + parentDir.getAbsolutePath());
+                            }
+
+                            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                                 fos.write(imgBytes);
                                 System.out.println("Saved image: " + imgPath);
                             }
@@ -1518,7 +1670,10 @@ func main() {
 
         for path, imgBase64 := range res.Markdown.Images {
             fullPath := filepath.Join(mdDir, path)
-            os.MkdirAll(filepath.Dir(fullPath), 0755)
+            if err := os.MkdirAll(filepath.Dir(fullPath), 0755); err != nil {
+                fmt.Printf("Error creating directory for markdown image: %v\n", err)
+                continue
+            }
             imgBytes, err := base64.StdEncoding.DecodeString(imgBase64)
             if err != nil {
                 fmt.Printf("Error decoding markdown image: %v\n", err)
@@ -1536,6 +1691,12 @@ func main() {
                 continue
             }
             filename := fmt.Sprintf("%s_%d.jpg", name, i)
+
+            if err := os.MkdirAll(filepath.Dir(filename), 0755); err != nil {
+                fmt.Printf("Error creating directory for output image: %v\n", err)
+                continue
+            }
+
             if err := os.WriteFile(filename, imgBytes, 0644); err != nil {
                 fmt.Printf("Error saving output image %s: %v\n", filename, err)
             } else {
@@ -1597,6 +1758,14 @@ class Program
                     {
                         string imgPath = $"{imgName}_{i}.jpg";
                         byte[] imageBytes = Convert.FromBase64String(base64Img);
+
+                        string directory = Path.GetDirectoryName(imgPath);
+                        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                            Console.WriteLine($"Created directory: {directory}");
+                        }
+
                         File.WriteAllBytes(imgPath, imageBytes);
                         Console.WriteLine($"Output image saved at {imgPath}");
                     }
@@ -1638,6 +1807,13 @@ axios.post(API_URL, payload)
       if (outputImages) {
         Object.entries(outputImages).forEach(([imgName, base64Img]) => {
           const imgPath = `${imgName}_${index}.jpg`;
+
+          const directory = path.dirname(imgPath);
+          if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory, { recursive: true });
+            console.log(`Created directory: ${directory}`);
+          }
+
           fs.writeFileSync(imgPath, Buffer.from(base64Img, 'base64'));
           console.log(`Output image saved at ${imgPath}`);
         });
@@ -1678,6 +1854,13 @@ foreach ($result as $i => $item) {
     if (!empty($item["outputImages"])) {
         foreach ($item["outputImages"] as $img_name => $img_base64) {
             $output_image_path = "{$img_name}_{$i}.jpg";
+
+            $directory = dirname($output_image_path);
+            if (!is_dir($directory)) {
+                mkdir($directory, 0777, true);
+                echo "Created directory: $directory\n";
+            }
+
             file_put_contents($output_image_path, base64_decode($img_base64));
             echo "Output image saved at $output_image_path\n";
         }
@@ -1693,10 +1876,10 @@ foreach ($result as $i => $item) {
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/on_device_deployment.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
-## 4. 二次开发
+## 5. 二次开发
 如果通用版面解析v3产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用版面解析v3产线的在您的场景中的识别效果。
 
-### 4.1 模型微调
+### 5.1 模型微调
 
 由于通用版面解析v3产线包含若干模块，模型产线的效果不及预期可能来自于其中任何一个模块。您可以对提取效果差的 case 进行分析，通过可视化图像，确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
@@ -1758,7 +1941,7 @@ foreach ($result as $i => $item) {
 </tbody>
 </table>
 
-### 4.2 模型应用
+### 5.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
@@ -1799,7 +1982,7 @@ SubPipelines:
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
-##  5. 多硬件支持
+##  6. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
 例如，您使用昇腾 NPU 进行版面解析产线的推理，使用的 CLI 命令为：
