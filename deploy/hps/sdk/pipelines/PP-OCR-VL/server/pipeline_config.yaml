@@ -13,7 +13,7 @@ format_block_content: False
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PP-DocLayoutV2-L #PP-DocLayoutV2-L PP-DocLayout_plus-L
+    model_name: PP-DocLayoutV2-L
     model_dir: null
     batch_size: 8
     threshold: 
@@ -50,7 +50,7 @@ SubModules:
       2: "union" # aside_text
       3: "large" # chart
       4: "union" # content
-      5: "large" # formula
+      5: "large" # display_formula
       6: "large" # doc_title
       7: "union" # figure_title
       8: "union" # footer
@@ -59,8 +59,8 @@ SubModules:
       11: "union" # formula_number
       12: "union" # header
       13: "union" # header
-      14: "large" # image
-      15: "small" # formula
+      14: "union" # image
+      15: "large" # inline_formula
       16: "union" # number
       17: "large" # paragraph_title
       18: "union" # reference
