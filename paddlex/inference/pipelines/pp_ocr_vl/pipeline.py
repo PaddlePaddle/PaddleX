@@ -296,12 +296,10 @@ class _PPOCRVLPipeline(BasePipeline):
                 vl_rec_results.append(vl_rec_results_other.pop(0))
 
         parsing_res_lists = []
-        vl_rec_res_lists = []
         table_res_lists = []
         curr_vlm_block_idx = 0
         for i, blocks_for_img in enumerate(blocks):
             parsing_res_list = []
-            vl_rec_res_list = []
             table_res_list = []
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
@@ -316,7 +314,6 @@ class _PPOCRVLPipeline(BasePipeline):
                     block_img4vl = block_imgs[curr_vlm_block_idx]
                     curr_vlm_block_idx += 1
                     vl_rec_result["image"] = block_img4vl
-                    vl_rec_res_list.append(vl_rec_result)
                     result_str = vl_rec_result.get("result", "")
                     result_str = truncate_repetitive_content(result_str)
                     if ("\\(" in result_str and "\\)" in result_str) or (
@@ -351,6 +348,9 @@ class _PPOCRVLPipeline(BasePipeline):
                     x_min, y_min, x_max, y_max = list(map(int, block_bbox))
                     img_path = f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
                     if img_path not in drop_figures_set:
+                        import cv2
+
+                        block_img = cv2.cvtColor(block_img, cv2.COLOR_BGR2RGB)
                         block_info.image = {
                             "path": img_path,
                             "img": Image.fromarray(block_img),
@@ -360,10 +360,9 @@ class _PPOCRVLPipeline(BasePipeline):
 
                 parsing_res_list.append(block_info)
             parsing_res_lists.append(parsing_res_list)
-            vl_rec_res_lists.append(vl_rec_res_list)
             table_res_lists.append(table_res_list)
 
-        return parsing_res_lists, vl_rec_res_lists, table_res_lists, imgs_in_doc
+        return parsing_res_lists, table_res_lists, imgs_in_doc
 
     def predict(
         self,
@@ -513,7 +512,7 @@ class _PPOCRVLPipeline(BasePipeline):
                 imgs_in_doc,
             ) = results_cv
 
-            parsing_res_lists, vl_rec_res_lists, table_res_lists, imgs_in_doc = (
+            parsing_res_lists, table_res_lists, imgs_in_doc = (
                 self.get_layout_parsing_results(
                     doc_preprocessor_images,
                     layout_det_results,
@@ -536,7 +535,6 @@ class _PPOCRVLPipeline(BasePipeline):
                 doc_preprocessor_res,
                 layout_det_res,
                 table_res_list,
-                vl_rec_res_list,
                 parsing_res_list,
                 imgs_in_doc_for_img,
             ) in zip(
@@ -546,7 +544,6 @@ class _PPOCRVLPipeline(BasePipeline):
                 doc_preprocessor_results,
                 layout_det_results,
                 table_res_lists,
-                vl_rec_res_lists,
                 parsing_res_lists,
                 imgs_in_doc,
             ):
@@ -556,7 +553,6 @@ class _PPOCRVLPipeline(BasePipeline):
                     "doc_preprocessor_res": doc_preprocessor_res,
                     "layout_det_res": layout_det_res,
                     "table_res_list": table_res_list,
-                    "vl_rec_res_list": vl_rec_res_list,
                     "parsing_res_list": parsing_res_list,
                     "imgs_in_doc": imgs_in_doc_for_img,
                     "model_settings": model_settings,
