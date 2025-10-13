@@ -37,6 +37,22 @@ from ..layout_parsing.result_v2 import (
     simplify_table_func,
 )
 
+VISUALIZE_INDEX_LABELS = [
+    "text",
+    "formula",
+    "inline_formula",
+    "display_formula",
+    "algorithm",
+    "reference",
+    "reference_content",
+    "content",
+    "abstract",
+    "paragraph_title",
+    "doc_title",
+    "vertical_text",
+    "ocr",
+]
+
 
 class PPOCRVLBlock(object):
     """PPOCRVL Block Class"""
@@ -177,7 +193,6 @@ def create_image_with_text(
     Returns:
         PIL.Image: The combined image with original image and text.
     """
-    return image_array
     image = Image.fromarray(image_array)
     image_width, image_height = image.size
 
@@ -377,19 +392,21 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         font_size = int(0.018 * int(image.width)) + 2
         font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
         parsing_result = self["parsing_res_list"]
-        for index, block in enumerate(parsing_result):
+        order_index = 0
+        for block in parsing_result:
             bbox = block.bbox
             label = block.label
             fill_color = get_show_color(label, False)
             draw.rectangle(bbox, fill=fill_color)
-            if index is not None:
+            if label in VISUALIZE_INDEX_LABELS:
                 text_position = (bbox[2] + 2, bbox[1] - font_size // 2)
                 if int(image.width) - bbox[2] < font_size:
                     text_position = (
                         int(bbox[2] - font_size * 1.1),
                         bbox[1] - font_size // 2,
                     )
-                draw.text(text_position, str(index + 1), font=font, fill="red")
+                draw.text(text_position, str(order_index + 1), font=font, fill="red")
+                order_index += 1
 
         res_img_dict["layout_order_res"] = image
 
@@ -506,14 +523,19 @@ class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         parsing_res_list_json = []
         order_index = 1
         for idx, parsing_res in enumerate(parsing_res_list):
+            label = parsing_res.label
+            if label in VISUALIZE_INDEX_LABELS:
+                order = order_index
+                order_index += 1
+            else:
+                order = None
             res_dict = {
                 "block_label": parsing_res.label,
                 "block_content": parsing_res.content,
                 "block_bbox": parsing_res.bbox,
                 "block_id": idx,
-                "block_order": order_index,
+                "block_order": order,
             }
-            order_index += 1
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
                     res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
