@@ -2439,6 +2439,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>returnWordBox</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>return_word_box</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
