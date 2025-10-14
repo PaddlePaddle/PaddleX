@@ -209,7 +209,6 @@ class _PPOCRVLPipeline(BasePipeline):
         blocks = []
         block_imgs = []
         text_prompts = []
-        is_table_flags = []
         vlm_block_ids = []
         figure_token_maps = []
         drop_figures_set = set()
@@ -246,7 +245,6 @@ class _PPOCRVLPipeline(BasePipeline):
                         text_prompt = "Formula Recognition:"
                     block_imgs.append(block_img)
                     text_prompts.append(text_prompt)
-                    is_table_flags.append(block_label == "table")
                     figure_token_maps.append(figure_token_map)
                     vlm_block_ids.append((i, j))
                     drop_figures_set.update(drop_figures)
@@ -256,44 +254,19 @@ class _PPOCRVLPipeline(BasePipeline):
             "max_new_tokens": 4096,
             **(vlm_kwargs or {}),
         }
-        vl_rec_results_table = list(
+        vl_rec_results = list(
             self.vl_rec_model.predict(
                 [
                     {
                         "image": block_img,
                         "query": text_prompt,
                     }
-                    for block_img, text_prompt, is_table in zip(
-                        block_imgs, text_prompts, is_table_flags
-                    )
-                    if is_table
-                ],
-                skip_special_tokens=False,
-                **kwargs,
-            )
-        )
-        vl_rec_results_other = list(
-            self.vl_rec_model.predict(
-                [
-                    {
-                        "image": block_img,
-                        "query": text_prompt,
-                    }
-                    for block_img, text_prompt, is_table in zip(
-                        block_imgs, text_prompts, is_table_flags
-                    )
-                    if not is_table
+                    for block_img, text_prompt in zip(block_imgs, text_prompts)
                 ],
                 skip_special_tokens=True,
                 **kwargs,
             )
         )
-        vl_rec_results = []
-        for is_table in is_table_flags:
-            if is_table:
-                vl_rec_results.append(vl_rec_results_table.pop(0))
-            else:
-                vl_rec_results.append(vl_rec_results_other.pop(0))
 
         parsing_res_lists = []
         table_res_lists = []
@@ -315,6 +288,8 @@ class _PPOCRVLPipeline(BasePipeline):
                     curr_vlm_block_idx += 1
                     vl_rec_result["image"] = block_img4vl
                     result_str = vl_rec_result.get("result", "")
+                    if result_str is None:
+                        result_str = ""
                     result_str = truncate_repetitive_content(result_str)
                     if ("\\(" in result_str and "\\)" in result_str) or (
                         "\\[" in result_str and "\\]" in result_str
