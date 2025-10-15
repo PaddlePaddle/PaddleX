@@ -395,13 +395,24 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
             - Token-to-img HTML map,
             - List of figure paths dropped.
     """
+
+    def gen_random_map(num):
+        exclude_digits = {"0", "1", "9"}
+        seq = []
+        i = 0
+        while len(seq) < num:
+            if not (set(str(i)) & exclude_digits):
+                seq.append(i)
+            i += 1
+        return seq
+
     import random
 
     random.seed(1024)
     token_map = {}
     table_x_min, table_y_min, table_x_max, table_y_max = table_box
     drop_idxes = []
-    random_map = list(range(len(figures)))
+    random_map = gen_random_map(len(figures))
     random.shuffle(random_map)
     for figure_id, figure in enumerate(figures):
         figure_x_min, figure_y_min, figure_x_max, figure_y_max = figure["coordinate"]
