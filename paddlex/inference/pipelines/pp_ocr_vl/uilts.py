@@ -145,7 +145,7 @@ def merge_images(images, aligns="center"):
         align = aligns[i - 1]
         w = max(merged.width, img2.width)
         h = merged.height + img2.height
-        new_img = Image.new("BGR", (w, h), (255, 255, 255))
+        new_img = Image.new("RGB", (w, h), (255, 255, 255))
         if align == "center":
             x1 = (w - merged.width) // 2
             x2 = (w - img2.width) // 2
