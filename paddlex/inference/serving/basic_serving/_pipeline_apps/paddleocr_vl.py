@@ -18,7 +18,7 @@ from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
-from ...schemas.pp_ocr_vl import INFER_ENDPOINT, InferRequest, InferResult
+from ...schemas.paddleocr_vl import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common

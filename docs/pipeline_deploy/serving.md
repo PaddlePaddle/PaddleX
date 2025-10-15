@@ -255,8 +255,8 @@ paddlex --serve --pipeline image_classification --use_hpip
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.3/paddlex_hps_doc_understanding_sdk.tar.gz">paddlex_hps_doc_understanding_sdk.tar.gz</a></td>
 </tr>
 <tr>
-<td>PP-OCR-VL</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.3/paddlex_hps_PP-OCR-VL_sdk.tar.gz">paddlex_hps_PP-OCR-VL_sdk.tar.gz</a></td>
+<td>PaddleOCR-VL</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.3/paddlex_hps_PaddleOCR-VL_sdk.tar.gz">paddlex_hps_PaddleOCR-VL_sdk.tar.gz</a></td>
 </tr>
 </tbody>
 </table>

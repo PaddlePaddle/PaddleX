@@ -16,7 +16,7 @@ from .constants import SUPPORTED_BACKENDS
 
 
 def model_name_to_module_name(model_name):
-    mod_name = model_name.lower().replace("-", "_")
+    mod_name = model_name.lower().replace("-", "_").replace(".", "")
     if mod_name[0].isdigit():
         return "m_" + mod_name
     return mod_name

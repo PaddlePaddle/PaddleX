@@ -29,7 +29,7 @@ CONFIG_GETTER_KEY = "get_config"
 CHAT_TEMPLATE_PATH_GETTER_KEY = "get_chat_template_path"
 DEFAULT_CHAT_TEMPLATE_FILENAME = "chat_template.jinja"
 
-ALL_MODEL_NAMES = {"PaddleOCR-VL"}
+ALL_MODEL_NAMES = {"PaddleOCR-VL-0.9B"}
 
 
 def _check_model_name_and_backend(model_name, backend):

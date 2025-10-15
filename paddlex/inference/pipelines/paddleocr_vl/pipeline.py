@@ -678,7 +678,7 @@ class _PPOCRVLPipeline(BasePipeline):
 
 @pipeline_requires_extra("ocr")
 class PPOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
-    entities = "PP-OCR-VL"
+    entities = "PaddleOCR-VL"
 
     @property
     def _pipeline_cls(self):

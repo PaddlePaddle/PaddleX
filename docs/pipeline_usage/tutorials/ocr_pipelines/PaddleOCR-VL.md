@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# PP-OCR-VL产线使用教程
+# PaddleOCR-VL产线使用教程
 
-## PP-OCR-VL产线介绍
+## PaddleOCR-VL产线介绍
 
 <待补充>
 
@@ -294,11 +294,11 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地
 > 在进行 GPU 推理时，默认配置可能会占用超过 16 GB 的显存，请务必确认 GPU 显存容量充足。若需减少显存占用，可参考下文说明修改配置文件，关闭不必要的功能。
 
 ### 2.1 命令行方式体验
-一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_ocr_vl_demo.png)，并将 `--input` 替换为本地路径，进行预测
+一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline PP-OCR-VL \
-        --input pp_ocr_vl_demo.png \
+paddlex --pipeline PaddleOCR-VL \
+        --input paddleocr_vl_demo.png \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --save_path ./output \
@@ -313,7 +313,7 @@ paddlex --pipeline PP-OCR-VL \
 
 <details><summary> 👉点击展开</summary>
 <pre><code>
-{'res': {'input_path': 'pp_structure_v3_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_seal_recognition': False, 'use_table_recognition': True, 'use_formula_recognition': True, 'use_chart_recognition': False, 'use_region_detection': True}, 'parsing_res_list': [{'block_label': 'doc_title', 'block_content': '助力双方交往搭建友谊桥梁', 'block_bbox': [133, 36, 1379, 123], 'block_id': 0, 'block_order': 1}, {'block_label': 'text', 'block_content': '本报记者沈小晓任彦黄培昭', 'block_bbox': [584, 159, 927, 179], 'block_id': 1, 'block_order': 2}, {'block_label': 'image', 'block_content': '', 'block_bbox': [774, 201, 1502, 685], 'block_id': 2, 'block_order': None}, {'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。中国驻厄立特里亚大使馆供图', 'block_bbox': [808, 704, 1484, 747], 'block_id': 3, 'block_order': None}, {'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青年依次登台表演中国民族舞、现代舞、扇子舞等，曼妙的舞姿赢得现场观众阵阵掌声。这是日前危立特里亚高等教育与研究院孔子学院(以下简称“厄特孔院")举办“喜迎新年"中国歌舞比赛的场景。\n', 'block_bbox': [9, 201, 358, 338], 'block_id': 4, 'block_order': 3}, {'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年来，在高质量共建“一带一路”框架下，中厄两国人文交流不断深化，互利合作的民意基础日益深厚。\n', 'block_bbox': [9, 345, 358, 435], 'block_id': 5, 'block_order': 4}, {'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的未来不是梦”\n', 'block_bbox': [28, 456, 339, 514], 'block_id': 6, 'block_order': 5}, {'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你心中的每一个角落……"厄立特里亚阿斯马拉大学综合楼二层，一阵优美的歌声在走廊里回响。循着熟悉的旋律轻轻推开一间教室的门，学生们正跟着老师学唱中文歌曲《同一首歌》。', 'block_bbox': [9, 536, 358, 651], 'block_id': 7, 'block_order': 6}, {'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一节中文歌曲课。为了让学生们更好地理解歌词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐字翻译和解释歌词。随着伴奏声响起，学生们边唱边随着节拍摇动身体，现场气氛热烈。', 'block_bbox': [9, 658, 359, 770], 'block_id': 8, 'block_order': 7}, {'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学生大部分来自首都阿斯马拉的中小学，年龄最小的仅有6岁。”尤斯拉告诉记者。', 'block_bbox': [10, 776, 359, 842], 'block_id': 9, 'block_order': 8}, {'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立学校的艺术老师。她12岁开始在厄特孔院学习中文，在2017年第十届“汉语桥"世界中学生中文比赛中获得厄立特里亚赛区第一名，并和同伴代表厄立特里亚前往中国参加决赛，获得团体优胜奖。2022年起，尤斯拉开始在厄特孔院兼职教授中文歌曲，每周末两个课时。“中国文化博大精深，我希望我的学生们能够通过中文歌曲更好地理解中国文化。”她说。', 'block_bbox': [9, 848, 358, 1057], 'block_id': 10, 'block_order': 9}, {'block_label': 'text', 'block_content': '“姐姐，你想去中国吗?”“非常想！我想去看故宫、爬长城。”尤斯拉的学生中有一对能歌善舞的姐妹，姐姐露娅今年15岁，妹妹莉娅14岁，两人都已在厄特孔院学习多年，中文说得格外流利。\n', 'block_bbox': [9, 1064, 358, 1177], 'block_id': 11, 'block_order': 10}, {'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文和中国文化的热爱，我们姐妹俩始终相互鼓励，一起学习。我们的中文一天比一天好，还学会了中文歌和中国舞。我们一定要到中国去。学好中文，我们的未来不是梦！”', 'block_bbox': [8, 1184, 358, 1297], 'block_id': 12, 'block_order': 11}, {'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所孔院成立于2013年3月，由贵州财经大学和', 'block_bbox': [10, 1304, 358, 1346], 'block_id': 13, 'block_order': 12}, {'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开设了中国语言课程和中国文化课程，注册学生2万余人次。10余年来，厄特孔院已成为当地民众了解中国的一扇窗口。', 'block_bbox': [388, 200, 740, 290], 'block_id': 14, 'block_order': 13}, {'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益增多，阿斯马拉大学教学点已难以满足教学需要。2024年4月，由中企蜀道集团所属四川路桥承建的孔院教学楼项目在阿斯马拉开工建设，预计今年上半年竣工，建成后将为危特孔院提供全新的办学场地。\n', 'block_bbox': [389, 297, 740, 435], 'block_id': 15, 'block_order': 14}, {'block_label': 'paragraph_title', 'block_content': '“在中国学习的经历让我看到更广阔的世界”', 'block_bbox': [409, 456, 718, 515], 'block_id': 16, 'block_order': 15}, {'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和培训人员积极投身国家建设，成为助力该国发展的人才和厄中友好的见证者和推动者。', 'block_bbox': [389, 537, 740, 603], 'block_id': 17, 'block_order': 16}, {'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰娜·特韦尔德·凯莱塔就是其中一位。她曾在中华女子学院攻读硕士学位，研究方向是女性领导力与社会发展。其间，她实地走访中国多个地区，获得了观察中国社会发展的第一手资料。\n', 'block_bbox': [389, 609, 740, 745], 'block_id': 18, 'block_order': 17}, {'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹新：“中国的发展在当今世界是独一无二的。沿着中国特色社会主义道路坚定前行，中国创造了发展奇迹，这一切都离不开中国共产党的领导。中国的发展经验值得许多国家学习借鉴。”\n', 'block_bbox': [389, 752, 740, 889], 'block_id': 19, 'block_order': 18}, {'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生穆卢盖塔·泽穆伊对中国怀有深厚感情。8年前，在北京师范大学获得硕士学位后，穆卢盖塔在社交媒体上写下这样一段话：“这是我人生的重要一步，自此我拥有了一双坚固的鞋子，赋予我穿越荆棘的力量。”', 'block_bbox': [389, 896, 740, 1033], 'block_id': 20, 'block_order': 19}, {'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教育等领域的发展，“中国在科研等方面的实力与日俱增。在中国学习的经历让我看到更广阔的世界，从中受益匪浅。”\n', 'block_bbox': [389, 1040, 740, 1129], 'block_id': 21, 'block_order': 20}, {'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特孔院学习3年，在中国书法、中国画等方面表现干分优秀，在2024年厄立特里亚赛区的“汉语桥”比赛中获得一等奖。莉迪亚说：“学习中国书法让我的内心变得安宁和纯粹。我也喜欢中国的服饰，希望未来能去中国学习，把中国不同民族元素融入服装设计中，创作出更多精美作品，也把厄特文化分享给更多的中国朋友。”\n', 'block_bbox': [389, 1136, 740, 1345], 'block_id': 22, 'block_order': 21}, {'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约好了在一起，我们欢迎你……”在一场中厄青年联谊活动上，四川路桥中方员工同当地大学生合唱《北京欢迎你》。厄立特里亚技术学院计算机科学与工程专业学生鲁夫塔·谢拉是其中一名演唱者，她很早便在孔院学习中文，一直在为去中国留学作准备。“这句歌词是我们两国人民友谊的生动写照。无论是投身于厄立特里亚基础设施建设的中企员工，还是在中国留学的厄立特里亚学子，两国人民携手努力，必将推动两国关系不断向前发展。”鲁夫塔说。\n', 'block_bbox': [769, 776, 1121, 1058], 'block_id': 23, 'block_order': 22}, {'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨马瑞表示：“每年我们都会组织学生到中国访问学习，自前有超过5000名厄立特里亚学生在中国留学。学习中国的教育经验，有助于提升厄立特里亚的教育水平。”', 'block_bbox': [770, 1064, 1121, 1177], 'block_id': 24, 'block_order': 23}, {'block_label': 'paragraph_title', 'block_content': '“共同向世界展示非洲和亚洲的灿烂文明”', 'block_bbox': [790, 1200, 1102, 1259], 'block_id': 25, 'block_order': 24}, {'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜒曲折的盘山公路一路向东寻找丝路印迹。驱车两个小时，记者来到位于厄立特里亚港口城市马萨', 'block_bbox': [770, 1280, 1122, 1346], 'block_id': 26, 'block_order': 25}, {'block_label': 'text', 'block_content': '瓦的北红海省博物馆。', 'block_bbox': [1154, 776, 1331, 794], 'block_id': 27, 'block_order': 26}, {'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利斯古城的中国古代陶制酒器，罐身上写着“万”“和”“禅”“山”等汉字。“这件文物证明，很早以前我们就通过海上丝绸之路进行贸易往来与文化交流。这也是厄立特里亚与中国友好交往历史的有力证明。”北红海省博物馆研究与文献部负责人伊萨亚斯·特斯法兹吉说。\n', 'block_bbox': [1152, 800, 1502, 986], 'block_id': 28, 'block_order': 27}, {'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学研究员菲尔蒙·特韦尔德十分喜爱中国文化。他表示：“学习彼此的语言和文化，将帮助厄中两国人民更好地理解彼此，助力双方交往，搭建友谊桥梁。”\n', 'block_bbox': [1152, 992, 1502, 1106], 'block_id': 29, 'block_order': 28}, {'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努重达姆·优素福曾多次访问中国，对中华文明的传承与创新、现代化博物馆的建设与发展印象深刻。“中国博物馆不仅有许多保存完好的文物，还充分运用先进科技手段进行展示，帮助人们更好理解中华文明。”塔吉丁说，“危立特里亚与中国都拥有悠久的文明，始终相互理解、相互尊重。我希望未来与中国同行加强合作，共同向世界展示非洲和亚洲的灿烂文明。”\n', 'block_bbox': [1151, 1112, 1502, 1346], 'block_id': 30, 'block_order': 29}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9864752888679504, 'coordinate': [774.821, 201.05176, 1502.1008, 685.7733]}, {'cls_id': 2, 'label': 'text', 'score': 0.9859225749969482, 'coordinate': [769.8655, 776.2444, 1121.5986, 1058.4167]}, {'cls_id': 2, 'label': 'text', 'score': 0.9857110381126404, 'coordinate': [1151.98, 1112.5356, 1502.7852, 1346.3569]}, {'cls_id': 2, 'label': 'text', 'score': 0.9847239255905151, 'coordinate': [389.0322, 1136.3547, 740.2322, 1345.928]}, {'cls_id': 2, 'label': 'text', 'score': 0.9842492938041687, 'coordinate': [1152.1504, 800.1625, 1502.1265, 986.1522]}, {'cls_id': 2, 'label': 'text', 'score': 0.9840831160545349, 'coordinate': [9.158066, 848.8696, 358.5725, 1057.832]}, {'cls_id': 2, 'label': 'text', 'score': 0.9802583456039429, 'coordinate': [9.335953, 201.10046, 358.31543, 338.78876]}, {'cls_id': 2, 'label': 'text', 'score': 0.9801402688026428, 'coordinate': [389.1556, 297.4113, 740.07556, 435.41647]}, {'cls_id': 2, 'label': 'text', 'score': 0.9793564081192017, 'coordinate': [389.18976, 752.0959, 740.0832, 889.88043]}, {'cls_id': 2, 'label': 'text', 'score': 0.9793409109115601, 'coordinate': [389.02496, 896.34143, 740.7431, 1033.9465]}, {'cls_id': 2, 'label': 'text', 'score': 0.9776486754417419, 'coordinate': [8.950775, 1184.7842, 358.75067, 1297.8755]}, {'cls_id': 2, 'label': 'text', 'score': 0.9773538708686829, 'coordinate': [770.7178, 1064.5714, 1121.2249, 1177.9928]}, {'cls_id': 2, 'label': 'text', 'score': 0.9773064255714417, 'coordinate': [389.38086, 609.7071, 740.0553, 745.3206]}, {'cls_id': 2, 'label': 'text', 'score': 0.9765821099281311, 'coordinate': [1152.0115, 992.296, 1502.4929, 1106.1166]}, {'cls_id': 2, 'label': 'text', 'score': 0.9761461019515991, 'coordinate': [9.46727, 536.993, 358.2047, 651.32025]}, {'cls_id': 2, 'label': 'text', 'score': 0.975399911403656, 'coordinate': [9.353531, 1064.3059, 358.45312, 1177.8347]}, {'cls_id': 2, 'label': 'text', 'score': 0.9730532169342041, 'coordinate': [9.932312, 345.36237, 358.03476, 435.1646]}, {'cls_id': 2, 'label': 'text', 'score': 0.9722575545310974, 'coordinate': [388.91736, 200.93637, 740.00793, 290.80692]}, {'cls_id': 2, 'label': 'text', 'score': 0.9710634350776672, 'coordinate': [389.39496, 1040.3186, 740.0091, 1129.7168]}, {'cls_id': 2, 'label': 'text', 'score': 0.9696939587593079, 'coordinate': [9.6145935, 658.1123, 359.06088, 770.0288]}, {'cls_id': 2, 'label': 'text', 'score': 0.9664148092269897, 'coordinate': [770.235, 1280.4562, 1122.0927, 1346.4742]}, {'cls_id': 2, 'label': 'text', 'score': 0.9597565531730652, 'coordinate': [389.66678, 537.5609, 740.06274, 603.17725]}, {'cls_id': 2, 'label': 'text', 'score': 0.9594324827194214, 'coordinate': [10.162949, 776.86414, 359.08307, 842.1771]}, {'cls_id': 2, 'label': 'text', 'score': 0.9484634399414062, 'coordinate': [10.402863, 1304.7743, 358.9441, 1346.3749]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9476125240325928, 'coordinate': [28.159409, 456.7627, 339.5631, 514.9665]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9427680969238281, 'coordinate': [790.6992, 1200.3663, 1102.3799, 1259.1647]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9424256682395935, 'coordinate': [409.02832, 456.6831, 718.8154, 515.5757]}, {'cls_id': 10, 'label': 'doc_title', 'score': 0.9376171827316284, 'coordinate': [133.77905, 36.884415, 1379.6667, 123.46867]}, {'cls_id': 2, 'label': 'text', 'score': 0.9020254015922546, 'coordinate': [584.9165, 159.1416, 927.22876, 179.01605]}, {'cls_id': 2, 'label': 'text', 'score': 0.895164430141449, 'coordinate': [1154.3364, 776.74646, 1331.8564, 794.2301]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.7892374992370605, 'coordinate': [808.9641, 704.2555, 1484.0623, 747.2296]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 129,   42],
+{'res': {'input_path': 'paddleocr_vl_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_seal_recognition': False, 'use_table_recognition': True, 'use_formula_recognition': True, 'use_chart_recognition': False, 'use_region_detection': True}, 'parsing_res_list': [{'block_label': 'doc_title', 'block_content': '助力双方交往搭建友谊桥梁', 'block_bbox': [133, 36, 1379, 123], 'block_id': 0, 'block_order': 1}, {'block_label': 'text', 'block_content': '本报记者沈小晓任彦黄培昭', 'block_bbox': [584, 159, 927, 179], 'block_id': 1, 'block_order': 2}, {'block_label': 'image', 'block_content': '', 'block_bbox': [774, 201, 1502, 685], 'block_id': 2, 'block_order': None}, {'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。中国驻厄立特里亚大使馆供图', 'block_bbox': [808, 704, 1484, 747], 'block_id': 3, 'block_order': None}, {'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青年依次登台表演中国民族舞、现代舞、扇子舞等，曼妙的舞姿赢得现场观众阵阵掌声。这是日前危立特里亚高等教育与研究院孔子学院(以下简称“厄特孔院")举办“喜迎新年"中国歌舞比赛的场景。\n', 'block_bbox': [9, 201, 358, 338], 'block_id': 4, 'block_order': 3}, {'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年来，在高质量共建“一带一路”框架下，中厄两国人文交流不断深化，互利合作的民意基础日益深厚。\n', 'block_bbox': [9, 345, 358, 435], 'block_id': 5, 'block_order': 4}, {'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的未来不是梦”\n', 'block_bbox': [28, 456, 339, 514], 'block_id': 6, 'block_order': 5}, {'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你心中的每一个角落……"厄立特里亚阿斯马拉大学综合楼二层，一阵优美的歌声在走廊里回响。循着熟悉的旋律轻轻推开一间教室的门，学生们正跟着老师学唱中文歌曲《同一首歌》。', 'block_bbox': [9, 536, 358, 651], 'block_id': 7, 'block_order': 6}, {'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一节中文歌曲课。为了让学生们更好地理解歌词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐字翻译和解释歌词。随着伴奏声响起，学生们边唱边随着节拍摇动身体，现场气氛热烈。', 'block_bbox': [9, 658, 359, 770], 'block_id': 8, 'block_order': 7}, {'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学生大部分来自首都阿斯马拉的中小学，年龄最小的仅有6岁。”尤斯拉告诉记者。', 'block_bbox': [10, 776, 359, 842], 'block_id': 9, 'block_order': 8}, {'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立学校的艺术老师。她12岁开始在厄特孔院学习中文，在2017年第十届“汉语桥"世界中学生中文比赛中获得厄立特里亚赛区第一名，并和同伴代表厄立特里亚前往中国参加决赛，获得团体优胜奖。2022年起，尤斯拉开始在厄特孔院兼职教授中文歌曲，每周末两个课时。“中国文化博大精深，我希望我的学生们能够通过中文歌曲更好地理解中国文化。”她说。', 'block_bbox': [9, 848, 358, 1057], 'block_id': 10, 'block_order': 9}, {'block_label': 'text', 'block_content': '“姐姐，你想去中国吗?”“非常想！我想去看故宫、爬长城。”尤斯拉的学生中有一对能歌善舞的姐妹，姐姐露娅今年15岁，妹妹莉娅14岁，两人都已在厄特孔院学习多年，中文说得格外流利。\n', 'block_bbox': [9, 1064, 358, 1177], 'block_id': 11, 'block_order': 10}, {'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文和中国文化的热爱，我们姐妹俩始终相互鼓励，一起学习。我们的中文一天比一天好，还学会了中文歌和中国舞。我们一定要到中国去。学好中文，我们的未来不是梦！”', 'block_bbox': [8, 1184, 358, 1297], 'block_id': 12, 'block_order': 11}, {'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所孔院成立于2013年3月，由贵州财经大学和', 'block_bbox': [10, 1304, 358, 1346], 'block_id': 13, 'block_order': 12}, {'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开设了中国语言课程和中国文化课程，注册学生2万余人次。10余年来，厄特孔院已成为当地民众了解中国的一扇窗口。', 'block_bbox': [388, 200, 740, 290], 'block_id': 14, 'block_order': 13}, {'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益增多，阿斯马拉大学教学点已难以满足教学需要。2024年4月，由中企蜀道集团所属四川路桥承建的孔院教学楼项目在阿斯马拉开工建设，预计今年上半年竣工，建成后将为危特孔院提供全新的办学场地。\n', 'block_bbox': [389, 297, 740, 435], 'block_id': 15, 'block_order': 14}, {'block_label': 'paragraph_title', 'block_content': '“在中国学习的经历让我看到更广阔的世界”', 'block_bbox': [409, 456, 718, 515], 'block_id': 16, 'block_order': 15}, {'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和培训人员积极投身国家建设，成为助力该国发展的人才和厄中友好的见证者和推动者。', 'block_bbox': [389, 537, 740, 603], 'block_id': 17, 'block_order': 16}, {'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰娜·特韦尔德·凯莱塔就是其中一位。她曾在中华女子学院攻读硕士学位，研究方向是女性领导力与社会发展。其间，她实地走访中国多个地区，获得了观察中国社会发展的第一手资料。\n', 'block_bbox': [389, 609, 740, 745], 'block_id': 18, 'block_order': 17}, {'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹新：“中国的发展在当今世界是独一无二的。沿着中国特色社会主义道路坚定前行，中国创造了发展奇迹，这一切都离不开中国共产党的领导。中国的发展经验值得许多国家学习借鉴。”\n', 'block_bbox': [389, 752, 740, 889], 'block_id': 19, 'block_order': 18}, {'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生穆卢盖塔·泽穆伊对中国怀有深厚感情。8年前，在北京师范大学获得硕士学位后，穆卢盖塔在社交媒体上写下这样一段话：“这是我人生的重要一步，自此我拥有了一双坚固的鞋子，赋予我穿越荆棘的力量。”', 'block_bbox': [389, 896, 740, 1033], 'block_id': 20, 'block_order': 19}, {'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教育等领域的发展，“中国在科研等方面的实力与日俱增。在中国学习的经历让我看到更广阔的世界，从中受益匪浅。”\n', 'block_bbox': [389, 1040, 740, 1129], 'block_id': 21, 'block_order': 20}, {'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特孔院学习3年，在中国书法、中国画等方面表现干分优秀，在2024年厄立特里亚赛区的“汉语桥”比赛中获得一等奖。莉迪亚说：“学习中国书法让我的内心变得安宁和纯粹。我也喜欢中国的服饰，希望未来能去中国学习，把中国不同民族元素融入服装设计中，创作出更多精美作品，也把厄特文化分享给更多的中国朋友。”\n', 'block_bbox': [389, 1136, 740, 1345], 'block_id': 22, 'block_order': 21}, {'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约好了在一起，我们欢迎你……”在一场中厄青年联谊活动上，四川路桥中方员工同当地大学生合唱《北京欢迎你》。厄立特里亚技术学院计算机科学与工程专业学生鲁夫塔·谢拉是其中一名演唱者，她很早便在孔院学习中文，一直在为去中国留学作准备。“这句歌词是我们两国人民友谊的生动写照。无论是投身于厄立特里亚基础设施建设的中企员工，还是在中国留学的厄立特里亚学子，两国人民携手努力，必将推动两国关系不断向前发展。”鲁夫塔说。\n', 'block_bbox': [769, 776, 1121, 1058], 'block_id': 23, 'block_order': 22}, {'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨马瑞表示：“每年我们都会组织学生到中国访问学习，自前有超过5000名厄立特里亚学生在中国留学。学习中国的教育经验，有助于提升厄立特里亚的教育水平。”', 'block_bbox': [770, 1064, 1121, 1177], 'block_id': 24, 'block_order': 23}, {'block_label': 'paragraph_title', 'block_content': '“共同向世界展示非洲和亚洲的灿烂文明”', 'block_bbox': [790, 1200, 1102, 1259], 'block_id': 25, 'block_order': 24}, {'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜒曲折的盘山公路一路向东寻找丝路印迹。驱车两个小时，记者来到位于厄立特里亚港口城市马萨', 'block_bbox': [770, 1280, 1122, 1346], 'block_id': 26, 'block_order': 25}, {'block_label': 'text', 'block_content': '瓦的北红海省博物馆。', 'block_bbox': [1154, 776, 1331, 794], 'block_id': 27, 'block_order': 26}, {'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利斯古城的中国古代陶制酒器，罐身上写着“万”“和”“禅”“山”等汉字。“这件文物证明，很早以前我们就通过海上丝绸之路进行贸易往来与文化交流。这也是厄立特里亚与中国友好交往历史的有力证明。”北红海省博物馆研究与文献部负责人伊萨亚斯·特斯法兹吉说。\n', 'block_bbox': [1152, 800, 1502, 986], 'block_id': 28, 'block_order': 27}, {'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学研究员菲尔蒙·特韦尔德十分喜爱中国文化。他表示：“学习彼此的语言和文化，将帮助厄中两国人民更好地理解彼此，助力双方交往，搭建友谊桥梁。”\n', 'block_bbox': [1152, 992, 1502, 1106], 'block_id': 29, 'block_order': 28}, {'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努重达姆·优素福曾多次访问中国，对中华文明的传承与创新、现代化博物馆的建设与发展印象深刻。“中国博物馆不仅有许多保存完好的文物，还充分运用先进科技手段进行展示，帮助人们更好理解中华文明。”塔吉丁说，“危立特里亚与中国都拥有悠久的文明，始终相互理解、相互尊重。我希望未来与中国同行加强合作，共同向世界展示非洲和亚洲的灿烂文明。”\n', 'block_bbox': [1151, 1112, 1502, 1346], 'block_id': 30, 'block_order': 29}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9864752888679504, 'coordinate': [774.821, 201.05176, 1502.1008, 685.7733]}, {'cls_id': 2, 'label': 'text', 'score': 0.9859225749969482, 'coordinate': [769.8655, 776.2444, 1121.5986, 1058.4167]}, {'cls_id': 2, 'label': 'text', 'score': 0.9857110381126404, 'coordinate': [1151.98, 1112.5356, 1502.7852, 1346.3569]}, {'cls_id': 2, 'label': 'text', 'score': 0.9847239255905151, 'coordinate': [389.0322, 1136.3547, 740.2322, 1345.928]}, {'cls_id': 2, 'label': 'text', 'score': 0.9842492938041687, 'coordinate': [1152.1504, 800.1625, 1502.1265, 986.1522]}, {'cls_id': 2, 'label': 'text', 'score': 0.9840831160545349, 'coordinate': [9.158066, 848.8696, 358.5725, 1057.832]}, {'cls_id': 2, 'label': 'text', 'score': 0.9802583456039429, 'coordinate': [9.335953, 201.10046, 358.31543, 338.78876]}, {'cls_id': 2, 'label': 'text', 'score': 0.9801402688026428, 'coordinate': [389.1556, 297.4113, 740.07556, 435.41647]}, {'cls_id': 2, 'label': 'text', 'score': 0.9793564081192017, 'coordinate': [389.18976, 752.0959, 740.0832, 889.88043]}, {'cls_id': 2, 'label': 'text', 'score': 0.9793409109115601, 'coordinate': [389.02496, 896.34143, 740.7431, 1033.9465]}, {'cls_id': 2, 'label': 'text', 'score': 0.9776486754417419, 'coordinate': [8.950775, 1184.7842, 358.75067, 1297.8755]}, {'cls_id': 2, 'label': 'text', 'score': 0.9773538708686829, 'coordinate': [770.7178, 1064.5714, 1121.2249, 1177.9928]}, {'cls_id': 2, 'label': 'text', 'score': 0.9773064255714417, 'coordinate': [389.38086, 609.7071, 740.0553, 745.3206]}, {'cls_id': 2, 'label': 'text', 'score': 0.9765821099281311, 'coordinate': [1152.0115, 992.296, 1502.4929, 1106.1166]}, {'cls_id': 2, 'label': 'text', 'score': 0.9761461019515991, 'coordinate': [9.46727, 536.993, 358.2047, 651.32025]}, {'cls_id': 2, 'label': 'text', 'score': 0.975399911403656, 'coordinate': [9.353531, 1064.3059, 358.45312, 1177.8347]}, {'cls_id': 2, 'label': 'text', 'score': 0.9730532169342041, 'coordinate': [9.932312, 345.36237, 358.03476, 435.1646]}, {'cls_id': 2, 'label': 'text', 'score': 0.9722575545310974, 'coordinate': [388.91736, 200.93637, 740.00793, 290.80692]}, {'cls_id': 2, 'label': 'text', 'score': 0.9710634350776672, 'coordinate': [389.39496, 1040.3186, 740.0091, 1129.7168]}, {'cls_id': 2, 'label': 'text', 'score': 0.9696939587593079, 'coordinate': [9.6145935, 658.1123, 359.06088, 770.0288]}, {'cls_id': 2, 'label': 'text', 'score': 0.9664148092269897, 'coordinate': [770.235, 1280.4562, 1122.0927, 1346.4742]}, {'cls_id': 2, 'label': 'text', 'score': 0.9597565531730652, 'coordinate': [389.66678, 537.5609, 740.06274, 603.17725]}, {'cls_id': 2, 'label': 'text', 'score': 0.9594324827194214, 'coordinate': [10.162949, 776.86414, 359.08307, 842.1771]}, {'cls_id': 2, 'label': 'text', 'score': 0.9484634399414062, 'coordinate': [10.402863, 1304.7743, 358.9441, 1346.3749]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9476125240325928, 'coordinate': [28.159409, 456.7627, 339.5631, 514.9665]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9427680969238281, 'coordinate': [790.6992, 1200.3663, 1102.3799, 1259.1647]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9424256682395935, 'coordinate': [409.02832, 456.6831, 718.8154, 515.5757]}, {'cls_id': 10, 'label': 'doc_title', 'score': 0.9376171827316284, 'coordinate': [133.77905, 36.884415, 1379.6667, 123.46867]}, {'cls_id': 2, 'label': 'text', 'score': 0.9020254015922546, 'coordinate': [584.9165, 159.1416, 927.22876, 179.01605]}, {'cls_id': 2, 'label': 'text', 'score': 0.895164430141449, 'coordinate': [1154.3364, 776.74646, 1331.8564, 794.2301]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.7892374992370605, 'coordinate': [808.9641, 704.2555, 1484.0623, 747.2296]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 129,   42],
         ...,
         [ 129,  140]],
 
@@ -344,10 +344,10 @@ paddlex --pipeline PP-OCR-VL \
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-OCR-VL")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
 output = pipeline.predict(
-    input="./pp_ocr_vl_demo.png",
+    input="./paddleocr_vl_demo.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -363,7 +363,7 @@ for res in output:
 from pathlib import Path
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-OCR-VL")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
 input_file = "./your_pdf_file.pdf"
 output_path = Path("./output")
@@ -805,7 +805,7 @@ for item in markdown_images:
 - 调用`save_to_json()` 方法会将上述内容保存到指定的 `save_path` 中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于 json 文件不支持保存numpy数组，因此会将其中的 `numpy.array` 类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的 `save_path` 中，如果指定为目录，则会将版面区域检测可视化图像、版面阅读顺序可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 - 调用`save_to_markdown()` 方法会将转化后的 Markdown 文件保存到指定的 `save_path` 中，保存的文件路径为`save_path/{your_img_basename}.md`，如果输入是 PDF 文件，建议直接指定目录，否责多个 markdown 文件会被覆盖，该方法另外支持传入 `pretty` 参数用于控制是否将图片、表格等美化为居中展示。传入 `show_formula_number` 参数用于控制是否将公式编号展示在 markdown 结果文件中。
-- 调用 `concatenate_markdown_pages()` 方法将 `PP-OCR-VL pipeline` 输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容。
+- 调用 `concatenate_markdown_pages()` 方法将 `PaddleOCR-VL pipeline` 输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容。
 
 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 <table>
@@ -845,17 +845,17 @@ for item in markdown_images:
 
 此外，您可以获取版面解析产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 ```
-paddlex --get_pipeline_config PP-OCR-VL --save_path ./my_path
+paddlex --get_pipeline_config PaddleOCR-VL --save_path ./my_path
 ```
 若您获取了配置文件，即可对版面解析产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/PP-OCR-VL.yaml")
+pipeline = create_pipeline(pipeline="./my_path/PaddleOCR-VL.yaml")
 
 output = pipeline.predict(
-    input="./pp_ocr_vl_demo.png",
+    input="./paddleocr_vl_demo.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
@@ -903,7 +903,7 @@ docker run \
     --gpus all \
     --network host \
     ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server \
-    paddlex_genai_server --model_name PaddleOCR-VL --host 0.0.0.0 --port 8118 --backend vllm
+    paddlex_genai_server --model_name PaddleOCR-VL-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
 #### 3.1.2 通过 PaddleX CLI 和启动
@@ -926,7 +926,7 @@ paddlex --install genai-vllm-server
 安装完成后，可通过 `paddlex_genai_server` 命令启动服务：
 
 ```bash
-paddlex_genai_server --model_name PaddleOCR-VL --backend vllm --port 8118
+paddlex_genai_server --model_name PaddleOCR-VL-0.9B --backend vllm --port 8118
 ```
 
 该命令支持的参数如下：
@@ -951,10 +951,10 @@ paddlex --install genai-client
 接着，获取产线配置文件：
 
 ```bash
-paddlex --get_pipeline_config PP-OCR-VL
+paddlex --get_pipeline_config PaddleOCR-VL
 ```
 
-配置文件的默认保存路径为 `PP-OCR-VL.yaml`。将配置文件中的 `VLRecognition.genai_config.backend` 和 `VLRecognition.genai_config.server_url` 字段修改为与此前启动的服务相对应的值，例如：
+配置文件的默认保存路径为 `PaddleOCR-VL.yaml`。将配置文件中的 `VLRecognition.genai_config.backend` 和 `VLRecognition.genai_config.server_url` 字段修改为与此前启动的服务相对应的值，例如：
 
 ```yaml
 VLRecognition:
@@ -967,7 +967,7 @@ VLRecognition:
 之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：
 
 ```bash
-paddlex --pipeline PP-OCR-VL.yaml --input pp_ocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL.yaml --input paddleocr_vl_demo.png
 ```
 
 或通过 Python API 调用：
@@ -975,9 +975,9 @@ paddlex --pipeline PP-OCR-VL.yaml --input pp_ocr_vl_demo.png
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline("PP-OCR-VL.yaml")
+pipeline = create_pipeline("PaddleOCR-VL.yaml")
 
-for res in pipeline.predict("pp_ocr_vl_demo.png"):
+for res in pipeline.predict("paddleocr_vl_demo.png"):
     res.print()
 ```
 
@@ -1004,13 +1004,13 @@ PaddleX VLM 推理服务支持通过配置文件进行调参。以下示例展�
 2. 启动服务时指定配置文件路径：
 
    ```bash
-   paddlex_genai_server --model_name PaddleOCR-VL --backend vllm --backend_config vllm_config.yaml
+   paddlex_genai_server --model_name PaddleOCR-VL-0.9B --backend vllm --backend_config vllm_config.yaml
    ```
 
 如果使用支持进程替换（process substitution）的 shell（如 Bash），也可以无需创建配置文件，直接在启动服务时传入配置项：
 
 ```bash
-paddlex_genai_server --model_name PaddleOCR-VL --backend vllm --backend_config <(echo -e 'gpu-memory-utilization: 0.3\nmax-num-seqs: 128')
+paddlex_genai_server --model_name PaddleOCR-VL-0.9B --backend vllm --backend_config <(echo -e 'gpu-memory-utilization: 0.3\nmax-num-seqs: 128')
 ```
 
 #### 3.3.2 客户端参数调整

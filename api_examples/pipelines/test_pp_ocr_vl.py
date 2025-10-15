@@ -14,7 +14,7 @@
 
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-OCR-VL")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
 output = pipeline.predict(
     "/paddle/project/PaddleX/demo_paper.png",

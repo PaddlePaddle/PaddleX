@@ -41,7 +41,7 @@ class DocVLMPredictor(BasePredictor):
         "PP-DocBee": {"PP-DocBee-2B", "PP-DocBee-7B"},
         "PP-DocBee2": {"PP-DocBee2-3B"},
         "PP-Chart2Table": {"PP-Chart2Table"},
-        "PaddleOCR-VL": {"PaddleOCR-VL"},
+        "PaddleOCR-VL": {"PaddleOCR-VL-0.9B"},
     }
 
     def __init__(self, *args, **kwargs):
@@ -65,9 +65,12 @@ class DocVLMPredictor(BasePredictor):
 
             self.infer, self.processor = self._build(**kwargs)
 
-            if self.model_name == "PaddleOCR-VL" and self.batch_sampler.batch_size > 1:
+            if (
+                self.model_name == "PaddleOCR-VL-0.9B"
+                and self.batch_sampler.batch_size > 1
+            ):
                 logging.warning(
-                    "Currently, the PaddleOCR-VL local model only supports batch size of 1. The batch size will be updated to 1."
+                    "Currently, the PaddleOCR-VL-0.9B local model only supports batch size of 1. The batch size will be updated to 1."
                 )
                 self.batch_sampler.batch_size = 1
         else:

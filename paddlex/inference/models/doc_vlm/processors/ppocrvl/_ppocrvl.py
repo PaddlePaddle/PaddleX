@@ -58,7 +58,7 @@ class PPOCRVLProcessor(object):
         tokenizer=None,
     ):
         self.image_token = (
-            "<|image_pad|>"
+            "<|IMAGE_PLACEHOLDER|>"
             if not hasattr(tokenizer, "image_token")
             else tokenizer.image_token
         )

@@ -593,7 +593,7 @@ PIPELINE_ARGUMENTS = {
             "help": "Determines whether to use end-to-end wireless table recognition model",
         },
     ],
-    "PP-OCR-VL": [
+    "PaddleOCR-VL": [
         {
             "name": "--use_doc_orientation_classify",
             "type": bool,

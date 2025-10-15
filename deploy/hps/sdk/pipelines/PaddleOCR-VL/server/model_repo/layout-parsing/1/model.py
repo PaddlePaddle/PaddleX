@@ -75,10 +75,10 @@ class TritonPythonModel(BaseTritonPythonModel):
                 raise TypeError(f"{type(file_storage)} does not support getting URLs.")
 
     def get_input_model_type(self):
-        return schemas.pp_ocr_vl.InferRequest
+        return schemas.paddleocr_vl.InferRequest
 
     def get_result_model_type(self):
-        return schemas.pp_ocr_vl.InferResult
+        return schemas.paddleocr_vl.InferResult
 
     def run(self, input, log_id):
         return self.run_batch([input], [log_id])
@@ -285,7 +285,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                 )
             )
 
-        return schemas.pp_ocr_vl.InferResult(
+        return schemas.paddleocr_vl.InferResult(
             layoutParsingResults=layout_parsing_results,
             dataInfo=data_info,
         )
