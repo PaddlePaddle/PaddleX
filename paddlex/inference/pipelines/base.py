@@ -91,6 +91,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         if self.hpi_config is not None:
             hpi_config = hpi_config or {}
             hpi_config = {**self.hpi_config, **hpi_config}
+        genai_config = config.get("genai_config", None)
 
         from .. import create_predictor
 
@@ -110,6 +111,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             pp_option=pp_option,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
+            genai_config=genai_config,
             **kwargs,
         )
         return model
@@ -145,6 +147,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             hpi_config=hpi_config,
         )
         return pipeline
+
+    def close(self):
+        pass
 
     def __call__(self, input, **kwargs):
         """

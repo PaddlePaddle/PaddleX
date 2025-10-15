@@ -593,6 +593,90 @@ PIPELINE_ARGUMENTS = {
             "help": "Determines whether to use end-to-end wireless table recognition model",
         },
     ],
+    "PaddleOCR-VL": [
+        {
+            "name": "--use_doc_orientation_classify",
+            "type": bool,
+            "help": "Determines whether to use document orientation classification",
+        },
+        {
+            "name": "--use_doc_unwarping",
+            "type": bool,
+            "help": "Determines whether to use document unwarping",
+        },
+        {
+            "name": "--use_layout_detection",
+            "type": bool,
+            "help": "Determines whether to use layout detection",
+        },
+        {
+            "name": "--use_chart_recognition",
+            "type": bool,
+            "help": "Determines whether to use document chart recognition",
+        },
+        {
+            "name": "--layout_threshold",
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
+            "help": "Determines confidence threshold for layout detection",
+        },
+        {
+            "name": "--layout_nms",
+            "type": bool,
+            "help": "Determines whether to use non maximum suppression",
+        },
+        {
+            "name": "--layout_unclip_ratio",
+            "type": custom_type(
+                Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]
+            ),
+            "help": "Determines unclip ratio for layout detection boxes",
+        },
+        {
+            "name": "--layout_merge_bboxes_mode",
+            "type": custom_type(Optional[Union[str, Dict[int, str]]]),
+            "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
+        },
+        {
+            "name": "--use_queues",
+            "type": bool,
+            "help": "Determines whether to use queues",
+        },
+        {
+            "name": "--prompt_label",
+            "type": custom_type(Optional[str]),
+            "help": "Sets the prompt label when not using layout detection",
+        },
+        {
+            "name": "--format_block_content",
+            "type": bool,
+            "help": "Determines whether to format block content",
+        },
+        {
+            "name": "--repetition_penalty",
+            "type": custom_type(Optional[float]),
+            "help": "",
+        },
+        {
+            "name": "--temperature",
+            "type": custom_type(Optional[float]),
+            "help": "Temperature parameter for VLLM model.",
+        },
+        {
+            "name": "--top_p",
+            "type": custom_type(Optional[float]),
+            "help": "Top-p parameter for VLLM model.",
+        },
+        {
+            "name": "--min_pixels",
+            "type": custom_type(Optional[int]),
+            "help": "Sets the minimum pixels for VLLM model.",
+        },
+        {
+            "name": "--max_pixels",
+            "type": custom_type(Optional[int]),
+            "help": "Sets the max_pixels pixels for VLLM model.",
+        },
+    ],
     "ts_forecast": None,
     "ts_anomaly_detection": None,
     "ts_classification": None,
