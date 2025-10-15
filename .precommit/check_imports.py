@@ -30,7 +30,7 @@ from setup import REQUIRED_DEPS
 # 1. It is supported only in Python 3.10+.
 # 2. It requires the packages to be installed, but we are doing a static check.
 MOD_TO_DEP = {
-    "aistudio-sdk": "aistudio_sdk",
+    "aistudio_sdk": "aistudio-sdk",
     "aiohttp": "aiohttp",
     "baidubce": "bce-python-sdk",
     "bs4": "beautifulsoup4",
