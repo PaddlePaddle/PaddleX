@@ -15,21 +15,21 @@
 
 def get_network_class(backend):
     if backend == "vllm":
-        from ._vllm import PPOCRVLForConditionalGeneration
+        from ._vllm import PaddleOCRVLForConditionalGeneration
 
-        return PPOCRVLForConditionalGeneration
+        return PaddleOCRVLForConditionalGeneration
     elif backend == "sglang":
-        from ._sglang import PPOCRVLForConditionalGeneration
+        from ._sglang import PaddleOCRVLForConditionalGeneration
 
-        return PPOCRVLForConditionalGeneration
+        return PaddleOCRVLForConditionalGeneration
     else:
         raise ValueError(f"Unsupported backend: {backend}")
 
 
 def get_processor_class(backend):
     if backend == "sglang":
-        from ._sglang import PPOCRVLImageProcessor
+        from ._sglang import PaddleOCRVLImageProcessor
 
-        return PPOCRVLImageProcessor
+        return PaddleOCRVLImageProcessor
     else:
         raise ValueError(f"Unsupported backend: {backend}")

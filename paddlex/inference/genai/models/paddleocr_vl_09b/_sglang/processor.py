@@ -87,7 +87,7 @@ if all(map(is_dep_available, ("sglang", "torch"))):
     async def resize_image_async(image, min_pixels, max_pixels, factor):
         return resize_image(image, min_pixels, max_pixels, factor)
 
-    class PPOCRVLImageProcessor(BaseMultimodalProcessor):
+    class PaddleOCRVLImageProcessor(BaseMultimodalProcessor):
 
         def __init__(self, hf_config, server_args, _processor, *args, **kwargs):
             super().__init__(hf_config, server_args, _processor, *args, **kwargs)
