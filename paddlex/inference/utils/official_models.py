@@ -295,6 +295,7 @@ ALL_MODELS = [
     "GroundingDINO-T",
     "SAM-H_box",
     "SAM-H_point",
+    "PP-DocLayoutV2",
     "PP-DocLayout-L",
     "PP-DocLayout-M",
     "PP-DocLayout-S",
