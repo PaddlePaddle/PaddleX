@@ -94,8 +94,8 @@ class _PPOCRVLPipeline(BasePipeline):
             )
             model_name = layout_det_config.get("model_name", None)
             assert (
-                model_name is not None and model_name == "PP-DocLayoutV2-L"
-            ), "model_name must be PP-DocLayoutV2-L"
+                model_name is not None and model_name == "PP-DocLayoutV2"
+            ), "model_name must be PP-DocLayoutV2"
             layout_kwargs = {}
             if (threshold := layout_det_config.get("threshold", None)) is not None:
                 layout_kwargs["threshold"] = threshold
