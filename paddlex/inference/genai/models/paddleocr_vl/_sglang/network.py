@@ -14,7 +14,7 @@
 
 
 from collections.abc import Iterable
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Set, Tuple, Union
 
 import numpy as np
 
@@ -26,9 +26,14 @@ if all(
     import torch
     import torch.nn as nn
     from einops import rearrange
+    from flash_attn import flash_attn_varlen_func
+    from sglang.srt.distributed import get_tensor_model_parallel_world_size
     from sglang.srt.layers.activation import get_act_fn
-    from sglang.srt.layers.attention.vision import VisionAttention
-    from sglang.srt.layers.linear import ColumnParallelLinear, RowParallelLinear
+    from sglang.srt.layers.linear import (
+        ColumnParallelLinear,
+        QKVParallelLinear,
+        RowParallelLinear,
+    )
     from sglang.srt.layers.quantization.base_config import QuantizationConfig
     from sglang.srt.managers.mm_utils import (
         MultiModalityDataPaddingPatternMultimodalTokens,
@@ -259,6 +264,101 @@ if all(
                     f" {pixel_values.dim()}. Expected 4 or 5."
                 )
 
+    def apply_rotary_pos_emb_flashatt(
+        q: torch.Tensor,
+        k: torch.Tensor,
+        cos: torch.Tensor,
+        sin: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        from sglang.srt.layers.rotary_embedding import apply_rotary_pos_emb
+
+        q_embed, k_embed = apply_rotary_pos_emb(q, k, cos, sin)
+        return q_embed, k_embed
+
+    class SiglipAttention(nn.Module):
+        """Multi-headed attention from 'Attention Is All You
+        Need' paper."""
+
+        def __init__(
+            self,
+            config,
+            quant_config: Optional[QuantizationConfig] = None,
+            prefix: str = "",
+        ):
+            super().__init__()
+            self.config = config
+
+            hidden_size = config.hidden_size
+            self.hidden_size = config.hidden_size
+            tp_size = get_tensor_model_parallel_world_size()
+            self.total_num_heads = config.num_attention_heads
+            assert self.total_num_heads % tp_size == 0
+            self.num_heads = self.total_num_heads // tp_size
+            self.total_num_kv_heads = config.num_attention_heads
+            if self.total_num_kv_heads >= tp_size:
+                assert self.total_num_kv_heads % tp_size == 0
+            else:
+                assert tp_size % self.total_num_kv_heads == 0
+            self.num_kv_heads = max(1, self.total_num_kv_heads // tp_size)
+            self.head_dim = config.hidden_size // self.total_num_heads
+            self.q_size = self.num_heads * self.head_dim
+            self.kv_size = self.num_kv_heads * self.head_dim
+            self.scale = self.head_dim**-0.5
+
+            self.qkv_proj = QKVParallelLinear(
+                hidden_size,
+                self.head_dim,
+                self.total_num_heads,
+                self.total_num_kv_heads,
+                bias=True,
+                quant_config=quant_config,
+                prefix=f"{prefix}.qkv_proj",
+            )
+            self.out_proj = RowParallelLinear(
+                input_size=hidden_size,
+                output_size=hidden_size,
+                quant_config=quant_config,
+                prefix=f"{prefix}.out_proj",
+            )
+
+        def forward(
+            self,
+            hidden_states: torch.Tensor,
+            cu_seqlens: Optional[List[torch.Tensor]] = None,
+            rope_emb: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
+        ) -> torch.Tensor:
+            batch_size, seq_length, embed_dim = hidden_states.shape
+
+            qkv_states, _ = self.qkv_proj(hidden_states)
+            queries, keys, values = qkv_states.chunk(3, dim=-1)
+
+            queries = queries.view(seq_length, self.num_heads, self.head_dim)
+            keys = keys.view(seq_length, self.num_heads, self.head_dim)
+            values = values.view(seq_length, self.num_heads, self.head_dim)
+
+            if rope_emb is not None:
+                cos, sin = rope_emb
+                queries, keys = apply_rotary_pos_emb_flashatt(
+                    queries.unsqueeze(0), keys.unsqueeze(0), cos, sin
+                )
+                queries = queries.squeeze(0)
+                keys = keys.squeeze(0)
+
+            max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max().item()
+
+            attn_output = flash_attn_varlen_func(
+                queries,
+                keys,
+                values,
+                cu_seqlens_q=cu_seqlens,
+                cu_seqlens_k=cu_seqlens,
+                max_seqlen_q=max_seqlen,
+                max_seqlen_k=max_seqlen,
+            ).reshape(seq_length, -1)
+
+            output, _ = self.out_proj(attn_output)
+            return output
+
     class SigLIPRotaryEmbedding(nn.Module):
 
         def __init__(self, dim: int, theta: float = 10000.0) -> None:
@@ -326,46 +426,21 @@ if all(
             self,
             config,
             quant_config: Optional[QuantizationConfig] = None,
-            attn_implementation: Optional[str] = None,
             prefix: str = "",
         ):
             super().__init__()
             self.embed_dim = config.hidden_size
-            self.num_heads = config.num_attention_heads
             self.layer_norm1 = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_eps)
+            self.self_attn = SiglipAttention(
+                config,
+                quant_config=quant_config,
+                prefix=f"{prefix}.self_attn",
+            )
             self.layer_norm2 = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_eps)
             self.mlp = SiglipMLP(
                 config,
                 quant_config=quant_config,
                 prefix=f"{prefix}.mlp",
-            )
-
-            if attn_implementation is None:
-                softmax_in_single_precision = False
-                qkv_backend = None
-            elif attn_implementation == "sdpa":
-                softmax_in_single_precision = False
-                qkv_backend = "sdpa"
-            elif attn_implementation == "flash_attention_2":
-                softmax_in_single_precision = False
-                qkv_backend = "triton_attn"
-            elif attn_implementation == "eager":
-                softmax_in_single_precision = True
-                qkv_backend = "sdpa"
-            elif attn_implementation == "flash_attention_3":
-                softmax_in_single_precision = False
-                qkv_backend = "fa3"
-
-            self.self_attn = VisionAttention(
-                embed_dim=self.embed_dim,
-                num_heads=self.num_heads,
-                projection_size=self.embed_dim,
-                use_qkv_parallel=True,
-                qkv_backend=qkv_backend,
-                softmax_in_single_precision=softmax_in_single_precision,
-                flatten_batch=True,
-                quant_config=quant_config,
-                prefix=f"{prefix}.self_attn",
             )
 
         def forward(
@@ -379,10 +454,11 @@ if all(
 
             hidden_states = self.layer_norm1(hidden_states)
             hidden_states = self.self_attn(
-                hidden_states,
+                hidden_states=hidden_states,
                 cu_seqlens=cu_seqlens,
-                position_embeddings=rope_emb,
+                rope_emb=rope_emb,
             )
+
             hidden_states = residual + hidden_states
 
             residual = hidden_states
@@ -700,7 +776,7 @@ if all(
                 input_ids, hidden_states, self.lm_head, forward_batch
             )
 
-        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> set[str]:
+        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> Set[str]:
             stacked_params_mapping = [
                 # (param_name, weight_name, shard_id)
                 (".qkv_proj", ".q_proj", "q"),
@@ -722,33 +798,19 @@ if all(
                     if weight_name not in name:
                         continue
                     name = name.replace(weight_name, param_name)
-
-                    # Skip loading extra bias for GPTQ models.
-                    if name.endswith(".bias") and name not in params_dict:
-                        continue
                     param = params_dict[name]
                     weight_loader = param.weight_loader
                     weight_loader(param, loaded_weight, shard_id)
                     break
                 else:
-                    if "visual" in name:
-                        # adapt to VisionAttention
-                        name = name.replace(r"self_attn.qkv.", r"self_attn.qkv_proj.")
-                        name = name.replace(r"self_attn.out_proj.", r"self_attn.proj.")
-
-                    try:
-                        # Skip loading extra bias for GPTQ models.
-                        if name.endswith(".bias") and name not in params_dict:
-                            continue
+                    if name in params_dict.keys():
                         param = params_dict[name]
-                    except KeyError:
-                        print(params_dict.keys())
-                        raise
-
-                    weight_loader = getattr(
-                        param, "weight_loader", default_weight_loader
-                    )
-                    weight_loader(param, loaded_weight)
+                        weight_loader = getattr(
+                            param, "weight_loader", default_weight_loader
+                        )
+                        weight_loader(param, loaded_weight)
+                    else:
+                        raise KeyError(f"Parameter '{name}' not found in model.")
 
     # monkey patch
     def get_input_embeddings(self) -> nn.Embedding:
