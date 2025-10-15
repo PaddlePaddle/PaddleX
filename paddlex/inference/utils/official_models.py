@@ -315,6 +315,11 @@ ALL_MODELS = [
     "th_PP-OCRv5_mobile_rec",
     "el_PP-OCRv5_mobile_rec",
     "en_PP-OCRv5_mobile_rec",
+    "arabic_PP-OCRv5_mobile_rec",
+    "te_PP-OCRv5_mobile_rec",
+    "ta_PP-OCRv5_mobile_rec",
+    "devanagari_PP-OCRv5_mobile_rec",
+    "cyrillic_PP-OCRv5_mobile_rec"
 ]
 
 
@@ -388,6 +393,11 @@ OCR_MODELS = [
     "te_PP-OCRv3_mobile_rec",
     "UniMERNet",
     "UVDoc",
+    "arabic_PP-OCRv5_mobile_rec",
+    "te_PP-OCRv5_mobile_rec",
+    "ta_PP-OCRv5_mobile_rec",
+    "devanagari_PP-OCRv5_mobile_rec",
+    "cyrillic_PP-OCRv5_mobile_rec"
 ]
 
 

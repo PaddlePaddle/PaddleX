@@ -183,6 +183,7 @@ EXTRAS = {
             "shapely",
             "tiktoken",
             "tokenizers",
+            "python-bidi",
         ],
         "speech": [
             "ftfy",

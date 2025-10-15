@@ -96,6 +96,7 @@ MOD_TO_DEP = {
     "vllm": "vllm",
     "xformers": "xformers",
     "yarl": "yarl",
+    "bidi": "python-bidi",
 }
 MOD_PATTERN = re.compile(
     rf"^(?:{'|'.join([re.escape(mod) for mod in MOD_TO_DEP])})(?=\.|$)"

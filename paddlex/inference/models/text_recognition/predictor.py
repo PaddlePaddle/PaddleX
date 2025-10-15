@@ -15,6 +15,7 @@
 import numpy as np
 
 from ....modules.text_recognition.model_list import MODELS
+from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import (
     ARABIC_FONT,
     CYRILLIC_FONT,
@@ -35,7 +36,11 @@ from ..base import BasePredictor
 from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
 from .result import TextRecResult
 
+if is_dep_available("python-bidi"):
+    from bidi.algorithm import get_display
 
+
+@class_requires_deps("python-bidi")
 class TextRecPredictor(BasePredictor):
 
     entities = MODELS
@@ -104,6 +109,11 @@ class TextRecPredictor(BasePredictor):
             wh_ratio_list=wh_ratio_list,
             max_wh_ratio=max_wh_ratio,
         )
+        if self.model_name in (
+            "arabic_PP-OCRv3_mobile_rec",
+            "arabic_PP-OCRv5_mobile_rec",
+        ):
+            texts = [get_display(s) for s in texts]
         return {
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,
@@ -152,6 +162,7 @@ class TextRecPredictor(BasePredictor):
 
         if self.model_name in (
             "cyrillic_PP-OCRv3_mobile_rec",
+            "cyrillic_PP-OCRv5_mobile_rec",
             "eslav_PP-OCRv5_mobile_rec",
         ):
             return CYRILLIC_FONT
@@ -168,17 +179,23 @@ class TextRecPredictor(BasePredictor):
         if self.model_name == "el_PP-OCRv5_mobile_rec":
             return EL_FONT
 
-        if self.model_name == "arabic_PP-OCRv3_mobile_rec":
+        if self.model_name in (
+            "arabic_PP-OCRv3_mobile_rec",
+            "arabic_PP-OCRv5_mobile_rec",
+        ):
             return ARABIC_FONT
 
         if self.model_name == "ka_PP-OCRv3_mobile_rec":
             return KANNADA_FONT
 
-        if self.model_name == "te_PP-OCRv3_mobile_rec":
+        if self.model_name in ("te_PP-OCRv3_mobile_rec", "te_PP-OCRv5_mobile_rec"):
             return TELUGU_FONT
 
-        if self.model_name == "ta_PP-OCRv3_mobile_rec":
+        if self.model_name in ("ta_PP-OCRv3_mobile_rec", "ta_PP-OCRv5_mobile_rec"):
             return TAMIL_FONT
 
-        if self.model_name == "devanagari_PP-OCRv3_mobile_rec":
+        if self.model_name in (
+            "devanagari_PP-OCRv3_mobile_rec",
+            "devanagari_PP-OCRv5_mobile_rec",
+        ):
             return DEVANAGARI_FONT
