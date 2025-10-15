@@ -56,14 +56,14 @@ BASE_DEP_SPECS = {
     "prettytable": "",
     "py-cpuinfo": "",
     "pyclipper": "",
-    "pycocotools": "<=2.0.8",  # pycocotools upgrade incompatible since 2.0.9
+    "pycocotools": "<= 2.0.8",  # pycocotools upgrade incompatible since 2.0.9
     "pydantic": ">= 2",
     "pypdfium2": ">= 4",
     "PyYAML": "== 6.0.2",
     "regex": "",
     "requests": "",
     "ruamel.yaml": "",
-    "safetensors": "",
+    "safetensors": "@ https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl; sys_platform == 'linux'",
     "scikit-image": "",
     "scikit-learn": "",
     "sentencepiece": "",
