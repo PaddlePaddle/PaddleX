@@ -13,5 +13,6 @@
 # limitations under the License.
 
 from .GOT_ocr_2_0 import PPChart2TableInference
+from .ppocrvl import PPOCRVLForConditionalGeneration
 from .qwen2_5_vl import PPDocBee2Inference
 from .qwen2_vl import PPDocBeeInference, Qwen2VLForConditionalGeneration

@@ -67,4 +67,5 @@ STATIC_SHAPE_MODEL_LIST = [
     "PP-DocLayout-S",
     "PP-DocLayout_plus-L",
     "PP-DocBlockLayout",
+    "PP-DocLayoutV2",
 ]

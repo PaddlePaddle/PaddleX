@@ -32,12 +32,13 @@ In short, just three steps:
 * `create_model`: Instantiate the prediction model object;
   * Parameters:
     * `model_name`: `str` type, model name, such as "PP-LCNet_x1_0", "/path/to/PP-LCNet_x1_0_infer/";
-    * `model_dir`: `str` type, local path to directory of inference model files ，such as "/path/to/PP-LCNet_x1_0_infer/", default to `None`, means that use the official model specified by `model_name`;
+    * `model_dir`: `str | None` type, local path to directory of inference model files ，such as "/path/to/PP-LCNet_x1_0_infer/", default to `None`, means that use the official model specified by `model_name`;
     * `batch_size`: `int` type, default to `1`;
     * `device`: `str` type, used to set the inference device, such as "cpu", "gpu:2" for GPU settings. By default, using 0 id GPU if available, otherwise CPU;
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). Please refer to [4-Inference Configuration](#4-inference-configuration) for more details;
-    * `use_hpip`：`bool` type, whether to enable the high-performance inference plugin;
-    * `hpi_config`：`dict | None` type, high-performance inference configuration;
+    * `use_hpip`: `bool` type, whether to enable the high-performance inference plugin;
+    * `hpi_config`: `dict | None` type, high-performance inference configuration;
+    * `genai_config`: `dict | None` type, generative AI configuration;
     * _`inference hyperparameters`_: used to set common inference hyperparameters. Please refer to specific model description document for details.
 
 ### 2. Perform Inference Prediction by Calling the `predict()` Method of the Prediction Model Object

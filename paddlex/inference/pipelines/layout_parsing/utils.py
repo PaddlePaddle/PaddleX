@@ -219,38 +219,43 @@ def calculate_projection_overlap_ratio(
 
 
 def calculate_overlap_ratio(
-    bbox1: Union[list, tuple], bbox2: Union[list, tuple], mode="union"
+    bbox1: Union[np.ndarray, list, tuple],
+    bbox2: Union[np.ndarray, list, tuple],
+    mode="union",
 ) -> float:
     """
-    Calculate the overlap ratio between two bounding boxes.
+    Calculate the overlap ratio between two bounding boxes using NumPy.
 
     Args:
-        bbox1 (list or tuple): The first bounding box, format [x_min, y_min, x_max, y_max]
-        bbox2 (list or tuple): The second bounding box, format [x_min, y_min, x_max, y_max]
+        bbox1 (np.ndarray, list or tuple): The first bounding box, format [x_min, y_min, x_max, y_max]
+        bbox2 (np.ndarray, list or tuple): The second bounding box, format [x_min, y_min, x_max, y_max]
         mode (str): The mode of calculation, either 'union', 'small', or 'large'.
 
     Returns:
         float: The overlap ratio value between the two bounding boxes
     """
-    x_min_inter = max(bbox1[0], bbox2[0])
-    y_min_inter = max(bbox1[1], bbox2[1])
-    x_max_inter = min(bbox1[2], bbox2[2])
-    y_max_inter = min(bbox1[3], bbox2[3])
+    bbox1 = np.array(bbox1)
+    bbox2 = np.array(bbox2)
 
-    inter_width = max(0, x_max_inter - x_min_inter)
-    inter_height = max(0, y_max_inter - y_min_inter)
+    x_min_inter = np.maximum(bbox1[0], bbox2[0])
+    y_min_inter = np.maximum(bbox1[1], bbox2[1])
+    x_max_inter = np.minimum(bbox1[2], bbox2[2])
+    y_max_inter = np.minimum(bbox1[3], bbox2[3])
 
-    inter_area = float(inter_width) * float(inter_height)
+    inter_width = np.maximum(0, x_max_inter - x_min_inter)
+    inter_height = np.maximum(0, y_max_inter - y_min_inter)
 
-    bbox1_area = caculate_bbox_area(bbox1)
-    bbox2_area = caculate_bbox_area(bbox2)
+    inter_area = inter_width * inter_height
+
+    bbox1_area = calculate_bbox_area(bbox1)
+    bbox2_area = calculate_bbox_area(bbox2)
 
     if mode == "union":
         ref_area = bbox1_area + bbox2_area - inter_area
     elif mode == "small":
-        ref_area = min(bbox1_area, bbox2_area)
+        ref_area = np.minimum(bbox1_area, bbox2_area)
     elif mode == "large":
-        ref_area = max(bbox1_area, bbox2_area)
+        ref_area = np.maximum(bbox1_area, bbox2_area)
     else:
         raise ValueError(
             f"Invalid mode {mode}, must be one of ['union', 'small', 'large']."
@@ -365,8 +370,8 @@ def _get_minbox_if_overlap_by_ratio(
             The selected bounding box or None if the overlap ratio is not exceeded.
     """
     # Calculate the areas of both bounding boxes
-    area1 = caculate_bbox_area(bbox1)
-    area2 = caculate_bbox_area(bbox2)
+    area1 = calculate_bbox_area(bbox1)
+    area2 = calculate_bbox_area(bbox2)
     # Calculate the overlap ratio using a helper function
     overlap_ratio = calculate_overlap_ratio(bbox1, bbox2, mode="small")
     # Check if the overlap ratio exceeds the threshold
@@ -415,11 +420,9 @@ def remove_overlap_blocks(
                 is_block2_image = block2["label"] == "image"
 
                 if is_block1_image != is_block2_image:
-                    # 如果只有一个块在视觉标签中，删除在视觉标签中的那个块
                     drop_index = i if is_block1_image else j
                     overlap_image_blocks.append(blocks["boxes"][drop_index])
                 else:
-                    # 如果两个块都在或都不在视觉标签中，根据 overlap_box_index 决定删除哪个块
                     drop_index = i if overlap_box_index == 1 else j
 
                 dropped_indexes.add(drop_index)
@@ -616,7 +619,7 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
         ocr_res["rec_scores"].append(1)
 
 
-def caculate_bbox_area(bbox):
+def calculate_bbox_area(bbox):
     """Calculate bounding box area"""
     x1, y1, x2, y2 = map(float, bbox)
     area = abs((x2 - x1) * (y2 - y1))
@@ -724,8 +727,11 @@ def get_show_color(label: str, order_label=False) -> Tuple:
             "vision_footnote": (144, 238, 144, 100),  # Light Green
             # Deep Purple (from 'texts_list')
             "text": (153, 0, 76, 100),
+            "vertical_text": (153, 0, 76, 100),
+            "inline_formula": (153, 0, 76, 100),
             # Bright Green (from 'interequations_list')
             "formula": (0, 255, 0, 100),
+            "display_formula": (0, 255, 0, 100),
             "abstract": (255, 239, 213, 100),  # Papaya Whip
             # Medium Green (from 'lists_list' and 'indexs_list')
             "content": (40, 169, 92, 100),
@@ -740,7 +746,7 @@ def get_show_color(label: str, order_label=False) -> Tuple:
             "chart": (216, 191, 216, 100),  # Thistle
             # Pale Yellow-Green (from 'tables_footnote_list')
             "reference": (229, 255, 204, 100),
-            # "reference_content": (229, 255, 204, 100),
+            "reference_content": (229, 255, 204, 100),
             "algorithm": (255, 250, 240, 100),  # Floral White
         }
     default_color = (158, 158, 158, 100)

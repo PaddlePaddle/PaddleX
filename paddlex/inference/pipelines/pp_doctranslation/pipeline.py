@@ -83,6 +83,10 @@ class PP_DocTranslation_Pipeline(BasePipeline):
 
         self.markdown_batch_sampler = MarkDownBatchSampler()
 
+    def close(self):
+        if self.layout_parsing_pipeline is not None:
+            self.layout_parsing_pipeline.close()
+
     def inintial_visual_predictor(self, config: dict) -> None:
         """
         Initializes the visual predictor with the given configuration.

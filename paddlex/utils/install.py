@@ -23,35 +23,47 @@ from . import logging
 
 
 def install_packages_from_requirements_file(
-    requirements_file_path, pip_install_opts=None
+    requirements_file_path,
+    pip_install_opts=None,
+    constraints="base",
 ):
-    from .deps import DEP_SPECS
+    from .deps import BASE_DEP_SPECS, REQUIRED_DEP_SPECS
 
-    # TODO: Precompute or cache the constraints
-    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
-        for reqs in DEP_SPECS.values():
-            for req in reqs:
-                req = Requirement(req)
-                if req.marker and not req.marker.evaluate():
-                    continue
-                if req.url:
-                    req = f"{req.name}@{req.url}"
-                else:
-                    req = f"{req.name}{req.specifier}"
-                f.write(req + "\n")
-        constraints_file_path = f.name
+    if constraints not in ("base", "required", "none"):
+        raise ValueError(f"Invalid constraints setting: {constraints}")
 
     args = [
         sys.executable,
         "-m",
         "pip",
         "install",
-        "-c",
-        constraints_file_path,
         *(pip_install_opts or []),
         "-r",
         requirements_file_path,
     ]
+
+    if constraints == "base":
+        dep_specs = BASE_DEP_SPECS
+    elif constraints == "required":
+        dep_specs = REQUIRED_DEP_SPECS
+    else:
+        dep_specs = None
+    if dep_specs:
+        # TODO: Precompute or cache the constraints
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+            for reqs in dep_specs.values():
+                for req in reqs:
+                    req = Requirement(req)
+                    if req.marker and not req.marker.evaluate():
+                        continue
+                    if req.url:
+                        req = f"{req.name}@{req.url}"
+                    else:
+                        req = f"{req.name}{req.specifier}"
+                    f.write(req + "\n")
+            constraints_file_path = f.name
+        args.extend(["-c", constraints_file_path])
+
     logging.debug("Command: %s", args)
 
     try:
@@ -60,14 +72,16 @@ def install_packages_from_requirements_file(
         os.unlink(constraints_file_path)
 
 
-def install_packages(requirements, pip_install_opts=None):
+def install_packages(requirements, pip_install_opts=None, constraints="base"):
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
         for req in requirements:
             f.write(req + "\n")
         reqs_file_path = f.name
     try:
         return install_packages_from_requirements_file(
-            reqs_file_path, pip_install_opts=pip_install_opts
+            reqs_file_path,
+            pip_install_opts=pip_install_opts,
+            constraints=constraints,
         )
     finally:
         os.unlink(reqs_file_path)
