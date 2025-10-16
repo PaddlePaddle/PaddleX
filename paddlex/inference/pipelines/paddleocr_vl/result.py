@@ -54,12 +54,12 @@ VISUALIZE_INDEX_LABELS = [
 ]
 
 
-class PPOCRVLBlock(object):
-    """PPOCRVL Block Class"""
+class PaddleOCRVLBlock(object):
+    """PaddleOCRVL Block Class"""
 
     def __init__(self, label, bbox, content="") -> None:
         """
-        Initialize a PPOCRVLBlock object.
+        Initialize a PaddleOCRVLBlock object.
 
         Args:
             label (str): Label assigned to the block.
@@ -211,9 +211,9 @@ def build_handle_funcs_dict(
     }
 
 
-class PPOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
+class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
     """
-    PPOCRVLResult class for holding and formatting OCR/VL parsing results.
+    PaddleOCRVLResult class for holding and formatting OCR/VL parsing results.
     """
 
     def __init__(self, data) -> None:

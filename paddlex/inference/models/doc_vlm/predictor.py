@@ -103,10 +103,10 @@ class DocVLMPredictor(BasePredictor):
             processor: The correspounding processor for the model.
         """
         from .modeling import (
+            PaddleOCRVLForConditionalGeneration,
             PPChart2TableInference,
             PPDocBee2Inference,
             PPDocBeeInference,
-            PPOCRVLForConditionalGeneration,
         )
 
         # build processor
@@ -149,7 +149,7 @@ class DocVLMPredictor(BasePredictor):
                     "The PaddelOCR-VL series does not support `use_hpip=True` for now."
                 )
             with TemporaryDeviceChanger(self.device):
-                model = PPOCRVLForConditionalGeneration.from_pretrained(
+                model = PaddleOCRVLForConditionalGeneration.from_pretrained(
                     self.model_dir,
                     dtype=self.dtype,
                     convert_from_hf=True,
@@ -260,10 +260,10 @@ class DocVLMPredictor(BasePredictor):
         from ..common.tokenizer.tokenizer_utils import ChatTemplate
         from .processors import (
             GOTImageProcessor,
+            PaddleOCRVLProcessor,
             PPChart2TableProcessor,
             PPDocBee2Processor,
             PPDocBeeProcessor,
-            PPOCRVLProcessor,
             Qwen2_5_VLImageProcessor,
             Qwen2VLImageProcessor,
             SiglipImageProcessor,
@@ -298,7 +298,7 @@ class DocVLMPredictor(BasePredictor):
             tokenizer.chat_template = ChatTemplate._compile_jinja_template(
                 chat_template_file.read_text(encoding="utf-8")
             )
-            return PPOCRVLProcessor(
+            return PaddleOCRVLProcessor(
                 image_processor=image_processor,
                 tokenizer=tokenizer,
             )
