@@ -64,10 +64,7 @@ BASE_DEP_SPECS = {
     "regex": "",
     "requests": "",
     "ruamel.yaml": "",
-    "safetensors": [
-        "@ https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl ; sys_platform == 'linux'",
-        "; sys_platform != 'linux'",
-    ],
+    "safetensors": "",
     "scikit-image": "",
     "scikit-learn": "",
     "sentencepiece": "",
