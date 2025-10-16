@@ -42,7 +42,7 @@ from .....utils.benchmark import benchmark
 from ..common import BatchFeature, fetch_image
 
 
-class PPOCRVLProcessor(object):
+class PaddleOCRVLProcessor(object):
     _DEFAULT_TEXT_KWARGS = {
         "padding": False,
         "return_tensors": "pd",

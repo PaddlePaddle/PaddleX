@@ -887,6 +887,7 @@ PaddleX 针对不同推理加速框架提供了相应的 Docker 镜像，用于�
 
 ```bash
 docker run \
+    -it \
     --rm \
     --gpus all \
     --network host \
@@ -899,6 +900,7 @@ docker run \
 
 ```bash
 docker run \
+    -it \
     --rm \
     --gpus all \
     --network host \
