@@ -321,7 +321,7 @@ ALL_MODELS = [
     "te_PP-OCRv5_mobile_rec",
     "ta_PP-OCRv5_mobile_rec",
     "devanagari_PP-OCRv5_mobile_rec",
-    "cyrillic_PP-OCRv5_mobile_rec"
+    "cyrillic_PP-OCRv5_mobile_rec",
 ]
 
 
@@ -360,6 +360,7 @@ OCR_MODELS = [
     "PP-DocLayout-M",
     "PP-DocLayout_plus-L",
     "PP-DocLayout-S",
+    "PP-DocLayoutV2",
     "PP-FormulaNet-L",
     "PP-FormulaNet_plus-L",
     "PP-FormulaNet_plus-M",
@@ -399,7 +400,7 @@ OCR_MODELS = [
     "te_PP-OCRv5_mobile_rec",
     "ta_PP-OCRv5_mobile_rec",
     "devanagari_PP-OCRv5_mobile_rec",
-    "cyrillic_PP-OCRv5_mobile_rec"
+    "cyrillic_PP-OCRv5_mobile_rec",
 ]
 
 
