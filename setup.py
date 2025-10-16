@@ -59,6 +59,7 @@ BASE_DEP_SPECS = {
     "pycocotools": "<= 2.0.8",  # pycocotools upgrade incompatible since 2.0.9
     "pydantic": ">= 2",
     "pypdfium2": ">= 4",
+    "python-bidi": "",
     "PyYAML": "== 6.0.2",
     "regex": "",
     "requests": "",
@@ -163,6 +164,7 @@ EXTRAS = {
             "opencv-contrib-python",
             "pyclipper",
             "pypdfium2",
+            "python-bidi",
             "shapely",
         ],
         "ocr": [
@@ -176,6 +178,7 @@ EXTRAS = {
             "premailer",
             "pyclipper",
             "pypdfium2",
+            "python-bidi",
             "regex",
             "safetensors",
             "scikit-learn",
@@ -183,7 +186,6 @@ EXTRAS = {
             "shapely",
             "tiktoken",
             "tokenizers",
-            "python-bidi",
         ],
         "speech": [
             "ftfy",
