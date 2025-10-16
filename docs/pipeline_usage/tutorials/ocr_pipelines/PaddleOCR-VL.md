@@ -878,12 +878,7 @@ for res in output:
 
 #### 3.1.1 使用 Docker 镜像
 
-PaddleX 针对不同推理加速框架提供了相应的 Docker 镜像，用于快速启动 VLM 推理服务：
-
-* **vLLM**：`ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server`
-* **SGLang**：`ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-sglang-server`
-
-以 vLLM 为例，可使用以下命令启动服务：
+PaddleX 提供了 Docker 镜像，用于快速启动 vLLM 推理服务。可使用以下命令启动服务：
 
 ```bash
 docker run \
