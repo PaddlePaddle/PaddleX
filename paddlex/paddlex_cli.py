@@ -369,6 +369,7 @@ def install(args):
         for plugin_type in plugin_types:
             if "vllm" in plugin_type or "sglang" in plugin_type:
                 try:
+                    install_packages(["wheel"], constraints="required")
                     if "vllm" in plugin_type:
                         install_packages(
                             ["flash-attn == 2.8.3"], constraints="required"
