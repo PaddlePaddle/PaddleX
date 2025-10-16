@@ -49,7 +49,7 @@ def get_model_dir(model_name, backend):
             f"Could not prepare the official model for the {repr(model_name)} model with the {repr(backend)} backend."
         ) from e
 
-    return model_dir
+    return str(model_dir)
 
 
 def get_model_components(model_name, backend):

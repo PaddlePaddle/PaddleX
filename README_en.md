@@ -37,6 +37,10 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 ## 📣 Recent Updates
 
+🔥🔥 **2025.10.16, PaddleX v3.3.0 Released**
+
+- **Added support for inference and deployment of PaddleOCR-VL and PP-OCRv5 multilingual models.**
+
 🔥🔥 **2025.8.20, PaddleX v3.2.0 Released**
 
 - **Deployment Capability Upgrades:**
