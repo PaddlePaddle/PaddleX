@@ -626,7 +626,7 @@ if all(
             return sample_hidden_state
 
     class SiglipVisionModel(nn.Module):
-        config_class = "PPOCRVisionConfig"
+        config_class = "PaddleOCRVisionConfig"
         main_input_name = "pixel_values"
 
         def __init__(
@@ -679,7 +679,7 @@ if all(
                 cu_seqlens=cu_seqlens,
             )
 
-    class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM):
+    class PaddleOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM):
 
         def __init__(self, *, config, quant_config=None, prefix: str = ""):
             super().__init__(config=config, prefix=prefix)

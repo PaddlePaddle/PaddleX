@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .network import PPOCRVLForConditionalGeneration
-from .processor import PPOCRVLImageProcessor
+from .network import PaddleOCRVLForConditionalGeneration
+from .processor import PaddleOCRVLImageProcessor

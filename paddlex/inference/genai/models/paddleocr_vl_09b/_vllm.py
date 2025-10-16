@@ -136,7 +136,7 @@ if all(
             w_bar = math.ceil(width * beta / factor) * factor
         return h_bar, w_bar
 
-    class PPOCRVLProcessingInfo(BaseProcessingInfo):
+    class PaddleOCRVLProcessingInfo(BaseProcessingInfo):
 
         def get_hf_config(self):
             return self.ctx.get_hf_config()
@@ -194,7 +194,9 @@ if all(
             image_size = hf_config.vision_config.image_size
             return ImageSize(height=image_size, width=image_size)
 
-    class PPOCRVLDummyInputsBuilder(BaseDummyInputsBuilder[PPOCRVLProcessingInfo]):
+    class PaddleOCRVLDummyInputsBuilder(
+        BaseDummyInputsBuilder[PaddleOCRVLProcessingInfo]
+    ):
 
         def get_dummy_text(self, mm_counts: Mapping[str, int]) -> str:
             num_images = mm_counts.get("image", 0)
@@ -221,7 +223,9 @@ if all(
                 )
             }
 
-    class PPOCRVLMultiModalProcessor(BaseMultiModalProcessor[PPOCRVLProcessingInfo]):
+    class PaddleOCRVLMultiModalProcessor(
+        BaseMultiModalProcessor[PaddleOCRVLProcessingInfo]
+    ):
 
         def _call_hf_processor(
             self,
@@ -955,7 +959,7 @@ if all(
             return sample_hidden_state
 
     class SiglipVisionModel(nn.Module):
-        config_class = "PPOCRVisionConfig"
+        config_class = "PaddleOCRVisionConfig"
         main_input_name = "pixel_values"
 
         def __init__(
@@ -1073,9 +1077,9 @@ if all(
             return loaded_params
 
     @MULTIMODAL_REGISTRY.register_processor(
-        PPOCRVLMultiModalProcessor,
-        info=PPOCRVLProcessingInfo,
-        dummy_inputs=PPOCRVLDummyInputsBuilder,
+        PaddleOCRVLMultiModalProcessor,
+        info=PaddleOCRVLProcessingInfo,
+        dummy_inputs=PaddleOCRVLDummyInputsBuilder,
     )
     @support_torch_compile(
         # set dynamic_arg_dims to support mrope
@@ -1086,7 +1090,7 @@ if all(
             "inputs_embeds": 0,
         }
     )
-    class PPOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM, SupportsMultiModal):
+    class PaddleOCRVLForConditionalGeneration(Ernie4_5_ForCausalLM, SupportsMultiModal):
 
         def __init__(self, *, vllm_config: VllmConfig, prefix: str = ""):
             super().__init__(vllm_config=vllm_config, prefix=prefix)
