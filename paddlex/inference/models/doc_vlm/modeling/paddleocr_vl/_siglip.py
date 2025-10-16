@@ -48,7 +48,7 @@ from ....common.vlm.transformers.model_outputs import (
     BaseModelOutput,
     BaseModelOutputWithPooling,
 )
-from ._config import PaddleOCRVLConfig, PPOCRVisionConfig
+from ._config import PaddleOCRVisionConfig, PaddleOCRVLConfig
 
 
 def rotate_half(x):
@@ -617,7 +617,7 @@ class SiglipEncoder(nn.Layer):
 class SiglipMultiheadAttentionPoolingHead(nn.Layer):
     """Multihead Attention Pooling."""
 
-    def __init__(self, config: PPOCRVisionConfig):
+    def __init__(self, config: PaddleOCRVisionConfig):
         super().__init__()
 
         self.probe = self.create_parameter(
@@ -646,7 +646,7 @@ class SiglipMultiheadAttentionPoolingHead(nn.Layer):
 
 
 class SiglipVisionTransformer(nn.Layer):
-    def __init__(self, config: PPOCRVisionConfig):
+    def __init__(self, config: PaddleOCRVisionConfig):
         super().__init__()
         self.config = config
         embed_dim = config.hidden_size
@@ -816,10 +816,10 @@ class SiglipPreTrainedModel(PretrainedModel):
 
 
 class SiglipVisionModel(SiglipPreTrainedModel):
-    config_class = PPOCRVisionConfig
+    config_class = PaddleOCRVisionConfig
     main_input_name = "pixel_values"
 
-    def __init__(self, config: PPOCRVisionConfig):
+    def __init__(self, config: PaddleOCRVisionConfig):
         super().__init__(config)
 
         self.vision_model = SiglipVisionTransformer(config)

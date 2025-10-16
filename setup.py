@@ -78,6 +78,7 @@ BASE_DEP_SPECS = {
     "tqdm": "",
     "typing-extensions": "",
     "ujson": "",
+    "python-bidi": "",
 }
 
 REQUIRED_DEPS = [
