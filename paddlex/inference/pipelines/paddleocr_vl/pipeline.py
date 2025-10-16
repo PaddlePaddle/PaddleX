@@ -675,6 +675,23 @@ class _PPOCRVLPipeline(BasePipeline):
                 if thread_vlm.is_alive():
                     logging.warning("VLM worker did not terminate in time")
 
+    def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
+        """
+        Concatenate Markdown content from multiple pages into a single document.
+
+        Args:
+            markdown_list (list): A list containing Markdown data for each page.
+
+        Returns:
+            tuple: A tuple containing the processed Markdown text.
+        """
+        markdown_texts = ""
+
+        for res in markdown_list:
+            markdown_texts += "\n\n" + res["markdown_texts"]
+
+        return markdown_texts
+
 
 @pipeline_requires_extra("ocr")
 class PPOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
