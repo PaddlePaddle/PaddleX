@@ -42,18 +42,14 @@ def _check_model_name_and_backend(model_name, backend):
 def get_model_dir(model_name, backend):
     _check_model_name_and_backend(model_name, backend)
 
-    if backend in ("vllm", "sglang"):
-        suffix = "_paddle"
-    else:
-        suffix = "_torch"
     try:
-        model_dir = official_models[model_name + suffix]
+        model_dir = official_models[model_name]
     except Exception as e:
         raise RuntimeError(
             f"Could not prepare the official model for the {repr(model_name)} model with the {repr(backend)} backend."
         ) from e
 
-    return model_dir
+    return str(model_dir)
 
 
 def get_model_components(model_name, backend):
