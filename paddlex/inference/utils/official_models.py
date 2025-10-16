@@ -45,6 +45,7 @@ ALL_MODELS = [
     "ResNet152",
     "ResNet152_vd",
     "ResNet200_vd",
+    "PaddleOCR-VL-0.9B",
     "PP-LCNet_x0_25",
     "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x0_35",
@@ -294,6 +295,7 @@ ALL_MODELS = [
     "GroundingDINO-T",
     "SAM-H_box",
     "SAM-H_point",
+    "PP-DocLayoutV2",
     "PP-DocLayout-L",
     "PP-DocLayout-M",
     "PP-DocLayout-S",
@@ -424,7 +426,12 @@ class _BaseModelHoster(ABC):
                 f"Using official model ({model_name}), the model files will be automatically downloaded and saved in `{model_dir}`."
             )
             self._download(model_name, model_dir)
-        return model_dir
+
+        return (
+            model_dir / "PaddleOCR-VL-0.9B"
+            if model_name == "PaddleOCR-VL-0.9B"
+            else model_dir
+        )
 
     @abstractmethod
     def _download(self):
