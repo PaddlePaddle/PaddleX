@@ -30,7 +30,7 @@ from ....common.vlm.transformers import PretrainedConfig
 
 
 class PPOCRVisionConfig(PretrainedConfig):
-    model_type = "ppocrvl"
+    model_type = "paddleocr_vl"
     base_config_key = "vision_config"
 
     def __init__(
@@ -67,8 +67,8 @@ class PPOCRVisionConfig(PretrainedConfig):
         self.tokens_per_second = tokens_per_second
 
 
-class PPOCRVLConfig(PretrainedConfig):
-    model_type = "ppocrvl"
+class PaddleOCRVLConfig(PretrainedConfig):
+    model_type = "paddleocr_vl"
     keys_to_ignore_at_inference = ["past_key_values"]
     sub_configs = {"vision_config": PPOCRVisionConfig}
 

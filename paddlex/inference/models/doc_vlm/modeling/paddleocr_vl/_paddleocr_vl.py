@@ -46,14 +46,14 @@ from ....common.vlm.transformers.model_outputs import (
     CausalLMOutputWithCrossAttentions,
     ModelOutput,
 )
-from ._config import PPOCRVLConfig
+from ._config import PaddleOCRVLConfig
 from ._ernie import Ernie4_5Model, Ernie4_5PretrainedModel
 from ._projector import Projector
 from ._siglip import SiglipVisionModel
 
 
 @dataclass
-class PPOCRVLCausalLMOutputWithPast(ModelOutput):
+class PaddleOCRVLCausalLMOutputWithPast(ModelOutput):
     loss: Optional[paddle.Tensor] = None
     logits: paddle.Tensor = None
     past_key_values: Optional[List[paddle.Tensor]] = None
@@ -62,9 +62,9 @@ class PPOCRVLCausalLMOutputWithPast(ModelOutput):
     rope_deltas: Optional[paddle.Tensor] = None
 
 
-class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
+class PaddleOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
     _tied_weights_keys = ["lm_head.weight"]
-    config_class = PPOCRVLConfig
+    config_class = PaddleOCRVLConfig
     _no_split_modules = ["Ernie4_5DecoderLayer", "SiglipEncoderLayer"]
 
     base_model_prefix = ""
@@ -644,7 +644,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
         rope_deltas: Optional[paddle.Tensor] = None,
         second_per_grid_ts: Optional[paddle.Tensor] = None,
         **kwargs,
-    ) -> Union[Tuple, PPOCRVLCausalLMOutputWithPast]:
+    ) -> Union[Tuple, PaddleOCRVLCausalLMOutputWithPast]:
         output_attentions = (
             output_attentions
             if output_attentions is not None
@@ -797,7 +797,7 @@ class PPOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
-        return PPOCRVLCausalLMOutputWithPast(
+        return PaddleOCRVLCausalLMOutputWithPast(
             loss=loss,
             logits=logits,
             past_key_values=outputs.past_key_values,

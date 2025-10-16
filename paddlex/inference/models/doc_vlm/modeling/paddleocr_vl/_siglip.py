@@ -48,7 +48,7 @@ from ....common.vlm.transformers.model_outputs import (
     BaseModelOutput,
     BaseModelOutputWithPooling,
 )
-from ._config import PPOCRVisionConfig, PPOCRVLConfig
+from ._config import PaddleOCRVLConfig, PPOCRVisionConfig
 
 
 def rotate_half(x):
@@ -801,7 +801,7 @@ class SiglipVisionTransformer(nn.Layer):
 
 
 class SiglipPreTrainedModel(PretrainedModel):
-    config_class = PPOCRVLConfig
+    config_class = PaddleOCRVLConfig
     base_model_prefix = "siglip"
     supports_gradient_checkpointing = True
 

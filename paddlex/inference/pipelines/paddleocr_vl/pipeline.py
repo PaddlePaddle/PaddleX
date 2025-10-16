@@ -32,7 +32,7 @@ from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..layout_parsing.utils import gather_imgs
-from .result import PPOCRVLBlock, PPOCRVLResult
+from .result import PaddleOCRVLBlock, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
     filter_overlap_boxes,
@@ -46,8 +46,8 @@ IMAGE_LABELS = ["image", "header_image", "footer_image", "seal"]
 
 
 @benchmark.time_methods
-class _PPOCRVLPipeline(BasePipeline):
-    """_PPOCRVLPipeline Pipeline"""
+class _PaddleOCRVLPipeline(BasePipeline):
+    """_PaddleOCRVLPipeline Pipeline"""
 
     def __init__(
         self,
@@ -314,7 +314,7 @@ class _PPOCRVLPipeline(BasePipeline):
 
                     block_content = result_str
 
-                block_info = PPOCRVLBlock(
+                block_info = PaddleOCRVLBlock(
                     label=block_label,
                     bbox=block_bbox,
                     content=block_content,
@@ -359,7 +359,7 @@ class _PPOCRVLPipeline(BasePipeline):
         min_pixels: Optional[int] = None,
         max_pixels: Optional[int] = None,
         **kwargs,
-    ) -> PPOCRVLResult:
+    ) -> PaddleOCRVLResult:
         """
         Predicts the layout parsing result for the given input.
 
@@ -379,7 +379,7 @@ class _PPOCRVLPipeline(BasePipeline):
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
-            PPOCRVLResult: The predicted layout parsing result.
+            PaddleOCRVLResult: The predicted layout parsing result.
         """
         model_settings = self.get_model_settings(
             use_doc_orientation_classify,
@@ -532,7 +532,7 @@ class _PPOCRVLPipeline(BasePipeline):
                     "imgs_in_doc": imgs_in_doc_for_img,
                     "model_settings": model_settings,
                 }
-                yield PPOCRVLResult(single_img_res)
+                yield PaddleOCRVLResult(single_img_res)
 
         if use_queues:
             max_num_batches_in_process = 64
@@ -677,12 +677,12 @@ class _PPOCRVLPipeline(BasePipeline):
 
 
 @pipeline_requires_extra("ocr")
-class PPOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
+class PaddleOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
     entities = "PaddleOCR-VL"
 
     @property
     def _pipeline_cls(self):
-        return _PPOCRVLPipeline
+        return _PaddleOCRVLPipeline
 
     def _get_batch_size(self, config):
         return config.get("batch_size", 1)

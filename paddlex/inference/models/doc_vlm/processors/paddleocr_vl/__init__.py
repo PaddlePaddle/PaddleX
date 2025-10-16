@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ._ppocrvl import PPOCRVLProcessor
+from ._paddleocr_vl import PaddleOCRVLProcessor
 from ._siglip import SiglipImageProcessor
