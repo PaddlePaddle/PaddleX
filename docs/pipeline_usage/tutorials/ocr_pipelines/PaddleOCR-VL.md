@@ -292,7 +292,7 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地
 在本地使用通用版面解析v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ocr`。此外，为了使用飞桨框架读取 safetensors 格式模型，请执行如下命令安装 safetensors：
 
 ```bash
-pytyon -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
+python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 ```
 
 > 默认配置暂不支持 Compute Capability 低于 8.0 的 GPU（如 V100、RTX 3060 等）。请参阅下一节，了解如何在此类 GPU 上使用推理加速框架。
@@ -961,8 +961,8 @@ paddlex --get_pipeline_config PaddleOCR-VL
 VLRecognition:
   ...
   genai_config:
-    backend: vllm
-    server_url: http://127.0.0.1:8118
+    backend: vllm-server
+    server_url: http://127.0.0.1:8118/v1
 ```
 
 之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：
