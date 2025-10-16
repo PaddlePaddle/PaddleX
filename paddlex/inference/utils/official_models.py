@@ -45,7 +45,7 @@ ALL_MODELS = [
     "ResNet152",
     "ResNet152_vd",
     "ResNet200_vd",
-    "PaddleOCR-VL-0.9B",
+    "PaddleOCR-VL",
     "PP-LCNet_x0_25",
     "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x0_35",
@@ -345,6 +345,7 @@ OCR_MODELS = [
     "en_PP-OCRv5_mobile_rec",
     "th_PP-OCRv5_mobile_rec",
     "el_PP-OCRv5_mobile_rec",
+    "PaddleOCR-VL",
     "PicoDet_layout_1x",
     "PicoDet_layout_1x_table",
     "PicoDet-L_layout_17cls",
@@ -356,6 +357,7 @@ OCR_MODELS = [
     "PP-DocBee-2B",
     "PP-DocBee-7B",
     "PP-DocBlockLayout",
+    "PP-DocLayoutV2",
     "PP-DocLayout-L",
     "PP-DocLayout-M",
     "PP-DocLayout_plus-L",
@@ -429,7 +431,7 @@ class _BaseModelHoster(ABC):
             self._download(model_name, model_dir)
 
         return (
-            model_dir / "PaddleOCR-VL-0.9B"
+            model_dir / "PaddleOCR-VL"
             if model_name == "PaddleOCR-VL-0.9B"
             else model_dir
         )
