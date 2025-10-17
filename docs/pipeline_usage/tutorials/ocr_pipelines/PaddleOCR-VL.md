@@ -287,6 +287,7 @@ comments: true
     * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 
 ## 2. 快速开始
+
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验通用通用版面解析v3产线的效果。
 
 在本地使用通用版面解析v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ocr`。此外，为了使用飞桨框架读取 safetensors 格式模型，请执行如下命令安装 safetensors：
@@ -907,6 +908,20 @@ docker run \
     paddlex_genai_server --model_name PaddleOCR-VL-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
+若您使用的是  NVIDIA 50 系显卡 (Compute Capacity >= 12)，需要在启动服务前安装指定版本的 FlashAttention:
+
+```
+docker run \
+    -it \
+    --rm \
+    --gpus all \
+    --network host \
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server \
+    /bin/bash
+python -m pip install flash-attn==2.8.3
+paddlex_genai_server --model_name PaddleOCR-VL-0.9B --backend vllm --port 8118
+```
+
 #### 3.1.2 通过 PaddleX CLI 和启动
 
 由于推理加速框架可能与飞桨框架存在依赖冲突，建议在虚拟环境中安装。示例如下：
@@ -922,6 +937,12 @@ python -m pip install "paddlex[ocr]"
 paddlex --install genai-vllm-server
 # 安装 SGLang 服务器插件
 # paddlex --install genai-sglang-server
+```
+
+若您使用的是  NVIDIA 50 系显卡 (Compute Capacity >= 12)，需要在启动服务前安装指定版本的 flash-attn:
+
+```
+python -m pip install flash-attn==2.8.3
 ```
 
 安装完成后，可通过 `paddlex_genai_server` 命令启动服务：
