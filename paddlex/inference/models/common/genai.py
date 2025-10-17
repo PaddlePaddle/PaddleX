@@ -33,6 +33,7 @@ class GenAIConfig(BaseModel):
         "native"
     )
     server_url: Optional[str] = None
+    api_key: Optional[str] = "null"
     max_concurrency: int = 200
     client_kwargs: Optional[Dict[str, Any]] = None
 
