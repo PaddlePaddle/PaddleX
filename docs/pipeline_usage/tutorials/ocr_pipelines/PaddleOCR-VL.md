@@ -939,7 +939,7 @@ paddlex --install genai-vllm-server
 # paddlex --install genai-sglang-server
 ```
 
-若您使用的是  NVIDIA 50 系显卡 (Compute Capacity >= 12)，需要在启动服务前安装指定版本的 flash-attn:
+若您使用的是  NVIDIA 50 系显卡 (Compute Capacity >= 12)，需要在启动服务前安装指定版本的 FlashAttention:
 
 ```
 python -m pip install flash-attn==2.8.3
