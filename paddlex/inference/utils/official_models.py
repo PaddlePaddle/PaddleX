@@ -584,17 +584,19 @@ Otherwise, only local models can be used."""
         for idx, hoster in enumerate(hosters):
             if model_name in hoster.model_list:
                 try:
-                    return hoster.get_model(model_name)
-                except Exception as e:
-                    logging.warning(
-                        f"Encounter exception when download model from {hoster.alias}: \n{e}."
+                    model_path = hoster.get_model(model_name)
+                    logging.debug(
+                        f"`{model_name}` model files has been download from model source: `{hoster.alias}`!"
                     )
+                    return model_path
+
+                except Exception as e:
                     if len(hosters) <= 1:
                         raise Exception(
-                            f"No model source is available! Please check network or use local model files!"
+                            f"Encounter exception when download model from {hoster.alias}. No model source is available! Please check network or use local model files!"
                         )
                     logging.warning(
-                        f"PaddleX would try to download from other model sources."
+                        f"Encountering exception when download model from {hoster.alias}: \n{e}, will try to download from other model sources: `hosters[idx + 1].alias`."
                     )
                     return self._download_from_hoster(hosters[idx + 1 :], model_name)
 
