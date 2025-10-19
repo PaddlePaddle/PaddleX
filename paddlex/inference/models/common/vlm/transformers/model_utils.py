@@ -1602,6 +1602,7 @@ class PretrainedModel(
 
                 if config.quantization_config.is_weight_quantize():
                     filter_dict_keys = None
+                transpose_weight_keys = None
                 try:
                     transpose_weight_keys = model.get_transpose_weight_keys()
                 except NotImplementedError:
@@ -1929,6 +1930,7 @@ class PretrainedModel(
             ):
                 raise NotImplementedError
             else:
+                transpose_weight_keys = None
                 try:
                     transpose_weight_keys = model.get_transpose_weight_keys()
                 except NotImplementedError:
