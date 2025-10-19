@@ -1357,6 +1357,72 @@
         "paddle_mkldnn",
         "paddle"
       ],
+      "en_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
       "PP-OCRv5_server_det": [
         "paddle_mkldnn",
         "openvino",
@@ -2764,6 +2830,72 @@
         "onnxruntime"
       ],
       "PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "en_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
         "openvino",
         "onnxruntime",
         "paddle_mkldnn",
@@ -4180,6 +4312,72 @@
         "onnxruntime"
       ],
       "PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "en_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
         "openvino",
         "onnxruntime",
         "paddle_mkldnn",
@@ -5548,6 +5746,72 @@
         "onnxruntime",
         "paddle"
       ],
+      "en_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
       "PP-OCRv5_server_det": [
         "tensorrt",
         "paddle"
@@ -6910,6 +7174,72 @@
         "paddle"
       ],
       "PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "en_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
         "paddle_tensorrt_fp16",
         "tensorrt",
         "onnxruntime",
@@ -8282,6 +8612,72 @@
         "paddle"
       ],
       "PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "en_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "paddle_tensorrt_fp16",
+        "tensorrt",
+        "onnxruntime",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
         "paddle_tensorrt_fp16",
         "tensorrt",
         "onnxruntime",
@@ -9299,6 +9695,50 @@
         "onnxruntime",
         "paddle"
       ],
+      "en_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
       "PP-OCRv5_server_det": [
         "paddle"
       ],
@@ -10310,6 +10750,50 @@
         "paddle"
       ],
       "PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "en_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
       ],
@@ -11327,6 +11811,34 @@
         "paddle"
       ],
       "PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "en_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "latin_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "cyrillic_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "arabic_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "devanagari_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "ta_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "te_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
       ],

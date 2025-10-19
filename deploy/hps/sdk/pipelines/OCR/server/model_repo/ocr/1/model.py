@@ -113,6 +113,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                 text_det_box_thresh=input.textDetBoxThresh,
                 text_det_unclip_ratio=input.textDetUnclipRatio,
                 text_rec_score_thresh=input.textRecScoreThresh,
+                return_word_box=input.returnWordBox,
             )
         )
 

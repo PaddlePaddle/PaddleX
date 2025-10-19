@@ -41,6 +41,7 @@ class InferRequest(ocr.BaseInferRequest):
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
+    returnWordBox: Optional[bool] = None
     visualize: Optional[bool] = None
 
 

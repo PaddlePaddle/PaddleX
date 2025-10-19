@@ -81,12 +81,13 @@ class _ModelBasedConfig(_BaseModel):
         predict_kwargs = deepcopy(self._config.Predict)
 
         model_dir = predict_kwargs.pop("model_dir", None)
+        device = self._config.Global.get("device", None)
 
         UNSET = object()
-        device = self._config.Global.get("device", None)
         kernel_option = predict_kwargs.pop("kernel_option", UNSET)
         use_hpip = predict_kwargs.pop("use_hpip", UNSET)
         hpi_config = predict_kwargs.pop("hpi_config", UNSET)
+        genai_config = predict_kwargs.pop("genai_config", UNSET)
 
         create_predictor_kwargs = {}
         if kernel_option is not UNSET:
@@ -99,10 +100,12 @@ class _ModelBasedConfig(_BaseModel):
             create_predictor_kwargs["use_hpip"] = False
         if hpi_config is not UNSET:
             create_predictor_kwargs["hpi_config"] = hpi_config
+        if genai_config is not UNSET:
+            create_predictor_kwargs["genai_config"] = genai_config
 
         predictor = create_predictor(
             self._model_name,
-            model_dir,
+            model_dir=model_dir,
             device=device,
             **create_predictor_kwargs,
         )

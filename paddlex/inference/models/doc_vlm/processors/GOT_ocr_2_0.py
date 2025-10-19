@@ -77,9 +77,11 @@ class PPChart2TableProcessor(object):
         return {"input_ids": input_ids, "images": images}
 
     @benchmark.timeit
-    def postprocess(self, model_pred, *args, **kwargs):
+    def postprocess(self, model_pred, **kwargs):
         return self.tokenizer.batch_decode(
-            model_pred[0], skip_special_tokens=True, clean_up_tokenization_spaces=False
+            model_pred[0],
+            skip_special_tokens=kwargs.get("skip_special_tokens", True),
+            clean_up_tokenization_spaces=False,
         )
 
     def _load_image(self, image_file):
