@@ -8,5 +8,5 @@ docker run \
     -v "$(pwd)":/workspace \
     -w /workspace \
     --rm \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/linmanhui/python:3.10 \
+    python:3.10 \
     /bin/bash scripts/_assemble.sh "$@"
