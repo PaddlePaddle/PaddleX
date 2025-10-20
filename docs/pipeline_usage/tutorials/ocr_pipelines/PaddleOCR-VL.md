@@ -932,7 +932,7 @@ python -m venv .venv
 # 激活环境
 source .venv/bin/activate
 # 安装 PaddleX
-python -m pip install "paddlex[ocr]"
+python -m pip install paddlex
 # 安装 vLLM 服务器插件
 paddlex --install genai-vllm-server
 # 安装 SGLang 服务器插件
