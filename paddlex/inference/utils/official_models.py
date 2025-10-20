@@ -433,11 +433,12 @@ class _BaseModelHoster(ABC):
             )
             self._download(model_name, model_dir)
 
-        return (
-            model_dir / "PaddleOCR-VL-0.9B"
-            if model_name == "PaddleOCR-VL"
-            else model_dir
-        )
+        if model_name == "PaddleOCR-VL":
+            vl_model_dir = model_dir / "PaddleOCR-VL-0.9B"
+            if vl_model_dir.exists() and vl_model_dir.is_dir():
+                return vl_model_dir
+
+        return model_dir
 
     @abstractmethod
     def _download(self):
