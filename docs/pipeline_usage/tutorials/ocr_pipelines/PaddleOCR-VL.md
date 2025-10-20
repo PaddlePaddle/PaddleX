@@ -932,7 +932,7 @@ python -m venv .venv
 # 激活环境
 source .venv/bin/activate
 # 安装 PaddleX
-python -m pip install "paddlex[ocr]"
+python -m pip install paddlex
 # 安装 vLLM 服务器插件
 paddlex --install genai-vllm-server
 # 安装 SGLang 服务器插件
@@ -1164,6 +1164,12 @@ PaddleX 会将来自单张或多张输入图像中的子图分组并对服务器
 <td><code>fileType</code></td>
 <td><code>integer</code>｜<code>null</code></td>
 <td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
