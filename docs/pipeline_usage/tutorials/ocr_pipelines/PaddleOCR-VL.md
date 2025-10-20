@@ -78,8 +78,8 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>PP-DocLayoutV2-L</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV2-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayoutV2-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-DocLayoutV2</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV2_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayoutV2_pretrained.pdparams">训练模型</a></td>
 <td>-</td>
 <td>- / -</td>
 <td>- / -</td>
