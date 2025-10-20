@@ -1607,6 +1607,7 @@ class PretrainedModel(
                 except NotImplementedError:
                     if convert_from_hf:
                         raise ValueError("`convert_from_hf=True` is not supported")
+                    transpose_weight_keys = None
                 state_dict = load_state_dict(
                     shard_file,
                     tp_actions if pre_tensor_parallel_split else None,
@@ -1934,6 +1935,7 @@ class PretrainedModel(
                 except NotImplementedError:
                     if convert_from_hf:
                         raise ValueError("`convert_from_hf=True` is not supported")
+                    transpose_weight_keys = None
                 state_dict = load_state_dict(
                     resolved_archive_file,
                     convert_from_hf=convert_from_hf,
