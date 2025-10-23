@@ -249,10 +249,14 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     vlm_block_ids.append((i, j))
                     drop_figures_set.update(drop_figures)
 
+        if vlm_kwargs is None:
+            vlm_kwargs = {}
+        elif vlm_kwargs.get("max_new_tokens", None) is None:
+            vlm_kwargs["max_new_tokens"] = 4096
+
         kwargs = {
             "use_cache": True,
-            "max_new_tokens": 4096,
-            **(vlm_kwargs or {}),
+            **vlm_kwargs,
         }
         vl_rec_results = list(
             self.vl_rec_model.predict(
@@ -358,6 +362,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         top_p: Optional[float] = None,
         min_pixels: Optional[int] = None,
         max_pixels: Optional[int] = None,
+        max_new_tokens: Optional[int] = None,
         **kwargs,
     ) -> PaddleOCRVLResult:
         """
@@ -376,6 +381,15 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
             layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            use_queues (Optional[bool], optional): Whether to use queues. Defaults to None.
+            prompt_label (Optional[Union[str, None]], optional): The label of the prompt in ['ocr', 'formula', 'table', 'chart']. Defaults to None.
+            format_block_content (Optional[bool]): Whether to format the block content. Default is None.
+            repetition_penalty (Optional[float]): The repetition penalty parameter used for VL model sampling. Default is None.
+            temperature (Optional[float]): Temperature parameter used for VL model sampling. Default is None.
+            top_p (Optional[float]): Top-p parameter used for VL model sampling. Default is None.
+            min_pixels (Optional[int]): The minimum number of pixels allowed when the VL model preprocesses images. Default is None.
+            max_pixels (Optional[int]): The maximum number of pixels allowed when the VL model preprocesses images. Default is None.
+            max_new_tokens (Optional[int]): The maximum number of new tokens. Default is None.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -499,6 +513,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         "top_p": top_p,
                         "min_pixels": min_pixels,
                         "max_pixels": max_pixels,
+                        "max_new_tokens": max_new_tokens,
                     },
                 )
             )
