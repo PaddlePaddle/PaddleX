@@ -432,6 +432,9 @@ class _BaseModelHoster(ABC):
                 f"Using official model ({model_name}), the model files will be automatically downloaded and saved in `{model_dir}`."
             )
             self._download(model_name, model_dir)
+            logging.debug(
+                f"`{model_name}` model files has been download from model source: `{self.alias}`!"
+            )
 
         if model_name == "PaddleOCR-VL":
             vl_model_dir = model_dir / "PaddleOCR-VL-0.9B"
@@ -531,7 +534,12 @@ class _AIStudioModelHoster(_BaseModelHoster):
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
-            aistudio_download(repo_id=f"PaddleX/{model_name}", local_dir=local_dir)
+            if model_name == "PaddleOCR-VL":
+                aistudio_download(
+                    repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
+                )
+            else:
+                aistudio_download(repo_id=f"PaddleX/{model_name}", local_dir=local_dir)
 
         if os.path.exists(save_dir):
             _clone(save_dir)
@@ -586,9 +594,6 @@ Otherwise, only local models can be used."""
             if model_name in hoster.model_list:
                 try:
                     model_path = hoster.get_model(model_name)
-                    logging.debug(
-                        f"`{model_name}` model files has been download from model source: `{hoster.alias}`!"
-                    )
                     return model_path
 
                 except Exception as e:
@@ -597,7 +602,7 @@ Otherwise, only local models can be used."""
                             f"Encounter exception when download model from {hoster.alias}. No model source is available! Please check network or use local model files!"
                         )
                     logging.warning(
-                        f"Encountering exception when download model from {hoster.alias}: \n{e}, will try to download from other model sources: `hosters[idx + 1].alias`."
+                        f"Encountering exception when download model from {hoster.alias}: \n{e}, will try to download from other model sources: `{hosters[idx + 1].alias}`."
                     )
                     return self._download_from_hoster(hosters[idx + 1 :], model_name)
 
