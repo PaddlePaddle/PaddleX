@@ -28,8 +28,8 @@ from ....modules.doc_vlm.model_list import MODELS
 from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
-from ....utils.env import get_device_type
 from ...common.batch_sampler import DocVLMBatchSampler
+from ...utils.misc import is_bfloat16_available
 from ..base import BasePredictor
 from .result import DocVLMResult
 
@@ -53,15 +53,8 @@ class DocVLMPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
 
         if self._use_local_model:
-            import paddle
-
             self.device = kwargs.get("device", None)
-            self.dtype = (
-                "bfloat16"
-                if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
-                and (self.device is None or "cpu" not in self.device)
-                else "float32"
-            )
+            self.dtype = "bfloat16" if is_bfloat16_available(self.device) else "float32"
 
             self.infer, self.processor = self._build(**kwargs)
 
