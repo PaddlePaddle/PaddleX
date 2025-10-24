@@ -109,9 +109,13 @@ def format_image_scaled_by_html_func(block, original_image_width):
 
 def format_image_plain_func(block):
     img_tags = []
-    image_path = block.image["path"]
-    img_tags.append("![]({})".format(image_path.replace("-\n", "").replace("\n", " ")))
-    return "\n".join(img_tags)
+    if block.image:
+        image_path = block.image["path"]
+        img_tags.append(
+            "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
+        )
+        return "\n".join(img_tags)
+    return ""
 
 
 def format_chart2table_func(block):
@@ -436,7 +440,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_markdown(self, pretty=True) -> dict:
+    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
         """
         Save the parsing result to a Markdown file.
 

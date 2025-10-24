@@ -318,6 +318,7 @@ class DetPredictor(BasePredictor):
             "PP-DocLayout-L",
             "PP-DocLayout_plus-L",
             "PP-DocBlockLayout",
+            "PP-DocLayoutV2",
         ]
         if any(name in self.model_name for name in models_required_imgsize):
             ordered_required_keys = (

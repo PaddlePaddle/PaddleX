@@ -83,6 +83,10 @@ class PP_DocTranslation_Pipeline(BasePipeline):
 
         self.markdown_batch_sampler = MarkDownBatchSampler()
 
+    def close(self):
+        if self.layout_parsing_pipeline is not None:
+            self.layout_parsing_pipeline.close()
+
     def inintial_visual_predictor(self, config: dict) -> None:
         """
         Initializes the visual predictor with the given configuration.
@@ -437,8 +441,14 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                 few_shot_demo_key_value_list=few_shot_demo_key_value_list,
             )
             translate = chat_bot.generate_chat_results(prompt=prompt).get("content", "")
+                        
+            if "<<END>>" not in translate:
+                raise Exception("The translation did not reach the end. "
+                                 "This may happen if your chunk_size is too large. Please reduce chunk_size and try again.")
             if translate is None:
                 raise Exception("The call to the large model failed.")
+            
+            translate = translate.replace("<<END>>", "").rstrip()
             return translate
 
         base_prompt_content = self.translate_pe.generate_prompt(

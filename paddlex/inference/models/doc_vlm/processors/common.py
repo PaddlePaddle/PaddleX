@@ -418,7 +418,7 @@ def process_vision_info(
         if "image" in vision_info or "image_url" in vision_info:
             image_inputs.append(fetch_image(vision_info))
         else:
-            raise ValueError("image, image_url should in content.")
+            raise ValueError("image, image_url should be in content.")
     if len(image_inputs) == 0:
         image_inputs = None
     return image_inputs
@@ -426,10 +426,10 @@ def process_vision_info(
 
 def fetch_image(
     ele: Dict[str, Union[str, Image.Image]],
-    size_factor: int,
-    min_pixels: int,
-    max_pixels: int,
-    max_ratio: float,
+    size_factor: Optional[int] = None,
+    min_pixels: Optional[int] = None,
+    max_pixels: Optional[int] = None,
+    max_ratio: Optional[float] = None,
 ) -> Image.Image:
     if not isinstance(ele, dict):
         ele = {"image": ele}
@@ -458,29 +458,41 @@ def fetch_image(
             f"Unrecognized image input, support local path, http url, base64 and PIL.Image, got {image}"
         )
     image = image_obj.convert("RGB")
-    # resize
-    if "resized_height" in ele and "resized_width" in ele:
-        resized_height, resized_width = smart_resize(
-            ele["resized_height"],
-            ele["resized_width"],
-            factor=size_factor,
-            min_pixels=min_pixels,
-            max_pixels=max_pixels,
-            max_ratio=max_ratio,
-        )
+
+    if (
+        size_factor is not None
+        and min_pixels is not None
+        and max_pixels is not None
+        and max_ratio is not None
+    ):
+        do_resize = True
     else:
-        width, height = image.size  # Image, not tensor
-        min_pixels = ele.get("min_pixels", min_pixels)
-        max_pixels = ele.get("max_pixels", max_pixels)
-        resized_height, resized_width = smart_resize(
-            height,
-            width,
-            factor=size_factor,
-            min_pixels=min_pixels,
-            max_pixels=max_pixels,
-            max_ratio=max_ratio,
-        )
-    image = image.resize((resized_width, resized_height))
+        do_resize = False
+
+    if do_resize:
+        # resize
+        if "resized_height" in ele and "resized_width" in ele:
+            resized_height, resized_width = smart_resize(
+                ele["resized_height"],
+                ele["resized_width"],
+                factor=size_factor,
+                min_pixels=min_pixels,
+                max_pixels=max_pixels,
+                max_ratio=max_ratio,
+            )
+        else:
+            width, height = image.size  # Image, not tensor
+            min_pixels = ele.get("min_pixels", min_pixels)
+            max_pixels = ele.get("max_pixels", max_pixels)
+            resized_height, resized_width = smart_resize(
+                height,
+                width,
+                factor=size_factor,
+                min_pixels=min_pixels,
+                max_pixels=max_pixels,
+                max_ratio=max_ratio,
+            )
+        image = image.resize((resized_width, resized_height))
 
     return image
 

@@ -13,4 +13,10 @@
 # limitations under the License.
 
 
-MODELS = ["PP-DocBee-2B", "PP-DocBee-7B", "PP-Chart2Table", "PP-DocBee2-3B"]
+MODELS = [
+    "PP-DocBee-2B",
+    "PP-DocBee-7B",
+    "PP-Chart2Table",
+    "PP-DocBee2-3B",
+    "PaddleOCR-VL-0.9B",
+]
