@@ -432,12 +432,16 @@ class _BaseModelHoster(ABC):
                 f"Using official model ({model_name}), the model files will be automatically downloaded and saved in `{model_dir}`."
             )
             self._download(model_name, model_dir)
+            logging.debug(
+                f"`{model_name}` model files has been download from model source: `{self.alias}`!"
+            )
 
-        return (
-            model_dir / "PaddleOCR-VL-0.9B"
-            if model_name == "PaddleOCR-VL"
-            else model_dir
-        )
+        if model_name == "PaddleOCR-VL":
+            vl_model_dir = model_dir / "PaddleOCR-VL-0.9B"
+            if vl_model_dir.exists() and vl_model_dir.is_dir():
+                return vl_model_dir
+
+        return model_dir
 
     @abstractmethod
     def _download(self):
@@ -530,7 +534,12 @@ class _AIStudioModelHoster(_BaseModelHoster):
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
-            aistudio_download(repo_id=f"PaddleX/{model_name}", local_dir=local_dir)
+            if model_name == "PaddleOCR-VL":
+                aistudio_download(
+                    repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
+                )
+            else:
+                aistudio_download(repo_id=f"PaddleX/{model_name}", local_dir=local_dir)
 
         if os.path.exists(save_dir):
             _clone(save_dir)
@@ -584,17 +593,16 @@ Otherwise, only local models can be used."""
         for idx, hoster in enumerate(hosters):
             if model_name in hoster.model_list:
                 try:
-                    return hoster.get_model(model_name)
+                    model_path = hoster.get_model(model_name)
+                    return model_path
+
                 except Exception as e:
-                    logging.warning(
-                        f"Encounter exception when download model from {hoster.alias}: \n{e}."
-                    )
                     if len(hosters) <= 1:
                         raise Exception(
-                            f"No model source is available! Please check network or use local model files!"
+                            f"Encounter exception when download model from {hoster.alias}. No model source is available! Please check network or use local model files!"
                         )
                     logging.warning(
-                        f"PaddleX would try to download from other model sources."
+                        f"Encountering exception when download model from {hoster.alias}: \n{e}, will try to download from other model sources: `{hosters[idx + 1].alias}`."
                     )
                     return self._download_from_hoster(hosters[idx + 1 :], model_name)
 
