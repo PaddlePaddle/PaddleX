@@ -82,7 +82,7 @@ class PaddleOCRVLProcessor(object):
                 {
                     "role": "user",
                     "content": [
-                        {"type": "image", "image": input_dict["image"]},  # placeholder
+                        {"type": "image", "image": "placeholder"},  # placeholder
                         {"type": "text", "text": input_dict["query"]},
                     ],
                 }
