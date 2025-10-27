@@ -324,6 +324,16 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         if self["model_settings"]["use_layout_detection"]:
             data["layout_det_res"] = self["layout_det_res"].str["res"]
+        parsing_res_list = self["parsing_res_list"]
+        parsing_res_list = [
+            {
+                "block_label": parsing_res.label,
+                "block_content": parsing_res.content,
+                "block_bbox": parsing_res.bbox,
+            }
+            for parsing_res in parsing_res_list
+        ]
+        data["parsing_res_list"] = parsing_res_list
         return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> dict[str, str]:
