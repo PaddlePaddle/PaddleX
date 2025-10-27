@@ -76,13 +76,15 @@ class PaddleOCRVLProcessor(object):
         input_dicts,
     ):
         images = [fetch_image(input_dict["image"]) for input_dict in input_dicts]
-
         text = []
         for input_dict in input_dicts:
             messages = [
                 {
                     "role": "user",
-                    "content": input_dict["query"],
+                    "content": [
+                        {"type": "image", "image": input_dict["image"]},  # placeholder
+                        {"type": "text", "text": input_dict["query"]},
+                    ],
                 }
             ]
             prompt = self.tokenizer.apply_chat_template(messages, tokenize=False)
