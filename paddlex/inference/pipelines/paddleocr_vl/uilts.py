@@ -18,7 +18,7 @@ import math
 import re
 from collections import Counter
 from copy import deepcopy
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 from PIL import Image
@@ -829,7 +829,7 @@ def convert_otsl_to_html(otsl_content: str):
     return export_to_html(table_data)
 
 
-def find_shortest_repeating_substring(s: str) -> str | None:
+def find_shortest_repeating_substring(s: str) -> Union[str, None]:
     """
     Find the shortest substring that repeats to form the entire string.
 
@@ -850,7 +850,7 @@ def find_shortest_repeating_substring(s: str) -> str | None:
 
 def find_repeating_suffix(
     s: str, min_len: int = 8, min_repeats: int = 5
-) -> Tuple[str, str, int] | None:
+) -> Union[Tuple[str, str, int], None]:
     """
     Detect if string ends with a repeating phrase.
 
@@ -888,7 +888,7 @@ def truncate_repetitive_content(
         min_len (int): Min length for char-level check.
 
     Returns:
-        Tuple[str, str]: (truncated_content, info_string)
+        Union[str, str]: (truncated_content, info_string)
     """
     stripped_content = content.strip()
     if not stripped_content:
