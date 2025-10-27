@@ -76,6 +76,7 @@ class PaddleOCRVLProcessor(object):
         input_dicts,
     ):
         images = [fetch_image(input_dict["image"]) for input_dict in input_dicts]
+
         text = []
         for input_dict in input_dicts:
             messages = [

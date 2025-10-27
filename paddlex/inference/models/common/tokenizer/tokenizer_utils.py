@@ -708,10 +708,6 @@ class ChatTemplateMixin:
                 conversations = convert_to_dict_message(conversation)
             elif isinstance(conversation[0], dict):
                 conversations = conversation
-                """
-                [{'role': 'user', 'content': 'OCR:'}]
-                [{'role': 'user', 'content': [{'type': 'image', 'image': 'placeholder'}, {'type': 'text', 'text': 'OCR:'}]}]
-                """
             else:
                 raise ValueError(
                     "apply_chat_template do not support applying batch conversations, "
