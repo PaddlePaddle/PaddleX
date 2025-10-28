@@ -35,6 +35,7 @@ from ..layout_parsing.utils import gather_imgs
 from .result import PaddleOCRVLBlock, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
+    crop_margin,
     filter_overlap_boxes,
     merge_blocks,
     tokenize_figure_of_table,
@@ -243,6 +244,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         text_prompt = "Chart Recognition:"
                     elif "formula" in block_label and block_label != "formula_number":
                         text_prompt = "Formula Recognition:"
+                        block_img = crop_margin(block_img)
                     block_imgs.append(block_img)
                     text_prompts.append(text_prompt)
                     figure_token_maps.append(figure_token_map)
