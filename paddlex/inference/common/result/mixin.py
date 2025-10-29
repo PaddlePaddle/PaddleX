@@ -94,7 +94,6 @@ class WordMixin:
                 img_name = Path(img_path).name
                 save_path = image_dir / img_name
                 img_obj.save(save_path)
-                # 累加到同一个字典
                 abs_image_paths[img_path] = str(save_path.resolve())
             return abs_image_paths
 
@@ -102,63 +101,6 @@ class WordMixin:
             """
             Convert word blocks to Word document format.
             """
-
-            STYLE_MAP = {
-                "doc_title": {
-                    "level": 0,
-                    "size": 20,
-                    "bold": True,
-                    "align": WD_ALIGN_PARAGRAPH.CENTER,
-                },
-                "header": {
-                    "size": 16,
-                    "bold": True,
-                    "align": WD_ALIGN_PARAGRAPH.CENTER,
-                },
-                "abstract_title": {
-                    "level": 1,
-                    "size": 14,
-                    "bold": True,
-                    "align": WD_ALIGN_PARAGRAPH.CENTER,
-                },
-                "content_title": {
-                    "level": 1,
-                    "size": 14,
-                    "bold": True,
-                    "align": WD_ALIGN_PARAGRAPH.LEFT,
-                },
-                "reference_title": {
-                    "level": 1,
-                    "size": 14,
-                    "bold": True,
-                    "align": WD_ALIGN_PARAGRAPH.LEFT,
-                },
-                "paragraph_title": {
-                    "level": 2,
-                    "size": 14,
-                    "bold": True,
-                    "align": WD_ALIGN_PARAGRAPH.LEFT,
-                },
-                "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-                "text": {
-                    "size": 12,
-                    "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
-                    "indent": True,
-                },
-                "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-                "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-                "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-                "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-                "algorithm": {
-                    "font": "Courier New",
-                    "size": 11,
-                    "align": WD_ALIGN_PARAGRAPH.LEFT,
-                },
-                "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
-                "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
-                "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-                "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            }
 
             def set_paragraph_style(para, config):
                 run = para.runs[0] if para.runs else para.add_run()
@@ -192,6 +134,7 @@ class WordMixin:
 
                 label = block.get("type")
                 content = block.get("content", "").strip()
+                config = block.get("config")
 
                 # --- header/footer ---
                 if label == "header" and content:
@@ -256,10 +199,6 @@ class WordMixin:
                     if label == "vision_footnote":
                         content = f"[footnote] {content}"
                     para = doc.add_paragraph(content)
-                    config = STYLE_MAP.get(
-                        label,
-                        {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True},
-                    )
                     set_paragraph_style(para, config)
             return doc
 
