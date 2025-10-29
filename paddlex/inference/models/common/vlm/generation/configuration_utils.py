@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import json
 import os
 import warnings
@@ -170,6 +171,9 @@ class GenerationConfig:
 
         # Validate the values of the attributes
         self.validate(is_init=True)
+
+    def to_dict(self):
+        return copy.deepcopy(self.__dict__)
 
     def __eq__(self, other):
         if not isinstance(other, GenerationConfig):

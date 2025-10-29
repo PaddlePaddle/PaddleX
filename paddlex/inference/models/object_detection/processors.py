@@ -746,11 +746,12 @@ class DetPostProcess:
             )
 
         if layout_nms:
-            selected_indices = nms(boxes, iou_same=0.6, iou_diff=0.98)
+            selected_indices = nms(boxes[:, :6], iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
 
         filter_large_image = True
-        if filter_large_image and len(boxes) > 1 and boxes.shape[1] == 6:
+        # boxes.shape[1] == 6 is object detection, 8 is ordered object detection
+        if filter_large_image and len(boxes) > 1 and boxes.shape[1] in [6, 8]:
             if img_size[0] > img_size[1]:
                 area_thres = 0.82
             else:
@@ -759,7 +760,14 @@ class DetPostProcess:
             img_area = img_size[0] * img_size[1]
             filtered_boxes = []
             for box in boxes:
-                label_index, score, xmin, ymin, xmax, ymax = box
+                (
+                    label_index,
+                    score,
+                    xmin,
+                    ymin,
+                    xmax,
+                    ymax,
+                ) = box[:6]
                 if label_index == image_index:
                     xmin = max(0, xmin)
                     ymin = max(0, ymin)
@@ -789,7 +797,7 @@ class DetPostProcess:
                     pass
                 else:
                     contains_other, contained_by_other = check_containment(
-                        boxes, formula_index
+                        boxes[:, :6], formula_index
                     )
                     if layout_merge_bboxes_mode == "large":
                         boxes = boxes[contained_by_other == 0]
@@ -808,13 +816,19 @@ class DetPostProcess:
                     else:
                         if layout_mode == "large":
                             contains_other, contained_by_other = check_containment(
-                                boxes, formula_index, category_index, mode=layout_mode
+                                boxes[:, :6],
+                                formula_index,
+                                category_index,
+                                mode=layout_mode,
                             )
                             # Remove boxes that are contained by other boxes
                             keep_mask &= contained_by_other == 0
                         elif layout_mode == "small":
                             contains_other, contained_by_other = check_containment(
-                                boxes, formula_index, category_index, mode=layout_mode
+                                boxes[:, :6],
+                                formula_index,
+                                category_index,
+                                mode=layout_mode,
                             )
                             # Keep boxes that do not contain others or are contained by others
                             keep_mask &= (contains_other == 0) | (
@@ -823,7 +837,13 @@ class DetPostProcess:
                 boxes = boxes[keep_mask]
 
         if boxes.size == 0:
-            return []
+            return np.array([])
+
+        if boxes.shape[1] == 8:
+            # Sort boxes by their order
+            sorted_idx = np.lexsort((-boxes[:, 7], boxes[:, 6]))
+            sorted_boxes = boxes[sorted_idx]
+            boxes = sorted_boxes[:, :6]
 
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):

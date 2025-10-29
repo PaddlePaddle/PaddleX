@@ -5,6 +5,8 @@ comments: true
 # PaddleX本地安装教程
 > ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.12下运行）。
 
+> ❗在大多数情况下，您需要先参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架，再执行 PaddleX 的安装步骤。[4 PaddleX 对飞桨框架的依赖](#4-paddlex-对飞桨框架的依赖) 中列举了不需要安装飞桨框架的情形。
+
 ## 1. 快速安装
 欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请首先明确您的开发需求，并根据您的需求选择合适的安装模式。
 PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安装</b>，下面分别对其应用场景进行介绍：
@@ -14,16 +16,14 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 
 快速安装轻量级的Wheel包之后，您即可基于PaddleX支持的所有模型进行推理，并能直接集成进您的项目中。
 
-参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)安装飞桨后，您可直接执行如下指令快速安装PaddleX的Wheel包：
-
-> ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
+您可直接执行如下指令快速安装PaddleX的Wheel包：
 
 ```bash
 # 仅安装必须依赖（可以在之后按需安装可选依赖）
 pip install paddlex
 ```
 
-通过如下方式可以安装所需的可选依赖（更多说明请参考 [2.3 选择性安装依赖](#23-选择性安装依赖)）：
+通过如下方式可以安装所需的可选依赖（更多说明请参考 [3 选择性安装依赖](#3-选择性安装依赖)）：
 
 安装 PaddleX “基础功能”需要的全部依赖：
 
@@ -124,7 +124,7 @@ PaddleX支持的模型训练相关插件如下，请您根据开发需求，确�
 
 
 
-若您需要安装的插件为`PaddleXXX`，在参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)安装飞桨后，您可以直接执行如下指令快速安装PaddleX的对应插件：
+若您需要安装的插件为`PaddleXXX`，可以直接执行如下指令快速安装PaddleX的对应插件：
 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX.git
@@ -144,7 +144,7 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 
 当您使用官方 Docker 镜像安装时，其中<b>已经内置了 PaddlePaddle、PaddleX（包括wheel包和所有插件）</b>，并配置好了相应的CUDA环境，<b>您获取 Docker 镜像并启动容器即可开始使用</b>。<b>请注意，PaddleX 官方 Docker 镜像与飞桨框架官方 Docker 镜像不同，后者并没有预装 PaddleX。</b>
 
-当您使用自定义方式安装时，需要先安装飞桨 PaddlePaddle 框架，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
+当您使用自定义方式安装时，需要先安装飞桨 PaddlePaddle 框架（除 [少数情形](#4-paddlex-对飞桨框架的依赖) 外），随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
 
 > ❗ 无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。
 
@@ -155,14 +155,17 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 
 ```bash
 # 对于 CPU 用户
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.1.2-paddlepaddle3.0.0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-cpu /bin/bash
 
 # 对于 GPU 用户
 # GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.1.2-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
 
 # GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.1.2-paddlepaddle3.0.0-gpu-cuda12.6-cudnn9.5-trt10.5 /bin/bash
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-gpu-cuda12.6-cudnn9.5 /bin/bash
+
+# GPU 版本，需显卡驱动程序版本 ≥550.xx
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-gpu-cuda12.9-cudnn9.9 /bin/bash
 ```
 
 
@@ -171,14 +174,16 @@ docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=hos
 <details><summary> 点击展开</summary>
 
 <pre><code class="language-bash"># 对于 CPU 用户
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.1.2-paddlepaddle3.0.0-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-cpu /bin/bash
 
-# 对于 GPU 用户
 # GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.1.2-paddlepaddle3.0.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-gpu-cuda11.8-cudnn8.9-trt8.6 /bin/bash
 
 # GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.1.2-paddlepaddle3.0.0-gpu-cuda12.6-cudnn9.5-trt10.5 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-gpu-cuda12.6-cudnn9.5 /bin/bash
+
+# GPU 版本，需显卡驱动程序版本 ≥550.xx
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.3.4-paddlepaddle3.2.0-gpu-cuda12.9-cudnn9.9 /bin/bash
 
 </code></pre></details>
 
@@ -187,7 +192,6 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -i
 * 若您想更深入了解 Docker 的原理或使用方式，请参考 [Docker官方网站](https://www.docker.com/) 或 [Docker官方教程](https://docs.docker.com/get-started/)。
 
 ### 2.2 自定义方式安装PaddleX
-在安装之前，请确保您已经参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)完成飞桨的本地安装。
 
 #### 2.2.1 获取 PaddleX 源码
 接下来，请使用以下命令从 GitHub 获取 PaddleX 最新源码：
@@ -251,7 +255,7 @@ All packages are installed.
 ```
 更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](../other_devices_support/multi_devices_use_guide.md)
 
-### 2.3 选择性安装依赖
+## 3 选择性安装依赖
 
 PaddleX 的功能丰富，而不同的功能需要的依赖也不尽相同。将 PaddleX 中不需要安装插件即可使用的功能归类为“基础功能”。PaddleX 官方 Docker 镜像预置了基础功能所需的全部依赖；使用上文介绍的 `pip install "...[base]"` 的安装方式也将安装基础功能需要的所有依赖。如果您只专注于 PaddleX 的某一项功能，且希望保持安装的依赖的体积尽可能小，可以通过指定“依赖组”的方式，选择性地安装依赖：
 
@@ -280,9 +284,17 @@ PaddleX 目前提供如下依赖组：
 | `ts` | 时序产线的基础功能。 |
 | `video` | 视频产线的基础功能。 |
 | `trans` | 翻译产线的基础功能。 |
+| `genai-client` | 生成式 AI 客户端功能。安装此依赖组等效于安装 PaddleX 生成式 AI 客户端插件；也可以通过 PaddleX CLI 安装生成式 AI 客户端插件。 |
+| `genai-sglang-server` | SGLang 服务器功能。安装此依赖组等效于安装 PaddleX SGLang 服务器插件；也可以通过 PaddleX CLI 安装SGLang 服务器插件。 |
+| `genai-vllm-server` | vLLM 服务器功能。安装此依赖组等效于安装 PaddleX vLLM 服务器插件；也可以通过 PaddleX CLI 安装 vLLM 服务器插件。 |
 | `serving` | 服务化部署功能。安装此依赖组等效于安装 PaddleX 服务化部署插件；也可以通过 PaddleX CLI 安装服务化部署插件。 |
-| `plugins` | 所有支持通过指定依赖组安装的插件提供的功能。 |
-| `all` | PaddleX 的所有基础功能，以及所有支持通过指定依赖组安装的插件提供的功能。 |
-
+| `paddle2onnx` | Paddle2ONNX 功能。安装此依赖组等效于安装 PaddleX Paddle2ONNX 插件；也可以通过 PaddleX CLI 安装 Paddle2ONNX 插件。 |
 
 每一条产线属于且仅属于一个依赖组；在各产线的使用文档中可以了解产线属于哪一依赖组。对于单功能模块，安装任意包含该模块的产线对应的依赖组后即可使用相关的基础功能。
+
+## 4 PaddleX 对飞桨框架的依赖
+
+PaddleX 的绝大部分功能依赖飞桨框架，因此，在大多数情况下，您需要在使用 PaddleX 前参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架。不过，对于以下几种情形，不必安装飞桨框架也可以使用相应的功能：
+
+- 使用 PaddleX `genai-vllm-server` 或 `genai-sglang-server` 插件提供的能力部署模型推理服务。
+- 使用 PaddleX `genai-client` 插件调用生成式 AI 推理服务。

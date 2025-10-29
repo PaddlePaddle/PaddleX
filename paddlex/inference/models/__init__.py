@@ -25,6 +25,7 @@ from ..utils.official_models import official_models
 # from .general_recognition import ShiTuRecPredictor
 from .anomaly_detection import UadPredictor
 from .base import BasePredictor
+from .common.genai import GenAIConfig, need_local_model
 from .doc_vlm import DocVLMPredictor
 from .face_feature import FaceFeaturePredictor
 from .formula_recognition import FormulaRecPredictor
@@ -55,25 +56,31 @@ from .video_detection import VideoDetPredictor
 def create_predictor(
     model_name: str,
     model_dir: Optional[str] = None,
-    device=None,
+    device: Optional[str] = None,
     pp_option=None,
     use_hpip: bool = False,
     hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+    genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
     *args,
     **kwargs,
 ) -> BasePredictor:
-    if model_dir is None:
+    # TODO: Check if the model is a genai model
+    if genai_config is not None:
+        genai_config = GenAIConfig.model_validate(genai_config)
+
+    if need_local_model(genai_config):
+        if model_dir is None:
+            model_dir = official_models[model_name]
+        else:
+            assert Path(model_dir).exists(), f"{model_dir} is not exists!"
+            model_dir = Path(model_dir)
+        config = BasePredictor.load_config(model_dir)
         assert (
-            model_name in official_models
-        ), f"The model ({model_name}) is not supported! Please using directory of local model files or model name supported by PaddleX!"
-        model_dir = official_models[model_name]
+            model_name == config["Global"]["model_name"]
+        ), f"Model name mismatch，please input the correct model dir."
     else:
-        assert Path(model_dir).exists(), f"{model_dir} is not exists!"
-        model_dir = Path(model_dir)
-    config = BasePredictor.load_config(model_dir)
-    assert (
-        model_name == config["Global"]["model_name"]
-    ), f"Model name mismatch，please input the correct model dir."
+        config = None
+
     return BasePredictor.get(model_name)(
         model_dir=model_dir,
         config=config,
@@ -81,6 +88,8 @@ def create_predictor(
         pp_option=pp_option,
         use_hpip=use_hpip,
         hpi_config=hpi_config,
+        genai_config=genai_config,
+        model_name=model_name,
         *args,
         **kwargs,
     )

@@ -358,7 +358,7 @@ class PaddleInfer(StaticInfer):
             logging.debug("`device_id` has been set to None")
 
         if (
-            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu")
+            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0
@@ -447,6 +447,12 @@ class PaddleInfer(StaticInfer):
                     # Delete unsupported passes in dcu
                     config.delete_pass("conv2d_add_act_fuse_pass")
                     config.delete_pass("conv2d_add_fuse_pass")
+            elif self._option.device_type == "iluvatar_gpu":
+                config.enable_custom_device("iluvatar_gpu", int(self._option.device_id))
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
             else:
                 assert self._option.device_type == "cpu"
                 config.disable_gpu()

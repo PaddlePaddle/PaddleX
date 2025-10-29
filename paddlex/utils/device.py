@@ -25,7 +25,7 @@ from .custom_device_list import (
 )
 from .flags import DISABLE_DEV_MODEL_WL
 
-SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
+SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu", "iluvatar_gpu"]
 
 
 def constr_device(device_type, device_ids):

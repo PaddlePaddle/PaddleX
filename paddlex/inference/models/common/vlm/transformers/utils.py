@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import importlib
 import inspect
 import os
 from contextlib import ExitStack
@@ -116,10 +115,6 @@ def get_checkpoint_shard_files(
 
 def is_paddle_support_lazy_init():
     return hasattr(paddle, "LazyGuard")
-
-
-def is_safetensors_available():
-    return importlib.util.find_spec("safetensors") is not None
 
 
 def paddlenlp_load(path, map_location="cpu"):

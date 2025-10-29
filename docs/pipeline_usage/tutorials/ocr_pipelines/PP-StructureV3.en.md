@@ -1572,7 +1572,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>False</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
