@@ -34,6 +34,7 @@ MOD_TO_DEP = {
     "aiohttp": "aiohttp",
     "baidubce": "bce-python-sdk",
     "bs4": "beautifulsoup4",
+    "docx": "python-docx",
     "chardet": "chardet",
     "chinese_calendar": "chinese-calendar",
     "colorlog": "colorlog",

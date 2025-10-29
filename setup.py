@@ -25,6 +25,7 @@ BASE_DEP_SPECS = {
     "aistudio-sdk": ">=0.3.5",
     "bce-python-sdk": ">= 0.9",
     "beautifulsoup4": "",
+    "python-docx": "",
     "chardet": "",
     "chinese-calendar": "",
     "colorlog": "",
@@ -143,6 +144,7 @@ EXTRAS = {
         ],
         "trans": [
             "beautifulsoup4",
+            "python-docx",
             "ftfy",
             "imagesize",
             "lxml",
