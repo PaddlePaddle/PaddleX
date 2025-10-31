@@ -20,7 +20,7 @@
     "PP-ChatOCRv3-doc": "0.3.1",
     "PP-ChatOCRv4-doc": "0.4.1",
     "PP-DocTranslation": "0.1.1",
-    "PaddleOCR-VL": "0.1.0",
+    "PaddleOCR-VL": "0.1.1",
     "PP-ShiTuV2": "0.1.0",
     "rotated_object_detection": "0.1.0",
     "seal_recognition": "0.2.1",
