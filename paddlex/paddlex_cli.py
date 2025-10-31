@@ -35,6 +35,7 @@ from .utils.deps import (
     get_serving_dep_specs,
     is_dep_available,
     is_paddle2onnx_plugin_available,
+    require_deps,
 )
 from .utils.env import get_paddle_cuda_version
 from .utils.install import install_packages, uninstall_packages
@@ -370,7 +371,19 @@ def install(args):
             if "vllm" in plugin_type or "sglang" in plugin_type:
                 try:
                     install_packages(["wheel"], constraints="required")
-                    install_packages(["flash-attn == 2.8.2"], constraints="required")
+                    require_deps("torch")
+                    import torch.cuda
+
+                    if torch.cuda.is_available():
+                        cap = torch.cuda.get_device_capability()
+                        if cap >= (12, 0):
+                            install_packages(
+                                ["flash-attn == 2.8.3"], constraints="required"
+                            )
+                        else:
+                            install_packages(
+                                ["flash-attn == 2.8.2"], constraints="required"
+                            )
                 except Exception:
                     logging.error("Installation failed", exc_info=True)
                     sys.exit(1)
