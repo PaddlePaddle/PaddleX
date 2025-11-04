@@ -689,7 +689,12 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 - "block_bbox": The coordinates of the layout box.
         """
 
-        table_bboxes = [calculate_minimum_enclosing_bbox(table_res["cell_box_list"]) for table_res in table_res_list] if table_res_list else []
+        table_cell_bboxes_list = [
+            [[int(pos) for pos in box] for box in table_res["cell_box_list"]]
+            for table_res in table_res_list
+        ] if table_res_list else []
+        table_bboxes = [calculate_minimum_enclosing_bbox(table_cell_bboxes)
+                        for table_cell_bboxes in table_cell_bboxes_list]
         seal_index = 0
         chart_index = 0
         layout_parsing_blocks: List[LayoutBlock] = []
