@@ -923,3 +923,35 @@ def truncate_repetitive_content(
         return most_common_line
 
     return content
+
+
+def crop_margin(img):
+    import cv2
+
+    if len(img.shape) == 3:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = img.copy()
+
+    if gray.dtype != np.uint8:
+        gray = gray.astype(np.uint8)
+
+    max_val = gray.max()
+    min_val = gray.min()
+
+    if max_val == min_val:
+        return img
+
+    data = (gray - min_val) / (max_val - min_val) * 255
+    data = data.astype(np.uint8)
+
+    _, binary = cv2.threshold(data, 200, 255, cv2.THRESH_BINARY_INV)
+    coords = cv2.findNonZero(binary)
+
+    if coords is None:
+        return img
+
+    x, y, w, h = cv2.boundingRect(coords)
+    cropped = img[y : y + h, x : x + w]
+
+    return cropped

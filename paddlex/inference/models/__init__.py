@@ -70,9 +70,6 @@ def create_predictor(
 
     if need_local_model(genai_config):
         if model_dir is None:
-            assert (
-                model_name in official_models
-            ), f"The model ({model_name}) is not supported! Please using directory of local model files or model name supported by PaddleX!"
             model_dir = official_models[model_name]
         else:
             assert Path(model_dir).exists(), f"{model_dir} is not exists!"
