@@ -306,7 +306,7 @@ def get_genai_fastdeploy_spec(device_type):
     if device_type not in SUPPORTED_DEVICE_TYPES:
         raise ValueError(f"Unsupported device type: {device_type}")
     if device_type == "gpu":
-        return "fastdeploy-gpu == 2.2.1"
+        return "fastdeploy-gpu == 2.2.2"
     else:
         raise AssertionError
 
