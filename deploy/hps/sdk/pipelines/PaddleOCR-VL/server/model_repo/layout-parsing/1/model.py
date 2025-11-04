@@ -81,7 +81,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         return schemas.paddleocr_vl.InferResult
 
     def run(self, input, log_id):
-        return self.run_batch([input], [log_id])
+        return self.run_batch([input], [log_id], log_id)
 
     def run_batch(self, inputs, log_ids, batch_id):
         result_or_output_dic = {}
