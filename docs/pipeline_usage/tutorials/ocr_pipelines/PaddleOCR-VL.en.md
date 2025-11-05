@@ -997,8 +997,8 @@ The default save path for the configuration file is `PaddleOCR-VL.yaml`. Modify 
 VLRecognition:
   ...
   genai_config:
-    backend: vllm
-    server_url: http://127.0.0.1:8118
+    backend: vllm-server
+    server_url: http://127.0.0.1:8118/v1
 ```
 
 After that, the modified configuration file can be used for production line invocation. For example, invoke it through the CLI:
@@ -1290,7 +1290,7 @@ Below are the API references for basic service-based deployment and examples of 
 </tr>
 <tr>
 <td><code>promptLabel</code></td>
-<td><code>string</code>|<code>object</code>|<code>null</code></td>
+<td><code>string</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>prompt_label</code> parameter in the  <code>predict</code> method of the PaddleOCR-VL object.</td>
 <td>No</td>
 </tr>

@@ -91,6 +91,7 @@ class BaseTritonPythonModel(object):
             log_ids = []
             for i, request in enumerate(requests):
                 log_id = protocol.generate_log_id()
+                logging.info("Request %s received", log_id)
                 log_ids.append(log_id)
                 input_ = pb_utils.get_input_tensor_by_name(
                     request, constants.INPUT_NAME

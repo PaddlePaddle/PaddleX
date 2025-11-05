@@ -35,7 +35,6 @@ from ....common.batch_sampler import BaseBatchSampler
 from ....utils.benchmark import ENTRY_POINT_NAME, benchmark
 from ....utils.hpi import HPIConfig, HPIInfo
 from ....utils.io import YAMLReader
-from ....utils.model_paths import get_model_paths
 from ....utils.pp_option import PaddlePredictorOption
 from ...common import HPInfer, PaddleInfer
 from ...common.genai import GenAIClient, GenAIConfig, need_local_model
@@ -156,7 +155,7 @@ class BasePredictor(
 
         self.batch_sampler.batch_size = batch_size
 
-        if self.model_dir and get_model_paths(self.model_dir, self.MODEL_FILE_PREFIX):
+        if self._use_local_model:
             self._use_hpip = use_hpip
             if not use_hpip:
                 self._pp_option = self._prepare_pp_option(pp_option, device)

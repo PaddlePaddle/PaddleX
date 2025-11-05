@@ -4,8 +4,8 @@
 {%- if not cls_token is defined -%}
     {%- set cls_token = "<|begin_of_sentence|>" -%}
 {%- endif -%}
-{%- if not sep_token is defined -%}
-    {%- set sep_token = "<|end_of_sentence|>" -%}
+{%- if not eos_token is defined -%}
+    {%- set eos_token = "</s>" -%}
 {%- endif -%}
 {%- if not image_token is defined -%}
     {%- set image_token = "<|IMAGE_START|><|IMAGE_PLACEHOLDER|><|IMAGE_END|>" -%}
@@ -29,10 +29,10 @@
         {{- "Assistant: " -}}
         {%- for content in message["content"] -%}
             {%- if content["type"] == "text" -%}
-                {{ content["text"] + "\n" }}
+                {{ content["text"] }}
             {%- endif -%}
         {%- endfor -%}
-        {{ sep_token -}}
+        {{ eos_token -}}
     {%- elif message["role"] == "system" -%}
         {%- for content in message["content"] -%}
             {%- if content["type"] == "text" -%}
