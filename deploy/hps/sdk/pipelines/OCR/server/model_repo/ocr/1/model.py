@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+from concurrent.futures import ThreadPoolExecutor
+from operator import itemgetter
 from typing import Any, Dict, Final, List, Tuple
 
 from paddlex_hps_server import (
@@ -25,6 +28,17 @@ from paddlex_hps_server.storage import SupportsGetURL, create_storage
 
 _DEFAULT_MAX_NUM_INPUT_IMGS: Final[int] = 10
 _DEFAULT_MAX_OUTPUT_IMG_SIZE: Final[Tuple[int, int]] = (2000, 2000)
+
+
+class _SequentialExecutor(object):
+    def map(self, fn, *iterables):
+        return map(fn, *iterables)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
 
 
 class TritonPythonModel(BaseTritonPythonModel):
@@ -68,6 +82,129 @@ class TritonPythonModel(BaseTritonPythonModel):
         return schemas.ocr.InferResult
 
     def run(self, input, log_id):
+        return self.run_batch([input], [log_id], log_id)
+
+    def run_batch(self, inputs, log_ids, batch_id):
+        result_or_output_dic = {}
+
+        input_groups = self._group_inputs(inputs)
+
+        max_group_size = max(map(len, input_groups))
+        if max_group_size > 1:
+            executor = ThreadPoolExecutor(max_workers=max_group_size)
+        else:
+            executor = _SequentialExecutor()
+
+        with executor:
+            for input_group in input_groups:
+                input_ids_g = list(map(itemgetter(0), input_group))
+                inputs_g = list(map(itemgetter(1), input_group))
+
+                log_ids_g = [log_ids[i] for i in input_ids_g]
+
+                ret = executor.map(self._preprocess, inputs_g, log_ids_g)
+                ind_img_lsts, ind_data_info_lst, ind_visualize_enabled_lst = [], [], []
+                for i, item in enumerate(ret):
+                    if isinstance(item, tuple):
+                        assert len(item) == 3, len(item)
+                        ind_img_lsts.append(item[0])
+                        ind_data_info_lst.append(item[1])
+                        ind_visualize_enabled_lst.append(item[2])
+                    else:
+                        input_id = input_ids_g[i]
+                        result_or_output_dic[input_id] = item
+
+                if len(ind_img_lsts):
+                    images = [img for item in ind_img_lsts for img in item]
+                    preds = list(
+                        self.pipeline(
+                            images,
+                            use_doc_orientation_classify=inputs_g[
+                                0
+                            ].useDocOrientationClassify,
+                            use_doc_unwarping=inputs_g[0].useDocUnwarping,
+                            use_textline_orientation=inputs_g[0].useTextlineOrientation,
+                            text_det_limit_side_len=inputs_g[0].textDetLimitSideLen,
+                            text_det_limit_type=inputs_g[0].textDetLimitType,
+                            text_det_thresh=inputs_g[0].textDetThresh,
+                            text_det_box_thresh=inputs_g[0].textDetBoxThresh,
+                            text_det_unclip_ratio=inputs_g[0].textDetUnclipRatio,
+                            text_rec_score_thresh=inputs_g[0].textRecScoreThresh,
+                            return_word_box=inputs_g[0].returnWordBox,
+                        )
+                    )
+
+                    if len(preds) != len(images):
+                        raise RuntimeError(
+                            f"The number of predictions ({len(preds)}) is not the same as the number of input images ({len(images)})."
+                        )
+
+                    start_idx = 0
+                    ind_preds = []
+                    for item in ind_img_lsts:
+                        ind_preds.append(preds[start_idx : start_idx + len(item)])
+                        start_idx += len(item)
+
+                    for i, result in zip(
+                        input_ids_g,
+                        executor.map(
+                            self._postprocess,
+                            ind_img_lsts,
+                            ind_data_info_lst,
+                            ind_visualize_enabled_lst,
+                            ind_preds,
+                            log_ids_g,
+                            inputs_g,
+                        ),
+                    ):
+                        result_or_output_dic[i] = result
+
+            assert len(result_or_output_dic) == len(
+                inputs
+            ), f"Expected {len(inputs)} results or outputs, but got {len(result_or_output_dic)}"
+
+            return [result_or_output_dic[i] for i in range(len(inputs))]
+
+    def _group_inputs(self, inputs):
+        def _to_hashable(obj):
+            if isinstance(obj, list):
+                return tuple(obj)
+            elif isinstance(obj, dict):
+                return tuple(sorted(obj.items()))
+            else:
+                return obj
+
+        def _hash(input):
+            return hash(
+                tuple(
+                    map(
+                        _to_hashable,
+                        (
+                            input.useDocOrientationClassify,
+                            input.useDocUnwarping,
+                            input.useTextlineOrientation,
+                            input.textDetLimitSideLen,
+                            input.textDetLimitType,
+                            input.textDetThresh,
+                            input.textDetBoxThresh,
+                            input.textDetUnclipRatio,
+                            input.textRecScoreThresh,
+                            input.returnWordBox,
+                        ),
+                    )
+                )
+            )
+
+        groups = {}
+        for i, inp in enumerate(inputs):
+            group_key = _hash(inp)
+            if group_key not in groups:
+                groups[group_key] = []
+            groups[group_key].append((i, inp))
+
+        return list(groups.values())
+
+    def _preprocess(self, input, log_id):
         if input.fileType is None:
             if utils.is_url(input.file):
                 maybe_file_type = utils.infer_file_type(input.file)
@@ -101,24 +238,11 @@ class TritonPythonModel(BaseTritonPythonModel):
             max_num_imgs=self.context["max_num_input_imgs"],
         )
 
-        result = list(
-            self.pipeline(
-                images,
-                use_doc_orientation_classify=input.useDocOrientationClassify,
-                use_doc_unwarping=input.useDocUnwarping,
-                use_textline_orientation=input.useTextlineOrientation,
-                text_det_limit_side_len=input.textDetLimitSideLen,
-                text_det_limit_type=input.textDetLimitType,
-                text_det_thresh=input.textDetThresh,
-                text_det_box_thresh=input.textDetBoxThresh,
-                text_det_unclip_ratio=input.textDetUnclipRatio,
-                text_rec_score_thresh=input.textRecScoreThresh,
-                return_word_box=input.returnWordBox,
-            )
-        )
+        return images, data_info, visualize_enabled
 
+    def _postprocess(self, images, data_info, visualize_enabled, preds, log_id, input):
         ocr_results: List[Dict[str, Any]] = []
-        for i, (img, item) in enumerate(zip(images, result)):
+        for i, (img, item) in enumerate(zip(images, preds)):
             pruned_res = app_common.prune_result(item.json["res"])
             if visualize_enabled:
                 output_imgs = item.img

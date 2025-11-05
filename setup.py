@@ -25,6 +25,7 @@ BASE_DEP_SPECS = {
     "aistudio-sdk": ">=0.3.5",
     "bce-python-sdk": ">= 0.9",
     "beautifulsoup4": "",
+    "python-docx": "",
     "chardet": "",
     "chinese-calendar": "",
     "colorlog": "",
@@ -143,6 +144,7 @@ EXTRAS = {
         ],
         "trans": [
             "beautifulsoup4",
+            "python-docx",
             "ftfy",
             "imagesize",
             "lxml",
@@ -211,7 +213,6 @@ EXTRAS = {
             "sglang [all] == 0.5.2",
             "torch == 2.8.0",
             "transformers",
-            "xformers",
         ],
         "genai-vllm-server": [
             "einops",
@@ -219,7 +220,6 @@ EXTRAS = {
             "transformers",
             "uvloop",
             "vllm == 0.10.2",
-            "xformers",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.0.2rc3",

@@ -16,10 +16,12 @@
 def get_config(backend):
     if backend == "fastdeploy":
         return {
-            "gpu-memory-utilization": 0.3,
+            "gpu-memory-utilization": 0.7,
             "max-model-len": 16384,
-            "max-num-batched-tokens": 131072,
+            "max-num-batched-tokens": 16384,
             "max-num-seqs": 256,
+            "workers": 2,
+            "graph-optimization-config": '{"graph_opt_level":0, "use_cudagraph":true}',
         }
     elif backend == "vllm":
         return {
