@@ -481,6 +481,7 @@ class DocVLMPredictor(BasePredictor):
                         }
                     ],
                     return_future=True,
+                    timeout=600,
                     **kwargs,
                 )
                 return future

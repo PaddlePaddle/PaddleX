@@ -51,6 +51,7 @@ DCU_WHITELIST = [
     "RLinear",
     "NLinear",
     "PicoDet_LCNet_x2_5_face",
+    "PP-DocLayoutV2",
 ]
 
 MLU_WHITELIST = [
@@ -215,6 +216,7 @@ XPU_WHITELIST = [
     "PP-OCRv5_server_det",
     "PP-OCRv5_mobile_det",
     "PP-Chart2Table",
+    "PP-DocLayoutV2",
 ]
 
 GCU_WHITELIST = [

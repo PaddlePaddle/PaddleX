@@ -31,4 +31,4 @@ def is_bfloat16_available(device):
     device_type, _ = parse_device(device)
     return (
         "npu" in get_device_type() or paddle.amp.is_bfloat16_supported()
-    ) and device_type in ("gpu", "npu", "xpu", "mlu", "dcu")
+    ) and device_type in ("gpu", "npu", "xpu", "mlu")
