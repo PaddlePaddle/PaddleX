@@ -13,9 +13,9 @@ RUN python -m pip install "paddlex${PADDLEX_VERSION}"
 
 ARG BUILD_FOR_SM120=false
 RUN if [ "${BUILD_FOR_SM120}" = 'true' ]; then \
-        python -m pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.3+cu128torch2.8-cp310-cp310-linux_x86_64.whl; \
+        python -m pip install torch==2.8.0 https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.3+cu128torch2.8-cp310-cp310-linux_x86_64.whl; \
     else \
-        python -m pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.2+cu128torch2.8-cp310-cp310-linux_x86_64.whl; \
+        python -m pip install torch==2.8.0 https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.2+cu128torch2.8-cp310-cp310-linux_x86_64.whl; \
     fi \
     && paddlex --install genai-vllm-server
 
