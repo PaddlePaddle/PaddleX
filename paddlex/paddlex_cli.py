@@ -369,10 +369,12 @@ def install(args):
 
         for plugin_type in plugin_types:
             if "vllm" in plugin_type or "sglang" in plugin_type:
+                install_packages(["xformers"], constraints="required")
                 if is_cuda_available():
                     try:
-                        install_packages(["wheel", "xformers"], constraints="required")
+                        install_packages(["wheel"], constraints="required")
                         cap = get_gpu_compute_capability()
+                        assert cap is not None
                         if cap >= (12, 0):
                             install_packages(
                                 ["flash-attn == 2.8.3"], constraints="required"

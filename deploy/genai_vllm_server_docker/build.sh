@@ -21,8 +21,8 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            echo "Unknown option: $1"
-            exit 1
+            echo "Unknown option: $1" >&2
+            exit 2
             ;;
     esac
 done
