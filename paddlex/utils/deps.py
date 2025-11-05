@@ -275,8 +275,10 @@ def is_genai_engine_plugin_available(backend="any"):
         if "fastdeploy" in backend:
             return is_dep_available("fastdeploy")
         elif is_extra_available(f"genai-{backend}"):
-            if "vllm" in backend or "sglang" in backend:
-                return is_dep_available("flash-attn")
+            from .env import is_cuda_available
+
+            if is_cuda_available():
+                return is_dep_available("xformers") and is_dep_available("flash-attn")
             return True
         return False
 
