@@ -1038,8 +1038,8 @@ paddlex --get_pipeline_config PaddleOCR-VL
 VLRecognition:
   ...
   genai_config:
-    backend: vllm
-    server_url: http://127.0.0.1:8118
+    backend: vllm-server
+    server_url: http://127.0.0.1:8118/v1
 ```
 
 之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：
@@ -1334,7 +1334,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 </tr>
 <tr>
 <td><code>promptLabel</code></td>
-<td><code>string</code> | <code>object</code> | <code>null</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>prompt_label</code> 参数相关说明。</td>
 <td>否</td>
 </tr>

@@ -88,7 +88,7 @@ class _AsyncThreadManager:
         self.loop = None
         self.thread = None
 
-    def run_async(self, coro, return_future=False):
+    def run_async(self, coro):
         if not self.is_running():
             raise RuntimeError("Event loop is not running")
 
@@ -164,6 +164,8 @@ class GenAIClient(object):
 
         self.backend = backend
         self._max_concurrency = max_concurrency
+        if model_name is None:
+            model_name = run_async(self._get_model_name(), timeout=10)
         self._model_name = model_name
 
         if "api_key" not in kwargs:
@@ -177,12 +179,6 @@ class GenAIClient(object):
         return self._client
 
     def create_chat_completion(self, messages, *, return_future=False, **kwargs):
-        if self._model_name is not None:
-            model_name = self._model_name
-        else:
-            model_name = run_async(self._get_model_name(), timeout=10)
-            self._model_name = model_name
-
         async def _create_chat_completion_with_semaphore(*args, **kwargs):
             async with self._semaphore:
                 return await self._client.chat.completions.create(
@@ -192,7 +188,7 @@ class GenAIClient(object):
 
         return run_async(
             _create_chat_completion_with_semaphore(
-                model=model_name,
+                model=self._model_name,
                 messages=messages,
                 **kwargs,
             ),
