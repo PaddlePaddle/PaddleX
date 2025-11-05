@@ -36,7 +36,11 @@ from .utils.deps import (
     is_dep_available,
     is_paddle2onnx_plugin_available,
 )
-from .utils.env import get_gpu_compute_capability, get_paddle_cuda_version
+from .utils.env import (
+    get_gpu_compute_capability,
+    get_paddle_cuda_version,
+    is_cuda_available,
+)
 from .utils.install import install_packages, uninstall_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -320,6 +324,9 @@ def install(args):
             )
 
     def _install_genai_deps(plugin_types):
+        if not is_cuda_available():
+            sys.exit("Currently, only GPU devices are supported.")
+
         fd_plugin_types = []
         not_fd_plugin_types = []
         for plugin_type in plugin_types:
@@ -330,10 +337,7 @@ def install(args):
         if fd_plugin_types:
             if not is_dep_available("paddlepaddle"):
                 sys.exit("Please install PaddlePaddle first.")
-            import paddle.device
 
-            if not paddle.device.is_compiled_with_cuda():
-                sys.exit("Currently, only the GPU version of FastDeploy is supported.")
             cap = get_gpu_compute_capability()
             if cap in ((8, 0), (9, 0)):
                 index_url = "https://www.paddlepaddle.org.cn/packages/stable/fastdeploy-gpu-80_90/"

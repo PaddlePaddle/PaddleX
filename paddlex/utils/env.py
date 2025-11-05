@@ -60,20 +60,33 @@ def get_paddle_cudnn_version():
 # Should we also support getting the runtime versions of CUDA and cuDNN?
 
 
-def get_gpu_compute_capability():
-    cap = None
-
+def is_cuda_available():
     if is_dep_available("paddlepaddle"):
         import paddle.device
 
-        if paddle.device.is_compiled_with_cuda():
-            cap = paddle.device.cuda.get_device_capability()
+        # TODO: Check runtime availability
+        return paddle.device.is_compiled_with_cuda()
     else:
-        # If Paddle is unavailable, retrieve GPU compute capability from PyTorch instead.
+        # If Paddle is unavailable, check GPU availability using PyTorch API.
         require_deps("torch")
         import torch.cuda
 
-        if torch.cuda.is_available():
+        return torch.cuda.is_available()
+
+
+def get_gpu_compute_capability():
+    cap = None
+
+    if is_cuda_available():
+        if is_dep_available("paddlepaddle"):
+            import paddle.device
+
+            cap = paddle.device.cuda.get_device_capability()
+        else:
+            # If Paddle is unavailable, retrieve GPU compute capability from PyTorch instead.
+            require_deps("torch")
+            import torch.cuda
+
             cap = torch.cuda.get_device_capability()
 
     return cap
