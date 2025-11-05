@@ -8,9 +8,14 @@ ENV PIP_NO_CACHE_DIR=0
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
-RUN python -m pip install 'paddlex>=3.3.5,<3.4'
+ARG PADDLEX_VERSION=">=3.3.6,<3.4"
+RUN python -m pip install "paddlex${PADDLEX_VERSION}"
 
-RUN python -m pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.2+cu128torch2.8-cp310-cp310-linux_x86_64.whl \
+ARG BUILD_FOR_SM120=false
+RUN if [ "${BUILD_FOR_SM120}" = 'true' ]; then \
+        python -m pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.3+cu128torch2.8-cp310-cp310-linux_x86_64.whl \
+    else \
+        python -m pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.2+cu128torch2.8-cp310-cp310-linux_x86_64.whl \
     && paddlex --install genai-vllm-server
 
 EXPOSE 8080
