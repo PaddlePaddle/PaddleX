@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .deps import is_dep_available, require_deps
+
 
 def get_device_type():
     import paddle
@@ -56,3 +58,22 @@ def get_paddle_cudnn_version():
 
 
 # Should we also support getting the runtime versions of CUDA and cuDNN?
+
+
+def get_gpu_compute_capability():
+    cap = None
+
+    if is_dep_available("paddlepaddle"):
+        import paddle.device
+
+        if paddle.device.is_compiled_with_cuda():
+            cap = paddle.device.cuda.get_device_capability()
+    else:
+        # If Paddle is unavailable, retrieve GPU compute capability from PyTorch instead.
+        require_deps("torch")
+        import torch.cuda
+
+        if torch.cuda.is_available():
+            cap = torch.cuda.get_device_capability()
+
+    return cap
