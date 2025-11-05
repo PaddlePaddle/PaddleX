@@ -36,7 +36,11 @@ from .utils.deps import (
     is_dep_available,
     is_paddle2onnx_plugin_available,
 )
-from .utils.env import get_gpu_compute_capability, get_paddle_cuda_version
+from .utils.env import (
+    get_gpu_compute_capability,
+    get_paddle_cuda_version,
+    is_cuda_available,
+)
 from .utils.install import install_packages, uninstall_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -365,21 +369,22 @@ def install(args):
 
         for plugin_type in plugin_types:
             if "vllm" in plugin_type or "sglang" in plugin_type:
-                try:
-                    install_packages(["wheel"], constraints="required")
-                    cap = get_gpu_compute_capability()
-                    if cap >= (12, 0):
-                        install_packages(
-                            ["xformers", "flash-attn == 2.8.3"], constraints="required"
-                        )
-                    else:
-                        install_packages(
-                            ["xformers", "flash-attn == 2.8.2"], constraints="required"
-                        )
-                except Exception:
-                    logging.error("Installation failed", exc_info=True)
-                    sys.exit(1)
-                break
+                if is_cuda_available():
+                    try:
+                        install_packages(["wheel", "xformers"], constraints="required")
+                        cap = get_gpu_compute_capability()
+                        if cap >= (12, 0):
+                            install_packages(
+                                ["flash-attn == 2.8.3"], constraints="required"
+                            )
+                        else:
+                            install_packages(
+                                ["flash-attn == 2.8.2"], constraints="required"
+                            )
+                    except Exception:
+                        logging.error("Installation failed", exc_info=True)
+                        sys.exit(1)
+                    break
 
         logging.info(
             "Successfully installed the generative AI plugin"
