@@ -36,7 +36,7 @@ from .utils.deps import (
     is_dep_available,
     is_paddle2onnx_plugin_available,
 )
-from .utils.env import get_paddle_cuda_version
+from .utils.env import get_gpu_compute_capability, get_paddle_cuda_version
 from .utils.install import install_packages, uninstall_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -334,7 +334,7 @@ def install(args):
 
             if not paddle.device.is_compiled_with_cuda():
                 sys.exit("Currently, only the GPU version of FastDeploy is supported.")
-            cap = paddle.device.cuda.get_device_capability()
+            cap = get_gpu_compute_capability()
             if cap in ((8, 0), (9, 0)):
                 index_url = "https://www.paddlepaddle.org.cn/packages/stable/fastdeploy-gpu-80_90/"
             elif cap in ((8, 6), (8, 9)):
@@ -370,7 +370,15 @@ def install(args):
             if "vllm" in plugin_type or "sglang" in plugin_type:
                 try:
                     install_packages(["wheel"], constraints="required")
-                    install_packages(["flash-attn == 2.8.2"], constraints="required")
+                    cap = get_gpu_compute_capability()
+                    if cap >= (12, 0):
+                        install_packages(
+                            ["xformers", "flash-attn == 2.8.3"], constraints="required"
+                        )
+                    else:
+                        install_packages(
+                            ["xformers", "flash-attn == 2.8.2"], constraints="required"
+                        )
                 except Exception:
                     logging.error("Installation failed", exc_info=True)
                     sys.exit(1)
