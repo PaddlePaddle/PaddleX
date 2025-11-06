@@ -64,14 +64,19 @@ def is_cuda_available():
     if is_dep_available("paddlepaddle"):
         import paddle.device
 
-        # TODO: Check runtime availability
+        # TODO:
+        # 1. Check runtime availability
+        # 2. Exclude DCU cases
         return paddle.device.is_compiled_with_cuda()
     else:
         # If Paddle is unavailable, check GPU availability using PyTorch API.
         require_deps("torch")
-        import torch.cuda
 
-        return torch.cuda.is_available()
+        import torch.cuda
+        import torch.version
+
+        # Distinguish GPUs and DCUs by checking `torch.version.cuda`
+        return torch.cuda.is_available() and torch.version.cuda is not None
 
 
 def get_gpu_compute_capability():
@@ -85,6 +90,7 @@ def get_gpu_compute_capability():
         else:
             # If Paddle is unavailable, retrieve GPU compute capability from PyTorch instead.
             require_deps("torch")
+
             import torch.cuda
 
             cap = torch.cuda.get_device_capability()
