@@ -64,10 +64,10 @@ def is_cuda_available():
     if is_dep_available("paddlepaddle"):
         import paddle.device
 
-        # TODO:
-        # 1. Check runtime availability
-        # 2. Exclude DCU cases
-        return paddle.device.is_compiled_with_cuda()
+        # TODO: Check runtime availability
+        return (
+            paddle.device.is_compiled_with_cuda() and not paddle.is_compiled_with_rocm()
+        )
     else:
         # If Paddle is unavailable, check GPU availability using PyTorch API.
         require_deps("torch")
