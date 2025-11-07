@@ -76,7 +76,7 @@ def is_cuda_available():
         import torch.version
 
         # Distinguish GPUs and DCUs by checking `torch.version.cuda`
-        return torch.cuda.is_available() and torch.version.cuda is not None
+        return torch.cuda.is_available() and torch.version.cuda
 
 
 def get_gpu_compute_capability():
