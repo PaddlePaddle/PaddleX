@@ -470,6 +470,8 @@ class PaddleInfer(StaticInfer):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
+                # This pass causes incorrect result when enabling mkldnn
+                config.delete_pass('onednn_placement_pass')
                 config.set_optimization_level(3)
 
         config.enable_memory_optim()
