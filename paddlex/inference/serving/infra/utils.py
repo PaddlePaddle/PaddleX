@@ -195,10 +195,7 @@ def read_pdf(
                 # TODO: Do not always use zoom=2.0
                 zoom = 2.0
                 deg = 0
-                image = page.render(scale=zoom, rotation=deg).to_pil()
-                image = image.convert("RGB")
-                image = np.array(image)
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                image = page.render(scale=zoom, rotation=deg).to_numpy()
                 images.append(image)
                 page_info = PDFPageInfo(
                     width=image.shape[1],

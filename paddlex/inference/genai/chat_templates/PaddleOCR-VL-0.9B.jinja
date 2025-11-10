@@ -1,0 +1,46 @@
+{%- if not add_generation_prompt is defined -%}
+    {%- set add_generation_prompt = true -%}
+{%- endif -%}
+{%- if not cls_token is defined -%}
+    {%- set cls_token = "<|begin_of_sentence|>" -%}
+{%- endif -%}
+{%- if not eos_token is defined -%}
+    {%- set eos_token = "</s>" -%}
+{%- endif -%}
+{%- if not image_token is defined -%}
+    {%- set image_token = "<|IMAGE_START|><|IMAGE_PLACEHOLDER|><|IMAGE_END|>" -%}
+{%- endif -%}
+{{- cls_token -}}
+{%- for message in messages -%}
+    {%- if message["role"] == "user" -%}
+        {{- "User: " -}}
+        {%- for content in message["content"] -%}
+            {%- if content["type"] == "image" -%}
+                {{ image_token }}
+            {%- endif -%}
+        {%- endfor -%}
+        {%- for content in message["content"] -%}
+            {%- if content["type"] == "text" -%}
+                {{ content["text"] }}
+            {%- endif -%}
+        {%- endfor -%}
+        {{ "\n" -}}
+    {%- elif message["role"] == "assistant" -%}
+        {{- "Assistant: " -}}
+        {%- for content in message["content"] -%}
+            {%- if content["type"] == "text" -%}
+                {{ content["text"] }}
+            {%- endif -%}
+        {%- endfor -%}
+        {{ eos_token -}}
+    {%- elif message["role"] == "system" -%}
+        {%- for content in message["content"] -%}
+            {%- if content["type"] == "text" -%}
+                {{ content["text"] + "\n" }}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- if add_generation_prompt -%}
+    {{- "Assistant: " -}}
+{%- endif -%}

@@ -23,8 +23,10 @@ from .mixin import (
     HtmlMixin,
     ImgMixin,
     JsonMixin,
+    LatexMixin,
     MarkdownMixin,
     StrMixin,
     VideoMixin,
+    WordMixin,
     XlsxMixin,
 )

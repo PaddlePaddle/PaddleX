@@ -267,7 +267,9 @@ class OpenCVImageReaderBackend(_ImageReaderBackend):
 
     def read_file(self, in_path):
         """read image file from path by OpenCV"""
-        return cv2.imread(in_path, flags=self.flags)
+        with open(in_path, "rb") as f:
+            img_array = np.frombuffer(f.read(), np.uint8)
+        return cv2.imdecode(img_array, flags=self.flags)
 
 
 class PILImageReaderBackend(_ImageReaderBackend):
@@ -293,11 +295,7 @@ class PDFReaderBackend(_BaseReaderBackend):
         doc = pdfium.PdfDocument(in_path)
         try:
             for page in doc:
-                image = page.render(scale=self._scale, rotation=self._rotation).to_pil()
-                image = image.convert("RGB")
-                img_cv = np.array(image)
-                img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
-                yield img_cv
+                yield page.render(scale=self._scale, rotation=self._rotation).to_numpy()
         finally:
             doc.close()
 

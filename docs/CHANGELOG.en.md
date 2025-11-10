@@ -6,6 +6,10 @@ comments: true
 
 ## Latest Version Information
 
+### PaddleX v3.3.0 (October 16, 2025)
+
+- **Added support for inference and deployment of PaddleOCR-VL and PP-OCRv5 multilingual models.**
+
 ### PaddleX v3.2.0(8.20/2025)
 
 - **Deployment Capability Upgrades:**
