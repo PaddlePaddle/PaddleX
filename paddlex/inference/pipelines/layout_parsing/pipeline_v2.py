@@ -35,7 +35,7 @@ from .layout_objects import LayoutBlock, LayoutRegion
 from .result_v2 import LayoutParsingResultV2
 from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
 from .utils import (
-    caculate_bbox_area,
+    calculate_bbox_area,
     calculate_minimum_enclosing_bbox,
     calculate_overlap_ratio,
     convert_formula_res_to_ocr_format,
@@ -86,6 +86,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
+    def close(self):
+        if getattr(self, "chart_recognition_model"):
+            self.chart_recognition_model.close()
+
     def inintial_predictor(self, config: dict) -> None:
         """Initializes the predictor based on the provided configuration.
 
@@ -106,6 +110,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             self.use_doc_preprocessor = False
         self.use_table_recognition = config.get("use_table_recognition", True)
         self.use_seal_recognition = config.get("use_seal_recognition", True)
+        self.format_block_content = config.get("format_block_content", False)
         self.use_region_detection = config.get(
             "use_region_detection",
             True,
@@ -331,7 +336,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
             # update the region box and max_block_area according to the layout boxes
             base_region_bbox = update_region_box(box, base_region_bbox)
-            max_block_area = max(max_block_area, caculate_bbox_area(box))
+            max_block_area = max(max_block_area, calculate_bbox_area(box))
 
             # update_layout_order_config_block_index(layout_order_config, label, box_idx)
 
@@ -367,7 +372,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         # check if there is only one paragraph title and without doc_title
         only_one_paragraph_title = len(paragraph_title_list) == 1 and doc_title_num == 0
         if only_one_paragraph_title:
-            paragraph_title_block_area = caculate_bbox_area(
+            paragraph_title_block_area = calculate_bbox_area(
                 layout_det_res["boxes"][paragraph_title_list[0]]["coordinate"]
             )
             title_area_max_block_threshold = BLOCK_SETTINGS.get(
@@ -505,7 +510,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         block_bboxes = [box["coordinate"] for box in layout_det_res["boxes"]]
         region_det_res["boxes"] = sorted(
             region_det_res["boxes"],
-            key=lambda item: caculate_bbox_area(item["coordinate"]),
+            key=lambda item: calculate_bbox_area(item["coordinate"]),
         )
         if len(region_det_res["boxes"]) == 0:
             region_det_res["boxes"] = [
@@ -848,6 +853,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
+        format_block_content: Union[bool, None],
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -858,6 +864,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_seal_recognition (Union[bool, None]): Enables seal recognition if True. Defaults to system setting if None.
             use_table_recognition (Union[bool, None]): Enables table recognition if True. Defaults to system setting if None.
             use_formula_recognition (Union[bool, None]): Enables formula recognition if True. Defaults to system setting if None.
+            format_block_content (Union[bool, None]): Enables block content formatting if True. Defaults to system setting if None.
 
         Returns:
             dict: A dictionary containing the model settings.
@@ -886,6 +893,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if use_chart_recognition is None:
             use_chart_recognition = self.use_chart_recognition
 
+        if format_block_content is None:
+            format_block_content = self.format_block_content
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_seal_recognition=use_seal_recognition,
@@ -893,6 +903,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition=use_formula_recognition,
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
+            format_block_content=format_block_content,
         )
 
     def predict(
@@ -906,6 +917,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None] = None,
         use_chart_recognition: Union[bool, None] = None,
         use_region_detection: Union[bool, None] = None,
+        format_block_content: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
@@ -943,6 +955,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_table_recognition (Optional[bool]): Whether to use table recognition.
             use_formula_recognition (Optional[bool]): Whether to use formula recognition.
             use_region_detection (Optional[bool]): Whether to use region detection.
+            format_block_content (Optional[bool]): Whether to format block content.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
             layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
@@ -982,6 +995,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_formula_recognition,
             use_chart_recognition,
             use_region_detection,
+            format_block_content,
         )
 
         if not self.check_model_settings_valid(model_settings):

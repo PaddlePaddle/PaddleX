@@ -823,11 +823,6 @@ class PretrainedConfig:
                 )
         to_remove = []
         for key, value in kwargs.items():
-            if key == "quantization_config" and isinstance(value, Dict):
-                for q_key in value:
-                    setattr(config.quantization_config, q_key, value[q_key])
-                to_remove.append(key)
-                continue
             if hasattr(config, key):
                 setattr(config, key, value)
                 if key != "dtype":
@@ -865,9 +860,6 @@ class PretrainedConfig:
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
-    def __repr__(self):
-        return f"{self.__class__.__name__} {self.to_json_string()}"
-
     def to_diff_dict(self, saving_file=False) -> Dict[str, Any]:
         """
         Removes all attributes from config which correspond to the default config attributes for better readability and
@@ -892,11 +884,6 @@ class PretrainedConfig:
 
         # only serialize values that differ from the default config
         for key, value in config_dict.items():
-            if key == "quantization_config":
-                quantization_diff_dict = self.quantization_config.to_diff_dict()
-                if len(quantization_diff_dict) > 0:
-                    serializable_config_dict[key] = quantization_diff_dict
-                continue
             if (
                 key not in default_config_dict
                 or key == "paddlenlp_version"
@@ -944,16 +931,6 @@ class PretrainedConfig:
             for key in list(output.keys()):
                 if key in self._unsavable_keys:
                     output.pop(key)
-
-        if hasattr(self, "quantization_config"):
-            output["quantization_config"] = (
-                self.quantization_config.to_dict()
-                if not isinstance(self.quantization_config, dict)
-                else self.quantization_config
-            )
-
-            # pop the `_pre_quantization_dtype` as torch.dtypes are not serializable.
-            _ = output.pop("_pre_quantization_dtype", None)
 
         return output
 

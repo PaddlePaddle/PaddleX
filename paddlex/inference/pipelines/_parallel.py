@@ -44,7 +44,7 @@ class MultiDeviceSimpleInferenceExecutor(object):
                 input_future_pairs = []
                 for pipeline in self._pipelines:
                     try:
-                        input_batch = list(input_batches)[0]
+                        input_batch = next(input_batches)
                     except StopIteration:
                         out_of_data = True
                         break

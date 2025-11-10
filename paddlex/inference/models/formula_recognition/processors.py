@@ -337,8 +337,8 @@ class LaTeXOCRDecode(object):
             str: The post-processed LaTeX string.
         """
         text_reg = r"(\\(operatorname|mathrm|text|mathbf)\s?\*? {.*?})"
-        letter = "[a-zA-Z]"
-        noletter = "[\W_^\d]"
+        letter = r"[a-zA-Z]"
+        noletter = r"[\W_^\d]"
         names = [x[0].replace(" ", "") for x in re.findall(text_reg, s)]
         s = re.sub(text_reg, lambda match: str(names.pop(0)), s)
         news = s
@@ -840,8 +840,8 @@ class UniMERNetDecode(object):
             str: Normalized string.
         """
         text_reg = r"(\\(operatorname|mathrm|text|mathbf)\s?\*? {.*?})"
-        letter = "[a-zA-Z]"
-        noletter = "[\W_^\d]"
+        letter = r"[a-zA-Z]"
+        noletter = r"[\W_^\d]"
         names = []
         for x in re.findall(text_reg, s):
             pattern = r"\\[a-zA-Z]+"
@@ -874,7 +874,7 @@ class UniMERNetDecode(object):
         return s.replace("XXXXXXX", " ")
 
     def remove_chinese_text_wrapping(self, formula):
-        pattern = re.compile(r"\\text\s*{\s*([^}]*?[\u4e00-\u9fff]+[^}]*?)\s*}")
+        pattern = re.compile(r"\\text\s*{([^{}]*[\u4e00-\u9fff]+[^{}]*)}")
 
         def replacer(match):
             return match.group(1)

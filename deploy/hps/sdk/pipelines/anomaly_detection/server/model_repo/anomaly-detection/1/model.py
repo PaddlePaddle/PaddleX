@@ -1,3 +1,17 @@
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from paddlex_hps_server import BaseTritonPythonModel, schemas, utils
 
 
@@ -17,7 +31,11 @@ class TritonPythonModel(BaseTritonPythonModel):
         pred = result["pred"][0].tolist()
         size = [len(pred), len(pred[0])]
         label_map = [item for sublist in pred for item in sublist]
-        visualize_enabled = input.visualize if input.visualize is not None else self.app_config.visualize
+        visualize_enabled = (
+            input.visualize
+            if input.visualize is not None
+            else self.app_config.visualize
+        )
 
         if visualize_enabled:
             output_image_base64 = utils.base64_encode(

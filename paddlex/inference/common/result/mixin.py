@@ -16,7 +16,9 @@ import copy
 import json
 import mimetypes
 import os
+import re
 from abc import abstractmethod
+from inspect import signature
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Union
 
@@ -35,6 +37,471 @@ from ...utils.io import (
     VideoWriter,
     XlsxWriter,
 )
+
+
+class WordMixin:
+    """
+    Mixin class for adding Word (.docx) export capabilities.
+    """
+
+    def __init__(self, *args: list, **kwargs: dict):
+        self._save_funcs.append(self.save_to_word)
+
+    @abstractmethod
+    def _to_word(self) -> Dict[str, Any]:
+        """
+        Convert the result to a Word-compatible format.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing Word-compatible blocks and image data.
+        """
+        raise NotImplementedError
+
+    @property
+    def word(self) -> Dict[str, Any]:
+        """
+        Convert the result to a Word-compatible format.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing Word-compatible blocks and image data.
+        """
+        return self._to_word()
+
+    def save_to_word(self, save_path, *args, **kwargs) -> None:
+        """
+        Save the Word session dict to a .docx file (each page as separate file).
+        """
+        from bs4 import BeautifulSoup
+        from docx import Document
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+        from docx.oxml.ns import qn
+        from docx.shared import Inches, Pt
+
+        def save_images(image_list, base_save_path):
+            """
+            Save images to disk and return a mapping from original path to saved absolute path.
+            """
+            abs_image_paths: Dict[str, str] = {}
+            image_dir = base_save_path / "imgs"
+            image_dir.mkdir(parents=True, exist_ok=True)
+
+            for item in image_list:
+                img_path = item.get("path")
+                img_obj = item.get("img")
+                if not img_path or not img_obj:
+                    continue
+
+                img_name = Path(img_path).name
+                save_path = image_dir / img_name
+                img_obj.save(save_path)
+                abs_image_paths[img_path] = str(save_path.resolve())
+            return abs_image_paths
+
+        def blocks_to_word(word_blocks, original_image_width, abs_image_paths):
+            """
+            Convert word blocks to Word document format.
+            """
+
+            def set_paragraph_style(para, config):
+                run = para.runs[0] if para.runs else para.add_run()
+                font_name = config.get("font", "Times New Roman")
+                run.font.name = font_name
+                run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
+                run.font.size = Pt(config.get("size", 12))
+                run.bold = config.get("bold", False)
+                para.alignment = config.get("align", WD_ALIGN_PARAGRAPH.LEFT)
+                if config.get("indent", False):
+                    para.paragraph_format.first_line_indent = Inches(0.3)
+
+            def parse_html_table(html):
+                soup = BeautifulSoup(html, "html.parser")
+                return [
+                    [cell.get_text(strip=True) for cell in tr.find_all(["td", "th"])]
+                    for tr in soup.find_all("tr")
+                ]
+
+            doc = Document()
+            current_page = None
+
+            for block in word_blocks:
+                page_idx = block.get("page_index", 0)
+                if current_page is None:
+                    current_page = page_idx
+                elif page_idx != current_page:
+                    # new page -> add a section
+                    doc.add_section()
+                    current_page = page_idx
+
+                label = block.get("type")
+                content = block.get("content", "").strip()
+                config = block.get("config")
+
+                # --- header/footer ---
+                if label == "header" and content:
+                    section = doc.sections[-1]
+                    section.header.is_linked_to_previous = False
+                    para = section.header.add_paragraph(content)
+                    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                elif label == "footer" and content:
+                    section = doc.sections[-1]
+                    section.footer.is_linked_to_previous = False
+                    para = section.footer.add_paragraph(content)
+                    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+                # --- image/chart ---
+                if label in ["chart", "image", "seal"]:
+                    image_name = block.get("content")
+                    if not image_name:
+                        return "% [Image not found]\n\n"
+
+                    # get the absolute path
+                    abs_image_path = abs_image_paths.get(image_name)
+                    if not abs_image_path:
+                        return f"% [Image path not found for {image_name}]\n\n"
+
+                    para = doc.add_paragraph()
+                    run = para.add_run()
+                    run.add_picture(abs_image_path, width=Inches(5))
+                    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+                # --- table process ---
+                elif label == "table" and content:
+                    rows = (
+                        parse_html_table(content)
+                        if "<table" in content
+                        else [r.split("\t") for r in content.split("\n") if r.strip()]
+                    )
+                    if rows:
+                        max_cols = max(len(r) for r in rows)
+                        table = doc.add_table(rows=0, cols=max_cols)
+                        table.style = "Table Grid"
+                        for row_cells in rows:
+                            row = table.add_row().cells
+                            for i in range(max_cols):
+                                row[i].text = (
+                                    row_cells[i].strip() if i < len(row_cells) else ""
+                                )
+
+                # --- other content ---
+                elif (
+                    label
+                    not in [
+                        "header",
+                        "footer",
+                        "table",
+                        "chart",
+                        "image",
+                        "seal",
+                        "vision_footnote",
+                    ]
+                    and content
+                ):
+                    if label == "vision_footnote":
+                        content = f"[footnote] {content}"
+                    para = doc.add_paragraph(content)
+                    set_paragraph_style(para, config)
+            return doc
+
+        fn = Path(self._get_input_fn())
+        stem = fn.stem
+        save_path = Path(save_path)
+        save_file = save_path / f"{stem}.docx"
+        # Determine whether the _to_word parameter originates from markdown.save_to_word or layout_parsing_result_.save_to_word
+        sig = signature(getattr(self, "_to_word", None))
+        params = sig.parameters.keys()
+        if len(params) == 0:
+            blocks = self._to_word()["word_blocks"]
+            images = self._to_word()["images"]
+            original_image_width = self._to_word().get("original_image_width", 500)
+            abs_image_paths = save_images(images, Path(save_path))
+            doc = blocks_to_word(blocks, original_image_width, abs_image_paths)
+        else:
+            doc = self._to_word(save_path.resolve())
+
+        doc.save(save_file.as_posix())
+
+
+class LatexMixin:
+    def __init__(self, *args: list, **kwargs: dict):
+        self._save_funcs.append(self.save_to_latex)
+
+    @abstractmethod
+    def _to_latex(self) -> Dict[str, Any]:
+        """
+        Convert the result to a LaTeX-compatible format.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing LaTeX-compatible blocks and image data.
+        """
+        raise NotImplementedError
+
+    @property
+    def latex(self) -> Dict[str, Any]:
+        """Property to access the LaTeX-compatible data.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing LaTeX-compatible blocks and image data.
+        """
+        return self._to_latex()
+
+    def save_to_latex(self, save_path, *args, **kwargs) -> None:
+        from bs4 import BeautifulSoup
+
+        """
+        Save the LaTeX session dict to a .tex file (each page as separate file).
+        """
+
+        def save_images(image_list, base_save_path):
+            """
+            Save images to disk and return a mapping from original path to saved absolute path.
+            """
+            abs_image_paths: Dict[str, str] = {}
+            image_dir = base_save_path / "imgs"
+            image_dir.mkdir(parents=True, exist_ok=True)
+
+            for item in image_list:
+                img_path = item.get("path")
+                img_obj = item.get("img")
+                if not img_path or not img_obj:
+                    continue
+
+                img_name = Path(img_path).name
+                save_path = image_dir / img_name
+                img_obj.save(save_path)
+                abs_image_paths[img_path] = str(save_path.resolve())
+            return abs_image_paths
+
+        def escape_latex(s: str) -> str:
+            """
+            Escape LaTeX special characters.
+            """
+            if not s:
+                return ""
+            return (
+                s.replace("\\", "\\textbackslash{}")
+                .replace("&", "\\&")
+                .replace("%", "\\%")
+                .replace("$", "\\$")
+                .replace("#", "\\#")
+                .replace("_", "\\_")
+                .replace("{", "\\{")
+                .replace("}", "\\}")
+                .replace("~", "\\textasciitilde{}")
+                .replace("^", "\\textasciicircum{}")
+            )
+
+        def escaped_paragraph_text(s: str) -> str:
+            """
+            Process regular paragraphs while preserving formulas.
+            """
+            paragraphs = re.split(r"\n\s*\n", s)
+            processed = []
+            for p in paragraphs:
+                p = p.strip()
+                if not p:
+                    continue
+
+                # Hold LaTeX/math formulas by replacing them with placeholders
+                placeholders = []
+
+                def _hold(m):
+                    placeholders.append(m.group(0))
+                    return f"@@FORMULA{len(placeholders)-1}@@"
+
+                temp = re.sub(
+                    r"(\$\$.*?\$\$|\$.*?\$|\\\[.*?\\\])", _hold, p, flags=re.DOTALL
+                )
+                temp = escape_latex(temp)
+                for i, f in enumerate(placeholders):
+                    temp = temp.replace(f"@@FORMULA{i}@@", f)
+                processed.append("\\par " + temp)
+            return "\n\n".join(processed) + "\n\n"
+
+        def generate_image_latex(block, abs_image_paths) -> str:
+
+            image_name = block.get("content")
+            if not image_name:
+                return "% [Image not found]\n\n"
+
+            # get the absolute path
+            abs_image_path = abs_image_paths.get(image_name)
+            if not abs_image_path:
+                return f"% [Image path not found for {image_name}]\n\n"
+
+            return (
+                f"\\begin{{figure}}[h]\n"
+                f"\\centering\n"
+                f"\\includegraphics[width=0.8\\linewidth]{{{abs_image_path}}}\n"
+                f"\\end{{figure}}\n\n"
+            )
+
+        def generate_table_latex(block) -> str:
+            content = block.get("content", "")
+            if "<table" in content:
+                soup = BeautifulSoup(content, "html.parser")
+                rows = [
+                    [
+                        (
+                            escape_latex(td.get_text(strip=True))
+                            if not re.search(
+                                r"(\$.*?\$|\\\(.*?\\\)|\\\[.*?\\\])",
+                                td.get_text(strip=True),
+                            )
+                            else td.get_text(strip=True)
+                        )
+                        for td in tr.find_all(["td", "th"])
+                    ]
+                    for tr in soup.find_all("tr")
+                ]
+            else:
+                rows = [
+                    [
+                        (
+                            escape_latex(c)
+                            if not re.search(r"(\$.*?\$|\\\(.*?\\\)|\\\[.*?\\\])", c)
+                            else c
+                        )
+                        for c in row.split("\t")
+                    ]
+                    for row in content.splitlines()
+                    if row.strip()
+                ]
+
+            if not rows:
+                return ""
+
+            col_count = max(len(r) for r in rows)
+            norm_rows = [r + [""] * (col_count - len(r)) for r in rows]
+            col_format = " ".join(
+                [">{\\raggedright\\arraybackslash}X" for _ in range(col_count)]
+            )
+
+            latex = "\\begin{center}\n\\renewcommand{\\arraystretch}{1.5}\n"
+            latex += f"\\begin{{tabularx}}{{\\textwidth}}{{{col_format}}}\n\\toprule\n"
+            for i, row in enumerate(norm_rows):
+                latex += " & ".join(row) + " \\\\\n"
+                if i == 0:
+                    latex += "\\midrule\n"
+            latex += "\\bottomrule\n\\end{tabularx}\n\\end{center}\n\n"
+            return latex
+
+        def block_to_latex(block, abs_image_paths) -> str:
+            label = block.get("type", "")
+            content = block.get("content", "") or ""
+            if label == "doc_title":
+                return f"\\begin{{center}}\n{{\\Huge {escape_latex(content.strip())}}}\\end{{center}}\n\n"
+            if label in ["header", "footer"]:
+                return ""
+            if label == "abstract":
+                return f"\\begin{{abstract}}\n{escape_latex(content.strip())}\n\\end{{abstract}}\n\n"
+            if label == "paragraph_title":
+                return f"\\section*{{{escape_latex(content.strip())}}}\n\n"
+            if label == "text":
+                return escaped_paragraph_text(content)
+            if label == "content":
+                lines = [line.rstrip() for line in content.splitlines()]
+                return (
+                    "\n".join(
+                        [escape_latex(line) + " \\\\" for line in lines if line.strip()]
+                    )
+                    + "\n\n"
+                )
+            if label == "formula":
+                return f"\\[\n{content.strip()}\n\\]\n\n"
+            if label == "algorithm":
+                return "\\begin{verbatim}\n" + content + "\n\\end{verbatim}\n\n"
+            if label in ["image", "chart", "seal"]:
+                return generate_image_latex(block, abs_image_paths)
+            if label == "table":
+                return generate_table_latex(block)
+            if label in ["figure_title", "table_title", "chart_title"]:
+                return f"\\begin{{center}}\n{{\\small {escape_latex(content.strip())}}}\\end{{center}}\n\n"
+            if label == "reference":
+                lines = [line.strip() for line in content.split("\n") if line.strip()]
+                bibitems = []
+                for line in lines:
+                    content = escape_latex(re.sub(r"^\[\d+\]\s*", "", line))
+                    key = f"ref{abs(hash(line)) % 100000}"
+                    bibitems.append(f"\\bibitem{{{key}}} {content}")
+                return "\n".join(bibitems) + "\n", "\n".join(bibitems) + "\n"
+            return f"% [Unknown block: {label}] {escape_latex(content)}\n\n"
+
+        def blocks_to_latex(blocks, abs_image_paths) -> str:
+            pages = {}
+            for b in blocks:
+                p = int(b.get("page_index", 0) or 0)
+                pages.setdefault(p, []).append(b)
+
+            latex_lines = [
+                "\\documentclass[12pt]{article}",
+                "\\usepackage{xeCJK}",
+                "\\usepackage{fontspec}",
+                "\\usepackage{graphicx}",
+                "\\usepackage{amsmath}",
+                "\\usepackage{geometry}",
+                "\\usepackage{fancyhdr}",
+                "\\usepackage{indentfirst}",
+                "\\usepackage{caption}",
+                "\\usepackage{tabularx, booktabs}",
+                "\\usepackage{amssymb}",
+                "\\usepackage{amsfonts}",
+                "\\geometry{a4paper, margin=1in}",
+                "\\setCJKmainfont{Droid Sans Fallback}",
+                "\\setmainfont{DejaVu Serif}",
+                "\\setsansfont{Lato}",
+                "\\setmonofont{Latin Modern Mono}",
+                "\\pagestyle{fancy}",
+                "\\setlength{\\parindent}{2em}",
+                "\\begin{document}\n",
+            ]
+
+            in_bib = False
+            for page_num in sorted(pages.keys()):
+                page_blocks = sorted(
+                    pages[page_num], key=lambda b: b.get("block_bbox", [0, 0, 0, 0])[1]
+                )
+                header_blocks = [b for b in page_blocks if b.get("type") == "header"]
+                footer_blocks = [b for b in page_blocks if b.get("type") == "footer"]
+                page_header = " ".join(b.get("content", "") for b in header_blocks)
+                page_footer = " ".join(b.get("content", "") for b in footer_blocks)
+
+                latex_lines.append(f"% ==== page {page_num} header/footer ====")
+                latex_lines.append(f"\\fancyhead[L]{{{escape_latex(page_header)}}}")
+                latex_lines.append(f"\\fancyfoot[C]{{{escape_latex(page_footer)}}}\n")
+
+                for block in page_blocks:
+                    if block.get("type", "") == "reference_title" and not in_bib:
+                        latex_lines.append("\\begin{thebibliography}{99}")
+                        in_bib = True
+                        continue
+                    latex_lines.append(block_to_latex(block, abs_image_paths))
+
+                latex_lines.append("\\clearpage\n")
+
+            if in_bib:
+                latex_lines.append("\\end{thebibliography}\n")
+
+            latex_lines.append("\\end{document}")
+            return "\n".join(latex_lines)
+
+        fn = Path(self._get_input_fn())
+        stem = fn.stem
+        save_path = Path(save_path)
+        save_file = save_path / f"{stem}.tex"
+
+        sig = signature(getattr(self, "_to_latex", None))
+        params = sig.parameters.keys()
+        if len(params) == 0:
+            blocks = self._to_latex()["latex_blocks"]
+            images = self._to_latex()["images"]
+            abs_image_paths = save_images(images, Path(save_path))
+            latex = blocks_to_latex(blocks, abs_image_paths)
+        else:
+            latex = self._to_latex(save_path.resolve())
+
+        os.makedirs(save_path, exist_ok=True)
+        with open(save_file.as_posix(), "w", encoding="utf-8") as f:
+            f.write(latex)
 
 
 class StrMixin:
@@ -611,7 +1078,9 @@ class MarkdownMixin:
         self._save_funcs.append(self.save_to_markdown)
 
     @abstractmethod
-    def _to_markdown(self, pretty=True) -> Dict[str, Union[str, Dict[str, Any]]]:
+    def _to_markdown(
+        self, pretty=True, show_formula_number=False
+    ) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
         Convert the result to markdown format.
 
@@ -632,7 +1101,9 @@ class MarkdownMixin:
         """
         return self._to_markdown()
 
-    def save_to_markdown(self, save_path, pretty=True, *args, **kwargs) -> None:
+    def save_to_markdown(
+        self, save_path, pretty=True, show_formula_number=False, *args, **kwargs
+    ) -> None:
         """Save the markdown data to a file.
 
         Args:
@@ -670,7 +1141,7 @@ class MarkdownMixin:
             self._markdown_writer.write,
             self._img_writer.write,
             self.save_path,
-            self._to_markdown(pretty=pretty),
+            self._to_markdown(pretty=pretty, show_formula_number=show_formula_number),
             *args,
             **kwargs,
         )

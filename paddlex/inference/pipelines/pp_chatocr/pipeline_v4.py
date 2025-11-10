@@ -96,6 +96,10 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
 
         self.table_structure_len_max = 500
 
+    def close(self):
+        if self.layout_parsing_pipeline is not None:
+            self.layout_parsing_pipeline.close()
+
     def inintial_visual_predictor(self, config: dict) -> None:
         """
         Initializes the visual predictor with the given configuration.

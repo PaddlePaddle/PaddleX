@@ -174,8 +174,9 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         None
     """
     from bs4 import BeautifulSoup
+    import copy
 
-    # if this is a short and simple tag, just translate it
+    # If the HTML is short and simple, translate directly
     if (
         html_block.count("<") < 5
         and html_block.count(">") < 5
@@ -188,11 +189,51 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
 
     soup = BeautifulSoup(html_block, "html.parser")
 
-    # collect text nodes
+    td_seen = set()
+    td_batch_nodes = []
+    td_batch_texts = []
+
+    # Find all <td> and <th> elements and collect their inner HTML for batch translation
+
+    for node in soup.find_all(string=True, recursive=True):
+        parent_td = node.find_parent(["td", "th"])
+        if parent_td and id(parent_td) not in td_seen:
+            td_text = parent_td.decode_contents().strip()
+            if td_text:
+                td_batch_nodes.append(parent_td)
+                td_batch_texts.append(td_text)
+            td_seen.add(id(parent_td))
+            
+    # Process <td>/<th> nodes in batches
+    batch_size = chunk_size
+    i = 0
+    while i < len(td_batch_nodes):
+        # A batch of nodes and the assembled content to be translated
+        batch_nodes = []
+        batch_texts = []
+        current_length = 0
+        while i < len(td_batch_nodes) and current_length + len(td_batch_texts[i]) <= batch_size:
+            batch_nodes.append(td_batch_nodes[i])
+            batch_texts.append(td_batch_texts[i])
+            current_length += len(td_batch_texts[i])
+            i += 1
+        
+        # Translate the batch and reinsert translated content
+        placeholder = "__TD__"
+        batch_text = placeholder.join(batch_texts)
+        translated_batch = translate_func(batch_text)
+        translated_lines = translated_batch.split(placeholder)
+
+        for td_node, line in zip(batch_nodes, translated_lines):
+            td_node.clear()
+            frag = BeautifulSoup(line, "html.parser")
+            for child in frag.contents:
+                td_node.append(copy.deepcopy(child))
+
+
     text_nodes = []
     for node in soup.find_all(string=True, recursive=True):
-        text = node.strip()
-        if text:
+        if not node.find_parent(["td", "th"]) and node.strip():
             text_nodes.append(node)
 
     idx = 0
@@ -204,11 +245,7 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         while idx < total:
             node_text = text_nodes[idx].strip()
             if len(node_text) > chunk_size:
-                # if node_text is too long, split it
-                translated_text = split_text_recursive(
-                    node_text, chunk_size, translate_func
-                )
-                # concatenate translated lines with \n
+                translated_text = split_text_recursive(node_text, chunk_size, translate_func)
                 text_nodes[idx].replace_with(translated_text)
                 idx += 1
                 continue

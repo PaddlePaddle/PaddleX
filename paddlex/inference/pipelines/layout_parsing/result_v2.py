@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import copy
 import re
+from copy import deepcopy
 from functools import partial
 from typing import List
 
@@ -26,7 +27,9 @@ from ...common.result import (
     BaseCVResult,
     HtmlMixin,
     JsonMixin,
+    LatexMixin,
     MarkdownMixin,
+    WordMixin,
     XlsxMixin,
 )
 from .layout_objects import LayoutBlock
@@ -109,9 +112,13 @@ def format_image_scaled_by_html_func(block, original_image_width):
 
 def format_image_plain_func(block):
     img_tags = []
-    image_path = block.image["path"]
-    img_tags.append("![]({})".format(image_path.replace("-\n", "").replace("\n", " ")))
-    return "\n".join(img_tags)
+    if block.image:
+        image_path = block.image["path"]
+        img_tags.append(
+            "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
+        )
+        return "\n".join(img_tags)
+    return ""
 
 
 def format_chart2table_func(block):
@@ -140,7 +147,9 @@ def format_first_line_func(block, templates, format_func, spliter):
     return spliter.join(lines)
 
 
-class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
+class LayoutParsingResultV2(
+    BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordMixin, LatexMixin
+):
     """Layout Parsing Result V2"""
 
     def __init__(self, data) -> None:
@@ -150,6 +159,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
+        WordMixin.__init__(self)
+        LatexMixin.__init__(self)
 
     def _to_img(self) -> dict[str, np.ndarray]:
         from .utils import get_show_color
@@ -278,23 +289,108 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             Dict[str, str]: A dictionary containing the object's data in JSON format.
         """
+        if self["model_settings"].get("format_block_content", False):
+            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                )
+            )
+
+            if self["model_settings"].get("use_chart_recognition", False):
+                format_chart_func = format_chart2table_func
+            else:
+                format_chart_func = format_image_func
+
+            if self["model_settings"].get("use_seal_recognition", False):
+                format_seal_func = lambda block: "\n".join(
+                    [format_image_func(block), format_text_func(block)]
+                )
+            else:
+                format_seal_func = format_image_func
+
+            if self["model_settings"].get("use_table_recognition", False):
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
+            else:
+                format_table_func = format_image_func
+
+            if self["model_settings"].get("use_formula_recognition", False):
+                format_formula_func = lambda block: f"$${block.content}$$"
+            else:
+                format_formula_func = format_image_func
+
+            handle_funcs_dict = {
+                "paragraph_title": format_title_func,
+                "abstract_title": format_title_func,
+                "reference_title": format_title_func,
+                "content_title": format_title_func,
+                "doc_title": lambda block: f"# {block.content}".replace(
+                    "-\n",
+                    "",
+                ).replace("\n", " "),
+                "table_title": format_text_func,
+                "figure_title": format_text_func,
+                "chart_title": format_text_func,
+                "vision_footnote": lambda block: block.content.replace(
+                    "\n\n", "\n"
+                ).replace("\n", "\n\n"),
+                "text": lambda block: block.content.replace("\n\n", "\n").replace(
+                    "\n", "\n\n"
+                ),
+                "abstract": partial(
+                    format_first_line_func,
+                    templates=["摘要", "abstract"],
+                    format_func=lambda l: f"## {l}\n",
+                    spliter=" ",
+                ),
+                "content": lambda block: block.content.replace("-\n", "  \n").replace(
+                    "\n", "  \n"
+                ),
+                "image": format_image_func,
+                "chart": format_chart_func,
+                "formula": format_formula_func,
+                "table": format_table_func,
+                "reference": partial(
+                    format_first_line_func,
+                    templates=["参考文献", "references"],
+                    format_func=lambda l: f"## {l}",
+                    spliter="\n",
+                ),
+                "algorithm": lambda block: block.content.strip("\n"),
+                "seal": format_seal_func,
+            }
+
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         parsing_res_list: List[LayoutBlock] = self["parsing_res_list"]
-        parsing_res_list = [
-            {
+        parsing_res_list_json = []
+        for parsing_res in parsing_res_list:
+            res_dict = {
                 "block_label": parsing_res.label,
                 "block_content": parsing_res.content,
                 "block_bbox": parsing_res.bbox,
                 "block_id": parsing_res.index,
                 "block_order": parsing_res.order_index,
             }
-            for parsing_res in parsing_res_list
-        ]
-        data["parsing_res_list"] = parsing_res_list
+            if self["model_settings"].get("format_block_content", False):
+                if handle_funcs_dict.get(parsing_res.label):
+                    res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
+                        parsing_res
+                    )
+                else:
+                    res_dict["block_content"] = parsing_res.content
+
+            parsing_res_list_json.append(res_dict)
+        data["parsing_res_list"] = parsing_res_list_json
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
@@ -351,7 +447,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_markdown(self, pretty=True) -> dict:
+    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
         """
         Save the parsing result to a Markdown file.
 
@@ -500,3 +596,138 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             markdown_info["markdown_images"][img["path"]] = img["img"]
 
         return markdown_info
+
+    def _to_word(self) -> dict:
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+        """
+        Convert the object's parsing result into a Word-compatible dict.
+
+        Returns:
+            dict: {
+                "word_blocks": List[Dict],       # Simplified list of content blocks
+                "original_image_width": int,   # Pixel width of the source page
+                "input_path": str,             # Original input file path
+                "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
+            }
+        """
+
+        word_blocks = []
+        image = []
+
+        STYLE_MAP = {
+            "doc_title": {
+                "level": 0,
+                "size": 20,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.CENTER,
+            },
+            "header": {
+                "size": 16,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.CENTER,
+            },
+            "abstract_title": {
+                "level": 1,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.CENTER,
+            },
+            "content_title": {
+                "level": 1,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "reference_title": {
+                "level": 1,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "paragraph_title": {
+                "level": 2,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
+            "text": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+                "indent": True,
+            },
+            "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
+            "algorithm": {
+                "font": "Courier New",
+                "size": 11,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
+        }
+
+        for block in self["parsing_res_list"]:
+
+            label = block.label
+            content = getattr(block, "content", "")
+            if label in ["image", "chart", "seal"]:
+                content = block.image["path"]
+            config = STYLE_MAP.get(
+                label,
+                {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True},
+            )
+            block_dict = {
+                "type": label,
+                "content": deepcopy(content),
+                "config": config,
+            }
+            word_blocks.append(block_dict)
+            if block.image is not None:
+                image.append({"path": block.image["path"], "img": block.image["img"]})
+
+        return {
+            "word_blocks": word_blocks,
+            "original_image_width": self["doc_preprocessor_res"]["output_img"].shape[1],
+            "input_path": self["input_path"],
+            "images": image,
+        }
+
+    def _to_latex(self) -> dict:
+        """
+        Convert the object's parsing result into a latex-compatible dict.
+
+        Returns:
+            dict: {
+                "latex_blocks": List[Dict],       # Simplified list of content blocks
+                "input_path": str,             # Original input file path
+                "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
+            }
+        """
+        latex_blocks = []
+        image = []
+
+        for block in self["parsing_res_list"]:
+
+            label = block.label
+            content = getattr(block, "content", "")
+            if label in ["image", "chart", "seal"]:
+                content = block.image["path"]
+            block_dict = {
+                "type": label,
+                "content": deepcopy(content),
+            }
+            latex_blocks.append(block_dict)
+            if block.image is not None:
+                image.append({"path": block.image["path"], "img": block.image["img"]})
+
+        return {
+            "latex_blocks": latex_blocks,
+            "images": image,
+            "input_path": self["input_path"],
+        }

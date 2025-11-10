@@ -713,11 +713,27 @@ class ChatTemplateMixin:
                     "apply_chat_template do not support applying batch conversations, "
                     "so you should apply the conversation one by one."
                 )
-        query = self.chat_template.render(
-            messages=conversations,
-            **self.special_tokens_map,
-            add_generation_prompt=add_generation_prompt,
-        )
+        try:
+            query = self.chat_template.render(
+                messages=conversations,
+                **self.special_tokens_map,
+                add_generation_prompt=add_generation_prompt,
+            )
+        except TypeError:
+            for i in range(len(conversations)):
+                content = conversations[i]["content"]
+                if isinstance(content, list):
+                    new_content = ""
+                    for part in content:
+                        if part.get("type") == "text":
+                            new_content = part["text"]
+                            break
+                conversations[i]["content"] = new_content
+            query = self.chat_template.render(
+                messages=conversations,
+                **self.special_tokens_map,
+                add_generation_prompt=add_generation_prompt,
+            )
         return query
 
     def encode_chat_inputs(
@@ -1239,12 +1255,6 @@ class PretrainedTokenizer(
                     # Strip white spaces on the left
                     if tok_extended.lstrip and left:
                         tokens[i - 1] = left.rstrip()  # Opposite here
-                else:
-                    # We strip left and right by default
-                    if right:
-                        tokens[i + 1] = right.lstrip()
-                    if left:
-                        tokens[i - 1] = left.rstrip()
         # ["This is something", "<special_token_1>", "else"]
         tokenized_text = []
         for token in tokens:

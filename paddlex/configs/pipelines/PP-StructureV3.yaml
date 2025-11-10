@@ -9,6 +9,7 @@ use_table_recognition: True
 use_formula_recognition: True
 use_chart_recognition: False
 use_region_detection: True
+format_block_content: False
 
 SubModules:
   LayoutDetection:

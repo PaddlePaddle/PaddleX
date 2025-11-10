@@ -107,6 +107,7 @@ plugins:
             公式识别产线: Formula Recognition
             印章文本识别产线: Seal Recognition
             文档图像预处理产线: Document Image Preprocessing
+            PaddleOCR-VL产线: PaddleOCR-VL
             计算机视觉: Computer Vision
             通用图像分类: General Image Classification
             通用目标检测: General Object Detection
@@ -339,6 +340,7 @@ nav:
          - 公式识别产线: pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md
          - 印章文本识别产线: pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md
          - 文档图像预处理产线: pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.md
+         - PaddleOCR-VL产线: pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md
        - 计算机视觉:
          - 通用图像分类: pipeline_usage/tutorials/cv_pipelines/image_classification.md
          - 通用目标检测: pipeline_usage/tutorials/cv_pipelines/object_detection.md

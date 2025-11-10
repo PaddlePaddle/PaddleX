@@ -10,9 +10,9 @@ comments: true
 
 **请注意，本项目依赖于如下环境配置：**
 
+- **CPU 架构**：x86-64
 - **操作系统**：Linux
-- **Docker 版本**：`>= 20.10.0`，用于镜像构建和部署
-- **CPU 架构**：x86-64 
+- **Docker Engine 版本**：`>= 20.10.0`，用于镜像构建和部署
 
 本文档主要介绍如何基于本项目提供的脚本完成高稳定性服务化部署环境搭建与物料打包。整体流程分为两个阶段：
 
@@ -48,7 +48,7 @@ comments: true
 为了使构建结果的可重现性更强，本步骤将依赖锁定到精确版本。请切换至 `server_env` 目录执行如下脚本：
 
 ```bash
-./script/freeze_requirements.sh
+./scripts/freeze_requirements.sh
 ```
 
 该脚本调用 `pip-tools compile` 解析依赖源文件，并最终生成一系列 `.txt` 文件（如 `requirements/gpu.txt`、`requirements/cpu.txt` 等），这些文件将为 [1.3 镜像构建](./README.md#13-镜像构建) 提供依赖版本约束。
@@ -85,7 +85,7 @@ comments: true
 对于 Triton Server，项目使用预先编译好的版本，将在构建镜像时自动下载，无需手动下载。以构建 GPU 镜像为例，在 `server_env` 目录下执行以下命令：
 
 ```bash
-./scripts/build_deployment_image.sh -k gpu -t latest-gpu 
+./scripts/build_deployment_image.sh -k gpu -t latest-gpu
 ```
 
 构建镜像的参数配置项包括
@@ -118,10 +118,10 @@ comments: true
 执行成功后，命令行会输出以下提示信息：
 
 ```text
- => => exporting to image                                                         
- => => exporting layers                                                      
- => => writing image  sha256:ba3d0b2b079d63ee0239a99043fec7e25f17bf2a7772ec2fc80503c1582b3459   
- => => naming to ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:latest-gpu   
+ => => exporting to image
+ => => exporting layers
+ => => writing image  sha256:ba3d0b2b079d63ee0239a99043fec7e25f17bf2a7772ec2fc80503c1582b3459
+ => => naming to ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:latest-gpu
 ```
 
 如需批量构建 GPU 和 CPU 镜像，可以执行以下命令：
@@ -172,7 +172,7 @@ comments: true
 </tbody>
 </table>
 
-调用后存储到当前目录 `/output` 路径下。
+调用后存储到当前目录 `output` 路径下。
 
 ## 3.FAQ
 

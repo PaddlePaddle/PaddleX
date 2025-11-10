@@ -18,6 +18,8 @@ import os
 import re
 import warnings
 from contextlib import contextmanager
+from functools import partial
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
@@ -33,9 +35,12 @@ except:
 from paddle.nn import Layer
 
 from ......utils import logging
+from ......utils.deps import is_dep_available, require_deps
 from ...tokenizer.tokenizer_utils import InitTrackerMeta, adapt_stale_fwd_patch
 from ..generation import GenerationConfig, GenerationMixin
 from ..utils import (
+    ASYMMETRY_QUANT_SCALE_MAX,
+    ASYMMETRY_QUANT_SCALE_MIN,
     CONFIG_NAME,
     LEGACY_CONFIG_NAME,
     PADDLE_WEIGHTS_INDEX_NAME,
@@ -44,6 +49,7 @@ from ..utils import (
     PYTORCH_WEIGHTS_NAME,
     SAFE_WEIGHTS_INDEX_NAME,
     SAFE_WEIGHTS_NAME,
+    SYMMETRY_QUANT_SCALE,
     device_guard,
     resolve_file_path,
 )
@@ -53,7 +59,6 @@ from .utils import (
     ContextManagers,
     fn_args_to_dict,
     get_checkpoint_shard_files,
-    is_safetensors_available,
     paddlenlp_load,
     weight_name_suffix,
 )
@@ -128,12 +133,112 @@ def _split_keys_evenly(keys: list, n: int) -> list:
     return result
 
 
+def _load_part_state_dict_from_safetensors(
+    keys,
+    checkpoint_file: Union[str, os.PathLike],
+    tensor_parallel_split_mapping,
+    fliter_dict_keys,
+    device,
+    quantization_linear_list=None,
+    quantization_config=None,
+    dtype=None,
+    return_numpy=False,
+    convert_from_hf=False,
+    transpose_weight_keys=None,
+):
+    import paddle
+    from safetensors import safe_open
+
+    if transpose_weight_keys:
+        transpose_weight_keys = set(transpose_weight_keys)
+
+    def _is_need_transpose(key):
+        if "lora" not in key and convert_from_hf and transpose_weight_keys:
+            return key in transpose_weight_keys
+
+    def _transpose_hf_weight(key, weight):
+        if _is_need_transpose(key):
+            return weight.transpose([-1, -2])
+        return weight
+
+    part_state_dict = {}
+    scale_dict = {}
+    with safe_open(checkpoint_file, framework="paddle") as f:
+        for key in keys:
+            # 1. non-merge ckpt loading dont have filter key.
+            # 2. merge ckpt will skip quant scale by `fliter_dict_keys`
+            if (
+                key.endswith(SYMMETRY_QUANT_SCALE)
+                or key.endswith(ASYMMETRY_QUANT_SCALE_MIN)
+                or key.endswith(ASYMMETRY_QUANT_SCALE_MAX)
+            ):
+                continue
+
+            if fliter_dict_keys is not None and key not in fliter_dict_keys:
+                continue
+
+            py_safe_slice_ = f.get_slice(key)
+            if (
+                quantization_linear_list is not None
+                and key.split(".weight")[0] in quantization_linear_list
+                and not key.endswith("_scale")
+            ):
+                raise NotImplementedError
+            else:
+                if key in tensor_parallel_split_mapping:
+                    tp_fn = tensor_parallel_split_mapping[key]
+                    if _is_need_transpose(key):
+                        assert isinstance(tp_fn, partial)
+                        is_column = True
+                        if "is_column" in tp_fn.keywords:
+                            is_column = tp_fn.keywords["is_column"]
+                        is_column = not is_column
+                        tp_fn = partial(
+                            tp_fn.func,
+                            *tp_fn.args,
+                            **{**tp_fn.keywords, "is_column": is_column},
+                        )
+                    if len(py_safe_slice_.shape) == 0:
+                        weight = tp_fn(py_safe_slice_[:])
+                    else:
+                        weight = tp_fn(py_safe_slice_)
+                else:
+                    weight = py_safe_slice_[:]
+
+                if not return_numpy and device == "expected":
+                    weight = weight._copy_to(
+                        paddle.framework._current_expected_place(), False
+                    )
+                weight = _transpose_hf_weight(key, weight)
+                if return_numpy:
+                    weight = weight.numpy()
+                part_state_dict[key] = weight
+
+        for key in keys:
+            if (
+                key.endswith(SYMMETRY_QUANT_SCALE)
+                or key.endswith(ASYMMETRY_QUANT_SCALE_MIN)
+                or key.endswith(ASYMMETRY_QUANT_SCALE_MAX)
+            ):
+                scale = f.get_tensor(key)
+                if not return_numpy and device == "expected":
+                    scale = scale._copy_to(
+                        paddle.framework._current_expected_place(), False
+                    )
+                if return_numpy:
+                    scale = scale.numpy()
+                scale_dict[key] = scale
+    return part_state_dict, scale_dict
+
+
 def load_state_dict(
     checkpoint_file: Union[str, os.PathLike],
     tensor_parallel_split_mapping=None,
     fliter_dict_keys=None,
     device="cpu",
     ckpt_quant_stage="O0",
+    convert_from_hf=False,
+    transpose_weight_keys=None,
 ):
     """
     Reads a PaddlePaddle checkpoint file, returning properly formatted errors if they arise.
@@ -142,16 +247,35 @@ def load_state_dict(
     if tensor_parallel_split_mapping is None:
         tensor_parallel_split_mapping = {}
 
-    state_dict = paddlenlp_load(checkpoint_file, map_location="cpu")
+    if Path(checkpoint_file).suffix == ".safetensors":
+        require_deps("safetensors")
+        from safetensors import safe_open
+
+        with safe_open(checkpoint_file, framework="paddle") as f:
+            state_dict, scale_dict = _load_part_state_dict_from_safetensors(
+                list(f.keys()),
+                checkpoint_file,
+                tensor_parallel_split_mapping,
+                fliter_dict_keys,
+                "expected",
+                dtype=None,
+                return_numpy=False,
+                convert_from_hf=convert_from_hf,
+                transpose_weight_keys=transpose_weight_keys,
+            )
+    else:
+        state_dict = paddlenlp_load(checkpoint_file, map_location="cpu")
     return state_dict
 
 
 _re_layer_prefix = re.compile(r"\.(\d+)\.")
 
 
-def _load_state_dict_into_model(model_to_load, state_dict, start_prefix):
+def _load_state_dict_into_model(
+    model_to_load, state_dict, start_prefix, convert_from_hf
+):
     # torch will cast dtype in load_state_dict, but paddle strictly check dtype
-    _convert_state_dict_dtype_and_shape(state_dict, model_to_load)
+    _convert_state_dict_dtype_and_shape(state_dict, model_to_load, convert_from_hf)
 
     error_msgs = []
 
@@ -168,6 +292,11 @@ def _load_state_dict_into_model(model_to_load, state_dict, start_prefix):
             "ignore", message=r".*is not found in the provided dict.*"
         )
         warnings.filterwarnings("ignore", message=r".*paddle.to_tensor.*")
+        if convert_from_hf:
+            try:
+                model_to_load.set_hf_state_dict(state_dict)
+            except NotImplementedError:
+                pass
         model_to_load.set_state_dict(state_dict)
         error_msgs.extend([str(x.message) for x in w])
 
@@ -176,12 +305,16 @@ def _load_state_dict_into_model(model_to_load, state_dict, start_prefix):
     return error_msgs
 
 
-def _convert_state_dict_dtype_and_shape(state_dict, model_to_load):
+def _convert_state_dict_dtype_and_shape(state_dict, model_to_load, convert_from_hf):
     # convert the dtype of state dict
     def is_0d_or_1d(tensor):
         return len(tensor.shape) == 0 or list(tensor.shape) == [1]
 
-    for key, value in model_to_load.state_dict().items():
+    if convert_from_hf:
+        model_state_dict = model_to_load.get_hf_state_dict()
+    else:
+        model_state_dict = model_to_load.state_dict()
+    for key, value in model_state_dict.items():
         if key in list(state_dict.keys()):
             if isinstance(state_dict[key], np.ndarray):
                 raise ValueError(
@@ -500,34 +633,6 @@ class PretrainedModel(
         config.weightonly_group_size = predictor_args.weightonly_group_size
         config.weight_block_size = predictor_args.weight_block_size
         config.moe_quant_type = predictor_args.moe_quant_type
-        if config.quantization_config.quant_method is not None:
-            predictor_args.weight_block_size = (
-                config.quantization_config.weight_block_size
-            )
-            config.weight_block_size = predictor_args.weight_block_size
-
-        if config.quantization_config.quant_type is not None:
-            if predictor_args.mode == "dynamic":
-                predictor_args.quant_type = config.quantization_config.quant_type
-                config.quant_type = config.quantization_config.quant_type
-            if "c8" in config.quant_type:
-                predictor_args.cachekv_int8_type = "static"
-                if predictor_args.mode == "dynamic":
-                    config.cachekv_int8_type = "static"
-
-            if predictor_args.mode == "dynamic":
-                ptq_multicards_num = 0
-                if os.path.exists(config.model_name_or_path):
-                    prefix = "act_scales_"
-                    for filename in os.listdir(config.model_name_or_path):
-                        if filename.startswith(prefix):
-                            ptq_multicards_num += 1
-
-                logging.info(
-                    f"PTQ from {ptq_multicards_num} cards, so we will not split"
-                )
-                if ptq_multicards_num > 1:
-                    config.single_card_ptq = False
 
         if predictor_args.block_attn:
             config.block_size = predictor_args.block_size
@@ -1131,6 +1236,7 @@ class PretrainedModel(
         keep_in_fp32_modules=None,
         quantization_linear_list=None,
         sharded_metadata=None,
+        convert_from_hf=False,
     ) -> Tuple[List[str]]:
         """load the state_dict into model, and do the following things:
 
@@ -1148,7 +1254,13 @@ class PretrainedModel(
         """
         is_safetensors = False
 
-        model_state_dict = model.state_dict()
+        if convert_from_hf:
+            try:
+                model_state_dict = model.get_hf_state_dict()
+            except NotImplementedError:
+                model_state_dict = model.state_dict()
+        else:
+            model_state_dict = model.state_dict()
 
         expected_keys = list(model_state_dict.keys())
         prefix = model.base_model_prefix
@@ -1184,45 +1296,6 @@ class PretrainedModel(
                 quantization_linear_list = [
                     ".".join([prefix, s]) for s in quantization_linear_list
                 ]
-
-        # Weight quantization if not yet quantized & update loaded_keys
-        if (
-            hasattr(config, "quantization_config")
-            and config.quantization_config.is_weight_quantize()
-        ):
-            try:
-                from ..quantization.quantization_utils import (
-                    convert_to_quantize_state_dict,
-                    update_loaded_state_dict_keys,
-                )
-            except ImportError:
-                raise ImportError(
-                    "Quantization features require `paddlepaddle >= 2.5.2`"
-                )
-            if state_dict is not None:
-                state_dict = convert_to_quantize_state_dict(
-                    state_dict,
-                    quantization_linear_list,
-                    config.quantization_config,
-                    dtype,
-                )
-                loaded_keys = [k for k in state_dict.keys()]
-            else:
-                loaded_keys = update_loaded_state_dict_keys(
-                    loaded_keys, quantization_linear_list, config.quantization_config
-                )
-            if keep_in_fp32_modules is None:
-                keep_in_fp32_modules = (
-                    ["quant_scale"]
-                    if config.quantization_config.weight_quantize_algo in ["nf4", "fp4"]
-                    else None
-                )
-            else:
-                keep_in_fp32_modules = (
-                    keep_in_fp32_modules + ["quant_scale"]
-                    if config.quantization_config.weight_quantize_algo in ["nf4", "fp4"]
-                    else keep_in_fp32_modules
-                )
 
         missing_keys = list(set(expected_keys) - set(loaded_keys))
         unexpected_keys = list(set(loaded_keys) - set(expected_keys))
@@ -1387,24 +1460,12 @@ class PretrainedModel(
                 ignore_mismatched_sizes,
             )
 
-            if (
-                hasattr(config, "quantization_config")
-                and config.quantization_config.is_weight_quantize()
-            ):
-                error_msgs = _load_state_dict_into_meta_model(
-                    model_to_load,
-                    state_dict,
-                    loaded_keys,
-                    start_prefix,
-                    expected_keys,
-                    dtype=dtype,
-                    is_safetensors=is_safetensors,
-                    keep_in_fp32_modules=keep_in_fp32_modules,
-                )
-            else:
-                error_msgs = _load_state_dict_into_model(
-                    model_to_load, state_dict, start_prefix
-                )
+            error_msgs = _load_state_dict_into_model(
+                model_to_load,
+                state_dict,
+                start_prefix,
+                convert_from_hf=convert_from_hf,
+            )
         else:
             # Sharded checkpoint or whole but low_cpu_mem_usage==True
 
@@ -1459,12 +1520,19 @@ class PretrainedModel(
                         if k[-1] in tp_actions:
                             fuse_actions.pop(k[-1], None)
 
-                if config.quantization_config.is_weight_quantize():
-                    filter_dict_keys = None
+                try:
+                    transpose_weight_keys = model.get_transpose_weight_keys()
+                except NotImplementedError:
+                    if convert_from_hf:
+                        raise ValueError("`convert_from_hf=True` is not supported")
+                    else:
+                        transpose_weight_keys = None
                 state_dict = load_state_dict(
                     shard_file,
                     tp_actions if pre_tensor_parallel_split else None,
                     filter_dict_keys,
+                    convert_from_hf=convert_from_hf,
+                    transpose_weight_keys=transpose_weight_keys,
                 )
 
                 # convert for fusing or splitting weights
@@ -1479,14 +1547,6 @@ class PretrainedModel(
                 )
                 missing_keys = list(set(missing_keys) - set(new_keys))
                 unexpected_keys = list(set(unexpected_keys) - set(fused_keys))
-
-                if config.quantization_config.is_weight_quantize():
-                    state_dict = convert_to_quantize_state_dict(
-                        state_dict,
-                        quantization_linear_list,
-                        config.quantization_config,
-                        dtype,
-                    )
 
                 # Mismatched keys contains tuples key/shape1/shape2 of weights in the checkpoint that have a shape not
                 # matching the weights in the model.
@@ -1514,7 +1574,7 @@ class PretrainedModel(
                     )
                     logging.info("Converted state_dict to Tensor Parallel Format")
 
-                if low_cpu_mem_usage or config.quantization_config.is_weight_quantize():
+                if low_cpu_mem_usage:
                     new_error_msgs = _load_state_dict_into_meta_model(
                         model_to_load,
                         state_dict,
@@ -1528,7 +1588,10 @@ class PretrainedModel(
                     error_msgs += new_error_msgs
                 else:
                     error_msgs += _load_state_dict_into_model(
-                        model_to_load, state_dict, start_prefix
+                        model_to_load,
+                        state_dict,
+                        start_prefix,
+                        convert_from_hf=convert_from_hf,
                     )
 
                 # force memory release
@@ -1544,23 +1607,15 @@ class PretrainedModel(
             )
 
         if len(unexpected_keys) > 0:
-            if logging.logging.level < 20:
-                logging.warning(
-                    f"Some weights of the model checkpoint at {pretrained_model_name_or_path} were not used when"
-                    f" initializing {model.__class__.__name__}: {sorted(unexpected_keys)}\n- This IS expected if you are"
-                    f" initializing {model.__class__.__name__} from the checkpoint of a model trained on another task or"
-                    " with another architecture (e.g. initializing a BertForSequenceClassification model from a"
-                    " BertForPreTraining model).\n- This IS NOT expected if you are initializing"
-                    f" {model.__class__.__name__} from the checkpoint of a model that you expect to be exactly identical"
-                    " (initializing a BertForSequenceClassification model from a BertForSequenceClassification model)."
-                )
-            else:
-                logging.warning(
-                    f"Some weights of the model checkpoint at {pretrained_model_name_or_path} were not used when"
-                    f" initializing the model, - This IS expected if you are"
-                    f" initializing the model from a checkpoint of a model trained on another task or"
-                    " with another architecture."
-                )
+            logging.warning(
+                f"Some weights of the model checkpoint at {pretrained_model_name_or_path} were not used when"
+                f" initializing {model.__class__.__name__}: {sorted(unexpected_keys)}\n- This IS expected if you are"
+                f" initializing {model.__class__.__name__} from the checkpoint of a model trained on another task or"
+                " with another architecture (e.g. initializing a BertForSequenceClassification model from a"
+                " BertForPreTraining model).\n- This IS NOT expected if you are initializing"
+                f" {model.__class__.__name__} from the checkpoint of a model that you expect to be exactly identical"
+                " (initializing a BertForSequenceClassification model from a BertForSequenceClassification model)."
+            )
         else:
             logging.info(
                 f"All model checkpoint weights were used when initializing {model.__class__.__name__}.\n"
@@ -1596,7 +1651,9 @@ class PretrainedModel(
         return model, missing_keys, unexpected_keys, mismatched_keys
 
     @classmethod
-    def from_pretrained(cls, pretrained_model_name_or_path, *args, **kwargs):
+    def from_pretrained(
+        cls, pretrained_model_name_or_path, *args, convert_from_hf=False, **kwargs
+    ):
         """
         Creates an instance of `PretrainedModel`. Model weights are loaded
         by specifying name of a built-in pretrained model, a pretrained model from HF Hub, a community contributed model,
@@ -1663,7 +1720,7 @@ class PretrainedModel(
             subfolder = ""
         variant = kwargs.pop("variant", None)
         use_safetensors = kwargs.pop(
-            "use_safetensors", None if is_safetensors_available() else False
+            "use_safetensors", None if is_dep_available("safetensors") else False
         )
 
         low_cpu_mem_usage = kwargs.pop("low_cpu_mem_usage", False)
@@ -1739,6 +1796,10 @@ class PretrainedModel(
             )
         )
 
+        init_args = config["init_args"] or ()
+        with ContextManagers(init_contexts):
+            model = cls(config, *init_args, **model_kwargs)
+
         if convert_from_torch and state_dict is None:
             if (
                 resolved_archive_file.endswith(PYTORCH_WEIGHTS_NAME)
@@ -1780,7 +1841,18 @@ class PretrainedModel(
             ):
                 raise NotImplementedError
             else:
-                state_dict = load_state_dict(resolved_archive_file)
+                try:
+                    transpose_weight_keys = model.get_transpose_weight_keys()
+                except NotImplementedError:
+                    if convert_from_hf:
+                        raise ValueError("`convert_from_hf=True` is not supported")
+                    else:
+                        transpose_weight_keys = None
+                state_dict = load_state_dict(
+                    resolved_archive_file,
+                    convert_from_hf=convert_from_hf,
+                    transpose_weight_keys=transpose_weight_keys,
+                )
 
             logging.info("Loaded weights file from disk, setting weights to model.")
 
@@ -1815,10 +1887,6 @@ class PretrainedModel(
                         state_dict[k] = paddle.Tensor.__call__(
                             state_dict.pop(k), zero_copy=True
                         )
-        # 3. init the model
-        init_args = config["init_args"] or ()
-        with ContextManagers(init_contexts):
-            model = cls(config, *init_args, **model_kwargs)
 
         if use_keep_in_fp32_modules:
             # low_cpu_mem_usage = True
@@ -1844,6 +1912,7 @@ class PretrainedModel(
                 keep_in_fp32_modules=keep_in_fp32_modules,
                 quantization_linear_list=quantization_linear_list,
                 sharded_metadata=sharded_metadata if is_sharded else None,
+                convert_from_hf=convert_from_hf,
             )
         )
 
@@ -2012,3 +2081,12 @@ class PretrainedModel(
             final_config["pp_config"] = merged_config["pp_config"]
 
         return final_config
+
+    def get_transpose_weight_keys(self):
+        raise NotImplementedError
+
+    def get_hf_state_dict(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def set_hf_state_dict(self, *args, **kwargs):
+        raise NotImplementedError
