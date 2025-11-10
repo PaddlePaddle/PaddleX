@@ -39,8 +39,8 @@ from paddle.distributed.fleet.meta_parallel import (
 from paddle.distributed.fleet.utils import recompute
 
 from ......utils import logging
-from ....common.vlm.transformers import PretrainedModel
-from ....common.vlm.transformers.model_outputs import (
+from ....common.transformers.transformers import PretrainedModel
+from ....common.transformers.transformers.model_outputs import (
     BaseModelOutputWithPastAndCrossAttentions,
 )
 from ._config import PaddleOCRVLConfig

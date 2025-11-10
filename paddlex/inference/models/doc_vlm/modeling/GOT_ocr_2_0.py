@@ -19,7 +19,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ...common.vlm.transformers.model_outputs import CausalLMOutputWithPast
+from ...common.transformers.transformers.model_outputs import CausalLMOutputWithPast
 from .qwen2 import Qwen2Config, Qwen2ForCausalLM, Qwen2Model
 
 

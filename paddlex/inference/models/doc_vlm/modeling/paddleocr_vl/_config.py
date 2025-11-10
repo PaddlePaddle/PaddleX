@@ -28,7 +28,7 @@
 
 from ......utils.device import parse_device
 from ......utils.env import get_paddle_cuda_version
-from ....common.vlm.transformers import PretrainedConfig
+from ....common.transformers.transformers import PretrainedConfig
 
 
 class PaddleOCRVisionConfig(PretrainedConfig):

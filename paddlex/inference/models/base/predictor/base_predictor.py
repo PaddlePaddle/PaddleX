@@ -35,6 +35,7 @@ from ....common.batch_sampler import BaseBatchSampler
 from ....utils.benchmark import ENTRY_POINT_NAME, benchmark
 from ....utils.hpi import HPIConfig, HPIInfo
 from ....utils.io import YAMLReader
+from ....utils.model_paths import get_model_paths
 from ....utils.pp_option import PaddlePredictorOption
 from ...common import HPInfer, PaddleInfer
 from ...common.genai import GenAIClient, GenAIConfig, need_local_model
@@ -157,13 +158,20 @@ class BasePredictor(
 
         if self._use_local_model:
             self._use_hpip = use_hpip
-            if not use_hpip:
-                self._pp_option = self._prepare_pp_option(pp_option, device)
+            model_paths = get_model_paths(self.model_dir)
+            if "paddle_dyn" in model_paths or "safetensors" in model_paths:
+                self._use_static_model = False
             else:
-                require_hpip()
-                self._hpi_config = self._prepare_hpi_config(hpi_config, device)
+                self._use_static_model = True
+            if self._use_static_model:
+                if not use_hpip:
+                    self._pp_option = self._prepare_pp_option(pp_option, device)
+                else:
+                    require_hpip()
+                    self._hpi_config = self._prepare_hpi_config(hpi_config, device)
         else:
             self._use_hpip = False
+            self._use_static_model = False
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
 

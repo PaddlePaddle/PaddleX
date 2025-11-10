@@ -27,11 +27,11 @@ from paddle.distributed.fleet.utils import recompute
 
 from .....utils import logging
 from .....utils.env import get_device_type
-from ...common.vlm.activations import ACT2FN
-from ...common.vlm.bert_padding import index_first_axis, pad_input, unpad_input
-from ...common.vlm.flash_attn_utils import has_flash_attn_func
-from ...common.vlm.transformers import PretrainedConfig, PretrainedModel
-from ...common.vlm.transformers.model_outputs import (
+from ...common.transformers.activations import ACT2FN
+from ...common.transformers.bert_padding import index_first_axis, pad_input, unpad_input
+from ...common.transformers.flash_attn_utils import has_flash_attn_func
+from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers.model_outputs import (
     BaseModelOutputWithPast,
     ModelOutput,
 )

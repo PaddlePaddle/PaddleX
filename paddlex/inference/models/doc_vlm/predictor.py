@@ -53,6 +53,8 @@ class DocVLMPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
 
         if self._use_local_model:
+            if self._use_static_model:
+                raise RuntimeError("Static graph models are not supported")
             self.device = kwargs.get("device", None)
             self.dtype = "bfloat16" if is_bfloat16_available(self.device) else "float32"
 
