@@ -87,17 +87,37 @@ class TextToSpeechPipeline(BasePipeline):
         Returns:
             PwganResult: The predicted pwgan results, support str and json output.
         """
-        if type(input) == str:
-            if input.endswith("txt"):
-                if os.path.exists(input):
+            sentences = [] 
+        if isinstance(input, str):
+            if input.endswith(".txt"):
+                if not os.path.exists(input):
+                    raise FileNotFoundError(f"The specified text file does not exist: {input}")
+                try:
                     with open(input, "r", encoding="utf-8") as f:
-                        sentences = f.readlines()
+                        sentences = [line.strip() for line in f.readlines()]
+                except IOError as e:
+                    raise IOError(f"An error occurred while reading the file {input}: {e}")
             else:
                 sentences = [input]
-        elif type(input) == list:
-            sentences = input
+        elif isinstance(input, list):
+            sentences = [] 
+            for item in input:
+                if isinstance(item, str):
+                    if item.endswith(".txt"):
+                        if not os.path.exists(item):
+                            raise FileNotFoundError(f"The specified text file in the list does not exist: {item}")
+                        try:
+                            with open(item, "r", encoding="utf-8") as f:
+                                sentences.extend([line.strip() for line in f.readlines()])
+                        except IOError as e:
+                            raise IOError(f"An error occurred while reading the file {item}: {e}")
+                    else:
+                        sentences.append(item)
         else:
-            raise TypeError("Input must be string or list of strings.")
+            raise TypeError(f"Unsupported input type: {type(input)}. Expected str, list, or np.ndarray.")
+        if not sentences:
+            raise ValueError("The input resulted in an empty list of sentences to process.")
+        
         for sentence in sentences:
             text_to_pinyin_res = [self.get_text_to_pinyin_result(sentence)['result']['phone_ids']]
             text_to_speech_acoustic_res = [self.get_text_to_speech_acoustic_result(text_to_pinyin_res)['result']]
