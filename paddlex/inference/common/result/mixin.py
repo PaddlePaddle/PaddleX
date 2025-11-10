@@ -1073,6 +1073,7 @@ class AudioMixin:
         """
         self._backend = backend
         self._save_funcs.append(self.save_to_audio)
+        self._audio_writer = AudioWriter(backend=self._backend, *args, **kwargs)
 
     @abstractmethod
     def _to_audio(self) -> Dict[str, np.array]:
@@ -1105,7 +1106,7 @@ class AudioMixin:
             mime_type, _ = mimetypes.guess_type(file_path)
             return mime_type is not None and mime_type.startswith("audio/")
     
-        audio_writer = AudioWriter(backend=self._backend, *args, **kwargs)
+        
         audio = self._to_audio()
         if not _is_audio_file(save_path):
             fn = Path(self._get_input_fn())
@@ -1114,13 +1115,13 @@ class AudioMixin:
             base_save_path = Path(save_path)
             for key in audio:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"
-                audio_writer.write(save_path.as_posix(), audio[key], *args, **kwargs)
+                self._audio_writer.write(save_path.as_posix(), audio[key], *args, **kwargs)
         else:
             if len(audio) > 1:
                 logging.warning(
                     f"The result has multiple audio files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
-            audio_writer.write(save_path, audio[list(audio.keys())[0]], *args, **kwargs)
+            self._audio_writer.write(save_path, audio[list(audio.keys())[0]], *args, **kwargs)
 
 class MarkdownMixin:
     """Mixin class for adding Markdown handling capabilities."""
