@@ -21,7 +21,7 @@ comments: true
   <tr>
     <td>fastspeech2_csmsc</td>
     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/fastspeech2_csmsc.tar">fastspeech2_csmsc</a></td>
-    <td>\\</td>
+    <td>\</td>
     <td>157M</td>
     <td rowspan="1">FastSpeech2 是微软开发的端到端文本转语音（TTS）模型，具备高效稳定的韵律控制能力。它采用非自回归架构，能实现快速高质量的语音合成，适用于虚拟助手、有声读物等多种场景。</td>
   </tr>
@@ -117,9 +117,7 @@ for res in output:
 <td>待预测数据</td>
 <td><code>str</code></td>
 <td>
-<ul>
   输入的input_phone_ids, 目前只支持tensor类型，如[151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186]等
-</ul>
 </td>
 <td>无</td>
 </tr>

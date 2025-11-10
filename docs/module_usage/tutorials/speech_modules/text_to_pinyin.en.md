@@ -95,7 +95,7 @@ Related methods, parameters, and explanations are as follows:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><b>Input text</b>, such as: <code>欢迎使用飞桨</code></li>
+  Input text, such as: <code>欢迎使用飞桨</code>
 </ul>
 </td>
 <td>None</td>

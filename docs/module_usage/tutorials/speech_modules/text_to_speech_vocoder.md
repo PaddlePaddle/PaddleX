@@ -22,7 +22,7 @@ comments: true
   <tr>
     <td>pwgan_csmsc</td>
     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/pwgan_csmsc.tar">pwgan_csmsc</a></td>
-    <td>\\</td>
+    <td>\</td>
     <td>5.1M</td>
     <td rowspan="1">Parallel WaveGAN（PWGAN）是日本名古屋大学开发的端到端语音合成声码器，具备高效稳定的波形生成能力。它采用生成对抗网络架构，能实现快速高保真的语音重建，适用于TTS系统后端处理、语音增强等多种场景。</td>
   </tr>
@@ -115,9 +115,7 @@ for res in output:
 <td>待预测数据</td>
 <td><code>str</code></td>
 <td>
-<ul>
   输入的mel谱, 可以是npy文件路径或者tensor类型。
-</ul>
 </td>
 <td>无</td>
 </tr>

@@ -21,7 +21,7 @@ The acoustic model for speech synthesis is the core component of speech synthesi
   <tr>
     <td>fastspeech2_csmsc</td>
     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/fastspeech2_csmsc.tar">fastspeech2_csmsc</a></td>
-    <td>\\</td>
+    <td>\</td>
     <td>157M</td>
     <td rowspan="1">FastSpeech2 is an end-to-end text-to-speech (TTS) model developed by Microsoft, featuring efficient and stable prosody control. It adopts a non-autoregressive architecture that enables fast and high-quality speech synthesis, suitable for various scenarios such as virtual assistants and audiobooks.</td>
   </tr>
@@ -119,9 +119,7 @@ Explanations of related methods and parameters are as follows:
 <td>Data to be predicted</td>
 <td><code>str</code></td>
 <td>
-<ul>
-  Currently only supports tensor-type input_phone_ids, such as [151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186], etc.
-</ul>
+Currently only supports tensor-type input_phone_ids, such as [151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186], etc.
 </td>
 <td>None</td>
 </tr>

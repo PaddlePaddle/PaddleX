@@ -91,7 +91,7 @@ for res in output:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><b>对应文本</b>，如：<code>欢迎使用飞桨</code></li>
+  对应文本，如：<code>欢迎使用飞桨</code>
 </ul>
 </td>
 <td>无</td>
