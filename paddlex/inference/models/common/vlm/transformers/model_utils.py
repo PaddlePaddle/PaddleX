@@ -1797,6 +1797,7 @@ class PretrainedModel(
         )
 
         init_args = config["init_args"] or ()
+        transpose_weight_keys = None
         with ContextManagers(init_contexts):
             model = cls(config, *init_args, **model_kwargs)
 
