@@ -100,7 +100,6 @@ class TextToSpeechPipeline(BasePipeline):
             else:
                 sentences = [input]
         elif isinstance(input, list):
-            sentences = [] 
             for item in input:
                 if isinstance(item, str):
                     if item.endswith(".txt"):
