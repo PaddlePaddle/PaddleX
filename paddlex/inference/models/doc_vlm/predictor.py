@@ -29,7 +29,7 @@ from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import DocVLMBatchSampler
-from ...utils.misc import is_bfloat16_available
+from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from .result import DocVLMResult
 
@@ -54,7 +54,12 @@ class DocVLMPredictor(BasePredictor):
 
         if self._use_local_model:
             self.device = kwargs.get("device", None)
-            self.dtype = "bfloat16" if is_bfloat16_available(self.device) else "float32"
+            if is_bfloat16_available(self.device):
+                self.dtype = "bfloat16"
+            elif is_float16_available(self.device):
+                self.dtype = "float16"
+            else:
+                self.dtype = "float32"
 
             self.infer, self.processor = self._build(**kwargs)
 
