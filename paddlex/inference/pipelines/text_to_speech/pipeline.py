@@ -87,7 +87,7 @@ class TextToSpeechPipeline(BasePipeline):
         Returns:
             PwganResult: The predicted pwgan results, support str and json output.
         """
-            sentences = [] 
+        sentences = [] 
         if isinstance(input, str):
             if input.endswith(".txt"):
                 if not os.path.exists(input):
