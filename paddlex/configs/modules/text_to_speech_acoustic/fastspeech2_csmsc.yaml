@@ -10,9 +10,5 @@ Predict:
   input: [151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186, 38, 233]
   lang: zh
   speaker_id: 0
-  use_trt: False
-  use_mkldnn: False
-  cpu_threads: 1
-  precision: "fp32"
   kernel_option:
     run_mode: paddle
