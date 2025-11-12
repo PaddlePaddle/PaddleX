@@ -663,16 +663,24 @@ class _TableRecognitionPipelineV2(BasePipeline):
         else:
             ocr_det_results = overall_ocr_res["rec_boxes"]
         ocr_texts = overall_ocr_res["rec_texts"]
+        # Get rec_scores if it exists
+        ocr_scores = overall_ocr_res.get("rec_scores", [])
+        if ocr_scores is not None and hasattr(ocr_scores, "tolist"):
+            ocr_scores = ocr_scores.tolist()
+        elif ocr_scores is None:
+            ocr_scores = []
 
         # Make copies to modify
         new_boxes = []
         new_texts = []
+        new_scores = []
 
         # Process each OCR box
         i = 0
         while i < len(ocr_det_results):
             ocr_box = ocr_det_results[i]
             text = ocr_texts[i]
+            score = ocr_scores[i] if i < len(ocr_scores) else None
             # Find cells that significantly overlap with this OCR box
             overlapping_cells = get_overlapping_cells(ocr_box, cells_det_results)
             # Check if we need to split (spans >= k cells)
@@ -683,6 +691,7 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 )
                 # Process each split box
                 split_texts = []
+                split_scores = []
                 for box in split_boxes:
                     x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
                     if y2 - y1 > 1 and x2 - x1 > 1:
@@ -698,21 +707,32 @@ class _TableRecognitionPipelineV2(BasePipeline):
                             ]  # Assumes "rec_texts" contains a single string
                         else:
                             result = ""
+                        # Extract the score from the OCR result
+                        if "rec_score" in ocr_result:
+                            result_score = ocr_result["rec_score"]
+                        else:
+                            result_score = score if score is not None else 0.0
                     else:
                         result = ""
+                        result_score = score if score is not None else 0.0
                     split_texts.append(result)
-                # Add split boxes and texts to results
+                    split_scores.append(result_score)
+                # Add split boxes, texts, and scores to results
                 new_boxes.extend(split_boxes)
                 new_texts.extend(split_texts)
+                new_scores.extend(split_scores)
             else:
-                # Keep original box and text
+                # Keep original box, text, and score
                 new_boxes.append(ocr_box)
                 new_texts.append(text)
+                new_scores.append(score if score is not None else 0.0)
             i += 1
 
         # Update the results dictionary
         overall_ocr_res["rec_boxes"] = new_boxes
         overall_ocr_res["rec_texts"] = new_texts
+        if "rec_scores" in overall_ocr_res or len(new_scores) > 0:
+            overall_ocr_res["rec_scores"] = new_scores
 
         return overall_ocr_res
 
