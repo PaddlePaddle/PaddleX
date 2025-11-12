@@ -34,4 +34,5 @@ from .writers import (
     WriterType,
     XlsxWriter,
     YAMLWriter,
+    AudioWriter,
 )
