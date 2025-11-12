@@ -5,10 +5,6 @@ Global:
   output: "output"
 
 Predict:
-  use_trt: False
-  use_mkldnn: False
-  cpu_threads: 1
-  precision: "fp32"
   batch_size: 1
   model_dir: "pwgan_csmsc"
   input: "https://paddlespeech.bj.bcebos.com/demos/paddlex/mel.npy"
