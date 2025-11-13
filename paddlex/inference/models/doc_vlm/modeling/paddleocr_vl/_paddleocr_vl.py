@@ -41,8 +41,7 @@ import numpy as np
 import paddle
 import paddle.nn as nn
 
-from ....common.vlm.generation import GenerationMixin
-from ....common.vlm.transformers.model_outputs import (
+from ....common.transformers.transformers.model_outputs import (
     CausalLMOutputWithCrossAttentions,
     ModelOutput,
 )
@@ -62,7 +61,7 @@ class PaddleOCRVLCausalLMOutputWithPast(ModelOutput):
     rope_deltas: Optional[paddle.Tensor] = None
 
 
-class PaddleOCRVLForConditionalGeneration(Ernie4_5PretrainedModel, GenerationMixin):
+class PaddleOCRVLForConditionalGeneration(Ernie4_5PretrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
     config_class = PaddleOCRVLConfig
     _no_split_modules = ["Ernie4_5DecoderLayer", "SiglipEncoderLayer"]

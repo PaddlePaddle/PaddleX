@@ -42,9 +42,9 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....common.vlm.activations import ACT2FN
-from ....common.vlm.transformers import PretrainedModel
-from ....common.vlm.transformers.model_outputs import (
+from ....common.transformers.activations import ACT2FN
+from ....common.transformers.transformers import PretrainedModel
+from ....common.transformers.transformers.model_outputs import (
     BaseModelOutput,
     BaseModelOutputWithPooling,
 )
