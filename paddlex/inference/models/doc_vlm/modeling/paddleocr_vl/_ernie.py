@@ -296,7 +296,7 @@ class RMSNorm(nn.Layer):
                 3. Scale by learned weight parameter
             - Maintains original dtype for numerical stability during computation
         """
-        if self.config.fuse_rms_norm:
+        if hidden_states.dtype != paddle.float16 and self.config.fuse_rms_norm:
             return fused_rms_norm_ext(
                 hidden_states, self.weight, self.variance_epsilon
             )[0].astype(self.weight.dtype)
@@ -854,8 +854,15 @@ class Ernie4_5Attention(nn.Layer):
         v = tensor.transpose(x=v, perm=perm)
 
         replicate = self.config.num_attention_heads // self.config.num_key_value_heads
+        is_float16 = k.dtype == paddle.float16
+        if is_float16:
+            k = k.cast(paddle.float32)
+            v = v.cast(paddle.float32)
         k = paddle.repeat_interleave(k, replicate, axis=1)
         v = paddle.repeat_interleave(v, replicate, axis=1)
+        if is_float16:
+            k = k.cast(paddle.float16)
+            v = v.cast(paddle.float16)
 
         scale_qk_coeff = self.config.scale_qk_coeff * self.head_dim**0.5
         product = paddle.matmul(x=q.scale(1.0 / scale_qk_coeff), y=k, transpose_y=True)
