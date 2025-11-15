@@ -50,6 +50,8 @@ STATIC_SHAPE_MODEL_LIST = [
     "RT-DETR-H_layout_3cls",
     "RT-DETR-H",
     "RT-DETR-L",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
     "RT-DETR-R18",
     "RT-DETR-R50",
     "RT-DETR-X",
