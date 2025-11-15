@@ -493,6 +493,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if len(layout_det_res["boxes"]) == 0 and len(overall_ocr_res["rec_boxes"]) > 0:
             for idx, ocr_rec_box in enumerate(overall_ocr_res["rec_boxes"]):
                 base_region_bbox = update_region_box(ocr_rec_box, base_region_bbox)
+                layout_det_res["boxes"] = list(layout_det_res["boxes"])
                 layout_det_res["boxes"].append(
                     {
                         "label": "text",
