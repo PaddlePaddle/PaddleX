@@ -493,7 +493,6 @@ class AudioWriterBackend(_BaseWriterBackend):
         self.sample_rate = sample_rate
 
     def _write_obj(self, out_path, obj):
-        print("out_path:",out_path)
         """write audio obj"""
         audio = obj["result"]
         sf.write(out_path, audio, self.sample_rate)
