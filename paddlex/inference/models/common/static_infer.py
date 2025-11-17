@@ -358,7 +358,8 @@ class PaddleInfer(StaticInfer):
             logging.debug("`device_id` has been set to None")
 
         if (
-            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
+            self._option.device_type
+            in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0
@@ -399,6 +400,7 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
+                config.delete_pass("matmul_add_act_fuse_pass")
             elif self._option.device_type == "npu":
                 config.enable_custom_device("npu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
