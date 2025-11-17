@@ -8,7 +8,5 @@ Predict:
   batch_size: 1
   model_dir: "pwgan_csmsc"
   input: "https://paddlespeech.bj.bcebos.com/demos/paddlex/mel.npy"
-  lang: zh
-  speaker_id: 0
   kernel_option:
     run_mode: paddle
