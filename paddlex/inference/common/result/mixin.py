@@ -1113,7 +1113,7 @@ class AudioMixin:
         if not _is_audio_file(save_path):
             fn = Path(self._get_input_fn())
             stem = fn.stem
-            suffix = fn.suffix if _is_audio_file(fn) else ".mp4"
+            suffix = fn.suffix if _is_audio_file(fn) else ".wav"
             base_save_path = Path(save_path)
             for key in audio:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"

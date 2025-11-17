@@ -7,8 +7,6 @@ Global:
 Predict:
   batch_size: 1
   model_dir: "fastspeech2csmsc"
-  input: [151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186, 38, 233]
-  lang: zh
-  speaker_id: 0
+  input: [[151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186, 38, 233]]
   kernel_option:
     run_mode: paddle
