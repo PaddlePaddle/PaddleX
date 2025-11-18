@@ -47,8 +47,8 @@ def get_model_paths(
         model_paths["onnx"] = model_dir / f"{model_file_prefix}.onnx"
     if (model_dir / f"{model_file_prefix}.om").exists():
         model_paths["om"] = model_dir / f"{model_file_prefix}.om"
-    if (model_dir / "model.pdparams").exists():
-        model_paths["paddle_dyn"] = model_dir / "model.pdparams"
+    if (model_dir / "model_state.pdparams").exists():
+        model_paths["paddle_dyn"] = model_dir / "model_state.pdparams"
     if (model_dir / "model.safetensors").exists():
         model_paths["safetensors"] = model_dir / "model.safetensors"
     return model_paths
