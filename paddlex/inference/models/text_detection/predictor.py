@@ -43,7 +43,7 @@ class TextDetPredictor(BasePredictor):
         input_shape=None,
         max_side_limit: int = 4000,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
 
@@ -74,7 +74,27 @@ class TextDetPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
+        if self._use_static_model:
+            infer = self.create_static_infer()
+        else:
+            if self.model_name == "PP-OCRv5_mobile_det":
+                from .modeling import PPOCRV5MobileDet
+
+                infer = PPOCRV5MobileDet.from_pretrained(
+                    self.model_dir, use_safetensors=True, convert_from_hf=True
+                )
+                infer.eval()
+            elif self.model_name == "PP-OCRv5_server_det":
+                from .modeling import PPOCRV5ServerDet
+
+                infer = PPOCRV5ServerDet.from_pretrained(
+                    self.model_dir, use_safetensors=True, convert_from_hf=True
+                )
+                infer.eval()
+            else:
+                raise RuntimeError(
+                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+                )
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op
@@ -128,7 +148,7 @@ class TextDetPredictor(BasePredictor):
         self,
         limit_side_len: Union[int, None] = None,
         limit_type: Union[str, None] = None,
-        **kwargs
+        **kwargs,
     ):
         # TODO: align to PaddleOCR
 
@@ -150,7 +170,7 @@ class TextDetPredictor(BasePredictor):
             limit_side_len=limit_side_len,
             limit_type=limit_type,
             input_shape=self.input_shape,
-            **kwargs
+            **kwargs,
         )
 
     @register("NormalizeImage")
