@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import math
-
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle import ParamAttr
-from paddle.nn.initializer import Constant, KaimingNormal
+from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from .modules import DBHead, LearnableAffineBlock
 
-NET_CONFIG_det = {
+NET_CONFIG_DET = {
     "blocks2":
     # k, in_c, out_c, s, use_se
     [[3, 16, 24, 1, False]],
@@ -52,13 +51,6 @@ NET_CONFIG_det = {
 }
 
 
-def get_bias_attr(k):
-    stdv = 1.0 / math.sqrt(k * 1.0)
-    initializer = paddle.nn.initializer.Uniform(-stdv, stdv)
-    bias_attr = ParamAttr(initializer=initializer)
-    return bias_attr
-
-
 def make_divisible(v, divisor=16, min_value=None):
     if min_value is None:
         min_value = divisor
@@ -66,30 +58,6 @@ def make_divisible(v, divisor=16, min_value=None):
     if new_v < 0.9 * v:
         new_v += divisor
     return new_v
-
-
-class LearnableAffineBlock(nn.Layer):
-    def __init__(self, scale_value=1.0, bias_value=0.0, lr_mult=1.0, lab_lr=0.1):
-        super().__init__()
-        self.scale = self.create_parameter(
-            shape=[
-                1,
-            ],
-            default_initializer=Constant(value=scale_value),
-            attr=ParamAttr(learning_rate=lr_mult * lab_lr),
-        )
-        self.add_parameter("scale", self.scale)
-        self.bias = self.create_parameter(
-            shape=[
-                1,
-            ],
-            default_initializer=Constant(value=bias_value),
-            attr=ParamAttr(learning_rate=lr_mult * lab_lr),
-        )
-        self.add_parameter("bias", self.bias)
-
-    def forward(self, x):
-        return self.scale * x + self.bias
 
 
 class Act(nn.Layer):
@@ -385,7 +353,7 @@ class PPLCNetV3(nn.Layer):
         self.scale = scale
         self.lr_mult_list = lr_mult_list
 
-        self.net_config = NET_CONFIG_det
+        self.net_config = NET_CONFIG_DET
 
         assert isinstance(
             self.lr_mult_list, (list, tuple)
@@ -632,76 +600,6 @@ class RSEFPN(nn.Layer):
 
         fuse = paddle.concat([p5, p4, p3, p2], axis=1)
         return fuse
-
-
-class Head(nn.Layer):
-    def __init__(self, in_channels, kernel_list=[3, 2, 2], **kwargs):
-        super(Head, self).__init__()
-
-        self.conv1 = nn.Conv2D(
-            in_channels=in_channels,
-            out_channels=in_channels // 4,
-            kernel_size=kernel_list[0],
-            padding=int(kernel_list[0] // 2),
-            weight_attr=ParamAttr(),
-            bias_attr=False,
-        )
-        self.conv_bn1 = nn.BatchNorm(
-            num_channels=in_channels // 4,
-            param_attr=ParamAttr(initializer=paddle.nn.initializer.Constant(value=1.0)),
-            bias_attr=ParamAttr(initializer=paddle.nn.initializer.Constant(value=1e-4)),
-            act="relu",
-        )
-
-        self.conv2 = nn.Conv2DTranspose(
-            in_channels=in_channels // 4,
-            out_channels=in_channels // 4,
-            kernel_size=kernel_list[1],
-            stride=2,
-            weight_attr=ParamAttr(initializer=paddle.nn.initializer.KaimingUniform()),
-            bias_attr=get_bias_attr(in_channels // 4),
-        )
-        self.conv_bn2 = nn.BatchNorm(
-            num_channels=in_channels // 4,
-            param_attr=ParamAttr(initializer=paddle.nn.initializer.Constant(value=1.0)),
-            bias_attr=ParamAttr(initializer=paddle.nn.initializer.Constant(value=1e-4)),
-            act="relu",
-        )
-        self.conv3 = nn.Conv2DTranspose(
-            in_channels=in_channels // 4,
-            out_channels=1,
-            kernel_size=kernel_list[2],
-            stride=2,
-            weight_attr=ParamAttr(initializer=paddle.nn.initializer.KaimingUniform()),
-            bias_attr=get_bias_attr(in_channels // 4),
-        )
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.conv_bn1(x)
-        x = self.conv2(x)
-        x = self.conv_bn2(x)
-        x = self.conv3(x)
-        x = F.sigmoid(x)
-        return x
-
-
-class DBHead(nn.Layer):
-    """
-    Differentiable Binarization (DB) for text detection:
-        see https://arxiv.org/abs/1911.08947
-    args:
-        params(dict): super parameters for build DB network
-    """
-
-    def __init__(self, in_channels, k=50, **kwargs):
-        super(DBHead, self).__init__()
-        self.k = k
-        self.binarize = Head(in_channels, **kwargs)
-
-    def forward(self, x):
-        shrink_maps = self.binarize(x)  # [1, 1, 960, 608]
-        return shrink_maps
 
 
 class PPOCRV5MobileDet(PretrainedModel):
