@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .PP_OCRv5_mobile_det import PPOCRV5MobileDet
-from .PP_OCRv5_server_det import PPOCRV5ServerDet
+from .pp_ocrv5_mobile_det import PPOCRV5MobileDet
+from .pp_ocrv5_server_det import PPOCRV5ServerDet
