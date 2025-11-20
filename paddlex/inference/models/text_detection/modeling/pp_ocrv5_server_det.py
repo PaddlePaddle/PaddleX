@@ -21,9 +21,7 @@ from paddle import ParamAttr
 from paddle.nn.initializer import Constant, KaimingNormal
 from paddle.regularizer import L2Decay
 
-from paddlex.inference.models.common.transformers.transformers import PretrainedModel
-
-from ._config import PPOCRV5ServerDetConfig
+from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
 
 kaiming_normal_ = KaimingNormal()
 zeros_ = Constant(value=0.0)
@@ -1036,30 +1034,26 @@ class PFHeadLocal(DBHead):
         return 0.5 * (base_maps + cbn_maps)
 
 
-class PPOCRV5ServerDetPreTrainedModel(PretrainedModel):
-    config_class = PPOCRV5ServerDetConfig
+class PPOCRV5ServerDet(PretrainedModel):
 
+    config_class = PretrainedConfig
 
-class PPOCRV5ServerDet(PPOCRV5ServerDetPreTrainedModel):
-    config_class = PPOCRV5ServerDetConfig
-
-    def __init__(self, config: PPOCRV5ServerDetConfig):
+    def __init__(self, config: PretrainedConfig):
         super().__init__(config)
 
         self.backbone = PPHGNetV2_B4(det=True)
         self.neck = LKPAN(in_channels=self.backbone.out_channels, out_channels=256)
         self.head = PFHeadLocal(in_channels=self.neck.out_channels, k=50, mode="large")
 
-    def forward(self, x):  # [1, 3, 960, 608]
+    def forward(self, x):
 
         x = paddle.to_tensor(x[0])
 
-        x = self.backbone(x)  # 4 * [1, 12, 240, 152]
-        x = self.neck(x)  # [1, 96, 240, 152]
-        x = self.head(x)  # static model output shape (1, 1, 960, 608)
+        x = self.backbone(x)
+        x = self.neck(x)
+        x = self.head(x)
 
-        x_np = x.cpu().numpy()
-        return [x_np]
+        return [x.cpu().numpy()]
 
     def get_transpose_weight_keys(self):
         pass

@@ -74,7 +74,6 @@ class TextDetPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        self._use_static_model = False
         if self._use_static_model:
             infer = self.create_static_infer()
         else:

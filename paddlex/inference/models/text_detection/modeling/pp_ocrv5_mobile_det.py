@@ -21,36 +21,33 @@ from paddle import ParamAttr
 from paddle.nn.initializer import Constant, KaimingNormal
 from paddle.regularizer import L2Decay
 
-from paddlex.inference.models.common.transformers.transformers import PretrainedModel
-
-from ._config import PPOCRV5MobileDetConfig
+from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
 
 NET_CONFIG_det = {
     "blocks2":
-    # k, in_c, out_c, s, use_se （out_c 从 32→24，适配权重）
+    # k, in_c, out_c, s, use_se
     [[3, 16, 24, 1, False]],
     "blocks3": [
-        [3, 24, 48, 2, False],  # out_c 从 64→48，适配权重
-        [3, 48, 48, 1, False],  # 输入输出通道同步为 48，保持一致
+        [3, 24, 48, 2, False],
+        [3, 48, 48, 1, False],
     ],
     "blocks4": [
-        [3, 48, 96, 2, False],  # out_c 从 128→96，适配权重
-        [3, 96, 96, 1, False],  # 输入输出通道同步为 96，保持一致
+        [3, 48, 96, 2, False],
+        [3, 96, 96, 1, False],
     ],
     "blocks5": [
-        [3, 96, 192, 2, False],  # out_c 从 256→192，适配权重
-        [5, 192, 192, 1, False],  # 输入输出通道同步为 192，保持一致
+        [3, 96, 192, 2, False],
+        [5, 192, 192, 1, False],
         [5, 192, 192, 1, False],
         [5, 192, 192, 1, False],
         [5, 192, 192, 1, False],
     ],
     "blocks6": [
-        [5, 192, 384, 2, True],  # out_c 从 512→384，适配权重
-        [5, 384, 384, 1, True],  # 输入输出通道同步为 384，保持一致
+        [5, 192, 384, 2, True],
+        [5, 384, 384, 1, True],
         [5, 384, 384, 1, False],
         [5, 384, 384, 1, False],
     ],
-    # 权重对应的 layer_list 输出通道（无 scale 时）
     "layer_list_out_channels": [12, 18, 42, 360],
 }
 
@@ -71,7 +68,6 @@ def make_divisible(v, divisor=16, min_value=None):
     return new_v
 
 
-# Backbone: PPLCNetV3 (ppocr/modeling/backbone/rec_lcnetv3.py)
 class LearnableAffineBlock(nn.Layer):
     def __init__(self, scale_value=1.0, bias_value=0.0, lr_mult=1.0, lab_lr=0.1):
         super().__init__()
@@ -489,8 +485,8 @@ class PPLCNetV3(nn.Layer):
         )
         self.out_channels = make_divisible(512 * scale)
 
-        mv_c = self.net_config["layer_list_out_channels"]  # [12,18,42,360]
-        # mv_c = [16, 24, 56, 480]
+        mv_c = self.net_config["layer_list_out_channels"]  # [12, 18, 42, 360]
+
         self.out_channels = [
             make_divisible(self.net_config["blocks3"][-1][2] * scale),
             make_divisible(self.net_config["blocks4"][-1][2] * scale),
@@ -708,30 +704,25 @@ class DBHead(nn.Layer):
         return shrink_maps
 
 
-class PPOCRV5MobileDetPreTrainedModel(PretrainedModel):
-    config_class = PPOCRV5MobileDetConfig
+class PPOCRV5MobileDet(PretrainedModel):
+    config_class = PretrainedConfig
 
-
-class PPOCRV5MobileDet(PPOCRV5MobileDetPreTrainedModel):
-    config_class = PPOCRV5MobileDetConfig
-
-    def __init__(self, config: PPOCRV5MobileDetConfig):
+    def __init__(self, config: PretrainedConfig):
         super().__init__(config)
 
         self.backbone = PPLCNetV3()
         self.neck = RSEFPN(in_channels=self.backbone.out_channels, out_channels=96)
         self.head = DBHead(in_channels=self.neck.out_channels)
 
-    def forward(self, x):  # [1, 3, 960, 608]
+    def forward(self, x):
 
         x = paddle.to_tensor(x[0])
 
-        x = self.backbone(x)  # 4 * [1, 12, 240, 152]
-        x = self.neck(x)  # [1, 96, 240, 152]
-        x = self.head(x)  # static model output shape (1, 1, 960, 608)
+        x = self.backbone(x)
+        x = self.neck(x)
+        x = self.head(x)
 
-        x_np = x.cpu().numpy()
-        return [x_np]
+        return [x.cpu().numpy()]
 
     def get_transpose_weight_keys(self):
         pass
