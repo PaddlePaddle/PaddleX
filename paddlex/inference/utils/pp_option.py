@@ -65,7 +65,7 @@ class PaddlePredictorOption(object):
         "mkldnn",
         "mkldnn_bf16",
     )
-    SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu")
+    SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu", "metax_gpu")
 
     def __init__(self, model_name=None, **kwargs):
         super().__init__()

@@ -373,6 +373,14 @@ class PaddleInfer(StaticInfer):
                     config.enable_new_executor()
                 config.delete_pass("conv2d_bn_xpu_fuse_pass")
                 config.delete_pass("transfer_layout_pass")
+
+            elif self._option.device_type == "metax_gpu":
+                config.enable_custom_device("metax_gpu", int(self._option.device_id))
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+
             elif self._option.device_type == "mlu":
                 config.enable_custom_device("mlu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
