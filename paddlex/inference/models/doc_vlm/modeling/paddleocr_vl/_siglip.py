@@ -42,6 +42,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
+from ......utils.env import get_gpu_compute_capability
 from ....common.transformers.activations import ACT2FN
 from ....common.transformers.transformers import PretrainedModel
 from ....common.transformers.transformers.model_outputs import (
@@ -137,6 +138,9 @@ class SiglipAttention(nn.Layer):
         self.q_proj = nn.Linear(self.embed_dim, self.embed_dim)
         self.out_proj = nn.Linear(self.embed_dim, self.embed_dim)
 
+        cap = get_gpu_compute_capability()
+        self._supports_sdpa = cap >= (8, 0) if cap is not None else False
+
     def forward(
         self,
         hidden_states: paddle.Tensor,  # [B, L, D]
@@ -162,7 +166,7 @@ class SiglipAttention(nn.Layer):
             cos, sin = rope_emb
             q, k = apply_rotary_pos_emb_vision(q, k, cos, sin)
 
-        if q.dtype == paddle.float32:
+        if not self._supports_sdpa or q.dtype == paddle.float32:
             # → [B, H, L, Dh]
             q = q.transpose([0, 2, 1, 3])
             k = k.transpose([0, 2, 1, 3])
