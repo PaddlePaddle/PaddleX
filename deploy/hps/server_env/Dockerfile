@@ -46,6 +46,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
+RUN python -m pip install pip==25.2
 
 # Requirement collection
 FROM base AS rc
