@@ -1,4 +1,4 @@
-# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from ...common.result import BaseResult
-import copy
+
 
 class TextToPinyinResult(BaseResult):
 

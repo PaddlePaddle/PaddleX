@@ -1,4 +1,4 @@
-# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-
-from ....utils.func_register import FuncRegister
+from ....modules.text_to_pinyin.model_list import MODELS
 from ...common.batch_sampler import TextBatchSampler
-
 from ..base import BasePredictor
 from .result import TextToPinyinResult
-from ....modules.text_to_pinyin.model_list import MODELS
 
 
 class TextToPinyinPredictor(BasePredictor):
@@ -58,9 +54,7 @@ class TextToPinyinPredictor(BasePredictor):
         Returns:
             G2PWOnnxConverter: An instance of G2PWOnnxConverter.
         """
-        from .processors import (
-            G2PWOnnxConverter,
-        )
+        from .processors import G2PWOnnxConverter
 
         # build model
         model = G2PWOnnxConverter(
@@ -79,6 +73,4 @@ class TextToPinyinPredictor(BasePredictor):
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
         result = self.model(batch_data[0])
-        return {
-            "result": [result]
-        }
+        return {"result": [result]}

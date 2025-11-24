@@ -28,6 +28,7 @@ from PIL import Image
 
 from ....utils import logging
 from ...utils.io import (
+    AudioWriter,
     CSVWriter,
     HtmlWriter,
     ImageWriter,
@@ -36,7 +37,6 @@ from ...utils.io import (
     TextWriter,
     VideoWriter,
     XlsxWriter,
-    AudioWriter,
 )
 
 
@@ -1062,7 +1062,8 @@ class VideoMixin:
                     f"The result has multiple video files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
             video_writer.write(save_path, video[list(video.keys())[0]], *args, **kwargs)
-            
+
+
 class AudioMixin:
     """Mixin class for adding Audio handling capabilities."""
 
@@ -1107,8 +1108,7 @@ class AudioMixin:
         def _is_audio_file(file_path):
             mime_type, _ = mimetypes.guess_type(file_path)
             return mime_type is not None and mime_type.startswith("audio/")
-    
-        
+
         audio = self._to_audio()
         if not _is_audio_file(save_path):
             fn = Path(self._get_input_fn())
@@ -1117,13 +1117,18 @@ class AudioMixin:
             base_save_path = Path(save_path)
             for key in audio:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"
-                self._audio_writer.write(save_path.as_posix(), audio[key], *args, **kwargs)
+                self._audio_writer.write(
+                    save_path.as_posix(), audio[key], *args, **kwargs
+                )
         else:
             if len(audio) > 1:
                 logging.warning(
                     f"The result has multiple audio files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
-            self._audio_writer.write(save_path, audio[list(audio.keys())[0]], *args, **kwargs)
+            self._audio_writer.write(
+                save_path, audio[list(audio.keys())[0]], *args, **kwargs
+            )
+
 
 class MarkdownMixin:
     """Mixin class for adding Markdown handling capabilities."""
