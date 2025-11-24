@@ -20,7 +20,7 @@ def get_config(backend):
             "max-model-len": 16384,
             "max-num-batched-tokens": 16384,
             "max-num-seqs": 256,
-            "workers": 2,
+            "workers": 4,
             "graph-optimization-config": '{"graph_opt_level":0, "use_cudagraph":true}',
         }
     elif backend == "vllm":
