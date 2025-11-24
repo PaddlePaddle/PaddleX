@@ -19,7 +19,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import soundfile as sf
 import yaml
 from PIL import Image
 
@@ -28,6 +27,9 @@ from .tablepyxl import document_to_xl
 
 if is_dep_available("opencv-contrib-python"):
     import cv2
+
+if is_dep_available("soundfile"):
+    import soundfile as sf
 
 
 __all__ = [

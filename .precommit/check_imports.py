@@ -49,6 +49,7 @@ MOD_TO_DEP = {
     "GPUtil": "GPUtil",
     "huggingface_hub": "huggingface-hub",
     "imagesize": "imagesize",
+    "jieba": "jieba",
     "jinja2": "Jinja2",
     "joblib": "joblib",
     "langchain": "langchain",
@@ -60,6 +61,7 @@ MOD_TO_DEP = {
     "modelscope": "modelscope",
     "numpy": "numpy",
     "openai": "openai",
+    "opencc": "OpenCC",
     "cv2": "opencv-contrib-python",
     "openpyxl": "openpyxl",
     "packaging": "packaging",
@@ -73,6 +75,7 @@ MOD_TO_DEP = {
     "pycocotools": "pycocotools",
     "pydantic": "pydantic",
     "pypdfium2": "pypdfium2",
+    "pypinyin": "pypinyin",
     "yaml": "PyYAML",
     "regex": "regex",
     "requests": "requests",
@@ -120,6 +123,7 @@ MANUALLY_MANAGED_OPTIONAL_HEAVY_MODS = {
     "paddle_custom_device",
     "ultra_infer",
     "fastdeploy",
+    "onnxruntime",
 }
 
 

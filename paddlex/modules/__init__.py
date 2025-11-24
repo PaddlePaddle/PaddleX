@@ -88,11 +88,11 @@ from .text_recognition import (
     TextRecExportor,
     TextRecTrainer,
 )
-from .text_to_speech_vocoder import (
-    TextToSpeechVocoderDatasetChecker,
-    TextToSpeechVocoderEvaluator,
-    TextToSpeechVocoderExportor,
-    TextToSpeechVocoderTrainer,
+from .text_to_pinyin import (
+    TextToPinyinDatasetChecker,
+    TextToPinyinEvaluator,
+    TextToPinyinExportor,
+    TextToPinyinTrainer,
 )
 from .text_to_speech_acoustic import (
     TextToSpeechAcousticDatasetChecker,
@@ -100,11 +100,11 @@ from .text_to_speech_acoustic import (
     TextToSpeechAcousticExportor,
     TextToSpeechAcousticTrainer,
 )
-from .text_to_pinyin import (
-    TextToPinyinDatasetChecker,
-    TextToPinyinEvaluator,
-    TextToPinyinExportor,
-    TextToPinyinTrainer,
+from .text_to_speech_vocoder import (
+    TextToSpeechVocoderDatasetChecker,
+    TextToSpeechVocoderEvaluator,
+    TextToSpeechVocoderExportor,
+    TextToSpeechVocoderTrainer,
 )
 from .ts_anomaly_detection import (
     TSADDatasetChecker,

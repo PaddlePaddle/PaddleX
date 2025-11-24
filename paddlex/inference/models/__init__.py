@@ -46,14 +46,15 @@ from .semantic_segmentation import SegPredictor
 from .table_structure_recognition import TablePredictor
 from .text_detection import TextDetPredictor
 from .text_recognition import TextRecPredictor
+from .text_to_pinyin import TextToPinyinPredictor
+from .text_to_speech_acoustic import Fastspeech2Predictor
+from .text_to_speech_vocoder import PwganPredictor
 from .ts_anomaly_detection import TSAdPredictor
 from .ts_classification import TSClsPredictor
 from .ts_forecasting import TSFcPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
-from .text_to_speech_acoustic import Fastspeech2Predictor
-from .text_to_speech_vocoder import PwganPredictor
-from .text_to_pinyin import TextToPinyinPredictor
+
 
 def create_predictor(
     model_name: str,

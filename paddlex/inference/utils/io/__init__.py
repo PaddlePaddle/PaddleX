@@ -24,6 +24,7 @@ from .readers import (
     YAMLReader,
 )
 from .writers import (
+    AudioWriter,
     CSVWriter,
     HtmlWriter,
     ImageWriter,
@@ -34,5 +35,4 @@ from .writers import (
     WriterType,
     XlsxWriter,
     YAMLWriter,
-    AudioWriter,
 )

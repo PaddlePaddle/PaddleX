@@ -358,7 +358,8 @@ class PaddleInfer(StaticInfer):
             logging.debug("`device_id` has been set to None")
 
         if (
-            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
+            self._option.device_type
+            in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0

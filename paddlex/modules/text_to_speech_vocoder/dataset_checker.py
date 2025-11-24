@@ -1,4 +1,4 @@
-# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .model_list import MODELS
-from ..base import BaseDatasetChecker
 from ...utils.errors import UnsupportedAPIError
+from ..base import BaseDatasetChecker
+from .model_list import MODELS
 
 
 class TextToSpeechVocoderDatasetChecker(BaseDatasetChecker):
@@ -24,4 +24,6 @@ class TextToSpeechVocoderDatasetChecker(BaseDatasetChecker):
 
     def __init__(self, config):
         # not support for now
-        raise UnsupportedAPIError("Fastspeech2Model model not support data check for now.")
+        raise UnsupportedAPIError(
+            "Fastspeech2Model model not support data check for now."
+        )
