@@ -34,7 +34,7 @@ comments: true
 ```python
 from paddlex import create_model
 model = create_model(model_name="fastspeech2_csmsc")
-output = model.predict(input=[151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186, 38, 233]. , batch_size=1)
+output = model.predict(input=[[151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186, 38, 233]] , batch_size=1)
 for res in output:
     res.print()
     res.save_to_json(save_path="./output/res.json")
