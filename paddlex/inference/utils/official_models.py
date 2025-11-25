@@ -31,7 +31,7 @@ from aistudio_sdk.snapshot_download import snapshot_download as aistudio_downloa
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
-from ...utils.flags import MODEL_SOURCE
+from ...utils.flags import DISABLE_MODEL_SOURCE_CHECK, MODEL_SOURCE
 
 ALL_MODELS = [
     "ResNet18",
@@ -541,18 +541,35 @@ class _AIStudioModelHoster(_BaseModelHoster):
 class _ModelManager:
     model_list = ALL_MODELS
     _save_dir = Path(CACHE_DIR) / "official_models"
+    hoster_candidates = [
+        _HuggingFaceModelHoster,
+        _AIStudioModelHoster,
+        _ModelScopeModelHoster,
+        _BosModelHoster,
+    ]
 
     def __init__(self) -> None:
         self._hosters = self._build_hosters()
 
     def _build_hosters(self):
+
+        if DISABLE_MODEL_SOURCE_CHECK:
+            logging.warning(
+                f"Connectivity check to the model hoster has been skipped because `DISABLE_MODEL_SOURCE_CHECK` is enabled."
+            )
+            hosters = []
+            for hoster_cls in self.hoster_candidates:
+                if hoster_cls.alias == MODEL_SOURCE:
+                    hosters.insert(0, hoster_cls(self._save_dir))
+                else:
+                    hosters.append(hoster_cls(self._save_dir))
+            return hosters
+
+        logging.warning(
+            f"Checking connectivity to the model hosters, this may take a while. To bypass this check, set `DISABLE_MODEL_SOURCE_CHECK` to `True`."
+        )
         hosters = []
-        for hoster_cls in [
-            _HuggingFaceModelHoster,
-            _AIStudioModelHoster,
-            _ModelScopeModelHoster,
-            _BosModelHoster,
-        ]:
+        for hoster_cls in self.hoster_candidates:
             if hoster_cls.alias == MODEL_SOURCE:
                 if hoster_cls.is_available():
                     hosters.insert(0, hoster_cls(self._save_dir))
@@ -561,7 +578,7 @@ class _ModelManager:
                     hosters.append(hoster_cls(self._save_dir))
         if len(hosters) == 0:
             logging.warning(
-                f"No model hoster is available! Please check your network connection to one of the following model hosts: HuggingFace ({_HuggingFaceModelHoster.healthcheck_url}), ModelScope ({_ModelScopeModelHoster.healthcheck_url}), AIStudio ({_AIStudioModelHoster.healthcheck_url}), or BOS ({_BosModelHoster.healthcheck_url}). Otherwise, only local models can be used."
+                f"No model hoster is available! Please check your network connection to one of the following model hoster: HuggingFace ({_HuggingFaceModelHoster.healthcheck_url}), ModelScope ({_ModelScopeModelHoster.healthcheck_url}), AIStudio ({_AIStudioModelHoster.healthcheck_url}), or BOS ({_BosModelHoster.healthcheck_url}). Otherwise, only local models can be used."
             )
         return hosters
 
