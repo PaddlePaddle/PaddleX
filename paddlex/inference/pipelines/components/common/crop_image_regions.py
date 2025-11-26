@@ -565,4 +565,8 @@ class CropByPolys(BaseOperator):
         if len(img.shape) == 2:
             img = np.stack((img,) * 3, axis=-1)
         img_crop, image = rectifier.run(img, new_points_list, mode="homography")
-        return np.array(img_crop[0], dtype=np.uint8)
+        img_crop = np.array(img_crop[0], dtype=np.uint8)
+        if img_crop.size == 0:
+            return img.copy()
+        return img_crop
+
