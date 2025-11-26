@@ -77,6 +77,8 @@ class MinMaxResize:
             data = 255 - data
 
         coords = cv2.findNonZero(gray)  # Find all non-zero points (text)
+        if coords is None:
+            return img
         a, b, w, h = cv2.boundingRect(coords)  # Find minimum spanning bounding box
         rect = data[b : b + h, a : a + w]
         im = Image.fromarray(rect).convert("L")
