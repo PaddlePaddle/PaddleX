@@ -117,8 +117,12 @@ class MinMaxResize:
             ]
             if padded_size != list(img.size):  # assert hypothesis
                 padded_im = Image.new("L", padded_size, 255)
-                padded_im.paste(img, img.getbbox())
-                img = padded_im
+                bbox = img.getbbox()
+                if bbox is None:
+                    padded_im.paste(img, (0, 0))
+                else:
+                    padded_im.paste(img, (0, 0, img.size[0], img.size[1]))
+                img = padded_img
         return img
 
     def resize(self, img: np.ndarray) -> np.ndarray:
