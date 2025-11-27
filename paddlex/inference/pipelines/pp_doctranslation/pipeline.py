@@ -26,6 +26,9 @@ from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+from ..layout_parsing.merge_table import merge_tables_across_pages
+from ..layout_parsing.result_v2 import LayoutParsingResultV2
+from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from .result import DocumentResult, LatexResult, MarkdownResult
 from .utils import (
     split_original_texts,
@@ -360,7 +363,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         glossary: Dict = None,
         llm_request_interval: float = 0.0,
         chat_bot_config: Dict = None,
-        use_flags: bool = False, 
+        use_flags: bool = False,
         **kwargs,
     ):
         """
@@ -402,7 +405,9 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         ):
             # for multi page pdf
             if use_flags:
-                ori_md_info_list = [self.concatenate_markdown_pages_with_flags(ori_md_info_list)]
+                ori_md_info_list = [
+                    self.concatenate_markdown_pages_with_flags(ori_md_info_list)
+                ]
             else:
                 ori_md_info_list = [self.concatenate_markdown_pages(ori_md_info_list)]
 
@@ -492,10 +497,10 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                     "markdown_texts": target_language_texts,
                 }
             )
-    
+
     # 将下一页的第一句话拼接至上一页， 保证翻译时语义的完整性，并对每页进行分页处理
     def concatenate_markdown_pages_with_flags(self, markdown_list: list) -> tuple:
-        
+
         markdown_texts = ""
         previous_page_last_element_paragraph_end_flag = True
         PAGE_PLACEHOLDER = "<sep>1</sep>"
@@ -506,8 +511,12 @@ class PP_DocTranslation_Pipeline(BasePipeline):
 
         for res in markdown_list:
             # Get the paragraph flags for the current page
-            page_first_element_paragraph_start_flag: bool = res["page_continuation_flags"][0]
-            page_last_element_paragraph_end_flag: bool = res["page_continuation_flags"][1]
+            page_first_element_paragraph_start_flag: bool = res[
+                "page_continuation_flags"
+            ][0]
+            page_last_element_paragraph_end_flag: bool = res["page_continuation_flags"][
+                1
+            ]
 
             # Determine whether to add a space or a newline
             if (
@@ -515,16 +524,21 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                 and not previous_page_last_element_paragraph_end_flag
             ):
                 # 提取下一页的第一个句子
-                first_sentence_match = re.search(rf"^[^{SENTENCE_ENDINGS}]*[{SENTENCE_ENDINGS}]?", res["markdown_texts"])
+                first_sentence_match = re.search(
+                    rf"^[^{SENTENCE_ENDINGS}]*[{SENTENCE_ENDINGS}]?",
+                    res["markdown_texts"],
+                )
                 if first_sentence_match:
                     front_sentence = first_sentence_match.group()
-                    remaining_text = res["markdown_texts"][first_sentence_match.end():]
+                    remaining_text = res["markdown_texts"][first_sentence_match.end() :]
                 else:
                     front_sentence = res["markdown_texts"]
                     remaining_text = ""
-                    
+
                 last_char_of_markdown = markdown_texts[-1] if markdown_texts else ""
-                first_char_of_handler = (res["markdown_texts"][0] if res["markdown_texts"] else "")
+                first_char_of_handler = (
+                    res["markdown_texts"][0] if res["markdown_texts"] else ""
+                )
 
                 # Check if the last character and the first character are Chinese characters
                 last_is_chinese_char = (
@@ -537,12 +551,12 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                     if first_char_of_handler
                     else False
                 )
-                
+
                 if not (last_is_chinese_char or first_is_chinese_char):
                     markdown_texts += " " + front_sentence
                 else:
                     markdown_texts += front_sentence
-                markdown_texts += f"\n\n{PAGE_PLACEHOLDER}\n\n"+remaining_text
+                markdown_texts += f"\n\n{PAGE_PLACEHOLDER}\n\n" + remaining_text
             else:
                 markdown_texts += f"\n\n{PAGE_PLACEHOLDER}\n\n" + res["markdown_texts"]
                 # markdown_texts += "\n\n" + res["markdown_texts"]
@@ -558,7 +572,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         }
 
         return MarkdownResult(concatenate_result)
-    
+
     def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
         """
         Concatenate Markdown content from multiple pages into a single document.
@@ -688,3 +702,80 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                 "input_path": latex_info_list[0]["input_path"],
             }
         )
+
+    def concatenate_pages(
+        self,
+        res_list: list,
+        title_level: False,
+    ):
+
+        pages = []
+
+        layout_parsing_result = {
+            "input_path": None,
+            "parsing_res_list": [],  # block order 排序
+            "doc_preprocessor_res": [],
+            "layout_det_res": [],
+            "region_det_res": [],
+            "overall_ocr_res": [],
+            "table_res_list": [],
+            "seal_res_list": [],
+            "chart_res_list": [],
+            "formula_res_list": [],
+            "imgs_in_doc": [],
+            "model_settings": None,
+        }
+
+        for single_img_res in res_list:
+
+            # 只要有一个不一样，那就是none
+            # input_path / model_settings 只保留第一份
+            if layout_parsing_result["input_path"] is None:
+                layout_parsing_result["input_path"] = single_img_res.get("input_path")
+
+            if layout_parsing_result["model_settings"] is None:
+                layout_parsing_result["model_settings"] = single_img_res.get(
+                    "model_settings"
+                )
+
+            # 合并成了一个整个
+            layout_parsing_result["parsing_res_list"].extend(
+                list(single_img_res.get("parsing_res_list", []))
+            )
+            pages.append(list(single_img_res.get("parsing_res_list", [])))
+
+            # 处理其他字段
+            for key in [
+                "doc_preprocessor_res",
+                "layout_det_res",
+                "region_det_res",
+                "overall_ocr_res",
+                "table_res_list",
+                "seal_res_list",
+                "chart_res_list",
+                "formula_res_list",
+                "imgs_in_doc",
+            ]:
+                value = single_img_res.get(key, [])
+                if isinstance(value, (list, tuple, set)):
+                    layout_parsing_result[key].extend(list(value))
+                else:
+                    layout_parsing_result[key].append(value)
+
+        layout_parsing_result["parsing_res_list"] = assign_levels_to_parsing_res(
+            layout_parsing_result["parsing_res_list"]
+        )
+
+        layout_parsing_result["parsing_res_list"] = merge_tables_across_pages(pages)
+
+        layout_parsing_result["page_index"] = None
+
+        if isinstance(layout_parsing_result["doc_preprocessor_res"], list):
+            if len(layout_parsing_result["doc_preprocessor_res"]) > 0:
+                layout_parsing_result["doc_preprocessor_res"] = layout_parsing_result[
+                    "doc_preprocessor_res"
+                ][0]
+            else:
+                layout_parsing_result["doc_preprocessor_res"] = None
+
+        return LayoutParsingResultV2(layout_parsing_result)
