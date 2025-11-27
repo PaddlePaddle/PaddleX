@@ -83,6 +83,24 @@ def format_title_func(block):
     )
 
 
+def format_para_title_func(block):
+    """
+    Normalize chapter title.
+    Add the '#' to indicate the level of the title.
+    If numbering exists, ensure there's exactly one space between it and the title content.
+    If numbering does not exist, return the original title unchanged.
+
+    :param title: Original chapter title string.
+    :return: Normalized chapter title string.
+    """
+    level = getattr(block, "title_level", 1)
+    title = getattr(block, "content", "").rstrip(".")
+    return f"#{'#' * level} {title}".replace("-\n", "").replace(
+        "\n",
+        " ",
+    )
+
+
 def format_centered_by_html(string):
     return (
         f'<div style="text-align: center;">{string}</div>'.replace(
@@ -329,7 +347,7 @@ class LayoutParsingResultV2(
                 format_formula_func = format_image_func
 
             handle_funcs_dict = {
-                "paragraph_title": format_title_func,
+                "paragraph_title": format_para_title_func,
                 "abstract_title": format_title_func,
                 "reference_title": format_title_func,
                 "content_title": format_title_func,
@@ -518,7 +536,7 @@ class LayoutParsingResultV2(
             format_formula_func = format_image_func
 
         handle_funcs_dict = {
-            "paragraph_title": format_title_func,
+            "paragraph_title": format_para_title_func,
             "abstract_title": format_title_func,
             "reference_title": format_title_func,
             "content_title": format_title_func,

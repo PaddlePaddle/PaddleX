@@ -1,0 +1,208 @@
+import json
+import os
+
+from bs4 import BeautifulSoup
+
+
+# ---------- 工具函数 ----------
+def full_to_half(text: str) -> str:
+    result = []
+    for char in text:
+        code = ord(char)
+        if 0xFF01 <= code <= 0xFF5E:
+            result.append(chr(code - 0xFEE0))
+        else:
+            result.append(char)
+    return "".join(result)
+
+
+# 计算包括colspan和rowspan的总列数，也算合并的单元格
+def calculate_table_total_columns(soup):
+    rows = soup.find_all("tr")
+    if not rows:
+        return 0
+    max_cols = 0
+    occupied = {}
+    for row_idx, row in enumerate(rows):
+        col_idx = 0
+        cells = row.find_all(["td", "th"])
+        if row_idx not in occupied:
+            occupied[row_idx] = {}
+        for cell in cells:
+            while col_idx in occupied[row_idx]:
+                col_idx += 1
+            colspan = int(cell.get("colspan", 1))
+            rowspan = int(cell.get("rowspan", 1))
+            for r in range(row_idx, row_idx + rowspan):
+                if r not in occupied:
+                    occupied[r] = {}
+                for c in range(col_idx, col_idx + colspan):
+                    occupied[r][c] = True
+            col_idx += colspan
+            max_cols = max(max_cols, col_idx)
+    return max_cols
+
+
+# 计算单行的实际列数
+def calculate_row_columns(row):
+    return sum(int(cell.get("colspan", 1)) for cell in row.find_all(["td", "th"]))
+
+
+# 计算单行的可视列数，不包括colspan,合并的单元格视为一个
+def calculate_visual_columns(row):
+    return len(row.find_all(["td", "th"]))
+
+
+def get_table_html(block):
+    """获取表格 HTML"""
+    if block.label == "table" and block.content:
+        return block.content
+    return ""
+
+
+# ---------- 表头和行匹配 ----------
+# 判断两个表格开头有多少行是一样的
+def detect_table_headers(soup1, soup2, max_header_rows=5):
+    rows1 = soup1.find_all("tr")
+    rows2 = soup2.find_all("tr")
+    # 只判断最少的行数
+    min_rows = min(len(rows1), len(rows2), max_header_rows)
+    header_rows = 0
+    headers_match = True
+    # 如果视觉列数相等
+    for i in range(min_rows):
+        cells1 = rows1[i].find_all(["td", "th"])
+        cells2 = rows2[i].find_all(["td", "th"])
+        if len(cells1) != len(cells2):
+            headers_match = header_rows > 0
+            break
+        # 如果二者的列数相等，内容相同
+        match = True
+        for c1, c2 in zip(cells1, cells2):
+            text1 = "".join(full_to_half(c1.get_text()).split())
+            text2 = "".join(full_to_half(c2.get_text()).split())
+            if text1 != text2 or int(c1.get("colspan", 1)) != int(c2.get("colspan", 1)):
+                match = False
+                break
+        # 完全匹配，匹配行数+1。否则结束往下匹配
+        if match:
+            header_rows += 1
+        else:
+            headers_match = header_rows > 0
+            break
+    if header_rows == 0:
+        headers_match = False
+    return header_rows, headers_match
+
+
+def check_rows_match(soup1, soup2):
+    rows1 = soup1.find_all("tr")
+    rows2 = soup2.find_all("tr")
+    if not rows1 or not rows2:
+        return False
+    last_row = rows1[-1]
+    # 去掉下面的表头
+    header_count, _ = detect_table_headers(soup1, soup2)
+    # 第一个不是表头的行
+    first_data_row = rows2[header_count] if len(rows2) > header_count else None
+    if not first_data_row:
+        return False
+    last_cols = calculate_row_columns(last_row)
+    first_cols = calculate_row_columns(first_data_row)
+    last_visual = calculate_visual_columns(last_row)
+    first_visual = calculate_visual_columns(first_data_row)
+    return last_cols == first_cols or last_visual == first_visual
+
+
+# ---------- 合并判断 ----------
+def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
+
+    # 1. 表格宽度差
+    x0, y0, x1, y1 = prev_block.bbox
+    prev_width = x1 - x0
+    x2, y2, x3, y4 = curr_block.bbox
+    curr_width = x3 - x2
+    if curr_width == 0 or prev_width == 0:
+        return False, None, None
+    if abs(curr_width - prev_width) / min(curr_width, prev_width) >= 0.1:
+        return False, None, None
+
+    # 2. 后续元素必须是 footer / vision_footnote / number
+    # 当前块的索引
+    prev_index = prev_page.index(prev_block)
+    allowed_follow = all(
+        b.label in ["footer", "vision_footnote", "number", "footnote"]
+        for b in prev_page[prev_index + 1 :]
+    )
+    if not allowed_follow:
+        return False, None, None
+
+    # 3. 前元素必须是 header
+    curr_index = curr_page.index(curr_block)
+    allowed_before = all(b.label == "header" for b in curr_page[:curr_index])
+    if not allowed_before:
+        return False, None, None
+
+    # 4. 获取 HTML 并解析
+    html_prev = get_table_html(prev_block)
+    html_curr = get_table_html(curr_block)
+    if not html_prev or not html_curr:
+        return False, None, None
+    soup_prev = BeautifulSoup(html_prev, "html.parser")
+    soup_curr = BeautifulSoup(html_curr, "html.parser")
+
+    # 5. 列数或行匹配
+    total_cols_prev = calculate_table_total_columns(soup_prev)
+    total_cols_curr = calculate_table_total_columns(soup_curr)
+    tables_match = total_cols_prev == total_cols_curr
+    rows_match = check_rows_match(soup_prev, soup_curr)
+
+    return (tables_match or rows_match), soup_prev, soup_curr
+
+
+# ---------- 合并 ----------
+def perform_table_merge(soup_prev, soup_curr):
+    header_count, _ = detect_table_headers(soup_prev, soup_curr)
+    rows_prev = soup_prev.find_all("tr")
+    rows_curr = soup_curr.find_all("tr")
+    for row in rows_curr[header_count:]:
+        row.extract()
+        rows_prev[-1].parent.append(row)
+    return str(soup_prev)
+
+
+# ---------- 主函数 ----------
+def merge_tables(pages):
+    nums = 0
+    for i in range(len(pages) - 1, 0, -1):
+        page_curr = pages[i]
+        page_prev = pages[i - 1]
+
+        # 当前页第一个表格
+        curr_block = next((b for b in page_curr if b.label == "table"), None)
+        if not curr_block:
+            continue
+
+        # 前页最后一个表格
+        prev_block = next((b for b in reversed(page_prev) if b.label == "table"), None)
+        if not prev_block:
+            continue
+        can_merge, soup_prev, soup_curr = can_merge_tables(
+            page_prev, prev_block, page_curr, curr_block
+        )
+        if can_merge:
+            nums += 1
+            merged_html = perform_table_merge(soup_prev, soup_curr)
+            prev_block.content = merged_html
+            curr_block.content = ""  # 删除当前表格
+    return pages, nums
+
+
+def merge_tables_across_pages(pages):
+    pages, _ = merge_tables(pages)
+
+    layout_parsing_result = []
+    for page in pages:
+        for block in page:
+            layout_parsing_result.append(block)
+    return layout_parsing_result
