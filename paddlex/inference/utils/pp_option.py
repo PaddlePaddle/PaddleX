@@ -18,7 +18,7 @@ from typing import Dict, List
 
 from ...utils import logging
 from ...utils.device import get_default_device, parse_device, set_env_for_device_type
-from ...utils.flags import ENABLE_MKLDNN_BYDEFAULT, USE_PIR_TRT, DISABLE_DEVICE_FALLBACK
+from ...utils.flags import DISABLE_DEVICE_FALLBACK, ENABLE_MKLDNN_BYDEFAULT, USE_PIR_TRT
 from .misc import is_mkldnn_available
 from .mkldnn_blocklist import MKLDNN_BLOCKLIST
 from .new_ir_blocklist import NEWIR_BLOCKLIST
@@ -54,7 +54,7 @@ class PaddlePredictorOption(object):
         "mkldnn",
         "mkldnn_bf16",
     )
-    SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu")
+    SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu", "iluvatar_gpu")
 
     def __init__(self, **kwargs):
         super().__init__()
@@ -84,7 +84,10 @@ class PaddlePredictorOption(object):
         if self.device_type == "gpu":
             import paddle
 
-            if not (paddle.device.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0):
+            if not (
+                paddle.device.is_compiled_with_cuda()
+                and paddle.device.cuda.device_count() > 0
+            ):
                 if DISABLE_DEVICE_FALLBACK:
                     raise RuntimeError(
                         "Device fallback is disabled and the specified device (GPU) is not available. "

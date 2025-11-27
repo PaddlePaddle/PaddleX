@@ -140,7 +140,13 @@ class DetPredictor(BasePredictor):
             pre_ops.insert(1, self.build_resize(self.img_size, False, 2))
 
         # build infer
-        infer = self.create_static_infer()
+        if self._use_static_model:
+            infer = self.create_static_infer()
+        else:
+            if self.model_name not in []:
+                raise RuntimeError(
+                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+                )
 
         # build postprocess op
         post_op = self.build_postprocess()
@@ -318,6 +324,7 @@ class DetPredictor(BasePredictor):
             "PP-DocLayout-L",
             "PP-DocLayout_plus-L",
             "PP-DocBlockLayout",
+            "PP-DocLayoutV2",
         ]
         if any(name in self.model_name for name in models_required_imgsize):
             ordered_required_keys = (

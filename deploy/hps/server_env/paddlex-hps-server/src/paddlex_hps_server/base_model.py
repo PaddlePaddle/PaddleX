@@ -80,14 +80,19 @@ class BaseTritonPythonModel(object):
         logging.info("%s initialized successfully", self.id)
 
     def execute(self, requests):
-        responses = []
+        batch_id = self._generate_batch_id()
+        tokens = logging.set_context_vars(self.id, batch_id)
+        logging.info("Received batch of size %s", len(requests))
+        start_time = time.perf_counter()
 
-        for request in requests:
-            log_id = protocol.generate_log_id()
-            tokens = logging.set_context_vars(self.id, log_id)
-
-            start_time = time.perf_counter()
-            try:
+        try:
+            inputs = {}
+            outputs = {}
+            log_ids = []
+            for i, request in enumerate(requests):
+                log_id = protocol.generate_log_id()
+                logging.info("Request %s received", log_id)
+                log_ids.append(log_id)
                 input_ = pb_utils.get_input_tensor_by_name(
                     request, constants.INPUT_NAME
                 )
@@ -95,39 +100,59 @@ class BaseTritonPythonModel(object):
                 input_model_type = self.get_input_model_type()
                 try:
                     input_ = protocol.parse_triton_input(input_, input_model_type)
+                    inputs[i] = input_
                 except ValidationError as e:
-                    output = protocol.create_aistudio_output_without_result(422, str(e))
-                else:
-                    try:
-                        result_or_output = self.run(input_, log_id)
-                    except Exception as e:
-                        logging.error("Unhandled exception", exc_info=e)
-                        output = protocol.create_aistudio_output_without_result(
-                            500, "Internal server error", log_id=log_id
+                    output = protocol.create_aistudio_output_without_result(
+                        422, str(e), log_id=log_id
+                    )
+                    outputs[i] = output
+
+            if inputs:
+                try:
+                    result_or_output_lst = self.run_batch(
+                        inputs.values(), [log_ids[i] for i in inputs.keys()], batch_id
+                    )
+                except Exception as e:
+                    logging.error("Unhandled exception", exc_info=e)
+                    for i in inputs.keys():
+                        outputs[i] = protocol.create_aistudio_output_without_result(
+                            500, "Internal server error", log_id=log_ids[i]
                         )
-                    else:
-                        result_model_type = self.get_result_model_type()
-                        if isinstance(result_or_output, result_model_type):
-                            output = protocol.create_aistudio_output_with_result(
-                                result_or_output, log_id=log_id
+                else:
+                    result_model_type = self.get_result_model_type()
+                    for i, item in enumerate(result_or_output_lst):
+                        if isinstance(item, result_model_type):
+                            outputs[i] = protocol.create_aistudio_output_with_result(
+                                item,
+                                log_id=log_ids[i],
                             )
                         else:
-                            output = result_or_output
+                            outputs[i] = item
+
+            assert len(outputs) == len(
+                requests
+            ), f"The number of outputs ({len(outputs)}) does not match the number of requests ({len(requests)})"
+
+            responses = []
+            for i in range(len(requests)):
+                output = outputs[i]
                 output = protocol.create_triton_output(output)
                 output = pb_utils.Tensor(constants.OUTPUT_NAME, output)
                 response = pb_utils.InferenceResponse(output_tensors=[output])
-            except Exception as e:
-                logging.error("Unhandled exception", exc_info=e)
-                response = pb_utils.InferenceResponse(
+                responses.append(response)
+        except Exception as e:
+            logging.error("Unhandled exception", exc_info=e)
+            responses = [
+                pb_utils.InferenceResponse(
                     output_tensors=[],
                     error=pb_utils.TritonError("An error occurred during execution"),
                 )
-            finally:
-                end_time = time.perf_counter()
-                logging.info("Time taken: %.3f ms", (end_time - start_time) * 1000)
-                logging.reset_context_vars(*tokens)
-
-            responses.append(response)
+                for _ in requests
+            ]
+        finally:
+            end_time = time.perf_counter()
+            logging.info("Time taken: %.3f ms", (end_time - start_time) * 1000)
+            logging.reset_context_vars(*tokens)
 
         return responses
 
@@ -139,6 +164,17 @@ class BaseTritonPythonModel(object):
 
     def run(self, input, log_id):
         raise NotImplementedError
+
+    def run_batch(self, inputs, log_ids, batch_id):
+        if len(inputs) != len(log_ids):
+            raise ValueError(
+                "The number of `inputs` does not match the number of `log_ids`"
+            )
+        outputs = []
+        for inp, log_id in zip(inputs, log_ids):
+            out = self.run(inp, log_id)
+            outputs.append(out)
+        return outputs
 
     def _create_pipeline(self, config, use_hpip):
         if self._device_id is not None:
@@ -154,4 +190,7 @@ class BaseTritonPythonModel(object):
         return pipeline
 
     def _generate_model_id(self):
+        return uuid.uuid4().hex
+
+    def _generate_batch_id(self):
         return uuid.uuid4().hex

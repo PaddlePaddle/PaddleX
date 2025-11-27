@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import re
+from copy import deepcopy
 from time import sleep
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -25,7 +26,7 @@ from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-from .result import MarkdownResult
+from .result import DocumentResult, LatexResult, MarkdownResult
 from .utils import (
     split_original_texts,
     split_text_recursive,
@@ -82,6 +83,10 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             self.inintial_chat_predictor(config)
 
         self.markdown_batch_sampler = MarkDownBatchSampler()
+
+    def close(self):
+        if self.layout_parsing_pipeline is not None:
+            self.layout_parsing_pipeline.close()
 
     def inintial_visual_predictor(self, config: dict) -> None:
         """
@@ -441,13 +446,14 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                 few_shot_demo_key_value_list=few_shot_demo_key_value_list,
             )
             translate = chat_bot.generate_chat_results(prompt=prompt).get("content", "")
-            
+
             if "<<END>>" not in translate:
-                raise Exception("The translation did not reach the end. "
-                                 "This may happen if your chunk_size is too large. Please reduce chunk_size and try again.")
+                raise Exception(
+                    "The translation did not reach the end. "
+                    "This may happen if your chunk_size is too large. Please reduce chunk_size and try again."
+                )
             if translate is None:
                 raise Exception("The call to the large model failed.")
-            
             translate = translate.replace("<<END>>", "").rstrip()
             return translate
 
@@ -617,3 +623,68 @@ class PP_DocTranslation_Pipeline(BasePipeline):
         }
 
         return MarkdownResult(concatenate_result)
+
+    def concatenate_word_pages(self, word_list: list) -> tuple:
+        """
+        Concatenate Word content from multiple pages into a single document.
+
+        Args:
+            word_list (list): A list containing Word data for each page.
+
+        Returns:
+            tuple: A tuple containing the processed Word document.
+        """
+        if len(word_list) == 0:
+            raise ValueError("The length of word_list is zero.")
+
+        merged_blocks = []
+        image = []
+
+        for page_idx, page_blocks in enumerate(word_list):
+            for block in page_blocks["word_blocks"]:
+                block_copy = deepcopy(block)
+                block_copy["page_index"] = page_idx
+                merged_blocks.append(block_copy)
+            for img_obj in page_blocks["images"]:
+                image.append(img_obj)
+
+        return DocumentResult(
+            {
+                "word_blocks": merged_blocks,
+                "input_path": word_list[0]["input_path"],
+                "images": image,
+            }
+        )
+
+    def concatenate_latex_pages(self, latex_info_list: list) -> tuple:
+        """
+        Concatenate LaTeX content from multiple pages into a single document.
+
+        Args:
+            latex_info_list (list): A list containing LaTeX data for each page.
+
+        Returns:
+            tuple: A tuple containing the processed LaTeX document.
+        """
+        if len(latex_info_list) == 0:
+            raise ValueError("The length of latex_info_list is zero.")
+
+        merged_blocks = []
+        merged_images = []
+
+        for page_idx, page_blocks in enumerate(latex_info_list):
+            for block in page_blocks["latex_blocks"]:
+                block_copy = deepcopy(block)
+                block_copy["page_index"] = page_idx
+                merged_blocks.append(block_copy)
+
+            for img_obj in page_blocks["images"]:
+                merged_images.append(img_obj)
+
+        return LatexResult(
+            {
+                "latex_blocks": merged_blocks,
+                "images": merged_images,
+                "input_path": latex_info_list[0]["input_path"],
+            }
+        )

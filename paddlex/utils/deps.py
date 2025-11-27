@@ -29,6 +29,8 @@ _EXTRA_PATTERN = re.compile(
 )
 _COLLECTIVE_EXTRA_NAMES = {"base", "plugins", "all"}
 
+_SUPPORTED_GENAI_ENGINE_BACKENDS = ["fastdeploy-server", "vllm-server", "sglang-server"]
+
 
 class DependencyError(Exception):
     pass
@@ -63,18 +65,21 @@ def _get_extras():
 EXTRAS = _get_extras()
 
 
-def _get_dep_specs():
+def _get_base_dep_specs(required_only=False):
     dep_specs = defaultdict(list)
     for dep_spec in importlib.metadata.requires("paddlex"):
         extra_name, dep_spec = _get_extra_name_and_remove_extra_marker(dep_spec)
-        if extra_name is None or extra_name == "all":
+        if (required_only and extra_name is None) or (
+            not required_only and (extra_name is None or extra_name == "base")
+        ):
             dep_spec = dep_spec.rstrip()
             req = Requirement(dep_spec)
             dep_specs[req.name].append(dep_spec)
     return dep_specs
 
 
-DEP_SPECS = _get_dep_specs()
+BASE_DEP_SPECS = _get_base_dep_specs()
+REQUIRED_DEP_SPECS = _get_base_dep_specs(required_only=True)
 
 
 def get_dep_version(dep):
@@ -85,33 +90,34 @@ def get_dep_version(dep):
 
 
 @lru_cache()
-def is_dep_available(dep, /, check_version=None):
-    # Currently for several special deps we check if the import packages exist.
-    if dep in ("paddlepaddle", "paddle-custom-device", "ultra-infer") and check_version:
+def is_dep_available(dep, /, check_version=False):
+    if (
+        dep in ("paddlepaddle", "paddle-custom-device", "ultra-infer", "fastdeploy")
+        and check_version
+    ):
         raise ValueError(
-            "Currently, `check_version` is not allowed to be `True` for `paddlepaddle`, `paddle-custom-device`, and `ultra-infer`."
+            "`check_version` is not allowed to be `True` for `paddlepaddle`, `paddle-custom-device`, `ultra-infer`, and `fastdeploy`."
         )
+    # Currently for several special deps we check if the import packages exist.
     if dep == "paddlepaddle":
         return importlib.util.find_spec("paddle") is not None
     elif dep == "paddle-custom-device":
         return importlib.util.find_spec("paddle_custom_device") is not None
     elif dep == "ultra-infer":
         return importlib.util.find_spec("ultra_infer") is not None
-    else:
-        if dep != "paddle2onnx" and dep not in DEP_SPECS:
-            raise ValueError("Unknown dependency")
-    if check_version is None:
-        if dep == "paddle2onnx":
-            check_version = True
-        else:
-            check_version = False
+    elif dep == "fastdeploy":
+        return importlib.util.find_spec("fastdeploy") is not None
+    elif dep == "onnxruntime":
+        return importlib.util.find_spec("onnxruntime") is not None
     version = get_dep_version(dep)
     if version is None:
         return False
     if check_version:
-        if dep == "paddle2onnx":
-            return Version(version) in Requirement(get_paddle2onnx_spec()).specifier
-        for dep_spec in DEP_SPECS[dep]:
+        if dep not in BASE_DEP_SPECS:
+            raise ValueError(
+                f"Currently, `check_version=True` is supported only for base dependencies."
+            )
+        for dep_spec in BASE_DEP_SPECS[dep]:
             if Version(version) in Requirement(dep_spec).specifier:
                 return True
     else:
@@ -252,5 +258,70 @@ def require_paddle2onnx_plugin():
         )
 
 
-def get_paddle2onnx_spec():
-    return "paddle2onnx == 2.0.2rc3"
+def get_paddle2onnx_dep_specs():
+    dep_specs = []
+    for item in EXTRAS["paddle2onnx"].values():
+        dep_specs += item
+    return dep_specs
+
+
+def is_genai_engine_plugin_available(backend="any"):
+    if backend != "any" and backend not in _SUPPORTED_GENAI_ENGINE_BACKENDS:
+        raise ValueError(f"Unknown backend type: {backend}")
+    if backend == "any":
+        for be in _SUPPORTED_GENAI_ENGINE_BACKENDS:
+            if is_genai_engine_plugin_available(be):
+                return True
+        return False
+    else:
+        if "fastdeploy" in backend:
+            return is_dep_available("fastdeploy")
+        elif is_extra_available(f"genai-{backend}"):
+            from .env import is_cuda_available
+
+            if is_cuda_available():
+                return is_dep_available("xformers") and is_dep_available("flash-attn")
+            return True
+        return False
+
+
+def require_genai_engine_plugin(backend="any"):
+    if not is_genai_engine_plugin_available(backend):
+        if backend == "any":
+            prefix = "The generative AI engine plugins are"
+        else:
+            prefix = f"The generative AI {repr(backend)} engine plugin is"
+        raise RuntimeError(f"{prefix} not available. Please install it properly.")
+
+
+def is_genai_client_plugin_available():
+    return is_extra_available("genai-client")
+
+
+def require_genai_client_plugin():
+    if not is_genai_client_plugin_available():
+        raise RuntimeError(
+            "The generative AI client plugin is not available. Please install it properly."
+        )
+
+
+def get_genai_fastdeploy_spec(device_type):
+    SUPPORTED_DEVICE_TYPES = ("gpu",)
+    if device_type not in SUPPORTED_DEVICE_TYPES:
+        raise ValueError(f"Unsupported device type: {device_type}")
+    if device_type == "gpu":
+        return "fastdeploy-gpu == 2.3.0"
+    else:
+        raise AssertionError
+
+
+def get_genai_dep_specs(type):
+    if type != "client" and type not in _SUPPORTED_GENAI_ENGINE_BACKENDS:
+        raise ValueError(f"Invalid type: {type}")
+    if "fastdeploy" in type:
+        raise ValueError(f"{repr(type)} is not supported")
+
+    dep_specs = []
+    for item in EXTRAS[f"genai-{type}"].values():
+        dep_specs += item
+    return dep_specs

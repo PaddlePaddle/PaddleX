@@ -29,12 +29,18 @@ from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.deps import (
     get_dep_version,
-    get_paddle2onnx_spec,
+    get_genai_dep_specs,
+    get_genai_fastdeploy_spec,
+    get_paddle2onnx_dep_specs,
     get_serving_dep_specs,
+    is_dep_available,
     is_paddle2onnx_plugin_available,
-    require_paddle2onnx_plugin,
 )
-from .utils.env import get_paddle_cuda_version
+from .utils.env import (
+    get_gpu_compute_capability,
+    get_paddle_cuda_version,
+    is_cuda_available,
+)
 from .utils.install import install_packages, uninstall_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -225,12 +231,20 @@ def install(args):
     """install paddlex"""
 
     def _install_serving_deps():
-        reqs = get_serving_dep_specs()
-        # Should we sort the requirements?
-        install_packages(reqs)
+        try:
+            install_packages(get_serving_dep_specs())
+        except Exception:
+            logging.error("Installation failed", exc_info=True)
+            sys.exit(1)
+        logging.info("Successfully installed the serving plugin")
 
     def _install_paddle2onnx_deps():
-        install_packages([get_paddle2onnx_spec()])
+        try:
+            install_packages(get_paddle2onnx_dep_specs())
+        except Exception:
+            logging.error("Installation failed", exc_info=True)
+            sys.exit(1)
+        logging.info("Successfully installed the Paddle2ONNX plugin")
 
     def _install_hpi_deps(device_type):
         SUPPORTED_DEVICE_TYPES = ["cpu", "gpu", "npu"]
@@ -270,32 +284,114 @@ def install(args):
                 logging.info(
                     f"The high-performance inference plugin '{package}' is mutually exclusive with '{other_package}' (version {version} installed). Uninstalling '{other_package}'..."
                 )
-                uninstall_packages([other_package])
+                try:
+                    uninstall_packages([other_package])
+                except Exception:
+                    logging.error("Failed to uninstall packages", exc_info=True)
+                    sys.exit(1)
 
         with importlib.resources.path("paddlex", hpip_links_file) as f:
             version = get_dep_version(package)
-            if version is None:
-                install_packages([package], pip_install_opts=["--find-links", str(f)])
-            else:
-                response = input(
-                    f"The high-performance inference plugin is already installed (version {repr(version)}). Do you want to reinstall it? (y/n):"
-                )
-                if response.lower() in ["y", "yes"]:
-                    uninstall_packages([package])
+            try:
+                if version is None:
                     install_packages(
-                        [package],
-                        pip_install_opts=[
-                            "--find-links",
-                            str(f),
-                        ],
+                        [package], pip_install_opts=["--find-links", str(f)]
                     )
                 else:
-                    return
+                    response = input(
+                        f"The high-performance inference plugin is already installed (version {repr(version)}). Do you want to reinstall it? (y/n):"
+                    )
+                    if response.lower() in ["y", "yes"]:
+                        uninstall_packages([package])
+                        install_packages(
+                            [package],
+                            pip_install_opts=[
+                                "--find-links",
+                                str(f),
+                            ],
+                        )
+                    else:
+                        return
+            except Exception:
+                logging.error("Installation failed", exc_info=True)
+                sys.exit(1)
+
+        logging.info("Successfully installed the high-performance inference plugin")
 
         if not is_paddle2onnx_plugin_available():
             logging.info(
                 "The Paddle2ONNX plugin is not available. It is recommended to run `paddlex --install paddle2onnx` to install the Paddle2ONNX plugin to use the full functionality of high-performance inference."
             )
+
+    def _install_genai_deps(plugin_types):
+        fd_plugin_types = []
+        not_fd_plugin_types = []
+        for plugin_type in plugin_types:
+            if "fastdeploy" in plugin_type:
+                fd_plugin_types.append(plugin_type)
+            else:
+                not_fd_plugin_types.append(plugin_type)
+        if fd_plugin_types:
+            if not is_dep_available("paddlepaddle"):
+                sys.exit("Please install PaddlePaddle first.")
+
+            cap = get_gpu_compute_capability()
+            if cap in ((8, 0), (9, 0)):
+                index_url = "https://www.paddlepaddle.org.cn/packages/stable/fastdeploy-gpu-80_90/"
+            elif cap in ((8, 6), (8, 9)):
+                index_url = "https://www.paddlepaddle.org.cn/packages/stable/fastdeploy-gpu-86_89/"
+            else:
+                sys.exit(
+                    f"The compute capability of the GPU is {cap[0]}.{cap[1]}, which is not supported. The supported compute capabilities are 8.0, 8.6, 8.9, and 9.0."
+                )
+            try:
+                install_packages(
+                    [get_genai_fastdeploy_spec("gpu")],
+                    pip_install_opts=["--extra-index-url", index_url],
+                )
+            except Exception:
+                logging.error("Installation failed", exc_info=True)
+                sys.exit(1)
+
+        reqs = []
+        for plugin_type in not_fd_plugin_types:
+            try:
+                r = get_genai_dep_specs(plugin_type)
+            except ValueError:
+                logging.error("Invalid generative AI plugin type: %s", plugin_type)
+                sys.exit(2)
+            reqs += r
+        try:
+            install_packages(reqs, constraints="required")
+        except Exception:
+            logging.error("Installation failed", exc_info=True)
+            sys.exit(1)
+
+        for plugin_type in plugin_types:
+            if "vllm" in plugin_type or "sglang" in plugin_type:
+                install_packages(["xformers"], constraints="required")
+                if is_cuda_available():
+                    try:
+                        install_packages(["wheel"], constraints="required")
+                        cap = get_gpu_compute_capability()
+                        assert cap is not None
+                        if cap >= (12, 0):
+                            install_packages(
+                                ["flash-attn == 2.8.3"], constraints="required"
+                            )
+                        else:
+                            install_packages(
+                                ["flash-attn == 2.8.2"], constraints="required"
+                            )
+                    except Exception:
+                        logging.error("Installation failed", exc_info=True)
+                        sys.exit(1)
+                    break
+
+        logging.info(
+            "Successfully installed the generative AI plugin"
+            + ("s" if len(plugin_types) > 1 else "")
+        )
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
@@ -322,10 +418,10 @@ def install(args):
 
     hpi_plugins = list(filter(lambda name: name.startswith("hpi-"), plugins))
     if hpi_plugins:
-        for i in hpi_plugins:
-            plugins.remove(i)
+        for p in hpi_plugins:
+            plugins.remove(p)
         if plugins:
-            logging.error("`hpi` cannot be used together with other plugins.")
+            logging.error("`hpi-xxx` cannot be used together with other plugins.")
             sys.exit(2)
         if len(hpi_plugins) > 1 or len(hpi_plugins[0].split("-")) != 2:
             logging.error(
@@ -338,10 +434,29 @@ def install(args):
         _install_hpi_deps(device_type=device_type)
         return
 
+    genai_plugins = list(filter(lambda name: name.startswith("genai-"), plugins))
+    if genai_plugins:
+        for p in genai_plugins:
+            plugins.remove(p)
+        if plugins:
+            logging.error("`genai-xxx` cannot be used together with other plugins.")
+            sys.exit(2)
+        genai_plugin_types = [p[len("genai-") :] for p in genai_plugins]
+        _install_genai_deps(genai_plugin_types)
+        return
+
+    all_repo_names = get_all_supported_repo_names()
+    unknown_plugins = []
+    for p in plugins:
+        if p not in all_repo_names:
+            unknown_plugins.append(p)
+    if unknown_plugins:
+        logging.error("Unknown plugins: %s", unknown_plugins)
+        sys.exit(2)
     if plugins:
         repo_names = plugins
     elif len(plugins) == 0:
-        repo_names = get_all_supported_repo_names()
+        repo_names = all_repo_names
     setup(
         repo_names=repo_names,
         no_deps=args.no_deps,
@@ -374,19 +489,31 @@ def pipeline_predict(
 
 
 def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
-    from .inference.serving.basic_serving import create_pipeline_app, run_server
+    try:
+        from .inference.serving.basic_serving import create_pipeline_app, run_server
+    except RuntimeError:
+        logging.error("Failed to load the serving module", exc_info=True)
+        sys.exit(1)
 
     pipeline_config = load_pipeline_config(pipeline)
-    pipeline = create_pipeline(
-        config=pipeline_config, device=device, use_hpip=use_hpip, hpi_config=hpi_config
-    )
+    try:
+        pipeline = create_pipeline(
+            config=pipeline_config,
+            device=device,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+        )
+    except Exception:
+        logging.error("Failed to create the pipeline", exc_info=True)
+        sys.exit(1)
     app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port)
 
 
 # TODO: Move to another module
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
-    require_paddle2onnx_plugin()
+    if not is_paddle2onnx_plugin_available():
+        sys.exit("Please install the Paddle2ONNX plugin first.")
 
     ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"
     CONFIG_FILENAME = f"{MODEL_FILE_PREFIX}.yml"
@@ -448,6 +575,9 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
             shutil.copy(src_path, dst_path)
             logging.info(f"Copied {src_path} to {dst_path}")
 
+    if not paddle_model_dir:
+        sys.exit("PaddlePaddle model directory must be specified")
+
     paddle_model_dir = Path(paddle_model_dir)
     if not onnx_model_dir:
         onnx_model_dir = paddle_model_dir
@@ -476,7 +606,6 @@ def main():
 
     if args.install is not None:
         install(args)
-        return
     elif args.serve:
         serve(
             args.pipeline,
@@ -486,14 +615,12 @@ def main():
             host=args.host,
             port=args.port,
         )
-        return
     elif args.paddle2onnx:
         paddle_to_onnx(
             args.paddle_model_dir,
             args.onnx_model_dir,
             opset_version=args.opset_version,
         )
-        return
     else:
         if args.get_pipeline_config is not None:
             interactive_get_pipeline(args.get_pipeline_config, args.save_path)
@@ -506,13 +633,16 @@ def main():
                     pipeline_args_dict[arg_name] = getattr(args, arg_name)
                 else:
                     logging.warning(f"Argument {arg_name} is missing in args")
-            pipeline_predict(
-                args.pipeline,
-                args.input,
-                args.device,
-                args.save_path,
-                use_hpip=args.use_hpip or None,
-                hpi_config=args.hpi_config,
-                **pipeline_args_dict,
-            )
-            return
+            try:
+                pipeline_predict(
+                    args.pipeline,
+                    args.input,
+                    args.device,
+                    args.save_path,
+                    use_hpip=args.use_hpip or None,
+                    hpi_config=args.hpi_config,
+                    **pipeline_args_dict,
+                )
+            except Exception:
+                logging.error("Pipeline prediction failed", exc_info=True)
+                sys.exit(1)

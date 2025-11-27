@@ -14,13 +14,13 @@
 
 
 import json
-import logging
 import os
 import shutil
 import unicodedata
 from functools import lru_cache
 from typing import List, Optional
 
+from .....utils import logging
 from .tokenizer_utils import (
     PretrainedTokenizer,
     _is_control,

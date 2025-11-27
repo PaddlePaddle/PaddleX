@@ -12,15 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
 import copy
+import io
 import os
 import warnings
-from typing import List
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from threading import Lock
+from typing import List, Optional
+
+import numpy as np
 
 from ....modules.doc_vlm.model_list import MODELS
+from ....utils import logging
+from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
-from ....utils.env import get_device_type
 from ...common.batch_sampler import DocVLMBatchSampler
+from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from .result import DocVLMResult
 
@@ -32,6 +41,7 @@ class DocVLMPredictor(BasePredictor):
         "PP-DocBee": {"PP-DocBee-2B", "PP-DocBee-7B"},
         "PP-DocBee2": {"PP-DocBee2-3B"},
         "PP-Chart2Table": {"PP-Chart2Table"},
+        "PaddleOCR-VL": {"PaddleOCR-VL-0.9B"},
     }
 
     def __init__(self, *args, **kwargs):
@@ -40,18 +50,34 @@ class DocVLMPredictor(BasePredictor):
             *args: Arbitrary positional arguments passed to the superclass.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
-        import paddle
-
         super().__init__(*args, **kwargs)
-        self.device = kwargs.get("device", None)
-        self.dtype = (
-            "bfloat16"
-            if ("npu" in get_device_type() or paddle.amp.is_bfloat16_supported())
-            and (self.device is None or "cpu" not in self.device)
-            else "float32"
-        )
 
-        self.infer, self.processor = self._build(**kwargs)
+        if self._use_local_model:
+            if self._use_static_model:
+                raise RuntimeError("Static graph models are not supported")
+            self.device = kwargs.get("device", None)
+            if is_bfloat16_available(self.device):
+                self.dtype = "bfloat16"
+            elif is_float16_available(self.device):
+                self.dtype = "float16"
+            else:
+                self.dtype = "float32"
+
+            self.infer, self.processor = self._build(**kwargs)
+
+            if (
+                self.model_name == "PaddleOCR-VL-0.9B"
+                and self.batch_sampler.batch_size > 1
+            ):
+                logging.warning(
+                    "Currently, the PaddleOCR-VL-0.9B local model only supports batch size of 1. The batch size will be updated to 1."
+                )
+                self.batch_sampler.batch_size = 1
+        else:
+            if self.batch_sampler.batch_size > 1:
+                self._thread_pool = ThreadPoolExecutor(
+                    max_workers=min(self.batch_sampler.batch_size, os.cpu_count() or 1)
+                )
 
     def _build_batch_sampler(self):
         """Builds and returns an DocVLMBatchSampler instance.
@@ -77,6 +103,7 @@ class DocVLMPredictor(BasePredictor):
             processor: The correspounding processor for the model.
         """
         from .modeling import (
+            PaddleOCRVLForConditionalGeneration,
             PPChart2TableInference,
             PPDocBee2Inference,
             PPDocBeeInference,
@@ -116,52 +143,130 @@ class DocVLMPredictor(BasePredictor):
                     self.model_dir,
                     dtype=self.dtype,
                 )
+        elif self.model_name in self.model_group["PaddleOCR-VL"]:
+            if kwargs.get("use_hpip", False):
+                warnings.warn(
+                    "The PaddelOCR-VL series does not support `use_hpip=True` for now."
+                )
+            with TemporaryDeviceChanger(self.device):
+                model = PaddleOCRVLForConditionalGeneration.from_pretrained(
+                    self.model_dir,
+                    dtype=self.dtype,
+                    convert_from_hf=True,
+                )
         else:
             raise NotImplementedError(f"Model {self.model_name} is not supported.")
 
         return model, processor
 
-    def process(self, data: List[dict], **kwargs):
+    def process(
+        self,
+        data: List[dict],
+        max_new_tokens: Optional[int] = None,
+        skip_special_tokens: Optional[bool] = None,
+        repetition_penalty: Optional[float] = None,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+        min_pixels: Optional[int] = None,
+        max_pixels: Optional[int] = None,
+        use_cache: Optional[bool] = None,
+        **kwargs,
+    ):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
 
         Args:
             data (List[dict]): A batch of input data, must be a dict (e.g. {"image": /path/to/image, "query": some question}).
-            kwargs (Optional[dict]): Arbitrary keyword arguments passed to model.generate.
 
         Returns:
             dict: A dictionary containing the raw sample information and prediction results for every instance of the batch.
         """
+        # TODO: Sampling settings
+        # FIXME: When `skip_special_tokens` is `True`, the results from different backends may differ.
+
         assert all(isinstance(i, dict) for i in data)
 
-        src_data = copy.copy(data)
-        # preprocess
-        data = self.processor.preprocess(data)
-        data = self._switch_inputs_to_device(data)
+        if self._use_local_model:
+            src_data = copy.copy(data)
+            # preprocess
+            data = self.processor.preprocess(data)
+            data = self._switch_inputs_to_device(data)
 
-        # do infer
-        with TemporaryDeviceChanger(self.device):
-            preds = self.infer.generate(data, **kwargs)
+            # do infer
+            generate_kwargs = {}
+            if max_new_tokens is not None:
+                generate_kwargs["max_new_tokens"] = max_new_tokens
+            elif self.model_name in self.model_group["PaddleOCR-VL"]:
+                generate_kwargs["max_new_tokens"] = 8192
+            if repetition_penalty is not None:
+                warnings.warn(
+                    "`repetition_penalty` is currently not supported by the local model and will be ignored."
+                )
+            if temperature is not None:
+                warnings.warn(
+                    "`temperature` is currently not supported by the local model and will be ignored."
+                )
+            if top_p is not None:
+                warnings.warn(
+                    "`top_p` is currently not supported by the local model and will be ignored."
+                )
+            if min_pixels is not None:
+                warnings.warn(
+                    "`min_pixels` is currently not supported by the local model and will be ignored."
+                )
+            if max_pixels is not None:
+                warnings.warn(
+                    "`max_pixels` is currently not supported by the local model and will be ignored."
+                )
+            if use_cache is not None:
+                generate_kwargs["use_cache"] = use_cache
+            with TemporaryDeviceChanger(self.device):
+                preds = self.infer.generate(
+                    data,
+                    **generate_kwargs,
+                )
 
-        # postprocess
-        preds = self.processor.postprocess(preds)
+            # postprocess
+            postprocess_kwargs = {}
+            if skip_special_tokens is not None:
+                postprocess_kwargs["skip_special_tokens"] = skip_special_tokens
+            preds = self.processor.postprocess(preds, **postprocess_kwargs)
+        else:
+            require_genai_client_plugin()
+
+            src_data = data
+
+            preds = self._genai_client_process(
+                data,
+                max_new_tokens=max_new_tokens,
+                skip_special_tokens=skip_special_tokens,
+                repetition_penalty=repetition_penalty,
+                temperature=temperature,
+                top_p=top_p,
+                min_pixels=min_pixels,
+                max_pixels=max_pixels,
+            )
 
         result_dict = self._format_result_dict(preds, src_data)
         return result_dict
 
     def build_processor(self, **kwargs):
         from ..common.tokenizer import (
+            LlamaTokenizer,
             MIXQwen2_5_Tokenizer,
             MIXQwen2Tokenizer,
             QWenTokenizer,
         )
+        from ..common.tokenizer.tokenizer_utils import ChatTemplate
         from .processors import (
             GOTImageProcessor,
+            PaddleOCRVLProcessor,
             PPChart2TableProcessor,
             PPDocBee2Processor,
             PPDocBeeProcessor,
             Qwen2_5_VLImageProcessor,
             Qwen2VLImageProcessor,
+            SiglipImageProcessor,
         )
 
         if self.model_name in self.model_group["PP-DocBee"]:
@@ -182,8 +287,28 @@ class DocVLMPredictor(BasePredictor):
             return PPDocBee2Processor(
                 image_processor=image_processor, tokenizer=tokenizer
             )
+        elif self.model_name in self.model_group["PaddleOCR-VL"]:
+            image_processor = SiglipImageProcessor.from_pretrained(self.model_dir)
+            vocab_file = str(Path(self.model_dir, "tokenizer.model"))
+            tokenizer = LlamaTokenizer.from_pretrained(
+                self.model_dir, vocab_file=vocab_file
+            )
+            # HACK
+            chat_template_file = Path(self.model_dir, "chat_template.jinja")
+            tokenizer.chat_template = ChatTemplate._compile_jinja_template(
+                chat_template_file.read_text(encoding="utf-8")
+            )
+            return PaddleOCRVLProcessor(
+                image_processor=image_processor,
+                tokenizer=tokenizer,
+            )
         else:
             raise NotImplementedError
+
+    def close(self):
+        super().close()
+        if hasattr(self, "_thread_pool"):
+            self._thread_pool.shutdown()
 
     def _format_result_dict(self, model_preds, src_data):
         if not isinstance(model_preds, list):
@@ -251,3 +376,131 @@ class DocVLMPredictor(BasePredictor):
             for k in input_dict
         }
         return rst_dict
+
+    def _genai_client_process(
+        self,
+        data,
+        max_new_tokens,
+        skip_special_tokens,
+        repetition_penalty,
+        temperature,
+        top_p,
+        min_pixels,
+        max_pixels,
+    ):
+        lock = Lock()
+
+        def _process(item):
+            image = item["image"]
+            if isinstance(image, str):
+                if image.startswith("http://") or image.startswith("https://"):
+                    image_url = image
+                else:
+                    from PIL import Image
+
+                    with Image.open(image) as img:
+                        img = img.convert("RGB")
+                        with io.BytesIO() as buf:
+                            img.save(buf, format="JPEG")
+                            image_url = "data:image/jpeg;base64," + base64.b64encode(
+                                buf.getvalue()
+                            ).decode("ascii")
+            elif isinstance(image, np.ndarray):
+                import cv2
+                from PIL import Image
+
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(image)
+                with io.BytesIO() as buf:
+                    img.save(buf, format="JPEG")
+                    image_url = "data:image/jpeg;base64," + base64.b64encode(
+                        buf.getvalue()
+                    ).decode("ascii")
+            else:
+                raise TypeError(f"Not supported image type: {type(image)}")
+
+            if self._genai_client.backend == "fastdeploy-server":
+                kwargs = {
+                    "temperature": 1 if temperature is None else temperature,
+                    "top_p": 0 if top_p is None else top_p,
+                }
+            else:
+                kwargs = {
+                    "temperature": 0 if temperature is None else temperature,
+                }
+                if top_p is not None:
+                    kwargs["top_p"] = top_p
+
+            if max_new_tokens is not None:
+                kwargs["max_completion_tokens"] = max_new_tokens
+            elif self.model_name in self.model_group["PaddleOCR-VL"]:
+                kwargs["max_completion_tokens"] = 8192
+
+            kwargs["extra_body"] = {}
+            if skip_special_tokens is not None:
+                if self._genai_client.backend in (
+                    "fastdeploy-server",
+                    "vllm-server",
+                    "sglang-server",
+                ):
+                    kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
+                else:
+                    raise ValueError("Not supported")
+
+            if repetition_penalty is not None:
+                kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
+
+            if min_pixels is not None:
+                if self._genai_client.backend == "vllm-server":
+                    kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
+                        "extra_body"
+                    ].get("mm_processor_kwargs", {})
+                    kwargs["extra_body"]["mm_processor_kwargs"][
+                        "min_pixels"
+                    ] = min_pixels
+                else:
+                    warnings.warn(
+                        f"{repr(self._genai_client.backend)} does not support `min_pixels`."
+                    )
+
+            if max_pixels is not None:
+                if self._genai_client.backend == "vllm-server":
+                    kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
+                        "extra_body"
+                    ].get("mm_processor_kwargs", {})
+                    kwargs["extra_body"]["mm_processor_kwargs"][
+                        "max_pixels"
+                    ] = max_pixels
+                else:
+                    warnings.warn(
+                        f"{repr(self._genai_client.backend)} does not support `max_pixels`."
+                    )
+
+            with lock:
+                future = self._genai_client.create_chat_completion(
+                    [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "image_url", "image_url": {"url": image_url}},
+                                {"type": "text", "text": item["query"]},
+                            ],
+                        }
+                    ],
+                    return_future=True,
+                    timeout=600,
+                    **kwargs,
+                )
+                return future
+
+        if len(data) > 1:
+            futures = list(self._thread_pool.map(_process, data))
+        else:
+            futures = [_process(data[0])]
+
+        results = []
+        for future in futures:
+            result = future.result()
+            results.append(result.choices[0].message.content)
+
+        return results

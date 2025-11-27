@@ -6,6 +6,10 @@ comments: true
 
 ## 最新版本信息
 
+### PaddleX v3.3.0(10.16/2025)
+
+- **支持PaddleOCR-VL、PP-OCRv5多语种模型的推理部署能力。**
+
 ### PaddleX v3.2.0(8.20/2025)
 
 - **部署能力升级：**

@@ -24,16 +24,17 @@ from collections import deque
 from stdlib_list import stdlib_list
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from setup import DEP_SPECS, REQUIRED_DEPS
+from setup import REQUIRED_DEPS
 
 # NOTE: We do not use `importlib.metadata.packages_distributions` here because
 # 1. It is supported only in Python 3.10+.
 # 2. It requires the packages to be installed, but we are doing a static check.
 MOD_TO_DEP = {
-    "aistudio_sdk": "aistudio_sdk",
+    "aistudio_sdk": "aistudio-sdk",
     "aiohttp": "aiohttp",
     "baidubce": "bce-python-sdk",
     "bs4": "beautifulsoup4",
+    "docx": "python-docx",
     "chardet": "chardet",
     "chinese_calendar": "chinese-calendar",
     "colorlog": "colorlog",
@@ -43,10 +44,12 @@ MOD_TO_DEP = {
     "fastapi": "fastapi",
     "filelock": "filelock",
     "filetype": "filetype",
+    "flash_attn": "flash-attn",
     "ftfy": "ftfy",
     "GPUtil": "GPUtil",
-    "huggingface_hub": "huggingface_hub",
+    "huggingface_hub": "huggingface-hub",
     "imagesize": "imagesize",
+    "jieba": "jieba",
     "jinja2": "Jinja2",
     "joblib": "joblib",
     "langchain": "langchain",
@@ -58,9 +61,11 @@ MOD_TO_DEP = {
     "modelscope": "modelscope",
     "numpy": "numpy",
     "openai": "openai",
+    "opencc": "OpenCC",
     "cv2": "opencv-contrib-python",
     "openpyxl": "openpyxl",
     "packaging": "packaging",
+    "paddle2onnx": "paddle2onnx",
     "pandas": "pandas",
     "PIL": "pillow",
     "premailer": "premailer",
@@ -70,26 +75,33 @@ MOD_TO_DEP = {
     "pycocotools": "pycocotools",
     "pydantic": "pydantic",
     "pypdfium2": "pypdfium2",
+    "pypinyin": "pypinyin",
     "yaml": "PyYAML",
     "regex": "regex",
     "requests": "requests",
     "ruamel.yaml": "ruamel.yaml",
+    "safetensors": "safetensors",
     "skimage": "scikit-image",
     "sklearn": "scikit-learn",
+    "sentencepiece": "sentencepiece",
+    "sglang": "sglang",
     "shapely": "shapely",
     "soundfile": "soundfile",
     "starlette": "starlette",
     "tiktoken": "tiktoken",
     "tokenizers": "tokenizers",
+    "torch": "torch",
     "tqdm": "tqdm",
+    "transformers": "transformers",
     "typing_extensions": "typing-extensions",
     "ujson": "ujson",
     "uvicorn": "uvicorn",
+    "uvloop": "uvloop",
+    "vllm": "vllm",
+    "xformers": "xformers",
     "yarl": "yarl",
+    "bidi": "python-bidi",
 }
-assert (
-    set(MOD_TO_DEP.values()) == DEP_SPECS.keys()
-), f"`MOD_TO_DEP` should be updated to match `DEP_SPECS`. Symmetric difference: {set(MOD_TO_DEP.values()) ^ DEP_SPECS.keys()}"
 MOD_PATTERN = re.compile(
     rf"^(?:{'|'.join([re.escape(mod) for mod in MOD_TO_DEP])})(?=\.|$)"
 )
@@ -107,7 +119,12 @@ SPECIAL_KNOWN_MODS = {
     "paddle3d",
     "paddlevideo",
 }
-MANUALLY_MANAGED_OPTIONAL_HEAVY_MODS = {"paddle_custom_device", "ultra_infer"}
+MANUALLY_MANAGED_OPTIONAL_HEAVY_MODS = {
+    "paddle_custom_device",
+    "ultra_infer",
+    "fastdeploy",
+    "onnxruntime",
+}
 
 
 def check(file_path):

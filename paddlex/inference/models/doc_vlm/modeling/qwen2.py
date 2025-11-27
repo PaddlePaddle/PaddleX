@@ -26,10 +26,10 @@ from paddle.distributed.fleet.utils import sequence_parallel_utils
 
 from .....utils import logging
 from .....utils.env import get_device_type
-from ...common.vlm import fusion_ops
-from ...common.vlm.activations import ACT2FN
-from ...common.vlm.transformers import PretrainedConfig, PretrainedModel
-from ...common.vlm.transformers.model_outputs import (
+from ...common.transformers import fusion_ops
+from ...common.transformers.activations import ACT2FN
+from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers.model_outputs import (
     BaseModelOutputWithPast,
     CausalLMOutputWithPast,
 )
@@ -929,7 +929,7 @@ class Qwen2PretrainedModel(PretrainedModel):
     @classmethod
     def _get_fuse_or_split_param_mappings(cls, config: Qwen2Config, is_fuse=False):
         # return parameter fuse utils
-        from ...common.vlm.conversion_utils import split_or_fuse_func
+        from ...common.transformers.conversion_utils import split_or_fuse_func
 
         fn = split_or_fuse_func(is_fuse=is_fuse)
 

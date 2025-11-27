@@ -33,9 +33,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir /paddlex
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends software-properties-common \
-    && add-apt-repository -y ppa:deadsnakes/ppa \
+RUN echo 'deb http://archive.ubuntu.com/ubuntu jammy main universe' > /etc/apt/sources.list.d/jammy-temp.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends python3.10 python3.10-venv \
     && python3.10 -m venv /paddlex/py310 \
@@ -48,6 +46,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
+RUN python -m pip install pip==25.2
 
 # Requirement collection
 FROM base AS rc
@@ -101,7 +100,8 @@ RUN --mount=type=bind,source=deploy/hps/server_env/requirements/${DEVICE_TYPE}.t
     python -m pip install --requirement /tmp/requirements.txt --requirement /tmp/hpi_requirements.txt \
     && if [ "${ENV_TYPE}" = 'dev' ]; then \
         python -m pip install --requirement /tmp/dev_requirements.txt; \
-    fi
+    fi \
+    && python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 
 RUN --mount=type=bind,source=.,target=/tmp/PaddleX,rw \
     python -m pip install --no-deps /tmp/PaddleX
