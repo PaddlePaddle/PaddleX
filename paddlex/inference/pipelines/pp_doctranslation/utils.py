@@ -176,6 +176,7 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
     import copy
 
     from bs4 import BeautifulSoup
+    import copy
 
     # If the HTML is short and simple, translate directly
     if (
