@@ -263,6 +263,8 @@ class InstanceSegConfig(DetConfig):
             self["use_gpu"] = True
         elif device_type.lower() == "xpu":
             self["use_xpu"] = True
+        elif device_type.lower() == "metax_gpu":
+            self["use_metax_gpu"] = True
             self["use_gpu"] = False
         elif device_type.lower() == "npu":
             self["use_npu"] = True

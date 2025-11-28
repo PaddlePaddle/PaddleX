@@ -288,6 +288,9 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
         elif device_type.lower() == "npu":
             self["use_npu"] = True
             self["use_gpu"] = False
+        elif device_type.lower() == "metax_gpu":
+            self["use_metax_gpu"] = True
+            self["use_gpu"] = False
         elif device_type.lower() == "mlu":
             self["use_mlu"] = True
             self["use_gpu"] = False

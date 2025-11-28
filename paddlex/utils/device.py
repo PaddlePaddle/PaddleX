@@ -19,13 +19,24 @@ from . import logging
 from .custom_device_list import (
     DCU_WHITELIST,
     GCU_WHITELIST,
+    METAX_GPU_WHITELIST,
     MLU_WHITELIST,
     NPU_BLACKLIST,
     XPU_WHITELIST,
 )
 from .flags import DISABLE_DEV_MODEL_WL
 
-SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu", "iluvatar_gpu"]
+SUPPORTED_DEVICE_TYPE = [
+    "cpu",
+    "gpu",
+    "xpu",
+    "npu",
+    "mlu",
+    "gcu",
+    "dcu",
+    "iluvatar_gpu",
+    "metax_gpu",
+]
 
 
 def constr_device(device_type, device_ids):
@@ -125,6 +136,9 @@ def set_env_for_device_type(device_type):
     if device_type.lower() == "gcu":
         envs = {"FLAGS_use_stride_kernel": "0"}
         _set(envs)
+    if device_type.lower() == "metax_gpu":
+        envs = {"FLAGS_use_stride_kernel": "0"}
+        _set(envs)
 
 
 def check_supported_device_type(device_type, model_name):
@@ -153,6 +167,10 @@ def check_supported_device_type(device_type, model_name):
     elif device_type == "gcu":
         assert model_name in GCU_WHITELIST, (
             f"The GCU device does not yet support `{model_name}` model!" + tips
+        )
+    elif device_type == "metax_gpu":
+        assert model_name in METAX_GPU_WHITELIST, (
+            f"The METAX_GPU device does not yet support `{model_name}` model!" + tips
         )
 
 

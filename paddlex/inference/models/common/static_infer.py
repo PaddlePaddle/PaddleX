@@ -22,13 +22,7 @@ import numpy as np
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps
-from ....utils.device import check_supported_device_type
-from ....utils.flags import (
-    DEBUG,
-    DISABLE_MKLDNN_MODEL_BL,
-    DISABLE_TRT_MODEL_BL,
-    USE_PIR_TRT,
-)
+from ....utils.flags import DEBUG, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import (
     HPIConfig,
@@ -38,10 +32,8 @@ from ...utils.hpi import (
     TensorRTConfig,
     suggest_inference_backend_and_config,
 )
-from ...utils.mkldnn_blocklist import MKLDNN_BLOCKLIST
 from ...utils.model_paths import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption, get_default_run_mode
-from ...utils.trt_blocklist import TRT_BLOCKLIST
 from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 
 CACHE_DIR = ".cache"
@@ -271,13 +263,11 @@ class StaticInfer(metaclass=abc.ABCMeta):
 class PaddleInfer(StaticInfer):
     def __init__(
         self,
-        model_name: str,
         model_dir: Union[str, PathLike],
         model_file_prefix: str,
         option: PaddlePredictorOption,
     ) -> None:
         super().__init__()
-        self._model_name = model_name
         self.model_dir = Path(model_dir)
         self.model_file_prefix = model_file_prefix
         self._option = option
@@ -297,46 +287,6 @@ class PaddleInfer(StaticInfer):
         pred = self.infer(x)
         return pred
 
-    def _check_run_mode(self):
-        # TODO: Check if trt is available
-        # check avaliable for trt
-        if (
-            not DISABLE_TRT_MODEL_BL
-            and self._option.run_mode.startswith("trt")
-            and self._model_name in TRT_BLOCKLIST
-            and self._option.device_type == "gpu"
-        ):
-            logging.warning(
-                f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
-            )
-            self._option.run_mode = "paddle"
-
-        # check avaliable for mkldnn
-        elif (
-            not DISABLE_MKLDNN_MODEL_BL
-            and self._option.run_mode.startswith("mkldnn")
-            and self._model_name in MKLDNN_BLOCKLIST
-            and self._option.device_type == "cpu"
-        ):
-            logging.warning(
-                f"The model({self._model_name}) is not supported to run in MKLDNN mode! Using `paddle` instead!"
-            )
-            self._option.run_mode = "paddle"
-            return "paddle"
-
-        # check avaliable for model
-        if self._model_name == "LaTeX_OCR_rec" and self._option.device_type == "cpu":
-            import cpuinfo
-
-            if (
-                "GenuineIntel" in cpuinfo.get_cpu_info().get("vendor_id_raw", "")
-                and self._option.run_mode != "mkldnn"
-            ):
-                logging.warning(
-                    "Now, the `LaTeX_OCR_rec` model only support `mkldnn` mode when running on Intel CPU devices. So using `mkldnn` instead."
-                )
-            self._option.run_mode = "mkldnn"
-
     def _create(
         self,
     ):
@@ -347,18 +297,30 @@ class PaddleInfer(StaticInfer):
         model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
         if "paddle" not in model_paths:
             raise RuntimeError("No valid PaddlePaddle model found")
-
-        check_supported_device_type(self._option.device_type, self._model_name)
-        self._check_run_mode()
-
         model_file, params_file = model_paths["paddle"]
+
+        if (
+            self._option.model_name == "LaTeX_OCR_rec"
+            and self._option.device_type == "cpu"
+        ):
+            import cpuinfo
+
+            if (
+                "GenuineIntel" in cpuinfo.get_cpu_info().get("vendor_id_raw", "")
+                and self._option.run_mode != "mkldnn"
+            ):
+                logging.warning(
+                    "Now, the `LaTeX_OCR_rec` model only support `mkldnn` mode when running on Intel CPU devices. So using `mkldnn` instead."
+                )
+            self._option.run_mode = "mkldnn"
+            logging.debug("`run_mode` updated to 'mkldnn'")
 
         if self._option.device_type == "cpu" and self._option.device_id is not None:
             self._option.device_id = None
             logging.debug("`device_id` has been set to None")
 
         if (
-            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
+            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0
@@ -366,10 +328,7 @@ class PaddleInfer(StaticInfer):
 
         # for TRT
         if self._option.run_mode.startswith("trt"):
-            assert self._option.device_type.lower() == "gpu", (
-                f"`{self._option.run_mode}` is only available on GPU devices, "
-                f"but got device_type='{self._option.device_type}'."
-            )
+            assert self._option.device_type == "gpu"
             cache_dir = self.model_dir / CACHE_DIR / "paddle"
             config = self._configure_trt(
                 model_file,
@@ -414,6 +373,14 @@ class PaddleInfer(StaticInfer):
                     config.enable_new_executor()
                 config.delete_pass("conv2d_bn_xpu_fuse_pass")
                 config.delete_pass("transfer_layout_pass")
+
+            elif self._option.device_type == "metax_gpu":
+                config.enable_custom_device("metax_gpu", int(self._option.device_id))
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+
             elif self._option.device_type == "mlu":
                 config.enable_custom_device("mlu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
@@ -436,10 +403,7 @@ class PaddleInfer(StaticInfer):
             elif self._option.device_type == "dcu":
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
-                    if self._option.enable_new_ir and self._option.enable_cinn:
-                        config.enable_cinn()
                 config.enable_use_gpu(100, self._option.device_id)
-                config.disable_mkldnn()
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 # XXX: is_compiled_with_rocm() must be True on dcu platform ?
@@ -447,12 +411,6 @@ class PaddleInfer(StaticInfer):
                     # Delete unsupported passes in dcu
                     config.delete_pass("conv2d_add_act_fuse_pass")
                     config.delete_pass("conv2d_add_fuse_pass")
-            elif self._option.device_type == "iluvatar_gpu":
-                config.enable_custom_device("iluvatar_gpu", int(self._option.device_id))
-                if hasattr(config, "enable_new_ir"):
-                    config.enable_new_ir(self._option.enable_new_ir)
-                if hasattr(config, "enable_new_executor"):
-                    config.enable_new_executor()
             else:
                 assert self._option.device_type == "cpu"
                 config.disable_gpu()
@@ -731,16 +689,10 @@ class HPInfer(StaticInfer):
                     trt_dynamic_shape_input_data,
                 )
                 kwargs["trt_dynamic_shape_input_data"] = trt_dynamic_shape_input_data
-        pp_option = PaddlePredictorOption(**kwargs)
-        pp_option.setdefault_by_model_name(model_name=self._config.pdx_model_name)
+        pp_option = PaddlePredictorOption(self._config.pdx_model_name, **kwargs)
         logging.info("Using Paddle Inference backend")
         logging.info("Paddle predictor option: %s", pp_option)
-        return PaddleInfer(
-            self._config.pdx_model_name,
-            self._model_dir,
-            self._model_file_prefix,
-            option=pp_option,
-        )
+        return PaddleInfer(self._model_dir, self._model_file_prefix, option=pp_option)
 
     def _build_ui_runtime(self, backend, backend_config, ui_option=None):
         # TODO: Validate the compatibility of backends with device types
