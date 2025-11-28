@@ -388,110 +388,123 @@ class DocVLMPredictor(BasePredictor):
         min_pixels,
         max_pixels,
     ):
+        import ctypes
+        import platform
+        import gc
+
+        def _force_memory_compact():
+            gc.collect()
+            if platform.system() == "Linux":
+                try:
+                    libc = ctypes.CDLL("libc.so.6")
+                    libc.malloc_trim(0)
+                except Exception:
+                    pass
+
         lock = Lock()
 
         def _process(item):
             image = item["image"]
-            if isinstance(image, str):
-                if image.startswith("http://") or image.startswith("https://"):
-                    image_url = image
+            image_url = None
+            
+            try:
+                if isinstance(image, str):
+                    if image.startswith("http://") or image.startswith("https://"):
+                        image_url = image
+                    else:
+                        from PIL import Image
+                        with Image.open(image) as img:
+                            img = img.convert("RGB")
+                            with io.BytesIO() as buf:
+                                img.save(buf, format="JPEG")
+                                image_url = "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+                
+                elif isinstance(image, np.ndarray):
+                    import cv2
+
+                    success, buffer = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+                    if not success:
+                        raise ValueError("Encode failed")
+
+                    b64_str = base64.b64encode(buffer).decode("ascii")
+                    image_url = f"data:image/jpeg;base64,{b64_str}"
+                    
+                    del buffer
+                    del b64_str
+                
                 else:
-                    from PIL import Image
+                    raise TypeError(f"Not supported image type: {type(image)}")
 
-                    with Image.open(image) as img:
-                        img = img.convert("RGB")
-                        with io.BytesIO() as buf:
-                            img.save(buf, format="JPEG")
-                            image_url = "data:image/jpeg;base64," + base64.b64encode(
-                                buf.getvalue()
-                            ).decode("ascii")
-            elif isinstance(image, np.ndarray):
-                import cv2
-                from PIL import Image
+                del image
+                item["image"] = None 
 
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                img = Image.fromarray(image)
-                with io.BytesIO() as buf:
-                    img.save(buf, format="JPEG")
-                    image_url = "data:image/jpeg;base64," + base64.b64encode(
-                        buf.getvalue()
-                    ).decode("ascii")
-            else:
-                raise TypeError(f"Not supported image type: {type(image)}")
-
-            if self._genai_client.backend == "fastdeploy-server":
-                kwargs = {
-                    "temperature": 1 if temperature is None else temperature,
-                    "top_p": 0 if top_p is None else top_p,
-                }
-            else:
-                kwargs = {
-                    "temperature": 0 if temperature is None else temperature,
-                }
-                if top_p is not None:
-                    kwargs["top_p"] = top_p
-
-            if max_new_tokens is not None:
-                kwargs["max_completion_tokens"] = max_new_tokens
-            elif self.model_name in self.model_group["PaddleOCR-VL"]:
-                kwargs["max_completion_tokens"] = 8192
-
-            kwargs["extra_body"] = {}
-            if skip_special_tokens is not None:
-                if self._genai_client.backend in (
-                    "fastdeploy-server",
-                    "vllm-server",
-                    "sglang-server",
-                ):
-                    kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
+                if self._genai_client.backend == "fastdeploy-server":
+                    kwargs = {
+                        "temperature": 1 if temperature is None else temperature,
+                        "top_p": 0 if top_p is None else top_p,
+                    }
                 else:
-                    raise ValueError("Not supported")
+                    kwargs = {
+                        "temperature": 0 if temperature is None else temperature,
+                    }
+                    if top_p is not None:
+                        kwargs["top_p"] = top_p
 
-            if repetition_penalty is not None:
-                kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
+                if max_new_tokens is not None:
+                    kwargs["max_completion_tokens"] = max_new_tokens
+                elif self.model_name in self.model_group["PaddleOCR-VL"]:
+                    kwargs["max_completion_tokens"] = 8192
 
-            if min_pixels is not None:
-                if self._genai_client.backend == "vllm-server":
-                    kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
-                        "extra_body"
-                    ].get("mm_processor_kwargs", {})
-                    kwargs["extra_body"]["mm_processor_kwargs"][
-                        "min_pixels"
-                    ] = min_pixels
-                else:
-                    warnings.warn(
-                        f"{repr(self._genai_client.backend)} does not support `min_pixels`."
+                kwargs["extra_body"] = {}
+                if skip_special_tokens is not None:
+                    if self._genai_client.backend in (
+                        "fastdeploy-server",
+                        "vllm-server",
+                        "sglang-server",
+                    ):
+                        kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
+                    else:
+                        raise ValueError("Not supported")
+
+                if repetition_penalty is not None:
+                    kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
+
+                if min_pixels is not None:
+                    if self._genai_client.backend == "vllm-server":
+                        kwargs["extra_body"].setdefault("mm_processor_kwargs", {})["min_pixels"] = min_pixels
+                    else:
+                        warnings.warn(f"{repr(self._genai_client.backend)} does not support `min_pixels`.")
+
+                if max_pixels is not None:
+                    if self._genai_client.backend == "vllm-server":
+                        kwargs["extra_body"].setdefault("mm_processor_kwargs", {})["max_pixels"] = max_pixels
+                    else:
+                        warnings.warn(f"{repr(self._genai_client.backend)} does not support `max_pixels`.")
+
+                with lock:
+                    future = self._genai_client.create_chat_completion(
+                        [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {"type": "image_url", "image_url": {"url": image_url}},
+                                    {"type": "text", "text": item["query"]},
+                                ],
+                            }
+                        ],
+                        return_future=True,
+                        timeout=600,
+                        **kwargs,
                     )
-
-            if max_pixels is not None:
-                if self._genai_client.backend == "vllm-server":
-                    kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
-                        "extra_body"
-                    ].get("mm_processor_kwargs", {})
-                    kwargs["extra_body"]["mm_processor_kwargs"][
-                        "max_pixels"
-                    ] = max_pixels
-                else:
-                    warnings.warn(
-                        f"{repr(self._genai_client.backend)} does not support `max_pixels`."
-                    )
-
-            with lock:
-                future = self._genai_client.create_chat_completion(
-                    [
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "image_url", "image_url": {"url": image_url}},
-                                {"type": "text", "text": item["query"]},
-                            ],
-                        }
-                    ],
-                    return_future=True,
-                    timeout=600,
-                    **kwargs,
-                )
-                return future
+                    return future
+            
+            except Exception as e:
+                logging.error(f"Processing error: {e}")
+                raise e
+            finally:
+                if 'image' in locals(): del image
+                if 'buffer' in locals(): del buffer
+                if 'b64_str' in locals(): del b64_str
 
         if len(data) > 1:
             futures = list(self._thread_pool.map(_process, data))
@@ -502,5 +515,7 @@ class DocVLMPredictor(BasePredictor):
         for future in futures:
             result = future.result()
             results.append(result.choices[0].message.content)
+        
+        _force_memory_compact()
 
         return results
