@@ -20,7 +20,7 @@ from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
-from .modules import DBHead, LearnableAffineBlock
+from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
 NET_CONFIG_DET = {
     "blocks2":
@@ -115,7 +115,6 @@ class LearnableRepLayer(nn.Layer):
         lab_lr=0.1,
     ):
         super().__init__()
-        self.is_repped = False
         self.groups = groups
         self.stride = stride
         self.kernel_size = kernel_size
@@ -160,12 +159,6 @@ class LearnableRepLayer(nn.Layer):
         self.act = Act(lr_mult=lr_mult, lab_lr=lab_lr)
 
     def forward(self, x):
-        # for export
-        if self.is_repped:
-            out = self.lab(self.reparam_conv(x))
-            if self.stride != 2:
-                out = self.act(out)
-            return out
 
         out = 0
         if self.identity is not None:
@@ -181,80 +174,6 @@ class LearnableRepLayer(nn.Layer):
         if self.stride != 2:
             out = self.act(out)
         return out
-
-    def rep(self):
-        if self.is_repped:
-            return
-        kernel, bias = self._get_kernel_bias()
-        self.reparam_conv = nn.Conv2D(
-            in_channels=self.in_channels,
-            out_channels=self.out_channels,
-            kernel_size=self.kernel_size,
-            stride=self.stride,
-            padding=self.padding,
-            groups=self.groups,
-        )
-        self.reparam_conv.weight.set_value(kernel)
-        self.reparam_conv.bias.set_value(bias)
-        self.is_repped = True
-
-    def _pad_kernel_1x1_to_kxk(self, kernel1x1, pad):
-        if not isinstance(kernel1x1, paddle.Tensor):
-            return 0
-        else:
-            return nn.functional.pad(kernel1x1, [pad, pad, pad, pad])
-
-    def _get_kernel_bias(self):
-        kernel_conv_1x1, bias_conv_1x1 = self._fuse_bn_tensor(self.conv_1x1)
-        kernel_conv_1x1 = self._pad_kernel_1x1_to_kxk(
-            kernel_conv_1x1, self.kernel_size // 2
-        )
-
-        kernel_identity, bias_identity = self._fuse_bn_tensor(self.identity)
-
-        kernel_conv_kxk = 0
-        bias_conv_kxk = 0
-        for conv in self.conv_kxk:
-            kernel, bias = self._fuse_bn_tensor(conv)
-            kernel_conv_kxk += kernel
-            bias_conv_kxk += bias
-
-        kernel_reparam = kernel_conv_kxk + kernel_conv_1x1 + kernel_identity
-        bias_reparam = bias_conv_kxk + bias_conv_1x1 + bias_identity
-        return kernel_reparam, bias_reparam
-
-    def _fuse_bn_tensor(self, branch):
-        if not branch:
-            return 0, 0
-        elif isinstance(branch, ConvBNLayer):
-            kernel = branch.conv.weight
-            running_mean = branch.bn._mean
-            running_var = branch.bn._variance
-            gamma = branch.bn.weight
-            beta = branch.bn.bias
-            eps = branch.bn._epsilon
-        else:
-            assert isinstance(branch, nn.BatchNorm2D)
-            if not hasattr(self, "id_tensor"):
-                input_dim = self.in_channels // self.groups
-                kernel_value = paddle.zeros(
-                    (self.in_channels, input_dim, self.kernel_size, self.kernel_size),
-                    dtype=branch.weight.dtype,
-                )
-                for i in range(self.in_channels):
-                    kernel_value[
-                        i, i % input_dim, self.kernel_size // 2, self.kernel_size // 2
-                    ] = 1
-                self.id_tensor = kernel_value
-            kernel = self.id_tensor
-            running_mean = branch._mean
-            running_var = branch._variance
-            gamma = branch.weight
-            beta = branch.bias
-            eps = branch._epsilon
-        std = (running_var + eps).sqrt()
-        t = (gamma / std).reshape((-1, 1, 1, 1))
-        return kernel * t, beta - running_mean * gamma / std
 
 
 class SELayer(nn.Layer):

@@ -20,7 +20,7 @@ from paddle.nn.initializer import Constant, KaimingNormal
 from paddle.regularizer import L2Decay
 
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
-from .modules import DBHead, LearnableAffineBlock
+from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
 kaiming_normal_ = KaimingNormal()
 zeros_ = Constant(value=0.0)
