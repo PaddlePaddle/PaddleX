@@ -400,6 +400,7 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
+                config.delete_pass("matmul_add_act_fuse_pass")
             elif self._option.device_type == "npu":
                 config.enable_custom_device("npu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
