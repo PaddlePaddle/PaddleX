@@ -15,7 +15,6 @@ Install PaddlePaddle and PaddleX:
 ```shell
 python -m pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 python -m pip install paddlex
-python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 ```
 > For Windows users, please use WSL or a Docker container.
 
