@@ -238,6 +238,7 @@ class FormulaRecConfig(BaseConfig):
             "Global.use_npu": False,
             "Global.use_mlu": False,
             "Global.use_gcu": False,
+            "Global.use_metax_gpu": False,
         }
 
         device_cfg = {
@@ -247,6 +248,7 @@ class FormulaRecConfig(BaseConfig):
             "mlu": {"Global.use_mlu": True},
             "npu": {"Global.use_npu": True},
             "gcu": {"Global.use_gcu": True},
+            "metax_gpu": {"Global.use_metax_gpu": True},
         }
         default_cfg.update(device_cfg[device])
         self.update(default_cfg)
