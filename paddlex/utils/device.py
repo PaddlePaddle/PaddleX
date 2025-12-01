@@ -19,13 +19,24 @@ from . import logging
 from .custom_device_list import (
     DCU_WHITELIST,
     GCU_WHITELIST,
+    METAX_GPU_WHITELIST,
     MLU_WHITELIST,
     NPU_BLACKLIST,
     XPU_WHITELIST,
 )
 from .flags import DISABLE_DEV_MODEL_WL
 
-SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu", "iluvatar_gpu"]
+SUPPORTED_DEVICE_TYPE = [
+    "cpu",
+    "gpu",
+    "xpu",
+    "npu",
+    "mlu",
+    "gcu",
+    "dcu",
+    "iluvatar_gpu",
+    "metax_gpu",
+]
 
 
 def constr_device(device_type, device_ids):
@@ -116,6 +127,9 @@ def set_env_for_device_type(device_type):
             "XPU_BLACK_LIST": "pad3d",
         }
         _set(envs)
+    if device_type.lower() == "metax_gpu":
+        envs = {"FLAGS_use_stride_kernel": "0"}
+        _set(envs)
     if device_type.lower() == "mlu":
         envs = {
             "FLAGS_use_stride_kernel": "0",
@@ -142,6 +156,11 @@ def check_supported_device_type(device_type, model_name):
         assert model_name in MLU_WHITELIST, (
             f"The MLU device does not yet support `{model_name}` model!" + tips
         )
+    elif device_type == "metax_gpu":
+        assert model_name in METAX_GPU_WHITELIST, (
+            f"The METAX_GPU device does not yet support `{model_name}` model!" + tips
+        )
+
     elif device_type == "npu":
         assert model_name not in NPU_BLACKLIST, (
             f"The NPU device does not yet support `{model_name}` model!" + tips
