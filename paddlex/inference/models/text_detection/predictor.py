@@ -17,9 +17,11 @@ from typing import List, Union
 import numpy as np
 
 from ....modules.text_detection.model_list import MODELS
+from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from ..common import ToBatch, ToCHWImage
 from .processors import DBPostProcess, DetResizeForTest, NormalizeImage
@@ -54,6 +56,15 @@ class TextDetPredictor(BasePredictor):
         self.unclip_ratio = unclip_ratio
         self.input_shape = input_shape
         self.max_side_limit = max_side_limit
+
+        self.device = kwargs.get("device", None)
+        if is_bfloat16_available(self.device):
+            self.dtype = "bfloat16"
+        elif is_float16_available(self.device):
+            self.dtype = "float16"
+        else:
+            self.dtype = "float32"
+
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -80,16 +91,18 @@ class TextDetPredictor(BasePredictor):
             if self.model_name == "PP-OCRv5_mobile_det":
                 from .modeling import PPOCRV5MobileDet
 
-                infer = PPOCRV5MobileDet.from_pretrained(
-                    self.model_dir, use_safetensors=True, convert_from_hf=True
-                )
+                with TemporaryDeviceChanger(self.device):
+                    infer = PPOCRV5MobileDet.from_pretrained(
+                        self.model_dir, use_safetensors=True, convert_from_hf=True
+                    )
                 infer.eval()
             elif self.model_name == "PP-OCRv5_server_det":
                 from .modeling import PPOCRV5ServerDet
 
-                infer = PPOCRV5ServerDet.from_pretrained(
-                    self.model_dir, use_safetensors=True, convert_from_hf=True
-                )
+                with TemporaryDeviceChanger(self.device):
+                    infer = PPOCRV5ServerDet.from_pretrained(
+                        self.model_dir, use_safetensors=True, convert_from_hf=True
+                    )
                 infer.eval()
             else:
                 raise RuntimeError(
@@ -122,7 +135,8 @@ class TextDetPredictor(BasePredictor):
         batch_imgs = self.pre_tfs["Normalize"](imgs=batch_imgs)
         batch_imgs = self.pre_tfs["ToCHW"](imgs=batch_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        with TemporaryDeviceChanger(self.device):
+            batch_preds = self.infer(x=x)
         polys, scores = self.post_op(
             batch_preds,
             batch_shapes,
