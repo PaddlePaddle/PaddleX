@@ -100,7 +100,7 @@ class ClasPredictor(BasePredictor):
             ):
                 with TemporaryDeviceChanger(self.device):
                     infer = PPLCNet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
+                        self.model_dir, use_safetensors=True
                     )
                 infer.eval()
             else:
