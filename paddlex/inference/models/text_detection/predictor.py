@@ -93,7 +93,7 @@ class TextDetPredictor(BasePredictor):
 
                 with TemporaryDeviceChanger(self.device):
                     infer = PPOCRV5MobileDet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
+                        self.model_dir, use_safetensors=True
                     )
                 infer.eval()
             elif self.model_name == "PP-OCRv5_server_det":
@@ -101,7 +101,7 @@ class TextDetPredictor(BasePredictor):
 
                 with TemporaryDeviceChanger(self.device):
                     infer = PPOCRV5ServerDet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
+                        self.model_dir, use_safetensors=True
                     )
                 infer.eval()
             else:
