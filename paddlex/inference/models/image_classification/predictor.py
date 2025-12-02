@@ -17,9 +17,11 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 
 from ....modules.image_classification.model_list import MODELS
+from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
 from .processors import Crop, Topk
@@ -46,6 +48,13 @@ class ClasPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.topk = topk
+        self.device = kwargs.get("device", None)
+        if is_bfloat16_available(self.device):
+            self.dtype = "bfloat16"
+        elif is_float16_available(self.device):
+            self.dtype = "float16"
+        else:
+            self.dtype = "float32"
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
@@ -79,8 +88,26 @@ class ClasPredictor(BasePredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
+        if self._use_static_model:
+            infer = self.create_static_infer()
+        else:
+            from .modeling import PPLCNet
 
+            if (
+                self.model_name == "PP-LCNet_x1_0_doc_ori"
+                or self.model_name == "PP-LCNet_x1_0_table_cls"
+                or self.model_name == "PP-LCNet_x0_25_textline_ori"
+            ):
+                with TemporaryDeviceChanger(self.device):
+                    # infer = PPLCNet.from_pretrained(self.model_dir)
+                    infer = PPLCNet.from_pretrained(
+                        self.model_dir, use_safetensors=True, convert_from_hf=True
+                    )
+                infer.eval()
+            else:
+                raise RuntimeError(
+                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+                )
         postprocessors = {}
         for key in self.config["PostProcess"]:
             func = self._FUNC_MAP.get(key)
@@ -109,7 +136,8 @@ class ClasPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        with TemporaryDeviceChanger(self.device):
+            batch_preds = self.infer(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors["Topk"](
             batch_preds, topk=topk or self.topk
         )
