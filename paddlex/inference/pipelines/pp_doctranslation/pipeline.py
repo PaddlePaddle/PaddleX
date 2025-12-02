@@ -26,9 +26,6 @@ from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-from ..layout_parsing.merge_table import merge_tables_across_pages
-from ..layout_parsing.result_v2 import LayoutParsingResultV2
-from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from .result import DocumentResult, LatexResult, MarkdownResult
 from .utils import (
     split_original_texts,
@@ -620,80 +617,3 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                 "input_path": latex_info_list[0]["input_path"],
             }
         )
-
-    def concatenate_pages(
-        self,
-        res_list: list,
-        title_level: False,
-    ):
-
-        pages = []
-
-        layout_parsing_result = {
-            "input_path": None,
-            "parsing_res_list": [],  # block order 排序
-            "doc_preprocessor_res": [],
-            "layout_det_res": [],
-            "region_det_res": [],
-            "overall_ocr_res": [],
-            "table_res_list": [],
-            "seal_res_list": [],
-            "chart_res_list": [],
-            "formula_res_list": [],
-            "imgs_in_doc": [],
-            "model_settings": None,
-        }
-
-        for single_img_res in res_list:
-
-            # 只要有一个不一样，那就是none
-            # input_path / model_settings 只保留第一份
-            if layout_parsing_result["input_path"] is None:
-                layout_parsing_result["input_path"] = single_img_res.get("input_path")
-
-            if layout_parsing_result["model_settings"] is None:
-                layout_parsing_result["model_settings"] = single_img_res.get(
-                    "model_settings"
-                )
-
-            # 合并成了一个整个
-            layout_parsing_result["parsing_res_list"].extend(
-                list(single_img_res.get("parsing_res_list", []))
-            )
-            pages.append(list(single_img_res.get("parsing_res_list", [])))
-
-            # 处理其他字段
-            for key in [
-                "doc_preprocessor_res",
-                "layout_det_res",
-                "region_det_res",
-                "overall_ocr_res",
-                "table_res_list",
-                "seal_res_list",
-                "chart_res_list",
-                "formula_res_list",
-                "imgs_in_doc",
-            ]:
-                value = single_img_res.get(key, [])
-                if isinstance(value, (list, tuple, set)):
-                    layout_parsing_result[key].extend(list(value))
-                else:
-                    layout_parsing_result[key].append(value)
-
-        layout_parsing_result["parsing_res_list"] = assign_levels_to_parsing_res(
-            layout_parsing_result["parsing_res_list"]
-        )
-
-        layout_parsing_result["parsing_res_list"] = merge_tables_across_pages(pages)
-
-        layout_parsing_result["page_index"] = None
-
-        if isinstance(layout_parsing_result["doc_preprocessor_res"], list):
-            if len(layout_parsing_result["doc_preprocessor_res"]) > 0:
-                layout_parsing_result["doc_preprocessor_res"] = layout_parsing_result[
-                    "doc_preprocessor_res"
-                ][0]
-            else:
-                layout_parsing_result["doc_preprocessor_res"] = None
-
-        return LayoutParsingResultV2(layout_parsing_result)
