@@ -99,7 +99,6 @@ class ClasPredictor(BasePredictor):
                 or self.model_name == "PP-LCNet_x0_25_textline_ori"
             ):
                 with TemporaryDeviceChanger(self.device):
-                    # infer = PPLCNet.from_pretrained(self.model_dir)
                     infer = PPLCNet.from_pretrained(
                         self.model_dir, use_safetensors=True, convert_from_hf=True
                     )
