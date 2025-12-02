@@ -132,6 +132,8 @@ class DocVLMPredictor(BasePredictor):
                     self.model_dir,
                     dtype=self.dtype,
                     pad_token_id=processor.tokenizer.eos_token_id,
+                    use_safetensors=True,
+                    convert_from_hf=True,
                 )
         elif self.model_name in self.model_group["PP-DocBee2"]:
             if kwargs.get("use_hpip", False):
