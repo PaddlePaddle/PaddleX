@@ -37,7 +37,7 @@ from ..layout_parsing.result_v2 import (
     simplify_table_func,
 )
 
-VISUALIZE_INDEX_LABELS = [
+VISUALIZE_ORDE_LABELS = [
     "text",
     "formula",
     "inline_formula",
@@ -51,13 +51,20 @@ VISUALIZE_INDEX_LABELS = [
     "doc_title",
     "vertical_text",
     "ocr",
+    "number",
+    "footnote",
+    "header",
+    "header_image",
+    "footer",
+    "footer_image",
+    "aside_text",
 ]
 
 
 class PaddleOCRVLBlock(object):
     """PaddleOCRVL Block Class"""
 
-    def __init__(self, label, bbox, content="") -> None:
+    def __init__(self, label, bbox, content="", group_id=None) -> None:
         """
         Initialize a PaddleOCRVLBlock object.
 
@@ -70,6 +77,7 @@ class PaddleOCRVLBlock(object):
         self.bbox = list(map(int, bbox))
         self.content = content
         self.image = None
+        self.group_id = group_id
 
     def __str__(self) -> str:
         """
@@ -208,6 +216,13 @@ def build_handle_funcs_dict(
         ),
         "algorithm": lambda block: block.content.strip("\n"),
         "seal": seal_func,
+        "number": format_text_plain_func,
+        "footnote": format_text_plain_func,
+        "header": format_text_plain_func,
+        "header_image": format_image_plain_func,
+        "footer": format_text_plain_func,
+        "footer_image": format_image_plain_func,
+        "aside_text": format_text_plain_func,
     }
 
 
@@ -228,6 +243,14 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
+        markdown_ignore_labels = self["model_settings"].get(
+            "markdown_ignore_labels", []
+        )
+        self.visualize_order_labels = [
+            label
+            for label in VISUALIZE_ORDE_LABELS
+            if label not in markdown_ignore_labels
+        ]
 
     def _to_img(self) -> dict[str, np.ndarray]:
         """
@@ -252,13 +275,14 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         font_size = int(0.018 * int(image.width)) + 2
         font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
         parsing_result = self["parsing_res_list"]
+
         order_index = 0
         for block in parsing_result:
             bbox = block.bbox
             label = block.label
             fill_color = get_show_color(label, False)
             draw.rectangle(bbox, fill=fill_color)
-            if label in VISUALIZE_INDEX_LABELS:
+            if label in self.visualize_order_labels:
                 text_position = (bbox[2] + 2, bbox[1] - font_size // 2)
                 if int(image.width) - bbox[2] < font_size:
                     text_position = (
@@ -318,6 +342,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
+        data["page_count"] = self["page_count"]
+        data["width"] = self["width"]
+        data["height"] = self["height"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         if self["model_settings"]["use_doc_preprocessor"]:
@@ -350,6 +377,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
+        data["page_count"] = self["page_count"]
+        data["width"] = self["width"]
+        data["height"] = self["height"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         if self["model_settings"].get("format_block_content", False):
@@ -382,13 +412,15 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 formula_func=format_formula_func,
                 seal_func=format_seal_func,
             )
+            for label in self["model_settings"].get("markdown_ignore_labels", []):
+                handle_funcs_dict.pop(label, None)
 
         parsing_res_list = self["parsing_res_list"]
         parsing_res_list_json = []
         order_index = 1
         for idx, parsing_res in enumerate(parsing_res_list):
             label = parsing_res.label
-            if label in VISUALIZE_INDEX_LABELS:
+            if label in self.visualize_order_labels:
                 order = order_index
                 order_index += 1
             else:
@@ -399,6 +431,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "block_bbox": parsing_res.bbox,
                 "block_id": idx,
                 "block_order": order,
+                "group_id": (
+                    parsing_res.group_id if parsing_res.group_id is not None else idx
+                ),
             }
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
@@ -465,6 +500,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             formula_func=format_formula_func,
             seal_func=format_seal_func,
         )
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
 
         markdown_content = ""
         markdown_info = {}
