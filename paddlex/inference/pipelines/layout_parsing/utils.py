@@ -609,7 +609,7 @@ def convert_formula_res_to_ocr_format(formula_res_list: List, ocr_res: dict):
         formula_res_text: str = formula_res["rec_formula"]
         ocr_res["rec_texts"].append(formula_res_text)
         if ocr_res["rec_boxes"].size == 0:
-            ocr_res["rec_boxes"] = np.array(formula_res["dt_polys"])
+            ocr_res["rec_boxes"] = np.array([formula_res["dt_polys"]])
         else:
             ocr_res["rec_boxes"] = np.vstack(
                 (ocr_res["rec_boxes"], [formula_res["dt_polys"]])
