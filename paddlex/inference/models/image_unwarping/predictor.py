@@ -20,7 +20,6 @@ from ....modules.image_unwarping.model_list import MODELS
 from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from ..common import Normalize, ToBatch, ToCHWImage
 from .processors import DocTrPostProcess
@@ -41,12 +40,6 @@ class WarpPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.device = kwargs.get("device", None)
-        if is_bfloat16_available(self.device):
-            self.dtype = "bfloat16"
-        elif is_float16_available(self.device):
-            self.dtype = "float16"
-        else:
-            self.dtype = "float32"
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
