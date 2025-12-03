@@ -21,7 +21,6 @@ from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
 from .processors import Crop, Topk
@@ -49,12 +48,6 @@ class ClasPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
         self.topk = topk
         self.device = kwargs.get("device", None)
-        if is_bfloat16_available(self.device):
-            self.dtype = "bfloat16"
-        elif is_float16_available(self.device):
-            self.dtype = "float16"
-        else:
-            self.dtype = "float32"
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
