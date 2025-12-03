@@ -406,6 +406,9 @@ PIR_TRT_CFG_SETTING = {
     "PP-YOLOE_plus-M": {
         "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
     },
+    "RT-DETR-X": {
+        "disable_ops": ["pd_op.flip"],
+    },
 }
 
 
