@@ -340,28 +340,6 @@ class UVDocnet(PretrainedModel):
             ),
         )
 
-        self.out_point_positions3D = nn.Sequential(
-            nn.Conv2D(
-                in_channels=self.num_filter * map_num[2],
-                out_channels=self.num_filter * map_num[0],
-                bias_attr=False,
-                kernel_size=self.kernel_size,
-                stride=1,
-                padding=self.kernel_size // 2,
-                padding_mode="reflect",
-            ),
-            BatchNorm(self.num_filter * map_num[0]),
-            nn.PReLU(),
-            nn.Conv2D(
-                in_channels=self.num_filter * map_num[0],
-                out_channels=3,
-                kernel_size=self.kernel_size,
-                stride=1,
-                padding=self.kernel_size // 2,
-                padding_mode="reflect",
-            ),
-        )
-
     def forward(self, x):
         x = paddle.to_tensor(x[0])
 
@@ -384,7 +362,6 @@ class UVDocnet(PretrainedModel):
         bridge = self.bridge_concat(bridge_concat)
         out_point_positions2D = self.out_point_positions2D(bridge)
 
-        # out_point_positions2D=unsqueeze(point_positions2D[0], axis=0)
         bm_up = F.upsample(
             out_point_positions2D,
             size=(h_ori, w_ori),
