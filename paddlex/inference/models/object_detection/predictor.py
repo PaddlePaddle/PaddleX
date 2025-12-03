@@ -143,7 +143,14 @@ class DetPredictor(BasePredictor):
         if self._use_static_model:
             infer = self.create_static_infer()
         else:
-            if self.model_name not in []:
+            if self.model_name == "RT-DETR-L":
+                from .modeling import RTDETRL
+
+                infer = RTDETRL.from_pretrained(
+                    self.model_dir, use_safetensors=True, convert_from_hf=True
+                )
+                infer.eval()
+            else:
                 raise RuntimeError(
                     f"There is no dynamic graph implementation for model {repr(self.model_name)}."
                 )
