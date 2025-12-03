@@ -21,7 +21,6 @@ from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...utils.misc import is_bfloat16_available, is_float16_available
 from ..base import BasePredictor
 from ..common import ToBatch, ToCHWImage
 from .processors import DBPostProcess, DetResizeForTest, NormalizeImage
@@ -58,12 +57,6 @@ class TextDetPredictor(BasePredictor):
         self.max_side_limit = max_side_limit
 
         self.device = kwargs.get("device", None)
-        if is_bfloat16_available(self.device):
-            self.dtype = "bfloat16"
-        elif is_float16_available(self.device):
-            self.dtype = "float16"
-        else:
-            self.dtype = "float32"
 
         self.pre_tfs, self.infer, self.post_op = self._build()
 
