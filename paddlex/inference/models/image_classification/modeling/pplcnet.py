@@ -243,23 +243,14 @@ class PPLCNet(PretrainedModel):
             "PP-LCNet_x0_25_textline_ori": [2, [2, 1], [2, 1], [2, 1], [2, 1]],
         }
 
-        scale = scale_mapping.get(model_name, 1.0)
-        class_num = class_num_mapping.get(model_name, 4)
-        dropout_prob = 0.2
-        class_expand = 1280
-        lr_mult_list = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-        stride_list = stride_list_mapping.get(model_name, [2, 2, 2, 2, 2])
-        use_last_conv = True
-        act = "hardswish"
-
-        self.scale = scale
-        self.class_num = class_num
-        self.dropout_prob = dropout_prob
-        self.class_expand = class_expand
-        self.lr_mult_list = lr_mult_list
-        self.stride_list = stride_list
-        self.use_last_conv = use_last_conv
-        self.act = act
+        self.scale = scale_mapping.get(model_name, 1.0)
+        self.class_num = class_num_mapping.get(model_name, 4)
+        self.dropout_prob = 0.2
+        self.class_expand = 1280
+        self.lr_mult_list = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        self.stride_list = stride_list_mapping.get(model_name, [2, 2, 2, 2, 2])
+        self.use_last_conv = True
+        self.act = "hardswish"
 
         self.net_config = NET_CONFIG
 
@@ -284,27 +275,27 @@ class PPLCNet(PretrainedModel):
             len(self.stride_list) == 5
         ), "stride_list length should be 5 but got {}".format(len(self.stride_list))
 
-        for i, stride in enumerate(stride_list[1:]):
+        for i, stride in enumerate(self.stride_list[1:]):
             self.net_config["blocks{}".format(i + 3)][0][3] = stride
         self.conv1 = ConvBNLayer(
             num_channels=3,
             filter_size=3,
-            num_filters=make_divisible(16 * scale),
-            stride=stride_list[0],
+            num_filters=make_divisible(16 * self.scale),
+            stride=self.stride_list[0],
             lr_mult=self.lr_mult_list[0],
-            act=act,
+            act=self.act,
         )
 
         self.blocks2 = nn.Sequential(
             *[
                 DepthwiseSeparable(
-                    num_channels=make_divisible(in_c * scale),
-                    num_filters=make_divisible(out_c * scale),
+                    num_channels=make_divisible(in_c * self.scale),
+                    num_filters=make_divisible(out_c * self.scale),
                     dw_size=k,
                     stride=s,
                     use_se=se,
                     lr_mult=self.lr_mult_list[1],
-                    act=act,
+                    act=self.act,
                 )
                 for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks2"])
             ]
@@ -313,13 +304,13 @@ class PPLCNet(PretrainedModel):
         self.blocks3 = nn.Sequential(
             *[
                 DepthwiseSeparable(
-                    num_channels=make_divisible(in_c * scale),
-                    num_filters=make_divisible(out_c * scale),
+                    num_channels=make_divisible(in_c * self.scale),
+                    num_filters=make_divisible(out_c * self.scale),
                     dw_size=k,
                     stride=s,
                     use_se=se,
                     lr_mult=self.lr_mult_list[2],
-                    act=act,
+                    act=self.act,
                 )
                 for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks3"])
             ]
@@ -328,13 +319,13 @@ class PPLCNet(PretrainedModel):
         self.blocks4 = nn.Sequential(
             *[
                 DepthwiseSeparable(
-                    num_channels=make_divisible(in_c * scale),
-                    num_filters=make_divisible(out_c * scale),
+                    num_channels=make_divisible(in_c * self.scale),
+                    num_filters=make_divisible(out_c * self.scale),
                     dw_size=k,
                     stride=s,
                     use_se=se,
                     lr_mult=self.lr_mult_list[3],
-                    act=act,
+                    act=self.act,
                 )
                 for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks4"])
             ]
@@ -343,13 +334,13 @@ class PPLCNet(PretrainedModel):
         self.blocks5 = nn.Sequential(
             *[
                 DepthwiseSeparable(
-                    num_channels=make_divisible(in_c * scale),
-                    num_filters=make_divisible(out_c * scale),
+                    num_channels=make_divisible(in_c * self.scale),
+                    num_filters=make_divisible(out_c * self.scale),
                     dw_size=k,
                     stride=s,
                     use_se=se,
                     lr_mult=self.lr_mult_list[4],
-                    act=act,
+                    act=self.act,
                 )
                 for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks5"])
             ]
@@ -358,13 +349,13 @@ class PPLCNet(PretrainedModel):
         self.blocks6 = nn.Sequential(
             *[
                 DepthwiseSeparable(
-                    num_channels=make_divisible(in_c * scale),
-                    num_filters=make_divisible(out_c * scale),
+                    num_channels=make_divisible(in_c * self.scale),
+                    num_filters=make_divisible(out_c * self.scale),
                     dw_size=k,
                     stride=s,
                     use_se=se,
                     lr_mult=self.lr_mult_list[5],
-                    act=act,
+                    act=self.act,
                 )
                 for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks6"])
             ]
@@ -373,15 +364,17 @@ class PPLCNet(PretrainedModel):
         self.avg_pool = AdaptiveAvgPool2D(1)
         if self.use_last_conv:
             self.last_conv = Conv2D(
-                in_channels=make_divisible(self.net_config["blocks6"][-1][2] * scale),
+                in_channels=make_divisible(
+                    self.net_config["blocks6"][-1][2] * self.scale
+                ),
                 out_channels=self.class_expand,
                 kernel_size=1,
                 stride=1,
                 padding=0,
                 bias_attr=False,
             )
-            self.act = _create_act(act)
-            self.dropout = Dropout(p=dropout_prob, mode="downscale_in_infer")
+            self.act = _create_act(self.act)
+            self.dropout = Dropout(p=self.dropout_prob, mode="downscale_in_infer")
         else:
             self.last_conv = None
         self.flatten = nn.Flatten(start_axis=1, stop_axis=-1)
@@ -389,9 +382,9 @@ class PPLCNet(PretrainedModel):
             (
                 self.class_expand
                 if self.use_last_conv
-                else make_divisible(self.net_config["blocks6"][-1][2] * scale)
+                else make_divisible(self.net_config["blocks6"][-1][2] * self.scale)
             ),
-            class_num,
+            self.class_num,
         )
         self.out_act = nn.Softmax(axis=-1)
 
