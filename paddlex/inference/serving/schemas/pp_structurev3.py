@@ -62,6 +62,7 @@ class InferRequest(ocr.BaseInferRequest):
     useOcrResultsWithTableCells: bool = True
     useE2eWiredTableRecModel: bool = False
     useE2eWirelessTableRecModel: bool = True
+    markdownIgnoreLabels: Optional[List[str]] = None
     visualize: Optional[bool] = None
 
 

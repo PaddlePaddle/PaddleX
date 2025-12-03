@@ -68,6 +68,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             top_p=request.topP,
             min_pixels=request.minPixels,
             max_pixels=request.maxPixels,
+            max_new_tokens=request.maxNewTokens,
+            merge_layout_blocks=request.mergeLayoutBlocks,
+            markdown_ignore_labels=request.markdownIgnoreLabels,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []

@@ -1331,6 +1331,24 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>maxNewTokens</code></td>
+<td><code>number</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>max_new_tokens</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mergeLayoutBlocks</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>merge_layout_blocks</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>markdown_ignore_labels</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>prettifyMarkdown</code></td>
 <td><code>boolean</code></td>
 <td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
