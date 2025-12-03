@@ -385,6 +385,8 @@ class UVDocnet(PretrainedModel):
                 new_key = old_key.replace("_mean", "running_mean")
             elif "_variance" in old_key:
                 new_key = old_key.replace("_variance", "running_var")
+            elif "out_point_positions2D.2._weight" in old_key:
+                new_key = old_key.replace("_weight", "weight")
             else:
                 new_key = old_key
             hf_state_dict[new_key] = value
@@ -399,6 +401,8 @@ class UVDocnet(PretrainedModel):
                 key_mapping[old_key] = old_key.replace("running_mean", "_mean")
             elif "running_var" in old_key:
                 key_mapping[old_key] = old_key.replace("running_var", "_variance")
+            elif "out_point_positions2D.2.weight" in old_key:
+                key_mapping[old_key] = old_key.replace("weight", "_weight")
 
         for old_key, new_key in key_mapping.items():
             state_dict[new_key] = state_dict.pop(old_key)
