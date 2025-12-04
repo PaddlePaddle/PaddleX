@@ -16,7 +16,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle import ParamAttr
-from paddle.nn import BatchNorm2D, Conv2D, Dropout, Linear
 from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
@@ -115,7 +114,7 @@ class ConvBNLayer(nn.Layer):
     ):
         super().__init__()
 
-        self.conv = Conv2D(
+        self.conv = nn.Conv2D(
             in_channels=num_channels,
             out_channels=num_filters,
             kernel_size=filter_size,
@@ -126,7 +125,7 @@ class ConvBNLayer(nn.Layer):
             bias_attr=False,
         )
 
-        self.bn = BatchNorm2D(
+        self.bn = nn.BatchNorm2D(
             num_filters,
             weight_attr=ParamAttr(regularizer=L2Decay(0.0), learning_rate=lr_mult),
             bias_attr=ParamAttr(regularizer=L2Decay(0.0), learning_rate=lr_mult),
@@ -185,7 +184,7 @@ class SEModule(nn.Layer):
     def __init__(self, channel, reduction=4, lr_mult=1.0):
         super().__init__()
         self.avg_pool = AdaptiveAvgPool2D(1)
-        self.conv1 = Conv2D(
+        self.conv1 = nn.Conv2D(
             in_channels=channel,
             out_channels=channel // reduction,
             kernel_size=1,
@@ -195,7 +194,7 @@ class SEModule(nn.Layer):
             bias_attr=ParamAttr(learning_rate=lr_mult),
         )
         self.relu = nn.ReLU()
-        self.conv2 = Conv2D(
+        self.conv2 = nn.Conv2D(
             in_channels=channel // reduction,
             out_channels=channel,
             kernel_size=1,
@@ -363,7 +362,7 @@ class PPLCNet(PretrainedModel):
 
         self.avg_pool = AdaptiveAvgPool2D(1)
         if self.use_last_conv:
-            self.last_conv = Conv2D(
+            self.last_conv = nn.Conv2D(
                 in_channels=make_divisible(
                     self.net_config["blocks6"][-1][2] * self.scale
                 ),
@@ -374,11 +373,11 @@ class PPLCNet(PretrainedModel):
                 bias_attr=False,
             )
             self.act = _create_act(self.act)
-            self.dropout = Dropout(p=self.dropout_prob, mode="downscale_in_infer")
+            self.dropout = nn.Dropout(p=self.dropout_prob, mode="downscale_in_infer")
         else:
             self.last_conv = None
         self.flatten = nn.Flatten(start_axis=1, stop_axis=-1)
-        self.fc = Linear(
+        self.fc = nn.Linear(
             (
                 self.class_expand
                 if self.use_last_conv
