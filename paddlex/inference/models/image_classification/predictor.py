@@ -86,16 +86,17 @@ class ClasPredictor(BasePredictor):
         else:
             from .modeling import PPLCNet
 
-            if (
-                self.model_name == "PP-LCNet_x1_0_doc_ori"
-                or self.model_name == "PP-LCNet_x1_0_table_cls"
-                or self.model_name == "PP-LCNet_x0_25_textline_ori"
-            ):
+            if self.model_name in [
+                "PP-LCNet_x1_0_doc_ori",
+                "PP-LCNet_x1_0_table_cls",
+                "PP-LCNet_x0_25_textline_ori",
+            ]:
                 with TemporaryDeviceChanger(self.device):
                     infer = PPLCNet.from_pretrained(
                         self.model_dir, use_safetensors=True, convert_from_hf=True
                     )
                 infer.eval()
+
             else:
                 raise RuntimeError(
                     f"There is no dynamic graph implementation for model {repr(self.model_name)}."

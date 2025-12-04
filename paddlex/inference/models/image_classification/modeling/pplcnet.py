@@ -221,35 +221,16 @@ class PPLCNet(PretrainedModel):
 
     def __init__(self, config: PretrainedConfig):
         super().__init__(config)
+
         config_dict = config.to_dict()
-        model_name = config_dict["Global"]["model_name"]
-
-        scale_mapping = {
-            "PP-LCNet_x1_0_doc_ori": 1.0,
-            "PP-LCNet_x1_0_table_cls": 1.0,
-            "PP-LCNet_x0_25_textline_ori": 0.25,
-        }
-
-        class_num_mapping = {
-            "PP-LCNet_x1_0_doc_ori": 4,
-            "PP-LCNet_x1_0_table_cls": 2,
-            "PP-LCNet_x0_25_textline_ori": 2,
-        }
-
-        stride_list_mapping = {
-            "PP-LCNet_x1_0_doc_ori": [2, 2, 2, 2, 2],
-            "PP-LCNet_x1_0_table_cls": [2, 2, 2, 2, 2],
-            "PP-LCNet_x0_25_textline_ori": [2, [2, 1], [2, 1], [2, 1], [2, 1]],
-        }
-
-        self.scale = scale_mapping.get(model_name, 1.0)
-        self.class_num = class_num_mapping.get(model_name, 4)
-        self.dropout_prob = 0.2
-        self.class_expand = 1280
-        self.lr_mult_list = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-        self.stride_list = stride_list_mapping.get(model_name, [2, 2, 2, 2, 2])
-        self.use_last_conv = True
-        self.act = "hardswish"
+        self.scale = config["Global"]["scale"]
+        self.class_num = config["Global"]["num_classes"]
+        self.dropout_prob = config["Global"]["dropout_prob"]
+        self.class_expand = config["Global"]["class_expand"]
+        self.stride_list = config["Global"]["stride_list"]
+        self.use_last_conv = config["Global"]["use_last_conv"]
+        self.act = config["Global"]["act"]
+        self.lr_mult_list = config["Global"]["lr_mult_list"]
 
         self.net_config = NET_CONFIG
 
@@ -400,6 +381,7 @@ class PPLCNet(PretrainedModel):
         x = self.blocks6(x)
 
         x = self.avg_pool(x)
+
         if self.last_conv is not None:
             x = self.last_conv(x)
             x = self.act(x)
