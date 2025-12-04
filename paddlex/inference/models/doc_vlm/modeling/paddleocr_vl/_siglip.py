@@ -140,7 +140,7 @@ class SiglipAttention(nn.Layer):
 
         cap = get_gpu_compute_capability()
         self._supports_sdpa = cap >= (8, 0) if cap is not None else False
-        if paddle.device.get_device().startswith('iluvatar_gpu'):
+        if paddle.get_device().startswith('iluvatar_gpu'):
             self._supports_sdpa = True
 
     def forward(
