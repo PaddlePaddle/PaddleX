@@ -322,6 +322,9 @@ ALL_MODELS = [
     "ta_PP-OCRv5_mobile_rec",
     "devanagari_PP-OCRv5_mobile_rec",
     "cyrillic_PP-OCRv5_mobile_rec",
+    "G2PWModel",
+    "fastspeech2_csmsc",
+    "pwgan_csmsc",
 ]
 
 

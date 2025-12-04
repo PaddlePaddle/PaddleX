@@ -4,4 +4,5 @@ numpy >= 1.24
 opencv-contrib-python == 4.10.0.84
 pycocotools >= 2
 pydantic >= 2
+safetensors @ https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 typing-extensions >= 4.11

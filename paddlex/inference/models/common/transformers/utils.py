@@ -106,4 +106,6 @@ def get_env_device():
         return "rocm"
     elif paddle.is_compiled_with_xpu():
         return "xpu"
+    elif paddle.is_compiled_with_maca():
+        return "metax_gpu"
     return "cpu"

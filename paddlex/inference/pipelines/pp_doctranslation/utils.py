@@ -173,8 +173,9 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
     Returns:
         None
     """
-    from bs4 import BeautifulSoup
     import copy
+
+    from bs4 import BeautifulSoup
 
     # If the HTML is short and simple, translate directly
     if (
@@ -203,7 +204,7 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
                 td_batch_nodes.append(parent_td)
                 td_batch_texts.append(td_text)
             td_seen.add(id(parent_td))
-            
+
     # Process <td>/<th> nodes in batches
     batch_size = chunk_size
     i = 0
@@ -212,12 +213,15 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         batch_nodes = []
         batch_texts = []
         current_length = 0
-        while i < len(td_batch_nodes) and current_length + len(td_batch_texts[i]) <= batch_size:
+        while (
+            i < len(td_batch_nodes)
+            and current_length + len(td_batch_texts[i]) <= batch_size
+        ):
             batch_nodes.append(td_batch_nodes[i])
             batch_texts.append(td_batch_texts[i])
             current_length += len(td_batch_texts[i])
             i += 1
-        
+
         # Translate the batch and reinsert translated content
         placeholder = "__TD__"
         batch_text = placeholder.join(batch_texts)
@@ -229,7 +233,6 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
             frag = BeautifulSoup(line, "html.parser")
             for child in frag.contents:
                 td_node.append(copy.deepcopy(child))
-
 
     text_nodes = []
     for node in soup.find_all(string=True, recursive=True):
@@ -245,7 +248,9 @@ def translate_html_block(html_block, chunk_size, translate_func, results):
         while idx < total:
             node_text = text_nodes[idx].strip()
             if len(node_text) > chunk_size:
-                translated_text = split_text_recursive(node_text, chunk_size, translate_func)
+                translated_text = split_text_recursive(
+                    node_text, chunk_size, translate_func
+                )
                 text_nodes[idx].replace_with(translated_text)
                 idx += 1
                 continue

@@ -943,8 +943,6 @@ class ChatTemplateMixin:
             raise ValueError("Receive error chat_template data: ", chat_template)
 
     def save_resources(self, save_directory):
-        super().save_resources(save_directory)
-
         if isinstance(
             self.chat_template, ChatTemplate
         ):  # Future remove if ChatTemplate is deprecated

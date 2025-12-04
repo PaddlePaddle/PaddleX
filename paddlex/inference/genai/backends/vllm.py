@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....utils import logging
 from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
 from ..configs.utils import (
     backend_config_to_args,
@@ -60,6 +61,16 @@ def run_vllm_server(host, port, model_name, model_dir, config, chat_template_pat
             "port": port,
         },
     )
+
+    import torch
+
+    if torch.version.hip is not None and torch.version.cuda is None:
+        # For DCU
+        if "api-server-count" in config:
+            logging.warning(
+                "Key 'api-server-count' will be popped as it is not supported"
+            )
+            config.pop("api-server-count")
 
     args = backend_config_to_args(config)
     args = parser.parse_args(args)

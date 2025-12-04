@@ -24,6 +24,7 @@ from .readers import (
     YAMLReader,
 )
 from .writers import (
+    AudioWriter,
     CSVWriter,
     HtmlWriter,
     ImageWriter,

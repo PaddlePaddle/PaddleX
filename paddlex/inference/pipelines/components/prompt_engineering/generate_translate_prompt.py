@@ -167,7 +167,7 @@ class GenerateTranslatePrompt(BaseGeneratePrompt):
 
         after_rule = "9. 请在翻译完成后添加特殊标记 <<END>>，确保翻译完整。"
         prompt = f"""{task_description}{rules_str}{after_rule}{output_format}{few_shot_demo_text_content}{few_shot_demo_key_value_list}"""
-        
+
         language_name = language_map.get(language, language)
         task_type = self.task_type
         if task_type == "translate_prompt":
