@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .RT_DETR_L import RTDETRL
+from .rt_detr import RTDETR

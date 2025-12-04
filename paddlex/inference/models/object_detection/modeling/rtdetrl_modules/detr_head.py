@@ -1,10 +1,10 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,8 +22,7 @@ import pycocotools.mask as mask_util
 from .modules.detr_ops import inverse_sigmoid
 from .modules.initializer import constant_, linear_init_
 
-
-__all__ = ['DETRHead', 'DeformableDETRHead', 'DINOHead', 'MaskDINOHead']
+__all__ = ["DETRHead", "DeformableDETRHead", "DINOHead", "MaskDINOHead"]
 
 
 def get_activation(name="LeakyReLU"):
@@ -31,7 +30,7 @@ def get_activation(name="LeakyReLU"):
         module = nn.Silu()
     elif name == "relu":
         module = nn.ReLU()
-    elif name in ["LeakyReLU", 'leakyrelu', 'lrelu']:
+    elif name in ["LeakyReLU", "leakyrelu", "lrelu"]:
         module = nn.LeakyReLU(0.1)
     elif name is None:
         module = nn.Identity()
@@ -42,15 +41,16 @@ def get_activation(name="LeakyReLU"):
 
 class MLP(nn.Layer):
     """This code is based on
-        https://github.com/facebookresearch/detr/blob/main/models/detr.py
+    https://github.com/facebookresearch/detr/blob/main/models/detr.py
     """
 
-    def __init__(self, input_dim, hidden_dim, output_dim, num_layers, act='relu'):
+    def __init__(self, input_dim, hidden_dim, output_dim, num_layers, act="relu"):
         super().__init__()
         self.num_layers = num_layers
         h = [hidden_dim] * (num_layers - 1)
         self.layers = nn.LayerList(
-            nn.Linear(n, k) for n, k in zip([input_dim] + h, h + [output_dim]))
+            nn.Linear(n, k) for n, k in zip([input_dim] + h, h + [output_dim])
+        )
         self.act = get_activation(act)
         self._reset_parameters()
 
@@ -66,45 +66,54 @@ class MLP(nn.Layer):
 
 class MultiHeadAttentionMap(nn.Layer):
     """This code is based on
-        https://github.com/facebookresearch/detr/blob/main/models/segmentation.py
+    https://github.com/facebookresearch/detr/blob/main/models/segmentation.py
 
-        This is a 2D attention module, which only returns the attention softmax (no multiplication by value)
+    This is a 2D attention module, which only returns the attention softmax (no multiplication by value)
     """
 
-    def __init__(self, query_dim, hidden_dim, num_heads, dropout=0.0,
-                 bias=True):
+    def __init__(self, query_dim, hidden_dim, num_heads, dropout=0.0, bias=True):
         super().__init__()
         self.num_heads = num_heads
         self.hidden_dim = hidden_dim
         self.dropout = nn.Dropout(dropout)
 
         weight_attr = paddle.ParamAttr(
-            initializer=paddle.nn.initializer.XavierUniform())
-        bias_attr = paddle.framework.ParamAttr(
-            initializer=paddle.nn.initializer.Constant()) if bias else False
+            initializer=paddle.nn.initializer.XavierUniform()
+        )
+        bias_attr = (
+            paddle.framework.ParamAttr(initializer=paddle.nn.initializer.Constant())
+            if bias
+            else False
+        )
 
         self.q_proj = nn.Linear(query_dim, hidden_dim, weight_attr, bias_attr)
         self.k_proj = nn.Conv2D(
-            query_dim,
-            hidden_dim,
-            1,
-            weight_attr=weight_attr,
-            bias_attr=bias_attr)
+            query_dim, hidden_dim, 1, weight_attr=weight_attr, bias_attr=bias_attr
+        )
 
-        self.normalize_fact = float(hidden_dim / self.num_heads)**-0.5
+        self.normalize_fact = float(hidden_dim / self.num_heads) ** -0.5
 
     def forward(self, q, k, mask=None):
         q = self.q_proj(q)
         k = self.k_proj(k)
-        bs, num_queries, n, c, h, w = q.shape[0], q.shape[1], self.num_heads,\
-                                      self.hidden_dim // self.num_heads, k.shape[-2], k.shape[-1]
+        bs, num_queries, n, c, h, w = (
+            q.shape[0],
+            q.shape[1],
+            self.num_heads,
+            self.hidden_dim // self.num_heads,
+            k.shape[-2],
+            k.shape[-1],
+        )
         qh = q.reshape([bs, num_queries, n, c])
         kh = k.reshape([bs, n, c, h, w])
         # weights = paddle.einsum("bqnc,bnchw->bqnhw", qh * self.normalize_fact, kh)
         qh = qh.transpose([0, 2, 1, 3]).reshape([-1, num_queries, c])
         kh = kh.reshape([-1, c, h * w])
-        weights = paddle.bmm(qh * self.normalize_fact, kh).reshape(
-            [bs, n, num_queries, h, w]).transpose([0, 2, 1, 3, 4])
+        weights = (
+            paddle.bmm(qh * self.normalize_fact, kh)
+            .reshape([bs, n, num_queries, h, w])
+            .transpose([0, 2, 1, 3, 4])
+        )
 
         if mask is not None:
             weights += mask
@@ -116,29 +125,35 @@ class MultiHeadAttentionMap(nn.Layer):
 
 class MaskHeadFPNConv(nn.Layer):
     """This code is based on
-        https://github.com/facebookresearch/detr/blob/main/models/segmentation.py
+    https://github.com/facebookresearch/detr/blob/main/models/segmentation.py
 
-        Simple convolutional head, using group norm.
-        Upsampling is done using a FPN approach
+    Simple convolutional head, using group norm.
+    Upsampling is done using a FPN approach
     """
 
     def __init__(self, input_dim, fpn_dims, context_dim, num_groups=8):
         super().__init__()
 
-        inter_dims = [input_dim,
-                      ] + [context_dim // (2**i) for i in range(1, 5)]
+        inter_dims = [
+            input_dim,
+        ] + [context_dim // (2**i) for i in range(1, 5)]
         weight_attr = paddle.ParamAttr(
-            initializer=paddle.nn.initializer.KaimingUniform())
+            initializer=paddle.nn.initializer.KaimingUniform()
+        )
         bias_attr = paddle.framework.ParamAttr(
-            initializer=paddle.nn.initializer.Constant())
+            initializer=paddle.nn.initializer.Constant()
+        )
 
-        self.conv0 = self._make_layers(input_dim, input_dim, 3, num_groups,
-                                       weight_attr, bias_attr)
+        self.conv0 = self._make_layers(
+            input_dim, input_dim, 3, num_groups, weight_attr, bias_attr
+        )
         self.conv_inter = nn.LayerList()
         for in_dims, out_dims in zip(inter_dims[:-1], inter_dims[1:]):
             self.conv_inter.append(
-                self._make_layers(in_dims, out_dims, 3, num_groups, weight_attr,
-                                  bias_attr))
+                self._make_layers(
+                    in_dims, out_dims, 3, num_groups, weight_attr, bias_attr
+                )
+            )
 
         self.conv_out = nn.Conv2D(
             inter_dims[-1],
@@ -146,7 +161,8 @@ class MaskHeadFPNConv(nn.Layer):
             3,
             padding=1,
             weight_attr=weight_attr,
-            bias_attr=bias_attr)
+            bias_attr=bias_attr,
+        )
 
         self.adapter = nn.LayerList()
         for i in range(len(fpn_dims)):
@@ -156,15 +172,19 @@ class MaskHeadFPNConv(nn.Layer):
                     inter_dims[i + 1],
                     1,
                     weight_attr=weight_attr,
-                    bias_attr=bias_attr))
+                    bias_attr=bias_attr,
+                )
+            )
 
-    def _make_layers(self,
-                     in_dims,
-                     out_dims,
-                     kernel_size,
-                     num_groups,
-                     weight_attr=None,
-                     bias_attr=None):
+    def _make_layers(
+        self,
+        in_dims,
+        out_dims,
+        kernel_size,
+        num_groups,
+        weight_attr=None,
+        bias_attr=None,
+    ):
         return nn.Sequential(
             nn.Conv2D(
                 in_dims,
@@ -172,20 +192,25 @@ class MaskHeadFPNConv(nn.Layer):
                 kernel_size,
                 padding=kernel_size // 2,
                 weight_attr=weight_attr,
-                bias_attr=bias_attr),
+                bias_attr=bias_attr,
+            ),
             nn.GroupNorm(num_groups, out_dims),
-            nn.ReLU())
+            nn.ReLU(),
+        )
 
     def forward(self, x, bbox_attention_map, fpns):
-        x = paddle.concat([
-            x.tile([bbox_attention_map.shape[1], 1, 1, 1]),
-            bbox_attention_map.flatten(0, 1)
-        ], 1)
+        x = paddle.concat(
+            [
+                x.tile([bbox_attention_map.shape[1], 1, 1, 1]),
+                bbox_attention_map.flatten(0, 1),
+            ],
+            1,
+        )
         x = self.conv0(x)
-        for inter_layer, adapter_layer, feat in zip(self.conv_inter[:-1],
-                                                    self.adapter, fpns):
-            feat = adapter_layer(feat).tile(
-                [bbox_attention_map.shape[1], 1, 1, 1])
+        for inter_layer, adapter_layer, feat in zip(
+            self.conv_inter[:-1], self.adapter, fpns
+        ):
+            feat = adapter_layer(feat).tile([bbox_attention_map.shape[1], 1, 1, 1])
             x = inter_layer(x)
             x = feat + F.interpolate(x, size=feat.shape[-2:])
 
@@ -195,18 +220,20 @@ class MaskHeadFPNConv(nn.Layer):
 
 
 class DETRHead(nn.Layer):
-    __shared__ = ['num_classes', 'hidden_dim', 'use_focal_loss']
-    __inject__ = ['loss']
+    __shared__ = ["num_classes", "hidden_dim", "use_focal_loss"]
+    __inject__ = ["loss"]
 
-    def __init__(self,
-                 num_classes=80,
-                 hidden_dim=256,
-                 nhead=8,
-                 num_mlp_layers=3,
-                 loss='DETRLoss',
-                 fpn_dims=[1024, 512, 256],
-                 with_mask_head=False,
-                 use_focal_loss=False):
+    def __init__(
+        self,
+        num_classes=80,
+        hidden_dim=256,
+        nhead=8,
+        num_mlp_layers=3,
+        loss="DETRLoss",
+        fpn_dims=[1024, 512, 256],
+        with_mask_head=False,
+        use_focal_loss=False,
+    ):
         super(DETRHead, self).__init__()
         # add background class
         self.num_classes = num_classes if use_focal_loss else num_classes + 1
@@ -216,15 +243,12 @@ class DETRHead(nn.Layer):
         self.use_focal_loss = use_focal_loss
 
         self.score_head = nn.Linear(hidden_dim, self.num_classes)
-        self.bbox_head = MLP(hidden_dim,
-                             hidden_dim,
-                             output_dim=4,
-                             num_layers=num_mlp_layers)
+        self.bbox_head = MLP(
+            hidden_dim, hidden_dim, output_dim=4, num_layers=num_mlp_layers
+        )
         if self.with_mask_head:
-            self.bbox_attention = MultiHeadAttentionMap(hidden_dim, hidden_dim,
-                                                        nhead)
-            self.mask_head = MaskHeadFPNConv(hidden_dim + nhead, fpn_dims,
-                                             hidden_dim)
+            self.bbox_attention = MultiHeadAttentionMap(hidden_dim, hidden_dim, nhead)
+            self.mask_head = MaskHeadFPNConv(hidden_dim + nhead, fpn_dims, hidden_dim)
         self._reset_parameters()
 
     def _reset_parameters(self):
@@ -234,9 +258,9 @@ class DETRHead(nn.Layer):
     def from_config(cls, cfg, hidden_dim, nhead, input_shape):
 
         return {
-            'hidden_dim': hidden_dim,
-            'nhead': nhead,
-            'fpn_dims': [i.channels for i in input_shape[::-1]][1:]
+            "hidden_dim": hidden_dim,
+            "nhead": nhead,
+            "fpn_dims": [i.channels for i in input_shape[::-1]][1:],
         }
 
     @staticmethod
@@ -248,11 +272,11 @@ class DETRHead(nn.Layer):
             for obj_poly in polygons:
                 rles = mask_util.frPyObjects(obj_poly, height, width)
                 rle = mask_util.merge(rles)
-                masks.append(
-                    paddle.to_tensor(mask_util.decode(rle)).astype('float32'))
+                masks.append(paddle.to_tensor(mask_util.decode(rle)).astype("float32"))
             masks = paddle.stack(masks)
             masks_pad = paddle.zeros(
-                [masks.shape[0], pad_mask.shape[1], pad_mask.shape[2]])
+                [masks.shape[0], pad_mask.shape[1], pad_mask.shape[2]]
+            )
             masks_pad[:, :height, :width] = masks
             out_gt_mask.append(masks_pad)
         return out_gt_mask
@@ -273,43 +297,45 @@ class DETRHead(nn.Layer):
         outputs_bbox = F.sigmoid(self.bbox_head(feats))
         outputs_seg = None
         if self.with_mask_head:
-            bbox_attention_map = self.bbox_attention(feats[-1], memory,
-                                                     src_mask)
+            bbox_attention_map = self.bbox_attention(feats[-1], memory, src_mask)
             fpn_feats = [a for a in body_feats[::-1]][1:]
-            outputs_seg = self.mask_head(src_proj, bbox_attention_map,
-                                         fpn_feats)
-            outputs_seg = outputs_seg.reshape([
-                feats.shape[1], feats.shape[2], outputs_seg.shape[-2],
-                outputs_seg.shape[-1]
-            ])
+            outputs_seg = self.mask_head(src_proj, bbox_attention_map, fpn_feats)
+            outputs_seg = outputs_seg.reshape(
+                [
+                    feats.shape[1],
+                    feats.shape[2],
+                    outputs_seg.shape[-2],
+                    outputs_seg.shape[-1],
+                ]
+            )
 
         if self.training:
             assert inputs is not None
-            assert 'gt_bbox' in inputs and 'gt_class' in inputs
-            gt_mask = self.get_gt_mask_from_polygons(
-                inputs['gt_poly'],
-                inputs['pad_mask']) if 'gt_poly' in inputs else None
+            assert "gt_bbox" in inputs and "gt_class" in inputs
+            gt_mask = (
+                self.get_gt_mask_from_polygons(inputs["gt_poly"], inputs["pad_mask"])
+                if "gt_poly" in inputs
+                else None
+            )
             return self.loss(
                 outputs_bbox,
                 outputs_logit,
-                inputs['gt_bbox'],
-                inputs['gt_class'],
+                inputs["gt_bbox"],
+                inputs["gt_class"],
                 masks=outputs_seg,
-                gt_mask=gt_mask)
+                gt_mask=gt_mask,
+            )
         else:
             return (outputs_bbox[-1], outputs_logit[-1], outputs_seg)
 
 
 class DeformableDETRHead(nn.Layer):
-    __shared__ = ['num_classes', 'hidden_dim']
-    __inject__ = ['loss']
+    __shared__ = ["num_classes", "hidden_dim"]
+    __inject__ = ["loss"]
 
-    def __init__(self,
-                 num_classes=80,
-                 hidden_dim=512,
-                 nhead=8,
-                 num_mlp_layers=3,
-                 loss='DETRLoss'):
+    def __init__(
+        self, num_classes=80, hidden_dim=512, nhead=8, num_mlp_layers=3, loss="DETRLoss"
+    ):
         super(DeformableDETRHead, self).__init__()
         self.num_classes = num_classes
         self.hidden_dim = hidden_dim
@@ -317,10 +343,9 @@ class DeformableDETRHead(nn.Layer):
         self.loss = loss
 
         self.score_head = nn.Linear(hidden_dim, self.num_classes)
-        self.bbox_head = MLP(hidden_dim,
-                             hidden_dim,
-                             output_dim=4,
-                             num_layers=num_mlp_layers)
+        self.bbox_head = MLP(
+            hidden_dim, hidden_dim, output_dim=4, num_layers=num_mlp_layers
+        )
 
         self._reset_parameters()
 
@@ -336,7 +361,7 @@ class DeformableDETRHead(nn.Layer):
 
     @classmethod
     def from_config(cls, cfg, hidden_dim, nhead, input_shape):
-        return {'hidden_dim': hidden_dim, 'nhead': nhead}
+        return {"hidden_dim": hidden_dim, "nhead": nhead}
 
     def forward(self, out_transformer, body_feats, inputs=None):
         r"""
@@ -356,51 +381,55 @@ class DeformableDETRHead(nn.Layer):
         # It's equivalent to "outputs_bbox[:, :, :, :2] += reference_points",
         # but the gradient is wrong in paddle.
         outputs_bbox = paddle.concat(
-            [
-                outputs_bbox[:, :, :, :2] + reference_points,
-                outputs_bbox[:, :, :, 2:]
-            ],
-            axis=-1)
+            [outputs_bbox[:, :, :, :2] + reference_points, outputs_bbox[:, :, :, 2:]],
+            axis=-1,
+        )
 
         outputs_bbox = F.sigmoid(outputs_bbox)
         outputs_logit = self.score_head(feats)
 
         if self.training:
             assert inputs is not None
-            assert 'gt_bbox' in inputs and 'gt_class' in inputs
+            assert "gt_bbox" in inputs and "gt_class" in inputs
 
-            return self.loss(outputs_bbox, outputs_logit, inputs['gt_bbox'],
-                             inputs['gt_class'])
+            return self.loss(
+                outputs_bbox, outputs_logit, inputs["gt_bbox"], inputs["gt_class"]
+            )
         else:
             return (outputs_bbox[-1], outputs_logit[-1], None)
 
 
 class DINOHead(nn.Layer):
-    __inject__ = ['loss']
+    __inject__ = ["loss"]
 
-    def __init__(self, loss='DINOLoss', eval_idx=-1):
+    def __init__(self, loss="DINOLoss", eval_idx=-1):
         super(DINOHead, self).__init__()
         self.loss = loss
         self.eval_idx = eval_idx
 
     def forward(self, out_transformer, body_feats, inputs=None):
-        (dec_out_bboxes, dec_out_logits, enc_topk_bboxes, enc_topk_logits,
-         dn_meta) = out_transformer
+        (dec_out_bboxes, dec_out_logits, enc_topk_bboxes, enc_topk_logits, dn_meta) = (
+            out_transformer
+        )
         if self.training:
             assert inputs is not None
-            assert 'gt_bbox' in inputs and 'gt_class' in inputs
+            assert "gt_bbox" in inputs and "gt_class" in inputs
 
             if dn_meta is not None:
                 if isinstance(dn_meta, list):
                     dual_groups = len(dn_meta) - 1
                     dec_out_bboxes = paddle.split(
-                        dec_out_bboxes, dual_groups + 1, axis=2)
+                        dec_out_bboxes, dual_groups + 1, axis=2
+                    )
                     dec_out_logits = paddle.split(
-                        dec_out_logits, dual_groups + 1, axis=2)
+                        dec_out_logits, dual_groups + 1, axis=2
+                    )
                     enc_topk_bboxes = paddle.split(
-                        enc_topk_bboxes, dual_groups + 1, axis=1)
+                        enc_topk_bboxes, dual_groups + 1, axis=1
+                    )
                     enc_topk_logits = paddle.split(
-                        enc_topk_logits, dual_groups + 1, axis=1)
+                        enc_topk_logits, dual_groups + 1, axis=1
+                    )
 
                     dec_out_bboxes_list = []
                     dec_out_logits_list = []
@@ -411,37 +440,36 @@ class DINOHead(nn.Layer):
                         if dn_meta[g_id] is not None:
                             dn_out_bboxes_gid, dec_out_bboxes_gid = paddle.split(
                                 dec_out_bboxes[g_id],
-                                dn_meta[g_id]['dn_num_split'],
-                                axis=2)
+                                dn_meta[g_id]["dn_num_split"],
+                                axis=2,
+                            )
                             dn_out_logits_gid, dec_out_logits_gid = paddle.split(
                                 dec_out_logits[g_id],
-                                dn_meta[g_id]['dn_num_split'],
-                                axis=2)
+                                dn_meta[g_id]["dn_num_split"],
+                                axis=2,
+                            )
                         else:
                             dn_out_bboxes_gid, dn_out_logits_gid = None, None
                             dec_out_bboxes_gid = dec_out_bboxes[g_id]
                             dec_out_logits_gid = dec_out_logits[g_id]
-                        out_bboxes_gid = paddle.concat([
-                            enc_topk_bboxes[g_id].unsqueeze(0),
-                            dec_out_bboxes_gid
-                        ])
-                        out_logits_gid = paddle.concat([
-                            enc_topk_logits[g_id].unsqueeze(0),
-                            dec_out_logits_gid
-                        ])
+                        out_bboxes_gid = paddle.concat(
+                            [enc_topk_bboxes[g_id].unsqueeze(0), dec_out_bboxes_gid]
+                        )
+                        out_logits_gid = paddle.concat(
+                            [enc_topk_logits[g_id].unsqueeze(0), dec_out_logits_gid]
+                        )
                         loss_gid = self.loss(
                             out_bboxes_gid,
                             out_logits_gid,
-                            inputs['gt_bbox'],
-                            inputs['gt_class'],
+                            inputs["gt_bbox"],
+                            inputs["gt_class"],
                             dn_out_bboxes=dn_out_bboxes_gid,
                             dn_out_logits=dn_out_logits_gid,
-                            dn_meta=dn_meta[g_id])
+                            dn_meta=dn_meta[g_id],
+                        )
                         # sum loss
                         for key, value in loss_gid.items():
-                            loss.update({
-                                key: loss.get(key, paddle.zeros([1])) + value
-                            })
+                            loss.update({key: loss.get(key, paddle.zeros([1])) + value})
 
                     # average across (dual_groups + 1)
                     for key, value in loss.items():
@@ -449,110 +477,124 @@ class DINOHead(nn.Layer):
                     return loss
                 else:
                     dn_out_bboxes, dec_out_bboxes = paddle.split(
-                        dec_out_bboxes, dn_meta['dn_num_split'], axis=2)
+                        dec_out_bboxes, dn_meta["dn_num_split"], axis=2
+                    )
                     dn_out_logits, dec_out_logits = paddle.split(
-                        dec_out_logits, dn_meta['dn_num_split'], axis=2)
+                        dec_out_logits, dn_meta["dn_num_split"], axis=2
+                    )
             else:
                 dn_out_bboxes, dn_out_logits = None, None
 
-            out_bboxes = paddle.concat(
-                [enc_topk_bboxes.unsqueeze(0), dec_out_bboxes])
-            out_logits = paddle.concat(
-                [enc_topk_logits.unsqueeze(0), dec_out_logits])
+            out_bboxes = paddle.concat([enc_topk_bboxes.unsqueeze(0), dec_out_bboxes])
+            out_logits = paddle.concat([enc_topk_logits.unsqueeze(0), dec_out_logits])
 
             return self.loss(
                 out_bboxes,
                 out_logits,
-                inputs['gt_bbox'],
-                inputs['gt_class'],
+                inputs["gt_bbox"],
+                inputs["gt_class"],
                 dn_out_bboxes=dn_out_bboxes,
                 dn_out_logits=dn_out_logits,
                 dn_meta=dn_meta,
-                gt_score=inputs.get('gt_score', None))
+                gt_score=inputs.get("gt_score", None),
+            )
         else:
-            return (dec_out_bboxes[self.eval_idx],
-                    dec_out_logits[self.eval_idx], None)
+            return (dec_out_bboxes[self.eval_idx], dec_out_logits[self.eval_idx], None)
 
 
 class MaskDINOHead(nn.Layer):
-    __inject__ = ['loss']
+    __inject__ = ["loss"]
 
-    def __init__(self, loss='DINOLoss'):
+    def __init__(self, loss="DINOLoss"):
         super(MaskDINOHead, self).__init__()
         self.loss = loss
 
     def forward(self, out_transformer, body_feats, inputs=None):
-        (dec_out_logits, dec_out_bboxes, dec_out_masks, enc_out, init_out,
-         dn_meta) = out_transformer
+        (dec_out_logits, dec_out_bboxes, dec_out_masks, enc_out, init_out, dn_meta) = (
+            out_transformer
+        )
         if self.training:
             assert inputs is not None
-            assert 'gt_bbox' in inputs and 'gt_class' in inputs
-            assert 'gt_segm' in inputs
+            assert "gt_bbox" in inputs and "gt_class" in inputs
+            assert "gt_segm" in inputs
 
             if dn_meta is not None:
                 dn_out_logits, dec_out_logits = paddle.split(
-                    dec_out_logits, dn_meta['dn_num_split'], axis=2)
+                    dec_out_logits, dn_meta["dn_num_split"], axis=2
+                )
                 dn_out_bboxes, dec_out_bboxes = paddle.split(
-                    dec_out_bboxes, dn_meta['dn_num_split'], axis=2)
+                    dec_out_bboxes, dn_meta["dn_num_split"], axis=2
+                )
                 dn_out_masks, dec_out_masks = paddle.split(
-                    dec_out_masks, dn_meta['dn_num_split'], axis=2)
+                    dec_out_masks, dn_meta["dn_num_split"], axis=2
+                )
                 if init_out is not None:
                     init_out_logits, init_out_bboxes, init_out_masks = init_out
                     init_out_logits_dn, init_out_logits = paddle.split(
-                        init_out_logits, dn_meta['dn_num_split'], axis=1)
+                        init_out_logits, dn_meta["dn_num_split"], axis=1
+                    )
                     init_out_bboxes_dn, init_out_bboxes = paddle.split(
-                        init_out_bboxes, dn_meta['dn_num_split'], axis=1)
+                        init_out_bboxes, dn_meta["dn_num_split"], axis=1
+                    )
                     init_out_masks_dn, init_out_masks = paddle.split(
-                        init_out_masks, dn_meta['dn_num_split'], axis=1)
+                        init_out_masks, dn_meta["dn_num_split"], axis=1
+                    )
 
                     dec_out_logits = paddle.concat(
-                        [init_out_logits.unsqueeze(0), dec_out_logits])
+                        [init_out_logits.unsqueeze(0), dec_out_logits]
+                    )
                     dec_out_bboxes = paddle.concat(
-                        [init_out_bboxes.unsqueeze(0), dec_out_bboxes])
+                        [init_out_bboxes.unsqueeze(0), dec_out_bboxes]
+                    )
                     dec_out_masks = paddle.concat(
-                        [init_out_masks.unsqueeze(0), dec_out_masks])
+                        [init_out_masks.unsqueeze(0), dec_out_masks]
+                    )
 
                     dn_out_logits = paddle.concat(
-                        [init_out_logits_dn.unsqueeze(0), dn_out_logits])
+                        [init_out_logits_dn.unsqueeze(0), dn_out_logits]
+                    )
                     dn_out_bboxes = paddle.concat(
-                        [init_out_bboxes_dn.unsqueeze(0), dn_out_bboxes])
+                        [init_out_bboxes_dn.unsqueeze(0), dn_out_bboxes]
+                    )
                     dn_out_masks = paddle.concat(
-                        [init_out_masks_dn.unsqueeze(0), dn_out_masks])
+                        [init_out_masks_dn.unsqueeze(0), dn_out_masks]
+                    )
             else:
                 dn_out_bboxes, dn_out_logits = None, None
                 dn_out_masks = None
 
             enc_out_logits, enc_out_bboxes, enc_out_masks = enc_out
-            out_logits = paddle.concat(
-                [enc_out_logits.unsqueeze(0), dec_out_logits])
-            out_bboxes = paddle.concat(
-                [enc_out_bboxes.unsqueeze(0), dec_out_bboxes])
-            out_masks = paddle.concat(
-                [enc_out_masks.unsqueeze(0), dec_out_masks])
+            out_logits = paddle.concat([enc_out_logits.unsqueeze(0), dec_out_logits])
+            out_bboxes = paddle.concat([enc_out_bboxes.unsqueeze(0), dec_out_bboxes])
+            out_masks = paddle.concat([enc_out_masks.unsqueeze(0), dec_out_masks])
 
-            inputs['gt_segm'] = [gt_segm.astype(out_masks.dtype)
-                                 for gt_segm in inputs['gt_segm']]
+            inputs["gt_segm"] = [
+                gt_segm.astype(out_masks.dtype) for gt_segm in inputs["gt_segm"]
+            ]
 
             return self.loss(
                 out_bboxes,
                 out_logits,
-                inputs['gt_bbox'],
-                inputs['gt_class'],
+                inputs["gt_bbox"],
+                inputs["gt_class"],
                 masks=out_masks,
-                gt_mask=inputs['gt_segm'],
+                gt_mask=inputs["gt_segm"],
                 dn_out_logits=dn_out_logits,
                 dn_out_bboxes=dn_out_bboxes,
                 dn_out_masks=dn_out_masks,
-                dn_meta=dn_meta)
+                dn_meta=dn_meta,
+            )
         else:
             return (dec_out_bboxes[-1], dec_out_logits[-1], dec_out_masks[-1])
 
 
 class RTDETRv3Head(nn.Layer):
-    __inject__ = ['loss']
-    __shared__ = ['o2m_branch', 'num_queries_o2m']
+    __inject__ = ["loss"]
+    __shared__ = ["o2m_branch", "num_queries_o2m"]
 
-    def __init__(self, loss='DINOLoss', eval_idx=-1, o2m=4, o2m_branch=False, num_queries_o2m=450):
+    def __init__(
+        self, loss="DINOLoss", eval_idx=-1, o2m=4, o2m_branch=False, num_queries_o2m=450
+    ):
         super(RTDETRv3Head, self).__init__()
         self.loss = loss
         self.eval_idx = eval_idx
@@ -561,11 +603,12 @@ class RTDETRv3Head(nn.Layer):
         self.num_queries_o2m = num_queries_o2m
 
     def forward(self, out_transformer, body_feats, inputs=None):
-        (dec_out_bboxes, dec_out_logits, enc_topk_bboxes, enc_topk_logits,
-         dn_meta) = out_transformer
+        (dec_out_bboxes, dec_out_logits, enc_topk_bboxes, enc_topk_logits, dn_meta) = (
+            out_transformer
+        )
         if self.training:
             assert inputs is not None
-            assert 'gt_bbox' in inputs and 'gt_class' in inputs
+            assert "gt_bbox" in inputs and "gt_class" in inputs
 
             if dn_meta is not None:
                 num_groups = len(dn_meta)
@@ -573,30 +616,61 @@ class RTDETRv3Head(nn.Layer):
                 total_enc_queries = enc_topk_bboxes.shape[1]
                 loss = {}
                 if self.o2m_branch:
-                    dec_out_bboxes, dec_out_bboxes_o2m = paddle.split(dec_out_bboxes, [total_dec_queries - self.num_queries_o2m, self.num_queries_o2m], axis=2)
-                    dec_out_logits, dec_out_logits_o2m = paddle.split(dec_out_logits, [total_dec_queries - self.num_queries_o2m, self.num_queries_o2m], axis=2)
-                    enc_topk_bboxes, enc_topk_bboxes_o2m = paddle.split(enc_topk_bboxes, [total_enc_queries - self.num_queries_o2m, self.num_queries_o2m], axis=1)
-                    enc_topk_logits, enc_topk_logits_o2m = paddle.split(enc_topk_logits, [total_enc_queries - self.num_queries_o2m, self.num_queries_o2m], axis=1)
+                    dec_out_bboxes, dec_out_bboxes_o2m = paddle.split(
+                        dec_out_bboxes,
+                        [
+                            total_dec_queries - self.num_queries_o2m,
+                            self.num_queries_o2m,
+                        ],
+                        axis=2,
+                    )
+                    dec_out_logits, dec_out_logits_o2m = paddle.split(
+                        dec_out_logits,
+                        [
+                            total_dec_queries - self.num_queries_o2m,
+                            self.num_queries_o2m,
+                        ],
+                        axis=2,
+                    )
+                    enc_topk_bboxes, enc_topk_bboxes_o2m = paddle.split(
+                        enc_topk_bboxes,
+                        [
+                            total_enc_queries - self.num_queries_o2m,
+                            self.num_queries_o2m,
+                        ],
+                        axis=1,
+                    )
+                    enc_topk_logits, enc_topk_logits_o2m = paddle.split(
+                        enc_topk_logits,
+                        [
+                            total_enc_queries - self.num_queries_o2m,
+                            self.num_queries_o2m,
+                        ],
+                        axis=1,
+                    )
 
-                    out_bboxes_o2m = paddle.concat([enc_topk_bboxes_o2m.unsqueeze(0), dec_out_bboxes_o2m])
-                    out_logits_o2m = paddle.concat([enc_topk_logits_o2m.unsqueeze(0), dec_out_logits_o2m])
+                    out_bboxes_o2m = paddle.concat(
+                        [enc_topk_bboxes_o2m.unsqueeze(0), dec_out_bboxes_o2m]
+                    )
+                    out_logits_o2m = paddle.concat(
+                        [enc_topk_logits_o2m.unsqueeze(0), dec_out_logits_o2m]
+                    )
                     loss_o2m = self.loss(
                         out_bboxes_o2m,
                         out_logits_o2m,
-                        inputs['gt_bbox'],
-                        inputs['gt_class'],
+                        inputs["gt_bbox"],
+                        inputs["gt_class"],
                         dn_out_bboxes=None,
                         dn_out_logits=None,
                         dn_meta=None,
-                        o2m=self.o2m)
+                        o2m=self.o2m,
+                    )
                     for key, value in loss_o2m.items():
-                        key = key + '_o2m_branch'
-                        loss.update({
-                            key: loss.get(key, paddle.zeros([1])) + value
-                        })
-                
-                split_dec_num = [sum(dn['dn_num_split']) for dn in dn_meta]
-                split_enc_num = [dn['dn_num_split'][1] for dn in dn_meta]
+                        key = key + "_o2m_branch"
+                        loss.update({key: loss.get(key, paddle.zeros([1])) + value})
+
+                split_dec_num = [sum(dn["dn_num_split"]) for dn in dn_meta]
+                split_enc_num = [dn["dn_num_split"][1] for dn in dn_meta]
                 dec_out_bboxes = paddle.split(dec_out_bboxes, split_dec_num, axis=2)
                 dec_out_logits = paddle.split(dec_out_logits, split_dec_num, axis=2)
                 enc_topk_bboxes = paddle.split(enc_topk_bboxes, split_enc_num, axis=1)
@@ -604,50 +678,51 @@ class RTDETRv3Head(nn.Layer):
 
                 for g_id in range(num_groups):
                     dn_out_bboxes_gid, dec_out_bboxes_gid = paddle.split(
-                        dec_out_bboxes[g_id], dn_meta[g_id]['dn_num_split'], axis=2)
+                        dec_out_bboxes[g_id], dn_meta[g_id]["dn_num_split"], axis=2
+                    )
                     dn_out_logits_gid, dec_out_logits_gid = paddle.split(
-                        dec_out_logits[g_id], dn_meta[g_id]['dn_num_split'], axis=2)
-                    out_bboxes_gid = paddle.concat([
-                        enc_topk_bboxes[g_id].unsqueeze(0), dec_out_bboxes_gid])
-                    out_logits_gid = paddle.concat([
-                        enc_topk_logits[g_id].unsqueeze(0), dec_out_logits_gid])
-                    
+                        dec_out_logits[g_id], dn_meta[g_id]["dn_num_split"], axis=2
+                    )
+                    out_bboxes_gid = paddle.concat(
+                        [enc_topk_bboxes[g_id].unsqueeze(0), dec_out_bboxes_gid]
+                    )
+                    out_logits_gid = paddle.concat(
+                        [enc_topk_logits[g_id].unsqueeze(0), dec_out_logits_gid]
+                    )
+
                     loss_gid = self.loss(
                         out_bboxes_gid,
                         out_logits_gid,
-                        inputs['gt_bbox'],
-                        inputs['gt_class'],
+                        inputs["gt_bbox"],
+                        inputs["gt_class"],
                         dn_out_bboxes=dn_out_bboxes_gid,
                         dn_out_logits=dn_out_logits_gid,
-                        dn_meta=dn_meta[g_id])
+                        dn_meta=dn_meta[g_id],
+                    )
                     # sum loss
                     for key, value in loss_gid.items():
-                        loss.update({
-                            key: loss.get(key, paddle.zeros([1])) + value
-                        })
+                        loss.update({key: loss.get(key, paddle.zeros([1])) + value})
 
                 # average across (dual_groups + 1)
                 for key, value in loss.items():
-                    if '_o2m_branch' not in key:
+                    if "_o2m_branch" not in key:
                         loss.update({key: value / num_groups})
                 return loss
             else:
                 dn_out_bboxes, dn_out_logits = None, None
 
-            out_bboxes = paddle.concat(
-                [enc_topk_bboxes.unsqueeze(0), dec_out_bboxes])
-            out_logits = paddle.concat(
-                [enc_topk_logits.unsqueeze(0), dec_out_logits])
+            out_bboxes = paddle.concat([enc_topk_bboxes.unsqueeze(0), dec_out_bboxes])
+            out_logits = paddle.concat([enc_topk_logits.unsqueeze(0), dec_out_logits])
 
             return self.loss(
                 out_bboxes,
                 out_logits,
-                inputs['gt_bbox'],
-                inputs['gt_class'],
+                inputs["gt_bbox"],
+                inputs["gt_class"],
                 dn_out_bboxes=dn_out_bboxes,
                 dn_out_logits=dn_out_logits,
                 dn_meta=dn_meta,
-                gt_score=inputs.get('gt_score', None))
+                gt_score=inputs.get("gt_score", None),
+            )
         else:
-            return (dec_out_bboxes[self.eval_idx],
-                    dec_out_logits[self.eval_idx], None)
+            return (dec_out_bboxes[self.eval_idx], dec_out_logits[self.eval_idx], None)

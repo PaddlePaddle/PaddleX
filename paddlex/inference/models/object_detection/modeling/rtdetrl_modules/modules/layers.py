@@ -1,10 +1,10 @@
-#   Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,14 +13,13 @@
 # limitations under the License.
 
 import math
-from numbers import Integral
 
 import numpy as np
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 import six
-from paddle import ParamAttr, to_tensor
+from paddle import ParamAttr
 from paddle.nn.initializer import Constant, Normal, XavierUniform
 from paddle.regularizer import L2Decay
 from paddle.vision.ops import DeformConv2D
@@ -47,7 +46,8 @@ class AlignConv(nn.Layer):
             padding=(self.kernel_size - 1) // 2,
             groups=groups,
             weight_attr=ParamAttr(initializer=Normal(0, 0.01)),
-            bias_attr=None)
+            bias_attr=None,
+        )
 
     @paddle.no_grad()
     def get_offset(self, anchors, featmap_size, stride):
@@ -96,7 +96,8 @@ class AlignConv(nn.Layer):
         offset_y = y_anchor - y_conv
         offset = paddle.stack([offset_y, offset_x], axis=-1)
         offset = offset.reshape(
-            [batch, feat_h, feat_w, self.kernel_size * self.kernel_size * 2])
+            [batch, feat_h, feat_w, self.kernel_size * self.kernel_size * 2]
+        )
         offset = offset.transpose([0, 3, 1, 2])
 
         return offset
@@ -112,32 +113,35 @@ class AlignConv(nn.Layer):
 
 
 class DeformableConvV2(nn.Layer):
-    def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 stride=1,
-                 padding=0,
-                 dilation=1,
-                 groups=1,
-                 weight_attr=None,
-                 bias_attr=None,
-                 lr_scale=1,
-                 regularizer=None,
-                 skip_quant=False,
-                 dcn_bias_regularizer=L2Decay(0.),
-                 dcn_bias_lr_scale=2.):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=1,
+        padding=0,
+        dilation=1,
+        groups=1,
+        weight_attr=None,
+        bias_attr=None,
+        lr_scale=1,
+        regularizer=None,
+        skip_quant=False,
+        dcn_bias_regularizer=L2Decay(0.0),
+        dcn_bias_lr_scale=2.0,
+    ):
         super(DeformableConvV2, self).__init__()
         self.offset_channel = 2 * kernel_size**2
         self.mask_channel = kernel_size**2
 
         if lr_scale == 1 and regularizer is None:
-            offset_bias_attr = ParamAttr(initializer=Constant(0.))
+            offset_bias_attr = ParamAttr(initializer=Constant(0.0))
         else:
             offset_bias_attr = ParamAttr(
-                initializer=Constant(0.),
+                initializer=Constant(0.0),
                 learning_rate=lr_scale,
-                regularizer=regularizer)
+                regularizer=regularizer,
+            )
         self.conv_offset = nn.Conv2D(
             in_channels,
             3 * kernel_size**2,
@@ -145,7 +149,8 @@ class DeformableConvV2(nn.Layer):
             stride=stride,
             padding=(kernel_size - 1) // 2,
             weight_attr=ParamAttr(initializer=Constant(0.0)),
-            bias_attr=offset_bias_attr)
+            bias_attr=offset_bias_attr,
+        )
         if skip_quant:
             self.conv_offset.skip_quant = True
 
@@ -154,7 +159,8 @@ class DeformableConvV2(nn.Layer):
             dcn_bias_attr = ParamAttr(
                 initializer=Constant(value=0),
                 regularizer=dcn_bias_regularizer,
-                learning_rate=dcn_bias_lr_scale)
+                learning_rate=dcn_bias_lr_scale,
+            )
         else:
             # in ResNet backbone, do not need bias
             dcn_bias_attr = False
@@ -167,44 +173,48 @@ class DeformableConvV2(nn.Layer):
             dilation=dilation,
             groups=groups,
             weight_attr=weight_attr,
-            bias_attr=dcn_bias_attr)
+            bias_attr=dcn_bias_attr,
+        )
 
     def forward(self, x):
         offset_mask = self.conv_offset(x)
         offset, mask = paddle.split(
             offset_mask,
             num_or_sections=[self.offset_channel, self.mask_channel],
-            axis=1)
+            axis=1,
+        )
         mask = F.sigmoid(mask)
         y = self.conv_dcn(x, offset, mask=mask)
         return y
 
 
 class ConvNormLayer(nn.Layer):
-    def __init__(self,
-                 ch_in,
-                 ch_out,
-                 filter_size,
-                 stride,
-                 groups=1,
-                 norm_type='bn',
-                 norm_decay=0.,
-                 norm_groups=32,
-                 use_dcn=False,
-                 bias_on=False,
-                 lr_scale=1.,
-                 freeze_norm=False,
-                 initializer=Normal(
-                     mean=0., std=0.01),
-                 skip_quant=False,
-                 dcn_lr_scale=2.,
-                 dcn_regularizer=L2Decay(0.)):
+    def __init__(
+        self,
+        ch_in,
+        ch_out,
+        filter_size,
+        stride,
+        groups=1,
+        norm_type="bn",
+        norm_decay=0.0,
+        norm_groups=32,
+        use_dcn=False,
+        bias_on=False,
+        lr_scale=1.0,
+        freeze_norm=False,
+        initializer=Normal(mean=0.0, std=0.01),
+        skip_quant=False,
+        dcn_lr_scale=2.0,
+        dcn_regularizer=L2Decay(0.0),
+    ):
         super(ConvNormLayer, self).__init__()
-        assert norm_type in ['bn', 'sync_bn', 'gn', None]
+        assert norm_type in ["bn", "sync_bn", "gn", None]
 
         if bias_on:
             bias_attr = ParamAttr(
-                initializer=Constant(value=0.), learning_rate=lr_scale)
+                initializer=Constant(value=0.0), learning_rate=lr_scale
+            )
         else:
             bias_attr = False
 
@@ -216,9 +226,9 @@ class ConvNormLayer(nn.Layer):
                 stride=stride,
                 padding=(filter_size - 1) // 2,
                 groups=groups,
-                weight_attr=ParamAttr(
-                    initializer=initializer, learning_rate=1.),
-                bias_attr=bias_attr)
+                weight_attr=ParamAttr(initializer=initializer, learning_rate=1.0),
+                bias_attr=bias_attr,
+            )
             if skip_quant:
                 self.conv.skip_quant = True
         else:
@@ -230,31 +240,35 @@ class ConvNormLayer(nn.Layer):
                 stride=stride,
                 padding=(filter_size - 1) // 2,
                 groups=groups,
-                weight_attr=ParamAttr(
-                    initializer=initializer, learning_rate=1.),
+                weight_attr=ParamAttr(initializer=initializer, learning_rate=1.0),
                 bias_attr=True,
                 lr_scale=dcn_lr_scale,
                 regularizer=dcn_regularizer,
                 dcn_bias_regularizer=dcn_regularizer,
                 dcn_bias_lr_scale=dcn_lr_scale,
-                skip_quant=skip_quant)
+                skip_quant=skip_quant,
+            )
 
-        norm_lr = 0. if freeze_norm else 1.
+        norm_lr = 0.0 if freeze_norm else 1.0
         param_attr = ParamAttr(
             learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay) if norm_decay is not None else None)
+            regularizer=L2Decay(norm_decay) if norm_decay is not None else None,
+        )
         bias_attr = ParamAttr(
             learning_rate=norm_lr,
-            regularizer=L2Decay(norm_decay) if norm_decay is not None else None)
-        if norm_type in ['bn', 'sync_bn']:
+            regularizer=L2Decay(norm_decay) if norm_decay is not None else None,
+        )
+        if norm_type in ["bn", "sync_bn"]:
             self.norm = nn.BatchNorm2D(
-                ch_out, weight_attr=param_attr, bias_attr=bias_attr)
-        elif norm_type == 'gn':
+                ch_out, weight_attr=param_attr, bias_attr=bias_attr
+            )
+        elif norm_type == "gn":
             self.norm = nn.GroupNorm(
                 num_groups=norm_groups,
                 num_channels=ch_out,
                 weight_attr=param_attr,
-                bias_attr=bias_attr)
+                bias_attr=bias_attr,
+            )
         else:
             self.norm = None
 
@@ -266,13 +280,15 @@ class ConvNormLayer(nn.Layer):
 
 
 class LiteConv(nn.Layer):
-    def __init__(self,
-                 in_channels,
-                 out_channels,
-                 stride=1,
-                 with_act=True,
-                 norm_type='sync_bn',
-                 name=None):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        stride=1,
+        with_act=True,
+        norm_type="sync_bn",
+        name=None,
+    ):
         super(LiteConv, self).__init__()
         self.lite_conv = nn.Sequential()
         conv1 = ConvNormLayer(
@@ -282,21 +298,24 @@ class LiteConv(nn.Layer):
             stride=stride,
             groups=in_channels,
             norm_type=norm_type,
-            initializer=XavierUniform())
+            initializer=XavierUniform(),
+        )
         conv2 = ConvNormLayer(
             in_channels,
             out_channels,
             filter_size=1,
             stride=stride,
             norm_type=norm_type,
-            initializer=XavierUniform())
+            initializer=XavierUniform(),
+        )
         conv3 = ConvNormLayer(
             out_channels,
             out_channels,
             filter_size=1,
             stride=stride,
             norm_type=norm_type,
-            initializer=XavierUniform())
+            initializer=XavierUniform(),
+        )
         conv4 = ConvNormLayer(
             out_channels,
             out_channels,
@@ -304,18 +323,19 @@ class LiteConv(nn.Layer):
             stride=stride,
             groups=out_channels,
             norm_type=norm_type,
-            initializer=XavierUniform())
+            initializer=XavierUniform(),
+        )
         conv_list = [conv1, conv2, conv3, conv4]
-        self.lite_conv.add_sublayer('conv1', conv1)
-        self.lite_conv.add_sublayer('relu6_1', nn.ReLU6())
-        self.lite_conv.add_sublayer('conv2', conv2)
+        self.lite_conv.add_sublayer("conv1", conv1)
+        self.lite_conv.add_sublayer("relu6_1", nn.ReLU6())
+        self.lite_conv.add_sublayer("conv2", conv2)
         if with_act:
-            self.lite_conv.add_sublayer('relu6_2', nn.ReLU6())
-        self.lite_conv.add_sublayer('conv3', conv3)
-        self.lite_conv.add_sublayer('relu6_3', nn.ReLU6())
-        self.lite_conv.add_sublayer('conv4', conv4)
+            self.lite_conv.add_sublayer("relu6_2", nn.ReLU6())
+        self.lite_conv.add_sublayer("conv3", conv3)
+        self.lite_conv.add_sublayer("relu6_3", nn.ReLU6())
+        self.lite_conv.add_sublayer("conv4", conv4)
         if with_act:
-            self.lite_conv.add_sublayer('relu6_4', nn.ReLU6())
+            self.lite_conv.add_sublayer("relu6_4", nn.ReLU6())
 
     def forward(self, inputs):
         out = self.lite_conv(inputs)
@@ -323,7 +343,7 @@ class LiteConv(nn.Layer):
 
 
 class DropBlock(nn.Layer):
-    def __init__(self, block_size, keep_prob, name=None, data_format='NCHW'):
+    def __init__(self, block_size, keep_prob, name=None, data_format="NCHW"):
         """
         DropBlock layer, see https://arxiv.org/abs/1810.12890
 
@@ -343,8 +363,8 @@ class DropBlock(nn.Layer):
         if not self.training or self.keep_prob == 1:
             return x
         else:
-            gamma = (1. - self.keep_prob) / (self.block_size**2)
-            if self.data_format == 'NCHW':
+            gamma = (1.0 - self.keep_prob) / (self.block_size**2)
+            if self.data_format == "NCHW":
                 shape = x.shape[2:]
             else:
                 shape = x.shape[1:3]
@@ -357,27 +377,30 @@ class DropBlock(nn.Layer):
                 self.block_size,
                 stride=1,
                 padding=self.block_size // 2,
-                data_format=self.data_format)
-            mask = 1. - mask_inv
-            mask = mask.astype('float32')
-            x = x.astype('float32')
+                data_format=self.data_format,
+            )
+            mask = 1.0 - mask_inv
+            mask = mask.astype("float32")
+            x = x.astype("float32")
             y = x * mask * (mask.numel() / mask.sum())
             return y
 
 
 class AnchorGeneratorSSD(object):
-    def __init__(self,
-                 steps=[8, 16, 32, 64, 100, 300],
-                 aspect_ratios=[[2.], [2., 3.], [2., 3.], [2., 3.], [2.], [2.]],
-                 min_ratio=15,
-                 max_ratio=90,
-                 base_size=300,
-                 min_sizes=[30.0, 60.0, 111.0, 162.0, 213.0, 264.0],
-                 max_sizes=[60.0, 111.0, 162.0, 213.0, 264.0, 315.0],
-                 offset=0.5,
-                 flip=True,
-                 clip=False,
-                 min_max_aspect_ratios_order=False):
+    def __init__(
+        self,
+        steps=[8, 16, 32, 64, 100, 300],
+        aspect_ratios=[[2.0], [2.0, 3.0], [2.0, 3.0], [2.0, 3.0], [2.0], [2.0]],
+        min_ratio=15,
+        max_ratio=90,
+        base_size=300,
+        min_sizes=[30.0, 60.0, 111.0, 162.0, 213.0, 264.0],
+        max_sizes=[60.0, 111.0, 162.0, 213.0, 264.0, 315.0],
+        offset=0.5,
+        flip=True,
+        clip=False,
+        min_max_aspect_ratios_order=False,
+    ):
         self.steps = steps
         self.aspect_ratios = aspect_ratios
         self.min_ratio = min_ratio
@@ -393,30 +416,33 @@ class AnchorGeneratorSSD(object):
         if self.min_sizes == [] and self.max_sizes == []:
             num_layer = len(aspect_ratios)
             step = int(
-                math.floor(((self.max_ratio - self.min_ratio)) / (num_layer - 2
-                                                                  )))
-            for ratio in six.moves.range(self.min_ratio, self.max_ratio + 1,
-                                         step):
-                self.min_sizes.append(self.base_size * ratio / 100.)
-                self.max_sizes.append(self.base_size * (ratio + step) / 100.)
-            self.min_sizes = [self.base_size * .10] + self.min_sizes
-            self.max_sizes = [self.base_size * .20] + self.max_sizes
+                math.floor(((self.max_ratio - self.min_ratio)) / (num_layer - 2))
+            )
+            for ratio in six.moves.range(self.min_ratio, self.max_ratio + 1, step):
+                self.min_sizes.append(self.base_size * ratio / 100.0)
+                self.max_sizes.append(self.base_size * (ratio + step) / 100.0)
+            self.min_sizes = [self.base_size * 0.10] + self.min_sizes
+            self.max_sizes = [self.base_size * 0.20] + self.max_sizes
 
         self.num_priors = []
         for aspect_ratio, min_size, max_size in zip(
-                aspect_ratios, self.min_sizes, self.max_sizes):
+            aspect_ratios, self.min_sizes, self.max_sizes
+        ):
             if isinstance(min_size, (list, tuple)):
                 self.num_priors.append(
-                    len(_to_list(min_size)) + len(_to_list(max_size)))
+                    len(_to_list(min_size)) + len(_to_list(max_size))
+                )
             else:
-                self.num_priors.append((len(aspect_ratio) * 2 + 1) * len(
-                    _to_list(min_size)) + len(_to_list(max_size)))
+                self.num_priors.append(
+                    (len(aspect_ratio) * 2 + 1) * len(_to_list(min_size))
+                    + len(_to_list(max_size))
+                )
 
     def __call__(self, inputs, image):
         boxes = []
         for input, min_size, max_size, aspect_ratio, step in zip(
-                inputs, self.min_sizes, self.max_sizes, self.aspect_ratios,
-                self.steps):
+            inputs, self.min_sizes, self.max_sizes, self.aspect_ratios, self.steps
+        ):
             box, _ = ops.prior_box(
                 input=input,
                 image=image,
@@ -427,20 +453,23 @@ class AnchorGeneratorSSD(object):
                 clip=self.clip,
                 steps=[step, step],
                 offset=self.offset,
-                min_max_aspect_ratios_order=self.min_max_aspect_ratios_order)
+                min_max_aspect_ratios_order=self.min_max_aspect_ratios_order,
+            )
             boxes.append(paddle.reshape(box, [-1, 4]))
         return boxes
 
 
 class RCNNBox(object):
-    __shared__ = ['num_classes', 'export_onnx']
+    __shared__ = ["num_classes", "export_onnx"]
 
-    def __init__(self,
-                 prior_box_var=[10., 10., 5., 5.],
-                 code_type="decode_center_size",
-                 box_normalized=False,
-                 num_classes=80,
-                 export_onnx=False):
+    def __init__(
+        self,
+        prior_box_var=[10.0, 10.0, 5.0, 5.0],
+        code_type="decode_center_size",
+        box_normalized=False,
+        num_classes=80,
+        export_onnx=False,
+    ):
         super(RCNNBox, self).__init__()
         self.prior_box_var = prior_box_var
         self.code_type = code_type
@@ -456,8 +485,7 @@ class RCNNBox(object):
 
         if self.export_onnx:
             onnx_rois_num_per_im = rois_num[0]
-            origin_shape = paddle.expand(im_shape[0, :],
-                                         [onnx_rois_num_per_im, 2])
+            origin_shape = paddle.expand(im_shape[0, :], [onnx_rois_num_per_im, 2])
 
         else:
             origin_shape_list = []
@@ -469,8 +497,7 @@ class RCNNBox(object):
             # bbox_pred.shape: [N, C*4]
             for idx in range(batch_size):
                 rois_num_per_im = rois_num[idx]
-                expand_im_shape = paddle.expand(im_shape[idx, :],
-                                                [rois_num_per_im, 2])
+                expand_im_shape = paddle.expand(im_shape[idx, :], [rois_num_per_im, 2])
                 origin_shape_list.append(expand_im_shape)
 
             origin_shape = paddle.concat(origin_shape_list)
@@ -500,17 +527,19 @@ class RCNNBox(object):
 
 
 class MultiClassNMS(object):
-    def __init__(self,
-                 score_threshold=.05,
-                 nms_top_k=-1,
-                 keep_top_k=100,
-                 nms_threshold=.5,
-                 normalized=True,
-                 nms_eta=1.0,
-                 return_index=False,
-                 return_rois_num=True,
-                 trt=False,
-                 cpu=False):
+    def __init__(
+        self,
+        score_threshold=0.05,
+        nms_top_k=-1,
+        keep_top_k=100,
+        nms_threshold=0.5,
+        normalized=True,
+        nms_eta=1.0,
+        return_index=False,
+        return_rois_num=True,
+        trt=False,
+        cpu=False,
+    ):
         super(MultiClassNMS, self).__init__()
         self.score_threshold = score_threshold
         self.nms_top_k = nms_top_k
@@ -525,33 +554,34 @@ class MultiClassNMS(object):
 
     def __call__(self, bboxes, score, background_label=-1):
         """
-        bboxes (Tensor|List[Tensor]): 1. (Tensor) Predicted bboxes with shape 
+        bboxes (Tensor|List[Tensor]): 1. (Tensor) Predicted bboxes with shape
                                          [N, M, 4], N is the batch size and M
                                          is the number of bboxes
                                       2. (List[Tensor]) bboxes and bbox_num,
                                          bboxes have shape of [M, C, 4], C
                                          is the class number and bbox_num means
                                          the number of bboxes of each batch with
-                                         shape [N,] 
+                                         shape [N,]
         score (Tensor): Predicted scores with shape [N, C, M] or [M, C]
         background_label (int): Ignore the background label; For example, RCNN
-                                is num_classes and YOLO is -1. 
+                                is num_classes and YOLO is -1.
         """
         kwargs = self.__dict__.copy()
         if isinstance(bboxes, tuple):
             bboxes, bbox_num = bboxes
-            kwargs.update({'rois_num': bbox_num})
+            kwargs.update({"rois_num": bbox_num})
         if background_label > -1:
-            kwargs.update({'background_label': background_label})
-        kwargs.pop('trt')
-        kwargs.pop('cpu')
+            kwargs.update({"background_label": background_label})
+        kwargs.pop("trt")
+        kwargs.pop("cpu")
 
         # TODO(wangxinxin08): paddle version should be develop or 2.3 and above to run nms on tensorrt
-        if self.trt and (int(paddle.version.major) == 0 or
-                         (int(paddle.version.major) >= 2 and
-                          int(paddle.version.minor) >= 3)):
+        if self.trt and (
+            int(paddle.version.major) == 0
+            or (int(paddle.version.major) >= 2 and int(paddle.version.minor) >= 3)
+        ):
             # TODO(wangxinxin08): tricky switch to run nms on tensorrt
-            kwargs.update({'nms_eta': 1.1})
+            kwargs.update({"nms_eta": 1.1})
             bbox, bbox_num, _ = ops.multiclass_nms(bboxes, score, **kwargs)
             bbox = bbox.reshape([1, -1, 6])
             idx = paddle.nonzero(bbox[..., 0] != -1)
@@ -560,7 +590,7 @@ class MultiClassNMS(object):
         else:
             if self.cpu:
                 device = paddle.device.get_device()
-                paddle.set_device('cpu')
+                paddle.set_device("cpu")
                 outputs = ops.multiclass_nms(bboxes, score, **kwargs)
                 paddle.set_device(device)
                 return outputs
@@ -571,15 +601,17 @@ class MultiClassNMS(object):
 class MatrixNMS(object):
     __append_doc__ = True
 
-    def __init__(self,
-                 score_threshold=.05,
-                 post_threshold=.05,
-                 nms_top_k=-1,
-                 keep_top_k=100,
-                 use_gaussian=False,
-                 gaussian_sigma=2.,
-                 normalized=False,
-                 background_label=0):
+    def __init__(
+        self,
+        score_threshold=0.05,
+        post_threshold=0.05,
+        nms_top_k=-1,
+        keep_top_k=100,
+        use_gaussian=False,
+        gaussian_sigma=2.0,
+        normalized=False,
+        background_label=0,
+    ):
         super(MatrixNMS, self).__init__()
         self.score_threshold = score_threshold
         self.post_threshold = post_threshold
@@ -601,34 +633,32 @@ class MatrixNMS(object):
             use_gaussian=self.use_gaussian,
             gaussian_sigma=self.gaussian_sigma,
             background_label=self.background_label,
-            normalized=self.normalized)
+            normalized=self.normalized,
+        )
 
 
 class YOLOBox(object):
-    __shared__ = ['num_classes']
+    __shared__ = ["num_classes"]
 
-    def __init__(self,
-                 num_classes=80,
-                 conf_thresh=0.005,
-                 downsample_ratio=32,
-                 clip_bbox=True,
-                 scale_x_y=1.):
+    def __init__(
+        self,
+        num_classes=80,
+        conf_thresh=0.005,
+        downsample_ratio=32,
+        clip_bbox=True,
+        scale_x_y=1.0,
+    ):
         self.num_classes = num_classes
         self.conf_thresh = conf_thresh
         self.downsample_ratio = downsample_ratio
         self.clip_bbox = clip_bbox
         self.scale_x_y = scale_x_y
 
-    def __call__(self,
-                 yolo_head_out,
-                 anchors,
-                 im_shape,
-                 scale_factor,
-                 var_weight=None):
+    def __call__(self, yolo_head_out, anchors, im_shape, scale_factor, var_weight=None):
         boxes_list = []
         scores_list = []
         origin_shape = im_shape / scale_factor
-        origin_shape = paddle.cast(origin_shape, 'int32')
+        origin_shape = paddle.cast(origin_shape, "int32")
         for i, head_out in enumerate(yolo_head_out):
             boxes, scores = paddle.vision.ops.yolo_box(
                 head_out,
@@ -638,7 +668,8 @@ class YOLOBox(object):
                 self.conf_thresh,
                 self.downsample_ratio // 2**i,
                 self.clip_bbox,
-                scale_x_y=self.scale_x_y)
+                scale_x_y=self.scale_x_y,
+            )
             boxes_list.append(boxes)
             scores_list.append(paddle.transpose(scores, perm=[0, 2, 1]))
         yolo_boxes = paddle.concat(boxes_list, axis=1)
@@ -647,21 +678,18 @@ class YOLOBox(object):
 
 
 class SSDBox(object):
-    def __init__(self,
-                 is_normalized=True,
-                 prior_box_var=[0.1, 0.1, 0.2, 0.2],
-                 use_fuse_decode=False):
+    def __init__(
+        self,
+        is_normalized=True,
+        prior_box_var=[0.1, 0.1, 0.2, 0.2],
+        use_fuse_decode=False,
+    ):
         self.is_normalized = is_normalized
         self.norm_delta = float(not self.is_normalized)
         self.prior_box_var = prior_box_var
         self.use_fuse_decode = use_fuse_decode
 
-    def __call__(self,
-                 preds,
-                 prior_boxes,
-                 im_shape,
-                 scale_factor,
-                 var_weight=None):
+    def __call__(self, preds, prior_boxes, im_shape, scale_factor, var_weight=None):
         boxes, scores = preds
         boxes = paddle.concat(boxes, axis=1)
         prior_boxes = paddle.concat(prior_boxes)
@@ -671,7 +699,8 @@ class SSDBox(object):
                 self.prior_box_var,
                 boxes,
                 code_type="decode_center_size",
-                box_normalized=self.is_normalized)
+                box_normalized=self.is_normalized,
+            )
         else:
             pb_w = prior_boxes[:, 2] - prior_boxes[:, 0] + self.norm_delta
             pb_h = prior_boxes[:, 3] - prior_boxes[:, 1] + self.norm_delta
@@ -683,10 +712,13 @@ class SSDBox(object):
             out_h = paddle.exp(boxes[:, :, 3] * self.prior_box_var[3]) * pb_h
             output_boxes = paddle.stack(
                 [
-                    out_x - out_w / 2., out_y - out_h / 2., out_x + out_w / 2.,
-                    out_y + out_h / 2.
+                    out_x - out_w / 2.0,
+                    out_y - out_h / 2.0,
+                    out_x + out_w / 2.0,
+                    out_y + out_h / 2.0,
                 ],
-                axis=-1)
+                axis=-1,
+            )
 
         if self.is_normalized:
             h = (im_shape[:, 0] / scale_factor[:, 0]).unsqueeze(-1)
@@ -695,14 +727,13 @@ class SSDBox(object):
             output_boxes *= im_shape
         else:
             output_boxes[..., -2:] -= 1.0
-        output_scores = F.softmax(paddle.concat(
-            scores, axis=1)).transpose([0, 2, 1])
+        output_scores = F.softmax(paddle.concat(scores, axis=1)).transpose([0, 2, 1])
 
         return output_boxes, output_scores
 
 
 class TTFBox(object):
-    __shared__ = ['down_ratio']
+    __shared__ = ["down_ratio"]
 
     def __init__(self, max_per_img=100, score_thresh=0.01, down_ratio=4):
         super(TTFBox, self).__init__()
@@ -716,7 +747,7 @@ class TTFBox(object):
         """
         pad = (kernel - 1) // 2
         hmax = F.max_pool2d(heat, kernel, stride=1, padding=pad)
-        keep = paddle.cast(hmax == heat, 'float32')
+        keep = paddle.cast(hmax == heat, "float32")
         return heat * keep
 
     def _topk(self, scores):
@@ -735,8 +766,8 @@ class TTFBox(object):
 
         topk_score_r = paddle.reshape(topk_scores, [-1])
         topk_score, topk_ind = paddle.topk(topk_score_r, k)
-        k_t = paddle.full(topk_ind.shape, k, dtype='int64')
-        topk_clses = paddle.cast(paddle.floor_divide(topk_ind, k_t), 'float32')
+        k_t = paddle.full(topk_ind.shape, k, dtype="int64")
+        topk_clses = paddle.cast(paddle.floor_divide(topk_ind, k_t), "float32")
 
         topk_inds = paddle.reshape(topk_inds, [-1])
         topk_ys = paddle.reshape(topk_ys, [-1, 1])
@@ -751,8 +782,8 @@ class TTFBox(object):
         heatmap = F.sigmoid(hm)
         heat = self._simple_nms(heatmap)
         scores, inds, clses, ys, xs = self._topk(heat)
-        ys = paddle.cast(ys, 'float32') * self.down_ratio
-        xs = paddle.cast(xs, 'float32') * self.down_ratio
+        ys = paddle.cast(ys, "float32") * self.down_ratio
+        xs = paddle.cast(xs, "float32") * self.down_ratio
         scores = paddle.tensor.unsqueeze(scores, [1])
         clses = paddle.tensor.unsqueeze(clses, [1])
 
@@ -769,8 +800,7 @@ class TTFBox(object):
 
         scale_y = scale_factor[:, 0:1]
         scale_x = scale_factor[:, 1:2]
-        scale_expand = paddle.concat(
-            [scale_x, scale_y, scale_x, scale_y], axis=1)
+        scale_expand = paddle.concat([scale_x, scale_y, scale_x, scale_y], axis=1)
         boxes_shape = paddle.shape(bboxes)
         boxes_shape.stop_gradient = True
         scale_expand = paddle.expand(scale_expand, shape=boxes_shape)
@@ -790,9 +820,12 @@ class TTFBox(object):
         results = []
         results_num = []
         for i in range(scale_factor.shape[0]):
-            result, num = self._decode(hm[i:i + 1, ], wh[i:i + 1, ],
-                                       im_shape[i:i + 1, ],
-                                       scale_factor[i:i + 1, ])
+            result, num = self._decode(
+                hm[i : i + 1,],
+                wh[i : i + 1,],
+                im_shape[i : i + 1,],
+                scale_factor[i : i + 1,],
+            )
             results.append(result)
             results_num.append(num)
         results = paddle.concat(results, axis=0)
@@ -801,7 +834,7 @@ class TTFBox(object):
 
 
 class JDEBox(object):
-    __shared__ = ['num_classes']
+    __shared__ = ["num_classes"]
 
     def __init__(self, num_classes=1, conf_thresh=0.3, downsample_ratio=32):
         self.num_classes = num_classes
@@ -811,25 +844,30 @@ class JDEBox(object):
     def generate_anchor(self, nGh, nGw, anchor_wh):
         nA = len(anchor_wh)
         yv, xv = paddle.meshgrid([paddle.arange(nGh), paddle.arange(nGw)])
-        mesh = paddle.stack(
-            (xv, yv), axis=0).cast(dtype='float32')  # 2 x nGh x nGw
+        mesh = paddle.stack((xv, yv), axis=0).cast(dtype="float32")  # 2 x nGh x nGw
         meshs = paddle.tile(mesh, [nA, 1, 1, 1])
 
-        anchor_offset_mesh = anchor_wh[:, :, None][:, :, :, None].repeat(
-            int(nGh), axis=-2).repeat(
-                int(nGw), axis=-1)
-        anchor_offset_mesh = paddle.to_tensor(
-            anchor_offset_mesh.astype(np.float32))
+        anchor_offset_mesh = (
+            anchor_wh[:, :, None][:, :, :, None]
+            .repeat(int(nGh), axis=-2)
+            .repeat(int(nGw), axis=-1)
+        )
+        anchor_offset_mesh = paddle.to_tensor(anchor_offset_mesh.astype(np.float32))
         # nA x 2 x nGh x nGw
 
         anchor_mesh = paddle.concat([meshs, anchor_offset_mesh], axis=1)
-        anchor_mesh = paddle.transpose(anchor_mesh,
-                                       [0, 2, 3, 1])  # (nA x nGh x nGw) x 4
+        anchor_mesh = paddle.transpose(
+            anchor_mesh, [0, 2, 3, 1]
+        )  # (nA x nGh x nGw) x 4
         return anchor_mesh
 
     def decode_delta(self, delta, fg_anchor_list):
-        px, py, pw, ph = fg_anchor_list[:, 0], fg_anchor_list[:,1], \
-                        fg_anchor_list[:, 2], fg_anchor_list[:,3]
+        px, py, pw, ph = (
+            fg_anchor_list[:, 0],
+            fg_anchor_list[:, 1],
+            fg_anchor_list[:, 2],
+            fg_anchor_list[:, 3],
+        )
         dx, dy, dw, dh = delta[:, 0], delta[:, 1], delta[:, 2], delta[:, 3]
         gx = pw * dx + px
         gy = ph * dy + py
@@ -845,10 +883,9 @@ class JDEBox(object):
         anchor_mesh = self.generate_anchor(nGh, nGw, anchor_vec)
         anchor_mesh = paddle.unsqueeze(anchor_mesh, 0)
         pred_list = self.decode_delta(
-            paddle.reshape(
-                delta_map, shape=[-1, 4]),
-            paddle.reshape(
-                anchor_mesh, shape=[-1, 4]))
+            paddle.reshape(delta_map, shape=[-1, 4]),
+            paddle.reshape(anchor_mesh, shape=[-1, 4]),
+        )
         pred_map = paddle.reshape(pred_list, shape=[nA * nGh * nGw, 4])
         return pred_map
 
@@ -859,7 +896,8 @@ class JDEBox(object):
         boxes_list, scores_list = [], []
         for idx in range(nB):
             p = paddle.reshape(
-                head_out[idx], shape=[nA, self.num_classes + 5, nGh, nGw])
+                head_out[idx], shape=[nA, self.num_classes + 5, nGh, nGw]
+            )
             p = paddle.transpose(p, perm=[0, 2, 3, 1])  # [nA, nGh, nGw, 6]
             delta_map = p[:, :, :, :4]
             boxes = self.decode_delta_map(nA, nGh, nGw, delta_map, anchor_vec)
@@ -867,9 +905,11 @@ class JDEBox(object):
             boxes_list.append(boxes * stride)
 
             p_conf = paddle.transpose(
-                p[:, :, :, 4:6], perm=[3, 0, 1, 2])  # [2, nA, nGh, nGw]
-            p_conf = F.softmax(
-                p_conf, axis=0)[1, :, :, :].unsqueeze(-1)  # [nA, nGh, nGw, 1]
+                p[:, :, :, 4:6], perm=[3, 0, 1, 2]
+            )  # [2, nA, nGh, nGw]
+            p_conf = F.softmax(p_conf, axis=0)[1, :, :, :].unsqueeze(
+                -1
+            )  # [nA, nGh, nGw, 1]
             scores = paddle.reshape(p_conf, shape=[nA * nGh * nGw, 1])
             scores_list.append(scores)
 
@@ -884,13 +924,15 @@ class JDEBox(object):
             anc_w, anc_h = anchors[i][0::2], anchors[i][1::2]
             anchor_vec = np.stack((anc_w, anc_h), axis=1) / stride
             nA = len(anc_w)
-            boxes, scores = self._postprocessing_by_level(nA, stride, head_out,
-                                                          anchor_vec)
+            boxes, scores = self._postprocessing_by_level(
+                nA, stride, head_out, anchor_vec
+            )
             bbox_pred_list.append(paddle.concat([boxes, scores], axis=-1))
 
         yolo_boxes_scores = paddle.concat(bbox_pred_list, axis=1)
         boxes_idx_over_conf_thr = paddle.nonzero(
-            yolo_boxes_scores[:, :, -1] > self.conf_thresh)
+            yolo_boxes_scores[:, :, -1] > self.conf_thresh
+        )
         boxes_idx_over_conf_thr.stop_gradient = True
 
         return boxes_idx_over_conf_thr, yolo_boxes_scores
@@ -915,12 +957,14 @@ class MaskMatrixNMS(object):
         Variable: cate_scores, tensors of shape (n)
     """
 
-    def __init__(self,
-                 update_threshold=0.05,
-                 pre_nms_top_n=500,
-                 post_nms_top_n=100,
-                 kernel='gaussian',
-                 sigma=2.0):
+    def __init__(
+        self,
+        update_threshold=0.05,
+        pre_nms_top_n=500,
+        post_nms_top_n=100,
+        kernel="gaussian",
+        sigma=2.0,
+    ):
         super(MaskMatrixNMS, self).__init__()
         self.update_threshold = update_threshold
         self.pre_nms_top_n = pre_nms_top_n
@@ -934,12 +978,7 @@ class MaskMatrixNMS(object):
         else:
             return paddle.argsort(scores, descending=True)
 
-    def __call__(self,
-                 seg_preds,
-                 seg_masks,
-                 cate_labels,
-                 cate_scores,
-                 sum_masks=None):
+    def __call__(self, seg_preds, seg_masks, cate_labels, cate_scores, sum_masks=None):
         # sort and keep top nms_pre
         sort_inds = self._sort_score(cate_scores, self.pre_nms_top_n)
         seg_masks = paddle.gather(seg_masks, index=sort_inds)
@@ -956,33 +995,31 @@ class MaskMatrixNMS(object):
         # union.
         sum_masks_x = paddle.expand(sum_masks, shape=[n_samples, n_samples])
         # iou.
-        iou_matrix = (inter_matrix / (
-            sum_masks_x + paddle.transpose(sum_masks_x, [1, 0]) - inter_matrix))
+        iou_matrix = inter_matrix / (
+            sum_masks_x + paddle.transpose(sum_masks_x, [1, 0]) - inter_matrix
+        )
         iou_matrix = paddle.triu(iou_matrix, diagonal=1)
         # label_specific matrix.
         cate_labels_x = paddle.expand(cate_labels, shape=[n_samples, n_samples])
         label_matrix = paddle.cast(
-            (cate_labels_x == paddle.transpose(cate_labels_x, [1, 0])),
-            'float32')
+            (cate_labels_x == paddle.transpose(cate_labels_x, [1, 0])), "float32"
+        )
         label_matrix = paddle.triu(label_matrix, diagonal=1)
 
         # IoU compensation
         compensate_iou = paddle.max((iou_matrix * label_matrix), axis=0)
-        compensate_iou = paddle.expand(
-            compensate_iou, shape=[n_samples, n_samples])
+        compensate_iou = paddle.expand(compensate_iou, shape=[n_samples, n_samples])
         compensate_iou = paddle.transpose(compensate_iou, [1, 0])
 
         # IoU decay
         decay_iou = iou_matrix * label_matrix
 
         # matrix nms
-        if self.kernel == 'gaussian':
+        if self.kernel == "gaussian":
             decay_matrix = paddle.exp(-1 * self.sigma * (decay_iou**2))
-            compensate_matrix = paddle.exp(-1 * self.sigma *
-                                           (compensate_iou**2))
-            decay_coefficient = paddle.min(decay_matrix / compensate_matrix,
-                                           axis=0)
-        elif self.kernel == 'linear':
+            compensate_matrix = paddle.exp(-1 * self.sigma * (compensate_iou**2))
+            decay_coefficient = paddle.min(decay_matrix / compensate_matrix, axis=0)
+        elif self.kernel == "linear":
             decay_matrix = (1 - decay_iou) / (1 - compensate_iou)
             decay_coefficient = paddle.min(decay_matrix, axis=0)
         else:
@@ -990,14 +1027,14 @@ class MaskMatrixNMS(object):
 
         # update the score.
         cate_scores = cate_scores * decay_coefficient
-        y = paddle.zeros(shape=cate_scores.shape, dtype='float32')
-        keep = paddle.where(cate_scores >= self.update_threshold, cate_scores,
-                            y)
+        y = paddle.zeros(shape=cate_scores.shape, dtype="float32")
+        keep = paddle.where(cate_scores >= self.update_threshold, cate_scores, y)
         keep = paddle.nonzero(keep)
         keep = paddle.squeeze(keep, axis=[1])
         # Prevent empty and increase fake data
         keep = paddle.concat(
-            [keep, paddle.cast(paddle.shape(cate_scores)[0:1] - 1, 'int64')])
+            [keep, paddle.cast(paddle.shape(cate_scores)[0:1] - 1, "int64")]
+        )
 
         seg_preds = paddle.gather(seg_preds, index=keep)
         cate_scores = paddle.gather(cate_scores, index=keep)
@@ -1011,16 +1048,18 @@ class MaskMatrixNMS(object):
         return seg_preds, cate_scores, cate_labels
 
 
-def Conv2d(in_channels,
-           out_channels,
-           kernel_size,
-           stride=1,
-           padding=0,
-           dilation=1,
-           groups=1,
-           bias=True,
-           weight_init=Normal(std=0.001),
-           bias_init=Constant(0.)):
+def Conv2d(
+    in_channels,
+    out_channels,
+    kernel_size,
+    stride=1,
+    padding=0,
+    dilation=1,
+    groups=1,
+    bias=True,
+    weight_init=Normal(std=0.001),
+    bias_init=Constant(0.0),
+):
     weight_attr = paddle.framework.ParamAttr(initializer=weight_init)
     if bias:
         bias_attr = paddle.framework.ParamAttr(initializer=bias_init)
@@ -1035,21 +1074,24 @@ def Conv2d(in_channels,
         dilation,
         groups,
         weight_attr=weight_attr,
-        bias_attr=bias_attr)
+        bias_attr=bias_attr,
+    )
     return conv
 
 
-def ConvTranspose2d(in_channels,
-                    out_channels,
-                    kernel_size,
-                    stride=1,
-                    padding=0,
-                    output_padding=0,
-                    groups=1,
-                    bias=True,
-                    dilation=1,
-                    weight_init=Normal(std=0.001),
-                    bias_init=Constant(0.)):
+def ConvTranspose2d(
+    in_channels,
+    out_channels,
+    kernel_size,
+    stride=1,
+    padding=0,
+    output_padding=0,
+    groups=1,
+    bias=True,
+    dilation=1,
+    weight_init=Normal(std=0.001),
+    bias_init=Constant(0.0),
+):
     weight_attr = paddle.framework.ParamAttr(initializer=weight_init)
     if bias:
         bias_attr = paddle.framework.ParamAttr(initializer=bias_init)
@@ -1065,7 +1107,8 @@ def ConvTranspose2d(in_channels,
         dilation,
         groups,
         weight_attr=weight_attr,
-        bias_attr=bias_attr)
+        bias_attr=bias_attr,
+    )
     return conv
 
 
@@ -1077,11 +1120,8 @@ def BatchNorm2d(num_features, eps=1e-05, momentum=0.9, affine=True):
         weight_attr = None
         bias_attr = None
     batchnorm = nn.BatchNorm2D(
-        num_features,
-        momentum,
-        eps,
-        weight_attr=weight_attr,
-        bias_attr=bias_attr)
+        num_features, momentum, eps, weight_attr=weight_attr, bias_attr=bias_attr
+    )
     return batchnorm
 
 
@@ -1089,7 +1129,7 @@ def ReLU():
     return nn.ReLU()
 
 
-def Upsample(scale_factor=None, mode='nearest', align_corners=False):
+def Upsample(scale_factor=None, mode="nearest", align_corners=False):
     return nn.Upsample(None, scale_factor, mode, align_corners)
 
 
@@ -1106,7 +1146,7 @@ class Concat(nn.Layer):
         return paddle.concat(inputs, axis=self.dim)
 
     def extra_repr(self):
-        return 'dim={}'.format(self.dim)
+        return "dim={}".format(self.dim)
 
 
 def _convert_attention_mask(attn_mask, dtype):
@@ -1117,17 +1157,18 @@ def _convert_attention_mask(attn_mask, dtype):
                 to prevents attention to some unwanted positions, usually the
                 paddings or the subsequent positions. It is a tensor with shape
                 broadcasted to `[batch_size, n_head, sequence_length, sequence_length]`.
-                When the data type is bool, the unwanted positions have `False` 
-                values and the others have `True` values. When the data type is 
-                int, the unwanted positions have 0 values and the others have 1 
-                values. When the data type is float, the unwanted positions have 
-                `-INF` values and the others have 0 values. It can be None when 
+                When the data type is bool, the unwanted positions have `False`
+                values and the others have `True` values. When the data type is
+                int, the unwanted positions have 0 values and the others have 1
+                values. When the data type is float, the unwanted positions have
+                `-INF` values and the others have 0 values. It can be None when
                 nothing wanted or needed to be prevented attention to. Default None.
         dtype (VarType): The target type of `attn_mask` we expect.
     Returns:
         Tensor: A Tensor with shape same as input `attn_mask`, with data type `dtype`.
     """
     return nn.layer.transformer._convert_attention_mask(attn_mask, dtype)
+
 
 class MultiHeadAttention(nn.Layer):
     """
@@ -1164,13 +1205,15 @@ class MultiHeadAttention(nn.Layer):
             output = multi_head_attn(query, None, None, attn_mask=attn_mask)  # [2, 4, 128]
     """
 
-    def __init__(self,
-                 embed_dim,
-                 num_heads,
-                 dropout=0.,
-                 kdim=None,
-                 vdim=None,
-                 need_weights=False):
+    def __init__(
+        self,
+        embed_dim,
+        num_heads,
+        dropout=0.0,
+        kdim=None,
+        vdim=None,
+        need_weights=False,
+    ):
         super(MultiHeadAttention, self).__init__()
         self.embed_dim = embed_dim
         self.kdim = kdim if kdim is not None else embed_dim
@@ -1182,26 +1225,27 @@ class MultiHeadAttention(nn.Layer):
         self.need_weights = need_weights
 
         self.head_dim = embed_dim // num_heads
-        assert self.head_dim * num_heads == self.embed_dim, "embed_dim must be divisible by num_heads"
+        assert (
+            self.head_dim * num_heads == self.embed_dim
+        ), "embed_dim must be divisible by num_heads"
 
         if self._qkv_same_embed_dim:
             self.in_proj_weight = self.create_parameter(
                 shape=[embed_dim, 3 * embed_dim],
                 attr=None,
                 dtype=self._dtype,
-                is_bias=False)
+                is_bias=False,
+            )
             self.in_proj_bias = self.create_parameter(
-                shape=[3 * embed_dim],
-                attr=None,
-                dtype=self._dtype,
-                is_bias=True)
+                shape=[3 * embed_dim], attr=None, dtype=self._dtype, is_bias=True
+            )
         else:
             self.q_proj = nn.Linear(embed_dim, embed_dim)
             self.k_proj = nn.Linear(self.kdim, embed_dim)
             self.v_proj = nn.Linear(self.vdim, embed_dim)
 
         self.out_proj = nn.Linear(embed_dim, embed_dim)
-        self._type_list = ('q_proj', 'k_proj', 'v_proj')
+        self._type_list = ("q_proj", "k_proj", "v_proj")
 
         self._reset_parameters()
 
@@ -1216,15 +1260,22 @@ class MultiHeadAttention(nn.Layer):
         if self._qkv_same_embed_dim:
             tensor = F.linear(
                 x=tensor,
-                weight=self.in_proj_weight[:, index * self.embed_dim:(index + 1)
-                                           * self.embed_dim],
-                bias=self.in_proj_bias[index * self.embed_dim:(index + 1) *
-                                       self.embed_dim]
-                if self.in_proj_bias is not None else None)
+                weight=self.in_proj_weight[
+                    :, index * self.embed_dim : (index + 1) * self.embed_dim
+                ],
+                bias=(
+                    self.in_proj_bias[
+                        index * self.embed_dim : (index + 1) * self.embed_dim
+                    ]
+                    if self.in_proj_bias is not None
+                    else None
+                ),
+            )
         else:
             tensor = getattr(self, self._type_list[index])(tensor)
-        tensor = tensor.reshape(
-            [0, 0, self.num_heads, self.head_dim]).transpose([0, 2, 1, 3])
+        tensor = tensor.reshape([0, 0, self.num_heads, self.head_dim]).transpose(
+            [0, 2, 1, 3]
+        )
         return tensor
 
     def forward(self, query, key=None, value=None, attn_mask=None):
@@ -1270,12 +1321,11 @@ class MultiHeadAttention(nn.Layer):
         key = query if key is None else key
         value = query if value is None else value
         # compute q ,k ,v
-        q, k, v = (self.compute_qkv(t, i)
-                   for i, t in enumerate([query, key, value]))
+        q, k, v = (self.compute_qkv(t, i) for i, t in enumerate([query, key, value]))
 
         # scale dot product attention
         product = paddle.matmul(x=q, y=k, transpose_y=True)
-        scaling = float(self.head_dim)**-0.5
+        scaling = float(self.head_dim) ** -0.5
         product = product * scaling
 
         if attn_mask is not None:
@@ -1285,10 +1335,8 @@ class MultiHeadAttention(nn.Layer):
         weights = F.softmax(product)
         if self.dropout:
             weights = F.dropout(
-                weights,
-                self.dropout,
-                training=self.training,
-                mode="upscale_in_train")
+                weights, self.dropout, training=self.training, mode="upscale_in_train"
+            )
         out = paddle.matmul(weights, v)
 
         # combine heads
@@ -1303,12 +1351,14 @@ class MultiHeadAttention(nn.Layer):
             outs.append(weights)
         return out if len(outs) == 1 else tuple(outs)
 
+
 class ConvMixer(nn.Layer):
     def __init__(
-            self,
-            dim,
-            depth,
-            kernel_size=3, ):
+        self,
+        dim,
+        depth,
+        kernel_size=3,
+    ):
         super().__init__()
         self.dim = dim
         self.depth = depth
@@ -1321,16 +1371,22 @@ class ConvMixer(nn.Layer):
 
     @staticmethod
     def conv_mixer(
-            dim,
-            depth,
-            kernel_size, ):
+        dim,
+        depth,
+        kernel_size,
+    ):
         Seq, ActBn = nn.Sequential, lambda x: Seq(x, nn.GELU(), nn.BatchNorm2D(dim))
-        Residual = type('Residual', (Seq, ),
-                        {'forward': lambda self, x: self[0](x) + x})
-        return Seq(*[
-            Seq(Residual(
-                ActBn(
-                    nn.Conv2D(
-                        dim, dim, kernel_size, groups=dim, padding="same"))),
-                ActBn(nn.Conv2D(dim, dim, 1))) for i in range(depth)
-        ])
+        Residual = type("Residual", (Seq,), {"forward": lambda self, x: self[0](x) + x})
+        return Seq(
+            *[
+                Seq(
+                    Residual(
+                        ActBn(
+                            nn.Conv2D(dim, dim, kernel_size, groups=dim, padding="same")
+                        )
+                    ),
+                    ActBn(nn.Conv2D(dim, dim, 1)),
+                )
+                for i in range(depth)
+            ]
+        )

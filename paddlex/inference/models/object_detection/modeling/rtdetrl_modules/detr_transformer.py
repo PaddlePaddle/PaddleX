@@ -1,10 +1,10 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,33 +15,32 @@
 # Modified from DETR (https://github.com/facebookresearch/detr)
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
 from .modules.detr_ops import _get_clones
-from .modules.initializer import linear_init_, conv_init_, xavier_uniform_, normal_
+from .modules.initializer import conv_init_, linear_init_, normal_, xavier_uniform_
 from .modules.layers import MultiHeadAttention, _convert_attention_mask
 from .modules.position_encoding import PositionEmbedding
 
-
-__all__ = ['TransformerEncoderLayer']
+__all__ = ["TransformerEncoderLayer"]
 
 
 class TransformerEncoderLayer(nn.Layer):
-    def __init__(self,
-                 d_model,
-                 nhead,
-                 dim_feedforward=2048,
-                 dropout=0.1,
-                 activation="relu",
-                 attn_dropout=None,
-                 act_dropout=None,
-                 normalize_before=False):
+    def __init__(
+        self,
+        d_model,
+        nhead,
+        dim_feedforward=2048,
+        dropout=0.1,
+        activation="relu",
+        attn_dropout=None,
+        act_dropout=None,
+        normalize_before=False,
+    ):
         super(TransformerEncoderLayer, self).__init__()
         attn_dropout = dropout if attn_dropout is None else attn_dropout
         act_dropout = dropout if act_dropout is None else act_dropout
@@ -102,8 +101,13 @@ class TransformerEncoder(nn.Layer):
         output = src
         for i, layer in enumerate(self.layers):
             if self.training and i < self.with_rp:
-                output = recompute(layer, output, src_mask=src_mask, pos_embed=pos_embed,
-                                   **{"preserve_rng_state": True, "use_reentrant": False})
+                output = recompute(
+                    layer,
+                    output,
+                    src_mask=src_mask,
+                    pos_embed=pos_embed,
+                    **{"preserve_rng_state": True, "use_reentrant": False},
+                )
             else:
                 output = layer(output, src_mask=src_mask, pos_embed=pos_embed)
 
@@ -114,15 +118,17 @@ class TransformerEncoder(nn.Layer):
 
 
 class TransformerDecoderLayer(nn.Layer):
-    def __init__(self,
-                 d_model,
-                 nhead,
-                 dim_feedforward=2048,
-                 dropout=0.1,
-                 activation="relu",
-                 attn_dropout=None,
-                 act_dropout=None,
-                 normalize_before=False):
+    def __init__(
+        self,
+        d_model,
+        nhead,
+        dim_feedforward=2048,
+        dropout=0.1,
+        activation="relu",
+        attn_dropout=None,
+        act_dropout=None,
+        normalize_before=False,
+    ):
         super(TransformerDecoderLayer, self).__init__()
         attn_dropout = dropout if attn_dropout is None else attn_dropout
         act_dropout = dropout if act_dropout is None else act_dropout
@@ -152,13 +158,15 @@ class TransformerDecoderLayer(nn.Layer):
     def with_pos_embed(tensor, pos_embed):
         return tensor if pos_embed is None else tensor + pos_embed
 
-    def forward(self,
-                tgt,
-                memory,
-                tgt_mask=None,
-                memory_mask=None,
-                pos_embed=None,
-                query_pos_embed=None):
+    def forward(
+        self,
+        tgt,
+        memory,
+        tgt_mask=None,
+        memory_mask=None,
+        pos_embed=None,
+        query_pos_embed=None,
+    ):
         tgt_mask = _convert_attention_mask(tgt_mask, tgt.dtype)
 
         residual = tgt
@@ -191,24 +199,22 @@ class TransformerDecoderLayer(nn.Layer):
 
 
 class TransformerDecoder(nn.Layer):
-    def __init__(self,
-                 decoder_layer,
-                 num_layers,
-                 norm=None,
-                 return_intermediate=False):
+    def __init__(self, decoder_layer, num_layers, norm=None, return_intermediate=False):
         super(TransformerDecoder, self).__init__()
         self.layers = _get_clones(decoder_layer, num_layers)
         self.num_layers = num_layers
         self.norm = norm
         self.return_intermediate = return_intermediate
 
-    def forward(self,
-                tgt,
-                memory,
-                tgt_mask=None,
-                memory_mask=None,
-                pos_embed=None,
-                query_pos_embed=None):
+    def forward(
+        self,
+        tgt,
+        memory,
+        tgt_mask=None,
+        memory_mask=None,
+        pos_embed=None,
+        query_pos_embed=None,
+    ):
         tgt_mask = _convert_attention_mask(tgt_mask, tgt.dtype)
 
         output = tgt
@@ -220,7 +226,8 @@ class TransformerDecoder(nn.Layer):
                 tgt_mask=tgt_mask,
                 memory_mask=memory_mask,
                 pos_embed=pos_embed,
-                query_pos_embed=query_pos_embed)
+                query_pos_embed=query_pos_embed,
+            )
             if self.return_intermediate:
                 intermediate.append(self.norm(output))
 
@@ -234,57 +241,77 @@ class TransformerDecoder(nn.Layer):
 
 
 class DETRTransformer(nn.Layer):
-    __shared__ = ['hidden_dim']
+    __shared__ = ["hidden_dim"]
 
-    def __init__(self,
-                 num_queries=100,
-                 position_embed_type='sine',
-                 return_intermediate_dec=True,
-                 backbone_num_channels=2048,
-                 hidden_dim=256,
-                 nhead=8,
-                 num_encoder_layers=6,
-                 num_decoder_layers=6,
-                 dim_feedforward=2048,
-                 dropout=0.1,
-                 activation="relu",
-                 pe_temperature=10000,
-                 pe_offset=0.,
-                 attn_dropout=None,
-                 act_dropout=None,
-                 normalize_before=False):
+    def __init__(
+        self,
+        num_queries=100,
+        position_embed_type="sine",
+        return_intermediate_dec=True,
+        backbone_num_channels=2048,
+        hidden_dim=256,
+        nhead=8,
+        num_encoder_layers=6,
+        num_decoder_layers=6,
+        dim_feedforward=2048,
+        dropout=0.1,
+        activation="relu",
+        pe_temperature=10000,
+        pe_offset=0.0,
+        attn_dropout=None,
+        act_dropout=None,
+        normalize_before=False,
+    ):
         super(DETRTransformer, self).__init__()
-        assert position_embed_type in ['sine', 'learned'],\
-            f'ValueError: position_embed_type not supported {position_embed_type}!'
+        assert position_embed_type in [
+            "sine",
+            "learned",
+        ], f"ValueError: position_embed_type not supported {position_embed_type}!"
         self.hidden_dim = hidden_dim
         self.nhead = nhead
 
         encoder_layer = TransformerEncoderLayer(
-            hidden_dim, nhead, dim_feedforward, dropout, activation,
-            attn_dropout, act_dropout, normalize_before)
+            hidden_dim,
+            nhead,
+            dim_feedforward,
+            dropout,
+            activation,
+            attn_dropout,
+            act_dropout,
+            normalize_before,
+        )
         encoder_norm = nn.LayerNorm(hidden_dim) if normalize_before else None
-        self.encoder = TransformerEncoder(encoder_layer, num_encoder_layers,
-                                          encoder_norm)
+        self.encoder = TransformerEncoder(
+            encoder_layer, num_encoder_layers, encoder_norm
+        )
 
         decoder_layer = TransformerDecoderLayer(
-            hidden_dim, nhead, dim_feedforward, dropout, activation,
-            attn_dropout, act_dropout, normalize_before)
+            hidden_dim,
+            nhead,
+            dim_feedforward,
+            dropout,
+            activation,
+            attn_dropout,
+            act_dropout,
+            normalize_before,
+        )
         decoder_norm = nn.LayerNorm(hidden_dim)
         self.decoder = TransformerDecoder(
             decoder_layer,
             num_decoder_layers,
             decoder_norm,
-            return_intermediate=return_intermediate_dec)
+            return_intermediate=return_intermediate_dec,
+        )
 
-        self.input_proj = nn.Conv2D(
-            backbone_num_channels, hidden_dim, kernel_size=1)
+        self.input_proj = nn.Conv2D(backbone_num_channels, hidden_dim, kernel_size=1)
         self.query_pos_embed = nn.Embedding(num_queries, hidden_dim)
         self.position_embedding = PositionEmbedding(
             hidden_dim // 2,
             temperature=pe_temperature,
-            normalize=True if position_embed_type == 'sine' else False,
+            normalize=True if position_embed_type == "sine" else False,
             embed_type=position_embed_type,
-            offset=pe_offset)
+            offset=pe_offset,
+        )
 
         self._reset_parameters()
 
@@ -298,7 +325,7 @@ class DETRTransformer(nn.Layer):
     @classmethod
     def from_config(cls, cfg, input_shape):
         return {
-            'backbone_num_channels': [i.channels for i in input_shape][-1],
+            "backbone_num_channels": [i.channels for i in input_shape][-1],
         }
 
     def _convert_attention_mask(self, mask):
@@ -342,23 +369,26 @@ class DETRTransformer(nn.Layer):
         else:
             src_mask = None
 
-        memory = self.encoder(
-            src_flatten, src_mask=src_mask, pos_embed=pos_embed)
+        memory = self.encoder(src_flatten, src_mask=src_mask, pos_embed=pos_embed)
 
-        query_pos_embed = self.query_pos_embed.weight.unsqueeze(0).tile(
-            [bs, 1, 1])
+        query_pos_embed = self.query_pos_embed.weight.unsqueeze(0).tile([bs, 1, 1])
         tgt = paddle.zeros_like(query_pos_embed)
         output = self.decoder(
             tgt,
             memory,
             memory_mask=src_mask,
             pos_embed=pos_embed,
-            query_pos_embed=query_pos_embed)
+            query_pos_embed=query_pos_embed,
+        )
 
         if self.training:
             src_mask = src_mask.reshape([bs, 1, 1, h, w])
         else:
             src_mask = None
 
-        return (output, memory.transpose([0, 2, 1]).reshape([bs, c, h, w]),
-                src_proj, src_mask)
+        return (
+            output,
+            memory.transpose([0, 2, 1]).reshape([bs, c, h, w]),
+            src_proj,
+            src_mask,
+        )
