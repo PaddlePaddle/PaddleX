@@ -15,7 +15,6 @@ PaddleOCR-VL 是一款先进、高效的文档解析模型，专为文档中的�
 ```shell
 python -m pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 python -m pip install paddlex
-python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 ```
 > 对于 Windows 用户，请使用 WSL 或者 Docker 进行环境搭建。
 
