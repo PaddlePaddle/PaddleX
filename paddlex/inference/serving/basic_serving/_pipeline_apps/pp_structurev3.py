@@ -84,6 +84,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_ocr_results_with_table_cells=request.useOcrResultsWithTableCells,
             use_e2e_wired_table_rec_model=request.useE2eWiredTableRecModel,
             use_e2e_wireless_table_rec_model=request.useE2eWirelessTableRecModel,
+            markdown_ignore_labels=request.markdownIgnoreLabels,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []

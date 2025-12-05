@@ -2393,6 +2393,12 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>markdown_ignore_labels</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
