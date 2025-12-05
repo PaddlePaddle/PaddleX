@@ -28,14 +28,17 @@ class ImgBatch(Batch):
     def __init__(self):
         super().__init__()
         self.page_indexes = []
+        self.page_counts = []
 
-    def append(self, instance, input_path, page_index):
+    def append(self, instance, input_path, page_index, page_count):
         super().append(instance, input_path)
         self.page_indexes.append(page_index)
+        self.page_counts.append(page_count)
 
     def reset(self):
         super().reset()
         self.page_indexes = []
+        self.page_counts = []
 
 
 class ImageBatchSampler(BaseBatchSampler):
@@ -81,7 +84,7 @@ class ImageBatchSampler(BaseBatchSampler):
         batch = ImgBatch()
         for input in inputs:
             if isinstance(input, np.ndarray):
-                batch.append(input, None, None)
+                batch.append(input, None, None, None)
                 if len(batch) == self.batch_size:
                     yield batch
                     batch = ImgBatch()
@@ -93,10 +96,10 @@ class ImageBatchSampler(BaseBatchSampler):
                         if input.startswith("http")
                         else input
                     )
-                    for page_idx, page_img in enumerate(
-                        self.pdf_reader.read(file_path)
-                    ):
-                        batch.append(page_img, file_path, page_idx)
+                    doc = self.pdf_reader.load(file_path)
+                    page_count = len(doc)
+                    for page_idx, page_img in enumerate(self.pdf_reader.read(doc)):
+                        batch.append(page_img, file_path, page_idx, page_count)
                         if len(batch) == self.batch_size:
                             yield batch
                             batch = ImgBatch()
@@ -106,7 +109,7 @@ class ImageBatchSampler(BaseBatchSampler):
                         if input.startswith("http")
                         else input
                     )
-                    batch.append(file_path, file_path, None)
+                    batch.append(file_path, file_path, None, None)
                     if len(batch) == self.batch_size:
                         yield batch
                         batch = ImgBatch()

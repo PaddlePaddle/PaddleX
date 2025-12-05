@@ -215,6 +215,18 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self.chart_recognition_model = self.create_model(
             chart_recognition_config,
         )
+        self.markdown_ignore_labels = config.get(
+            "markdown_ignore_labels",
+            [
+                "number",
+                "footnote",
+                "header",
+                "header_image",
+                "footer",
+                "footer_image",
+                "aside_text",
+            ],
+        )
 
         return
 
@@ -791,6 +803,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         chart_res_list: list,
         formula_res_list: list,
         text_rec_score_thresh: Union[float, None] = None,
+        markdown_ignore_labels: List[str] = [],
     ) -> list:
         """
         Retrieves the layout parsing result based on the layout detection result, OCR result, and other recognition results.
@@ -836,9 +849,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
         parsing_res_list = self.sort_layout_parsing_blocks(layout_parsing_page)
 
         order_index = 1
+        visualize_order_labels = [
+            label
+            for label in BLOCK_LABEL_MAP["visualize_index_labels"]
+            if label not in markdown_ignore_labels
+        ]
         for index, block in enumerate(parsing_res_list):
             block.index = index
-            if block.label in BLOCK_LABEL_MAP["visualize_index_labels"]:
+            if block.label in visualize_order_labels:
                 block.order_index = order_index
                 order_index += 1
 
@@ -854,6 +872,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
         format_block_content: Union[bool, None],
+        markdown_ignore_labels: Optional[list[str]] = None,
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -896,6 +915,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if format_block_content is None:
             format_block_content = self.format_block_content
 
+        if markdown_ignore_labels is None:
+            markdown_ignore_labels = self.markdown_ignore_labels
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_seal_recognition=use_seal_recognition,
@@ -904,6 +926,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
             format_block_content=format_block_content,
+            markdown_ignore_labels=markdown_ignore_labels,
         )
 
     def predict(
@@ -940,6 +963,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_ocr_results_with_table_cells: bool = True,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
+        markdown_ignore_labels: Optional[list[str]] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -982,6 +1006,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
+            markdown_ignore_labels (Optional[list[str]]): The list of ignored markdown labels. Default is None.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -996,6 +1021,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_chart_recognition,
             use_region_detection,
             format_block_content,
+            markdown_ignore_labels,
         )
 
         if not self.check_model_settings_valid(model_settings):
@@ -1204,6 +1230,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             for (
                 input_path,
                 page_index,
+                page_count,
                 doc_preprocessor_image,
                 doc_preprocessor_res,
                 layout_det_res,
@@ -1216,6 +1243,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             ) in zip(
                 batch_data.input_paths,
                 batch_data.page_indexes,
+                batch_data.page_counts,
                 doc_preprocessor_images,
                 doc_preprocessor_results,
                 layout_det_results,
@@ -1252,6 +1280,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     chart_res_list=chart_res_list,
                     formula_res_list=formula_res_list,
                     text_rec_score_thresh=text_rec_score_thresh,
+                    markdown_ignore_labels=model_settings["markdown_ignore_labels"],
                 )
 
                 for formula_res in formula_res_list:
@@ -1263,6 +1292,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 single_img_res = {
                     "input_path": input_path,
                     "page_index": page_index,
+                    "page_count": page_count,
+                    "width": doc_preprocessor_image.shape[1],
+                    "height": doc_preprocessor_image.shape[0],
                     "doc_preprocessor_res": doc_preprocessor_res,
                     "layout_det_res": layout_det_res,
                     "region_det_res": region_det_res,

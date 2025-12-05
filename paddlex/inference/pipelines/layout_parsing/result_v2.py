@@ -239,6 +239,9 @@ class LayoutParsingResultV2(
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
+        data["page_count"] = self["page_count"]
+        data["width"] = self["width"]
+        data["height"] = self["height"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         parsing_res_list: List[LayoutBlock] = self["parsing_res_list"]
@@ -364,11 +367,23 @@ class LayoutParsingResultV2(
                 ),
                 "algorithm": lambda block: block.content.strip("\n"),
                 "seal": format_seal_func,
+                "number": format_text_plain_func,
+                "footnote": format_text_plain_func,
+                "header": format_text_plain_func,
+                "header_image": format_image_plain_func,
+                "footer": format_text_plain_func,
+                "footer_image": format_image_plain_func,
+                "aside_text": format_text_plain_func,
             }
+            for label in self["model_settings"].get("markdown_ignore_labels", []):
+                handle_funcs_dict.pop(label, None)
 
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
+        data["page_count"] = self["page_count"]
+        data["width"] = self["width"]
+        data["height"] = self["height"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         parsing_res_list: List[LayoutBlock] = self["parsing_res_list"]
@@ -542,6 +557,8 @@ class LayoutParsingResultV2(
             "algorithm": lambda block: block.content.strip("\n"),
             "seal": format_seal_func,
         }
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
 
         markdown_content = ""
         last_label = None
