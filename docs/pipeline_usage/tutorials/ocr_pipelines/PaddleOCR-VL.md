@@ -1375,6 +1375,24 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>maxNewTokens</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>max_new_tokens</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mergeLayoutBlocks</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>merge_layout_blocks</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>mardown_ignore_labels</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>prettifyMarkdown</code></td>
 <td><code>boolean</code></td>
 <td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>

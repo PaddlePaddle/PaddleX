@@ -2436,6 +2436,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>markdown_ignore_labels</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>

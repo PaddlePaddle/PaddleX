@@ -135,6 +135,9 @@ class TritonPythonModel(BaseTritonPythonModel):
                             top_p=inputs_g[0].topP,
                             min_pixels=inputs_g[0].minPixels,
                             max_pixels=inputs_g[0].maxPixels,
+                            max_new_tokens=inputs_g[0].maxNewTokens,
+                            merge_layout_blocks=inputs_g[0].mergeLayoutBlocks,
+                            markdown_ignore_labels=inputs_g[0].markdownIgnoreLabels,
                         )
                     )
 
@@ -200,6 +203,9 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 input.topP,
                                 input.minPixels,
                                 input.maxPixels,
+                                input.maxNewTokens,
+                                input.mergeLayoutBlocks,
+                                input.markdownIgnoreLabels,
                             )
                         ),
                     )

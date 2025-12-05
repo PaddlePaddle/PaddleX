@@ -46,6 +46,9 @@ class InferRequest(ocr.BaseInferRequest):
     topP: Optional[float] = None
     minPixels: Optional[int] = None
     maxPixels: Optional[int] = None
+    maxNewTokens: Optional[int] = None
+    mergeLayoutBlocks: Optional[bool] = None
+    markdownIgnoreLabels: Optional[List[str]] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
     visualize: Optional[bool] = None

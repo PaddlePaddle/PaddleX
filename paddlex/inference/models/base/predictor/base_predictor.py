@@ -158,7 +158,7 @@ class BasePredictor(
 
         if self._use_local_model:
             self._use_hpip = use_hpip
-            model_paths = get_model_paths(self.model_dir)
+            model_paths = get_model_paths(self.model_dir, self.MODEL_FILE_PREFIX)
             if "paddle_dyn" in model_paths or "safetensors" in model_paths:
                 self._use_static_model = False
             else:
