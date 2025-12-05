@@ -8794,7 +8794,7 @@ If it is a PDF file, each page of the PDF will be processed separately, and each
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -8810,6 +8810,12 @@ If it is a PDF file, each page of the PDF will be processed separately, and each
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>format_block_content</code></td>
+<td>Whether to format the content in <code>block_content</code> as Markdown. If set to <code>None</code>, the instantiation value is used; otherwise, this parameter takes precedence.</td>
+<td><code>bool|None</code></td>
+<td></td>
 </tr>
 <tr>
 <td><code>layout_threshold</code></td>
@@ -9074,10 +9080,16 @@ If it is a PDF file, each page of the PDF will be processed separately, and each
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>True</code></td>
+</tr>
+<tr>
+<td><code>markdown_ignore_labels</code></td>
+<td>Layout labels that need to be ignored in Markdown. If set to <code>None</code>, the initialized default value will be used: <code>['number','footnote','header','header_image','footer','footer_image','aside_text']</code></td>
+<td><code>list|None</code></td>
+<td></td>
 </tr>
 </table>
 
@@ -9178,6 +9190,15 @@ If it is a PDF file, each page of the PDF will be processed separately, and each
 <p><code>page_index</code>: <code>(Union[int, None])</code> If the input is a PDF file, this indicates which page of the PDF it is; otherwise, it is <code>None</code>.</p>
 </li>
 <li>
+<p><code>page_count</code>: <code>(Union[int, None])</code> If the input is a PDF file, it indicates the total number of pages in the PDF; otherwise, it is <code>None</code>.</p>
+</li>
+<li>
+<p><code>width</code>: <code>(int)</code> The width of the original input image.</p>
+</li>
+<li>
+<p><code>height</code>: <code>(int)</code> The height of the original input image.</p>
+</li>
+<li>
 <p><code>model_settings</code>: <code>(Dict[str, bool])</code> Model parameters required for configuring the pipeline.</p>
 <ul>
 <li><code>use_doc_preprocessor</code>: <code>(bool)</code> Controls whether to enable the document preprocessor sub-line.</li>
@@ -9186,6 +9207,7 @@ If it is a PDF file, each page of the PDF will be processed separately, and each
 <li><code>use_table_recognition</code>: <code>(bool)</code> Controls whether to enable the table recognition sub-line.</li>
 <li><code>use_formula_recognition</code>: <code>(bool)</code> Controls whether to enable the formula recognition sub-line.</li>
 <li><code>format_block_content</code>: <code>(bool)</code> Controls whether to format the <code>block_content</code> into Markdown format</li>
+<li><code>markdown_ignore_labels</code>: <code>(List[str])</code> Labels of layout regions that need to be ignored in Markdown, defaulting to <code>['number','footnote','header','header_image','footer','footer_image','aside_text']</code></li>
 </ul>
 </li>
 <li>
@@ -10376,7 +10398,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 5, 2025 13:18:35 UTC">December 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 5, 2025 13:26:47 UTC">December 5, 2025</span>
   </span>
 
     
@@ -10386,7 +10408,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 5, 2025 13:18:35 UTC">December 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 5, 2025 13:26:47 UTC">December 5, 2025</span>
   </span>
 
     
