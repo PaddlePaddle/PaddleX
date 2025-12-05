@@ -219,9 +219,9 @@ def build_handle_funcs_dict(
         "number": format_text_plain_func,
         "footnote": format_text_plain_func,
         "header": format_text_plain_func,
-        "header_image": format_image_plain_func,
+        "header_image": image_func,
         "footer": format_text_plain_func,
-        "footer_image": format_image_plain_func,
+        "footer_image": image_func,
         "aside_text": format_text_plain_func,
     }
 
@@ -412,8 +412,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 formula_func=format_formula_func,
                 seal_func=format_seal_func,
             )
-            for label in self["model_settings"].get("markdown_ignore_labels", []):
-                handle_funcs_dict.pop(label, None)
 
         parsing_res_list = self["parsing_res_list"]
         parsing_res_list_json = []
