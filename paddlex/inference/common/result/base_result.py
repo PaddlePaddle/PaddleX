@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import inspect
 import random
 import time
@@ -43,7 +44,7 @@ class AutoWeakList(UserList):
 
     def __iter__(self):
         """Iterate over items in the list."""
-        for item in super().__iter__():
+        for item in self.data:
             if isinstance(item, weakref.WeakMethod):
                 func = item()
                 if func is not None:
@@ -58,6 +59,17 @@ class AutoWeakList(UserList):
             func = item()
             return func
         return item
+
+    def __deepcopy__(self, memo):
+        """Deep copy the object using the provided memory map."""
+        result = []
+        for item in self.data:
+            if isinstance(item, weakref.WeakMethod):
+                func = weakref.WeakMethod(item())
+                result.append(func)
+            else:
+                result.append(copy.deepcopy(item, memo))
+        return result
 
 
 class BaseResult(dict, JsonMixin, StrMixin):
