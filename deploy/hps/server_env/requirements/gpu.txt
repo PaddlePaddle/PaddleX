@@ -329,9 +329,8 @@ ruamel-yaml==0.18.10
     # via paddlex (../../../setup.py)
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-safetensors @ https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
+safetensors==0.7.0
     # via
-    #   -r requirements/app.in
     #   paddlepaddle-gpu
     #   paddlex (../../../setup.py)
 scikit-image==0.24.0
