@@ -1608,7 +1608,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1624,6 +1624,12 @@ In the above Python script, the following steps are executed:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>format_block_content</code></td>
+<td>Whether to format the content in <code>block_content</code> as Markdown. If set to <code>None</code>, the instantiation value is used; otherwise, this parameter takes precedence.</td>
+<td><code>bool|None</code></td>
+<td></td>
 </tr>
 <tr>
 <td><code>layout_threshold</code></td>
@@ -1888,10 +1894,16 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the initialized parameter value, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>True</code></td>
+</tr>
+<tr>
+<td><code>markdown_ignore_labels</code></td>
+<td>Layout labels that need to be ignored in Markdown. If set to <code>None</code>, the initialized default value will be used: <code>['number','footnote','header','header_image','footer','footer_image','aside_text']</code></td>
+<td><code>list|None</code></td>
+<td></td>
 </tr>
 </table>
 
@@ -1987,6 +1999,12 @@ In the above Python script, the following steps are executed:
 
     - `page_index`: `(Union[int, None])` If the input is a PDF file, this indicates which page of the PDF it is; otherwise, it is `None`.
 
+    - `page_count`: `(Union[int, None])` If the input is a PDF file, it indicates the total number of pages in the PDF; otherwise, it is `None`.
+
+    - `width`: `(int)` The width of the original input image.
+
+    - `height`: `(int)` The height of the original input image.
+
     - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring the pipeline.
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessor sub-line.
@@ -1995,6 +2013,7 @@ In the above Python script, the following steps are executed:
         - `use_table_recognition`: `(bool)` Controls whether to enable the table recognition sub-line.
         - `use_formula_recognition`: `(bool)` Controls whether to enable the formula recognition sub-line.
         - `format_block_content`: `(bool)` Controls whether to format the `block_content` into Markdown format
+        - `markdown_ignore_labels`: `(List[str])` Labels of layout regions that need to be ignored in Markdown, defaulting to `['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
     - `parsing_res_list`: `(List[Dict])` A list of parsing results, where each element is a dictionary. The order of the list is the reading order after parsing.
         - `block_bbox`: `(np.ndarray)` The bounding box of the layout area.
@@ -2433,6 +2452,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td><code>useE2eWirelessTableRecModel</code></td>
 <td><code>boolean</code></td>
 <td>Please refer to the description of the <code>use_e2e_wireless_table_rec_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>markdown_ignore_labels</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>

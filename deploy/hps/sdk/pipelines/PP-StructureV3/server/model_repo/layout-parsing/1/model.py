@@ -163,6 +163,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                             use_e2e_wireless_table_rec_model=inputs_g[
                                 0
                             ].useE2eWirelessTableRecModel,
+                            markdown_ignore_labels=inputs_g[0].markdownIgnoreLabels,
                         )
                     )
 
@@ -243,6 +244,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                             input.useOcrResultsWithTableCells,
                             input.useE2eWiredTableRecModel,
                             input.useE2eWirelessTableRecModel,
+                            input.markdownIgnoreLabels,
                         ),
                     )
                 )

@@ -21,7 +21,7 @@ output = pipeline.predict(
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
-    use_seal_recognition=True,
+    use_seal_recognition=False,
     use_table_recognition=True,
 )
 

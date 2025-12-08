@@ -100,8 +100,7 @@ RUN --mount=type=bind,source=deploy/hps/server_env/requirements/${DEVICE_TYPE}.t
     python -m pip install --requirement /tmp/requirements.txt --requirement /tmp/hpi_requirements.txt \
     && if [ "${ENV_TYPE}" = 'dev' ]; then \
         python -m pip install --requirement /tmp/dev_requirements.txt; \
-    fi \
-    && python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
+    fi
 
 RUN --mount=type=bind,source=.,target=/tmp/PaddleX,rw \
     python -m pip install --no-deps /tmp/PaddleX
@@ -141,6 +140,8 @@ RUN groupadd -g 1000 paddlex \
 # Not sure if all these deps are necessary
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libre2-5 libssl1.1 libb64-0d libnuma1 libarchive13 python3.10-dev libgl1-mesa-glx libglib2.0-0 libgomp1 ccache binutils build-essential texlive texlive-latex-base texlive-latex-extra \
+    && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core fonts-liberation fonts-noto-cjk fonts-wqy-microhei fonts-freefont-ttf \
+    && fc-cache -fv \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build3 --chown=paddlex:paddlex /paddlex/libs /paddlex/libs

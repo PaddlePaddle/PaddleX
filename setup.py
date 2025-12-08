@@ -68,7 +68,7 @@ BASE_DEP_SPECS = {
     "regex": "",
     "requests": "",
     "ruamel.yaml": "",
-    "safetensors": "",
+    "safetensors": ">= 0.7.0",
     "scikit-image": "",
     "scikit-learn": "",
     "sentencepiece": "",

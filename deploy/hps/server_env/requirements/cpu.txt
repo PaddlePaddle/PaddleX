@@ -129,6 +129,8 @@ imageio==2.37.0
     # via scikit-image
 imagesize==1.4.1
     # via paddlex (../../../setup.py)
+jieba==0.42.1
+    # via paddlex (../../../setup.py)
 jinja2==3.1.5
     # via paddlex (../../../setup.py)
 jiter==0.8.2
@@ -219,6 +221,8 @@ openai==1.63.2
     # via
     #   langchain-openai
     #   paddlex (../../../setup.py)
+opencc==1.1.9
+    # via paddlex (../../../setup.py)
 opencv-contrib-python==4.10.0.84
     # via
     #   -r requirements/app.in
@@ -290,6 +294,8 @@ pyparsing==3.2.1
     # via matplotlib
 pypdfium2==4.30.1
     # via paddlex (../../../setup.py)
+pypinyin==0.55.0
+    # via paddlex (../../../setup.py)
 python-bidi==0.6.6
     # via paddlex (../../../setup.py)
 python-dateutil==2.9.0.post0
@@ -329,9 +335,8 @@ ruamel-yaml==0.18.10
     # via paddlex (../../../setup.py)
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-safetensors @ https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
+safetensors==0.7.0
     # via
-    #   -r requirements/app.in
     #   paddlepaddle
     #   paddlex (../../../setup.py)
 scikit-image==0.24.0

@@ -15,7 +15,6 @@ PaddleOCR-VL 是一款先进、高效的文档解析模型，专为文档中的�
 ```shell
 python -m pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 python -m pip install paddlex
-python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 ```
 > 对于 Windows 用户，请使用 WSL 或者 Docker 进行环境搭建。
 
@@ -543,6 +542,18 @@ for item in markdown_images:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>merge_layout_blocks</code></td>
+<td>控制是否对跨栏或上下交错分栏的版面检测框进行合并。如果设置为<code>None</code>，将使用初始化的默认值，默认初始化为<code>True</code>。</td>
+<td><code>bool|None</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>markdown_ignore_labels</code></td>
+<td>需要在Markdown中忽略的版面标签。如果设置为<code>None</code>，将使用初始化的默认值:<code>['number','footnote','header','header_image','footer','footer_image','aside_text']</code></td>
+<td><code>list|None</code></td>
+<td></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>用于推理的设备。支持指定具体卡号：
 <ul>
@@ -682,6 +693,18 @@ MKL-DNN 缓存容量。
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>merge_layout_blocks</code></td>
+<td>控制是否对跨栏或上下交错分栏的版面检测框进行合并。如果不设置，将使用初始化的默认值，默认初始化为<code>True</code>。</td>
+<td><code>bool</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>markdown_ignore_labels</code></td>
+<td>需要在Markdown中忽略的版面标签。如果不设置，将使用初始化的参数值。</td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
 <td><code>use_queues</code></td>
 <td>用于控制是否启用内部队列。当设置为 <code>True</code> 时，数据加载（如将 PDF 页面渲染为图像）、版面检测模型处理以及 VLM 推理将分别在独立线程中异步执行，通过队列传递数据，从而提升效率。对于页数较多的 PDF 文档，或是包含大量图像或 PDF 文件的目录，这种方式尤其高效。</td>
 <td><code>bool|None</code></td>
@@ -727,6 +750,24 @@ MKL-DNN 缓存容量。
 <td><code>max_pixels</code></td>
 <td>VL模型预处理图像时允许的最大像素数。</td>
 <td><code>int|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>max_new_tokens</code></td>
+<td>VL模型生成的最大token数。</td>
+<td><code>int|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>merge_layout_blocks</code></td>
+<td>控制是否对跨栏或上下交错分栏的版面检测框进行合并。</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>markdown_ignore_labels</code></td>
+<td>需要在Markdown中忽略的版面标签。</td>
+<td><code>list|None</code></td>
 <td><code>None</code></td>
 </tr>
 </table>
@@ -835,7 +876,13 @@ MKL-DNN 缓存容量。
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
     - `input_path`: `(str)` 待预测图像或者PDF的输入路径
 
-    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，表示当前是PDF的第几页，从0开始，否则为 `None`
+
+    - `page_count`: `(Union[int, None])` 如果输入是PDF文件，表示当前是PDF的总页数，否则为 `None`
+
+    - `width`: `(int)` 原始输入图像的宽度。
+
+    - `height`: `(int)` 原始输入图像的高度。
 
     - `model_settings`: `(Dict[str, bool])` 配置 PaddleOCR-VL 所需的模型参数
 
@@ -843,6 +890,8 @@ MKL-DNN 缓存容量。
         - `use_layout_detection`: `(bool)` 控制是否启用版面检测模块
         - `use_chart_recognition`: `(bool)` 控制是否开启图表识别功能
         - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容
+        - `merge_layout_blocks`: `(bool)` 控制是否对多栏布局或上下交错分栏的版面框进行合并
+        - `markdown_ignore_labels`: `(List[str])` 需要在Markdown中忽略的版面标签，默认为`['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果dict，仅当`use_doc_preprocessor=True`时存在
         - `input_path`: `(str)` 文档预处理子接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`，此处为`None`
@@ -1372,6 +1421,24 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>maxPixels</code></td>
 <td><code>number</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>max_pixels</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>maxNewTokens</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>max_new_tokens</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mergeLayoutBlocks</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>merge_layout_blocks</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>mardown_ignore_labels</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>

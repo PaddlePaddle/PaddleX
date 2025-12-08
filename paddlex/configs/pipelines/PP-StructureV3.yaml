@@ -10,6 +10,14 @@ use_formula_recognition: True
 use_chart_recognition: False
 use_region_detection: True
 format_block_content: False
+markdown_ignore_labels:
+  - number
+  - footnote
+  - header
+  - header_image
+  - footer
+  - footer_image
+  - aside_text
 
 SubModules:
   LayoutDetection:
