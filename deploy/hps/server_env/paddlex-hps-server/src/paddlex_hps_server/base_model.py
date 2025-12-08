@@ -61,10 +61,14 @@ class BaseTritonPythonModel(object):
         logging.info("Output names: %s", self.output_names)
 
         if args["model_instance_kind"] == "GPU":
+            if env.DEVICE_TYPE != "gpu":
+                raise pb_utils.TritonModelException(
+                    f"Expected device type to be 'gpu', but got {repr(env.DEVICE_TYPE)}"
+                )
             self._device_type = "gpu"
             self._device_id = int(args["model_instance_device_id"])
         elif args["model_instance_kind"] == "CPU":
-            self._device_type = "cpu"
+            self._device_type = env.DEVICE_TYPE
             self._device_id = None
         else:
             raise pb_utils.TritonModelException(
