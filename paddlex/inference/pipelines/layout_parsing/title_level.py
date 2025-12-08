@@ -63,7 +63,6 @@ def cluster_global_heights(entries, k_clusters=4):
     heights = [e["height"] for e in entries]
     uniq = sorted(set(heights))
 
-    # 如果不同高度小于4，则按照高度排序
     if len(uniq) == 0:
         return {}
 
@@ -75,7 +74,6 @@ def cluster_global_heights(entries, k_clusters=4):
 
     centers = km.cluster_centers_.reshape(-1)
 
-    # 簇中心从大到小排序（大字号就层级高）
     order = np.argsort(-centers)
     old2new = {int(old): new_idx + 1 for new_idx, old in enumerate(order)}
 
@@ -102,10 +100,6 @@ def compute_global_symbol_seq(entries):
 
     return seq
 
-
-# ---------------------------------------------------------
-# 5. 核心：根据标题 entries 计算最终层级
-# ---------------------------------------------------------
 def compute_levels_for_entries(entries):
 
     phys_map = cluster_global_heights(entries)
@@ -125,9 +119,6 @@ def compute_levels_for_entries(entries):
 
         stype, D = get_symbol_and_depth_and_token(e["content"])
 
-        # --------------------------
-        # 桶分类
-        # --------------------------
         if D > 0:
             bucket = "A"
         else:
@@ -139,12 +130,8 @@ def compute_levels_for_entries(entries):
                     B_level = lvl
                     break
 
-        # 物理层
         L_phys = phys_map.get(e["height"], 1)
 
-        # -------------------------
-        # A 桶（三票机制）
-        # -------------------------
         if bucket == "A":
             L_exp = D
 
@@ -165,15 +152,9 @@ def compute_levels_for_entries(entries):
             else:
                 L_final = L_seq
 
-        # -------------------------
-        # B 桶
-        # -------------------------
         elif bucket == "B":
             L_final = B_level
 
-        # -------------------------
-        # C 桶：纯物理层
-        # -------------------------
         else:
             L_final = L_phys
 
@@ -182,15 +163,8 @@ def compute_levels_for_entries(entries):
         contents.append(e["content"])
         levels.append(e["level"])
 
-    # print(contents)
-    # print(levels)
-
     return entries
 
-
-# ---------------------------------------------------------
-# 6. 针对 parsing_res_list 的完整处理流程
-# ---------------------------------------------------------
 def assign_levels_to_parsing_res(parsing_res_list):
     """
     parsing_res_list 是一个 LayoutBlock 对象列表
@@ -225,14 +199,8 @@ def assign_levels_to_parsing_res(parsing_res_list):
     if len(entries) == 0:
         return parsing_res_list
 
-    # -------------------------------------------
-    # ② 计算层级
-    # -------------------------------------------
     entries = compute_levels_for_entries(entries)
 
-    # -------------------------------------------
-    # ③ 写回 LayoutBlock 对象
-    # -------------------------------------------
     for e in entries:
         blk = e["origin_block"]
         setattr(blk, "title_level", e["level"])
