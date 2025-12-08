@@ -177,18 +177,23 @@ class DETRPostProcess(object):
 class RTDETRConfig(PretrainedConfig):
     def __init__(
         self,
-        PPHGNetV2,
+        backbone,
         HybridEncoder,
         RTDETRTransformer,
         DINOHead,
         DETRPostProcess,
     ):
-        self.arch = PPHGNetV2["arch"]
-        self.return_idx = PPHGNetV2["return_idx"]
-        self.freeze_stem_only = PPHGNetV2["freeze_stem_only"]
-        self.freeze_at = PPHGNetV2["freeze_at"]
-        self.freeze_norm = PPHGNetV2["freeze_norm"]
-        self.lr_mult_list = PPHGNetV2["lr_mult_list"]
+        if backbone["name"] == "PPHGNetV2":
+            self.arch = backbone["arch"]
+            self.return_idx = backbone["return_idx"]
+            self.freeze_stem_only = backbone["freeze_stem_only"]
+            self.freeze_at = backbone["freeze_at"]
+            self.freeze_norm = backbone["freeze_norm"]
+            self.lr_mult_list = backbone["lr_mult_list"]
+        else:
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for backbone {backbone['name']}."
+            )
         self.hidden_dim = HybridEncoder["hidden_dim"]
         self.use_encoder_idx = HybridEncoder["use_encoder_idx"]
         self.num_encoder_layers = HybridEncoder["num_encoder_layers"]
