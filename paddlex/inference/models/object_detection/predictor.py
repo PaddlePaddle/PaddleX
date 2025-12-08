@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ from typing import Any, List, Optional, Sequence, Tuple, Union
 import numpy as np
 
 from ....modules.object_detection.model_list import MODELS
+from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ..base import BasePredictor
@@ -104,6 +105,7 @@ class DetPredictor(BasePredictor):
                     "small",
                 ], f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'] or a dict, but got {layout_merge_bboxes_mode}"
 
+        self.device = kwargs.get("device", None)
         self.img_size = img_size
         self.threshold = threshold
         self.layout_nms = layout_nms
@@ -143,7 +145,18 @@ class DetPredictor(BasePredictor):
         if self._use_static_model:
             infer = self.create_static_infer()
         else:
-            if self.model_name not in []:
+            if self.model_name == "RT-DETR-L":
+                from .modeling import RTDETR
+
+                with TemporaryDeviceChanger(self.device):
+                    infer = RTDETR.from_pretrained(
+                        self.model_dir,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    )
+                    infer.eval()
+            else:
                 raise RuntimeError(
                     f"There is no dynamic graph implementation for model {repr(self.model_name)}."
                 )
@@ -237,7 +250,8 @@ class DetPredictor(BasePredictor):
         batch_inputs = self.pre_ops[-1](datas)
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        with TemporaryDeviceChanger(self.device):
+            batch_preds = self.infer(batch_inputs)
 
         # process a batch of predictions into a list of single image result
         preds_list = self._format_output(batch_preds)
