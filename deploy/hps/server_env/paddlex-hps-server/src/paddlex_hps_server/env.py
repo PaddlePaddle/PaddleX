@@ -14,6 +14,7 @@
 
 import os
 
+DEVICE_TYPE = os.getenv("PADDLEX_HPS_DEVICE_TYPE", "cpu")
 PIPELINE_CONFIG_PATH = os.getenv("PADDLEX_HPS_PIPELINE_CONFIG_PATH", "")
 USE_HPIP = os.getenv("PADDLEX_HPS_USE_HPIP", "")
 
