@@ -26,8 +26,10 @@ def full_to_half(text: str) -> str:
     return "".join(result)
 
 
-# Calculate total columns including colspan and rowspan, accounting for merged cells
 def calculate_table_total_columns(soup):
+    """
+    alculate total columns including colspan and rowspan, accounting for merged cells
+    """
     rows = soup.find_all("tr")
     if not rows:
         return 0
@@ -53,25 +55,24 @@ def calculate_table_total_columns(soup):
     return max_cols
 
 
-# Calculate the actual number of columns in a single row
 def calculate_row_columns(row):
+    """
+    Calculate the actual number of columns in a single row
+    """
     return sum(int(cell.get("colspan", 1)) for cell in row.find_all(["td", "th"]))
 
 
-# Calculate the visual number of columns in a single row, excluding colspan (merged cells count as one)
 def calculate_visual_columns(row):
+    """
+    Calculate the visual number of columns in a single row, excluding colspan (merged cells count as one)
+    """
     return len(row.find_all(["td", "th"]))
 
 
-def get_table_html(block):
-    """获取表格 HTML"""
-    if block.label == "table" and block.content:
-        return block.content
-    return ""
-
-
-# Determine how many identical rows exist at the beginning of two tables
 def detect_table_headers(soup1, soup2, max_header_rows=5):
+    """
+    Determine how many identical rows exist at the beginning of two tables
+    """
     rows1 = soup1.find_all("tr")
     rows2 = soup2.find_all("tr")
     # Check only the minimum number of rows
@@ -146,8 +147,8 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
     if not allowed_before:
         return False, None, None
 
-    html_prev = get_table_html(prev_block)
-    html_curr = get_table_html(curr_block)
+    html_prev = prev_block.content
+    html_curr = curr_block.content
     if not html_prev or not html_curr:
         return False, None, None
     soup_prev = BeautifulSoup(html_prev, "html.parser")
@@ -173,30 +174,50 @@ def perform_table_merge(soup_prev, soup_curr):
 
 def merge_tables(pages):
     nums = 0
+    # get the length of each page
+    page_lens = [len(page) for page in pages]
     for i in range(len(pages) - 1, 0, -1):
         page_curr = pages[i]
         page_prev = pages[i - 1]
 
-        curr_block = next((b for b in page_curr if b.label == "table"), None)
-        if not curr_block:
-            continue
+        for block in page_curr:
+            if block.label == "table":
+                curr_block = block
+                break
+        else:
+            curr_block = None
 
-        prev_block = next((b for b in reversed(page_prev) if b.label == "table"), None)
-        if not prev_block:
-            continue
-        can_merge, soup_prev, soup_curr = can_merge_tables(
-            page_prev, prev_block, page_curr, curr_block
-        )
+        for block in reversed(page_prev):
+            if block.label == "table":
+                prev_block = block
+                break
+        else:
+            prev_block = None
+
+        # both curr_block and prev_block should not be None
+        if curr_block and prev_block:
+            can_merge, soup_prev, soup_curr = can_merge_tables(
+                page_prev, prev_block, page_curr, curr_block
+            )
+        else:
+            can_merge = False
+
         if can_merge:
-            nums += 1
             merged_html = perform_table_merge(soup_prev, soup_curr)
             prev_block.content = merged_html
             curr_block.content = ""
-    return pages, nums
+            # one table spilt into more than two pages, the group_id should be the same
+            if curr_block.group_id is not None:
+                prev_block.group_id = curr_block.group_id
+            else:
+                new_id = pages[i - 1].index(prev_block) + sum(page_lens[: i - 1])
+                prev_block.group_id = new_id
+                curr_block.group_id = new_id
+    return pages
 
 
 def merge_tables_across_pages(pages):
-    pages, _ = merge_tables(pages)
+    pages = merge_tables(pages)
 
     layout_parsing_result = []
     for page in pages:

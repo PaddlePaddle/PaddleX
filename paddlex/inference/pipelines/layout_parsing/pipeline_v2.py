@@ -1380,7 +1380,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             title_level: Whether to assign title levels
 
         Returns:
-            LayoutParsingResultV2: Combined parsing result
+            ProcessedLayoutParsingResult: Combined parsing result after merge_table or title_level policy
         """
         # Initialize result data structure
         layout_parsing_result = {
@@ -1411,23 +1411,13 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
             blocks_by_page.append(single_img_res.get("parsing_res_list", []))
 
-            for key in [
-                "input_path",
-                "page_count",
-                "width",
-                "height",
-                "doc_preprocessor_res",
-                "layout_det_res",
-                "region_det_res",
-                "overall_ocr_res",
-                "table_res_list",
-                "seal_res_list",
-                "chart_res_list",
-                "formula_res_list",
-                "imgs_in_doc",
-                "model_settings",
-            ]:
-                value = single_img_res.get(key, [])
+            for key, value in single_img_res.items():
+                if key == "parsing_res_list":
+                    continue
+
+                if key not in layout_parsing_result:
+                    layout_parsing_result[key] = []
+
                 if isinstance(value, (list, tuple, set)):
                     layout_parsing_result[key].extend(list(value))
                 else:

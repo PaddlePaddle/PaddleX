@@ -32,8 +32,10 @@ SYMBOL_PATTERNS = {
 }
 
 
-# Extract numbering type and its semantic level
 def get_symbol_and_level(content: str):
+    """
+    Extract numbering type and its semantic level
+    """
     txt = str(content).strip()
 
     if SYMBOL_PATTERNS["NUM_LIST_WITH_BRACKET"].match(txt):
@@ -58,24 +60,24 @@ def get_symbol_and_level(content: str):
 
 # Special keywords that should be treated as level-1 headings
 SPECIAL_KEYWORDS = {
-    1: [
-        "ABSTRACT",
-        "SUMMARY",
-        "RESUME",
-        "绪论",
-        "引言",
-        "CONTENTS",
-        "REFERENCES",
-        "参考文献",
-        "APPENDIX",
-        "附录",
-        "ACKNOWLEDGMENTS",
-    ]
+    "ABSTRACT": 1,
+    "SUMMARY": 1,
+    "RESUME": 1,
+    "绪论": 1,
+    "引言": 1,
+    "CONTENTS": 1,
+    "REFERENCES": 1,
+    "参考文献": 1,
+    "APPENDIX": 1,
+    "附录": 1,
+    "ACKNOWLEDGMENTS": 1,
 }
 
 
-# Cluster heading heights to infer level based on font size
 def cluster_global_heights(entries, k_clusters=4):
+    """
+    Cluster heading heights to infer level based on font size
+    """
 
     from sklearn.cluster import KMeans
 
@@ -106,14 +108,16 @@ def cluster_global_heights(entries, k_clusters=4):
     return mapping
 
 
-# Assign a global ordering to different numbering styles
 def compute_global_symbol_seq(entries, title_symbol_level):
+    """
+    Assign a global ordering to different numbering styles
+    """
 
     seq = {}
     counter = 1
 
-    for e in entries:
-        symbol, level = title_symbol_level[e["content"]]
+    for idx, e in enumerate(entries):
+        symbol, level = title_symbol_level[idx]
 
         if level > 0 and symbol not in seq:
             seq[symbol] = counter
@@ -122,15 +126,17 @@ def compute_global_symbol_seq(entries, title_symbol_level):
     return seq
 
 
-# Compute final level for each heading
 def compute_levels_for_entries(entries):
+    """
+    Compute final level for each heading
+    """
 
     # get title's symbol and level
     title_symbol_level = {}
-    for e in entries:
+    for idx, e in enumerate(entries):
         symbol, level = get_symbol_and_level(e["content"])
         e["symbol"], e["level"] = symbol, level
-        title_symbol_level[e["content"]] = (symbol, level)
+        title_symbol_level[idx] = (symbol, level)
 
     cluster_map = cluster_global_heights(entries)
     global_seq = compute_global_symbol_seq(entries, title_symbol_level)
@@ -141,58 +147,52 @@ def compute_levels_for_entries(entries):
     contents = []
     levels = []
 
-    for e in entries:
-
-        content_u = str(e["content"]).upper()
+    for idx, e in enumerate(entries):
 
         if e.get("level") == 0:
             continue
 
-        symbol, level = title_symbol_level[e["content"]]
+        symbol, level = title_symbol_level[idx]
 
         # if matches the semantics in SYMBOL_PATTERNS,bucket the semantic level
         if level > 0:
-            bucket = "Semantic"
+            bucket = "semantic"
         # Check special keywords (ABSTRACT, REFERENCES, etc.)
-        elif any(w in content_u for kw in SPECIAL_KEYWORDS.values() for w in kw):
-            for level, keywords in SPECIAL_KEYWORDS.items():
-                if any(w in content_u for w in keywords):
-                    RelativeOrder_level = level
-                    break
-            bucket = "RelativeOrder"
+        elif str(e["content"]).upper() in SPECIAL_KEYWORDS:
+            bucket = "special_word"
         else:
-            bucket = "Cluster"
+            bucket = "cluster"
 
-        Cluster_level = cluster_map[e["height"]]
+        cluster_level = cluster_map[e["height"]]
 
-        if bucket == "Semantic":
-            Semantic_level = level
+        if bucket == "semantic":
+            semantic_level = level
 
             if symbol == "NUM_LIST":
                 if first_num_level != 0:
-                    RelativeOrder_level = global_seq.get(symbol) + (
+                    relative_order_level = global_seq.get(symbol) + (
                         level - first_num_level
                     )
                 else:
                     first_num_level = level
-                    RelativeOrder_level = global_seq.get(symbol)
+                    relative_order_level = global_seq.get(symbol)
             else:
-                RelativeOrder_level = global_seq.get(symbol)
+                relative_order_level = global_seq.get(symbol)
 
             # Voting among three signals
-            votes = [Semantic_level, RelativeOrder_level, Cluster_level]
+            votes = [semantic_level, relative_order_level, cluster_level]
             most_common = Counter(votes).most_common(1)
 
             if most_common[0][1] > 1:
                 final_level = most_common[0][0]
             else:
-                final_level = RelativeOrder_level
+                final_level = relative_order_level
 
-        elif bucket == "RelativeOrder":
-            final_level = RelativeOrder_level
+        elif bucket == "special_word":
+            final_level = SPECIAL_KEYWORDS[e["content"]]
 
         else:
-            final_level = Cluster_level
+            final_level = cluster_level
 
         e["level"] = int(final_level)
 
@@ -202,8 +202,10 @@ def compute_levels_for_entries(entries):
     return entries
 
 
-# Write computed levels back to the parsing results
 def assign_levels_to_parsing_res(parsing_res_list):
+    """
+    Write computed levels back to the parsing results
+    """
 
     entries = []
 
@@ -212,8 +214,8 @@ def assign_levels_to_parsing_res(parsing_res_list):
         if block.label not in ("paragraph_title", "doc_title"):
             continue
 
-        content = getattr(block, "content", "")
-        bbox = getattr(block, "bbox")
+        content = block.content
+        bbox = block.bbox
         height = bbox[3] - bbox[1]
 
         if height is None:
