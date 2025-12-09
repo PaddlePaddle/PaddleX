@@ -13,5 +13,5 @@
 # limitations under the License.
 
 from .configuration_utils import PretrainedConfig
-from .hf_state_dict_utils import HFStateDictMixin
+from .hf_state_dict_utils import BNHFStateDictMixin
 from .model_utils import PretrainedModel

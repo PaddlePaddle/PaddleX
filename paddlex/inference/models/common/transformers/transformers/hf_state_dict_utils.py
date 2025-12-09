@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class HFStateDictMixin:
+class BNHFStateDictMixin:
     def _get_forward_key_rules(self):
         return [
             ("_mean", "_mean", "running_mean"),
