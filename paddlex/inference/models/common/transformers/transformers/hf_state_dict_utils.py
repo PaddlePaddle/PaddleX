@@ -13,7 +13,10 @@
 # limitations under the License.
 
 
-class BNHFStateDictMixin:
+class BatchNormHFStateDictMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def _get_forward_key_rules(self):
         return [
             ("_mean", "_mean", "running_mean"),

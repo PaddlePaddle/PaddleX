@@ -17,7 +17,7 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 
 from ...common.transformers.transformers import (
-    BNHFStateDictMixin,
+    BatchNormHFStateDictMixin,
     PretrainedConfig,
     PretrainedModel,
 )
@@ -197,7 +197,7 @@ class ResnetStraight(nn.Layer):
         return out3
 
 
-class UVDocNet(BNHFStateDictMixin, PretrainedModel):
+class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
     config_class = PretrainedConfig
 
     def __init__(self, config: PretrainedConfig):
