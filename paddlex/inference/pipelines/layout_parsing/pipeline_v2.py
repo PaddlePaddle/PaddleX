@@ -32,10 +32,10 @@ from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .layout_objects import LayoutBlock, LayoutRegion
-from .result_v2 import LayoutParsingResultV2
-from ..layout_parsing.merge_table import merge_tables_across_pages
-from ..layout_parsing.title_level import assign_levels_to_parsing_res
+from .merge_table import merge_tables_across_pages
+from .result_v2 import LayoutParsingResultV2, ProcessedLayoutParsingResult
 from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
+from .title_level import assign_levels_to_parsing_res
 from .utils import (
     calculate_bbox_area,
     calculate_minimum_enclosing_bbox,
@@ -1365,26 +1365,30 @@ class _LayoutParsingPipelineV2(BasePipeline):
             )
 
         return markdown_texts
+
     def concatenate_pages(
         self,
         res_list: list,
-        merge_talble: bool = True,
+        merge_table: bool = True,
         title_level: bool = True,
     ):
         """Concatenate layout parsing results from multiple pages.
-        
+
         Args:
             res_list: List of page parsing results
             merge_talble: Whether to merge tables across pages
             title_level: Whether to assign title levels
-            
+
         Returns:
             LayoutParsingResultV2: Combined parsing result
         """
         # Initialize result data structure
         layout_parsing_result = {
-            "input_path": None,
-            "parsing_res_list": [], 
+            "input_path": [],
+            "page_count": [],
+            "width": [],
+            "height": [],
+            "parsing_res_list": [],
             "doc_preprocessor_res": [],
             "layout_det_res": [],
             "region_det_res": [],
@@ -1394,28 +1398,24 @@ class _LayoutParsingPipelineV2(BasePipeline):
             "chart_res_list": [],
             "formula_res_list": [],
             "imgs_in_doc": [],
-            "model_settings": None,
+            "model_settings": [],
         }
-        
-        pages = []
-        input_path_list = set()
+
+        blocks_by_page = []
 
         for single_img_res in res_list:
 
-            input_path_list.add(single_img_res.get("input_path"))
-
-            if layout_parsing_result["model_settings"] is None:
-                layout_parsing_result["model_settings"] = single_img_res.get(
-                    "model_settings"
-                )
-
             layout_parsing_result["parsing_res_list"].extend(
-                list(single_img_res.get("parsing_res_list", []))
+                single_img_res.get("parsing_res_list", [])
             )
 
-            pages.append(list(single_img_res.get("parsing_res_list", [])))
+            blocks_by_page.append(single_img_res.get("parsing_res_list", []))
 
             for key in [
+                "input_path",
+                "page_count",
+                "width",
+                "height",
                 "doc_preprocessor_res",
                 "layout_det_res",
                 "region_det_res",
@@ -1425,6 +1425,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 "chart_res_list",
                 "formula_res_list",
                 "imgs_in_doc",
+                "model_settings",
             ]:
                 value = single_img_res.get(key, [])
                 if isinstance(value, (list, tuple, set)):
@@ -1432,25 +1433,17 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 else:
                     layout_parsing_result[key].append(value)
 
-        if merge_talble:
-            layout_parsing_result["parsing_res_list"] = merge_tables_across_pages(pages)
+        if merge_table:
+            layout_parsing_result["parsing_res_list"] = merge_tables_across_pages(
+                blocks_by_page
+            )
         if title_level:
-            layout_parsing_result["parsing_res_list"] = assign_levels_to_parsing_res(layout_parsing_result["parsing_res_list"])
+            layout_parsing_result["parsing_res_list"] = assign_levels_to_parsing_res(
+                layout_parsing_result["parsing_res_list"]
+            )
 
-        if len(input_path_list) == 1 :
-            layout_parsing_result["input_path"] = list(input_path_list)[0]
-        else:
-            layout_parsing_result["input_path"] = None
+        return ProcessedLayoutParsingResult(layout_parsing_result)
 
-        layout_parsing_result["page_index"] = None
-
-        if isinstance(layout_parsing_result["doc_preprocessor_res"], list):
-            if len(layout_parsing_result["doc_preprocessor_res"]) > 0:
-                layout_parsing_result["doc_preprocessor_res"] = layout_parsing_result["doc_preprocessor_res"][0]
-            else:
-                layout_parsing_result["doc_preprocessor_res"] = None
-
-        return LayoutParsingResultV2(layout_parsing_result)
 
 @pipeline_requires_extra("ocr")
 class LayoutParsingPipelineV2(AutoParallelImageSimpleInferencePipeline):
