@@ -207,7 +207,8 @@ def _load_part_state_dict_from_safetensors(
 
                 if not return_numpy and device == "expected":
                     weight = weight._copy_to(
-                        paddle.framework._current_expected_place(), False
+                        paddle.framework._current_expected_place(),
+                        True,
                     )
                 weight = _transpose_hf_weight(key, weight)
                 if return_numpy:
