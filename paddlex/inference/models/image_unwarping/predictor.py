@@ -71,10 +71,10 @@ class WarpPredictor(BasePredictor):
         if self._use_static_model:
             infer = self.create_static_infer()
         else:
-            from .modeling import UVDocnet
+            from .modeling import UVDocNet
 
             with TemporaryDeviceChanger(self.device):
-                infer = UVDocnet.from_pretrained(
+                infer = UVDocNet.from_pretrained(
                     self.model_dir, use_safetensors=True, convert_from_hf=True
                 )
             infer.eval()

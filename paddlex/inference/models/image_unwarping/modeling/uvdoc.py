@@ -16,7 +16,11 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers import (
+    HFStateDictMixin,
+    PretrainedConfig,
+    PretrainedModel,
+)
 
 
 def conv3x3(in_channels, out_channels, kernel_size, stride=1):
@@ -193,11 +197,11 @@ class ResnetStraight(nn.Layer):
         return out3
 
 
-class UVDocnet(PretrainedModel):
+class UVDocNet(HFStateDictMixin, PretrainedModel):
     config_class = PretrainedConfig
 
     def __init__(self, config: PretrainedConfig):
-        super(UVDocnet, self).__init__(config)
+        super(UVDocNet, self).__init__(config)
 
         self.num_filter = 32
         self.in_channels = 3
@@ -373,38 +377,12 @@ class UVDocnet(PretrainedModel):
 
         return [out.cpu().numpy()]
 
-    def get_transpose_weight_keys(self):
-        pass
+    def _get_forward_key_rules(self):
+        default_rules = super()._get_forward_key_rules()
+        custom_rules = [("out_point_positions2D.2._weight", "_weight", "weight")]
+        return default_rules + custom_rules
 
-    def get_hf_state_dict(self, *args, **kwargs):
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            elif "out_point_positions2D.2._weight" in old_key:
-                new_key = old_key.replace("_weight", "weight")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-            elif "out_point_positions2D.2.weight" in old_key:
-                key_mapping[old_key] = old_key.replace("weight", "_weight")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)
+    def _get_reverse_key_rules(self):
+        default_rules = super()._get_reverse_key_rules()
+        custom_rules = [("out_point_positions2D.2.weight", "weight", "_weight")]
+        return default_rules + custom_rules
