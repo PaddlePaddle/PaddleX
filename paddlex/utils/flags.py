@@ -70,6 +70,7 @@ DISABLE_MODEL_SOURCE_CHECK = os.environ.get(
     "PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", False
 )
 
+HUGGING_FACE_ENDPOINT = os.environ.get("PADDLE_PDX_HUGGING_FACE_ENDPOINT", "https://huggingface.co")
 
 # Inference Benchmark
 INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)
