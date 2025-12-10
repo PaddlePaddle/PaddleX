@@ -14,9 +14,6 @@
 
 
 class BatchNormHFStateDictMixin:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def _get_forward_key_rules(self):
         return [
             ("_mean", "_mean", "running_mean"),
@@ -30,6 +27,12 @@ class BatchNormHFStateDictMixin:
         ]
 
     def get_hf_state_dict(self, *args, **kwargs):
+
+        try:
+            super().get_hf_state_dict(*args, **kwargs)
+        except NotImplementedError:
+            pass
+
         model_state_dict = self.state_dict(*args, **kwargs)
         hf_state_dict = {}
         rules = self._get_forward_key_rules()
@@ -44,6 +47,12 @@ class BatchNormHFStateDictMixin:
         return hf_state_dict
 
     def set_hf_state_dict(self, state_dict, *args, **kwargs):
+
+        try:
+            super().set_hf_state_dict(state_dict, *args, **kwargs)
+        except NotImplementedError:
+            pass
+
         key_mapping = {}
         rules = self._get_reverse_key_rules()
 
