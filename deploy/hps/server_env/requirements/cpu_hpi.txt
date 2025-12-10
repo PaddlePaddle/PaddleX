@@ -28,13 +28,17 @@ numpy==1.24.4
     # via
     #   -c requirements/cpu.txt
     #   onnx
+    #   onnx-graphsurgeon
     #   onnxruntime
     #   opencv-contrib-python
     #   ultra-infer-python
 onnx==1.17.0
     # via
+    #   onnx-graphsurgeon
     #   onnxoptimizer
     #   paddle2onnx
+onnx-graphsurgeon==0.5.6
+    # via -r requirements/cpu_hpi.in
 onnxoptimizer==0.3.13
     # via paddle2onnx
 onnxruntime==1.22.0
