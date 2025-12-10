@@ -31,7 +31,7 @@ from aistudio_sdk.snapshot_download import snapshot_download as aistudio_downloa
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
-from ...utils.flags import DISABLE_MODEL_SOURCE_CHECK, MODEL_SOURCE
+from ...utils.flags import DISABLE_MODEL_SOURCE_CHECK, MODEL_SOURCE, HUGGING_FACE_ENDPOINT
 
 ALL_MODELS = [
     "ResNet18",
@@ -481,12 +481,12 @@ class _BosModelHoster(_BaseModelHoster):
 class _HuggingFaceModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "huggingface"
-    healthcheck_url = "https://huggingface.co"
+    healthcheck_url = HUGGING_FACE_ENDPOINT
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
             hf_hub.snapshot_download(
-                repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
+                repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir, endpoint=HUGGING_FACE_ENDPOINT
             )
 
         if os.path.exists(save_dir):
