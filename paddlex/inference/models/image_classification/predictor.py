@@ -129,7 +129,10 @@ class ClasPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        with TemporaryDeviceChanger(self.device):
+        if self._use_static_model:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
+        else:
             batch_preds = self.infer(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors["Topk"](
             batch_preds, topk=topk or self.topk
