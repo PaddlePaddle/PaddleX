@@ -212,7 +212,6 @@ class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
         self.act = config.act
         self.lr_mult_list = config.lr_mult_list
         self.net_config = config.net_config
-
         if isinstance(self.lr_mult_list, str):
             self.lr_mult_list = eval(self.lr_mult_list)
 
@@ -236,6 +235,7 @@ class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
 
         for i, stride in enumerate(self.stride_list[1:]):
             self.net_config["blocks{}".format(i + 3)][0][3] = stride
+
         self.conv1 = ConvBNLayer(
             num_channels=3,
             filter_size=3,

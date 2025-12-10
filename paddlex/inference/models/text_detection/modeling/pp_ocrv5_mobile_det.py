@@ -19,10 +19,14 @@ from paddle import ParamAttr
 from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
-from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers import (
+    BatchNormHFStateDictMixin,
+    PretrainedModel,
+)
+from ._config import PPOCRV5MobileDetConfig
 from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
-NET_CONFIG_DET = {
+NET_CONFIG = {
     "blocks2":
     # k, in_c, out_c, s, use_se
     [[3, 16, 24, 1, False]],
@@ -266,13 +270,16 @@ class PPLCNetV3(nn.Layer):
         conv_kxk_num=4,
         lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
         lab_lr=0.1,
+        net_config=NET_CONFIG,
+        out_channels=512,
         **kwargs,
     ):
         super().__init__()
         self.scale = scale
         self.lr_mult_list = lr_mult_list
 
-        self.net_config = NET_CONFIG_DET
+        self.net_config = net_config
+        self.out_channels = make_divisible(out_channels * scale)
 
         assert isinstance(
             self.lr_mult_list, (list, tuple)
@@ -370,7 +377,6 @@ class PPLCNetV3(nn.Layer):
                 for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks6"])
             ]
         )
-        self.out_channels = make_divisible(512 * scale)
 
         mv_c = self.net_config["layer_list_out_channels"]  # [12, 18, 42, 360]
 
@@ -521,15 +527,46 @@ class RSEFPN(nn.Layer):
         return fuse
 
 
-class PPOCRV5MobileDet(PretrainedModel):
-    config_class = PretrainedConfig
+class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
+    config_class = PPOCRV5MobileDetConfig
 
-    def __init__(self, config: PretrainedConfig):
+    def __init__(self, config: PPOCRV5MobileDetConfig):
         super().__init__(config)
 
-        self.backbone = PPLCNetV3()
-        self.neck = RSEFPN(in_channels=self.backbone.out_channels, out_channels=96)
-        self.head = DBHead(in_channels=self.neck.out_channels)
+        self.backbone_scale = config.backbone_scale
+        self.backbone_det = config.backbone_det
+        self.backbone_conv_kxk_num = config.backbone_conv_kxk_num
+        self.backbone_lr_mult_list = config.backbone_lr_mult_list
+        self.backbone_lab_lr = config.backbone_lab_lr
+        self.backbone_net_config = config.backbone_net_config
+        self.backbone_out_channels = config.backbone_out_channels
+
+        self.neck_out_channels = config.neck_out_channels
+        self.neck_shortcut = config.neck_shortcut
+
+        self.head_k = config.head_k
+        self.head_fix_nan = config.head_fix_nan
+
+        self.backbone = PPLCNetV3(
+            scale=self.backbone_scale,
+            conv_kxk_num=self.backbone_conv_kxk_num,
+            lr_mult_list=self.backbone_lr_mult_list,
+            lab_lr=self.backbone_lab_lr,
+            net_config=self.backbone_net_config,
+            out_channels=self.backbone_out_channels,
+        )
+
+        neck_in_channels = self.backbone.out_channels
+        self.neck = RSEFPN(
+            in_channels=neck_in_channels,
+            out_channels=self.neck_out_channels,
+            shortcut=self.neck_shortcut,
+        )
+
+        head_in_channels = self.neck_out_channels
+        self.head = DBHead(
+            in_channels=head_in_channels, k=self.head_k, fix_nan=self.head_fix_nan
+        )
 
     def forward(self, x):
 
@@ -540,36 +577,3 @@ class PPOCRV5MobileDet(PretrainedModel):
         x = self.head(x)
 
         return [x.cpu().numpy()]
-
-    def get_transpose_weight_keys(self):
-        pass
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)

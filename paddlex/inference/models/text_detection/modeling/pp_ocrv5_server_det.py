@@ -19,58 +19,26 @@ from paddle import ParamAttr
 from paddle.nn.initializer import Constant, KaimingNormal
 from paddle.regularizer import L2Decay
 
-from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers import (
+    BatchNormHFStateDictMixin,
+    PretrainedModel,
+)
+from ._config import PPOCRV5ServerDetConfig
 from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
 kaiming_normal_ = KaimingNormal()
 zeros_ = Constant(value=0.0)
 ones_ = Constant(value=1.0)
 
-
-def PPHGNetV2_B4(pretrained=False, use_ssld=False, det=False, **kwargs):
-    """
-    PPHGNetV2_B4
-    Args:
-        pretrained (bool/str): If `True` load pretrained parameters, `False` otherwise.
-                    If str, means the path of the pretrained model.
-        use_ssld (bool) Whether using ssld pretrained model when pretrained is True.
-    Returns:
-        model: nn.Layer. Specific `PPHGNetV2_B4` model depends on args.
-    """
-
-    stage_config_det = {
-        # in_channels, mid_channels, out_channels, num_blocks, is_downsample, light_block, kernel_size, layer_num
-        "stage1": [48, 48, 128, 1, False, False, 3, 6, 2],
-        "stage2": [128, 96, 512, 1, True, False, 3, 6, 2],
-        "stage3": [512, 192, 1024, 3, True, True, 5, 6, 2],
-        "stage4": [1024, 384, 2048, 1, True, True, 5, 6, 2],
-    }
-
-    model = PPHGNetV2(
-        stem_channels=[3, 32, 48],
-        stage_config=stage_config_det,
-        use_lab=False,
-        det=det,
-        **kwargs,
-    )
-    return model
+STAFE_CONFIG_DET = {
+    "stage1": [48, 48, 128, 1, False, False, 3, 6, 2],
+    "stage2": [128, 96, 512, 1, True, False, 3, 6, 2],
+    "stage3": [512, 192, 1024, 3, True, True, 5, 6, 2],
+    "stage4": [1024, 384, 2048, 1, True, True, 5, 6, 2],
+}
 
 
 class ConvBNAct(nn.Layer):
-    """
-    ConvBNAct is a combination of convolution and batchnorm layers.
-
-    Args:
-        in_channels (int): Number of input channels.
-        out_channels (int): Number of output channels.
-        kernel_size (int): Size of the convolution kernel. Defaults to 3.
-        stride (int): Stride of the convolution. Defaults to 1.
-        padding (int/str): Padding or padding type for the convolution. Defaults to 1.
-        groups (int): Number of groups for the convolution. Defaults to 1.
-        use_act: (bool): Whether to use activation function. Defaults to True.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
-    """
 
     def __init__(
         self,
@@ -118,16 +86,6 @@ class ConvBNAct(nn.Layer):
 
 
 class LightConvBNAct(nn.Layer):
-    """
-    LightConvBNAct is a combination of pw and dw layers.
-
-    Args:
-        in_channels (int): Number of input channels.
-        out_channels (int): Number of output channels.
-        kernel_size (int): Size of the depth-wise convolution kernel.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
-    """
 
     def __init__(
         self,
@@ -164,16 +122,6 @@ class LightConvBNAct(nn.Layer):
 
 
 class StemBlock(nn.Layer):
-    """
-    StemBlock for PP-HGNetV2.
-
-    Args:
-        in_channels (int): Number of input channels.
-        mid_channels (int): Number of middle channels.
-        out_channels (int): Number of output channels.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
-    """
 
     def __init__(
         self,
@@ -182,7 +130,6 @@ class StemBlock(nn.Layer):
         out_channels,
         use_lab=False,
         lr_mult=1.0,
-        text_rec=False,
     ):
         super().__init__()
         self.stem1 = ConvBNAct(
@@ -215,7 +162,7 @@ class StemBlock(nn.Layer):
             in_channels=mid_channels * 2,
             out_channels=mid_channels,
             kernel_size=3,
-            stride=1 if text_rec else 2,
+            stride=2,
             use_lab=use_lab,
             lr_mult=lr_mult,
         )
@@ -244,22 +191,6 @@ class StemBlock(nn.Layer):
 
 
 class HGV2_Block(nn.Layer):
-    """
-    HGV2_Block, the basic unit that constitutes the HGV2_Stage.
-
-    Args:
-        in_channels (int): Number of input channels.
-        mid_channels (int): Number of middle channels.
-        out_channels (int): Number of output channels.
-        kernel_size (int): Size of the convolution kernel. Defaults to 3.
-        layer_num (int): Number of layers in the HGV2 block. Defaults to 6.
-        stride (int): Stride of the convolution. Defaults to 1.
-        padding (int/str): Padding or padding type for the convolution. Defaults to 1.
-        groups (int): Number of groups for the convolution. Defaults to 1.
-        use_act (bool): Whether to use activation function. Defaults to True.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
-    """
 
     def __init__(
         self,
@@ -324,21 +255,6 @@ class HGV2_Block(nn.Layer):
 
 
 class HGV2_Stage(nn.Layer):
-    """
-    HGV2_Stage, the basic unit that constitutes the PPHGNetV2.
-
-    Args:
-        in_channels (int): Number of input channels.
-        mid_channels (int): Number of middle channels.
-        out_channels (int): Number of output channels.
-        block_num (int): Number of blocks in the HGV2 stage.
-        layer_num (int): Number of layers in the HGV2 block. Defaults to 6.
-        is_downsample (bool): Whether to use downsampling operation. Defaults to False.
-        light_block (bool): Whether to use light block. Defaults to True.
-        kernel_size (int): Size of the convolution kernel. Defaults to 3.
-        use_lab (bool, optional): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float, optional): Learning rate multiplier for the layer. Defaults to 1.0.
-    """
 
     def __init__(
         self,
@@ -394,25 +310,10 @@ class HGV2_Stage(nn.Layer):
 
 
 class PPHGNetV2(nn.Layer):
-    """
-    PPHGNetV2
-
-    Args:
-        stage_config (dict): Config for PPHGNetV2 stages. such as the number of channels, stride, etc.
-        stem_channels: (list): Number of channels of the stem of the PPHGNetV2.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        use_last_conv (bool): Whether to use the last conv layer as the output channel. Defaults to True.
-        class_expand (int): Number of channels for the last 1x1 convolutional layer.
-        drop_prob (float): Dropout probability for the last 1x1 convolutional layer. Defaults to 0.0.
-        class_num (int): The number of classes for the classification layer. Defaults to 1000.
-        lr_mult_list (list): Learning rate multiplier for the stages. Defaults to [1.0, 1.0, 1.0, 1.0, 1.0].
-    Returns:
-        model: nn.Layer. Specific PPHGNetV2 model depends on args.
-    """
 
     def __init__(
         self,
-        stage_config,
+        stage_config=STAFE_CONFIG_DET,
         stem_channels=[3, 32, 64],
         use_lab=False,
         use_last_conv=True,
@@ -421,18 +322,16 @@ class PPHGNetV2(nn.Layer):
         class_num=1000,
         lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
         det=False,
-        text_rec=False,
-        out_indices=None,
+        out_indices=[0, 1, 2, 3],
         **kwargs,
     ):
         super().__init__()
         self.det = det
-        self.text_rec = text_rec
         self.use_lab = use_lab
         self.use_last_conv = use_last_conv
         self.class_expand = class_expand
         self.class_num = class_num
-        self.out_indices = out_indices if out_indices is not None else [0, 1, 2, 3]
+        self.out_indices = out_indices
         self.out_channels = []
 
         # stem
@@ -442,7 +341,6 @@ class PPHGNetV2(nn.Layer):
             out_channels=stem_channels[2],
             use_lab=use_lab,
             lr_mult=lr_mult_list[0],
-            text_rec=text_rec,
         )
 
         # stages
@@ -478,22 +376,6 @@ class PPHGNetV2(nn.Layer):
                 self.out_channels.append(out_channels)
 
         self.avg_pool = nn.AdaptiveAvgPool2D(1)
-
-        if self.use_last_conv:
-            self.last_conv = nn.Conv2D(
-                in_channels=out_channels,
-                out_channels=self.class_expand,
-                kernel_size=1,
-                stride=1,
-                padding=0,
-                bias_attr=False,
-            )
-            self.act = nn.ReLU()
-            if self.use_lab:
-                self.lab = LearnableAffineBlock()
-            self.dropout = nn.Dropout(p=dropout_prob, mode="downscale_in_infer")
-
-        self.flatten = nn.Flatten(start_axis=1, stop_axis=-1)
 
         self._init_weights()
 
@@ -604,7 +486,7 @@ class IntraCLBlock(nn.Layer):
         super(IntraCLBlock, self).__init__()
         self.channels = in_channels
         self.rf = reduce_factor
-        weight_attr = paddle.nn.initializer.KaimingUniform()
+        weight_attr = nn.initializer.KaimingUniform()
         self.conv1x1_reduce_channel = nn.Conv2D(
             self.channels, self.channels // self.rf, kernel_size=1, stride=1, padding=0
         )
@@ -712,7 +594,7 @@ class LKPAN(nn.Layer):
     def __init__(self, in_channels, out_channels, mode="large", **kwargs):
         super(LKPAN, self).__init__()
         self.out_channels = out_channels
-        weight_attr = paddle.nn.initializer.KaimingUniform()
+        weight_attr = nn.initializer.KaimingUniform()
 
         self.ins_conv = nn.LayerList()
         self.inp_conv = nn.LayerList()
@@ -879,7 +761,6 @@ class LocalModule(nn.Layer):
 
     def forward(self, x, init_map, distance_map):
         outf = paddle.concat([init_map, x], axis=1)
-        # last Conv
         out = self.last_1(self.last_3(outf))
         return out
 
@@ -904,16 +785,55 @@ class PFHeadLocal(DBHead):
         return 0.5 * (base_maps + cbn_maps)
 
 
-class PPOCRV5ServerDet(PretrainedModel):
+class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
 
-    config_class = PretrainedConfig
+    config_class = PPOCRV5ServerDetConfig
 
-    def __init__(self, config: PretrainedConfig):
+    def __init__(self, config: PPOCRV5ServerDetConfig):
         super().__init__(config)
 
-        self.backbone = PPHGNetV2_B4(det=True)
-        self.neck = LKPAN(in_channels=self.backbone.out_channels, out_channels=256)
-        self.head = PFHeadLocal(in_channels=self.neck.out_channels, k=50, mode="large")
+        self.backbone_stem_channels = config.backbone_stem_channels
+        self.backbone_stage_config = config.backbone_stage_config
+        self.backbone_use_lab = config.backbone_use_lab
+        self.backbone_use_last_conv = config.backbone_use_last_conv
+        self.backbone_class_expand = config.backbone_class_expand
+        self.backbone_dropout_prob = config.backbone_dropout_prob
+        self.backbone_class_num = config.backbone_class_num
+        self.backbone_lr_mult_list = config.backbone_lr_mult_list
+        self.backbone_det = config.backbone_det
+        self.backbone_out_indices = config.backbone_out_indices
+
+        self.neck_out_channels = config.neck_out_channels
+        self.neck_mode = config.neck_mode
+
+        self.head_in_channels = config.head_in_channels
+        self.head_k = config.head_k
+        self.head_mode = config.head_mode
+
+        self.backbone = PPHGNetV2(
+            stem_channels=self.backbone_stem_channels,
+            stage_config=self.backbone_stage_config,
+            use_lab=self.backbone_use_lab,
+            use_last_conv=self.backbone_use_last_conv,
+            class_expand=self.backbone_class_expand,
+            dropout_prob=self.backbone_dropout_prob,
+            class_num=self.backbone_class_num,
+            lr_mult_list=self.backbone_lr_mult_list,
+            det=self.backbone_det,
+            out_indices=self.backbone_out_indices,
+        )
+
+        neck_in_channels = self.backbone.out_channels
+        self.neck = LKPAN(
+            in_channels=neck_in_channels,
+            out_channels=self.neck_out_channels,
+            mode=self.neck_mode,
+        )
+
+        head_in_channels = self.neck.out_channels
+        self.head = PFHeadLocal(
+            in_channels=head_in_channels, k=self.head_k, mode=self.head_mode
+        )
 
     def forward(self, x):
 
@@ -924,36 +844,3 @@ class PPOCRV5ServerDet(PretrainedModel):
         x = self.head(x)
 
         return [x.cpu().numpy()]
-
-    def get_transpose_weight_keys(self):
-        pass
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)

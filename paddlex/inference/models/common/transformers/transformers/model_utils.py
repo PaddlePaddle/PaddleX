@@ -1842,13 +1842,12 @@ class PretrainedModel(
             ):
                 raise NotImplementedError
             else:
-                try:
-                    transpose_weight_keys = model.get_transpose_weight_keys()
-                except NotImplementedError:
-                    if convert_from_hf:
-                        raise ValueError("`convert_from_hf=True` is not supported")
-                    else:
-                        transpose_weight_keys = None
+                transpose_weight_keys = None
+                if convert_from_hf:
+                    try:
+                        transpose_weight_keys = model.get_transpose_weight_keys()
+                    except NotImplementedError:
+                        pass
                 state_dict = load_state_dict(
                     resolved_archive_file,
                     convert_from_hf=convert_from_hf,
