@@ -172,7 +172,7 @@ def perform_table_merge(soup_prev, soup_curr):
     return str(soup_prev)
 
 
-def merge_tables(pages):
+def merge_tables_across_pages(pages):
     nums = 0
     # get the length of each page
     page_lens = [len(page) for page in pages]
@@ -214,13 +214,3 @@ def merge_tables(pages):
                 prev_block.group_id = new_id
                 curr_block.group_id = new_id
     return pages
-
-
-def merge_tables_across_pages(pages):
-    pages = merge_tables(pages)
-
-    layout_parsing_result = []
-    for page in pages:
-        for block in page:
-            layout_parsing_result.append(block)
-    return layout_parsing_result

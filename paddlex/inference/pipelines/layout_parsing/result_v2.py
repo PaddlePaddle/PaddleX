@@ -538,7 +538,7 @@ class LayoutParsingResultV2(
             format_formula_func = format_image_func
 
         handle_funcs_dict = {
-            "paragraph_title": format_para_title_func,
+            "paragraph_title": format_title_func,
             "abstract_title": format_title_func,
             "reference_title": format_title_func,
             "content_title": format_title_func,

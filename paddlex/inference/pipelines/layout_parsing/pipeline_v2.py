@@ -1403,7 +1403,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
         blocks_by_page = []
 
-        for single_img_res in res_list:
+        for idx, single_img_res in enumerate(res_list):
 
             layout_parsing_result["parsing_res_list"].extend(
                 single_img_res.get("parsing_res_list", [])
@@ -1423,13 +1423,16 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 else:
                     layout_parsing_result[key].append(value)
 
+            for block in single_img_res["parsing_res_list"]:
+                setattr(block, "page_index", idx)
+
+        # TODO add seg to pages
+
         if merge_table:
-            layout_parsing_result["parsing_res_list"] = merge_tables_across_pages(
-                blocks_by_page
-            )
+            blocks_by_page = merge_tables_across_pages(blocks_by_page)
         if title_level:
             layout_parsing_result["parsing_res_list"] = assign_levels_to_parsing_res(
-                layout_parsing_result["parsing_res_list"]
+                blocks_by_page, layout_parsing_result["layout_det_res"]
             )
 
         return ProcessedLayoutParsingResult(layout_parsing_result)
