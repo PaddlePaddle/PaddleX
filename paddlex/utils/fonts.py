@@ -20,7 +20,7 @@ from PIL import ImageFont
 from . import logging
 from .cache import CACHE_DIR
 from .download import download
-from .flags import LOCAL_FONT_FILE_PATH
+from .flags import LOCAL_FONT_FILE_PATH, FONTS_REMOTE_REPOSITORY_URL
 
 
 def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
@@ -94,7 +94,7 @@ class Font:
         font_path = (Path(CACHE_DIR) / "fonts" / self._font_name).resolve().as_posix()
         if not Path(font_path).is_file():
             download(
-                url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{self._font_name}",
+                url=f"${FONTS_REMOTE_REPOSITORY_URL}/{self._font_name}",
                 save_path=font_path,
             )
         self._local_path = font_path

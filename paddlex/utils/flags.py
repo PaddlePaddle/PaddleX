@@ -58,6 +58,7 @@ DISABLE_MKLDNN_MODEL_BL = get_flag_from_env_var(
     "PADDLE_PDX_DISABLE_MKLDNN_MODEL_BL", False
 )
 LOCAL_FONT_FILE_PATH = get_flag_from_env_var("PADDLE_PDX_LOCAL_FONT_FILE_PATH", None)
+FONTS_REMOTE_REPOSITORY_URL = os.environ.get("PADDLE_PDX_FONTS_REMOTE_REPOSITORY_URL", "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts")
 ENABLE_MKLDNN_BYDEFAULT = get_flag_from_env_var(
     "PADDLE_PDX_ENABLE_MKLDNN_BYDEFAULT", True
 )
