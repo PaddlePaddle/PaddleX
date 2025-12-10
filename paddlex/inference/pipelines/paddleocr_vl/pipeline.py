@@ -253,12 +253,14 @@ class _PaddleOCRVLPipeline(BasePipeline):
             blocks.append(blocks_for_img)
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
-                block_label = block["label"]
+                text_prompt = block["label"]
+                block_label = block["label"].lower()
                 if block_label not in image_labels and block_img is not None:
                     figure_token_map = {}
-                    text_prompt = "OCR:"
                     drop_figures = []
-                    if block_label == "table":
+                    if block_label == "ocr":
+                        text_prompt = "OCR:"
+                    elif block_label == "table":
                         text_prompt = "Table Recognition:"
                         block_img, figure_token_map, drop_figures = (
                             tokenize_figure_of_table(
@@ -308,7 +310,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
                 block_bbox = block["box"]
-                block_label = block["label"]
+                block_label = block["label"].lower()
                 block_content = ""
                 if curr_vlm_block_idx < len(vlm_block_ids) and vlm_block_ids[
                     curr_vlm_block_idx
@@ -447,12 +449,17 @@ class _PaddleOCRVLPipeline(BasePipeline):
             prompt_label = prompt_label if prompt_label else "ocr"
             if prompt_label.lower() == "chart":
                 model_settings["use_chart_recognition"] = True
-            assert prompt_label.lower() in [
+            if prompt_label.lower() not in [
                 "ocr",
                 "formula",
                 "table",
                 "chart",
-            ], f"Layout detection is disabled (use_layout_detection=False). 'prompt_label' must be one of ['ocr', 'formula', 'table', 'chart'], but got '{prompt_label}'."
+            ]:
+                logging.warning(
+                    f"Layout detection is disabled (use_layout_detection=False). "
+                    f"'prompt_label' must be one of ['ocr', 'formula', 'table', 'chart'], "
+                    f"but got '{prompt_label}'. Program will continue anyway."
+                )
 
         def _process_cv(batch_data, new_batch_size=None):
             if not new_batch_size:
@@ -510,7 +517,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                                 "boxes": [
                                     {
                                         "cls_id": 0,
-                                        "label": prompt_label.lower(),
+                                        "label": prompt_label,
                                         "score": 1,
                                         "coordinate": [
                                             0,
