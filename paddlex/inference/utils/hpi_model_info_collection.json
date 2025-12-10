@@ -5135,7 +5135,6 @@
         "onnxruntime"
       ],
       "PP-OCRv4_server_det": [
-        "tensorrt",
         "onnxruntime",
         "paddle"
       ],
@@ -5822,7 +5821,6 @@
         "paddle"
       ],
       "PP-OCRv5_server_det": [
-        "tensorrt",
         "paddle"
       ],
       "PP-OCRv5_mobile_det": [
@@ -6563,7 +6561,6 @@
         "onnxruntime"
       ],
       "PP-OCRv4_server_det": [
-        "tensorrt",
         "onnxruntime",
         "paddle"
       ],
@@ -7258,7 +7255,6 @@
         "paddle"
       ],
       "PP-OCRv5_server_det": [
-        "tensorrt",
         "onnxruntime",
         "paddle"
       ],
@@ -8005,7 +8001,6 @@
         "onnxruntime"
       ],
       "PP-OCRv4_server_det": [
-        "tensorrt",
         "onnxruntime",
         "paddle"
       ],
@@ -8699,7 +8694,6 @@
         "paddle"
       ],
       "PP-OCRv5_server_det": [
-        "tensorrt",
         "onnxruntime",
         "paddle"
       ],
