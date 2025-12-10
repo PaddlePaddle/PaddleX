@@ -19,30 +19,11 @@ from paddle import ParamAttr
 from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
-from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
-
-# Each element(list) represents a depthwise block, which is composed of k, in_c, out_c, s, use_se.
-# k: kernel_size
-# in_c: input channel number in depthwise block
-# out_c: output channel number in depthwise block
-# s: stride in depthwise block
-# use_se: whether to use SE block
-
-NET_CONFIG = {
-    # [k, in_c, out_c, s, use_se]
-    "blocks2": [[3, 16, 32, 1, False]],
-    "blocks3": [[3, 32, 64, 2, False], [3, 64, 64, 1, False]],
-    "blocks4": [[3, 64, 128, 2, False], [3, 128, 128, 1, False]],
-    "blocks5": [
-        [3, 128, 256, 2, False],
-        [5, 256, 256, 1, False],
-        [5, 256, 256, 1, False],
-        [5, 256, 256, 1, False],
-        [5, 256, 256, 1, False],
-        [5, 256, 256, 1, False],
-    ],
-    "blocks6": [[5, 256, 512, 2, True], [5, 512, 512, 1, True]],
-}
+from ...common.transformers.transformers import (
+    BatchNormHFStateDictMixin,
+    PretrainedModel,
+)
+from ._config import PPLCNetConfig
 
 
 def make_divisible(v, divisor=8, min_value=None):
@@ -216,23 +197,21 @@ class SEModule(nn.Layer):
         return x
 
 
-class PPLCNet(PretrainedModel):
-    config_class = PretrainedConfig
+class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
+    config_class = PPLCNetConfig
 
-    def __init__(self, config: PretrainedConfig):
+    def __init__(self, config: PPLCNetConfig):
         super().__init__(config)
 
-        config_dict = config.to_dict()
-        self.scale = config["Global"]["scale"]
-        self.class_num = config["Global"]["num_classes"]
-        self.dropout_prob = config["Global"]["dropout_prob"]
-        self.class_expand = config["Global"]["class_expand"]
-        self.stride_list = config["Global"]["stride_list"]
-        self.use_last_conv = config["Global"]["use_last_conv"]
-        self.act = config["Global"]["act"]
-        self.lr_mult_list = config["Global"]["lr_mult_list"]
-
-        self.net_config = NET_CONFIG
+        self.scale = config.scale
+        self.class_num = config.class_num
+        self.dropout_prob = config.dropout_prob
+        self.class_expand = config.class_expand
+        self.stride_list = config.stride_list
+        self.use_last_conv = config.use_last_conv
+        self.act = config.act
+        self.lr_mult_list = config.lr_mult_list
+        self.net_config = config.net_config
 
         if isinstance(self.lr_mult_list, str):
             self.lr_mult_list = eval(self.lr_mult_list)
@@ -401,33 +380,3 @@ class PPLCNet(PretrainedModel):
                 if t_layer in key and key.endswith("weight"):
                     keys.append(key)
         return keys
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)
