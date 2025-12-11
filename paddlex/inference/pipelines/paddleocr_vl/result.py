@@ -510,10 +510,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 markdown_info["markdown_images"][block.image["path"]] = block.image[
                     "img"
                 ]
-            handle_func = handle_funcs_dict.get(
-                label,
-                lambda block: block.content
-            )
+            handle_func = handle_funcs_dict.get(label, lambda block: block.content)
             if (
                 show_formula_number
                 and (label == "display_formula" or label == "formula")
