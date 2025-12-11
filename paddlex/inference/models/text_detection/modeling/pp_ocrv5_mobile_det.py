@@ -41,6 +41,18 @@ def make_divisible(
 
 
 class Act(nn.Layer):
+    """
+    Act
+
+    Args:
+        act (str): Activation type, "relu" or "hswish"
+        lr_mult (float): Learning rate multiplier for LAB alpha
+        lab_lr (float): Learning rate multiplier for LAB beta
+
+    Returns:
+        paddle.Tensor: Output tensor after activation and LAB
+    """
+
     def __init__(self, act: str, lr_mult: float, lab_lr: float):
         super().__init__()
         if act == "hswish":
@@ -55,6 +67,21 @@ class Act(nn.Layer):
 
 
 class ConvBNLayer(nn.Layer):
+    """
+    ConvBNLayer
+
+    Args:
+        in_channels (int): Input channel number
+        out_channels (int): Output channel number
+        kernel_size (int): Convolution kernel size
+        stride (int): Convolution stride
+        lr_mult (float): Learning rate multiplier for conv/BN params
+        groups (int, optional): Group convolution number, default 1
+
+    Returns:
+        paddle.Tensor: Output tensor after conv and BN
+    """
+
     def __init__(
         self,
         in_channels: int,
@@ -89,6 +116,24 @@ class ConvBNLayer(nn.Layer):
 
 
 class LearnableRepLayer(nn.Layer):
+    """
+    LearnableRepLayer
+
+    Args:
+        in_channels (int): Input channel number
+        out_channels (int): Output channel number
+        kernel_size (int): Convolution kernel size
+        act (str): Activation type, "relu" or "hswish"
+        stride (int): Convolution stride
+        lr_mult (float): Learning rate multiplier for conv/BN/LAB params
+        lab_lr (float): Learning rate multiplier for LAB beta
+        num_conv_branches (int): Number of kxk conv branches
+        groups (int, optional): Group convolution number, default 1
+
+    Returns:
+        paddle.Tensor: Output tensor after rep branches fusion and activation
+    """
+
     def __init__(
         self,
         in_channels: int,
@@ -164,6 +209,18 @@ class LearnableRepLayer(nn.Layer):
 
 
 class SELayer(nn.Layer):
+    """
+    SELayer
+
+    Args:
+        channel (int): Input/output channel number
+        reduction (int): Channel reduction ratio for excitation
+        lr_mult (float): Learning rate multiplier for conv params
+
+    Returns:
+        paddle.Tensor: Output tensor after channel attention weighting
+    """
+
     def __init__(self, channel: int, reduction: int, lr_mult: float):
         super().__init__()
         if "npu" in paddle.device.get_device():
@@ -203,6 +260,25 @@ class SELayer(nn.Layer):
 
 
 class LCNetV3Block(nn.Layer):
+    """
+    LCNetV3Block
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        act (str): Activation function type
+        stride (int): Convolution stride for depthwise conv
+        dw_size (int): Kernel size of depthwise convolution
+        use_se (bool): Whether to use SE channel attention module
+        conv_kxk_num (int): Number of conv branches in LearnableRepLayer
+        reduction (int): Channel reduction ratio for SE module
+        lr_mult (float): Learning rate multiplier for convolution parameters
+        lab_lr (float): Learning rate multiplier for learnable representation layer
+
+    Returns:
+        paddle.Tensor: Output tensor after depthwise conv, SE (optional) and pointwise conv
+    """
+
     def __init__(
         self,
         in_channels: int,
@@ -251,6 +327,24 @@ class LCNetV3Block(nn.Layer):
 
 
 class PPLCNetV3(nn.Layer):
+    """
+    PPLCNetV3
+
+    Args:
+        scale (float): Channel scale factor for network width adjustment
+        conv_kxk_num (int): Number of conv branches in LearnableRepLayer of LCNetV3Block
+        reduction (int): Channel reduction ratio for SE module in LCNetV3Block
+        act (str): Activation function type used in LCNetV3Block
+        lr_mult_list (List[float]): Learning rate multipliers for different layers, length must be 6
+        lab_lr (float): Learning rate multiplier for learnable representation layer in LCNetV3Block
+        net_config (Dict[str, Any]): Network configuration dict containing block parameters and output channels
+        out_channels (int): Base number of output channels before scale adjustment
+        **kwargs: Additional keyword arguments
+
+    Returns:
+        List[paddle.Tensor]: List of 4 feature tensors from different stages after 1x1 conv projection
+    """
+
     def __init__(
         self,
         scale: float,
@@ -360,6 +454,17 @@ class PPLCNetV3(nn.Layer):
 
 
 class SEModule(nn.Layer):
+    """
+    SEModule
+
+    Args:
+        in_channels (int): Number of input channels
+        reduction (int): Channel reduction ratio for excitation layer
+
+    Returns:
+        paddle.Tensor: Output tensor after channel attention weighting
+    """
+
     def __init__(self, in_channels: int, reduction: int):
         super(SEModule, self).__init__()
         if "npu" in paddle.device.get_device():
@@ -391,6 +496,20 @@ class SEModule(nn.Layer):
 
 
 class RSELayer(nn.Layer):
+    """
+    RSELayer
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of convolution layer
+        shortcut (bool): Whether to add shortcut connection (residual) with SE output
+        reduction (int): Channel reduction ratio for SE module
+
+    Returns:
+        paddle.Tensor: Output tensor after convolution, SE attention and optional shortcut
+    """
+
     def __init__(
         self,
         in_channels: int,
@@ -423,6 +542,20 @@ class RSELayer(nn.Layer):
 
 
 class RSEFPN(nn.Layer):
+    """
+    RSEFPN
+
+    Args:
+        in_channels (List[int]): List of input channel numbers for multi-scale feature maps
+        out_channels (int): Number of output channels for RSELayer convolution
+        shortcut (bool): Whether to use shortcut connection in RSELayer
+        reduction (int): Channel reduction ratio for SE module in RSELayer
+        **kwargs: Additional keyword arguments
+
+    Returns:
+        paddle.Tensor: Fused feature tensor after multi-scale feature aggregation and concatenation
+    """
+
     def __init__(
         self,
         in_channels: List[int],
@@ -488,6 +621,16 @@ class RSEFPN(nn.Layer):
 
 
 class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
+    """
+    PPOCRV5MobileDet
+
+    Args:
+        config (PPOCRV5MobileDetConfig): Configuration object containing model hyperparameters
+
+    Returns:
+        List: List containing the detection output tensor (converted to numpy array on CPU)
+    """
+
     config_class = PPOCRV5MobileDetConfig
 
     def __init__(self, config: PPOCRV5MobileDetConfig):

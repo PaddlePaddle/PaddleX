@@ -28,6 +28,19 @@ from ._config import UVDocNetConfig
 def conv3x3(
     in_channels: int, out_channels: int, kernel_size: int, stride: int = 1
 ) -> nn.Conv2D:
+    """
+    conv3x3
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of convolution layer
+        stride (int, optional): Convolution stride, default is 1
+
+    Returns:
+        nn.Conv2D: Convolutional layer with same padding (padding = kernel_size // 2)
+    """
+
     return nn.Conv2D(
         in_channels=in_channels,
         out_channels=out_channels,
@@ -40,6 +53,18 @@ def conv3x3(
 def dilated_conv_bn_act(
     in_channels: int, out_channels: int, dilation: int
 ) -> nn.Sequential:
+    """
+    dilated_conv_bn_act
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        dilation (int): Dilation rate for dilated convolution
+
+    Returns:
+        nn.Sequential: Sequential block containing dilated conv, BN and ReLU layers
+    """
+
     model = nn.Sequential(
         nn.Conv2D(
             in_channels=in_channels,
@@ -63,6 +88,19 @@ def dilated_conv(
     dilation: int,
     stride: int = 1,
 ) -> nn.Sequential:
+    """
+    dilated_conv
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of dilated convolution
+        dilation (int): Dilation rate for dilated convolution
+        stride (int, optional): Convolution stride, default is 1
+
+    Returns:
+        nn.Sequential: Sequential block containing only the dilated convolution layer
+    """
     model = nn.Sequential(
         nn.Conv2D(
             in_channels=in_channels,
@@ -77,6 +115,21 @@ def dilated_conv(
 
 
 class ResidualBlockWithDilation(nn.Layer):
+    """
+    ResidualBlockWithDilation: Residual block with optional dilated convolution and downsampling
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of convolution layers
+        stride (int, optional): Convolution stride for first conv layer, default is 1
+        downsample (Optional[nn.Layer]): Downsampling layer for residual connection, default is None
+        is_activation (bool, optional): Whether to apply activation (unused in current implementation), default is True
+        is_top (bool, optional): Whether it is the top block (uses standard conv instead of dilated conv), default is False
+
+    Returns:
+        paddle.Tensor: Output tensor after residual block with conv/dilated conv and ReLU activation
+    """
 
     def __init__(
         self,
@@ -119,6 +172,19 @@ class ResidualBlockWithDilation(nn.Layer):
 
 
 class ResnetStraight(nn.Layer):
+    """
+    ResnetStraight: Straightforward ResNet architecture with residual blocks and optional dilated convolution
+
+    Args:
+        num_filter (int): Base number of filters/channels for the network
+        map_num (List[int]): List of channel scaling factors for each layer
+        block_nums (List[int]): List of residual block numbers for each layer
+        kernel_size (int): Kernel size of convolution layers in residual blocks
+        stride (List[int]): List of stride values for each layer's first residual block
+
+    Returns:
+        paddle.Tensor: Output tensor from the third residual layer of the ResNet
+    """
 
     def __init__(
         self,
@@ -191,6 +257,16 @@ class ResnetStraight(nn.Layer):
 
 
 class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
+    """
+    UVDocNet
+
+    Args:
+        config (UVDocNetConfig): Configuration object containing network hyperparameters
+
+    Returns:
+        List: List containing the transformed document image tensor (converted to numpy array on CPU)
+    """
+
     config_class = UVDocNetConfig
 
     def __init__(self, config: UVDocNetConfig):
