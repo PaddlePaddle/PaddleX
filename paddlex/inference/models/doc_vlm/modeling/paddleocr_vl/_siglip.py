@@ -35,6 +35,7 @@
 
 # TODO: Weight initialization
 
+import platform
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
@@ -42,7 +43,11 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ......utils.env import get_gpu_compute_capability
+from ......utils.env import (
+    get_device_type,
+    get_gpu_compute_capability,
+    get_paddle_cuda_version,
+)
 from ....common.vlm.activations import ACT2FN
 from ....common.vlm.transformers import PretrainedModel
 from ....common.vlm.transformers.model_outputs import (
@@ -139,7 +144,18 @@ class SiglipAttention(nn.Layer):
         self.out_proj = nn.Linear(self.embed_dim, self.embed_dim)
 
         cap = get_gpu_compute_capability()
-        self._supports_sdpa = cap >= (8, 0) if cap is not None else False
+        cuda_ver = get_paddle_cuda_version()
+        self._supports_sdpa = False
+        if (
+            cap is not None
+            and cap >= (8, 0)
+            and cuda_ver is not None
+            and cuda_ver >= (11, 4)
+            and platform.system() == "Linux"
+        ):
+            self._supports_sdpa = True
+        if get_device_type() == "iluvatar_gpu":
+            self._supports_sdpa = True
 
     def forward(
         self,
