@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
@@ -23,35 +25,28 @@ from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
 )
-from ._config import PPOCRV5ServerDetConfig
+from ._config_pp_ocrv5_server import PPOCRV5ServerDetConfig
 from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
 kaiming_normal_ = KaimingNormal()
 zeros_ = Constant(value=0.0)
 ones_ = Constant(value=1.0)
 
-STAFE_CONFIG_DET = {
-    "stage1": [48, 48, 128, 1, False, False, 3, 6, 2],
-    "stage2": [128, 96, 512, 1, True, False, 3, 6, 2],
-    "stage3": [512, 192, 1024, 3, True, True, 5, 6, 2],
-    "stage4": [1024, 384, 2048, 1, True, True, 5, 6, 2],
-}
-
 
 class ConvBNAct(nn.Layer):
 
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size=3,
-        stride=1,
-        padding=1,
-        groups=1,
-        use_act=True,
-        use_lab=False,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int = 3,
+        stride: int = 1,
+        padding: Union[int, str] = 1,
+        groups: int = 1,
+        use_act: bool = True,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
+    ) -> None:
         super().__init__()
         self.use_act = use_act
         self.use_lab = use_lab
@@ -75,7 +70,7 @@ class ConvBNAct(nn.Layer):
             if self.use_lab:
                 self.lab = LearnableAffineBlock(lr_mult=lr_mult)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv(x)
         x = self.bn(x)
         if self.use_act:
@@ -89,13 +84,13 @@ class LightConvBNAct(nn.Layer):
 
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        use_lab=False,
-        lr_mult=1.0,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__()
         self.conv1 = ConvBNAct(
             in_channels=in_channels,
@@ -115,7 +110,7 @@ class LightConvBNAct(nn.Layer):
             lr_mult=lr_mult,
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv1(x)
         x = self.conv2(x)
         return x
@@ -125,12 +120,12 @@ class StemBlock(nn.Layer):
 
     def __init__(
         self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        use_lab=False,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        mid_channels: int,
+        out_channels: int,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
+    ) -> None:
         super().__init__()
         self.stem1 = ConvBNAct(
             in_channels=in_channels,
@@ -178,7 +173,7 @@ class StemBlock(nn.Layer):
             kernel_size=2, stride=1, ceil_mode=True, padding="SAME"
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.stem1(x)
         x2 = self.stem2a(x)
         x2 = self.stem2b(x2)
@@ -194,16 +189,16 @@ class HGV2_Block(nn.Layer):
 
     def __init__(
         self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        kernel_size=3,
-        layer_num=6,
-        identity=False,
-        light_block=True,
-        use_lab=False,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        mid_channels: int,
+        out_channels: int,
+        kernel_size: int = 3,
+        layer_num: int = 6,
+        identity: bool = False,
+        light_block: bool = True,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
+    ) -> None:
         super().__init__()
         self.identity = identity
 
@@ -239,7 +234,7 @@ class HGV2_Block(nn.Layer):
             lr_mult=lr_mult,
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         identity = x
         output = []
         output.append(x)
@@ -258,18 +253,18 @@ class HGV2_Stage(nn.Layer):
 
     def __init__(
         self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        block_num,
-        layer_num=6,
-        is_downsample=True,
-        light_block=True,
-        kernel_size=3,
-        use_lab=False,
-        stride=2,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        mid_channels: int,
+        out_channels: int,
+        block_num: int,
+        layer_num: int = 6,
+        is_downsample: bool = True,
+        light_block: bool = True,
+        kernel_size: int = 3,
+        use_lab: bool = False,
+        stride: int = 2,
+        lr_mult: float = 1.0,
+    ) -> None:
 
         super().__init__()
         self.is_downsample = is_downsample
@@ -302,7 +297,7 @@ class HGV2_Stage(nn.Layer):
             )
         self.blocks = nn.Sequential(*blocks_list)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         if self.is_downsample:
             x = self.downsample(x)
         x = self.blocks(x)
@@ -313,18 +308,17 @@ class PPHGNetV2(nn.Layer):
 
     def __init__(
         self,
-        stage_config=STAFE_CONFIG_DET,
-        stem_channels=[3, 32, 64],
-        use_lab=False,
-        use_last_conv=True,
-        class_expand=2048,
-        dropout_prob=0.0,
-        class_num=1000,
-        lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
-        det=False,
-        out_indices=[0, 1, 2, 3],
+        stage_config: Dict[str, Tuple],
+        stem_channels: Tuple[int, int, int],
+        use_lab: bool,
+        use_last_conv: bool,
+        class_expand: float,
+        class_num: int,
+        lr_mult_list: List[float],
+        det: bool,
+        out_indices: List[int],
         **kwargs,
-    ):
+    ) -> None:
         super().__init__()
         self.det = det
         self.use_lab = use_lab
@@ -379,7 +373,7 @@ class PPHGNetV2(nn.Layer):
 
         self._init_weights()
 
-    def _init_weights(self):
+    def _init_weights(self) -> None:
         for m in self.sublayers():
             if isinstance(m, nn.Conv2D):
                 kaiming_normal_(m.weight)
@@ -389,7 +383,7 @@ class PPHGNetV2(nn.Layer):
             elif isinstance(m, nn.Linear):
                 zeros_(m.bias)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> List[paddle.Tensor]:
         x = self.stem(x)
         out = []
         for i, stage in enumerate(self.stages):
@@ -402,16 +396,16 @@ class PPHGNetV2(nn.Layer):
 class DSConv(nn.Layer):
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        padding,
-        stride=1,
-        groups=None,
-        if_act=True,
-        act="relu",
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        padding: Union[int, str],
+        stride: int = 1,
+        groups: Optional[int] = None,
+        if_act: bool = True,
+        act: str = "relu",
         **kwargs,
-    ):
+    ) -> None:
         super(DSConv, self).__init__()
         if groups == None:
             groups = in_channels
@@ -456,7 +450,7 @@ class DSConv(nn.Layer):
                 bias_attr=False,
             )
 
-    def forward(self, inputs):
+    def forward(self, inputs: paddle.Tensor) -> paddle.Tensor:
         x = self.conv1(inputs)
         x = self.bn1(x)
 
@@ -482,7 +476,7 @@ class DSConv(nn.Layer):
 
 
 class IntraCLBlock(nn.Layer):
-    def __init__(self, in_channels=96, reduce_factor=4):
+    def __init__(self, in_channels: int, reduce_factor: int) -> None:
         super(IntraCLBlock, self).__init__()
         self.channels = in_channels
         self.rf = reduce_factor
@@ -564,7 +558,7 @@ class IntraCLBlock(nn.Layer):
         self.bn = nn.BatchNorm2D(self.channels)
         self.relu = nn.ReLU()
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x_new = self.conv1x1_reduce_channel(x)
 
         x_7_c = self.c_layer_7x7(x_new)
@@ -591,7 +585,14 @@ class IntraCLBlock(nn.Layer):
 
 
 class LKPAN(nn.Layer):
-    def __init__(self, in_channels, out_channels, mode="large", **kwargs):
+    def __init__(
+        self,
+        in_channels: List[int],
+        out_channels: int,
+        mode: str,
+        reduce_factor: int,
+        **kwargs,
+    ) -> None:
         super(LKPAN, self).__init__()
         self.out_channels = out_channels
         weight_attr = nn.initializer.KaimingUniform()
@@ -658,12 +659,12 @@ class LKPAN(nn.Layer):
                 )
             )
 
-        self.incl1 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
-        self.incl2 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
-        self.incl3 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
-        self.incl4 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
+        self.incl1 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
+        self.incl2 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
+        self.incl3 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
+        self.incl4 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
 
-    def forward(self, x):
+    def forward(self, x: List[paddle.Tensor]) -> paddle.Tensor:
         c2, c3, c4, c5 = x
 
         in5 = self.ins_conv[3](c5)
@@ -711,15 +712,15 @@ class LKPAN(nn.Layer):
 class ConvBNLayer(nn.Layer):
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        stride,
-        padding,
-        groups=1,
-        if_act=True,
-        act=None,
-    ):
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        stride: int,
+        padding: Union[int, str],
+        groups: int = 1,
+        if_act: bool = True,
+        act: Optional[str] = None,
+    ) -> None:
         super(ConvBNLayer, self).__init__()
         self.if_act = if_act
         self.act = act
@@ -735,7 +736,7 @@ class ConvBNLayer(nn.Layer):
 
         self.bn = nn.BatchNorm(num_channels=out_channels, act=None)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv(x)
         x = self.bn(x)
         if self.if_act:
@@ -754,32 +755,42 @@ class ConvBNLayer(nn.Layer):
 
 
 class LocalModule(nn.Layer):
-    def __init__(self, in_c, mid_c, use_distance=True):
+    def __init__(self, in_c: int, mid_c: int, act: str) -> None:
         super(self.__class__, self).__init__()
-        self.last_3 = ConvBNLayer(in_c + 1, mid_c, 3, 1, 1, act="relu")
+        self.last_3 = ConvBNLayer(in_c + 1, mid_c, 3, 1, 1, act=act)
         self.last_1 = nn.Conv2D(mid_c, 1, 1, 1, 0)
 
-    def forward(self, x, init_map, distance_map):
+    def forward(self, x: paddle.Tensor, init_map: paddle.Tensor) -> paddle.Tensor:
         outf = paddle.concat([init_map, x], axis=1)
         out = self.last_1(self.last_3(outf))
         return out
 
 
 class PFHeadLocal(DBHead):
-    def __init__(self, in_channels, k=50, mode="small", **kwargs):
+    def __init__(
+        self,
+        in_channels: int,
+        k: int,
+        mode: str,
+        scale_factor: int,
+        act: str,
+        **kwargs: Any,
+    ) -> None:
         super(PFHeadLocal, self).__init__(in_channels, k, **kwargs)
         self.mode = mode
 
-        self.up_conv = nn.Upsample(scale_factor=2, mode="nearest", align_mode=1)
+        self.up_conv = nn.Upsample(
+            scale_factor=scale_factor, mode="nearest", align_mode=1
+        )
         if self.mode == "large":
-            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 4)
+            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 4, act)
         elif self.mode == "small":
-            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 8)
+            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 8, act)
 
-    def forward(self, x, targets=None):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         shrink_maps, f = self.binarize(x, return_f=True)
         base_maps = shrink_maps
-        cbn_maps = self.cbn_layer(self.up_conv(f), shrink_maps, None)
+        cbn_maps = self.cbn_layer(self.up_conv(f), shrink_maps)
         cbn_maps = F.sigmoid(cbn_maps)
 
         return 0.5 * (base_maps + cbn_maps)
@@ -789,7 +800,7 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
 
     config_class = PPOCRV5ServerDetConfig
 
-    def __init__(self, config: PPOCRV5ServerDetConfig):
+    def __init__(self, config: PPOCRV5ServerDetConfig) -> None:
         super().__init__(config)
 
         self.backbone_stem_channels = config.backbone_stem_channels
@@ -797,7 +808,6 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
         self.backbone_use_lab = config.backbone_use_lab
         self.backbone_use_last_conv = config.backbone_use_last_conv
         self.backbone_class_expand = config.backbone_class_expand
-        self.backbone_dropout_prob = config.backbone_dropout_prob
         self.backbone_class_num = config.backbone_class_num
         self.backbone_lr_mult_list = config.backbone_lr_mult_list
         self.backbone_det = config.backbone_det
@@ -805,18 +815,22 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
 
         self.neck_out_channels = config.neck_out_channels
         self.neck_mode = config.neck_mode
+        self.neck_reduce_factor = config.neck_reduce_factor
 
         self.head_in_channels = config.head_in_channels
         self.head_k = config.head_k
         self.head_mode = config.head_mode
+        self.head_scale_factor = config.head_scale_factor
+        self.head_act = config.head_act
+        self.head_kernel_list = config.head_kernel_list
+        self.head_fix_nan = config.head_fix_nan
 
         self.backbone = PPHGNetV2(
-            stem_channels=self.backbone_stem_channels,
             stage_config=self.backbone_stage_config,
+            stem_channels=self.backbone_stem_channels,
             use_lab=self.backbone_use_lab,
             use_last_conv=self.backbone_use_last_conv,
             class_expand=self.backbone_class_expand,
-            dropout_prob=self.backbone_dropout_prob,
             class_num=self.backbone_class_num,
             lr_mult_list=self.backbone_lr_mult_list,
             det=self.backbone_det,
@@ -828,14 +842,21 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
             in_channels=neck_in_channels,
             out_channels=self.neck_out_channels,
             mode=self.neck_mode,
+            reduce_factor=self.neck_reduce_factor,
         )
 
         head_in_channels = self.neck.out_channels
         self.head = PFHeadLocal(
-            in_channels=head_in_channels, k=self.head_k, mode=self.head_mode
+            in_channels=head_in_channels,
+            k=self.head_k,
+            mode=self.head_mode,
+            scale_factor=self.head_scale_factor,
+            act=self.head_act,
+            kernel_list=self.head_kernel_list,
+            fix_nan=self.head_fix_nan,
         )
 
-    def forward(self, x):
+    def forward(self, x: List) -> List:
 
         x = paddle.to_tensor(x[0])
 

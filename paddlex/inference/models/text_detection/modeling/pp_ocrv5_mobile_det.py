@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Any, Dict, List, Optional, Union
+
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
@@ -23,39 +25,13 @@ from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
 )
-from ._config import PPOCRV5MobileDetConfig
+from ._config_pp_ocrv5_mobile import PPOCRV5MobileDetConfig
 from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
-NET_CONFIG = {
-    "blocks2":
-    # k, in_c, out_c, s, use_se
-    [[3, 16, 24, 1, False]],
-    "blocks3": [
-        [3, 24, 48, 2, False],
-        [3, 48, 48, 1, False],
-    ],
-    "blocks4": [
-        [3, 48, 96, 2, False],
-        [3, 96, 96, 1, False],
-    ],
-    "blocks5": [
-        [3, 96, 192, 2, False],
-        [5, 192, 192, 1, False],
-        [5, 192, 192, 1, False],
-        [5, 192, 192, 1, False],
-        [5, 192, 192, 1, False],
-    ],
-    "blocks6": [
-        [5, 192, 384, 2, True],
-        [5, 384, 384, 1, True],
-        [5, 384, 384, 1, False],
-        [5, 384, 384, 1, False],
-    ],
-    "layer_list_out_channels": [12, 18, 42, 360],
-}
 
-
-def make_divisible(v, divisor=16, min_value=None):
+def make_divisible(
+    v: Union[int, float], divisor: int = 16, min_value: Optional[int] = None
+) -> int:
     if min_value is None:
         min_value = divisor
     new_v = max(min_value, int(v + divisor / 2) // divisor * divisor)
@@ -65,7 +41,7 @@ def make_divisible(v, divisor=16, min_value=None):
 
 
 class Act(nn.Layer):
-    def __init__(self, act="hswish", lr_mult=1.0, lab_lr=0.1):
+    def __init__(self, act: str, lr_mult: float, lab_lr: float):
         super().__init__()
         if act == "hswish":
             self.act = nn.Hardswish()
@@ -74,13 +50,19 @@ class Act(nn.Layer):
             self.act = nn.ReLU()
         self.lab = LearnableAffineBlock(lr_mult=lr_mult, lab_lr=lab_lr)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         return self.lab(self.act(x))
 
 
 class ConvBNLayer(nn.Layer):
     def __init__(
-        self, in_channels, out_channels, kernel_size, stride, groups=1, lr_mult=1.0
+        self,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        stride: int,
+        lr_mult: float,
+        groups: int = 1,
     ):
         super().__init__()
         self.conv = nn.Conv2D(
@@ -100,7 +82,7 @@ class ConvBNLayer(nn.Layer):
             bias_attr=ParamAttr(regularizer=L2Decay(0.0), learning_rate=lr_mult),
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv(x)
         x = self.bn(x)
         return x
@@ -109,14 +91,15 @@ class ConvBNLayer(nn.Layer):
 class LearnableRepLayer(nn.Layer):
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        stride=1,
-        groups=1,
-        num_conv_branches=1,
-        lr_mult=1.0,
-        lab_lr=0.1,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        act: str,
+        stride: int,
+        lr_mult: float,
+        lab_lr: float,
+        num_conv_branches: int,
+        groups: int = 1,
     ):
         super().__init__()
         self.groups = groups
@@ -160,9 +143,9 @@ class LearnableRepLayer(nn.Layer):
         )
 
         self.lab = LearnableAffineBlock(lr_mult=lr_mult, lab_lr=lab_lr)
-        self.act = Act(lr_mult=lr_mult, lab_lr=lab_lr)
+        self.act = Act(act=act, lr_mult=lr_mult, lab_lr=lab_lr)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
 
         out = 0
         if self.identity is not None:
@@ -181,7 +164,7 @@ class LearnableRepLayer(nn.Layer):
 
 
 class SELayer(nn.Layer):
-    def __init__(self, channel, reduction=4, lr_mult=1.0):
+    def __init__(self, channel: int, reduction: int, lr_mult: float):
         super().__init__()
         if "npu" in paddle.device.get_device():
             self.avg_pool = nn.MeanPool2D(1, 1)
@@ -208,7 +191,7 @@ class SELayer(nn.Layer):
         )
         self.hardsigmoid = nn.Hardsigmoid()
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         identity = x
         x = self.avg_pool(x)
         x = self.conv1(x)
@@ -222,14 +205,16 @@ class SELayer(nn.Layer):
 class LCNetV3Block(nn.Layer):
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        stride,
-        dw_size,
-        use_se=False,
-        conv_kxk_num=4,
-        lr_mult=1.0,
-        lab_lr=0.1,
+        in_channels: int,
+        out_channels: int,
+        act: str,
+        stride: int,
+        dw_size: int,
+        use_se: bool,
+        conv_kxk_num: int,
+        reduction: int,
+        lr_mult: float,
+        lab_lr: float,
     ):
         super().__init__()
         self.use_se = use_se
@@ -237,6 +222,7 @@ class LCNetV3Block(nn.Layer):
             in_channels=in_channels,
             out_channels=in_channels,
             kernel_size=dw_size,
+            act=act,
             stride=stride,
             groups=in_channels,
             num_conv_branches=conv_kxk_num,
@@ -244,18 +230,19 @@ class LCNetV3Block(nn.Layer):
             lab_lr=lab_lr,
         )
         if use_se:
-            self.se = SELayer(in_channels, lr_mult=lr_mult)
+            self.se = SELayer(in_channels, reduction=reduction, lr_mult=lr_mult)
         self.pw_conv = LearnableRepLayer(
             in_channels=in_channels,
             out_channels=out_channels,
             kernel_size=1,
+            act=act,
             stride=1,
             num_conv_branches=conv_kxk_num,
             lr_mult=lr_mult,
             lab_lr=lab_lr,
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.dw_conv(x)
         if self.use_se:
             x = self.se(x)
@@ -266,12 +253,14 @@ class LCNetV3Block(nn.Layer):
 class PPLCNetV3(nn.Layer):
     def __init__(
         self,
-        scale=1.0,
-        conv_kxk_num=4,
-        lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-        lab_lr=0.1,
-        net_config=NET_CONFIG,
-        out_channels=512,
+        scale: float,
+        conv_kxk_num: int,
+        reduction: int,
+        act: str,
+        lr_mult_list: List[float],
+        lab_lr: float,
+        net_config: Dict[str, Any],
+        out_channels: int,
         **kwargs,
     ):
         super().__init__()
@@ -298,87 +287,34 @@ class PPLCNetV3(nn.Layer):
             lr_mult=self.lr_mult_list[0],
         )
 
-        self.blocks2 = nn.Sequential(
-            *[
-                LCNetV3Block(
-                    in_channels=make_divisible(in_c * scale),
-                    out_channels=make_divisible(out_c * scale),
-                    dw_size=k,
-                    stride=s,
-                    use_se=se,
-                    conv_kxk_num=conv_kxk_num,
-                    lr_mult=self.lr_mult_list[1],
-                    lab_lr=lab_lr,
-                )
-                for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks2"])
-            ]
-        )
+        def _build_blocks(block_key, lr_mult_idx):
+            return nn.Sequential(
+                *[
+                    LCNetV3Block(
+                        in_channels=make_divisible(in_c * scale),
+                        out_channels=make_divisible(out_c * scale),
+                        act=act,
+                        dw_size=k,
+                        stride=s,
+                        use_se=se,
+                        conv_kxk_num=conv_kxk_num,
+                        reduction=reduction,
+                        lr_mult=self.lr_mult_list[lr_mult_idx],
+                        lab_lr=lab_lr,
+                    )
+                    for i, (k, in_c, out_c, s, se) in enumerate(
+                        self.net_config[block_key]
+                    )
+                ]
+            )
 
-        self.blocks3 = nn.Sequential(
-            *[
-                LCNetV3Block(
-                    in_channels=make_divisible(in_c * scale),
-                    out_channels=make_divisible(out_c * scale),
-                    dw_size=k,
-                    stride=s,
-                    use_se=se,
-                    conv_kxk_num=conv_kxk_num,
-                    lr_mult=self.lr_mult_list[2],
-                    lab_lr=lab_lr,
-                )
-                for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks3"])
-            ]
-        )
+        self.blocks2 = _build_blocks("blocks2", 1)
+        self.blocks3 = _build_blocks("blocks3", 2)
+        self.blocks4 = _build_blocks("blocks4", 3)
+        self.blocks5 = _build_blocks("blocks5", 4)
+        self.blocks6 = _build_blocks("blocks6", 5)
 
-        self.blocks4 = nn.Sequential(
-            *[
-                LCNetV3Block(
-                    in_channels=make_divisible(in_c * scale),
-                    out_channels=make_divisible(out_c * scale),
-                    dw_size=k,
-                    stride=s,
-                    use_se=se,
-                    conv_kxk_num=conv_kxk_num,
-                    lr_mult=self.lr_mult_list[3],
-                    lab_lr=lab_lr,
-                )
-                for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks4"])
-            ]
-        )
-
-        self.blocks5 = nn.Sequential(
-            *[
-                LCNetV3Block(
-                    in_channels=make_divisible(in_c * scale),
-                    out_channels=make_divisible(out_c * scale),
-                    dw_size=k,
-                    stride=s,
-                    use_se=se,
-                    conv_kxk_num=conv_kxk_num,
-                    lr_mult=self.lr_mult_list[4],
-                    lab_lr=lab_lr,
-                )
-                for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks5"])
-            ]
-        )
-
-        self.blocks6 = nn.Sequential(
-            *[
-                LCNetV3Block(
-                    in_channels=make_divisible(in_c * scale),
-                    out_channels=make_divisible(out_c * scale),
-                    dw_size=k,
-                    stride=s,
-                    use_se=se,
-                    conv_kxk_num=conv_kxk_num,
-                    lr_mult=self.lr_mult_list[5],
-                    lab_lr=lab_lr,
-                )
-                for i, (k, in_c, out_c, s, se) in enumerate(self.net_config["blocks6"])
-            ]
-        )
-
-        mv_c = self.net_config["layer_list_out_channels"]  # [12, 18, 42, 360]
+        mv_c = self.net_config["layer_list_out_channels"]
 
         self.out_channels = [
             make_divisible(self.net_config["blocks3"][-1][2] * scale),
@@ -402,7 +338,7 @@ class PPLCNetV3(nn.Layer):
             int(mv_c[3] * scale),
         ]
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> List[paddle.Tensor]:
         out_list = []
         x = self.conv1(x)
 
@@ -424,7 +360,7 @@ class PPLCNetV3(nn.Layer):
 
 
 class SEModule(nn.Layer):
-    def __init__(self, in_channels, reduction=4):
+    def __init__(self, in_channels: int, reduction: int):
         super(SEModule, self).__init__()
         if "npu" in paddle.device.get_device():
             self.avg_pool = nn.MeanPool2D(1, 1)
@@ -445,7 +381,7 @@ class SEModule(nn.Layer):
             padding=0,
         )
 
-    def forward(self, inputs):
+    def forward(self, inputs: paddle.Tensor) -> paddle.Tensor:
         outputs = self.avg_pool(inputs)
         outputs = self.conv1(outputs)
         outputs = F.relu(outputs)
@@ -455,7 +391,14 @@ class SEModule(nn.Layer):
 
 
 class RSELayer(nn.Layer):
-    def __init__(self, in_channels, out_channels, kernel_size, shortcut=True):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        shortcut: bool,
+        reduction: int,
+    ):
         super(RSELayer, self).__init__()
         weight_attr = paddle.nn.initializer.KaimingUniform()
         self.out_channels = out_channels
@@ -467,10 +410,10 @@ class RSELayer(nn.Layer):
             weight_attr=ParamAttr(initializer=weight_attr),
             bias_attr=False,
         )
-        self.se_block = SEModule(self.out_channels)
+        self.se_block = SEModule(self.out_channels, reduction=reduction)
         self.shortcut = shortcut
 
-    def forward(self, ins):
+    def forward(self, ins: paddle.Tensor) -> paddle.Tensor:
         x = self.in_conv(ins)
         if self.shortcut:
             out = x + self.se_block(x)
@@ -480,7 +423,14 @@ class RSELayer(nn.Layer):
 
 
 class RSEFPN(nn.Layer):
-    def __init__(self, in_channels, out_channels, shortcut=True, **kwargs):
+    def __init__(
+        self,
+        in_channels: List[int],
+        out_channels: int,
+        shortcut: bool,
+        reduction: int,
+        **kwargs,
+    ):
         super(RSEFPN, self).__init__()
         self.out_channels = out_channels
         self.ins_conv = nn.LayerList()
@@ -488,15 +438,25 @@ class RSEFPN(nn.Layer):
 
         for i in range(len(in_channels)):
             self.ins_conv.append(
-                RSELayer(in_channels[i], out_channels, kernel_size=1, shortcut=shortcut)
+                RSELayer(
+                    in_channels[i],
+                    out_channels,
+                    kernel_size=1,
+                    shortcut=shortcut,
+                    reduction=reduction,
+                )
             )
             self.inp_conv.append(
                 RSELayer(
-                    out_channels, out_channels // 4, kernel_size=3, shortcut=shortcut
+                    out_channels,
+                    out_channels // 4,
+                    kernel_size=3,
+                    shortcut=shortcut,
+                    reduction=reduction,
                 )
             )
 
-    def forward(self, x):
+    def forward(self, x: List[paddle.Tensor]) -> paddle.Tensor:
         c2, c3, c4, c5 = x
 
         in5 = self.ins_conv[3](c5)
@@ -536,6 +496,8 @@ class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
         self.backbone_scale = config.backbone_scale
         self.backbone_det = config.backbone_det
         self.backbone_conv_kxk_num = config.backbone_conv_kxk_num
+        self.backbone_reduction = config.backbone_reduction
+        self.backbone_act = config.backbone_act
         self.backbone_lr_mult_list = config.backbone_lr_mult_list
         self.backbone_lab_lr = config.backbone_lab_lr
         self.backbone_net_config = config.backbone_net_config
@@ -545,11 +507,14 @@ class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
         self.neck_shortcut = config.neck_shortcut
 
         self.head_k = config.head_k
+        self.head_kernel_list = config.head_kernel_list
         self.head_fix_nan = config.head_fix_nan
 
         self.backbone = PPLCNetV3(
             scale=self.backbone_scale,
             conv_kxk_num=self.backbone_conv_kxk_num,
+            reduction=self.backbone_reduction,
+            act=self.backbone_act,
             lr_mult_list=self.backbone_lr_mult_list,
             lab_lr=self.backbone_lab_lr,
             net_config=self.backbone_net_config,
@@ -561,16 +526,23 @@ class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
             in_channels=neck_in_channels,
             out_channels=self.neck_out_channels,
             shortcut=self.neck_shortcut,
+            reduction=self.backbone_reduction,
         )
 
         head_in_channels = self.neck_out_channels
         self.head = DBHead(
-            in_channels=head_in_channels, k=self.head_k, fix_nan=self.head_fix_nan
+            in_channels=head_in_channels,
+            k=self.head_k,
+            kernel_list=self.head_kernel_list,
+            fix_nan=self.head_fix_nan,
         )
 
-    def forward(self, x):
+    def forward(self, x: List) -> List:
 
-        x = paddle.to_tensor(x[0])
+        if isinstance(x, (list, tuple)):
+            x = x[0]
+        if not isinstance(x, paddle.Tensor):
+            x = paddle.to_tensor(x)
 
         x = self.backbone(x)
         x = self.neck(x)
