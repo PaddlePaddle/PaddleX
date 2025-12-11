@@ -242,7 +242,7 @@ def compute_levels_for_entries(entries):
         if level > 0:
             bucket = "semantic"
         # Check special keywords (ABSTRACT, REFERENCES, etc.)
-        elif str(e["content"]).upper() in SPECIAL_KEYWORDS:
+        elif str(e["content"]).upper().strip().rstrip("：: ") in SPECIAL_KEYWORDS:
             bucket = "special_word"
         else:
             bucket = "cluster"
@@ -273,7 +273,9 @@ def compute_levels_for_entries(entries):
                 final_level = relative_order_level
 
         elif bucket == "special_word":
-            final_level = SPECIAL_KEYWORDS[e["content"]]
+            final_level = SPECIAL_KEYWORDS[
+                str(e["content"]).upper().strip().rstrip("：: ")
+            ]
 
         else:
             final_level = cluster_level
@@ -326,7 +328,7 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
         )
 
     if len(entries) == 0:
-        return parsing_res_list
+        return blocks_by_page
 
     entries = compute_levels_for_entries(entries)
 
@@ -334,4 +336,4 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
         block = e["origin_block"]
         setattr(block, "title_level", e["level"])
 
-    return parsing_res_list
+    return blocks_by_page

@@ -892,56 +892,41 @@ class ProcessedLayoutParsingResult(BaseResult, MarkdownMixin):
             handle_funcs_dict.pop(label, None)
 
         markdown_content = ""
-        last_label = None
-        seg_start_flag = True
-        seg_end_flag = True
-        prev_block = None
-        page_first_element_seg_start_flag = None
-        page_last_element_seg_end_flag = None
         markdown_info = {}
         markdown_info["markdown_images"] = {}
-        for idx, block in enumerate(self["parsing_res_list"]):
-            seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
+        pages_list = self["parsing_res_list"]
+        global_block_id = 0
 
-            label = block.label
-            if block.image is not None:
-                markdown_info["markdown_images"][block.image["path"]] = block.image[
-                    "img"
-                ]
-            page_first_element_seg_start_flag = (
-                seg_start_flag
-                if (page_first_element_seg_start_flag is None)
-                else page_first_element_seg_start_flag
-            )
+        for page_blocks in pages_list:
 
-            handle_func = handle_funcs_dict.get(label, None)
-            if handle_func:
-                prev_block = block
-                if label == last_label == "text" and seg_start_flag == False:
-                    markdown_content += handle_func(block)
-                else:
-                    markdown_content += (
-                        "\n\n" + handle_func(block)
-                        if markdown_content
-                        else handle_func(block)
-                    )
-                last_label = label
-            if block.group_id is None:
-                block.group_id = idx
-        page_first_element_seg_start_flag = (
-            True
-            if page_first_element_seg_start_flag is None
-            else page_first_element_seg_start_flag
-        )
-        page_last_element_seg_end_flag = seg_end_flag
+            if not page_blocks:
+                continue
+            for idx, block in enumerate(page_blocks):
+
+                label = block.label
+
+                if block.image is not None:
+                    markdown_info["markdown_images"][block.image["path"]] = block.image[
+                        "img"
+                    ]
+
+                handle_func = handle_funcs_dict.get(label, None)
+
+                if handle_func:
+                    current_text = handle_func(block)
+
+                    if markdown_content:
+                        markdown_content += "\n\n" + current_text
+                    else:
+                        markdown_content += current_text
+
+                if block.group_id is None:
+                    block.group_id = global_block_id
+                global_block_id += 1
 
         markdown_info["page_index"] = self["page_index"]
         markdown_info["input_path"] = self["input_path"]
         markdown_info["markdown_texts"] = markdown_content
-        markdown_info["page_continuation_flags"] = (
-            page_first_element_seg_start_flag,
-            page_last_element_seg_end_flag,
-        )
         for img in self["imgs_in_doc"]:
             markdown_info["markdown_images"][img["path"]] = img["img"]
 
