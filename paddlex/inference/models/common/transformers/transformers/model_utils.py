@@ -203,7 +203,11 @@ def _load_part_state_dict_from_safetensors(
                     else:
                         weight = tp_fn(py_safe_slice_)
                 else:
-                    weight = py_safe_slice_[:]
+                    # HACK
+                    if len(py_safe_slice_.get_shape()) == 0:
+                        logging.debug("Ignore empty shape this moment")
+                    else:
+                        weight = py_safe_slice_[:]
 
                 if not return_numpy and device == "expected":
                     weight = weight._copy_to(
@@ -1843,13 +1847,12 @@ class PretrainedModel(
             ):
                 raise NotImplementedError
             else:
-                try:
-                    transpose_weight_keys = model.get_transpose_weight_keys()
-                except NotImplementedError:
-                    if convert_from_hf:
-                        raise ValueError("`convert_from_hf=True` is not supported")
-                    else:
-                        transpose_weight_keys = None
+                transpose_weight_keys = None
+                if convert_from_hf:
+                    try:
+                        transpose_weight_keys = model.get_transpose_weight_keys()
+                    except NotImplementedError:
+                        pass
                 state_dict = load_state_dict(
                     resolved_archive_file,
                     convert_from_hf=convert_from_hf,
