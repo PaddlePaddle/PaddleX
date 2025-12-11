@@ -512,7 +512,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 ]
             handle_func = handle_funcs_dict.get(
                 label,
-                lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
+                lambda block: block.content
             )
             if (
                 show_formula_number
