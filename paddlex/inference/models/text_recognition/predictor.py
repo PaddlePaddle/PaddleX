@@ -116,8 +116,11 @@ class TextRecPredictor(BasePredictor):
         indices = np.argsort(np.array(width_list))
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-        with TemporaryDeviceChanger(self.device):
+        if self._use_static_model:
             batch_preds = self.infer(x=x)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
         batch_num = self.batch_sampler.batch_size
         img_num = len(batch_raw_imgs)
         rec_image_shape = next(
