@@ -35,7 +35,7 @@ ones_ = Constant(value=1.0)
 
 class ConvBNAct(nn.Layer):
     """
-    ConvBNAct
+    ConvBNAct: Convolution + Batch Normalization + Activation (optional) with Learnable Affine Block
 
     Args:
         in_channels (int): Number of input channels
@@ -99,7 +99,7 @@ class ConvBNAct(nn.Layer):
 
 class LightConvBNAct(nn.Layer):
     """
-    LightConvBNAct
+    LightConvBNAct: Lightweight depthwise separable convolution block with BN and activation
 
     Args:
         in_channels (int): Number of input channels
@@ -149,7 +149,7 @@ class LightConvBNAct(nn.Layer):
 
 class StemBlock(nn.Layer):
     """
-    StemBlock
+    StemBlock: Multi-stage convolution stem block with pooling and concatenation
 
     Args:
         in_channels (int): Number of input channels
@@ -231,7 +231,7 @@ class StemBlock(nn.Layer):
 
 class HGV2_Block(nn.Layer):
     """
-    HGV2_Block
+    HGV2_Block: Multi-layer convolution block with feature aggregation and residual connection
 
     Args:
         in_channels (int): Number of input channels
@@ -312,7 +312,7 @@ class HGV2_Block(nn.Layer):
 
 class HGV2_Stage(nn.Layer):
     """
-    HGV2_Stage
+    HGV2_Stage: Sequential HGV2_Block layers with optional depthwise downsampling
 
     Args:
         in_channels (int): Number of input channels
@@ -386,7 +386,7 @@ class HGV2_Stage(nn.Layer):
 
 class PPHGNetV2(nn.Layer):
     """
-    PPHGNetV2
+    PPHGNetV2: Hierarchical feature extraction network with stem block and multi-stage HGV2 blocks
 
     Args:
         stage_config (Dict[str, Tuple]): Dictionary of stage configurations, each tuple contains (in_channels, mid_channels, out_channels, block_num, is_downsample, light_block, kernel_size, layer_num, stride)
@@ -493,7 +493,7 @@ class PPHGNetV2(nn.Layer):
 
 class DSConv(nn.Layer):
     """
-    DSConv
+    DSConv: Depthwise separable convolution with bottleneck and residual connection
 
     Args:
         in_channels (int): Number of input channels
@@ -593,7 +593,7 @@ class DSConv(nn.Layer):
 
 class IntraCLBlock(nn.Layer):
     """
-    IntraCLBlock
+    IntraCLBlock: Multi-scale convolution block with vertical/horizontal kernel fusion
 
     Args:
         in_channels (int): Number of input channels
@@ -607,7 +607,6 @@ class IntraCLBlock(nn.Layer):
         super(IntraCLBlock, self).__init__()
         self.channels = in_channels
         self.rf = reduce_factor
-        weight_attr = nn.initializer.KaimingUniform()
         self.conv1x1_reduce_channel = nn.Conv2D(
             self.channels, self.channels // self.rf, kernel_size=1, stride=1, padding=0
         )
@@ -713,7 +712,7 @@ class IntraCLBlock(nn.Layer):
 
 class LKPAN(nn.Layer):
     """
-    LKPAN
+    LKPAN: Feature pyramid network with multi-scale aggregation and IntraCL enhancement
 
     Args:
         in_channels (List[int]): List of input channel numbers for multi-scale feature maps
@@ -852,7 +851,7 @@ class LKPAN(nn.Layer):
 
 class ConvBNLayer(nn.Layer):
     """
-    ConvBNLayer
+    ConvBNLayer: Basic convolution + batch normalization + optional activation block
 
     Args:
         in_channels (int): Number of input channels
@@ -914,7 +913,7 @@ class ConvBNLayer(nn.Layer):
 
 class LocalModule(nn.Layer):
     """
-    LocalModule
+    LocalModule: Feature enhancement module with concatenation and 1x1 projection
 
     Args:
         in_c (int): Number of input channels (before concatenation)
@@ -938,7 +937,7 @@ class LocalModule(nn.Layer):
 
 class PFHeadLocal(DBHead):
     """
-    PFHeadLocal
+    PFHeadLocal: Enhanced DB head with local feature refinement for detection
 
     Args:
         in_channels (int): Number of input channels
@@ -983,7 +982,7 @@ class PFHeadLocal(DBHead):
 
 class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
     """
-    PPOCRV5ServerDet
+    PPOCRV5ServerDet: Server-side OCR detection model with PPHGNetV2, LKPAN and PFHeadLocal
 
     Args:
         config (PPOCRV5ServerDetConfig): Configuration object containing model hyperparameters

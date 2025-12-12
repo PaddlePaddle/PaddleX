@@ -29,7 +29,7 @@ def conv3x3(
     in_channels: int, out_channels: int, kernel_size: int, stride: int = 1
 ) -> nn.Conv2D:
     """
-    conv3x3
+    conv3x3: 3x3 convolution layer with same padding
 
     Args:
         in_channels (int): Number of input channels
@@ -54,7 +54,7 @@ def dilated_conv_bn_act(
     in_channels: int, out_channels: int, dilation: int
 ) -> nn.Sequential:
     """
-    dilated_conv_bn_act
+    dilated_conv_bn_act: Dilated convolution block with BN and ReLU activation
 
     Args:
         in_channels (int): Number of input channels
@@ -89,7 +89,7 @@ def dilated_conv(
     stride: int = 1,
 ) -> nn.Sequential:
     """
-    dilated_conv
+    dilated_conv: Pure dilated convolution layer for multi-scale feature learning
 
     Args:
         in_channels (int): Number of input channels
@@ -258,7 +258,7 @@ class ResnetStraight(nn.Layer):
 
 class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
     """
-    UVDocNet
+    UVDocNet: Image rectification network based on ResNet and multi-scale dilated convolution
 
     Args:
         config (UVDocNetConfig): Configuration object containing network hyperparameters

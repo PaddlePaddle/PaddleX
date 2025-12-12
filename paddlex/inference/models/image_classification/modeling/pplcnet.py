@@ -74,7 +74,7 @@ def _create_act(act: str) -> nn.Layer:
 
 class AdaptiveAvgPool2D(nn.AdaptiveAvgPool2D):
     """
-    AdaptiveAvgPool2D
+    AdaptiveAvgPool2D: : Adaptive average pooling layer optimized
 
     Args:
         *args: Positional arguments passed to parent class nn.AdaptiveAvgPool2D
@@ -121,7 +121,7 @@ class AdaptiveAvgPool2D(nn.AdaptiveAvgPool2D):
 
 class ConvBNLayer(nn.Layer):
     """
-    ConvBNLayer
+    ConvBNLayer: Combination layer of convolution, batch normalization and activation function
 
     Args:
         num_channels (int): Number of input channels
@@ -175,7 +175,7 @@ class ConvBNLayer(nn.Layer):
 
 class DepthwiseSeparable(nn.Layer):
     """
-    DepthwiseSeparable
+    DepthwiseSeparable: Depthwise separable convolution layer with optional SE attention module
 
     Args:
         num_channels (int): Number of input channels
@@ -233,7 +233,7 @@ class DepthwiseSeparable(nn.Layer):
 
 class SEModule(nn.Layer):
     """
-    SEModule
+    SEModule: Squeeze-and-Excitation attention module for channel-wise feature recalibration
 
     Args:
         channel (int): Number of input channels
@@ -281,7 +281,7 @@ class SEModule(nn.Layer):
 
 class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
     """
-    PPLCNet
+    PPLCNet: Lightweight convolutional neural network for image classification tasks
 
     Args:
         config (PPLCNetConfig): Configuration instance containing model hyperparameters

@@ -32,6 +32,17 @@ from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 def make_divisible(
     v: Union[int, float], divisor: int = 16, min_value: Optional[int] = None
 ) -> int:
+    """
+    make_divisible: Adjust channel number to be divisible by specified divisor (network width optimization)
+
+    Args:
+        v (Union[int, float]): Original channel number
+        divisor (int, optional): Divisor for channel adjustment, default 16
+        min_value (Optional[int], optional): Minimum channel number after adjustment, default None
+
+    Returns:
+        int: Adjusted channel number (integer)
+    """
     if min_value is None:
         min_value = divisor
     new_v = max(min_value, int(v + divisor / 2) // divisor * divisor)
@@ -42,7 +53,7 @@ def make_divisible(
 
 class Act(nn.Layer):
     """
-    Act
+    Act: Activation layer with Learnable Affine Block (LAB)
 
     Args:
         act (str): Activation type, "relu" or "hswish"
@@ -68,7 +79,7 @@ class Act(nn.Layer):
 
 class ConvBNLayer(nn.Layer):
     """
-    ConvBNLayer
+    ConvBNLayer: Convolution + Batch Normalization combination layer
 
     Args:
         in_channels (int): Input channel number
@@ -117,7 +128,7 @@ class ConvBNLayer(nn.Layer):
 
 class LearnableRepLayer(nn.Layer):
     """
-    LearnableRepLayer
+    LearnableRepLayer: Learnable representation layer with multi-branch convolution fusion
 
     Args:
         in_channels (int): Input channel number
@@ -210,7 +221,7 @@ class LearnableRepLayer(nn.Layer):
 
 class SELayer(nn.Layer):
     """
-    SELayer
+    SELayer: Squeeze-and-Excitation channel attention layer
 
     Args:
         channel (int): Input/output channel number
@@ -261,7 +272,7 @@ class SELayer(nn.Layer):
 
 class LCNetV3Block(nn.Layer):
     """
-    LCNetV3Block
+    LCNetV3Block: Depthwise separable convolution block with SE attention (LCNetV3)
 
     Args:
         in_channels (int): Number of input channels
@@ -328,7 +339,7 @@ class LCNetV3Block(nn.Layer):
 
 class PPLCNetV3(nn.Layer):
     """
-    PPLCNetV3
+    PPLCNetV3: Lightweight convolutional network with learnable representation layers
 
     Args:
         scale (float): Channel scale factor for network width adjustment
@@ -455,7 +466,7 @@ class PPLCNetV3(nn.Layer):
 
 class SEModule(nn.Layer):
     """
-    SEModule
+    SEModule: Simplified Squeeze-and-Excitation channel attention module
 
     Args:
         in_channels (int): Number of input channels
@@ -497,7 +508,7 @@ class SEModule(nn.Layer):
 
 class RSELayer(nn.Layer):
     """
-    RSELayer
+    RSELayer: Residual SE layer with convolution and shortcut connection
 
     Args:
         in_channels (int): Number of input channels
@@ -543,7 +554,7 @@ class RSELayer(nn.Layer):
 
 class RSEFPN(nn.Layer):
     """
-    RSEFPN
+    RSEFPN: Feature Pyramid Network with Residual SE attention
 
     Args:
         in_channels (List[int]): List of input channel numbers for multi-scale feature maps
@@ -622,7 +633,7 @@ class RSEFPN(nn.Layer):
 
 class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
     """
-    PPOCRV5MobileDet
+    PPOCRV5MobileDet: Lightweight OCR detection model based on PPLCNetV3, RSEFPN and DBHead
 
     Args:
         config (PPOCRV5MobileDetConfig): Configuration object containing model hyperparameters
