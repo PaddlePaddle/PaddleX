@@ -67,12 +67,13 @@ class ConvBNAct(nn.Layer):
         super().__init__()
         self.use_act = use_act
         self.use_lab = use_lab
+        padding_val = padding if isinstance(padding, str) else (kernel_size - 1) // 2
         self.conv = nn.Conv2D(
             in_channels,
             out_channels,
             kernel_size,
             stride,
-            padding=padding if isinstance(padding, str) else (kernel_size - 1) // 2,
+            padding=padding_val,
             groups=groups,
             weight_attr=ParamAttr(learning_rate=lr_mult),
             bias_attr=False,
@@ -606,80 +607,24 @@ class IntraCLBlock(nn.Layer):
     def __init__(self, in_channels: int, reduce_factor: int) -> None:
         super(IntraCLBlock, self).__init__()
         self.channels = in_channels
-        self.rf = reduce_factor
-        self.conv1x1_reduce_channel = nn.Conv2D(
-            self.channels, self.channels // self.rf, kernel_size=1, stride=1, padding=0
-        )
-        self.conv1x1_return_channel = nn.Conv2D(
-            self.channels // self.rf, self.channels, kernel_size=1, stride=1, padding=0
-        )
+        self.reduce_factor = reduce_factor
+        reduced_ch = self.channels // self.reduce_factor
 
-        self.v_layer_7x1 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(7, 1),
-            stride=(1, 1),
-            padding=(3, 0),
-        )
-        self.v_layer_5x1 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(5, 1),
-            stride=(1, 1),
-            padding=(2, 0),
-        )
-        self.v_layer_3x1 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(3, 1),
-            stride=(1, 1),
-            padding=(1, 0),
-        )
+        # conv2d (in_channels, out_channels, kernel_size, stride, padding)
+        self.conv1x1_reduce_channel = nn.Conv2D(self.channels, reduced_ch, 1, 1, 0)
+        self.conv1x1_return_channel = nn.Conv2D(reduced_ch, self.channels, 1, 1, 0)
 
-        self.q_layer_1x7 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(1, 7),
-            stride=(1, 1),
-            padding=(0, 3),
-        )
-        self.q_layer_1x5 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(1, 5),
-            stride=(1, 1),
-            padding=(0, 2),
-        )
-        self.q_layer_1x3 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(1, 3),
-            stride=(1, 1),
-            padding=(0, 1),
-        )
+        self.v_layer_7x1 = nn.Conv2D(reduced_ch, reduced_ch, (7, 1), (1, 1), (3, 0))
+        self.v_layer_5x1 = nn.Conv2D(reduced_ch, reduced_ch, (5, 1), (1, 1), (2, 0))
+        self.v_layer_3x1 = nn.Conv2D(reduced_ch, reduced_ch, (3, 1), (1, 1), (1, 0))
 
-        # base
-        self.c_layer_7x7 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(7, 7),
-            stride=(1, 1),
-            padding=(3, 3),
-        )
-        self.c_layer_5x5 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(5, 5),
-            stride=(1, 1),
-            padding=(2, 2),
-        )
-        self.c_layer_3x3 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(3, 3),
-            stride=(1, 1),
-            padding=(1, 1),
-        )
+        self.q_layer_1x7 = nn.Conv2D(reduced_ch, reduced_ch, (1, 7), (1, 1), (0, 3))
+        self.q_layer_1x5 = nn.Conv2D(reduced_ch, reduced_ch, (1, 5), (1, 1), (0, 2))
+        self.q_layer_1x3 = nn.Conv2D(reduced_ch, reduced_ch, (1, 3), (1, 1), (0, 1))
+
+        self.c_layer_7x7 = nn.Conv2D(reduced_ch, reduced_ch, (7, 7), (1, 1), (3, 3))
+        self.c_layer_5x5 = nn.Conv2D(reduced_ch, reduced_ch, (5, 5), (1, 1), (2, 2))
+        self.c_layer_3x3 = nn.Conv2D(reduced_ch, reduced_ch, (3, 3), (1, 1), (1, 1))
 
         self.bn = nn.BatchNorm2D(self.channels)
         self.relu = nn.ReLU()
@@ -687,23 +632,13 @@ class IntraCLBlock(nn.Layer):
     def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x_new = self.conv1x1_reduce_channel(x)
 
-        x_7_c = self.c_layer_7x7(x_new)
-        x_7_v = self.v_layer_7x1(x_new)
-        x_7_q = self.q_layer_1x7(x_new)
-        x_7 = x_7_c + x_7_v + x_7_q
-
-        x_5_c = self.c_layer_5x5(x_7)
-        x_5_v = self.v_layer_5x1(x_7)
-        x_5_q = self.q_layer_1x5(x_7)
-        x_5 = x_5_c + x_5_v + x_5_q
-
-        x_3_c = self.c_layer_3x3(x_5)
-        x_3_v = self.v_layer_3x1(x_5)
-        x_3_q = self.q_layer_1x3(x_5)
-        x_3 = x_3_c + x_3_v + x_3_q
+        x_7 = (
+            self.c_layer_7x7(x_new) + self.v_layer_7x1(x_new) + self.q_layer_1x7(x_new)
+        )
+        x_5 = self.c_layer_5x5(x_7) + self.v_layer_5x1(x_7) + self.q_layer_1x5(x_7)
+        x_3 = self.c_layer_3x3(x_5) + self.v_layer_3x1(x_5) + self.q_layer_1x3(x_5)
 
         x_relation = self.conv1x1_return_channel(x_3)
-
         x_relation = self.bn(x_relation)
         x_relation = self.relu(x_relation)
 
@@ -719,6 +654,8 @@ class LKPAN(nn.Layer):
         out_channels (int): Number of output channels for 1x1 convolution layers
         mode (str): Network mode ('lite' for DSConv, 'large' for standard Conv2D)
         reduce_factor (int): Channel reduction ratio for IntraCLBlock modules
+        upsample_mode (str): Interpolation mode for upsample operation
+        upsample_align_mode (int): Align mode for upsample operation
         **kwargs: Additional keyword arguments
 
     Returns:
@@ -731,17 +668,15 @@ class LKPAN(nn.Layer):
         out_channels: int,
         mode: str,
         reduce_factor: int,
+        upsample_mode: str,
+        upsample_align_mode: int,
         **kwargs,
     ) -> None:
         super(LKPAN, self).__init__()
         self.out_channels = out_channels
+        self.upsample_mode = upsample_mode
+        self.upsample_align_mode = upsample_align_mode
         weight_attr = nn.initializer.KaimingUniform()
-
-        self.ins_conv = nn.LayerList()
-        self.inp_conv = nn.LayerList()
-        # pan head
-        self.pan_head_conv = nn.LayerList()
-        self.pan_lat_conv = nn.LayerList()
 
         if mode.lower() == "lite":
             p_layer = DSConv
@@ -753,6 +688,11 @@ class LKPAN(nn.Layer):
                     mode
                 )
             )
+
+        self.ins_conv = nn.LayerList()
+        self.inp_conv = nn.LayerList()
+        self.pan_head_conv = nn.LayerList()
+        self.pan_lat_conv = nn.LayerList()
 
         for i in range(len(in_channels)):
             self.ins_conv.append(
@@ -813,14 +753,23 @@ class LKPAN(nn.Layer):
         in2 = self.ins_conv[0](c2)
 
         out4 = in4 + F.upsample(
-            in5, scale_factor=2, mode="nearest", align_mode=1
-        )  # 1/16
+            in5,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
         out3 = in3 + F.upsample(
-            out4, scale_factor=2, mode="nearest", align_mode=1
-        )  # 1/8
+            out4,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
         out2 = in2 + F.upsample(
-            out3, scale_factor=2, mode="nearest", align_mode=1
-        )  # 1/4
+            out3,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
 
         f5 = self.inp_conv[3](in5)
         f4 = self.inp_conv[2](out4)
@@ -841,9 +790,24 @@ class LKPAN(nn.Layer):
         p3 = self.incl2(p3)
         p2 = self.incl1(p2)
 
-        p5 = F.upsample(p5, scale_factor=8, mode="nearest", align_mode=1)
-        p4 = F.upsample(p4, scale_factor=4, mode="nearest", align_mode=1)
-        p3 = F.upsample(p3, scale_factor=2, mode="nearest", align_mode=1)
+        p5 = F.upsample(
+            p5,
+            scale_factor=8,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
+        p4 = F.upsample(
+            p4,
+            scale_factor=4,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
+        p3 = F.upsample(
+            p3,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
 
         fuse = paddle.concat([p5, p4, p3, p2], axis=1)
         return fuse
@@ -945,6 +909,8 @@ class PFHeadLocal(DBHead):
         mode (str): Module size mode ('large' or 'small') to control intermediate channels
         scale_factor (int): Upsampling scale factor for feature maps
         act (str): Activation function type for LocalModule
+        upsample_mode (str): Interpolation mode for upsample operation
+        upsample_align_mode (int): Align mode for upsample operation
         **kwargs: Additional keyword arguments for parent DBHead class
 
     Returns:
@@ -958,23 +924,31 @@ class PFHeadLocal(DBHead):
         mode: str,
         scale_factor: int,
         act: str,
+        upsample_mode: str,
+        upsample_align_mode: int,
         **kwargs: Any,
     ) -> None:
         super(PFHeadLocal, self).__init__(in_channels, k, **kwargs)
         self.mode = mode
 
         self.up_conv = nn.Upsample(
-            scale_factor=scale_factor, mode="nearest", align_mode=1
+            scale_factor=scale_factor,
+            mode=upsample_mode,
+            align_mode=upsample_align_mode,
         )
-        if self.mode == "large":
-            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 4, act)
-        elif self.mode == "small":
-            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 8, act)
+
+        if mode == "large":
+            mid_ch = in_channels // 4
+        elif mode == "small":
+            mid_ch = in_channels // 8
+        else:
+            raise ValueError(f"mode must be 'large' or 'small', currently {mode}")
+        self.cbn_layer = LocalModule(in_channels // 4, mid_ch, act)
 
     def forward(self, x: paddle.Tensor) -> paddle.Tensor:
-        shrink_maps, f = self.binarize(x, return_f=True)
-        base_maps = shrink_maps
-        cbn_maps = self.cbn_layer(self.up_conv(f), shrink_maps)
+        base_maps, f = self.binarize(x, return_f=True)
+
+        cbn_maps = self.cbn_layer(self.up_conv(f), base_maps)
         cbn_maps = F.sigmoid(cbn_maps)
 
         return 0.5 * (base_maps + cbn_maps)
@@ -996,6 +970,8 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
     def __init__(self, config: PPOCRV5ServerDetConfig) -> None:
         super().__init__(config)
 
+        self.upsample_mode = config.upsample_mode
+        self.upsample_align_mode = config.upsample_align_mode
         self.backbone_stem_channels = config.backbone_stem_channels
         self.backbone_stage_config = config.backbone_stage_config
         self.backbone_use_lab = config.backbone_use_lab
@@ -1036,6 +1012,8 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
             out_channels=self.neck_out_channels,
             mode=self.neck_mode,
             reduce_factor=self.neck_reduce_factor,
+            upsample_mode=self.upsample_mode,
+            upsample_align_mode=self.upsample_align_mode,
         )
 
         head_in_channels = self.neck.out_channels
@@ -1045,6 +1023,8 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
             mode=self.head_mode,
             scale_factor=self.head_scale_factor,
             act=self.head_act,
+            upsample_mode=self.upsample_mode,
+            upsample_align_mode=self.upsample_align_mode,
             kernel_list=self.head_kernel_list,
             fix_nan=self.head_fix_nan,
         )

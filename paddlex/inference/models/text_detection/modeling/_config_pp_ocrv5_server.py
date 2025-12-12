@@ -18,6 +18,8 @@ DEFAULT_CONFIG = {
     "model_type": "det",
     "model_name": "PP-OCRv5_server_det",
     "algorithm": "DB",
+    "upsample_mode": "nearest",
+    "upsample_align_mode": 1,
     "backbone": {
         "name": "PPHGNetV2",
         "stem_channels": [3, 32, 48],
@@ -58,6 +60,12 @@ class PPOCRV5ServerDetConfig(PretrainedConfig):
 
         self.model_name = kwargs.get("model_name", DEFAULT_CONFIG["model_name"])
         self.algorithm = kwargs.get("algorithm", DEFAULT_CONFIG["algorithm"])
+        self.upsample_mode = kwargs.get(
+            "upsample_mode", DEFAULT_CONFIG["upsample_mode"]
+        )
+        self.upsample_align_mode = kwargs.get(
+            "upsample_align_mode", DEFAULT_CONFIG["upsample_align_mode"]
+        )
 
         backbone_cfg = kwargs.get("backbone", DEFAULT_CONFIG["backbone"])
         self.backbone_name = backbone_cfg.get(
