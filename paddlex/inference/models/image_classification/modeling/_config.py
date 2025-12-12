@@ -14,6 +14,50 @@
 
 from ...common.transformers.transformers import PretrainedConfig
 
+BASE_DEFAULT_CONFIG = {
+    "dropout_prob": 0.2,
+    "class_expand": 1280,
+    "use_last_conv": True,
+    "act": "hardswish",
+    "reduction": 4,
+    "lr_mult_list": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+    "net_config": {
+        "blocks2": [[3, 16, 32, 1, False]],
+        "blocks3": [[3, 32, 64, 2, False], [3, 64, 64, 1, False]],
+        "blocks4": [[3, 64, 128, 2, False], [3, 128, 128, 1, False]],
+        "blocks5": [
+            [3, 128, 256, 2, False],
+            [5, 256, 256, 1, False],
+            [5, 256, 256, 1, False],
+            [5, 256, 256, 1, False],
+            [5, 256, 256, 1, False],
+            [5, 256, 256, 1, False],
+        ],
+        "blocks6": [[5, 256, 512, 2, True], [5, 512, 512, 1, True]],
+    },
+}
+
+VARIANT_CONFIGS = {
+    "PP-LCNet_x1_0_doc_ori": {
+        "model_name": "PP-LCNet_x1_0_doc_ori",
+        "scale": 1.0,
+        "class_num": 4,
+        "stride_list": [2, 2, 2, 2, 2],
+    },
+    "PP-LCNet_x0_25_textline_ori": {
+        "model_name": "PP-LCNet_x0_25_textline_ori",
+        "scale": 0.25,
+        "class_num": 2,
+        "stride_list": [2, [2, 1], [2, 1], [2, 1], [2, 1]],
+    },
+    "PP-LCNet_x1_0_table_cls": {
+        "model_name": "PP-LCNet_x1_0_table_cls",
+        "scale": 1.0,
+        "class_num": 2,
+        "stride_list": [2, 2, 2, 2, 2],
+    },
+}
+
 
 class PPLCNetConfig(PretrainedConfig):
     model_type = "cls"
@@ -21,13 +65,21 @@ class PPLCNetConfig(PretrainedConfig):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.model_name = kwargs["model_name"]
-        self.scale = kwargs["scale"]
-        self.class_num = kwargs["class_num"]
-        self.stride_list = kwargs["stride_list"]
-        self.dropout_prob = kwargs["dropout_prob"]
-        self.class_expand = kwargs["class_expand"]
-        self.use_last_conv = kwargs["use_last_conv"]
-        self.act = kwargs["act"]
-        self.lr_mult_list = kwargs["lr_mult_list"]
-        self.net_config = kwargs["net_config"]
+        model_name = kwargs.get("model_name", "none")
+        if model_name not in VARIANT_CONFIGS:
+            raise ValueError(f"model_name {model_name} not exit")
+        DEFAULT_CONFIG = {**BASE_DEFAULT_CONFIG, **VARIANT_CONFIGS[model_name]}
+
+        self.model_name = kwargs.get("model_name", DEFAULT_CONFIG["model_name"])
+        self.scale = kwargs.get("scale", DEFAULT_CONFIG["scale"])
+        self.class_num = kwargs.get("class_num", DEFAULT_CONFIG["class_num"])
+        self.stride_list = kwargs.get("stride_list", DEFAULT_CONFIG["stride_list"])
+        self.reduction = kwargs.get("reduction", DEFAULT_CONFIG["reduction"])
+        self.dropout_prob = kwargs.get("dropout_prob", DEFAULT_CONFIG["dropout_prob"])
+        self.class_expand = kwargs.get("class_expand", DEFAULT_CONFIG["class_expand"])
+        self.use_last_conv = kwargs.get(
+            "use_last_conv", DEFAULT_CONFIG["use_last_conv"]
+        )
+        self.act = kwargs.get("act", DEFAULT_CONFIG["act"])
+        self.lr_mult_list = kwargs.get("lr_mult_list", DEFAULT_CONFIG["lr_mult_list"])
+        self.net_config = kwargs.get("net_config", DEFAULT_CONFIG["net_config"])
