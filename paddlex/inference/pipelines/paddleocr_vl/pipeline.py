@@ -133,6 +133,19 @@ class _PaddleOCRVLPipeline(BasePipeline):
         self.crop_by_boxes = CropByBoxes()
 
         self.use_queues = config.get("use_queues", False)
+        self.merge_layout_blocks = config.get("merge_layout_blocks", True)
+        self.markdown_ignore_labels = config.get(
+            "markdown_ignore_labels",
+            [
+                "number",
+                "footnote",
+                "header",
+                "header_image",
+                "footer",
+                "footer_image",
+                "aside_text",
+            ],
+        )
 
     def close(self):
         self.vl_rec_model.close()
@@ -144,6 +157,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_layout_detection: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         format_block_content: Union[bool, None],
+        merge_layout_blocks: Union[bool, None],
+        markdown_ignore_labels: Optional[list[str]] = None,
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -173,11 +188,19 @@ class _PaddleOCRVLPipeline(BasePipeline):
         if format_block_content is None:
             format_block_content = self.format_block_content
 
+        if merge_layout_blocks is None:
+            merge_layout_blocks = self.merge_layout_blocks
+
+        if markdown_ignore_labels is None:
+            markdown_ignore_labels = self.markdown_ignore_labels
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_layout_detection=use_layout_detection,
             use_chart_recognition=use_chart_recognition,
             format_block_content=format_block_content,
+            merge_layout_blocks=merge_layout_blocks,
+            markdown_ignore_labels=markdown_ignore_labels,
         )
 
     def check_model_settings_valid(self, input_params: dict) -> bool:
@@ -206,6 +229,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         imgs_in_doc,
         use_chart_recognition=False,
         vlm_kwargs=None,
+        merge_layout_blocks=True,
     ):
         blocks = []
         block_imgs = []
@@ -222,9 +246,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
             layout_det_res = filter_overlap_boxes(layout_det_res)
             boxes = layout_det_res["boxes"]
             blocks_for_img = self.crop_by_boxes(image, boxes)
-            blocks_for_img = merge_blocks(
-                blocks_for_img, non_merge_labels=image_labels + ["table"]
-            )
+            if merge_layout_blocks:
+                blocks_for_img = merge_blocks(
+                    blocks_for_img, non_merge_labels=image_labels + ["table"]
+                )
             blocks.append(blocks_for_img)
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
@@ -303,7 +328,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         result_str = result_str.replace("$", "")
 
                         result_str = (
-                            result_str.replace("\(", " $ ")
+                            result_str.replace("\\(", " $ ")
                             .replace("\\)", " $ ")
                             .replace("\\[", " $$ ")
                             .replace("\\]", " $$ ")
@@ -324,6 +349,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     label=block_label,
                     bbox=block_bbox,
                     content=block_content,
+                    group_id=block.get("group_id", None),
                 )
                 if block_label in image_labels and block_img is not None:
                     x_min, y_min, x_max, y_max = list(map(int, block_bbox))
@@ -365,6 +391,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
         min_pixels: Optional[int] = None,
         max_pixels: Optional[int] = None,
         max_new_tokens: Optional[int] = None,
+        merge_layout_blocks: Optional[bool] = None,
+        markdown_ignore_labels: Optional[list[str]] = None,
         **kwargs,
     ) -> PaddleOCRVLResult:
         """
@@ -392,6 +420,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
             min_pixels (Optional[int]): The minimum number of pixels allowed when the VL model preprocesses images. Default is None.
             max_pixels (Optional[int]): The maximum number of pixels allowed when the VL model preprocesses images. Default is None.
             max_new_tokens (Optional[int]): The maximum number of new tokens. Default is None.
+            merge_layout_blocks (Optional[bool]): Whether to merge layout blocks. Default is None.
+            markdown_ignore_labels (Optional[list[str]]): The list of ignored markdown labels. Default is None.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -403,6 +433,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_layout_detection,
             use_chart_recognition,
             format_block_content,
+            merge_layout_blocks,
+            markdown_ignore_labels,
         )
 
         if not self.check_model_settings_valid(model_settings):
@@ -430,6 +462,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 instances = batch_data.instances[idx : idx + new_batch_size]
                 input_paths = batch_data.input_paths[idx : idx + new_batch_size]
                 page_indexes = batch_data.page_indexes[idx : idx + new_batch_size]
+                page_counts = batch_data.page_counts[idx : idx + new_batch_size]
 
                 image_arrays = self.img_reader(instances)
 
@@ -491,12 +524,13 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         )
                     imgs_in_doc = [[] for _ in layout_det_results]
 
-                yield input_paths, page_indexes, doc_preprocessor_images, doc_preprocessor_results, layout_det_results, imgs_in_doc
+                yield input_paths, page_indexes, page_counts, doc_preprocessor_images, doc_preprocessor_results, layout_det_results, imgs_in_doc
 
         def _process_vlm(results_cv):
             (
                 input_paths,
                 page_indexes,
+                page_counts,
                 doc_preprocessor_images,
                 doc_preprocessor_results,
                 layout_det_results,
@@ -517,12 +551,14 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         "max_pixels": max_pixels,
                         "max_new_tokens": max_new_tokens,
                     },
+                    model_settings["merge_layout_blocks"],
                 )
             )
 
             for (
                 input_path,
                 page_index,
+                page_count,
                 doc_preprocessor_image,
                 doc_preprocessor_res,
                 layout_det_res,
@@ -532,6 +568,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             ) in zip(
                 input_paths,
                 page_indexes,
+                page_counts,
                 doc_preprocessor_images,
                 doc_preprocessor_results,
                 layout_det_results,
@@ -542,6 +579,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 single_img_res = {
                     "input_path": input_path,
                     "page_index": page_index,
+                    "page_count": page_count,
+                    "width": doc_preprocessor_image.shape[1],
+                    "height": doc_preprocessor_image.shape[0],
                     "doc_preprocessor_res": doc_preprocessor_res,
                     "layout_det_res": layout_det_res,
                     "table_res_list": table_res_list,
@@ -627,7 +667,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             should_break = True
                             break
                         results_cv_list.append(item[1])
-                        for res in results_cv_list[-1][4]:
+                        for res in results_cv_list[-1][5]:
                             num_boxes += len(res["boxes"])
                         if num_boxes >= MAX_NUM_BOXES:
                             break

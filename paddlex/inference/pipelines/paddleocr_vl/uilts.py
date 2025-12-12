@@ -259,15 +259,15 @@ def merge_blocks(blocks, non_merge_labels):
             current_indices.append(idx)
             current_aligns.append(align_mode)
         else:
-            merged_groups.append((current_indices, current_group, current_aligns))
+            merged_groups.append((current_indices, current_aligns))
             current_group = [block]
             current_indices = [idx]
             current_aligns = []
     if current_group:
-        merged_groups.append((current_indices, current_group, current_aligns))
+        merged_groups.append((current_indices, current_aligns))
 
     group_ranges = []
-    for group_indices, group, aligns in merged_groups:
+    for group_indices, aligns in merged_groups:
         start, end = min(group_indices), max(group_indices)
         group_ranges.append((start, end, group_indices, aligns))
 
@@ -276,9 +276,7 @@ def merge_blocks(blocks, non_merge_labels):
     idx = 0
     while idx < len(blocks):
         group_found = False
-        for (start, end, group_indices, aligns), (g_indices, g_blocks, g_aligns) in zip(
-            group_ranges, merged_groups
-        ):
+        for start, end, group_indices, aligns in group_ranges:
             if idx == start and all(i not in used_indices for i in group_indices):
                 group_found = True
                 imgs = [blocks[i]["img"] for i in group_indices]
@@ -298,6 +296,7 @@ def merge_blocks(blocks, non_merge_labels):
                         block = blocks[block_idx].copy()
                         block["img"] = merged_img if j == 0 else None
                         block["merge_aligns"] = merge_aligns if j == 0 else None
+                        block["group_id"] = group_indices[0]
                         result_blocks.append(block)
                         used_indices.add(block_idx)
                 insert_list = []

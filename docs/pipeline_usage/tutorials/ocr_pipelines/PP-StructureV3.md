@@ -1576,7 +1576,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1592,6 +1592,12 @@ for item in markdown_images:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>format_block_content</code></td>
+<td>是否将<code>block_content</code>中的内容格式化为Markdown格式。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
+<td><code>bool|None</code></td>
+<td></td>
 </tr>
 <tr>
 <td><code>layout_threshold</code></td>
@@ -1652,7 +1658,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
-<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>736</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1664,7 +1670,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
-<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>min</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1716,7 +1722,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
-<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>736</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1728,7 +1734,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
-<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>min</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1840,10 +1846,16 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>True</code></td>
+</tr>
+<tr>
+<td><code>markdown_ignore_labels</code></td>
+<td>需要在Markdown中忽略的版面标签。如果设置为<code>None</code>，将使用初始化的默认值:<code>['number','footnote','header','header_image','footer','footer_image','aside_text']</code></td>
+<td><code>list|None</code></td>
+<td></td>
 </tr>
 </table>
 
@@ -1947,7 +1959,13 @@ for item in markdown_images:
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
     - `input_path`: `(str)` 待预测图像或者PDF的输入路径
 
-    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，表示当前是PDF的第几页，从0开始，否则为 `None`
+
+    - `page_count`: `(Union[int, None])` 如果输入是PDF文件，表示当前是PDF的总页数，否则为 `None`
+
+    - `width`: `(int)` 原始输入图像的宽度。
+
+    - `height`: `(int)` 原始输入图像的高度。
 
     - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
 
@@ -1957,6 +1975,7 @@ for item in markdown_images:
         - `use_table_recognition`: `(bool)` 控制是否启用表格识别子产线
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
         - `format_block_content`: `(bool)` 控制是否将 `block_content` 中的内容格式化为Markdown格式
+        - `markdown_ignore_labels`: `(List[str])` 需要在Markdown中忽略的版面标签，默认为`['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果字典，仅当`use_doc_preprocessor=True`时存在
         - `input_path`: `(str)` 文档预处理子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`，此处为`None`
@@ -2390,6 +2409,12 @@ for res in output:
 <td><code>useE2eWirelessTableRecModel</code></td>
 <td><code>boolean</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wireless_table_rec_model</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>markdownIgnoreLabels</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>markdown_ignore_labels</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -3066,8 +3091,8 @@ SubPipelines:
         module_name: text_detection
         model_name: PP-OCRv5_server_det
         model_dir: null # 替换为微调后的文本测模型权重路径
-        limit_side_len: 960
-        limit_type: max
+        limit_side_len: 736
+        limit_type: min
         max_side_limit: 4000
         thresh: 0.3
         box_thresh: 0.6

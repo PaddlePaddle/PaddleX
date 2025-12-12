@@ -203,11 +203,16 @@ def _load_part_state_dict_from_safetensors(
                     else:
                         weight = tp_fn(py_safe_slice_)
                 else:
-                    weight = py_safe_slice_[:]
+                    # HACK
+                    if len(py_safe_slice_.get_shape()) == 0:
+                        logging.debug("Ignore empty shape this moment")
+                    else:
+                        weight = py_safe_slice_[:]
 
                 if not return_numpy and device == "expected":
                     weight = weight._copy_to(
-                        paddle.framework._current_expected_place(), False
+                        paddle.framework._current_expected_place(),
+                        True,
                     )
                 weight = _transpose_hf_weight(key, weight)
                 if return_numpy:
@@ -252,17 +257,18 @@ def load_state_dict(
         from safetensors import safe_open
 
         with safe_open(checkpoint_file, framework="paddle") as f:
-            state_dict, scale_dict = _load_part_state_dict_from_safetensors(
-                list(f.keys()),
-                checkpoint_file,
-                tensor_parallel_split_mapping,
-                fliter_dict_keys,
-                "expected",
-                dtype=None,
-                return_numpy=False,
-                convert_from_hf=convert_from_hf,
-                transpose_weight_keys=transpose_weight_keys,
-            )
+            keys = list(f.keys())
+        state_dict, scale_dict = _load_part_state_dict_from_safetensors(
+            keys,
+            checkpoint_file,
+            tensor_parallel_split_mapping,
+            fliter_dict_keys,
+            "expected",
+            dtype=None,
+            return_numpy=False,
+            convert_from_hf=convert_from_hf,
+            transpose_weight_keys=transpose_weight_keys,
+        )
     else:
         state_dict = paddlenlp_load(checkpoint_file, map_location="cpu")
     return state_dict
@@ -1841,13 +1847,12 @@ class PretrainedModel(
             ):
                 raise NotImplementedError
             else:
-                try:
-                    transpose_weight_keys = model.get_transpose_weight_keys()
-                except NotImplementedError:
-                    if convert_from_hf:
-                        raise ValueError("`convert_from_hf=True` is not supported")
-                    else:
-                        transpose_weight_keys = None
+                transpose_weight_keys = None
+                if convert_from_hf:
+                    try:
+                        transpose_weight_keys = model.get_transpose_weight_keys()
+                    except NotImplementedError:
+                        pass
                 state_dict = load_state_dict(
                     resolved_archive_file,
                     convert_from_hf=convert_from_hf,

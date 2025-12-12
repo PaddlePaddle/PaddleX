@@ -359,7 +359,7 @@ class PaddleInfer(StaticInfer):
 
         if (
             self._option.device_type
-            in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
+            in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu", "metax_gpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0
@@ -417,6 +417,12 @@ class PaddleInfer(StaticInfer):
                 config.delete_pass("transfer_layout_pass")
             elif self._option.device_type == "mlu":
                 config.enable_custom_device("mlu", self._option.device_id)
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+            elif self._option.device_type == "metax_gpu":
+                config.enable_custom_device("metax_gpu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):
