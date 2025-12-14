@@ -558,7 +558,7 @@ class _ModelManager:
 
         if DISABLE_MODEL_SOURCE_CHECK:
             logging.warning(
-                f"Connectivity check to the model hoster has been skipped because `DISABLE_MODEL_SOURCE_CHECK` is enabled."
+                f"Connectivity check to the model hoster has been skipped because `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK` is enabled."
             )
             hosters = []
             for hoster_cls in self.hoster_candidates:
@@ -569,7 +569,7 @@ class _ModelManager:
             return hosters
 
         logging.warning(
-            f"Checking connectivity to the model hosters, this may take a while. To bypass this check, set `DISABLE_MODEL_SOURCE_CHECK` to `True`."
+            f"Checking connectivity to the model hosters, this may take a while. To bypass this check, set `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK` to `True`."
         )
         hosters = []
         for hoster_cls in self.hoster_candidates:
