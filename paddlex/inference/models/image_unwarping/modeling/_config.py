@@ -32,6 +32,7 @@ DEFAULT_CONFIG = {
     },
     "padding_mode": "reflect",
     "upsample_size": [712, 488],
+    "upsample_mode": "bilinear",
 }
 
 
@@ -54,4 +55,7 @@ class UVDocNetConfig(PretrainedConfig):
         self.padding_mode = kwargs.get("padding_mode", DEFAULT_CONFIG["padding_mode"])
         self.upsample_size = kwargs.get(
             "upsample_size", DEFAULT_CONFIG["upsample_size"]
+        )
+        self.upsample_mode = kwargs.get(
+            "upsample_mode", DEFAULT_CONFIG["upsample_mode"]
         )

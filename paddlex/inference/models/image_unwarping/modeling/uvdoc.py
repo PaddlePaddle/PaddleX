@@ -225,28 +225,20 @@ class ResnetStraight(nn.Layer):
                 ),
                 nn.BatchNorm2D(out_channels),
             )
+
         layers = []
-        layers.append(
-            ResidualBlockWithDilation(
-                self.in_channels,
-                out_channels,
-                kernel_size,
-                stride,
-                downsample,
-                is_top=True,
-            )
-        )
-        self.in_channels = out_channels
-        for i in range(1, block_nums):
+        for i in range(block_nums):
             layers.append(
                 ResidualBlockWithDilation(
-                    out_channels,
-                    out_channels,
-                    kernel_size,
-                    is_activation=True,
-                    is_top=False,
+                    in_channels=self.in_channels if i == 0 else out_channels,
+                    out_channels=out_channels,
+                    kernel_size=kernel_size,
+                    stride=stride if i == 0 else 1,
+                    downsample=downsample if i == 0 else None,
+                    is_top=True if i == 0 else False,
                 )
             )
+        self.in_channels = out_channels
         return nn.Sequential(*layers)
 
     def forward(self, x: paddle.Tensor) -> paddle.Tensor:
@@ -281,6 +273,7 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         self.dilation_values = config.dilation_values
         self.padding_mode = config.padding_mode
         self.upsample_size = config.upsample_size
+        self.upsample_mode = config.upsample_mode
 
         self.resnet_head = nn.Sequential(
             nn.Conv2D(
@@ -383,7 +376,7 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         x = F.upsample(
             x,
             size=(self.upsample_size[0], self.upsample_size[1]),
-            mode="bilinear",
+            mode=self.upsample_mode,
             align_corners=True,
         )
         resnet_head = self.resnet_head(x)
@@ -405,12 +398,14 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         bm_up = F.upsample(
             out_point_positions2D,
             size=(h_ori, w_ori),
-            mode="bilinear",
+            mode=self.upsample_mode,
             align_corners=True,
         )
         bm = bm_up.transpose([0, 2, 3, 1])
         out = F.grid_sample(image, bm, align_corners=True)
 
+        print(out)
+        breakpoint()
         return [out.cpu().numpy()]
 
     def _get_forward_key_rules(self):

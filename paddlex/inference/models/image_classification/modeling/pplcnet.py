@@ -212,8 +212,9 @@ class DepthwiseSeparable(nn.Layer):
             lr_mult=lr_mult,
             act=act,
         )
-        if use_se:
-            self.se = SEModule(num_channels, reduction=reduction, lr_mult=lr_mult)
+        self.se = (
+            SEModule(num_channels, reduction, lr_mult) if use_se else nn.Identity()
+        )
         self.pw_conv = ConvBNLayer(
             num_channels=num_channels,
             filter_size=1,
@@ -225,8 +226,7 @@ class DepthwiseSeparable(nn.Layer):
 
     def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.dw_conv(x)
-        if self.use_se:
-            x = self.se(x)
+        x = self.se(x)
         x = self.pw_conv(x)
         return x
 
@@ -247,25 +247,16 @@ class SEModule(nn.Layer):
     def __init__(self, channel: int, reduction: int, lr_mult: float = 1.0) -> None:
         super().__init__()
         self.avg_pool = AdaptiveAvgPool2D(1)
-        self.conv1 = nn.Conv2D(
-            in_channels=channel,
-            out_channels=channel // reduction,
-            kernel_size=1,
-            stride=1,
-            padding=0,
-            weight_attr=ParamAttr(learning_rate=lr_mult),
-            bias_attr=ParamAttr(learning_rate=lr_mult),
-        )
+        conv_kwargs = {
+            "kernel_size": 1,
+            "stride": 1,
+            "padding": 0,
+            "weight_attr": ParamAttr(learning_rate=lr_mult),
+            "bias_attr": ParamAttr(learning_rate=lr_mult),
+        }
+        self.conv1 = nn.Conv2D(channel, channel // reduction, **conv_kwargs)
+        self.conv2 = nn.Conv2D(channel // reduction, channel, **conv_kwargs)
         self.relu = nn.ReLU()
-        self.conv2 = nn.Conv2D(
-            in_channels=channel // reduction,
-            out_channels=channel,
-            kernel_size=1,
-            stride=1,
-            padding=0,
-            weight_attr=ParamAttr(learning_rate=lr_mult),
-            bias_attr=ParamAttr(learning_rate=lr_mult),
-        )
         self.hardsigmoid = nn.Hardsigmoid()
 
     def forward(self, x: paddle.Tensor) -> paddle.Tensor:
