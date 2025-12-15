@@ -1,0 +1,13 @@
+Global:
+  model: PP-DocLayoutV2
+  mode: predict # only support predict
+  dataset_dir: "/paddle/dataset/paddlex/layout/det_layout_examples"
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "PP-DocLayoutV2"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
+  kernel_option:
+    run_mode: paddle

@@ -203,11 +203,16 @@ def _load_part_state_dict_from_safetensors(
                     else:
                         weight = tp_fn(py_safe_slice_)
                 else:
-                    weight = py_safe_slice_[:]
+                    # HACK
+                    if len(py_safe_slice_.get_shape()) == 0:
+                        logging.debug("Ignore empty shape this moment")
+                    else:
+                        weight = py_safe_slice_[:]
 
                 if not return_numpy and device == "expected":
                     weight = weight._copy_to(
-                        paddle.framework._current_expected_place(), False
+                        paddle.framework._current_expected_place(),
+                        True,
                     )
                 weight = _transpose_hf_weight(key, weight)
                 if return_numpy:

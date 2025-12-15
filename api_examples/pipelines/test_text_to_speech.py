@@ -12,6 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .configuration_utils import PretrainedConfig
-from .hf_state_dict_utils import BatchNormHFStateDictMixin
-from .model_utils import PretrainedModel
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="text_to_speech")
+
+output = pipeline.predict(
+    "根据您的情况，建议低盐饮食配合轻度活动，已为您推荐了健康的食谱"
+)
+
+for res in output:
+    print(res)
+    res.print()
+    res.save_to_audio("./output/test.wav")
+    res.save_to_json("./output")
