@@ -28,7 +28,17 @@ SYMBOL_PATTERNS = {
     # Matches numeric numbering enclosed in parentheses: (1), (1.1), （2）, （2.3）, 1)
     "NUM_LIST_WITH_BRACKET": re.compile(r"^\s*(?:[\(（])?(\d+(?:\.\d+)*)[\)）]"),
     # Matches Chinese numerals: 一 , 二 , 第一 , 十三
-    "CHINESE_NUM": re.compile(r"^\s*(?:第)?([一二三四五六七八九十]+)", flags=re.I),
+    "CHINESE_NUM": re.compile(
+        r"^\s*"
+        r"(?:第|[（\(])?"
+        r"([一二三四五六七八九十]{1,2})"
+        r"(?:"
+        r"[章节篇卷部条题讲课回）\)]"  # <--- 把右括号也放进“白名单”里
+        r"|"
+        r"(?![a-zA-Z\u4e00-\u9fa5])"  # 只有“纯裸数字”时，才禁止后面跟汉字
+        r")",
+        flags=re.I,
+    ),
 }
 
 
@@ -67,10 +77,36 @@ SPECIAL_KEYWORDS = {
     "引言": 1,
     "CONTENTS": 1,
     "REFERENCES": 1,
+    "REFERENCE": 1,
     "参考文献": 1,
     "APPENDIX": 1,
+    "APPENDICES": 1,
     "附录": 1,
     "ACKNOWLEDGMENTS": 1,
+    "INTRODUCTION": 1,
+    "BACKGROUNDANDRELATEDWORK": 1,
+    "BACKGROUND": 1,
+    "RELATEDWORK": 1,
+    "THEORETICALMODELS": 1,
+    "DATA": 1,
+    "METHOD": 1,
+    "METHODS": 1,
+    "METHODOLOGY": 1,
+    "TOPICANALYSIS": 1,
+    "RESULT": 1,
+    "RESULTS": 1,
+    "DISCUSSION": 1,
+    "CONCLUSIONS": 1,
+    "CONCLUSION": 1,
+    "LIMITATIONS": 1,
+    "研究背景": 1,
+    "相关工作": 1,
+    "研究方法": 1,
+    "实验结果": 1,
+    "讨论": 1,
+    "结论": 1,
+    "致谢": 1,
+    "目录": 1,
 }
 
 
@@ -242,7 +278,10 @@ def compute_levels_for_entries(entries):
         if level > 0:
             bucket = "semantic"
         # Check special keywords (ABSTRACT, REFERENCES, etc.)
-        elif str(e["content"]).upper().strip().rstrip("：: ") in SPECIAL_KEYWORDS:
+        elif (
+            str(e["content"]).upper().strip().rstrip("：: ").replace(" ", "")
+            in SPECIAL_KEYWORDS
+        ):
             bucket = "special_word"
         else:
             bucket = "cluster"
@@ -274,7 +313,7 @@ def compute_levels_for_entries(entries):
 
         elif bucket == "special_word":
             final_level = SPECIAL_KEYWORDS[
-                str(e["content"]).upper().strip().rstrip("：: ")
+                str(e["content"]).upper().strip().rstrip("：: ").replace(" ", "")
             ]
 
         else:
@@ -304,35 +343,30 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
 
     for block in parsing_res_list:
 
-        if block.label not in ("paragraph_title", "doc_title"):
-            continue
+        if block.label == "paragraph_title":
+            content = block.content
+            height = get_title_height(block, layout_det_res)
 
-        content = block.content
-        bbox = block.bbox
-        # height = bbox[3] - bbox[1]
-        height = get_title_height(block, layout_det_res)
+            if height is None:
+                continue
 
-        if height is None:
-            continue
+            # Document title has fixed level 0
+            init_level = 0 if block.label == "doc_title" else None
 
-        # Document title has fixed level 0
-        init_level = 0 if block.label == "doc_title" else None
-
-        entries.append(
-            {
-                "origin_block": block,
-                "content": content,
-                "height": height,
-                "level": init_level,
-            }
-        )
-
-    if len(entries) == 0:
-        return blocks_by_page
+            entries.append(
+                {
+                    "origin_block": block,
+                    "content": content,
+                    "height": height,
+                    "level": init_level,
+                }
+            )
 
     entries = compute_levels_for_entries(entries)
 
     for e in entries:
+        if e["origin_block"].label == "doc_title":
+            setattr(block, "title_level", 0)
         block = e["origin_block"]
         setattr(block, "title_level", e["level"])
 

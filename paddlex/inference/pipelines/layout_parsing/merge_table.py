@@ -143,7 +143,9 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
         return False, None, None
 
     curr_index = curr_page.index(curr_block)
-    allowed_before = all(b.label == "header" for b in curr_page[:curr_index])
+    allowed_before = all(
+        b.label in ["header", "header_image"] for b in curr_page[:curr_index]
+    )
     if not allowed_before:
         return False, None, None
 
