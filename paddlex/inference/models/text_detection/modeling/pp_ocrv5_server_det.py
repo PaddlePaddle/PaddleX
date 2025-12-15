@@ -599,32 +599,64 @@ class IntraCLBlock(nn.Layer):
     Args:
         in_channels (int): Number of input channels
         reduce_factor (int): Channel reduction ratio for 1x1 convolution
+        intraclblock_config (dict): Configuration dict for convolution layers, includes:
+            - reduce_channel: (kernel_size, stride, padding) for channel reduction 1x1 conv
+            - return_channel: (kernel_size, stride, padding) for channel recovery 1x1 conv
+            - v_layer_7x1/5x1/3x1: (kernel_size, stride, padding) for vertical (Hx1) conv
+            - q_layer_1x7/1x5/1x3: (kernel_size, stride, padding) for horizontal (1xW) conv
+            - c_layer_7x7/5x5/3x3: (kernel_size, stride, padding) for cross (HxW) conv
 
     Returns:
         paddle.Tensor: Output tensor after multi-scale conv fusion and residual connection
     """
 
-    def __init__(self, in_channels: int, reduce_factor: int) -> None:
+    def __init__(
+        self, in_channels: int, reduce_factor: int, intraclblock_config: dict
+    ) -> None:
         super(IntraCLBlock, self).__init__()
+
         self.channels = in_channels
         self.reduce_factor = reduce_factor
+        self.intraclblock_config = intraclblock_config
+
         reduced_ch = self.channels // self.reduce_factor
 
-        # conv2d (in_channels, out_channels, kernel_size, stride, padding)
-        self.conv1x1_reduce_channel = nn.Conv2D(self.channels, reduced_ch, 1, 1, 0)
-        self.conv1x1_return_channel = nn.Conv2D(reduced_ch, self.channels, 1, 1, 0)
+        self.conv1x1_reduce_channel = nn.Conv2d(
+            self.channels, reduced_ch, *self.intraclblock_config["reduce_channel"]
+        )
+        self.conv1x1_return_channel = nn.Conv2d(
+            reduced_ch, self.channels, *self.intraclblock_config["return_channel"]
+        )
 
-        self.v_layer_7x1 = nn.Conv2D(reduced_ch, reduced_ch, (7, 1), (1, 1), (3, 0))
-        self.v_layer_5x1 = nn.Conv2D(reduced_ch, reduced_ch, (5, 1), (1, 1), (2, 0))
-        self.v_layer_3x1 = nn.Conv2D(reduced_ch, reduced_ch, (3, 1), (1, 1), (1, 0))
+        self.v_layer_7x1 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["v_layer_7x1"]
+        )
+        self.v_layer_5x1 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["v_layer_5x1"]
+        )
+        self.v_layer_3x1 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["v_layer_3x1"]
+        )
 
-        self.q_layer_1x7 = nn.Conv2D(reduced_ch, reduced_ch, (1, 7), (1, 1), (0, 3))
-        self.q_layer_1x5 = nn.Conv2D(reduced_ch, reduced_ch, (1, 5), (1, 1), (0, 2))
-        self.q_layer_1x3 = nn.Conv2D(reduced_ch, reduced_ch, (1, 3), (1, 1), (0, 1))
+        self.q_layer_1x7 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["q_layer_1x7"]
+        )
+        self.q_layer_1x5 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["q_layer_1x5"]
+        )
+        self.q_layer_1x3 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["q_layer_1x3"]
+        )
 
-        self.c_layer_7x7 = nn.Conv2D(reduced_ch, reduced_ch, (7, 7), (1, 1), (3, 3))
-        self.c_layer_5x5 = nn.Conv2D(reduced_ch, reduced_ch, (5, 5), (1, 1), (2, 2))
-        self.c_layer_3x3 = nn.Conv2D(reduced_ch, reduced_ch, (3, 3), (1, 1), (1, 1))
+        self.c_layer_7x7 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["c_layer_7x7"]
+        )
+        self.c_layer_5x5 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["c_layer_5x5"]
+        )
+        self.c_layer_3x3 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["c_layer_3x3"]
+        )
 
         self.bn = nn.BatchNorm2D(self.channels)
         self.relu = nn.ReLU()
@@ -654,6 +686,12 @@ class LKPAN(nn.Layer):
         out_channels (int): Number of output channels for 1x1 convolution layers
         mode (str): Network mode ('lite' for DSConv, 'large' for standard Conv2D)
         reduce_factor (int): Channel reduction ratio for IntraCLBlock modules
+        intraclblock_config (dict): Configuration dict for convolution layers, includes:
+            - reduce_channel: (kernel_size, stride, padding) for channel reduction 1x1 conv
+            - return_channel: (kernel_size, stride, padding) for channel recovery 1x1 conv
+            - v_layer_7x1/5x1/3x1: (kernel_size, stride, padding) for vertical (Hx1) conv
+            - q_layer_1x7/1x5/1x3: (kernel_size, stride, padding) for horizontal (1xW) conv
+            - c_layer_7x7/5x5/3x3: (kernel_size, stride, padding) for cross (HxW) conv
         upsample_mode (str): Interpolation mode for upsample operation
         upsample_align_mode (int): Align mode for upsample operation
         **kwargs: Additional keyword arguments
@@ -668,6 +706,7 @@ class LKPAN(nn.Layer):
         out_channels: int,
         mode: str,
         reduce_factor: int,
+        intraclblock_config: dict,
         upsample_mode: str,
         upsample_align_mode: int,
         **kwargs,
@@ -739,10 +778,26 @@ class LKPAN(nn.Layer):
                 )
             )
 
-        self.incl1 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
-        self.incl2 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
-        self.incl3 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
-        self.incl4 = IntraCLBlock(self.out_channels // 4, reduce_factor=reduce_factor)
+        self.incl1 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
+        self.incl2 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
+        self.incl3 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
+        self.incl4 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
 
     def forward(self, x: List[paddle.Tensor]) -> paddle.Tensor:
         c2, c3, c4, c5 = x
@@ -985,6 +1040,7 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
         self.neck_out_channels = config.neck_out_channels
         self.neck_mode = config.neck_mode
         self.neck_reduce_factor = config.neck_reduce_factor
+        self.neck_intraclblock_config = config.neck_intraclblock_config
 
         self.head_in_channels = config.head_in_channels
         self.head_k = config.head_k
@@ -1012,6 +1068,7 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
             out_channels=self.neck_out_channels,
             mode=self.neck_mode,
             reduce_factor=self.neck_reduce_factor,
+            intraclblock_config=self.neck_intraclblock_config,
             upsample_mode=self.upsample_mode,
             upsample_align_mode=self.upsample_align_mode,
         )

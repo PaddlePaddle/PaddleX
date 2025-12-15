@@ -38,7 +38,25 @@ DEFAULT_CONFIG = {
         "det": True,
         "out_indices": [0, 1, 2, 3],
     },
-    "neck": {"name": "LKPAN", "out_channels": 256, "mode": "large", "reduce_factor": 2},
+    "neck": {
+        "name": "LKPAN",
+        "out_channels": 256,
+        "mode": "large",
+        "reduce_factor": 2,
+        "intraclblock_config": {
+            "reduce_channel": [1, 1, 0],
+            "return_channel": [1, 1, 0],
+            "v_layer_7x1": [[7, 1], [1, 1], [3, 0]],
+            "v_layer_5x1": [[5, 1], [1, 1], [2, 0]],
+            "v_layer_3x1": [[3, 1], [1, 1], [1, 0]],
+            "q_layer_1x7": [[1, 7], [1, 1], [0, 3]],
+            "q_layer_1x5": [[1, 5], [1, 1], [0, 2]],
+            "q_layer_1x3": [[1, 3], [1, 1], [0, 1]],
+            "c_layer_7x7": [[7, 7], [1, 1], [3, 3]],
+            "c_layer_5x5": [[5, 5], [1, 1], [2, 2]],
+            "c_layer_3x3": [[3, 3], [1, 1], [1, 1]],
+        },
+    },
     "head": {
         "name": "PFHeadLocal",
         "in_channels": 1024,
@@ -105,6 +123,9 @@ class PPOCRV5ServerDetConfig(PretrainedConfig):
         self.neck_mode = neck_cfg.get("mode", DEFAULT_CONFIG["neck"]["mode"])
         self.neck_reduce_factor = neck_cfg.get(
             "reduce_factor", DEFAULT_CONFIG["neck"]["reduce_factor"]
+        )
+        self.neck_intraclblock_config = neck_cfg.get(
+            "intraclblock_config", DEFAULT_CONFIG["neck"]["intraclblock_config"]
         )
 
         head_cfg = kwargs.get("head", DEFAULT_CONFIG["head"])
