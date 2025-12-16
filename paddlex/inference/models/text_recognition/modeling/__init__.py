@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .pp_ocrv5_rec import PPOCRV5MobileRec, PPOCRV5ServerRec
+from .pp_ocrv5_rec import PPOCRV5Rec

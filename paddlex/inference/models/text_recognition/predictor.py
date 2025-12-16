@@ -78,22 +78,11 @@ class TextRecPredictor(BasePredictor):
         if self._use_static_model:
             infer = self.create_static_infer()
         else:
-            if self.model_name == "PP-OCRv5_mobile_rec":
-                from .modeling import PPOCRV5MobileRec
+            if self.model_name in ["PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"]:
+                from .modeling import PPOCRV5Rec
 
                 with TemporaryDeviceChanger(self.device):
-                    infer = PPOCRV5MobileRec.from_pretrained(
-                        self.model_dir,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    )
-                    infer.eval()
-            elif self.model_name == "PP-OCRv5_server_rec":
-                from .modeling import PPOCRV5ServerRec
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = PPOCRV5ServerRec.from_pretrained(
+                    infer = PPOCRV5Rec.from_pretrained(
                         self.model_dir,
                         use_safetensors=True,
                         convert_from_hf=True,

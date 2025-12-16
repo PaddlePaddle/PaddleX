@@ -20,7 +20,7 @@ from .pp_ocrv5_rec_modules.rec_lcnetv3 import PPLCNetV3
 from .pp_ocrv5_rec_modules.rec_multi_head import MultiHead
 from .pp_ocrv5_rec_modules.rec_pphgnetv2 import PPHGNetV2_B4
 
-__all__ = ["PPOCRV5MobileRec", "PPOCRV5ServerRec"]
+__all__ = ["PPOCRV5Rec"]
 
 
 class PPOCRV5RecConfig(PretrainedConfig):
@@ -31,8 +31,11 @@ class PPOCRV5RecConfig(PretrainedConfig):
     ):
         if backbone["name"] == "PPLCNetV3":
             self.scale = backbone["scale"]
+            self.model_name = "PPOCRV5Mobile"
         elif backbone["name"] == "PPHGNetV2_B4":
             self.text_rec = backbone["text_rec"]
+            self.stage_config = backbone["stage_config"]
+            self.model_name = "PPOCRV5Server"
         else:
             raise RuntimeError(
                 f"There is no dynamic graph implementation for backbone {backbone['name']}."
@@ -42,13 +45,19 @@ class PPOCRV5RecConfig(PretrainedConfig):
         self.tensor_parallel_degree = 1
 
 
-class PPOCRV5MobileRec(PretrainedModel):
+class PPOCRV5Rec(PretrainedModel):
 
     config_class = PPOCRV5RecConfig
 
     def __init__(self, config: PPOCRV5RecConfig):
         super().__init__(config)
-        self.backbone = PPLCNetV3(scale=self.config.scale)
+        if self.config.model_name == "PPOCRV5Mobile":
+            self.backbone = PPLCNetV3(scale=self.config.scale)
+        elif self.config.model_name == "PPOCRV5Server":
+            self.backbone = PPHGNetV2_B4(
+                text_rec=self.config.text_rec,
+                stage_config=self.config.stage_config,
+            )
         self.head = MultiHead(
             in_channels=self.backbone.out_channels,
             out_channels_list=self.config.decode_list,
@@ -73,70 +82,8 @@ class PPOCRV5MobileRec(PretrainedModel):
                     "bias" not in all_weight_keys[i]
                 ):
                     need_to_transpose.append(all_weight_keys[i])
-        return need_to_transpose
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)
-
-
-class PPOCRV5ServerRec(PretrainedModel):
-
-    config_class = PPOCRV5RecConfig
-
-    def __init__(self, config: PPOCRV5RecConfig):
-        super().__init__(config)
-        self.backbone = PPHGNetV2_B4(text_rec=self.config.text_rec)
-        self.head = MultiHead(
-            in_channels=self.backbone.out_channels,
-            out_channels_list=self.config.decode_list,
-            head_list=self.config.head_list,
-        )
-
-    def forward(self, x):
-        x = paddle.to_tensor(x[0])
-        x = self.backbone(x)
-        x = self.head(x)
-        return [x.cpu().numpy()]
-
-    def get_transpose_weight_keys(self):
-        transpose_keys = ["fc", "out_proj", "attn.qkv"]
-        need_to_transpose = ["backbone.fc.weight"]
-        all_weight_keys = []
-        for name, param in self.head.named_parameters():
-            all_weight_keys.append("head." + name)
-        for i in range(len(all_weight_keys)):
-            for j in range(len(transpose_keys)):
-                if (transpose_keys[j] in all_weight_keys[i]) and (
-                    "bias" not in all_weight_keys[i]
-                ):
-                    need_to_transpose.append(all_weight_keys[i])
+        if self.config.model_name == "PPOCRV5Server":
+            need_to_transpose.append("backbone.fc.weight")
         return need_to_transpose
 
     def get_hf_state_dict(self, *args, **kwargs):
