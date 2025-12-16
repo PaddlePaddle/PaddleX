@@ -26,8 +26,13 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle import ParamAttr
-from paddle.nn import BatchNorm2D, Conv2D
+from paddle.nn import AdaptiveAvgPool2D, BatchNorm2D, Conv2D, ReLU
+from paddle.nn.initializer import Constant, KaimingNormal
 from paddle.regularizer import L2Decay
+
+kaiming_normal_ = KaimingNormal()
+zeros_ = Constant(value=0.0)
+ones_ = Constant(value=1.0)
 
 
 class DonutSwinModelOutput(OrderedDict):
@@ -899,33 +904,6 @@ class AdaptiveAvgPool2D(nn.AdaptiveAvgPool2D):
             )
 
 
-# copyright (c) 2023 PaddlePaddle Authors. All Rights Reserve.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-import paddle
-import paddle.nn as nn
-import paddle.nn.functional as F
-from paddle import ParamAttr
-from paddle.nn import AdaptiveAvgPool2D, BatchNorm2D, Conv2D, ReLU
-from paddle.nn.initializer import Constant, KaimingNormal
-from paddle.regularizer import L2Decay
-
-kaiming_normal_ = KaimingNormal()
-zeros_ = Constant(value=0.0)
-ones_ = Constant(value=1.0)
-
-
 class LearnableAffineBlock(TheseusLayer):
     """
     Create a learnable affine block module. This module can significantly improve accuracy on smaller models.
@@ -1434,25 +1412,3 @@ class PPHGNetV2(TheseusLayer):
             else:
                 x = F.avg_pool2d(x, [3, 2])
         return x
-
-
-def PPHGNetV2_B4(pretrained=False, use_ssld=False, det=False, text_rec=False, stage_config={}, **kwargs):
-    """
-    PPHGNetV2_B4
-    Args:
-        pretrained (bool/str): If `True` load pretrained parameters, `False` otherwise.
-                    If str, means the path of the pretrained model.
-        use_ssld (bool) Whether using ssld pretrained model when pretrained is True.
-    Returns:
-        model: nn.Layer. Specific `PPHGNetV2_B4` model depends on args.
-    """
-
-    model = PPHGNetV2(
-        stem_channels=[3, 32, 48],
-        stage_config=stage_config,
-        use_lab=False,
-        det=det,
-        text_rec=text_rec,
-        **kwargs,
-    )
-    return model

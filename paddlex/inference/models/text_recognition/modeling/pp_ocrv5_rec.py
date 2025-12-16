@@ -18,7 +18,7 @@ import paddle
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
 from .pp_ocrv5_rec_modules.rec_lcnetv3 import PPLCNetV3
 from .pp_ocrv5_rec_modules.rec_multi_head import MultiHead
-from .pp_ocrv5_rec_modules.rec_pphgnetv2 import PPHGNetV2_B4
+from .pp_ocrv5_rec_modules.rec_pphgnetv2 import PPHGNetV2
 
 __all__ = ["PPOCRV5Rec"]
 
@@ -32,8 +32,9 @@ class PPOCRV5RecConfig(PretrainedConfig):
         if backbone["name"] == "PPLCNetV3":
             self.scale = backbone["scale"]
             self.model_name = "PPOCRV5Mobile"
-        elif backbone["name"] == "PPHGNetV2_B4":
+        elif backbone["name"] == "PPHGNetV2":
             self.text_rec = backbone["text_rec"]
+            self.stem_channels = backbone["stem_channels"]
             self.stage_config = backbone["stage_config"]
             self.model_name = "PPOCRV5Server"
         else:
@@ -54,9 +55,10 @@ class PPOCRV5Rec(PretrainedModel):
         if self.config.model_name == "PPOCRV5Mobile":
             self.backbone = PPLCNetV3(scale=self.config.scale)
         elif self.config.model_name == "PPOCRV5Server":
-            self.backbone = PPHGNetV2_B4(
-                text_rec=self.config.text_rec,
+            self.backbone = PPHGNetV2(
                 stage_config=self.config.stage_config,
+                stem_channels=self.config.stem_channels,
+                text_rec=self.config.text_rec,
             )
         self.head = MultiHead(
             in_channels=self.backbone.out_channels,
