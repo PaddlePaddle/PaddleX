@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import copy
 import inspect
 import random
 import time
@@ -24,6 +23,18 @@ import numpy as np
 
 from ....utils import logging
 from .mixin import JsonMixin, StrMixin
+
+
+class CopyableWeakMethod(weakref.WeakMethod):
+    """
+    A weak method that can be deep copied.
+    """
+
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memo):
+        return self.__copy__()
 
 
 class AutoWeakList(UserList):
@@ -38,14 +49,14 @@ class AutoWeakList(UserList):
         Otherwise, append the item itself.
         """
         if inspect.ismethod(item):
-            super().append(weakref.WeakMethod(item))
+            super().append(CopyableWeakMethod(item))
         else:
             super().append(item)
 
     def __iter__(self):
         """Iterate over items in the list."""
         for item in self.data:
-            if isinstance(item, weakref.WeakMethod):
+            if isinstance(item, CopyableWeakMethod):
                 func = item()
                 if func is not None:
                     yield func
@@ -55,21 +66,10 @@ class AutoWeakList(UserList):
     def __getitem__(self, index):
         """Get item at index."""
         item = super().__getitem__(index)
-        if isinstance(item, weakref.WeakMethod):
+        if isinstance(item, CopyableWeakMethod):
             func = item()
             return func
         return item
-
-    def __deepcopy__(self, memo):
-        """Deep copy the object using the provided memory map."""
-        result = []
-        for item in self.data:
-            if isinstance(item, weakref.WeakMethod):
-                func = weakref.WeakMethod(item())
-                result.append(func)
-            else:
-                result.append(copy.deepcopy(item, memo))
-        return result
 
 
 class BaseResult(dict, JsonMixin, StrMixin):

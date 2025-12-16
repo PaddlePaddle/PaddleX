@@ -17,7 +17,11 @@ from __future__ import absolute_import, division, print_function
 import paddle
 import paddle.nn.functional as F
 
-from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers import (
+    BatchNormHFStateDictMixin,
+    PretrainedConfig,
+    PretrainedModel,
+)
 from .rtdetrl_modules.detr_head import DINOHead
 from .rtdetrl_modules.hgnet_v2 import PPHGNetV2
 from .rtdetrl_modules.hybrid_encoder import HybridEncoder, TransformerLayer
@@ -226,7 +230,7 @@ class RTDETRConfig(PretrainedConfig):
         self.tensor_parallel_degree = 1
 
 
-class RTDETR(PretrainedModel):
+class RTDETR(BatchNormHFStateDictMixin, PretrainedModel):
 
     config_class = RTDETRConfig
 
@@ -313,33 +317,3 @@ class RTDETR(PretrainedModel):
             ):
                 need_to_transpose.append(all_weight_keys[i])
         return need_to_transpose
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)

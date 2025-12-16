@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
@@ -19,7 +21,11 @@ from paddle import ParamAttr
 from paddle.nn.initializer import Constant, KaimingNormal
 from paddle.regularizer import L2Decay
 
-from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
+from ...common.transformers.transformers import (
+    BatchNormHFStateDictMixin,
+    PretrainedModel,
+)
+from ._config_pp_ocrv5_server import PPOCRV5ServerDetConfig
 from .pp_ocrv5_modules import DBHead, LearnableAffineBlock
 
 kaiming_normal_ = KaimingNormal()
@@ -27,72 +33,47 @@ zeros_ = Constant(value=0.0)
 ones_ = Constant(value=1.0)
 
 
-def PPHGNetV2_B4(pretrained=False, use_ssld=False, det=False, **kwargs):
-    """
-    PPHGNetV2_B4
-    Args:
-        pretrained (bool/str): If `True` load pretrained parameters, `False` otherwise.
-                    If str, means the path of the pretrained model.
-        use_ssld (bool) Whether using ssld pretrained model when pretrained is True.
-    Returns:
-        model: nn.Layer. Specific `PPHGNetV2_B4` model depends on args.
-    """
-
-    stage_config_det = {
-        # in_channels, mid_channels, out_channels, num_blocks, is_downsample, light_block, kernel_size, layer_num
-        "stage1": [48, 48, 128, 1, False, False, 3, 6, 2],
-        "stage2": [128, 96, 512, 1, True, False, 3, 6, 2],
-        "stage3": [512, 192, 1024, 3, True, True, 5, 6, 2],
-        "stage4": [1024, 384, 2048, 1, True, True, 5, 6, 2],
-    }
-
-    model = PPHGNetV2(
-        stem_channels=[3, 32, 48],
-        stage_config=stage_config_det,
-        use_lab=False,
-        det=det,
-        **kwargs,
-    )
-    return model
-
-
 class ConvBNAct(nn.Layer):
     """
-    ConvBNAct is a combination of convolution and batchnorm layers.
+    ConvBNAct: Convolution + Batch Normalization + Activation (optional) with Learnable Affine Block
 
     Args:
-        in_channels (int): Number of input channels.
-        out_channels (int): Number of output channels.
-        kernel_size (int): Size of the convolution kernel. Defaults to 3.
-        stride (int): Stride of the convolution. Defaults to 1.
-        padding (int/str): Padding or padding type for the convolution. Defaults to 1.
-        groups (int): Number of groups for the convolution. Defaults to 1.
-        use_act: (bool): Whether to use activation function. Defaults to True.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int, optional): Convolution kernel size, default is 3
+        stride (int, optional): Convolution stride, default is 1
+        padding (Union[int, str], optional): Padding value or mode (e.g. 'same'), default is 1
+        groups (int, optional): Number of grouped convolution groups, default is 1
+        use_act (bool, optional): Whether to apply ReLU activation, default is True
+        use_lab (bool, optional): Whether to use LearnableAffineBlock after activation, default is False
+        lr_mult (float, optional): Learning rate multiplier for conv/bn parameters, default is 1.0
+
+    Returns:
+        paddle.Tensor: Output tensor after convolution, BN and optional activation/affine transform
     """
 
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size=3,
-        stride=1,
-        padding=1,
-        groups=1,
-        use_act=True,
-        use_lab=False,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int = 3,
+        stride: int = 1,
+        padding: Union[int, str] = 1,
+        groups: int = 1,
+        use_act: bool = True,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
+    ) -> None:
         super().__init__()
         self.use_act = use_act
         self.use_lab = use_lab
+        padding_val = padding if isinstance(padding, str) else (kernel_size - 1) // 2
         self.conv = nn.Conv2D(
             in_channels,
             out_channels,
             kernel_size,
             stride,
-            padding=padding if isinstance(padding, str) else (kernel_size - 1) // 2,
+            padding=padding_val,
             groups=groups,
             weight_attr=ParamAttr(learning_rate=lr_mult),
             bias_attr=False,
@@ -107,7 +88,7 @@ class ConvBNAct(nn.Layer):
             if self.use_lab:
                 self.lab = LearnableAffineBlock(lr_mult=lr_mult)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv(x)
         x = self.bn(x)
         if self.use_act:
@@ -119,25 +100,29 @@ class ConvBNAct(nn.Layer):
 
 class LightConvBNAct(nn.Layer):
     """
-    LightConvBNAct is a combination of pw and dw layers.
+    LightConvBNAct: Lightweight depthwise separable convolution block with BN and activation
 
     Args:
-        in_channels (int): Number of input channels.
-        out_channels (int): Number of output channels.
-        kernel_size (int): Size of the depth-wise convolution kernel.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of depthwise convolution
+        use_lab (bool, optional): Whether to use LearnableAffineBlock in ConvBNAct, default is False
+        lr_mult (float, optional): Learning rate multiplier for conv/bn parameters, default is 1.0
+        **kwargs: Additional keyword arguments
+
+    Returns:
+        paddle.Tensor: Output tensor after pointwise conv (no act) + depthwise conv (with act)
     """
 
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        use_lab=False,
-        lr_mult=1.0,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__()
         self.conv1 = ConvBNAct(
             in_channels=in_channels,
@@ -157,7 +142,7 @@ class LightConvBNAct(nn.Layer):
             lr_mult=lr_mult,
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv1(x)
         x = self.conv2(x)
         return x
@@ -165,25 +150,27 @@ class LightConvBNAct(nn.Layer):
 
 class StemBlock(nn.Layer):
     """
-    StemBlock for PP-HGNetV2.
+    StemBlock: Multi-stage convolution stem block with pooling and concatenation
 
     Args:
-        in_channels (int): Number of input channels.
-        mid_channels (int): Number of middle channels.
-        out_channels (int): Number of output channels.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
+        in_channels (int): Number of input channels
+        mid_channels (int): Number of intermediate channels for stem layers
+        out_channels (int): Number of output channels
+        use_lab (bool, optional): Whether to use LearnableAffineBlock in ConvBNAct, default is False
+        lr_mult (float, optional): Learning rate multiplier for conv/bn parameters, default is 1.0
+
+    Returns:
+        paddle.Tensor: Output tensor after multi-stage convolution, pooling and concatenation
     """
 
     def __init__(
         self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        use_lab=False,
-        lr_mult=1.0,
-        text_rec=False,
-    ):
+        in_channels: int,
+        mid_channels: int,
+        out_channels: int,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
+    ) -> None:
         super().__init__()
         self.stem1 = ConvBNAct(
             in_channels=in_channels,
@@ -215,7 +202,7 @@ class StemBlock(nn.Layer):
             in_channels=mid_channels * 2,
             out_channels=mid_channels,
             kernel_size=3,
-            stride=1 if text_rec else 2,
+            stride=2,
             use_lab=use_lab,
             lr_mult=lr_mult,
         )
@@ -231,7 +218,7 @@ class StemBlock(nn.Layer):
             kernel_size=2, stride=1, ceil_mode=True, padding="SAME"
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.stem1(x)
         x2 = self.stem2a(x)
         x2 = self.stem2b(x2)
@@ -245,34 +232,35 @@ class StemBlock(nn.Layer):
 
 class HGV2_Block(nn.Layer):
     """
-    HGV2_Block, the basic unit that constitutes the HGV2_Stage.
+    HGV2_Block: Multi-layer convolution block with feature aggregation and residual connection
 
     Args:
-        in_channels (int): Number of input channels.
-        mid_channels (int): Number of middle channels.
-        out_channels (int): Number of output channels.
-        kernel_size (int): Size of the convolution kernel. Defaults to 3.
-        layer_num (int): Number of layers in the HGV2 block. Defaults to 6.
-        stride (int): Stride of the convolution. Defaults to 1.
-        padding (int/str): Padding or padding type for the convolution. Defaults to 1.
-        groups (int): Number of groups for the convolution. Defaults to 1.
-        use_act (bool): Whether to use activation function. Defaults to True.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float): Learning rate multiplier for the layer. Defaults to 1.0.
+        in_channels (int): Number of input channels
+        mid_channels (int): Number of intermediate channels for each layer
+        out_channels (int): Number of output channels after aggregation
+        kernel_size (int, optional): Kernel size of convolution layers, default is 3
+        layer_num (int, optional): Number of convolution layers in the block, default is 6
+        identity (bool, optional): Whether to add identity residual connection, default is False
+        light_block (bool, optional): Whether to use LightConvBNAct (True) or ConvBNAct (False), default is True
+        use_lab (bool, optional): Whether to use LearnableAffineBlock in conv layers, default is False
+        lr_mult (float, optional): Learning rate multiplier for conv/bn parameters, default is 1.0
+
+    Returns:
+        paddle.Tensor: Output tensor after multi-layer conv, feature concatenation and aggregation
     """
 
     def __init__(
         self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        kernel_size=3,
-        layer_num=6,
-        identity=False,
-        light_block=True,
-        use_lab=False,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        mid_channels: int,
+        out_channels: int,
+        kernel_size: int = 3,
+        layer_num: int = 6,
+        identity: bool = False,
+        light_block: bool = True,
+        use_lab: bool = False,
+        lr_mult: float = 1.0,
+    ) -> None:
         super().__init__()
         self.identity = identity
 
@@ -308,7 +296,7 @@ class HGV2_Block(nn.Layer):
             lr_mult=lr_mult,
         )
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         identity = x
         output = []
         output.append(x)
@@ -325,35 +313,39 @@ class HGV2_Block(nn.Layer):
 
 class HGV2_Stage(nn.Layer):
     """
-    HGV2_Stage, the basic unit that constitutes the PPHGNetV2.
+    HGV2_Stage: Sequential HGV2_Block layers with optional depthwise downsampling
 
     Args:
-        in_channels (int): Number of input channels.
-        mid_channels (int): Number of middle channels.
-        out_channels (int): Number of output channels.
-        block_num (int): Number of blocks in the HGV2 stage.
-        layer_num (int): Number of layers in the HGV2 block. Defaults to 6.
-        is_downsample (bool): Whether to use downsampling operation. Defaults to False.
-        light_block (bool): Whether to use light block. Defaults to True.
-        kernel_size (int): Size of the convolution kernel. Defaults to 3.
-        use_lab (bool, optional): Whether to use the LAB operation. Defaults to False.
-        lr_mult (float, optional): Learning rate multiplier for the layer. Defaults to 1.0.
+        in_channels (int): Number of input channels
+        mid_channels (int): Number of intermediate channels for HGV2_Block layers
+        out_channels (int): Number of output channels for each HGV2_Block
+        block_num (int): Number of HGV2_Block in the stage
+        layer_num (int, optional): Number of convolution layers in each HGV2_Block, default is 6
+        is_downsample (bool, optional): Whether to apply depthwise downsampling at stage start, default is True
+        light_block (bool, optional): Whether to use LightConvBNAct in HGV2_Block, default is True
+        kernel_size (int, optional): Kernel size of convolution layers in HGV2_Block, default is 3
+        use_lab (bool, optional): Whether to use LearnableAffineBlock in conv layers, default is False
+        stride (int, optional): Stride for downsampling convolution, default is 2
+        lr_mult (float, optional): Learning rate multiplier for conv/bn parameters, default is 1.0
+
+    Returns:
+        paddle.Tensor: Output tensor after optional downsampling and sequential HGV2_Block processing
     """
 
     def __init__(
         self,
-        in_channels,
-        mid_channels,
-        out_channels,
-        block_num,
-        layer_num=6,
-        is_downsample=True,
-        light_block=True,
-        kernel_size=3,
-        use_lab=False,
-        stride=2,
-        lr_mult=1.0,
-    ):
+        in_channels: int,
+        mid_channels: int,
+        out_channels: int,
+        block_num: int,
+        layer_num: int = 6,
+        is_downsample: bool = True,
+        light_block: bool = True,
+        kernel_size: int = 3,
+        use_lab: bool = False,
+        stride: int = 2,
+        lr_mult: float = 1.0,
+    ) -> None:
 
         super().__init__()
         self.is_downsample = is_downsample
@@ -386,7 +378,7 @@ class HGV2_Stage(nn.Layer):
             )
         self.blocks = nn.Sequential(*blocks_list)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         if self.is_downsample:
             x = self.downsample(x)
         x = self.blocks(x)
@@ -395,44 +387,44 @@ class HGV2_Stage(nn.Layer):
 
 class PPHGNetV2(nn.Layer):
     """
-    PPHGNetV2
+    PPHGNetV2: Hierarchical feature extraction network with stem block and multi-stage HGV2 blocks
 
     Args:
-        stage_config (dict): Config for PPHGNetV2 stages. such as the number of channels, stride, etc.
-        stem_channels: (list): Number of channels of the stem of the PPHGNetV2.
-        use_lab (bool): Whether to use the LAB operation. Defaults to False.
-        use_last_conv (bool): Whether to use the last conv layer as the output channel. Defaults to True.
-        class_expand (int): Number of channels for the last 1x1 convolutional layer.
-        drop_prob (float): Dropout probability for the last 1x1 convolutional layer. Defaults to 0.0.
-        class_num (int): The number of classes for the classification layer. Defaults to 1000.
-        lr_mult_list (list): Learning rate multiplier for the stages. Defaults to [1.0, 1.0, 1.0, 1.0, 1.0].
+        stage_config (Dict[str, Tuple]): Dictionary of stage configurations, each tuple contains (in_channels, mid_channels, out_channels, block_num, is_downsample, light_block, kernel_size, layer_num, stride)
+        stem_channels (Tuple[int, int, int]): Stem block channels (in, mid, out)
+        use_lab (bool): Whether to use LearnableAffineBlock in ConvBNAct layers
+        use_last_conv (bool): Whether to use last convolution layer (unused in current implementation)
+        class_expand (float): Expansion factor for classification head channels
+        class_num (int): Number of classification classes
+        lr_mult_list (List[float]): Learning rate multipliers for stem and each stage
+        det (bool): Whether the network is used for detection (controls output indices)
+        out_indices (List[int]): Indices of stages to output features for detection
+        **kwargs: Additional keyword arguments
+
     Returns:
-        model: nn.Layer. Specific PPHGNetV2 model depends on args.
+        List[paddle.Tensor]: List of feature tensors from specified stages (only when det=True)
     """
 
     def __init__(
         self,
-        stage_config,
-        stem_channels=[3, 32, 64],
-        use_lab=False,
-        use_last_conv=True,
-        class_expand=2048,
-        dropout_prob=0.0,
-        class_num=1000,
-        lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0],
-        det=False,
-        text_rec=False,
-        out_indices=None,
+        stage_config: Dict[str, Tuple],
+        stem_channels: Tuple[int, int, int],
+        use_lab: bool,
+        use_last_conv: bool,
+        class_expand: float,
+        class_num: int,
+        lr_mult_list: List[float],
+        det: bool,
+        out_indices: List[int],
         **kwargs,
-    ):
+    ) -> None:
         super().__init__()
         self.det = det
-        self.text_rec = text_rec
         self.use_lab = use_lab
         self.use_last_conv = use_last_conv
         self.class_expand = class_expand
         self.class_num = class_num
-        self.out_indices = out_indices if out_indices is not None else [0, 1, 2, 3]
+        self.out_indices = out_indices
         self.out_channels = []
 
         # stem
@@ -442,7 +434,6 @@ class PPHGNetV2(nn.Layer):
             out_channels=stem_channels[2],
             use_lab=use_lab,
             lr_mult=lr_mult_list[0],
-            text_rec=text_rec,
         )
 
         # stages
@@ -479,25 +470,9 @@ class PPHGNetV2(nn.Layer):
 
         self.avg_pool = nn.AdaptiveAvgPool2D(1)
 
-        if self.use_last_conv:
-            self.last_conv = nn.Conv2D(
-                in_channels=out_channels,
-                out_channels=self.class_expand,
-                kernel_size=1,
-                stride=1,
-                padding=0,
-                bias_attr=False,
-            )
-            self.act = nn.ReLU()
-            if self.use_lab:
-                self.lab = LearnableAffineBlock()
-            self.dropout = nn.Dropout(p=dropout_prob, mode="downscale_in_infer")
-
-        self.flatten = nn.Flatten(start_axis=1, stop_axis=-1)
-
         self._init_weights()
 
-    def _init_weights(self):
+    def _init_weights(self) -> None:
         for m in self.sublayers():
             if isinstance(m, nn.Conv2D):
                 kaiming_normal_(m.weight)
@@ -507,7 +482,7 @@ class PPHGNetV2(nn.Layer):
             elif isinstance(m, nn.Linear):
                 zeros_(m.bias)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> List[paddle.Tensor]:
         x = self.stem(x)
         out = []
         for i, stage in enumerate(self.stages):
@@ -518,18 +493,36 @@ class PPHGNetV2(nn.Layer):
 
 
 class DSConv(nn.Layer):
+    """
+    DSConv: Depthwise separable convolution with bottleneck and residual connection
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of depthwise convolution
+        padding (Union[int, str]): Padding value or mode (e.g. 'SAME') for depthwise conv
+        stride (int, optional): Stride for depthwise convolution, default is 1
+        groups (Optional[int], optional): Number of groups for depthwise conv (default: in_channels)
+        if_act (bool, optional): Whether to apply activation after second BN, default is True
+        act (str, optional): Activation function type ('relu' or 'hardswish'), default is 'relu'
+        **kwargs: Additional keyword arguments
+
+    Returns:
+        paddle.Tensor: Output tensor after depthwise separable convolution and optional residual connection
+    """
+
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        padding,
-        stride=1,
-        groups=None,
-        if_act=True,
-        act="relu",
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        padding: Union[int, str],
+        stride: int = 1,
+        groups: Optional[int] = None,
+        if_act: bool = True,
+        act: str = "relu",
         **kwargs,
-    ):
+    ) -> None:
         super(DSConv, self).__init__()
         if groups == None:
             groups = in_channels
@@ -574,7 +567,7 @@ class DSConv(nn.Layer):
                 bias_attr=False,
             )
 
-    def forward(self, inputs):
+    def forward(self, inputs: paddle.Tensor) -> paddle.Tensor:
         x = self.conv1(inputs)
         x = self.bn1(x)
 
@@ -600,108 +593,84 @@ class DSConv(nn.Layer):
 
 
 class IntraCLBlock(nn.Layer):
-    def __init__(self, in_channels=96, reduce_factor=4):
+    """
+    IntraCLBlock: Multi-scale convolution block with vertical/horizontal kernel fusion
+
+    Args:
+        in_channels (int): Number of input channels
+        reduce_factor (int): Channel reduction ratio for 1x1 convolution
+        intraclblock_config (dict): Configuration dict for convolution layers, includes:
+            - reduce_channel: (kernel_size, stride, padding) for channel reduction 1x1 conv
+            - return_channel: (kernel_size, stride, padding) for channel recovery 1x1 conv
+            - v_layer_7x1/5x1/3x1: (kernel_size, stride, padding) for vertical (Hx1) conv
+            - q_layer_1x7/1x5/1x3: (kernel_size, stride, padding) for horizontal (1xW) conv
+            - c_layer_7x7/5x5/3x3: (kernel_size, stride, padding) for cross (HxW) conv
+
+    Returns:
+        paddle.Tensor: Output tensor after multi-scale conv fusion and residual connection
+    """
+
+    def __init__(
+        self, in_channels: int, reduce_factor: int, intraclblock_config: dict
+    ) -> None:
         super(IntraCLBlock, self).__init__()
+
         self.channels = in_channels
-        self.rf = reduce_factor
-        weight_attr = paddle.nn.initializer.KaimingUniform()
-        self.conv1x1_reduce_channel = nn.Conv2D(
-            self.channels, self.channels // self.rf, kernel_size=1, stride=1, padding=0
+        self.reduce_factor = reduce_factor
+        self.intraclblock_config = intraclblock_config
+
+        reduced_ch = self.channels // self.reduce_factor
+
+        self.conv1x1_reduce_channel = nn.Conv2d(
+            self.channels, reduced_ch, *self.intraclblock_config["reduce_channel"]
         )
-        self.conv1x1_return_channel = nn.Conv2D(
-            self.channels // self.rf, self.channels, kernel_size=1, stride=1, padding=0
+        self.conv1x1_return_channel = nn.Conv2d(
+            reduced_ch, self.channels, *self.intraclblock_config["return_channel"]
         )
 
-        self.v_layer_7x1 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(7, 1),
-            stride=(1, 1),
-            padding=(3, 0),
+        self.v_layer_7x1 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["v_layer_7x1"]
         )
-        self.v_layer_5x1 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(5, 1),
-            stride=(1, 1),
-            padding=(2, 0),
+        self.v_layer_5x1 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["v_layer_5x1"]
         )
-        self.v_layer_3x1 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(3, 1),
-            stride=(1, 1),
-            padding=(1, 0),
+        self.v_layer_3x1 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["v_layer_3x1"]
         )
 
-        self.q_layer_1x7 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(1, 7),
-            stride=(1, 1),
-            padding=(0, 3),
+        self.q_layer_1x7 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["q_layer_1x7"]
         )
-        self.q_layer_1x5 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(1, 5),
-            stride=(1, 1),
-            padding=(0, 2),
+        self.q_layer_1x5 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["q_layer_1x5"]
         )
-        self.q_layer_1x3 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(1, 3),
-            stride=(1, 1),
-            padding=(0, 1),
+        self.q_layer_1x3 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["q_layer_1x3"]
         )
 
-        # base
-        self.c_layer_7x7 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(7, 7),
-            stride=(1, 1),
-            padding=(3, 3),
+        self.c_layer_7x7 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["c_layer_7x7"]
         )
-        self.c_layer_5x5 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(5, 5),
-            stride=(1, 1),
-            padding=(2, 2),
+        self.c_layer_5x5 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["c_layer_5x5"]
         )
-        self.c_layer_3x3 = nn.Conv2D(
-            self.channels // self.rf,
-            self.channels // self.rf,
-            kernel_size=(3, 3),
-            stride=(1, 1),
-            padding=(1, 1),
+        self.c_layer_3x3 = nn.Conv2d(
+            reduced_ch, reduced_ch, *self.intraclblock_config["c_layer_3x3"]
         )
 
         self.bn = nn.BatchNorm2D(self.channels)
         self.relu = nn.ReLU()
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x_new = self.conv1x1_reduce_channel(x)
 
-        x_7_c = self.c_layer_7x7(x_new)
-        x_7_v = self.v_layer_7x1(x_new)
-        x_7_q = self.q_layer_1x7(x_new)
-        x_7 = x_7_c + x_7_v + x_7_q
-
-        x_5_c = self.c_layer_5x5(x_7)
-        x_5_v = self.v_layer_5x1(x_7)
-        x_5_q = self.q_layer_1x5(x_7)
-        x_5 = x_5_c + x_5_v + x_5_q
-
-        x_3_c = self.c_layer_3x3(x_5)
-        x_3_v = self.v_layer_3x1(x_5)
-        x_3_q = self.q_layer_1x3(x_5)
-        x_3 = x_3_c + x_3_v + x_3_q
+        x_7 = (
+            self.c_layer_7x7(x_new) + self.v_layer_7x1(x_new) + self.q_layer_1x7(x_new)
+        )
+        x_5 = self.c_layer_5x5(x_7) + self.v_layer_5x1(x_7) + self.q_layer_1x5(x_7)
+        x_3 = self.c_layer_3x3(x_5) + self.v_layer_3x1(x_5) + self.q_layer_1x3(x_5)
 
         x_relation = self.conv1x1_return_channel(x_3)
-
         x_relation = self.bn(x_relation)
         x_relation = self.relu(x_relation)
 
@@ -709,16 +678,44 @@ class IntraCLBlock(nn.Layer):
 
 
 class LKPAN(nn.Layer):
-    def __init__(self, in_channels, out_channels, mode="large", **kwargs):
+    """
+    LKPAN: Feature pyramid network with multi-scale aggregation and IntraCL enhancement
+
+    Args:
+        in_channels (List[int]): List of input channel numbers for multi-scale feature maps
+        out_channels (int): Number of output channels for 1x1 convolution layers
+        mode (str): Network mode ('lite' for DSConv, 'large' for standard Conv2D)
+        reduce_factor (int): Channel reduction ratio for IntraCLBlock modules
+        intraclblock_config (dict): Configuration dict for convolution layers, includes:
+            - reduce_channel: (kernel_size, stride, padding) for channel reduction 1x1 conv
+            - return_channel: (kernel_size, stride, padding) for channel recovery 1x1 conv
+            - v_layer_7x1/5x1/3x1: (kernel_size, stride, padding) for vertical (Hx1) conv
+            - q_layer_1x7/1x5/1x3: (kernel_size, stride, padding) for horizontal (1xW) conv
+            - c_layer_7x7/5x5/3x3: (kernel_size, stride, padding) for cross (HxW) conv
+        upsample_mode (str): Interpolation mode for upsample operation
+        upsample_align_mode (int): Align mode for upsample operation
+        **kwargs: Additional keyword arguments
+
+    Returns:
+        paddle.Tensor: Fused feature tensor after multi-scale feature aggregation, IntraCLBlock enhancement and concatenation
+    """
+
+    def __init__(
+        self,
+        in_channels: List[int],
+        out_channels: int,
+        mode: str,
+        reduce_factor: int,
+        intraclblock_config: dict,
+        upsample_mode: str,
+        upsample_align_mode: int,
+        **kwargs,
+    ) -> None:
         super(LKPAN, self).__init__()
         self.out_channels = out_channels
-        weight_attr = paddle.nn.initializer.KaimingUniform()
-
-        self.ins_conv = nn.LayerList()
-        self.inp_conv = nn.LayerList()
-        # pan head
-        self.pan_head_conv = nn.LayerList()
-        self.pan_lat_conv = nn.LayerList()
+        self.upsample_mode = upsample_mode
+        self.upsample_align_mode = upsample_align_mode
+        weight_attr = nn.initializer.KaimingUniform()
 
         if mode.lower() == "lite":
             p_layer = DSConv
@@ -730,6 +727,11 @@ class LKPAN(nn.Layer):
                     mode
                 )
             )
+
+        self.ins_conv = nn.LayerList()
+        self.inp_conv = nn.LayerList()
+        self.pan_head_conv = nn.LayerList()
+        self.pan_lat_conv = nn.LayerList()
 
         for i in range(len(in_channels)):
             self.ins_conv.append(
@@ -776,12 +778,28 @@ class LKPAN(nn.Layer):
                 )
             )
 
-        self.incl1 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
-        self.incl2 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
-        self.incl3 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
-        self.incl4 = IntraCLBlock(self.out_channels // 4, reduce_factor=2)
+        self.incl1 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
+        self.incl2 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
+        self.incl3 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
+        self.incl4 = IntraCLBlock(
+            self.out_channels // 4,
+            reduce_factor=reduce_factor,
+            intraclblock_config=intraclblock_config,
+        )
 
-    def forward(self, x):
+    def forward(self, x: List[paddle.Tensor]) -> paddle.Tensor:
         c2, c3, c4, c5 = x
 
         in5 = self.ins_conv[3](c5)
@@ -790,14 +808,23 @@ class LKPAN(nn.Layer):
         in2 = self.ins_conv[0](c2)
 
         out4 = in4 + F.upsample(
-            in5, scale_factor=2, mode="nearest", align_mode=1
-        )  # 1/16
+            in5,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
         out3 = in3 + F.upsample(
-            out4, scale_factor=2, mode="nearest", align_mode=1
-        )  # 1/8
+            out4,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
         out2 = in2 + F.upsample(
-            out3, scale_factor=2, mode="nearest", align_mode=1
-        )  # 1/4
+            out3,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
 
         f5 = self.inp_conv[3](in5)
         f4 = self.inp_conv[2](out4)
@@ -818,26 +845,58 @@ class LKPAN(nn.Layer):
         p3 = self.incl2(p3)
         p2 = self.incl1(p2)
 
-        p5 = F.upsample(p5, scale_factor=8, mode="nearest", align_mode=1)
-        p4 = F.upsample(p4, scale_factor=4, mode="nearest", align_mode=1)
-        p3 = F.upsample(p3, scale_factor=2, mode="nearest", align_mode=1)
+        p5 = F.upsample(
+            p5,
+            scale_factor=8,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
+        p4 = F.upsample(
+            p4,
+            scale_factor=4,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
+        p3 = F.upsample(
+            p3,
+            scale_factor=2,
+            mode=self.upsample_mode,
+            align_mode=self.upsample_align_mode,
+        )
 
         fuse = paddle.concat([p5, p4, p3, p2], axis=1)
         return fuse
 
 
 class ConvBNLayer(nn.Layer):
+    """
+    ConvBNLayer: Basic convolution + batch normalization + optional activation block
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of convolution layer
+        stride (int): Convolution stride
+        padding (Union[int, str]): Padding value or mode (e.g. 'SAME') for convolution
+        groups (int, optional): Number of grouped convolution groups, default is 1
+        if_act (bool, optional): Whether to apply activation function, default is True
+        act (Optional[str], optional): Activation function type ('relu' or 'hardswish'), default is None
+
+    Returns:
+        paddle.Tensor: Output tensor after convolution, BN and optional activation
+    """
+
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        kernel_size,
-        stride,
-        padding,
-        groups=1,
-        if_act=True,
-        act=None,
-    ):
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        stride: int,
+        padding: Union[int, str],
+        groups: int = 1,
+        if_act: bool = True,
+        act: Optional[str] = None,
+    ) -> None:
         super(ConvBNLayer, self).__init__()
         self.if_act = if_act
         self.act = act
@@ -853,7 +912,7 @@ class ConvBNLayer(nn.Layer):
 
         self.bn = nn.BatchNorm(num_channels=out_channels, act=None)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         x = self.conv(x)
         x = self.bn(x)
         if self.if_act:
@@ -872,50 +931,162 @@ class ConvBNLayer(nn.Layer):
 
 
 class LocalModule(nn.Layer):
-    def __init__(self, in_c, mid_c, use_distance=True):
+    """
+    LocalModule: Feature enhancement module with concatenation and 1x1 projection
+
+    Args:
+        in_c (int): Number of input channels (before concatenation)
+        mid_c (int): Number of intermediate channels for 3x3 ConvBNLayer
+        act (str): Activation function type for ConvBNLayer
+
+    Returns:
+        paddle.Tensor: 1-channel output tensor after concatenation, conv and projection
+    """
+
+    def __init__(self, in_c: int, mid_c: int, act: str) -> None:
         super(self.__class__, self).__init__()
-        self.last_3 = ConvBNLayer(in_c + 1, mid_c, 3, 1, 1, act="relu")
+        self.last_3 = ConvBNLayer(in_c + 1, mid_c, 3, 1, 1, act=act)
         self.last_1 = nn.Conv2D(mid_c, 1, 1, 1, 0)
 
-    def forward(self, x, init_map, distance_map):
+    def forward(self, x: paddle.Tensor, init_map: paddle.Tensor) -> paddle.Tensor:
         outf = paddle.concat([init_map, x], axis=1)
-        # last Conv
         out = self.last_1(self.last_3(outf))
         return out
 
 
 class PFHeadLocal(DBHead):
-    def __init__(self, in_channels, k=50, mode="small", **kwargs):
+    """
+    PFHeadLocal: Enhanced DB head with local feature refinement for detection
+
+    Args:
+        in_channels (int): Number of input channels
+        k (int): DB head hyperparameter (kernel factor)
+        mode (str): Module size mode ('large' or 'small') to control intermediate channels
+        scale_factor (int): Upsampling scale factor for feature maps
+        act (str): Activation function type for LocalModule
+        upsample_mode (str): Interpolation mode for upsample operation
+        upsample_align_mode (int): Align mode for upsample operation
+        **kwargs: Additional keyword arguments for parent DBHead class
+
+    Returns:
+        paddle.Tensor: Fused binarization map (average of base map and enhanced local map)
+    """
+
+    def __init__(
+        self,
+        in_channels: int,
+        k: int,
+        mode: str,
+        scale_factor: int,
+        act: str,
+        upsample_mode: str,
+        upsample_align_mode: int,
+        **kwargs: Any,
+    ) -> None:
         super(PFHeadLocal, self).__init__(in_channels, k, **kwargs)
         self.mode = mode
 
-        self.up_conv = nn.Upsample(scale_factor=2, mode="nearest", align_mode=1)
-        if self.mode == "large":
-            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 4)
-        elif self.mode == "small":
-            self.cbn_layer = LocalModule(in_channels // 4, in_channels // 8)
+        self.up_conv = nn.Upsample(
+            scale_factor=scale_factor,
+            mode=upsample_mode,
+            align_mode=upsample_align_mode,
+        )
 
-    def forward(self, x, targets=None):
-        shrink_maps, f = self.binarize(x, return_f=True)
-        base_maps = shrink_maps
-        cbn_maps = self.cbn_layer(self.up_conv(f), shrink_maps, None)
+        if mode == "large":
+            mid_ch = in_channels // 4
+        elif mode == "small":
+            mid_ch = in_channels // 8
+        else:
+            raise ValueError(f"mode must be 'large' or 'small', currently {mode}")
+        self.cbn_layer = LocalModule(in_channels // 4, mid_ch, act)
+
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
+        base_maps, f = self.binarize(x, return_f=True)
+
+        cbn_maps = self.cbn_layer(self.up_conv(f), base_maps)
         cbn_maps = F.sigmoid(cbn_maps)
 
         return 0.5 * (base_maps + cbn_maps)
 
 
-class PPOCRV5ServerDet(PretrainedModel):
+class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
+    """
+    PPOCRV5ServerDet: Server-side OCR detection model with PPHGNetV2, LKPAN and PFHeadLocal
 
-    config_class = PretrainedConfig
+    Args:
+        config (PPOCRV5ServerDetConfig): Configuration object containing model hyperparameters
 
-    def __init__(self, config: PretrainedConfig):
+    Returns:
+        List: List containing the detection output tensor (converted to numpy array on CPU)
+    """
+
+    config_class = PPOCRV5ServerDetConfig
+
+    def __init__(self, config: PPOCRV5ServerDetConfig) -> None:
         super().__init__(config)
 
-        self.backbone = PPHGNetV2_B4(det=True)
-        self.neck = LKPAN(in_channels=self.backbone.out_channels, out_channels=256)
-        self.head = PFHeadLocal(in_channels=self.neck.out_channels, k=50, mode="large")
+        self.upsample_mode = config.upsample_mode
+        self.upsample_align_mode = config.upsample_align_mode
+        self.backbone_stem_channels = config.backbone_stem_channels
+        self.backbone_stage_config = config.backbone_stage_config
+        self.backbone_use_lab = config.backbone_use_lab
+        self.backbone_use_last_conv = config.backbone_use_last_conv
+        self.backbone_class_expand = config.backbone_class_expand
+        self.backbone_class_num = config.backbone_class_num
+        self.backbone_lr_mult_list = config.backbone_lr_mult_list
+        self.backbone_det = config.backbone_det
+        self.backbone_out_indices = config.backbone_out_indices
 
-    def forward(self, x):
+        self.neck_out_channels = config.neck_out_channels
+        self.neck_mode = config.neck_mode
+        self.neck_reduce_factor = config.neck_reduce_factor
+        self.neck_intraclblock_config = config.neck_intraclblock_config
+
+        self.head_in_channels = config.head_in_channels
+        self.head_k = config.head_k
+        self.head_mode = config.head_mode
+        self.head_scale_factor = config.head_scale_factor
+        self.head_act = config.head_act
+        self.head_kernel_list = config.head_kernel_list
+        self.head_fix_nan = config.head_fix_nan
+
+        self.backbone = PPHGNetV2(
+            stage_config=self.backbone_stage_config,
+            stem_channels=self.backbone_stem_channels,
+            use_lab=self.backbone_use_lab,
+            use_last_conv=self.backbone_use_last_conv,
+            class_expand=self.backbone_class_expand,
+            class_num=self.backbone_class_num,
+            lr_mult_list=self.backbone_lr_mult_list,
+            det=self.backbone_det,
+            out_indices=self.backbone_out_indices,
+        )
+
+        neck_in_channels = self.backbone.out_channels
+        self.neck = LKPAN(
+            in_channels=neck_in_channels,
+            out_channels=self.neck_out_channels,
+            mode=self.neck_mode,
+            reduce_factor=self.neck_reduce_factor,
+            intraclblock_config=self.neck_intraclblock_config,
+            upsample_mode=self.upsample_mode,
+            upsample_align_mode=self.upsample_align_mode,
+        )
+
+        head_in_channels = self.neck.out_channels
+        self.head = PFHeadLocal(
+            in_channels=head_in_channels,
+            k=self.head_k,
+            mode=self.head_mode,
+            scale_factor=self.head_scale_factor,
+            act=self.head_act,
+            upsample_mode=self.upsample_mode,
+            upsample_align_mode=self.upsample_align_mode,
+            kernel_list=self.head_kernel_list,
+            fix_nan=self.head_fix_nan,
+        )
+
+    def forward(self, x: List) -> List:
 
         x = paddle.to_tensor(x[0])
 
@@ -924,36 +1095,3 @@ class PPOCRV5ServerDet(PretrainedModel):
         x = self.head(x)
 
         return [x.cpu().numpy()]
-
-    def get_transpose_weight_keys(self):
-        pass
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)

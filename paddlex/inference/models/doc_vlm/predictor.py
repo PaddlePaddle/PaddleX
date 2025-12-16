@@ -29,7 +29,8 @@ from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import DocVLMBatchSampler
-from ...utils.misc import is_bfloat16_available, is_float16_available
+from ...utils.misc import is_bfloat16_available
+from ...utils.model_paths import get_model_paths
 from ..base import BasePredictor
 from .result import DocVLMResult
 
@@ -58,8 +59,6 @@ class DocVLMPredictor(BasePredictor):
             self.device = kwargs.get("device", None)
             if is_bfloat16_available(self.device):
                 self.dtype = "bfloat16"
-            elif is_float16_available(self.device):
-                self.dtype = "float16"
             else:
                 self.dtype = "float32"
 
@@ -128,11 +127,23 @@ class DocVLMPredictor(BasePredictor):
                     "The PP-Chart2Table series does not support `use_hpip=True` for now."
                 )
             with TemporaryDeviceChanger(self.device):
-                model = PPChart2TableInference.from_pretrained(
-                    self.model_dir,
-                    dtype=self.dtype,
-                    pad_token_id=processor.tokenizer.eos_token_id,
-                )
+                model_path = get_model_paths(self.model_dir)
+
+                if "safetensors" in model_path:
+                    model = PPChart2TableInference.from_pretrained(
+                        self.model_dir,
+                        dtype=self.dtype,
+                        pad_token_id=processor.tokenizer.eos_token_id,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                    )
+                else:
+                    model = PPChart2TableInference.from_pretrained(
+                        self.model_dir,
+                        dtype=self.dtype,
+                        pad_token_id=processor.tokenizer.eos_token_id,
+                    )
+
         elif self.model_name in self.model_group["PP-DocBee2"]:
             if kwargs.get("use_hpip", False):
                 warnings.warn(

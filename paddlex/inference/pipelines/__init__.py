@@ -55,6 +55,7 @@ from .ts_classification import TSClsPipeline
 from .ts_forecasting import TSFcPipeline
 from .video_classification import VideoClassificationPipeline
 from .video_detection import VideoDetectionPipeline
+from .text_to_speech import TextToSpeechPipeline
 
 
 def get_pipeline_path(pipeline_name: str) -> str:

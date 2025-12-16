@@ -250,8 +250,11 @@ class DetPredictor(BasePredictor):
         batch_inputs = self.pre_ops[-1](datas)
 
         # do infer
-        with TemporaryDeviceChanger(self.device):
+        if self._use_static_model:
             batch_preds = self.infer(batch_inputs)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(batch_inputs)
 
         # process a batch of predictions into a list of single image result
         preds_list = self._format_output(batch_preds)
