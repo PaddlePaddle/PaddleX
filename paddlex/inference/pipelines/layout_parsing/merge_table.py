@@ -121,6 +121,26 @@ def check_rows_match(soup1, soup2):
     return last_cols == first_cols or last_visual == first_visual
 
 
+def is_skippable(block, allowed_labels):
+
+    continue_keywords = ["continue", "continued", "cont'd", "续", "cont‘d", "續"]
+
+    if block.label in allowed_labels:
+        return True
+
+    b_text = str(getattr(block, "text", "") or "").lower()
+    b_fig_title = str(getattr(block, "figure_title", "") or "").lower()
+    b_doc_title = str(getattr(block, "doc_title", "") or "").lower()
+    b_para_title = str(getattr(block, "paragraph_title", "") or "").lower()
+
+    full_content = f"{b_text} {b_fig_title} {b_doc_title} {b_para_title}"
+
+    if any(kw in full_content for kw in continue_keywords):
+        return True
+
+    return False
+
+
 def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
 
     from bs4 import BeautifulSoup
@@ -143,8 +163,10 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
         return False, None, None
 
     curr_index = curr_page.index(curr_block)
+    curr_allowed_labels = ["header", "header_image", "number"]
+
     allowed_before = all(
-        b.label in ["header", "header_image"] for b in curr_page[:curr_index]
+        is_skippable(b, curr_allowed_labels) for b in curr_page[:curr_index]
     )
     if not allowed_before:
         return False, None, None
