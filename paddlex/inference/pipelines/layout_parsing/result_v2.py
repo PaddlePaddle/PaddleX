@@ -556,6 +556,13 @@ class LayoutParsingResultV2(
             ),
             "algorithm": lambda block: block.content.strip("\n"),
             "seal": format_seal_func,
+            "number": format_text_plain_func,
+            "footnote": format_text_plain_func,
+            "header": format_text_plain_func,
+            "header_image": format_image_plain_func,
+            "footer": format_text_plain_func,
+            "footer_image": format_image_plain_func,
+            "aside_text": format_text_plain_func,
         }
         for label in self["model_settings"].get("markdown_ignore_labels", []):
             handle_funcs_dict.pop(label, None)
