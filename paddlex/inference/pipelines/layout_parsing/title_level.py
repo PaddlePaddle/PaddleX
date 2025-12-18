@@ -33,9 +33,9 @@ SYMBOL_PATTERNS = {
         r"(?:第|[（\(])?"
         r"([一二三四五六七八九十]{1,2})"
         r"(?:"
-        r"[章节篇卷部条题讲课回）\)]"  # <--- 把右括号也放进“白名单”里
+        r"[章节篇卷部条题讲课回）\)]"
         r"|"
-        r"(?![a-zA-Z\u4e00-\u9fa5])"  # 只有“纯裸数字”时，才禁止后面跟汉字
+        r"(?![a-zA-Z\u4e00-\u9fa5])"
         r")",
         flags=re.I,
     ),
@@ -124,36 +124,34 @@ def get_title_height(block, layout_det_res):
 
     page_image = layout_det_res[block.page_index]["input_img"]
 
-    # 向下取整 Round down for top-left
+    # Round down for top-left
     x1 = int(block.bbox[0])
     y1 = int(block.bbox[1])
-    # 向上取整 Round up for bottom-right to ensure full coverage
+    # Round up for bottom-right to ensure full coverage
     x2 = int(math.ceil(block.bbox[2]))
     y2 = int(math.ceil(block.bbox[3]))
-    # 防止越界 Boundary clamping: Ensure coordinates do not exceed image dimensions
+    # Boundary clamping: Ensure coordinates do not exceed image dimensions
     h, w = page_image.shape[:2]
     x1, y1, x2, y2 = max(0, x1), max(0, y1), min(w, x2), min(h, y2)
 
     title_image = page_image[y1:y2, x1:x2]
-    # 转灰度 Convert to grayscale
+    # Convert to grayscale
     title_image = cv2.cvtColor(title_image, cv2.COLOR_RGB2GRAY)
-    # 二值化 Binarization using Otsu's method
+    # Binarization using Otsu's method
     ret, binary = cv2.threshold(
         title_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
     )
 
-    # 判断横排还是竖排 Determine orientation based on aspect ratio
+    # Determine orientation based on aspect ratio
     h, w = binary.shape[:2]
     aspect_ratio = w / h
 
     projection = None
 
     if aspect_ratio >= 1.0:
-        # 横排：投影到 Y 轴，测量的“宽度”就是行高
         # orizontal text: Project to Y-axis
         projection = np.sum(binary, axis=1)
     else:
-        # 竖排：投影到 X 轴，测量的“宽度”就是列宽
         # Vertical text: Project to X-axis
         projection = np.sum(binary, axis=0)
 
@@ -161,25 +159,21 @@ def get_title_height(block, layout_det_res):
     current_height = 0
     in_block = False
 
-    # 阈值：最大投影值的 5%，过滤噪点
     # Signals below this are considered background/gap
     threshold = np.max(projection) * 0.05
 
     for val in projection:
         if val > threshold:
-            # 如果当前像素有字，高度+1 Entering or inside a text line
+            # Entering or inside a text line
             in_block = True
             current_height += 1
         else:
-            # 如果当前像素是空的（行间距），且刚才正在记录一行
             if in_block:
-                # 这一行结束了，记录高度,> 2px 才算一行
                 if current_height > 2:
                     heights_list.append(current_height)
                 current_height = 0
             in_block = False
 
-    # 走到最后，但是还有像素
     # Edge Case: If the loop ends while still inside a text block
     if in_block and current_height > 2:
         heights_list.append(current_height)
@@ -190,7 +184,6 @@ def get_title_height(block, layout_det_res):
     big_lines = [h for h in heights_list if h > threshold]
     avg_height = sum(big_lines) / len(big_lines)
 
-    # 四舍五入？
     return int(round(avg_height))
 
 
