@@ -42,4 +42,12 @@ def is_float16_available(device):
     device_type, _ = parse_device(device)
     return (
         "npu" in get_device_type() or paddle.amp.is_float16_supported()
-    ) and device_type in ("gpu", "npu", "xpu", "mlu", "dcu", "metax_gpu")
+    ) and device_type in (
+        "gpu",
+        "npu",
+        "xpu",
+        "mlu",
+        "dcu",
+        "metax_gpu",
+        "iluvatar_gpu",
+    )
