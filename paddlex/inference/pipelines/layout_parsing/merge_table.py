@@ -156,7 +156,7 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
 
     prev_index = prev_page.index(prev_block)
     allowed_follow = all(
-        b.label in ["footer", "vision_footnote", "number", "footnote"]
+        b.label in ["footer", "vision_footnote", "number", "footnote", "footer_image"]
         for b in prev_page[prev_index + 1 :]
     )
     if not allowed_follow:
