@@ -80,7 +80,7 @@ class ConcatenatePagesRequest(BaseModel):
 
 
 class ConcatenatePagesResult(BaseModel):
-    markdownText: str
+    text: str
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

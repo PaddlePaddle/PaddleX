@@ -158,7 +158,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 }
             )
 
-        concatenated_text = pipeline.concatenate_markdown_pages(pages)
+        concatenated_text = pipeline.pipeline.concatenate_markdown_pages(pages)
 
         return AIStudioResultResponse[ConcatenatePagesResult](
             logId=log_id,
