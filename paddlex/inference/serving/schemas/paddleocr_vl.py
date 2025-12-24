@@ -56,6 +56,7 @@ class InferRequest(ocr.BaseInferRequest):
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
     visualize: Optional[bool] = None
+    logId: Optional[str] = None
 
 
 class MarkdownData(BaseModel):
@@ -77,6 +78,7 @@ class InferResult(BaseModel):
 
 class ConcatenatePagesRequest(BaseModel):
     pages: List[MarkdownData]
+    logId: Optional[str] = None
 
 
 class ConcatenatePagesResult(BaseModel):

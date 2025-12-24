@@ -68,6 +68,7 @@ class InferRequest(ocr.BaseInferRequest):
     useE2eWirelessTableRecModel: bool = True
     markdownIgnoreLabels: Optional[List[str]] = None
     visualize: Optional[bool] = None
+    logId: Optional[str] = None
 
 
 class LayoutParsingResult(BaseModel):
@@ -84,6 +85,7 @@ class InferResult(BaseModel):
 
 class ConcatenatePagesRequest(BaseModel):
     pages: List[ocr.MarkdownData]
+    logId: Optional[str] = None
 
 
 class ConcatenatePagesResult(BaseModel):
