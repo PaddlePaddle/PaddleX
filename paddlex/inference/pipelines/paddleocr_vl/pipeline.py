@@ -59,6 +59,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        initial_predictor: bool = True,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -72,85 +73,92 @@ class _PaddleOCRVLPipeline(BasePipeline):
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The default high-performance inference configuration dictionary.
                 Defaults to None.
+            initial_predictor (bool, optional): Whether to initialize predictors.
         """
         super().__init__(
             device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
         )
 
-        self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
-        if self.use_doc_preprocessor:
-            doc_preprocessor_config = config.get("SubPipelines", {}).get(
-                "DocPreprocessor",
-                {
-                    "pipeline_config_error": "config error for doc_preprocessor_pipeline!"
-                },
-            )
-            self.doc_preprocessor_pipeline = self.create_pipeline(
-                doc_preprocessor_config
-            )
-
-        self.use_layout_detection = config.get("use_layout_detection", True)
-        if self.use_layout_detection:
-            layout_det_config = config.get("SubModules", {}).get(
-                "LayoutDetection",
-                {"model_config_error": "config error for layout_det_model!"},
-            )
-            model_name = layout_det_config.get("model_name", None)
-            assert (
-                model_name is not None and model_name == "PP-DocLayoutV2"
-            ), "model_name must be PP-DocLayoutV2"
-            layout_kwargs = {}
-            if (threshold := layout_det_config.get("threshold", None)) is not None:
-                layout_kwargs["threshold"] = threshold
-            if (layout_nms := layout_det_config.get("layout_nms", None)) is not None:
-                layout_kwargs["layout_nms"] = layout_nms
-            if (
-                layout_unclip_ratio := layout_det_config.get(
-                    "layout_unclip_ratio", None
+        if initial_predictor:
+            self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
+            if self.use_doc_preprocessor:
+                doc_preprocessor_config = config.get("SubPipelines", {}).get(
+                    "DocPreprocessor",
+                    {
+                        "pipeline_config_error": "config error for doc_preprocessor_pipeline!"
+                    },
                 )
-            ) is not None:
-                layout_kwargs["layout_unclip_ratio"] = layout_unclip_ratio
-            if (
-                layout_merge_bboxes_mode := layout_det_config.get(
-                    "layout_merge_bboxes_mode", None
+                self.doc_preprocessor_pipeline = self.create_pipeline(
+                    doc_preprocessor_config
                 )
-            ) is not None:
-                layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
-            self.layout_det_model = self.create_model(
-                layout_det_config, **layout_kwargs
+
+            self.use_layout_detection = config.get("use_layout_detection", True)
+            if self.use_layout_detection:
+                layout_det_config = config.get("SubModules", {}).get(
+                    "LayoutDetection",
+                    {"model_config_error": "config error for layout_det_model!"},
+                )
+                model_name = layout_det_config.get("model_name", None)
+                assert (
+                    model_name is not None and model_name == "PP-DocLayoutV2"
+                ), "model_name must be PP-DocLayoutV2"
+                layout_kwargs = {}
+                if (threshold := layout_det_config.get("threshold", None)) is not None:
+                    layout_kwargs["threshold"] = threshold
+                if (
+                    layout_nms := layout_det_config.get("layout_nms", None)
+                ) is not None:
+                    layout_kwargs["layout_nms"] = layout_nms
+                if (
+                    layout_unclip_ratio := layout_det_config.get(
+                        "layout_unclip_ratio", None
+                    )
+                ) is not None:
+                    layout_kwargs["layout_unclip_ratio"] = layout_unclip_ratio
+                if (
+                    layout_merge_bboxes_mode := layout_det_config.get(
+                        "layout_merge_bboxes_mode", None
+                    )
+                ) is not None:
+                    layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
+                self.layout_det_model = self.create_model(
+                    layout_det_config, **layout_kwargs
+                )
+
+            self.use_chart_recognition = config.get("use_chart_recognition", True)
+
+            vl_rec_config = config.get("SubModules", {}).get(
+                "VLRecognition",
+                {"model_config_error": "config error for vl_rec_model!"},
             )
 
-        self.use_chart_recognition = config.get("use_chart_recognition", True)
+            self.vl_rec_model = self.create_model(vl_rec_config)
+            self.format_block_content = config.get("format_block_content", False)
 
-        vl_rec_config = config.get("SubModules", {}).get(
-            "VLRecognition",
-            {"model_config_error": "config error for vl_rec_model!"},
-        )
+            self.batch_sampler = ImageBatchSampler(
+                batch_size=config.get("batch_size", 1)
+            )
+            self.img_reader = ReadImage(format="BGR")
+            self.crop_by_boxes = CropByBoxes()
 
-        self.vl_rec_model = self.create_model(vl_rec_config)
-        self.format_block_content = config.get("format_block_content", False)
-
-        self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
-        self.img_reader = ReadImage(format="BGR")
-        self.crop_by_boxes = CropByBoxes()
-
-        self.use_queues = config.get("use_queues", False)
-        self.merge_layout_blocks = config.get("merge_layout_blocks", True)
-        self.markdown_ignore_labels = config.get(
-            "markdown_ignore_labels",
-            [
-                "number",
-                "footnote",
-                "header",
-                "header_image",
-                "footer",
-                "footer_image",
-                "aside_text",
-            ],
-        )
+            self.use_queues = config.get("use_queues", False)
+            self.merge_layout_blocks = config.get("merge_layout_blocks", True)
+            self.markdown_ignore_labels = config.get(
+                "markdown_ignore_labels",
+                [
+                    "number",
+                    "footnote",
+                    "header",
+                    "header_image",
+                    "footer",
+                    "footer_image",
+                    "aside_text",
+                ],
+            )
 
     def close(self):
-        self.vl_rec_model.close()
+        if hasattr(self, "vl_rec_model"):
+            self.vl_rec_model.close()
 
     def get_model_settings(
         self,

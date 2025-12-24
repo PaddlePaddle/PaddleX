@@ -18,7 +18,14 @@ from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
-from ...schemas.paddleocr_vl import INFER_ENDPOINT, InferRequest, InferResult
+from ...schemas.paddleocr_vl import (
+    CONCATENATE_PAGES_ENDPOINT,
+    INFER_ENDPOINT,
+    ConcatenatePagesRequest,
+    ConcatenatePagesResult,
+    InferRequest,
+    InferResult,
+)
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
@@ -128,6 +135,35 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             result=InferResult(
                 layoutParsingResults=layout_parsing_results,
                 dataInfo=data_info,
+            ),
+        )
+
+    @primary_operation(
+        app,
+        CONCATENATE_PAGES_ENDPOINT,
+        "concatenatePages",
+    )
+    def _concatenate_pages(
+        request: ConcatenatePagesRequest,
+    ) -> AIStudioResultResponse[ConcatenatePagesResult]:
+        pipeline = ctx.pipeline
+
+        log_id = serving_utils.generate_log_id()
+
+        pages = []
+        for page in request.pages:
+            pages.append(
+                {
+                    "markdown_texts": page.text,
+                }
+            )
+
+        concatenated_text = pipeline.concatenate_markdown_pages(pages)
+
+        return AIStudioResultResponse[ConcatenatePagesResult](
+            logId=log_id,
+            result=ConcatenatePagesResult(
+                text=concatenated_text,
             ),
         )
 
