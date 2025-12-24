@@ -627,6 +627,10 @@ def set_inference_operations(val):
     _inference_operations = val
 
 
+def add_inference_operations(*ops):
+    _inference_operations.extend(ops)
+
+
 if INFER_BENCHMARK or PIPELINE_BENCHMARK:
     benchmark = Benchmark(enabled=True)
 else:

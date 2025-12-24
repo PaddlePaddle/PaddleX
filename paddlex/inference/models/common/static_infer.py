@@ -29,7 +29,7 @@ from ....utils.flags import (
     DISABLE_TRT_MODEL_BL,
     USE_PIR_TRT,
 )
-from ...utils.benchmark import benchmark, set_inference_operations
+from ...utils.benchmark import add_inference_operations, benchmark
 from ...utils.hpi import (
     HPIConfig,
     OMConfig,
@@ -50,7 +50,7 @@ INFERENCE_OPERATIONS = [
     "PaddleInferChainLegacy",
     "MultiBackendInfer",
 ]
-set_inference_operations(INFERENCE_OPERATIONS)
+add_inference_operations(*INFERENCE_OPERATIONS)
 
 
 # XXX: Better use Paddle Inference API to do this
