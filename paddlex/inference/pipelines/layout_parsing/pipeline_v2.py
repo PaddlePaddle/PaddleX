@@ -62,6 +62,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        initial_predictor: bool = True,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -74,6 +75,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The default high-performance inference configuration dictionary.
                 Defaults to None.
+            initial_predictor (bool, optional): Whether to initialize predictors.
         """
 
         super().__init__(
@@ -83,7 +85,8 @@ class _LayoutParsingPipelineV2(BasePipeline):
             hpi_config=hpi_config,
         )
 
-        self.inintial_predictor(config)
+        if initial_predictor:
+            self.inintial_predictor(config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
