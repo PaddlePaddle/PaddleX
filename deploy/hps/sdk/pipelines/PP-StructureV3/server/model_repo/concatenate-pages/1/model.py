@@ -36,8 +36,8 @@ class TritonPythonModel(BaseTritonPythonModel):
                 }
             )
 
-        concatenated_text = self.pipeline.concatenate_markdown_pages(pages)
+        concatenated_markdown = self.pipeline.concatenate_markdown_pages(pages)
 
         return schemas.pp_structurev3.ConcatenatePagesResult(
-            text=concatenated_text,
+            text=concatenated_markdown["markdown_texts"],
         )
