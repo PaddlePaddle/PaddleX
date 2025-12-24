@@ -83,7 +83,12 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
         *args,
         **kwargs,
     ):
-        super().__init__()
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
+
+        self._init_args = args
+        self._init_kwargs = kwargs
 
         self._multi_device_inference = False
         if self.device is not None:
@@ -95,8 +100,6 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
                     pipeline = self._create_internal_pipeline(
                         config,
                         device_utils.constr_device(device_type, [device_id]),
-                        *args,
-                        **kwargs,
                     )
                     self._pipelines.append(pipeline)
                 batch_size = self._get_batch_size(config)
@@ -107,9 +110,7 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
                     postprocess_result=self._postprocess_result,
                 )
         if not self._multi_device_inference:
-            self._pipeline = self._create_internal_pipeline(
-                config, self.device, *args, **kwargs
-            )
+            self._pipeline = self._create_internal_pipeline(config, self.device)
 
     @property
     def multi_device_inference(self):
@@ -163,15 +164,15 @@ class AutoParallelImageSimpleInferencePipeline(AutoParallelSimpleInferencePipeli
     def _pipeline_cls(self):
         raise NotImplementedError
 
-    def _create_internal_pipeline(self, config, device, *args, **kwargs):
+    def _create_internal_pipeline(self, config, device):
         return self._pipeline_cls(
             config,
             device=device,
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
             hpi_config=self.hpi_config,
-            *args,
-            **kwargs,
+            *self._init_args,
+            **self._init_kwargs,
         )
 
     def _create_batch_sampler(self, batch_size):
