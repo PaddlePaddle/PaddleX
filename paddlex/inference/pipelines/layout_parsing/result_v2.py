@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from __future__ import annotations
 
 import copy
@@ -25,6 +26,7 @@ from PIL import Image, ImageDraw, ImageFont
 from ....utils.fonts import PINGFANG_FONT
 from ...common.result import (
     BaseCVResult,
+    BaseResult,
     HtmlMixin,
     JsonMixin,
     LatexMixin,
@@ -77,6 +79,24 @@ def format_title_func(block):
         if "." in title
         else 1
     )
+    return f"#{'#' * level} {title}".replace("-\n", "").replace(
+        "\n",
+        " ",
+    )
+
+
+def format_para_title_func(block):
+    """
+    Normalize chapter title.
+    Add the '#' to indicate the level of the title.
+    If numbering exists, ensure there's exactly one space between it and the title content.
+    If numbering does not exist, return the original title unchanged.
+
+    :param title: Original chapter title string.
+    :return: Normalized chapter title string.
+    """
+    level = block.title_level
+    title = block.content
     return f"#{'#' * level} {title}".replace("-\n", "").replace(
         "\n",
         " ",
@@ -329,7 +349,7 @@ class LayoutParsingResultV2(
                 format_formula_func = format_image_func
 
             handle_funcs_dict = {
-                "paragraph_title": format_title_func,
+                "paragraph_title": format_para_title_func,
                 "abstract_title": format_title_func,
                 "reference_title": format_title_func,
                 "content_title": format_title_func,
@@ -755,3 +775,159 @@ class LayoutParsingResultV2(
             "images": image,
             "input_path": self["input_path"],
         }
+
+
+class ProcessedLayoutParsingResult(BaseResult, MarkdownMixin):
+
+    def __init__(self, data) -> None:
+        """Initializes a new instance of the class with the specified data."""
+        super().__init__(data)
+        MarkdownMixin.__init__(self)
+
+    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
+        """
+        Save the parsing result to a Markdown file.
+
+        Args:
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
+
+        Returns:
+            Dict
+        """
+
+        self["model_settings"] = self["model_settings"][0]
+        self["input_path"] = self["input_path"][0]
+        self["doc_preprocessor_res"] = self["doc_preprocessor_res"][0]
+        self["page_index"] = None
+        self["width"] = None
+        self["height"] = None
+        self["page_count"] = None
+
+        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+
+        if pretty:
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                )
+            )
+        else:
+            format_text_func = lambda block: block.content
+            format_image_func = format_image_plain_func
+
+        if self["model_settings"].get("use_chart_recognition", False):
+            format_chart_func = format_chart2table_func
+        else:
+            format_chart_func = format_image_func
+
+        if self["model_settings"].get("use_seal_recognition", False):
+            format_seal_func = lambda block: "\n".join(
+                [format_image_func(block), format_text_func(block)]
+            )
+        else:
+            format_seal_func = format_image_func
+
+        if self["model_settings"].get("use_table_recognition", False):
+            if pretty:
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
+            else:
+                format_table_func = lambda block: simplify_table_func(
+                    "\n" + block.content
+                )
+        else:
+            format_table_func = format_image_func
+
+        if self["model_settings"].get("use_formula_recognition", False):
+            format_formula_func = lambda block: f"$${block.content}$$"
+        else:
+            format_formula_func = format_image_func
+
+        handle_funcs_dict = {
+            "paragraph_title": format_para_title_func,
+            "abstract_title": format_title_func,
+            "reference_title": format_title_func,
+            "content_title": format_title_func,
+            "doc_title": lambda block: f"# {block.content}".replace(
+                "-\n",
+                "",
+            ).replace("\n", " "),
+            "table_title": format_text_func,
+            "figure_title": format_text_func,
+            "chart_title": format_text_func,
+            "vision_footnote": lambda block: block.content.replace(
+                "\n\n", "\n"
+            ).replace("\n", "\n\n"),
+            "text": lambda block: block.content.replace("\n\n", "\n").replace(
+                "\n", "\n\n"
+            ),
+            "abstract": partial(
+                format_first_line_func,
+                templates=["摘要", "abstract"],
+                format_func=lambda l: f"## {l}\n",
+                spliter=" ",
+            ),
+            "content": lambda block: block.content.replace("-\n", "  \n").replace(
+                "\n", "  \n"
+            ),
+            "image": format_image_func,
+            "chart": format_chart_func,
+            "formula": format_formula_func,
+            "table": format_table_func,
+            "reference": partial(
+                format_first_line_func,
+                templates=["参考文献", "references"],
+                format_func=lambda l: f"## {l}",
+                spliter="\n",
+            ),
+            "algorithm": lambda block: block.content.strip("\n"),
+            "seal": format_seal_func,
+        }
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
+
+        markdown_content = ""
+        markdown_info = {}
+        markdown_info["markdown_images"] = {}
+        pages_list = self["parsing_res_list"]
+        global_block_id = 0
+
+        for page_blocks in pages_list:
+
+            if not page_blocks:
+                continue
+            for idx, block in enumerate(page_blocks):
+
+                label = block.label
+
+                if block.image is not None:
+                    markdown_info["markdown_images"][block.image["path"]] = block.image[
+                        "img"
+                    ]
+
+                handle_func = handle_funcs_dict.get(label, None)
+
+                if handle_func:
+                    current_text = handle_func(block)
+
+                    if markdown_content:
+                        markdown_content += "\n\n" + current_text
+                    else:
+                        markdown_content += current_text
+
+                if block.group_id is None:
+                    block.group_id = global_block_id
+                global_block_id += 1
+
+        markdown_info["page_index"] = self["page_index"]
+        markdown_info["input_path"] = self["input_path"]
+        markdown_info["markdown_texts"] = markdown_content
+        for img in self["imgs_in_doc"]:
+            markdown_info["markdown_images"][img["path"]] = img["img"]
+
+        return markdown_info

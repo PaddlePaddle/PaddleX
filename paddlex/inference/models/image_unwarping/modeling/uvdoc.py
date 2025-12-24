@@ -404,8 +404,6 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         bm = bm_up.transpose([0, 2, 3, 1])
         out = F.grid_sample(image, bm, align_corners=True)
 
-        print(out)
-        breakpoint()
         return [out.cpu().numpy()]
 
     def _get_forward_key_rules(self):
