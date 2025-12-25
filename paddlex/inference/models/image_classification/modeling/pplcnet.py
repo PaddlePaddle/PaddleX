@@ -21,6 +21,7 @@ from paddle import ParamAttr
 from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
+from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
@@ -386,6 +387,9 @@ class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
         self.fc = nn.Linear(fc_in_channels, self.class_num)
         self.out_act = nn.Softmax(axis=-1)
 
+    add_inference_operations("pplcnet_forward")
+
+    @benchmark.timeit_with_options(name="pplcnet_forward")
     def forward(self, x: List) -> List:
 
         x = paddle.to_tensor(x[0])
