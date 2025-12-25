@@ -15,6 +15,7 @@
 
 import paddle
 
+from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
 from .pp_ocrv5_rec_modules.rec_lcnetv3 import PPLCNetV3
 from .pp_ocrv5_rec_modules.rec_multi_head import MultiHead
@@ -28,15 +29,26 @@ class PPOCRV5RecConfig(PretrainedConfig):
         self,
         backbone,
         MultiHead,
-    ):
-        if backbone["name"] == "PPLCNetV3":
+    ):  
+        self.backbone_name = backbone["name"]
+        if self.backbone_name == "PPLCNetV3":
+            self.net_config = self.decode_tuple(backbone["net_config"])
             self.scale = backbone["scale"]
-            self.model_name = "PPOCRV5Mobile"
-        elif backbone["name"] == "PPHGNetV2":
+            self.conv_kxk_num = backbone["conv_kxk_num"]
+            self.lr_mult_list = backbone["lr_mult_list"]
+            self.lab_lr = backbone["lab_lr"]
+        elif self.backbone_name == "PPHGNetV2":
             self.text_rec = backbone["text_rec"]
             self.stem_channels = backbone["stem_channels"]
             self.stage_config = backbone["stage_config"]
-            self.model_name = "PPOCRV5Server"
+            self.det = backbone["det"]
+            self.use_lab = backbone["use_lab"]
+            self.use_last_conv = backbone["use_last_conv"]
+            self.class_expand = backbone["class_expand"]
+            self.dropout_prob = backbone["dropout_prob"]
+            self.class_num = backbone["class_num"]
+            self.lr_mult_list = backbone["lr_mult_list"]
+            self.out_indices = backbone["out_indices"]
         else:
             raise RuntimeError(
                 f"There is no dynamic graph implementation for backbone {backbone['name']}."
@@ -44,6 +56,16 @@ class PPOCRV5RecConfig(PretrainedConfig):
         self.head_list = MultiHead["head_list"]
         self.decode_list = MultiHead["decode_list"]
         self.tensor_parallel_degree = 1
+    
+    def decode_tuple(self, obj):
+        if isinstance(obj, dict):
+            if "__tuple__" in obj:
+                return tuple(self.decode_tuple(x) for x in obj["__tuple__"])
+            return {k: self.decode_tuple(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self.decode_tuple(x) for x in obj]
+        else:
+            return obj
 
 
 class PPOCRV5Rec(PretrainedModel):
@@ -52,13 +74,27 @@ class PPOCRV5Rec(PretrainedModel):
 
     def __init__(self, config: PPOCRV5RecConfig):
         super().__init__(config)
-        if self.config.model_name == "PPOCRV5Mobile":
-            self.backbone = PPLCNetV3(scale=self.config.scale)
-        elif self.config.model_name == "PPOCRV5Server":
+        if self.config.backbone_name == "PPLCNetV3":
+            self.backbone = PPLCNetV3(
+                scale=self.config.scale,
+                net_config=self.config.net_config,
+                conv_kxk_num=self.config.conv_kxk_num,
+                lr_mult_list=self.config.lr_mult_list,
+                lab_lr=self.config.lab_lr,
+            )
+        elif self.config.backbone_name == "PPHGNetV2":
             self.backbone = PPHGNetV2(
                 stage_config=self.config.stage_config,
                 stem_channels=self.config.stem_channels,
                 text_rec=self.config.text_rec,
+                det=self.config.det,
+                use_lab=self.config.use_lab,
+                use_last_conv=self.config.use_last_conv,
+                class_expand=self.config.class_expand,
+                dropout_prob=self.config.dropout_prob,
+                class_num=self.config.class_num,
+                lr_mult_list=self.config.lr_mult_list,
+                out_indices=self.config.out_indices,
             )
         self.head = MultiHead(
             in_channels=self.backbone.out_channels,
@@ -66,6 +102,9 @@ class PPOCRV5Rec(PretrainedModel):
             head_list=self.config.head_list,
         )
 
+    add_inference_operations("pp_ocrv5_rec_forward")
+
+    @benchmark.timeit_with_options(name="pp_ocrv5_rec_forward")
     def forward(self, x):
         x = paddle.to_tensor(x[0])
         x = self.backbone(x)
@@ -84,7 +123,7 @@ class PPOCRV5Rec(PretrainedModel):
                     "bias" not in all_weight_keys[i]
                 ):
                     need_to_transpose.append(all_weight_keys[i])
-        if self.config.model_name == "PPOCRV5Server":
+        if self.config.backbone_name == "PPHGNetV2":
             need_to_transpose.append("backbone.fc.weight")
         return need_to_transpose
 

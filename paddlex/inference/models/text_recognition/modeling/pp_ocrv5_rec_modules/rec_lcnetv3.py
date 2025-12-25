@@ -360,6 +360,7 @@ class LCNetV3Block(nn.Layer):
 class PPLCNetV3(nn.Layer):
     def __init__(
         self,
+        net_config,
         scale=1.0,
         conv_kxk_num=4,
         lr_mult_list=[1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
@@ -369,27 +370,7 @@ class PPLCNetV3(nn.Layer):
         super().__init__()
         self.scale = scale
         self.lr_mult_list = lr_mult_list
-
-        self.net_config = {
-            "blocks2":
-            # k, in_c, out_c, s, use_se
-            [[3, 16, 32, 1, False]],
-            "blocks3": [[3, 32, 64, 1, False], [3, 64, 64, 1, False]],
-            "blocks4": [[3, 64, 128, (2, 1), False], [3, 128, 128, 1, False]],
-            "blocks5": [
-                [3, 128, 256, (1, 2), False],
-                [5, 256, 256, 1, False],
-                [5, 256, 256, 1, False],
-                [5, 256, 256, 1, False],
-                [5, 256, 256, 1, False],
-            ],
-            "blocks6": [
-                [5, 256, 512, (2, 1), True],
-                [5, 512, 512, 1, True],
-                [5, 512, 512, (2, 1), False],
-                [5, 512, 512, 1, False],
-            ],
-        }
+        self.net_config = net_config
 
         assert isinstance(
             self.lr_mult_list, (list, tuple)
