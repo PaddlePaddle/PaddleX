@@ -188,6 +188,7 @@ def read_pdf(
     page_info_list: List[PDFPageInfo] = []
     with _lock:
         doc = pdfium.PdfDocument(bytes_)
+        doc.init_forms()
         try:
             for page in doc:
                 if max_num_imgs is not None and len(images) >= max_num_imgs:
