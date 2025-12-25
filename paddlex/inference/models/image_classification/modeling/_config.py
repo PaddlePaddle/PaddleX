@@ -14,7 +14,11 @@
 
 from ...common.transformers.transformers import PretrainedConfig
 
-BASE_DEFAULT_CONFIG = {
+DEFAULT_CONFIG = {
+    "model_name": "PP-LCNet_x1_0_doc_ori",
+    "scale": 1.0,
+    "class_num": 4,
+    "stride_list": [2, 2, 2, 2, 2],
     "dropout_prob": 0.2,
     "class_expand": 1280,
     "use_last_conv": True,
@@ -37,38 +41,12 @@ BASE_DEFAULT_CONFIG = {
     },
 }
 
-VARIANT_CONFIGS = {
-    "PP-LCNet_x1_0_doc_ori": {
-        "model_name": "PP-LCNet_x1_0_doc_ori",
-        "scale": 1.0,
-        "class_num": 4,
-        "stride_list": [2, 2, 2, 2, 2],
-    },
-    "PP-LCNet_x0_25_textline_ori": {
-        "model_name": "PP-LCNet_x0_25_textline_ori",
-        "scale": 0.25,
-        "class_num": 2,
-        "stride_list": [2, [2, 1], [2, 1], [2, 1], [2, 1]],
-    },
-    "PP-LCNet_x1_0_table_cls": {
-        "model_name": "PP-LCNet_x1_0_table_cls",
-        "scale": 1.0,
-        "class_num": 2,
-        "stride_list": [2, 2, 2, 2, 2],
-    },
-}
-
 
 class PPLCNetConfig(PretrainedConfig):
     model_type = "cls"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-        model_name = kwargs.get("model_name", "none")
-        if model_name not in VARIANT_CONFIGS:
-            raise ValueError(f"model_name {model_name} not exit")
-        DEFAULT_CONFIG = {**BASE_DEFAULT_CONFIG, **VARIANT_CONFIGS[model_name]}
 
         self.model_name = kwargs.get("model_name", DEFAULT_CONFIG["model_name"])
         self.scale = kwargs.get("scale", DEFAULT_CONFIG["scale"])
