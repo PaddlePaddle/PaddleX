@@ -113,6 +113,8 @@ EXTRAS = {
             # Currently `pypdfium2` is required by the image batch sampler
             "pypdfium2",
             "scikit-image",
+            "scipy",
+            "six",
         ],
         "multimodal": [
             "einops",
