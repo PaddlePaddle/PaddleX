@@ -52,7 +52,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     ) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
 
-        log_id = serving_utils.generate_log_id()
+        log_id = request.logId if request.logId else serving_utils.generate_log_id()
         visualize_enabled = (
             request.visualize if request.visualize is not None else ctx.config.visualize
         )
@@ -148,8 +148,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     ) -> AIStudioResultResponse[ConcatenatePagesResult]:
         pipeline = ctx.pipeline
 
-        log_id = serving_utils.generate_log_id()
-
         pages = []
         for page in request.pages:
             pages.append(
@@ -161,7 +159,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         concatenated_text = pipeline.pipeline.concatenate_markdown_pages(pages)
 
         return AIStudioResultResponse[ConcatenatePagesResult](
-            logId=log_id,
+            logId=request.logId if request.logId else serving_utils.generate_log_id(),
             result=ConcatenatePagesResult(
                 text=concatenated_text,
             ),
