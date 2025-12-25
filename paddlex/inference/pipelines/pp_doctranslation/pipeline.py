@@ -488,6 +488,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                     "markdown_texts": target_language_texts,
                 }
             )
+
     def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
         """
         Concatenate Markdown content from multiple pages into a single document.
