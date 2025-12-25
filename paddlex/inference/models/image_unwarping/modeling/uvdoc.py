@@ -18,6 +18,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
+from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
@@ -368,6 +369,9 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
             ),
         )
 
+    add_inference_operations("uvdoc_forward")
+
+    @benchmark.timeit_with_options(name="uvdoc_forward")
     def forward(self, x: Any) -> List[paddle.Tensor]:
         x = paddle.to_tensor(x[0])
 
@@ -404,8 +408,6 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         bm = bm_up.transpose([0, 2, 3, 1])
         out = F.grid_sample(image, bm, align_corners=True)
 
-        print(out)
-        breakpoint()
         return [out.cpu().numpy()]
 
     def _get_forward_key_rules(self):

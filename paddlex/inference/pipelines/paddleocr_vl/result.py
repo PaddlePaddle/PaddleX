@@ -32,6 +32,7 @@ from ..layout_parsing.result_v2 import (
     format_first_line_func,
     format_image_plain_func,
     format_image_scaled_by_html_func,
+    format_para_title_func,
     format_text_plain_func,
     format_title_func,
     simplify_table_func,
@@ -172,7 +173,7 @@ def build_handle_funcs_dict(
         dict: A mapping from block label to handler function.
     """
     return {
-        "paragraph_title": format_title_func,
+        "paragraph_title": format_para_title_func,
         "abstract_title": format_title_func,
         "reference_title": format_title_func,
         "content_title": format_title_func,
@@ -460,6 +461,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             dict: Markdown information with text and images.
         """
+
+        self["doc_preprocessor_res"] = self["doc_preprocessor_res"][0]
+
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
 
         if pretty:

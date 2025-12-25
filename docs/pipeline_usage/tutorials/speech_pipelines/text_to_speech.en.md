@@ -206,7 +206,7 @@ In the above Python script, the following steps are executed:
 
 - Calling the `print()` method will print the result to the terminal, with the printed content explained as follows:
 
-- Calling the `save_to_audio()` method will save the above content to the specified `save_path`. 
+- Calling the `save_to_audio()` method will save the above content to the specified `save_path`.
 
 <!-- 此外，您可以获取 text_to_speech 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
