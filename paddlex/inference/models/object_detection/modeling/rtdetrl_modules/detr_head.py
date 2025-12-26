@@ -17,7 +17,6 @@ from __future__ import absolute_import, division, print_function
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
-import pycocotools.mask as mask_util
 
 from .modules.detr_ops import inverse_sigmoid
 from .modules.initializer import constant_, linear_init_
@@ -265,6 +264,8 @@ class DETRHead(nn.Layer):
 
     @staticmethod
     def get_gt_mask_from_polygons(gt_poly, pad_mask):
+        import pycocotools.mask as mask_util
+
         out_gt_mask = []
         for polygons, padding in zip(gt_poly, pad_mask):
             height, width = int(padding[:, 0].sum()), int(padding[0, :].sum())
