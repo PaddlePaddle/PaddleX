@@ -462,8 +462,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: Markdown information with text and images.
         """
 
-        self["doc_preprocessor_res"] = self["doc_preprocessor_res"][0]
-
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
 
         if pretty:

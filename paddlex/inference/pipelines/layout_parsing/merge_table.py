@@ -28,7 +28,7 @@ def full_to_half(text: str) -> str:
 
 def calculate_table_total_columns(soup):
     """
-    alculate total columns including colspan and rowspan, accounting for merged cells
+    calculate total columns including colspan and rowspan, accounting for merged cells
     """
     rows = soup.find_all("tr")
     if not rows:
