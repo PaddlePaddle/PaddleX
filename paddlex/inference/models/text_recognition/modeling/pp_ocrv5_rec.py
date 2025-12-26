@@ -29,10 +29,10 @@ class PPOCRV5RecConfig(PretrainedConfig):
         self,
         backbone,
         MultiHead,
-    ):  
+    ):
         self.backbone_name = backbone["name"]
         if self.backbone_name == "PPLCNetV3":
-            self.net_config = self.decode_tuple(backbone["net_config"])
+            self.net_config = backbone["net_config"]
             self.scale = backbone["scale"]
             self.conv_kxk_num = backbone["conv_kxk_num"]
             self.lr_mult_list = backbone["lr_mult_list"]
@@ -56,16 +56,6 @@ class PPOCRV5RecConfig(PretrainedConfig):
         self.head_list = MultiHead["head_list"]
         self.decode_list = MultiHead["decode_list"]
         self.tensor_parallel_degree = 1
-    
-    def decode_tuple(self, obj):
-        if isinstance(obj, dict):
-            if "__tuple__" in obj:
-                return tuple(self.decode_tuple(x) for x in obj["__tuple__"])
-            return {k: self.decode_tuple(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [self.decode_tuple(x) for x in obj]
-        else:
-            return obj
 
 
 class PPOCRV5Rec(PretrainedModel):
