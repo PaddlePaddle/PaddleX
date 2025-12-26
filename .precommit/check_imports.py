@@ -87,7 +87,6 @@ MOD_TO_DEP = {
     "sentencepiece": "sentencepiece",
     "sglang": "sglang",
     "shapely": "shapely",
-    "six": "six",
     "soundfile": "soundfile",
     "starlette": "starlette",
     "tiktoken": "tiktoken",
