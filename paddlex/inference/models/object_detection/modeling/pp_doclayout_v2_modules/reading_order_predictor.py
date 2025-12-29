@@ -668,20 +668,6 @@ class ReadingOrderPredictor(nn.Layer):
         self.label_features_projection = nn.Linear(
             self.config["hidden_size"], self.config["hidden_size"]
         )
-        self.visual_features_projection = nn.Linear(256, self.config["hidden_size"])
-
-        self.global_visual_proj = nn.Linear(256, self.config["hidden_size"])
-        self.global_gate = nn.Sequential(
-            nn.Linear(self.config["hidden_size"], self.config["hidden_size"]),
-            nn.Sigmoid(),
-        )
-
-        self.global_agg = BoxGlobalAggregator(
-            d_model=self.config["hidden_size"],
-            nhead=self.config["num_attention_heads"],
-            n_levels=3,
-            n_points=4,
-        )
 
         self.encoder = LayoutLMv3Encoder(self.config)
         self.dropout = nn.Dropout(self.config["hidden_dropout_prob"])
@@ -695,7 +681,7 @@ class ReadingOrderPredictor(nn.Layer):
             max_length=512,
         )
 
-    def forward(self, boxes, labels=None, visual_features_list=None, mask=None):
+    def forward(self, boxes, labels=None, mask=None):
         START_TOKEN_ID = 0
         PRED_TOKEN_ID = 3
         END_TOKEN_ID = 2
@@ -721,11 +707,6 @@ class ReadingOrderPredictor(nn.Layer):
         )
         pad_boxes = paddle.concat([pad_box, boxes, pad_box], axis=1).astype("int64")
         bbox_embedding = self.embeddings(input_ids=input_ids, bbox=pad_boxes)
-
-        if visual_features_list is not None:
-            vf_proj = self.visual_features_projection(visual_features_list)
-        else:
-            vf_proj = paddle.zeros_like(bbox_embedding)
 
         if labels is not None:
 

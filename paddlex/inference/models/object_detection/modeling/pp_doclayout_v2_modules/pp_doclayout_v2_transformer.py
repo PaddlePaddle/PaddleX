@@ -195,7 +195,6 @@ class TransformerDecoder(nn.Layer):
         memory_level_start_index,
         bbox_head,
         score_head,
-        fg_head,
         reading_order_predictor,
         query_pos_head,
         attn_mask=None,
@@ -207,7 +206,6 @@ class TransformerDecoder(nn.Layer):
         output = tgt
         dec_out_bboxes = []
         dec_out_logits = []
-        dec_out_fg_logits = []
 
         ref_points_detach = F.sigmoid(ref_points_unact)
         for i, layer in enumerate(self.layers):
@@ -232,11 +230,9 @@ class TransformerDecoder(nn.Layer):
                 bbox_head[i](output) + inverse_sigmoid(ref_points_detach)
             )
             score_logits = score_head[i](output)
-            fg_logits = fg_head[i](output)
 
             if self.training:
                 dec_out_logits.append(score_logits)
-                dec_out_fg_logits.append(fg_logits)
                 if i == 0:
                     dec_out_bboxes.append(inter_ref_bbox)
                 else:
@@ -247,7 +243,6 @@ class TransformerDecoder(nn.Layer):
                     )
             elif i == self.eval_idx:
                 dec_out_logits.append(score_logits)
-                dec_out_fg_logits.append(fg_logits)
                 dec_out_bboxes.append(inter_ref_bbox)
                 break
 
@@ -338,7 +333,6 @@ class TransformerDecoder(nn.Layer):
             bboxes = bbox_cxcywh_to_xyxy(raw_bboxes).astype("float32") * 1000
             bboxes = paddle.clip(bboxes, min=0.0, max=1000.0).astype("int64")
             logits = paddle.stack(dec_out_logits)[0]  # (batch_size, 300, 1)
-            fg_logits = paddle.stack(dec_out_fg_logits)[0]  # (batch_size, 300, 1)
 
             # 1. 得到每个框最大logit和对应的类别ID
             probs = F.sigmoid(logits)
@@ -373,9 +367,6 @@ class TransformerDecoder(nn.Layer):
             sorted_logits = paddle.take_along_axis(
                 logits, indices.unsqueeze(-1), axis=1
             )  # (batch_size, 300, 1)
-            sorted_fg_logits = paddle.take_along_axis(
-                fg_logits, indices.unsqueeze(-1), axis=1
-            )  # (batch_size, 300, 1)
 
             # 5. 补0
             mask_expand = sorted_mask.unsqueeze(-1).expand(
@@ -390,14 +381,12 @@ class TransformerDecoder(nn.Layer):
             order_logits = reading_order_predictor(  # [B, Nq, C_order] [B, 300, 510]
                 boxes=pad_boxes,
                 labels=pad_class_ids,
-                visual_features_list=None,
                 mask=mask,
             )
             order_logits = order_logits[:, :, :300]
         return (
             sorted_raw_boxes.unsqueeze(axis=0),
             sorted_logits.unsqueeze(axis=0),
-            sorted_fg_logits.unsqueeze(axis=0),
             order_logits,
         )
 
@@ -426,9 +415,6 @@ class PPDocLayoutTransformer(RTDETRTransformer):
         )
         self.decoder = TransformerDecoder(
             self.hidden_dim, decoder_layer, self.num_decoder_layers, eval_idx
-        )
-        self.dec_fg_head = nn.LayerList(
-            [nn.Linear(self.hidden_dim, 1) for _ in range(self.num_decoder_layers)]
         )
         self.reading_order_predictor = ReadingOrderPredictor()
 
@@ -468,7 +454,7 @@ class PPDocLayoutTransformer(RTDETRTransformer):
         )
 
         # decoder
-        out_bboxes, out_logits, out_fg_logits, out_read_orders = self.decoder(
+        out_bboxes, out_logits, out_read_orders = self.decoder(
             target,
             init_ref_points_unact,
             memory,
@@ -476,7 +462,6 @@ class PPDocLayoutTransformer(RTDETRTransformer):
             level_start_index,
             self.dec_bbox_head,
             self.dec_score_head,
-            self.dec_fg_head,
             self.reading_order_predictor,
             self.query_pos_head,
             attn_mask=attn_mask,

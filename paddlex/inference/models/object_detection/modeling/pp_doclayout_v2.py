@@ -216,31 +216,12 @@ class PPDocLayoutV2(RTDETR):
     def get_transpose_weight_keys(self):
         t_layers = [
             "fc",
-            "channelwise",
-            "mapper_crp",
-            "mapper_sca",
-            ".mapper.",
-            "txt_mapper",
-            "txt_pooled_mapper",
-            "clip_img_mapper",
-            "kv_mapper",
-            "clip_mapper",
             "out_proj",
-            # "patch_embedding",
             "q_proj",
             "k_proj",
             "v_proj",
-            "lm_head",
-            "gate_proj",
-            "up_proj",
-            "down_proj",
-            "o_proj",
-            "lm_head",
             "linear_1",
             "linear_2",
-            # doclayout
-            "dec_bbox_head",
-            "dec_score_head",
             "enc_bbox_head",
             "spatial_proj",
             "query",
@@ -249,19 +230,17 @@ class PPDocLayoutV2(RTDETR):
             "intermediate",
             "attention",
             "output",
-            "global_agg",
-            "visual_features_projection",
             "relative_head",
-            "global_visual_proj",
             "query_pos_head",
             "enc_score_head",
-            "cross_attn",
-            "out_proj",
             "in_proj_weight",
             "linear1",
             "linear2",
             "label_features_projection",
             "reading_order_predictor.encoder.layer",
+            "encoder_attn",
+            "decoder.bbox_embed",
+            "decoder.class_embed",
         ]
         keys = []
         for key, _ in self.get_hf_state_dict().items():
@@ -270,12 +249,216 @@ class PPDocLayoutV2(RTDETR):
                     t_layer in key
                     and key.endswith("weight")
                     and "LayerNorm" not in key
+                    and "layer_norm" not in key
                     and "enc_output.1" not in key
                 ):
-                    # if "enc_output" in key:
-                    # breakpoint()
                     keys.append(key)
 
         return keys
 
-    # def get_hf_state_dict(self):
+    def set_hf_state_dict(self, state_dict, *args, **kwargs):
+        import re
+
+        mapping = {
+            # --- Backbone ---
+            r"model.backbone.model.embedder.stem(\d+)a.normalization": r"backbone.stem.stem\1a.bn",
+            r"model.backbone.model.embedder.stem(\d+)b.normalization": r"backbone.stem.stem\1b.bn",
+            r"model.backbone.model.embedder.stem(\d+)a.convolution": r"backbone.stem.stem\1a.conv",
+            r"model.backbone.model.embedder.stem(\d+)b.convolution": r"backbone.stem.stem\1b.conv",
+            r"model.backbone.model.embedder.stem(\d+).normalization": r"backbone.stem.stem\1.bn",
+            r"model.backbone.model.embedder.stem(\d+).convolution": r"backbone.stem.stem\1.conv",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).layers.(\d+).conv(\d+).normalization": r"backbone.stages.\1.blocks.\2.layers.\3.conv\4.bn",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).layers.(\d+).conv(\d+).convolution": r"backbone.stages.\1.blocks.\2.layers.\3.conv\4.conv",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).layers.(\d+).normalization": r"backbone.stages.\1.blocks.\2.layers.\3.bn",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).layers.(\d+).convolution": r"backbone.stages.\1.blocks.\2.layers.\3.conv",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).aggregation.0.normalization": r"backbone.stages.\1.blocks.\2.aggregation_squeeze_conv.bn",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).aggregation.0.convolution": r"backbone.stages.\1.blocks.\2.aggregation_squeeze_conv.conv",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).aggregation.1.convolution": r"backbone.stages.\1.blocks.\2.aggregation_excitation_conv.conv",
+            r"model.backbone.model.encoder.stages.(\d+).blocks.(\d+).aggregation.1.normalization": r"backbone.stages.\1.blocks.\2.aggregation_excitation_conv.bn",
+            r"model.backbone.model.encoder.stages.(\d+).downsample.normalization": r"backbone.stages.\1.downsample.bn",
+            r"model.backbone.model.encoder.stages.(\d+).downsample.convolution": r"backbone.stages.\1.downsample.conv",
+            # --- Decoder ---
+            r"model.decoder_input_proj.(\d+).0": r"transformer.input_proj.\1.conv",
+            r"model.decoder_input_proj.(\d+).1": r"transformer.input_proj.\1.norm",
+            r"model.decoder.layers.(\d+).self_attn_layer_norm": r"transformer.decoder.layers.\1.norm1",
+            r"model.decoder.layers.(\d+).encoder_attn_layer_norm": r"transformer.decoder.layers.\1.norm2",
+            r"model.decoder.layers.(\d+).final_layer_norm": r"transformer.decoder.layers.\1.norm3",
+            r"model.decoder.layers.(\d+).encoder_attn": r"transformer.decoder.layers.\1.cross_attn",
+            r"model.decoder.layers.(\d+).fc(\d+)": r"transformer.decoder.layers.\1.linear\2",
+            # --- Encoder ---
+            r"model.encoder.encoder.(\d+).layers.(\d+).self_attn_layer_norm": r"neck.encoder.\1.layers.\2.norm1",
+            r"model.encoder.encoder.(\d+).layers.(\d+).final_layer_norm": r"neck.encoder.\1.layers.\2.norm2",
+            r"model.encoder.encoder.(\d+).layers.(\d+).fc(\d+)": r"neck.encoder.\1.layers.\2.linear\3",
+            r"model.encoder.encoder.(\d+).layers.(\d+).fc(\d+).bias": r"neck.encoder.\1.layers.\2.norm\3.bias",
+            r"model.encoder.fpn_blocks.(\d+).bottlenecks.(\d+).conv(\d+).norm": r"neck.fpn_blocks.\1.bottlenecks.\2.conv\3.bn",
+            r"model.encoder.pan_blocks.(\d+).bottlenecks.(\d+).conv(\d+).norm": r"neck.pan_blocks.\1.bottlenecks.\2.conv\3.bn",
+            r"model.encoder.fpn_blocks.(\d+).bottlenecks.(\d+).conv(\d+).conv": r"neck.fpn_blocks.\1.bottlenecks.\2.conv\3.conv",
+            r"model.encoder.pan_blocks.(\d+).bottlenecks.(\d+).conv(\d+).conv": r"neck.pan_blocks.\1.bottlenecks.\2.conv\3.conv",
+            r"model.encoder.fpn_blocks.(\d+).conv(\d+).norm": r"neck.fpn_blocks.\1.conv\2.bn",
+            r"model.encoder.pan_blocks.(\d+).conv(\d+).norm": r"neck.pan_blocks.\1.conv\2.bn",
+            r"model.encoder.lateral_convs.(\d+).norm": r"neck.lateral_convs.\1.bn",
+            r"model.encoder.downsample_convs.(\d+).norm": r"neck.downsample_convs.\1.bn",
+            # --- General ---
+            "model.backbone.model.encoder.stages": "backbone.stages",
+            "model.decoder.layers": "transformer.decoder.layers",
+            "model.decoder.bbox_embed": "transformer.dec_bbox_head",
+            "model.decoder.class_embed": "transformer.dec_score_head",
+            "model.decoder.query_pos_head": "transformer.query_pos_head",
+            "reading_order": "transformer.reading_order_predictor",
+            "model.encoder_input_proj": "neck.input_proj",
+            "model.encoder": "neck",
+            "model": "transformer",
+        }
+
+        def _convert_key(key):
+            for pattern, replacement in mapping.items():
+                new_key, n = re.subn(pattern, replacement, key)
+                if n > 0:
+                    return new_key
+            return key
+
+        def _convert_state_dict(state_dict):
+            keys = state_dict.keys()
+            new_tensors = {}
+            for key in keys:
+                tensor = state_dict[key]
+                new_key = _convert_key(key)
+
+                if "q_proj.weight" in new_key or "q_proj.bias" in new_key:
+                    k_proj = state_dict.get(key.replace("q_proj", "k_proj"), None)
+                    v_proj = state_dict.get(key.replace("q_proj", "v_proj"), None)
+                    if k_proj is not None and v_proj is not None:
+                        merged_tensor = paddle.cat([tensor, k_proj, v_proj], dim=-1)
+                        merged_key = new_key.replace("q_proj.", "in_proj_")
+                        new_tensors[merged_key] = merged_tensor
+                else:
+                    new_tensors[new_key] = tensor
+
+            return new_tensors
+
+        state_dict = _convert_state_dict(state_dict)
+        key_mapping = {}
+        rules = self._get_reverse_key_rules()
+        for old_key in list(state_dict.keys()):
+            for match_key, old_sub, new_sub in rules:
+                if match_key in old_key:
+                    key_mapping[old_key] = old_key.replace(old_sub, new_sub)
+                    break
+        for old_key, new_key in key_mapping.items():
+            state_dict[new_key] = state_dict.pop(old_key)
+
+        return self.set_state_dict(state_dict, *args, **kwargs)
+
+    def get_hf_state_dict(self, *args, **kwargs):
+        import re
+
+        mapping = {
+            # --- Backbone ---
+            r"backbone\.stem\.stem(\d+)a\.bn": r"model.backbone.model.embedder.stem\1a.normalization",
+            r"backbone\.stem\.stem(\d+)b\.bn": r"model.backbone.model.embedder.stem\1b.normalization",
+            r"backbone\.stem\.stem(\d+)a\.conv": r"model.backbone.model.embedder.stem\1a.convolution",
+            r"backbone\.stem\.stem(\d+)b\.conv": r"model.backbone.model.embedder.stem\1b.convolution",
+            r"backbone\.stem\.stem(\d+)\.bn": r"model.backbone.model.embedder.stem\1.normalization",
+            r"backbone\.stem\.stem(\d+)\.conv": r"model.backbone.model.embedder.stem\1.convolution",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.layers\.(\d+)\.conv(\d+)\.bn": r"model.backbone.model.encoder.stages.\1.blocks.\2.layers.\3.conv\4.normalization",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.layers\.(\d+)\.conv(\d+)\.conv": r"model.backbone.model.encoder.stages.\1.blocks.\2.layers.\3.conv\4.convolution",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.layers\.(\d+)\.bn": r"model.backbone.model.encoder.stages.\1.blocks.\2.layers.\3.normalization",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.layers\.(\d+)\.conv\b": r"model.backbone.model.encoder.stages.\1.blocks.\2.layers.\3.convolution",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.aggregation_squeeze_conv\.bn": r"model.backbone.model.encoder.stages.\1.blocks.\2.aggregation.0.normalization",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.aggregation_squeeze_conv\.conv": r"model.backbone.model.encoder.stages.\1.blocks.\2.aggregation.0.convolution",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.aggregation_excitation_conv\.conv": r"model.backbone.model.encoder.stages.\1.blocks.\2.aggregation.1.convolution",
+            r"backbone\.stages\.(\d+)\.blocks\.(\d+)\.aggregation_excitation_conv\.bn": r"model.backbone.model.encoder.stages.\1.blocks.\2.aggregation.1.normalization",
+            r"backbone\.stages\.(\d+)\.downsample\.bn": r"model.backbone.model.encoder.stages.\1.downsample.normalization",
+            r"backbone\.stages\.(\d+)\.downsample\.conv": r"model.backbone.model.encoder.stages.\1.downsample.convolution",
+            # --- Decoder ---
+            r"transformer\.input_proj\.(\d+)\.conv": r"model.decoder_input_proj.\1.0",
+            r"transformer\.input_proj\.(\d+)\.norm": r"model.decoder_input_proj.\1.1",
+            r"transformer\.decoder\.layers\.(\d+)\.norm1": r"model.decoder.layers.\1.self_attn_layer_norm",
+            r"transformer\.decoder\.layers\.(\d+)\.norm2": r"model.decoder.layers.\1.encoder_attn_layer_norm",
+            r"transformer\.decoder\.layers\.(\d+)\.norm3": r"model.decoder.layers.\1.final_layer_norm",
+            r"transformer\.decoder\.layers\.(\d+)\.cross_attn": r"model.decoder.layers.\1.encoder_attn",
+            r"transformer\.decoder\.layers\.(\d+)\.linear(\d+)": r"model.decoder.layers.\1.fc\2",
+            # --- Encoder ---
+            r"neck\.encoder\.(\d+)\.layers\.(\d+)\.norm1": r"model.encoder.encoder.\1.layers.\2.self_attn_layer_norm",
+            r"neck\.encoder\.(\d+)\.layers\.(\d+)\.norm2": r"model.encoder.encoder.\1.layers.\2.final_layer_norm",
+            r"neck\.encoder\.(\d+)\.layers\.(\d+)\.linear(\d+)": r"model.encoder.encoder.\1.layers.\2.fc\3",
+            r"neck\.encoder\.(\d+)\.layers\.(\d+)\.norm(\d+)\.bias": r"model.encoder.encoder.\1.layers.\2.fc\3.bias",
+            r"neck\.fpn_blocks\.(\d+)\.bottlenecks\.(\d+)\.conv(\d+)\.bn": r"model.encoder.fpn_blocks.\1.bottlenecks.\2.conv\3.norm",
+            r"neck\.pan_blocks\.(\d+)\.bottlenecks\.(\d+)\.conv(\d+)\.bn": r"model.encoder.pan_blocks.\1.bottlenecks.\2.conv\3.norm",
+            r"neck\.fpn_blocks\.(\d+)\.bottlenecks\.(\d+)\.conv(\d+)\.conv": r"model.encoder.fpn_blocks.\1.bottlenecks.\2.conv\3.conv",
+            r"neck\.pan_blocks\.(\d+)\.bottlenecks\.(\d+)\.conv(\d+)\.conv": r"model.encoder.pan_blocks.\1.bottlenecks.\2.conv\3.conv",
+            r"neck\.fpn_blocks\.(\d+)\.conv(\d+)\.bn": r"model.encoder.fpn_blocks.\1.conv\2.norm",
+            r"neck\.pan_blocks\.(\d+)\.conv(\d+)\.bn": r"model.encoder.pan_blocks.\1.conv\2.norm",
+            r"neck\.lateral_convs\.(\d+)\.bn": r"model.encoder.lateral_convs.\1.norm",
+            r"neck\.downsample_convs\.(\d+)\.bn": r"model.encoder.downsample_convs.\1.norm",
+            # --- General ---
+            "backbone.stages": "model.backbone.model.encoder.stages",
+            "transformer.decoder.layers": "model.decoder.layers",
+            "transformer.dec_bbox_head": "model.decoder.bbox_embed",
+            "transformer.dec_score_head": "model.decoder.class_embed",
+            "transformer.query_pos_head": "model.decoder.query_pos_head",
+            "transformer.reading_order_predictor": "reading_order",
+            "transformer": "model",
+            "neck.input_proj": "model.encoder_input_proj",
+            "neck": "model.encoder",
+        }
+
+        def _convert_key(key):
+            for pattern, replacement in mapping.items():
+                new_key, n = re.subn(pattern, replacement, key)
+                if n > 0:
+                    return new_key
+            return key
+
+        def _split_linear(tensor, key):
+            encoder_hidden_dim = 256
+            if "in_proj_weight" in key:
+                q = key.replace("in_proj_weight", "q_proj.weight")
+                q_tensor = tensor[:encoder_hidden_dim, :].clone()
+                k = key.replace("in_proj_weight", "k_proj.weight")
+                k_tensor = tensor[
+                    encoder_hidden_dim : 2 * encoder_hidden_dim, :
+                ].clone()
+                v = key.replace("in_proj_weight", "v_proj.weight")
+                v_tensor = tensor[-encoder_hidden_dim:, :].clone()
+            elif "in_proj_bias" in key:
+                q = key.replace("in_proj_bias", "q_proj.bias")
+                q_tensor = tensor[:encoder_hidden_dim].clone()
+                k = key.replace("in_proj_bias", "k_proj.bias")
+                k_tensor = tensor[encoder_hidden_dim : 2 * encoder_hidden_dim].clone()
+                v = key.replace("in_proj_bias", "v_proj.bias")
+                v_tensor = tensor[-encoder_hidden_dim:].clone()
+
+            return q, k, v, q_tensor, k_tensor, v_tensor
+
+        def _convert_state_dict(current_state_dict):
+            keys = current_state_dict.keys()
+            new_tensors = {}
+            for key in keys:
+                tensor = current_state_dict[key]
+                new_key = _convert_key(key)
+
+                if "in_proj_weight" in new_key or "in_proj_bias" in new_key:
+                    q, k, v, q_tensor, k_tensor, v_tensor = _split_linear(
+                        tensor, new_key
+                    )
+                    new_tensors[q] = q_tensor
+                    new_tensors[k] = k_tensor
+                    new_tensors[v] = v_tensor
+                else:
+                    new_tensors[new_key] = tensor
+            return new_tensors
+
+        model_state_dict = self.state_dict(*args, **kwargs)
+        hf_state_dict = {}
+        rules = self._get_forward_key_rules()
+        for old_key, value in model_state_dict.items():
+            new_key = old_key
+            for match_key, old_sub, new_sub in rules:
+                if match_key in old_key:
+                    new_key = old_key.replace(old_sub, new_sub)
+                    break
+            hf_state_dict[new_key] = value
+
+        hf_state_dict = _convert_state_dict(hf_state_dict)
+        return hf_state_dict
