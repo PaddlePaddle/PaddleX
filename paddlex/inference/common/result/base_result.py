@@ -15,12 +15,61 @@
 import inspect
 import random
 import time
+import weakref
+from collections import UserList
 from pathlib import Path
 
 import numpy as np
 
 from ....utils import logging
 from .mixin import JsonMixin, StrMixin
+
+
+class CopyableWeakMethod(weakref.WeakMethod):
+    """
+    A weak method that can be deep copied.
+    """
+
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memo):
+        return self.__copy__()
+
+
+class AutoWeakList(UserList):
+    """
+    A list that automatically removes weak references to items.
+    """
+
+    def append(self, item):
+        """
+        Append item to list.
+        If item is a bound method, append a weak reference to the method.
+        Otherwise, append the item itself.
+        """
+        if inspect.ismethod(item):
+            super().append(CopyableWeakMethod(item))
+        else:
+            super().append(item)
+
+    def __iter__(self):
+        """Iterate over items in the list."""
+        for item in self.data:
+            if isinstance(item, CopyableWeakMethod):
+                func = item()
+                if func is not None:
+                    yield func
+            else:
+                yield item
+
+    def __getitem__(self, index):
+        """Get item at index."""
+        item = super().__getitem__(index)
+        if isinstance(item, CopyableWeakMethod):
+            func = item()
+            return func
+        return item
 
 
 class BaseResult(dict, JsonMixin, StrMixin):
@@ -36,7 +85,7 @@ class BaseResult(dict, JsonMixin, StrMixin):
             data (dict): The initial data.
         """
         super().__init__(data)
-        self._save_funcs = []
+        self._save_funcs = AutoWeakList()
         StrMixin.__init__(self)
         JsonMixin.__init__(self)
         np.set_printoptions(threshold=1, edgeitems=1)

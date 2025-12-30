@@ -35,6 +35,7 @@
 
 # TODO: Weight initialization
 
+import platform
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
@@ -42,9 +43,14 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....common.vlm.activations import ACT2FN
-from ....common.vlm.transformers import PretrainedModel
-from ....common.vlm.transformers.model_outputs import (
+from ......utils.env import (
+    get_device_type,
+    get_gpu_compute_capability,
+    get_paddle_cuda_version,
+)
+from ....common.transformers.activations import ACT2FN
+from ....common.transformers.transformers import PretrainedModel
+from ....common.transformers.transformers.model_outputs import (
     BaseModelOutput,
     BaseModelOutputWithPooling,
 )
@@ -100,15 +106,22 @@ def eager_attention_forward(
     dropout: float = 0.0,
     **kwargs,
 ):
-    attn_weights = paddle.matmul(query, key.transpose((0, 1, 3, 2))) * scaling
+    origin_dtype = query.dtype
+
+    attn_weights = paddle.matmul(x=query.scale(scaling), y=key, transpose_y=True)
+    attn_weights = attn_weights.cast(paddle.float32)
+
     if attention_mask is not None:
+        attnetion_mask = attention_mask.cast(paddle.float32)
         attn_weights = attn_weights + attention_mask
 
-    attn_weights = F.softmax(attn_weights, axis=-1, dtype="float32").astype(query.dtype)
+    attn_weights = F.softmax(attn_weights, axis=-1)
+    attn_weights = attn_weights.cast(origin_dtype)
+
     attn_weights = F.dropout(attn_weights, p=dropout, training=module.training)
 
     attn_output = paddle.matmul(attn_weights, value)
-    attn_output = attn_output.transpose((0, 2, 1, 3)).contiguous()
+    attn_output = attn_output.transpose((0, 2, 1, 3))
 
     return attn_output, attn_weights
 
@@ -130,6 +143,20 @@ class SiglipAttention(nn.Layer):
         self.q_proj = nn.Linear(self.embed_dim, self.embed_dim)
         self.out_proj = nn.Linear(self.embed_dim, self.embed_dim)
 
+        cap = get_gpu_compute_capability()
+        cuda_ver = get_paddle_cuda_version()
+        self._supports_sdpa = False
+        if (
+            cap is not None
+            and cap >= (8, 0)
+            and cuda_ver is not None
+            and cuda_ver >= (11, 4)
+            and platform.system() == "Linux"
+        ):
+            self._supports_sdpa = True
+        if get_device_type() == "iluvatar_gpu":
+            self._supports_sdpa = True
+
     def forward(
         self,
         hidden_states: paddle.Tensor,  # [B, L, D]
@@ -138,6 +165,9 @@ class SiglipAttention(nn.Layer):
         cu_seqlens: Optional[List[paddle.Tensor]] = None,
         rope_emb: Optional[Tuple[paddle.Tensor, paddle.Tensor]] = None,  # (cos, sin)
     ):
+        if output_attentions:
+            raise NotImplementedError
+
         B, L, D = hidden_states.shape
 
         q = self.q_proj(hidden_states)
@@ -145,7 +175,6 @@ class SiglipAttention(nn.Layer):
         v = self.v_proj(hidden_states)
 
         # [B, L, H, Dh]
-
         q = q.reshape([B, L, self.num_heads, self.head_dim])
         k = k.reshape([B, L, self.num_heads, self.head_dim])
         v = v.reshape([B, L, self.num_heads, self.head_dim])
@@ -153,29 +182,38 @@ class SiglipAttention(nn.Layer):
             cos, sin = rope_emb
             q, k = apply_rotary_pos_emb_vision(q, k, cos, sin)
 
-        # → [B, H, L, Dh]
-        q = q.transpose([0, 2, 1, 3])
-        k = k.transpose([0, 2, 1, 3])
-        v = v.transpose([0, 2, 1, 3])
+        if not self._supports_sdpa or q.dtype == paddle.float32:
+            # → [B, H, L, Dh]
+            q = q.transpose([0, 2, 1, 3])
+            k = k.transpose([0, 2, 1, 3])
+            v = v.transpose([0, 2, 1, 3])
 
-        attn_output, attn_weights = eager_attention_forward(
-            self,
-            q,
-            k,
-            v,
-            attention_mask,
-            is_causal=self.is_causal,
-            scaling=self.scale,
-            dropout=0.0 if not self.training else self.dropout,
-        )
-        attn_output = attn_output.reshape([B, L, D]).contiguous()
+            attn_output, _ = eager_attention_forward(
+                self,
+                q,
+                k,
+                v,
+                attention_mask,
+                is_causal=self.is_causal,
+                scaling=self.scale,
+                dropout=0.0 if not self.training else self.dropout,
+            )
+            attn_output = attn_output.reshape([B, L, D])
+        else:
+            attn_output = paddle.nn.functional.scaled_dot_product_attention(
+                q,
+                k,
+                v,
+                attention_mask,
+                dropout_p=self.dropout,
+                is_causal=self.is_causal,
+                training=self.training,
+            )
+        attn_output = attn_output.reshape([B, L, D])
 
         attn_output = self.out_proj(attn_output)
 
-        if not output_attentions:
-            attn_weights = None
-
-        return attn_output, attn_weights
+        return attn_output, None
 
 
 class SiglipVisionEmbeddings(nn.Layer):

@@ -54,6 +54,11 @@ A：可以：
 2. 设置全局预训练模型缓存路径，例如：`paddlex.pretrain_dir='/usrname/paddlex'`，已下载模型将不会重复下载。
 
 
+## <b>Q：每次导入`paddlex`都会卡住一会，为什么？</b>
+
+1. 因为每次启动，`paddlex`会默认自动测试模型托管平台的网络联通性（包括huggingface、aistudio、modelscope），以确定后续自动下载模型时选择哪个平台；
+2. 如果确定使用本地模型，不需要测试检查，可以设置环境变量`PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=1`来禁用；
+
 
 ## <b>Q：当我在使用PaddleX的过程中遇到问题，应该怎样反馈呢？</b>
 

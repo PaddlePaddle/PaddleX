@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .base_audio_result import BaseAudioResult
 from .base_cv_result import BaseCVResult
 from .base_result import BaseResult
 from .base_ts_result import BaseTSResult

@@ -1,0 +1,33 @@
+pipeline_name: text_to_speech
+
+SubModules:
+  TextToPinyin:
+    module_name: text_to_pinyin
+    model_name: G2PWModel
+    model_dir: null
+    batch_size: 1   
+    device: gpu:0
+    use_trt: False
+    use_mkldnn: False
+    cpu_threads: 1
+    precision: "fp32"
+  TextToSpeechAcoustic:
+    module_name: text_to_speech_acoustic
+    model_name: fastspeech2_csmsc
+    model_dir: null
+    batch_size: 1   
+    device: gpu:0
+    use_trt: False
+    use_mkldnn: False
+    cpu_threads: 1
+    precision: "fp32"
+  TextToSpeechVocoder:
+    module_name: text_to_speech_vocoder
+    model_name: pwgan_csmsc
+    model_dir: null
+    batch_size: 1   
+    device: gpu:0
+    use_trt: False
+    use_mkldnn: False
+    cpu_threads: 1
+    precision: "fp32"

@@ -43,5 +43,5 @@ MODELS = [
     "cyrillic_PP-OCRv5_mobile_rec",
     "devanagari_PP-OCRv5_mobile_rec",
     "ta_PP-OCRv5_mobile_rec",
-    "te_PP-OCRv5_mobile_rec"
+    "te_PP-OCRv5_mobile_rec",
 ]

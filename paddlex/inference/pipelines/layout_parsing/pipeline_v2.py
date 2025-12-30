@@ -31,9 +31,12 @@ from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
+from ..pp_doctranslation.result import MarkdownResult
 from .layout_objects import LayoutBlock, LayoutRegion
-from .result_v2 import LayoutParsingResultV2
+from .merge_table import merge_tables_across_pages
+from .result_v2 import LayoutParsingResultV2, ProcessedLayoutParsingResult
 from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
+from .title_level import assign_levels_to_parsing_res
 from .utils import (
     calculate_bbox_area,
     calculate_minimum_enclosing_bbox,
@@ -41,6 +44,7 @@ from .utils import (
     convert_formula_res_to_ocr_format,
     gather_imgs,
     get_bbox_intersection,
+    get_seg_flag,
     get_sub_regions_ocr_res,
     remove_overlap_blocks,
     shrink_supplement_region_bbox,
@@ -214,6 +218,18 @@ class _LayoutParsingPipelineV2(BasePipeline):
         )
         self.chart_recognition_model = self.create_model(
             chart_recognition_config,
+        )
+        self.markdown_ignore_labels = config.get(
+            "markdown_ignore_labels",
+            [
+                "number",
+                "footnote",
+                "header",
+                "header_image",
+                "footer",
+                "footer_image",
+                "aside_text",
+            ],
         )
 
         return
@@ -791,6 +807,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         chart_res_list: list,
         formula_res_list: list,
         text_rec_score_thresh: Union[float, None] = None,
+        markdown_ignore_labels: List[str] = [],
     ) -> list:
         """
         Retrieves the layout parsing result based on the layout detection result, OCR result, and other recognition results.
@@ -836,9 +853,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
         parsing_res_list = self.sort_layout_parsing_blocks(layout_parsing_page)
 
         order_index = 1
+        visualize_order_labels = [
+            label
+            for label in BLOCK_LABEL_MAP["visualize_index_labels"]
+            if label not in markdown_ignore_labels
+        ]
         for index, block in enumerate(parsing_res_list):
             block.index = index
-            if block.label in BLOCK_LABEL_MAP["visualize_index_labels"]:
+            if block.label in visualize_order_labels:
                 block.order_index = order_index
                 order_index += 1
 
@@ -854,6 +876,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
         format_block_content: Union[bool, None],
+        markdown_ignore_labels: Optional[list[str]] = None,
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -896,6 +919,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
         if format_block_content is None:
             format_block_content = self.format_block_content
 
+        if markdown_ignore_labels is None:
+            markdown_ignore_labels = self.markdown_ignore_labels
+
         return dict(
             use_doc_preprocessor=use_doc_preprocessor,
             use_seal_recognition=use_seal_recognition,
@@ -904,6 +930,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_chart_recognition=use_chart_recognition,
             use_region_detection=use_region_detection,
             format_block_content=format_block_content,
+            markdown_ignore_labels=markdown_ignore_labels,
         )
 
     def predict(
@@ -940,6 +967,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_ocr_results_with_table_cells: bool = True,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
+        markdown_ignore_labels: Optional[list[str]] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -982,6 +1010,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_ocr_results_with_table_cells (bool): Whether to use OCR results processed by table cells.
             use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
             use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
+            markdown_ignore_labels (Optional[list[str]]): The list of ignored markdown labels. Default is None.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -996,6 +1025,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             use_chart_recognition,
             use_region_detection,
             format_block_content,
+            markdown_ignore_labels,
         )
 
         if not self.check_model_settings_valid(model_settings):
@@ -1204,6 +1234,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             for (
                 input_path,
                 page_index,
+                page_count,
                 doc_preprocessor_image,
                 doc_preprocessor_res,
                 layout_det_res,
@@ -1216,6 +1247,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             ) in zip(
                 batch_data.input_paths,
                 batch_data.page_indexes,
+                batch_data.page_counts,
                 doc_preprocessor_images,
                 doc_preprocessor_results,
                 layout_det_results,
@@ -1252,6 +1284,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     chart_res_list=chart_res_list,
                     formula_res_list=formula_res_list,
                     text_rec_score_thresh=text_rec_score_thresh,
+                    markdown_ignore_labels=model_settings["markdown_ignore_labels"],
                 )
 
                 for formula_res in formula_res_list:
@@ -1263,6 +1296,9 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 single_img_res = {
                     "input_path": input_path,
                     "page_index": page_index,
+                    "page_count": page_count,
+                    "width": doc_preprocessor_image.shape[1],
+                    "height": doc_preprocessor_image.shape[0],
                     "doc_preprocessor_res": doc_preprocessor_res,
                     "layout_det_res": layout_det_res,
                     "region_det_res": region_det_res,
@@ -1330,7 +1366,144 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 page_last_element_paragraph_end_flag
             )
 
-        return markdown_texts
+        markdown_result = {"markdown_texts": markdown_texts}
+
+        return MarkdownResult(markdown_result)
+
+    def merge_text_across_page(self, blocks_by_page):
+
+        merged_blocks_by_page = []
+
+        global_prev_block = None
+
+        global_block_id = 0
+
+        for page_index, one_page_blocks in enumerate(blocks_by_page):
+            current_page_new_blocks = []
+
+            prev_block = None
+
+            for block in one_page_blocks:
+
+                setattr(block, "group_id", global_block_id)
+
+                seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
+
+                prev_block = block
+
+                is_text = block.label == "text"
+                prev_is_text = (
+                    global_prev_block is not None and global_prev_block.label == "text"
+                )
+
+                if is_text and prev_is_text and not seg_start_flag:
+
+                    prev_text = global_prev_block.content
+                    curr_text = block.content
+
+                    last_char = prev_text[-1] if prev_text else ""
+                    first_char = curr_text[0] if curr_text else ""
+
+                    is_last_chinese = re.match(r"[\u4e00-\u9fff]", last_char)
+                    is_first_chinese = re.match(r"[\u4e00-\u9fff]", first_char)
+
+                    separator = ""
+                    if (
+                        not (is_last_chinese or is_first_chinese)
+                        and last_char
+                        and first_char
+                    ):
+                        separator = " "
+
+                    global_prev_block.content += separator + curr_text
+
+                    setattr(block, "group_id", global_prev_block.group_id)
+
+                else:
+                    # after merge, block don't add to current page
+                    current_page_new_blocks.append(block)
+
+                    global_prev_block = block
+
+                global_block_id += 1
+
+            merged_blocks_by_page.append(current_page_new_blocks)
+
+        return merged_blocks_by_page
+
+    def concatenate_pages(
+        self,
+        res_list: list,
+        merge_table: bool = True,
+        title_level: bool = True,
+    ):
+        """Concatenate layout parsing results from multiple pages.
+
+        Args:
+            res_list: List of page parsing results
+            merge_talble: Whether to merge tables across pages
+            title_level: Whether to assign title levels
+
+        Returns:
+            ProcessedLayoutParsingResult: Combined parsing result after merge_table or title_level policy
+        """
+        # Initialize result data structure
+        layout_parsing_result = {
+            "input_path": [],
+            "page_index": [],
+            "page_count": [],
+            "width": [],
+            "height": [],
+            "parsing_res_list": [],
+            "doc_preprocessor_res": [],
+            "layout_det_res": [],
+            "region_det_res": [],
+            "overall_ocr_res": [],
+            "table_res_list": [],
+            "seal_res_list": [],
+            "chart_res_list": [],
+            "formula_res_list": [],
+            "imgs_in_doc": [],
+            "model_settings": [],
+        }
+
+        blocks_by_page = []
+
+        for idx, single_img_res in enumerate(res_list):
+
+            layout_parsing_result["parsing_res_list"].extend(
+                single_img_res.get("parsing_res_list", [])
+            )
+
+            blocks_by_page.append(single_img_res.get("parsing_res_list", []))
+
+            for key, value in single_img_res.items():
+                if key == "parsing_res_list":
+                    continue
+
+                if key not in layout_parsing_result:
+                    layout_parsing_result[key] = []
+
+                if isinstance(value, (list, tuple, set)):
+                    layout_parsing_result[key].extend(list(value))
+                else:
+                    layout_parsing_result[key].append(value)
+
+            for block in single_img_res["parsing_res_list"]:
+                setattr(block, "page_index", idx)
+
+        if merge_table:
+            blocks_by_page = merge_tables_across_pages(blocks_by_page)
+        if title_level:
+            blocks_by_page = assign_levels_to_parsing_res(
+                blocks_by_page, layout_parsing_result["layout_det_res"]
+            )
+
+        layout_parsing_result["parsing_res_list"] = self.merge_text_across_page(
+            blocks_by_page
+        )
+
+        return ProcessedLayoutParsingResult(layout_parsing_result)
 
 
 @pipeline_requires_extra("ocr")

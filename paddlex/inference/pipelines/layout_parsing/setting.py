@@ -83,6 +83,13 @@ BLOCK_LABEL_MAP = {
         "abstract_title",
         "refer_title",
         "content_title",
+        "number",
+        "footnote",
+        "header",
+        "header_image",
+        "footer",
+        "footer_image",
+        "aside_text",
     ],
     "image_labels": ["image", "figure"],
 }

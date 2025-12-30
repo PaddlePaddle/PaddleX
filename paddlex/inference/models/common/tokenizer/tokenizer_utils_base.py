@@ -36,6 +36,8 @@ from typing import (
 import numpy as np
 
 from .....utils import logging
+from .....utils.cache import CACHE_DIR
+from .....utils.download import download
 
 __all__ = [
     "AddedToken",
@@ -1661,7 +1663,15 @@ class PretrainedTokenizerBase(SpecialTokensMixin):
         resolved_vocab_files = {}
         for file_id, file_path in vocab_files.items():
             # adapt to PaddleX
-            resolved_vocab_files[file_id] = file_path
+            if file_path is None or os.path.isfile(file_path):
+                resolved_vocab_files[file_id] = file_path
+                continue
+            else:
+                download_path = os.path.join(
+                    CACHE_DIR, "official_models", pretrained_model_name_or_path, file_id
+                )
+                download(file_path, download_path)
+                resolved_vocab_files[file_id] = download_path
 
         for file_id, file_path in resolved_vocab_files.items():
             if resolved_vocab_files[file_id] is not None:

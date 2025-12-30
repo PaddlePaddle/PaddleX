@@ -250,6 +250,7 @@ class TextRecConfig(BaseConfig):
             "Global.use_mlu": False,
             "Global.use_gcu": False,
             "Global.use_iluvatar_gpu": False,
+            "Global.use_metax_gpu": False,
         }
 
         device_cfg = {
@@ -260,6 +261,7 @@ class TextRecConfig(BaseConfig):
             "npu": {"Global.use_npu": True},
             "gcu": {"Global.use_gcu": True},
             "iluvatar_gpu": {"Global.use_iluvatar_gpu": True},
+            "metax_gpu": {"Global.use_metax_gpu": True},
         }
         default_cfg.update(device_cfg[device])
         self.update(default_cfg)

@@ -837,7 +837,7 @@ class DetPostProcess:
                 boxes = boxes[keep_mask]
 
         if boxes.size == 0:
-            return np.array([])
+            return []
 
         if boxes.shape[1] == 8:
             # Sort boxes by their order

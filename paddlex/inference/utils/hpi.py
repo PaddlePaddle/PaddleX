@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
+from ...utils import logging
 from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
 from ...utils.env import get_paddle_cuda_version, get_paddle_version
 from ...utils.flags import USE_PIR_TRT
@@ -156,6 +157,14 @@ def suggest_inference_backend_and_config(
         return None, f"Inference backend {repr(hpi_config.backend)} is unavailable."
 
     paddle_version = get_paddle_version()
+
+    if paddle_version[:3] >= (3, 1, 0):
+        logging.debug(
+            "Paddle version %s is not supported yet. The prior knowledge of Paddle 3.1.1 will be used.",
+            paddle_version,
+        )
+        paddle_version = (3, 1, 1, None)
+
     if (3, 0) <= paddle_version[:2] <= (3, 1) and paddle_version[3] is None:
         if paddle_version[2] == 0:
             paddle_version = f"paddle{paddle_version[0]}{paddle_version[1]}"

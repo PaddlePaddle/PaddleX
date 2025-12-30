@@ -283,10 +283,7 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
         for page in pdfDoc:
             rotate = int(0)
             zoom = 2
-            img = page.render(scale=zoom, rotation=rotate).to_pil()
-            img = img.convert("RGB")
-            img = np.array(img)
-            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            img = page.render(scale=zoom, rotation=rotate).to_numpy()
             xywh = crop_white_area(img)
 
             if xywh is not None:

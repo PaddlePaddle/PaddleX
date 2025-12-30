@@ -1,0 +1,12 @@
+Global:
+  model: fastspeech2_csmsc
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "fastspeech2csmsc"
+  input: [[151, 120, 182, 82, 182, 82, 174, 75, 262, 51, 37, 186, 38, 233]]
+  kernel_option:
+    run_mode: paddle

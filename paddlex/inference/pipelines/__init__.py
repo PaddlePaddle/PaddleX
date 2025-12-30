@@ -50,6 +50,7 @@ from .seal_recognition import SealRecognitionPipeline
 from .semantic_segmentation import SemanticSegmentationPipeline
 from .small_object_detection import SmallObjectDetectionPipeline
 from .table_recognition import TableRecognitionPipeline, TableRecognitionPipelineV2
+from .text_to_speech import TextToSpeechPipeline
 from .ts_anomaly_detection import TSAnomalyDetPipeline
 from .ts_classification import TSClsPipeline
 from .ts_forecasting import TSFcPipeline

@@ -28,7 +28,7 @@
 
 from ......utils.device import parse_device
 from ......utils.env import get_paddle_cuda_version
-from ....common.vlm.transformers import PretrainedConfig
+from ....common.transformers.transformers import PretrainedConfig
 
 
 class PaddleOCRVisionConfig(PretrainedConfig):
@@ -176,6 +176,8 @@ class PaddleOCRVLConfig(PretrainedConfig):
             cuda_version = get_paddle_cuda_version()
             if cuda_version and cuda_version[0] > 11:
                 self.fuse_rms_norm = True
+        if device_type == "metax_gpu":
+            self.fuse_rms_norm = True
         self.use_sparse_flash_attn = True
         self.use_var_len_flash_attn = False
         self.scale_qk_coeff = 1.0

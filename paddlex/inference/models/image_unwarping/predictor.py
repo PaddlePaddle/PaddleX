@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 
 from ....modules.image_unwarping.model_list import MODELS
+from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..base import BasePredictor
@@ -38,6 +39,7 @@ class WarpPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
+        self.device = kwargs.get("device", None)
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
@@ -66,8 +68,16 @@ class WarpPredictor(BasePredictor):
         preprocessors["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
+        if self._use_static_model:
+            infer = self.create_static_infer()
+        else:
+            from .modeling import UVDocNet
 
-        infer = self.create_static_infer()
+            with TemporaryDeviceChanger(self.device):
+                infer = UVDocNet.from_pretrained(
+                    self.model_dir, use_safetensors=True, convert_from_hf=True
+                )
+            infer.eval()
 
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
         return preprocessors, infer, postprocessors
@@ -86,7 +96,11 @@ class WarpPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_raw_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        if self._use_static_model:
+            batch_preds = self.infer(x=x)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
         batch_warp_preds = self.postprocessors["DocTrPostProcess"](batch_preds)
 
         return {

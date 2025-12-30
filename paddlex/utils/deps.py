@@ -107,6 +107,8 @@ def is_dep_available(dep, /, check_version=False):
         return importlib.util.find_spec("ultra_infer") is not None
     elif dep == "fastdeploy":
         return importlib.util.find_spec("fastdeploy") is not None
+    elif dep == "onnxruntime":
+        return importlib.util.find_spec("onnxruntime") is not None
     version = get_dep_version(dep)
     if version is None:
         return False
@@ -275,8 +277,10 @@ def is_genai_engine_plugin_available(backend="any"):
         if "fastdeploy" in backend:
             return is_dep_available("fastdeploy")
         elif is_extra_available(f"genai-{backend}"):
-            if "vllm" in backend or "sglang" in backend:
-                return is_dep_available("flash-attn")
+            from .env import is_cuda_available
+
+            if is_cuda_available():
+                return is_dep_available("xformers") and is_dep_available("flash-attn")
             return True
         return False
 
@@ -306,7 +310,7 @@ def get_genai_fastdeploy_spec(device_type):
     if device_type not in SUPPORTED_DEVICE_TYPES:
         raise ValueError(f"Unsupported device type: {device_type}")
     if device_type == "gpu":
-        return "fastdeploy-gpu == 2.0.3"
+        return "fastdeploy-gpu == 2.3.0"
     else:
         raise AssertionError
 

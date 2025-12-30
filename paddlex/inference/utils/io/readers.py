@@ -102,7 +102,10 @@ class PDFReader(_BaseReader):
         super().__init__(backend, **bk_args)
 
     def read(self, in_path):
-        yield from self._backend.read_file(str(in_path))
+        yield from self._backend.read_file(in_path)
+
+    def load(self, in_path):
+        return self._backend.load_file(str(in_path))
 
     def _init_backend(self, bk_type, bk_args):
         return PDFReaderBackend(**bk_args)
@@ -291,15 +294,19 @@ class PDFReaderBackend(_BaseReaderBackend):
         self._rotation = rotate
         self._scale = zoom
 
-    def read_file(self, in_path):
+    def load_file(self, in_path):
+        """load pdf file"""
         doc = pdfium.PdfDocument(in_path)
+        return doc
+
+    def read_file(self, in_path):
+        if isinstance(in_path, pdfium.PdfDocument):
+            doc = in_path
+        else:
+            doc = self.load_file(str(in_path))
         try:
             for page in doc:
-                image = page.render(scale=self._scale, rotation=self._rotation).to_pil()
-                image = image.convert("RGB")
-                img_cv = np.array(image)
-                img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
-                yield img_cv
+                yield page.render(scale=self._scale, rotation=self._rotation).to_numpy()
         finally:
             doc.close()
 

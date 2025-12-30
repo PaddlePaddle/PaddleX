@@ -205,6 +205,8 @@ class BaseRunner(metaclass=abc.ABCMeta):
                 new_env["MLU_VISIBLE_DEVICES"] = dev_ids
             elif device == "gcu":
                 new_env["TOPS_VISIBLE_DEVICES"] = dev_ids
+            elif device == "metax_gpu":
+                new_env["MACA_VISIBLE_DEVICES"] = dev_ids
             else:
                 new_env["CUDA_VISIBLE_DEVICES"] = dev_ids
             return args, new_env

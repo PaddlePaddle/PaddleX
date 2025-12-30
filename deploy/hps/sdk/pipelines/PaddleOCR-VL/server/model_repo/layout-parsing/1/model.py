@@ -81,7 +81,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         return schemas.paddleocr_vl.InferResult
 
     def run(self, input, log_id):
-        return self.run_batch([input], [log_id])
+        return self.run_batch([input], [log_id], log_id)
 
     def run_batch(self, inputs, log_ids, batch_id):
         result_or_output_dic = {}
@@ -135,6 +135,9 @@ class TritonPythonModel(BaseTritonPythonModel):
                             top_p=inputs_g[0].topP,
                             min_pixels=inputs_g[0].minPixels,
                             max_pixels=inputs_g[0].maxPixels,
+                            max_new_tokens=inputs_g[0].maxNewTokens,
+                            merge_layout_blocks=inputs_g[0].mergeLayoutBlocks,
+                            markdown_ignore_labels=inputs_g[0].markdownIgnoreLabels,
                         )
                     )
 
@@ -170,24 +173,42 @@ class TritonPythonModel(BaseTritonPythonModel):
             return [result_or_output_dic[i] for i in range(len(inputs))]
 
     def _group_inputs(self, inputs):
+        def _to_hashable(obj):
+            if isinstance(obj, list):
+                return tuple(obj)
+            elif isinstance(obj, dict):
+                return tuple(sorted(obj.items()))
+            else:
+                return obj
+
         def _hash(input):
             return hash(
-                (
-                    input.useDocOrientationClassify,
-                    input.useDocUnwarping,
-                    input.useLayoutDetection,
-                    input.useChartRecognition,
-                    input.layoutThreshold,
-                    input.layoutNms,
-                    input.layoutUnclipRatio,
-                    input.layoutMergeBboxesMode,
-                    input.promptLabel,
-                    input.formatBlockContent,
-                    input.repetitionPenalty,
-                    input.temperature,
-                    input.topP,
-                    input.minPixels,
-                    input.maxPixels,
+                tuple(
+                    map(
+                        _to_hashable,
+                        (
+                            (
+                                input.useDocOrientationClassify,
+                                input.useDocUnwarping,
+                                input.useLayoutDetection,
+                                input.useChartRecognition,
+                                input.layoutThreshold,
+                                input.layoutNms,
+                                input.layoutUnclipRatio,
+                                input.layoutMergeBboxesMode,
+                                input.promptLabel,
+                                input.formatBlockContent,
+                                input.repetitionPenalty,
+                                input.temperature,
+                                input.topP,
+                                input.minPixels,
+                                input.maxPixels,
+                                input.maxNewTokens,
+                                input.mergeLayoutBlocks,
+                                input.markdownIgnoreLabels,
+                            )
+                        ),
+                    )
                 )
             )
 

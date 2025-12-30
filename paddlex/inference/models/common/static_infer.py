@@ -29,7 +29,7 @@ from ....utils.flags import (
     DISABLE_TRT_MODEL_BL,
     USE_PIR_TRT,
 )
-from ...utils.benchmark import benchmark, set_inference_operations
+from ...utils.benchmark import add_inference_operations, benchmark
 from ...utils.hpi import (
     HPIConfig,
     OMConfig,
@@ -50,7 +50,7 @@ INFERENCE_OPERATIONS = [
     "PaddleInferChainLegacy",
     "MultiBackendInfer",
 ]
-set_inference_operations(INFERENCE_OPERATIONS)
+add_inference_operations(*INFERENCE_OPERATIONS)
 
 
 # XXX: Better use Paddle Inference API to do this
@@ -358,7 +358,8 @@ class PaddleInfer(StaticInfer):
             logging.debug("`device_id` has been set to None")
 
         if (
-            self._option.device_type in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu")
+            self._option.device_type
+            in ("gpu", "dcu", "npu", "mlu", "gcu", "xpu", "iluvatar_gpu", "metax_gpu")
             and self._option.device_id is None
         ):
             self._option.device_id = 0
@@ -416,6 +417,12 @@ class PaddleInfer(StaticInfer):
                 config.delete_pass("transfer_layout_pass")
             elif self._option.device_type == "mlu":
                 config.enable_custom_device("mlu", self._option.device_id)
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+            elif self._option.device_type == "metax_gpu":
+                config.enable_custom_device("metax_gpu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):

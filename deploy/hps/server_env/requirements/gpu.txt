@@ -129,6 +129,8 @@ imageio==2.37.0
     # via scikit-image
 imagesize==1.4.1
     # via paddlex (../../../setup.py)
+jieba==0.42.1
+    # via paddlex (../../../setup.py)
 jinja2==3.1.5
     # via paddlex (../../../setup.py)
 jiter==0.8.2
@@ -171,6 +173,7 @@ lxml==5.3.1
     # via
     #   paddlex (../../../setup.py)
     #   premailer
+    #   python-docx
 markupsafe==3.0.2
     # via jinja2
 marshmallow==3.26.1
@@ -218,6 +221,8 @@ openai==1.63.2
     # via
     #   langchain-openai
     #   paddlex (../../../setup.py)
+opencc==1.1.9
+    # via paddlex (../../../setup.py)
 opencv-contrib-python==4.10.0.84
     # via
     #   -r requirements/app.in
@@ -238,7 +243,7 @@ packaging==24.2
     #   matplotlib
     #   paddlex (../../../setup.py)
     #   scikit-image
-paddlepaddle-gpu @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/deps/paddlepaddle/paddlepaddle_gpu-3.1.1%2Bfc-cp310-cp310-linux_x86_64.whl
+paddlepaddle-gpu @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/deps/paddlepaddle/paddlepaddle_gpu-3.2.1%2Bfc-cp310-cp310-linux_x86_64.whl
     # via -r requirements/gpu.in
 pandas==1.3.5
     # via paddlex (../../../setup.py)
@@ -289,12 +294,16 @@ pyparsing==3.2.1
     # via matplotlib
 pypdfium2==4.30.1
     # via paddlex (../../../setup.py)
+pypinyin==0.55.0
+    # via paddlex (../../../setup.py)
 python-bidi==0.6.6
     # via paddlex (../../../setup.py)
 python-dateutil==2.9.0.post0
     # via
     #   matplotlib
     #   pandas
+python-docx==1.2.0
+    # via paddlex (../../../setup.py)
 pytz==2025.1
     # via pandas
 pyyaml==6.0.2
@@ -326,8 +335,10 @@ ruamel-yaml==0.18.10
     # via paddlex (../../../setup.py)
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-safetensors==0.6.2
-    # via paddlex (../../../setup.py)
+safetensors==0.7.0
+    # via
+    #   paddlepaddle-gpu
+    #   paddlex (../../../setup.py)
 scikit-image==0.24.0
     # via paddlex (../../../setup.py)
 scikit-learn==1.6.1
@@ -396,6 +407,7 @@ typing-extensions==4.12.2
     #   paddlex (../../../setup.py)
     #   pydantic
     #   pydantic-core
+    #   python-docx
     #   sqlalchemy
     #   starlette
     #   typing-inspect

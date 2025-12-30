@@ -47,6 +47,8 @@ def get_env_device():
         return "mlu"
     elif "gcu" in paddle.device.get_all_custom_device_type():
         return "gcu"
+    elif "metax_gpu" in paddle.device.get_all_custom_device_type():
+        return "metax_gpu"
     elif "intel_hpu" in paddle.device.get_all_custom_device_type():
         return "intel_hpu"
     elif "iluvatar_gpu" in paddle.device.get_all_custom_device_type():

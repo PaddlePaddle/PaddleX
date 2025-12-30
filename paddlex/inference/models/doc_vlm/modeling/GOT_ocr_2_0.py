@@ -19,7 +19,8 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ...common.vlm.transformers.model_outputs import CausalLMOutputWithPast
+from ...common.transformers.transformers import BatchNormHFStateDictMixin
+from ...common.transformers.transformers.model_outputs import CausalLMOutputWithPast
 from .qwen2 import Qwen2Config, Qwen2ForCausalLM, Qwen2Model
 
 
@@ -811,7 +812,30 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
         return model_inputs
 
 
-class PPChart2TableInference(GOTQwenForCausalLM):
+class PPChart2TableInference(BatchNormHFStateDictMixin, GOTQwenForCausalLM):
+
+    def get_transpose_weight_keys(self):
+        t_layers = [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+            "o_proj",
+            "lm_head",
+            "attn.qkv",
+            "mlp.lin1",
+            "mlp.lin2",
+            "attn.proj",
+            "mm_projector_vary",
+        ]
+        keys = []
+        for key, _ in self.get_hf_state_dict().items():
+            for t_layer in t_layers:
+                if t_layer in key and key.endswith("weight"):
+                    keys.append(key)
+        return keys
 
     def generate(self, inputs, **kwargs):
         max_new_tokens = kwargs.get("max_new_tokens", 1024)

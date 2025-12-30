@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 
 from ....modules.table_recognition.model_list import MODELS
+from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -34,6 +35,7 @@ class TablePredictor(BasePredictor):
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         super().__init__(*args, **kwargs)
+        self.device = kwargs.get("device", None)
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
@@ -53,7 +55,24 @@ class TablePredictor(BasePredictor):
                 preprocessors.append(op)
         preprocessors.append(ToBatch())
 
-        infer = self.create_static_infer()
+        if self._use_static_model:
+            infer = self.create_static_infer()
+        else:
+            if self.model_name in ["SLANeXt_wired", "SLANeXt_wireless"]:
+                from .modeling import SLANeXt
+
+                with TemporaryDeviceChanger(self.device):
+                    infer = SLANeXt.from_pretrained(
+                        self.model_dir,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    )
+                    infer.eval()
+            else:
+                raise RuntimeError(
+                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+                )
 
         postprocessors = TableLabelDecode(
             model_name=self.config["Global"]["model_name"],
@@ -89,7 +108,11 @@ class TablePredictor(BasePredictor):
         batch_imgs = self.preprocessors[4](imgs=pad_imgs)  # ToCHWImage
         x = self.preprocessors[5](imgs=batch_imgs)  # ToBatch
 
-        batch_preds = self.infer(x=x)
+        if self._use_static_model:
+            batch_preds = self.infer(x=x)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
 
         table_result = self.postprocessors(
             pred=batch_preds,

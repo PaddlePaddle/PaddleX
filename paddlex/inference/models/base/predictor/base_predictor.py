@@ -133,12 +133,13 @@ class BasePredictor(
             self.config = config
             self._genai_config = genai_config
             assert genai_config.server_url is not None
+            client_kwargs = {"model_name": model_name}
+            client_kwargs.update(genai_config.client_kwargs or {})
             self._genai_client = GenAIClient(
                 backend=genai_config.backend,
                 base_url=genai_config.server_url,
                 max_concurrency=genai_config.max_concurrency,
-                model_name=model_name,
-                **(genai_config.client_kwargs or {}),
+                **client_kwargs,
             )
             self._use_local_model = False
 
@@ -156,15 +157,22 @@ class BasePredictor(
 
         self.batch_sampler.batch_size = batch_size
 
-        if self.model_dir and get_model_paths(self.model_dir, self.MODEL_FILE_PREFIX):
+        if self._use_local_model:
             self._use_hpip = use_hpip
-            if not use_hpip:
-                self._pp_option = self._prepare_pp_option(pp_option, device)
+            model_paths = get_model_paths(self.model_dir, self.MODEL_FILE_PREFIX)
+            if "paddle_dyn" in model_paths or "safetensors" in model_paths:
+                self._use_static_model = False
             else:
-                require_hpip()
-                self._hpi_config = self._prepare_hpi_config(hpi_config, device)
+                self._use_static_model = True
+            if self._use_static_model:
+                if not use_hpip:
+                    self._pp_option = self._prepare_pp_option(pp_option, device)
+                else:
+                    require_hpip()
+                    self._hpi_config = self._prepare_hpi_config(hpi_config, device)
         else:
             self._use_hpip = False
+            self._use_static_model = False
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
 

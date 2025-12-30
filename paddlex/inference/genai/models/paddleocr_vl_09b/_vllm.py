@@ -103,20 +103,12 @@ if all(
         3. The aspect ratio of the image is maintained as closely as possible.
 
         """
-        # if height < factor or width < factor:
-        #    raise ValueError(f"height:{height} or width:{width} must be larger than factor:{factor}")
-        # if int(height < factor//4) + int(width < factor//4):
-        #     raise ValueError(f"height:{height} or width:{width} must be larger than factor:{factor//4}")
 
         if height < factor:
-            print(
-                f"smart_resize: height={height} < factor={factor}, reset height=factor"
-            )
             width = round((width * factor) / height)
             height = factor
 
         if width < factor:
-            print(f"smart_resize: width={width} < factor={factor}, reset width=factor")
             height = round((height * factor) / width)
             width = factor
 
