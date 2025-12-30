@@ -117,5 +117,9 @@ class BaseResult(dict, JsonMixin, StrMixin):
             )
             self._rand_fn = Path(fp).name
             return self._rand_fn
-        fp = self["input_path"]
+        if isinstance(self["input_path"], list):
+            input_path = self["input_path"][0]
+        else:
+            input_path = self["input_path"]
+        fp = input_path
         return Path(fp).name
