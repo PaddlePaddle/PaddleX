@@ -623,7 +623,6 @@ def nms(boxes, iou_same=0.6, iou_diff=0.95):
         current = indices[0]
         current_box = boxes[current]
         current_class = current_box[0]
-        current_box[1]
         current_coords = current_box[2:]
 
         selected_boxes.append(current)
