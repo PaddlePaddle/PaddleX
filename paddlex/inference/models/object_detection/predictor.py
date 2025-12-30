@@ -213,7 +213,7 @@ class DetPredictor(BasePredictor):
 
         if len(pred) == 3:
             return [
-                {"boxes": np.array(pred_box[i]), "masks": np.array(pred_mask[i])}
+                {"boxes": np.asarray(pred_box[i]), "masks": np.asarray(pred_mask[i])}
                 for i in range(len(pred_box))
             ]
         else:
