@@ -17,8 +17,15 @@
         <link rel="next" href="paddle2onnx.html">
       
       
+        
+          <link rel="alternate" href="on_device_deployment.html" hreflang="zh">
+        
+          <link rel="alternate" href="../en/pipeline_deploy/on_device_deployment.html" hreflang="en">
+        
+      
+      
       <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -26,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.2a3383ac.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -66,7 +73,6 @@
     <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
   
 
-    
     
     
   </head>
@@ -261,7 +267,7 @@ You're not viewing the latest version.
         <a href="https://github.com/PaddlePaddle/PaddleX" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -619,7 +625,7 @@ You're not viewing the latest version.
       <a href="https://github.com/PaddlePaddle/PaddleX" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -641,9 +647,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     Home
+  
+
     
   </span>
+  
   
 
       </a>
@@ -687,9 +698,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     安装
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -698,7 +714,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            安装
+            
+  
+    安装
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -714,9 +734,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     安装PaddlePaddle
+  
+
     
   </span>
+  
   
 
       </a>
@@ -737,9 +762,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     安装PaddleX
+  
+
     
   </span>
+  
   
 
       </a>
@@ -805,9 +835,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     产线使用教程
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -816,7 +851,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            产线使用教程
+            
+  
+    产线使用教程
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -832,9 +871,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     概述
+  
+
     
   </span>
+  
   
 
       </a>
@@ -879,9 +923,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文本图像智能分析
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -890,7 +939,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
-            文本图像智能分析
+            
+  
+    文本图像智能分析
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -906,9 +959,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档场景信息抽取v3产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -929,9 +987,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档场景信息抽取v4产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -996,9 +1059,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     OCR
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1007,7 +1075,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
-            OCR
+            
+  
+    OCR
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1023,9 +1095,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用OCR产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1046,9 +1123,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用表格识别产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1069,9 +1151,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用表格识别v2产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1092,9 +1179,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用版面解析产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1115,9 +1207,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用版面解析v3产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1138,9 +1235,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     公式识别产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1161,9 +1263,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     印章文本识别产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1184,9 +1291,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档图像预处理产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1267,9 +1379,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     计算机视觉
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1278,7 +1395,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_4">
             <span class="md-nav__icon md-icon"></span>
-            计算机视觉
+            
+  
+    计算机视觉
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1294,9 +1415,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用图像分类
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1317,9 +1443,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用目标检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1340,9 +1471,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用实例分割
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1363,9 +1499,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用语义分割
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1386,9 +1527,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像多标签分类
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1409,9 +1555,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     小目标检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1432,9 +1583,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像异常检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1455,9 +1611,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     3D多模态融合检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1478,9 +1639,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     人体关键点检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1501,9 +1667,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     开放词汇检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1524,9 +1695,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     开放词汇分割
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1547,9 +1723,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     旋转目标检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1570,9 +1751,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用图像识别
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1593,9 +1779,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     行人属性识别
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1616,9 +1807,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     车辆属性识别
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1639,9 +1835,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     人脸识别
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1696,9 +1897,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序分析
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1707,7 +1913,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
-            时序分析
+            
+  
+    时序分析
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1723,9 +1933,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序预测产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1746,9 +1961,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序异常检测产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1769,9 +1989,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序分类产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1822,9 +2047,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     语音处理
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1833,7 +2063,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_6">
             <span class="md-nav__icon md-icon"></span>
-            语音处理
+            
+  
+    语音处理
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1849,9 +2083,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     多语种语音识别
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1904,9 +2143,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     视频分析
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1915,7 +2159,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_7">
             <span class="md-nav__icon md-icon"></span>
-            视频分析
+            
+  
+    视频分析
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1931,9 +2179,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用视频分类
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1954,9 +2207,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     通用视频检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2007,9 +2265,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     多模态视觉语言模型
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2018,7 +2281,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_8">
             <span class="md-nav__icon md-icon"></span>
-            多模态视觉语言模型
+            
+  
+    多模态视觉语言模型
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2034,9 +2301,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档理解产线
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2091,9 +2363,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     说明文件
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2102,7 +2379,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_9">
             <span class="md-nav__icon md-icon"></span>
-            说明文件
+            
+  
+    说明文件
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2118,9 +2399,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线命令行使用说明
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2141,9 +2427,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线Python脚本使用说明
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2164,9 +2455,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     产线并行推理
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2242,9 +2538,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     单功能模块使用教程
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2253,7 +2554,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            单功能模块使用教程
+            
+  
+    单功能模块使用教程
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2311,9 +2616,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     OCR
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2322,7 +2632,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_1">
             <span class="md-nav__icon md-icon"></span>
-            OCR
+            
+  
+    OCR
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2338,9 +2652,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文本检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2361,9 +2680,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     印章文本检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2384,9 +2708,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文本识别模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2407,9 +2736,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     版面区域检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2430,9 +2764,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     表格结构识别模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2453,9 +2792,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     表格单元格检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2476,9 +2820,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     表格分类模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2499,9 +2848,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档图像方向分类
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2522,9 +2876,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文本图像矫正模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2545,9 +2904,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文本行方向分类
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2568,9 +2932,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     公式识别模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2627,9 +2996,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像分类
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2638,7 +3012,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            图像分类
+            
+  
+    图像分类
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2654,9 +3032,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像分类模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2677,9 +3060,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像多标签分类模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2700,9 +3088,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     行人属性识别模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2723,9 +3116,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     车辆属性识别模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2778,9 +3176,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像特征
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2789,7 +3192,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            图像特征
+            
+  
+    图像特征
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2805,9 +3212,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像特征模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2828,9 +3240,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     人脸特征模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2895,9 +3312,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     目标检测
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2906,7 +3328,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            目标检测
+            
+  
+    目标检测
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2922,9 +3348,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     目标检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2945,9 +3376,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     小目标检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2968,9 +3404,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     人脸检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2991,9 +3432,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     主体检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3014,9 +3460,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     行人检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3037,9 +3488,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     车辆检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3060,9 +3516,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     人体关键点检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3083,9 +3544,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     开放词汇目标检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3142,9 +3608,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像分割
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3153,7 +3624,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            图像分割
+            
+  
+    图像分割
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3169,9 +3644,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     语义分割模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3192,9 +3672,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     实例分割模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3215,9 +3700,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像异常检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3238,9 +3728,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     开放词汇目标分割模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3295,9 +3790,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序分析
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3306,7 +3806,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            时序分析
+            
+  
+    时序分析
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3322,9 +3826,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序预测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3345,9 +3854,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序异常检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3368,9 +3882,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序分类模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3421,9 +3940,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     语音识别
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3432,7 +3956,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            语音识别
+            
+  
+    语音识别
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3448,9 +3976,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     多语种语音识别模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3501,9 +4034,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     3D检测
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3512,7 +4050,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
-            3D检测
+            
+  
+    3D检测
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3528,9 +4070,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     BEV融合3D检测模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3583,9 +4130,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     多模态视觉语言模型
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3594,7 +4146,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_9">
             <span class="md-nav__icon md-icon"></span>
-            多模态视觉语言模型
+            
+  
+    多模态视觉语言模型
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3610,9 +4166,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档类视觉语言模型模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3633,9 +4194,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图表解析模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3694,9 +4260,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     说明文件
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3705,7 +4276,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_10">
             <span class="md-nav__icon md-icon"></span>
-            说明文件
+            
+  
+    说明文件
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3721,9 +4296,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX单模型Python脚本使用说明
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3744,9 +4324,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX通用模型配置文件参数说明
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3767,9 +4352,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX时序任务模型配置文件参数说明
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3790,9 +4380,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     模型推理 Benchmark
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3813,9 +4408,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     产线推理 Benchmark
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3884,9 +4484,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     模型产线部署
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3895,7 +4500,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            模型产线部署
+            
+  
+    模型产线部署
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3911,9 +4520,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     高性能推理
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3934,9 +4548,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     服务化部署
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3966,9 +4585,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     端侧部署
+  
+
     
   </span>
+  
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -3979,9 +4603,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     端侧部署
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4004,7 +4633,9 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      安装流程与使用方式
+      
+        安装流程与使用方式
+      
     </span>
   </a>
   
@@ -4014,7 +4645,9 @@ You're not viewing the latest version.
           <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      环境准备
+      
+        环境准备
+      
     </span>
   </a>
   
@@ -4023,7 +4656,9 @@ You're not viewing the latest version.
           <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      物料准备
+      
+        物料准备
+      
     </span>
   </a>
   
@@ -4032,7 +4667,9 @@ You're not viewing the latest version.
           <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
-      部署步骤
+      
+        部署步骤
+      
     </span>
   </a>
   
@@ -4046,7 +4683,9 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      
+        参考资料
+      
     </span>
   </a>
   
@@ -4055,7 +4694,9 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
-      反馈专区
+      
+        反馈专区
+      
     </span>
   </a>
   
@@ -4082,9 +4723,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     获取 ONNX 模型
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4105,9 +4751,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     打包PaddleX项目
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4159,9 +4810,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     多硬件使用
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4170,7 +4826,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
-            多硬件使用
+            
+  
+    多硬件使用
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4186,9 +4846,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     多硬件使用指南
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4239,9 +4904,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     飞桨多硬件安装
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4250,7 +4920,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_2">
             <span class="md-nav__icon md-icon"></span>
-            飞桨多硬件安装
+            
+  
+    飞桨多硬件安装
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4266,9 +4940,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     海光 DCU 飞桨安装教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4289,9 +4968,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     寒武纪 MLU 飞桨安装教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4312,9 +4996,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     昇腾 NPU 飞桨安装教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4335,9 +5024,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     昆仑 XPU 飞桨安装教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4358,9 +5052,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     燧原 GCU 飞桨安装教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4422,9 +5121,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     数据标注教程
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4433,7 +5137,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            数据标注教程
+            
+  
+    数据标注教程
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4481,9 +5189,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     计算机视觉
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4492,7 +5205,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_1">
             <span class="md-nav__icon md-icon"></span>
-            计算机视觉
+            
+  
+    计算机视觉
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4508,9 +5225,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像分类任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4531,9 +5253,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像特征任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4554,9 +5281,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     实例分割任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4577,9 +5309,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     图像多标签分类
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4600,9 +5337,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     目标检测任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4623,9 +5365,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     语义分割任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4678,9 +5425,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     OCR
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4689,7 +5441,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            OCR
+            
+  
+    OCR
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4705,9 +5461,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     表格识别任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4728,9 +5489,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文本检测/识别任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4785,9 +5551,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序分析
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4796,7 +5567,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            时序分析
+            
+  
+    时序分析
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4812,9 +5587,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序异常检测任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4835,9 +5615,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序分类任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4858,9 +5643,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     时序预测任务模块
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4926,9 +5716,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     产线列表
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4937,7 +5732,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
-            产线列表
+            
+  
+    产线列表
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4953,9 +5752,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线列表(CPU/GPU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4976,9 +5780,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线列表(DCU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4999,9 +5808,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线列表(MLU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5022,9 +5836,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线列表(NPU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5045,9 +5864,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX产线列表(XPU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5107,9 +5931,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     模型列表
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5118,7 +5947,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            模型列表
+            
+  
+    模型列表
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5134,9 +5967,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX模型列表(CPU/GPU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5157,9 +5995,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX模型列表(DCU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5180,9 +6023,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX模型列表(MLU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5203,9 +6051,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX模型列表(NPU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5226,9 +6079,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX模型列表(XPU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5249,9 +6107,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     PaddleX模型列表(GCU)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5335,9 +6198,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     产业实践教程&范例
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5346,7 +6214,11 @@ You're not viewing the latest version.
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
-            产业实践教程&范例
+            
+  
+    产业实践教程&范例
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5362,9 +6234,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档场景信息抽取实践教程-如何微调版面区域检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5385,9 +6262,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档场景信息抽取实践教程-如何微调印章文本检测
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5408,9 +6290,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     文档场景信息抽取实践教程-如何使用deepseek
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5431,9 +6318,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     OCR识别之车牌文本检测实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5454,9 +6346,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     OCR识别之手写中文识别实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5477,9 +6374,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     公式识别实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5500,9 +6402,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     版面区域检测模型使用实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5523,9 +6430,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     人脸识别之卡通人脸识别实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5546,9 +6458,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     垃圾分类实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5569,9 +6486,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     遥感图像实例分割实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5592,9 +6514,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     行人跌倒检测实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5615,9 +6542,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     服装时尚元素检测实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5638,9 +6570,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     OCR识别之车牌文本检测实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5661,9 +6598,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     车道线分割实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5684,9 +6626,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     设备异常检测应用实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5707,9 +6654,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     心跳监测时序数据分类应用实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5730,9 +6682,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     用电量长期预测应用实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5753,9 +6710,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     产线部署实践教程
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5783,9 +6745,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     可视化工具
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5805,9 +6772,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     FAQ
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5827,9 +6799,14 @@ You're not viewing the latest version.
   
   
   <span class="md-ellipsis">
+    
+  
     近期更新
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5866,7 +6843,9 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      安装流程与使用方式
+      
+        安装流程与使用方式
+      
     </span>
   </a>
   
@@ -5876,7 +6855,9 @@ You're not viewing the latest version.
           <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      环境准备
+      
+        环境准备
+      
     </span>
   </a>
   
@@ -5885,7 +6866,9 @@ You're not viewing the latest version.
           <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      物料准备
+      
+        物料准备
+      
     </span>
   </a>
   
@@ -5894,7 +6877,9 @@ You're not viewing the latest version.
           <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
-      部署步骤
+      
+        部署步骤
+      
     </span>
   </a>
   
@@ -5908,7 +6893,9 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      
+        参考资料
+      
     </span>
   </a>
   
@@ -5917,7 +6904,9 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
-      反馈专区
+      
+        反馈专区
+      
     </span>
   </a>
   
@@ -5933,6 +6922,55 @@ You're not viewing the latest version.
           
           
             <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../index.html" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="high_performance_inference.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    模型产线部署
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
               <article class="md-content__inner md-typeset">
                 
                   
@@ -6324,7 +7362,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年10月11日 03:17:58 UTC">2025年10月11日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年12月30日 02:50:46 UTC">2025年12月30日</span>
   </span>
 
     
@@ -6334,7 +7372,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年10月11日 03:17:58 UTC">2025年10月11日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年12月30日 02:50:46 UTC">2025年12月30日</span>
   </span>
 
     
@@ -6349,7 +7387,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:143938697+tianyuzhou668@users.noreply.github.com">tianyuzhou668</a>
+        <a href="mailto:radole1203@gmail.com">Olexandr88</a>
     </nav>
   </span>
 
@@ -6498,7 +7536,7 @@ You're not viewing the latest version.
       
     
     <a href="https://github.com/PaddlePaddle/PaddleX" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>
@@ -6515,10 +7553,11 @@ You're not viewing the latest version.
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="../javascripts/katex.min.js"></script>
       
