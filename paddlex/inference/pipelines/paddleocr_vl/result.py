@@ -37,6 +37,7 @@ from ..layout_parsing.result_v2 import (
     format_title_func,
     simplify_table_func,
 )
+from ..layout_parsing.title_level import assign_levels_to_parsing_res
 
 VISUALIZE_ORDE_LABELS = [
     "text",
@@ -503,10 +504,14 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         for label in self["model_settings"].get("markdown_ignore_labels", []):
             handle_funcs_dict.pop(label, None)
 
+        parsing_res_list = assign_levels_to_parsing_res(
+            [self["parsing_res_list"]], [self["layout_det_res"]]
+        )[0]
+
         markdown_content = ""
         markdown_info = {}
         markdown_info["markdown_images"] = {}
-        for idx, block in enumerate(self["parsing_res_list"]):
+        for idx, block in enumerate(parsing_res_list):
             label = block.label
             if block.image is not None:
                 markdown_info["markdown_images"][block.image["path"]] = block.image[
@@ -516,9 +521,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             if (
                 show_formula_number
                 and (label == "display_formula" or label == "formula")
-                and idx != len(self["parsing_res_list"]) - 1
+                and idx != len(parsing_res_list) - 1
             ):
-                next_block = self["parsing_res_list"][idx + 1]
+                next_block = parsing_res_list[idx + 1]
                 next_block_label = next_block.label
                 if next_block_label == "formula_number":
                     block.content = merge_formula_and_number(
