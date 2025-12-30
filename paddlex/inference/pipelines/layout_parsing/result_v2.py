@@ -95,6 +95,8 @@ def format_para_title_func(block):
     :param title: Original chapter title string.
     :return: Normalized chapter title string.
     """
+    if not hasattr(block, "title_level"):
+        return format_title_func(block)
     level = block.title_level
     title = block.content
     return f"#{'#' * level} {title}".replace("-\n", "").replace(
