@@ -263,13 +263,17 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         res_img_dict = {}
         model_settings = self["model_settings"]
-        if model_settings["use_doc_preprocessor"]:
+        if model_settings["use_doc_preprocessor"] and not isinstance(
+            self["doc_preprocessor_res"], list
+        ):
             for key, value in self["doc_preprocessor_res"].img.items():
                 res_img_dict[key] = value
-        if self["model_settings"]["use_layout_detection"]:
+        if self["model_settings"]["use_layout_detection"] and not isinstance(
+            self["layout_det_res"], list
+        ):
             res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
-        if self.get("spotting_res"):
+        if self.get("spotting_res") and not isinstance(self["spotting_res"], list):
             boxes = self["spotting_res"]["dt_polys"]
             txts = self["spotting_res"]["rec_texts"]
             image = self["doc_preprocessor_res"]["output_img"][:, :, ::-1]
@@ -415,7 +419,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     original_image_width=original_image_width,
                     show_ocr_content=use_ocr_for_image_block,
                 ),
-                remove_symbol= not use_ocr_for_image_block,
+                remove_symbol=not use_ocr_for_image_block,
             )
 
             format_seal_func = lambda block: format_centered_by_html(
@@ -482,11 +486,24 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             parsing_res_list_json.append(res_dict)
         data["parsing_res_list"] = parsing_res_list_json
         if self.get("spotting_res"):
-            data["spotting_res"] = self["spotting_res"]
+            if isinstance(self["spotting_res"], list):
+                data["spotting_res"] = [res for res in self["spotting_res"]]
+            else:
+                data["spotting_res"] = self["spotting_res"]
         if self["model_settings"]["use_doc_preprocessor"]:
-            data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
+            if isinstance(self["doc_preprocessor_res"], list):
+                data["doc_preprocessor_res"] = [
+                    res.json["res"] for res in self["doc_preprocessor_res"]
+                ]
+            else:
+                data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         if self["model_settings"]["use_layout_detection"]:
-            data["layout_det_res"] = self["layout_det_res"].json["res"]
+            if isinstance(self["layout_det_res"], list):
+                data["layout_det_res"] = [
+                    res.json["res"] for res in self["layout_det_res"]
+                ]
+            else:
+                data["layout_det_res"] = self["layout_det_res"].json["res"]
         return JsonMixin._to_json(data, *args, **kwargs)
 
     def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
@@ -501,7 +518,13 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: Markdown information with text and images.
         """
 
-        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+        if isinstance(self["doc_preprocessor_res"], list):
+            original_image_width = self["doc_preprocessor_res"][0]["output_img"].shape[
+                1
+            ]
+        else:
+            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+
         use_ocr_for_image_block = self["model_settings"].get(
             "use_ocr_for_image_block", False
         )
