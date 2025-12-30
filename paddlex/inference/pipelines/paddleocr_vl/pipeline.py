@@ -40,12 +40,13 @@ from .uilts import (
     crop_margin,
     filter_overlap_boxes,
     merge_blocks,
+    post_process_for_grounding,
     tokenize_figure_of_table,
     truncate_repetitive_content,
     untokenize_figure_of_table,
 )
 
-IMAGE_LABELS = ["image", "header_image", "footer_image", "seal"]
+IMAGE_LABELS = ["image", "header_image", "footer_image"]
 
 
 @benchmark.time_methods
@@ -96,9 +97,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 {"model_config_error": "config error for layout_det_model!"},
             )
             model_name = layout_det_config.get("model_name", None)
-            assert (
-                model_name is not None and model_name == "PP-DocLayoutV2"
-            ), "model_name must be PP-DocLayoutV2"
+            assert model_name is not None and model_name in [
+                "PP-DocLayoutV2",
+                "PP-DocLayoutV3",
+            ], "model_name must be PP-DocLayoutV2 or PP-DocLayoutV3"
             layout_kwargs = {}
             if (threshold := layout_det_config.get("threshold", None)) is not None:
                 layout_kwargs["threshold"] = threshold
@@ -122,6 +124,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         self.use_chart_recognition = config.get("use_chart_recognition", True)
 
+        self.use_seal_recognition = config.get("use_seal_recognition", False)
+
         vl_rec_config = config.get("SubModules", {}).get(
             "VLRecognition",
             {"model_config_error": "config error for vl_rec_model!"},
@@ -135,6 +139,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
         self.crop_by_boxes = CropByBoxes()
 
         self.use_queues = config.get("use_queues", False)
+        self.use_polygon_points = config.get("use_polygon_points", False)
+        self.save_vl_images = config.get("save_vl_images", False)
         self.merge_layout_blocks = config.get("merge_layout_blocks", True)
         self.markdown_ignore_labels = config.get(
             "markdown_ignore_labels",
@@ -157,8 +163,11 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_doc_orientation_classify: Union[bool, None],
         use_doc_unwarping: Union[bool, None],
         use_layout_detection: Union[bool, None],
+        use_polygon_points: Union[bool, None],
         use_chart_recognition: Union[bool, None],
+        use_seal_recognition: Union[bool, None],
         format_block_content: Union[bool, None],
+        save_vl_images: Union[bool, None],
         merge_layout_blocks: Union[bool, None],
         markdown_ignore_labels: Optional[list[str]] = None,
     ) -> dict:
@@ -187,9 +196,17 @@ class _PaddleOCRVLPipeline(BasePipeline):
         if use_chart_recognition is None:
             use_chart_recognition = self.use_chart_recognition
 
+        if use_seal_recognition is None:
+            use_seal_recognition = self.use_seal_recognition
+
         if format_block_content is None:
             format_block_content = self.format_block_content
 
+        if use_polygon_points is None:
+            use_polygon_points = self.use_polygon_points
+
+        if save_vl_images is None:
+            save_vl_images = self.save_vl_images
         if merge_layout_blocks is None:
             merge_layout_blocks = self.merge_layout_blocks
 
@@ -200,7 +217,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_doc_preprocessor=use_doc_preprocessor,
             use_layout_detection=use_layout_detection,
             use_chart_recognition=use_chart_recognition,
+            use_seal_recognition=use_seal_recognition,
             format_block_content=format_block_content,
+            use_polygon_points=use_polygon_points,
+            save_vl_images=save_vl_images,
             merge_layout_blocks=merge_layout_blocks,
             markdown_ignore_labels=markdown_ignore_labels,
         )
@@ -230,24 +250,30 @@ class _PaddleOCRVLPipeline(BasePipeline):
         layout_det_results,
         imgs_in_doc,
         use_chart_recognition=False,
+        use_seal_recognition=False,
         vlm_kwargs=None,
         merge_layout_blocks=True,
+        use_polygon_points=None,
+        **kwargs,
     ):
         blocks = []
         block_imgs = []
         text_prompts = []
         vlm_block_ids = []
         figure_token_maps = []
+        has_spotting = False
         drop_figures_set = set()
         image_labels = (
             IMAGE_LABELS if use_chart_recognition else IMAGE_LABELS + ["chart"]
         )
+        if not use_seal_recognition:
+            image_labels += ["seal"]
         for i, (image, layout_det_res, imgs_in_doc_for_img) in enumerate(
             zip(images, layout_det_results, imgs_in_doc)
         ):
-            layout_det_res = filter_overlap_boxes(layout_det_res)
+            layout_det_res = filter_overlap_boxes(layout_det_res, use_polygon_points)
             boxes = layout_det_res["boxes"]
-            blocks_for_img = self.crop_by_boxes(image, boxes)
+            blocks_for_img = self.crop_by_boxes(image, boxes, use_polygon_points)
             if merge_layout_blocks:
                 blocks_for_img = merge_blocks(
                     blocks_for_img, non_merge_labels=image_labels + ["table"]
@@ -271,7 +297,15 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         text_prompt = "Chart Recognition:"
                     elif "formula" in block_label and block_label != "formula_number":
                         text_prompt = "Formula Recognition:"
-                        block_img = crop_margin(block_img)
+                        crop_img = crop_margin(block_img)
+                        w, h, _ = crop_img.shape
+                        if w > 2 and h > 2:
+                            block_img = crop_img
+                    elif block_label == "spotting":
+                        text_prompt = "Grounding:"
+                        has_spotting = True
+                    elif block_label == "seal" and use_seal_recognition:
+                        text_prompt = "Seal Recognition:"
                     block_imgs.append(block_img)
                     text_prompts.append(text_prompt)
                     figure_token_maps.append(figure_token_map)
@@ -283,30 +317,84 @@ class _PaddleOCRVLPipeline(BasePipeline):
         elif vlm_kwargs.get("max_new_tokens", None) is None:
             vlm_kwargs["max_new_tokens"] = 4096
 
+        table_min_pixels = kwargs.get("table_min_pixels", None)
+        table_max_pixels = kwargs.get("table_max_pixels", None)
+        formula_min_pixels = kwargs.get("formula_min_pixels", None)
+        formula_max_pixels = kwargs.get("formula_max_pixels", None)
+        chart_min_pixels = kwargs.get("chart_min_pixels", None)
+        chart_max_pixels = kwargs.get("chart_max_pixels", None)
+        ocr_min_pixels = kwargs.get("ocr_min_pixels", None)
+        ocr_max_pixels = kwargs.get("ocr_max_pixels", None)
+
         kwargs = {
             "use_cache": True,
             **vlm_kwargs,
         }
-        vl_rec_results = list(
-            self.vl_rec_model.predict(
-                [
-                    {
-                        "image": block_img,
-                        "query": text_prompt,
-                    }
-                    for block_img, text_prompt in zip(block_imgs, text_prompts)
-                ],
-                skip_special_tokens=True,
-                **kwargs,
+
+        if (
+            table_min_pixels == formula_min_pixels == chart_min_pixels == ocr_min_pixels
+        ) and (
+            table_max_pixels == formula_max_pixels == chart_max_pixels == ocr_max_pixels
+        ):
+            vl_rec_results = list(
+                self.vl_rec_model.predict(
+                    [
+                        {
+                            "image": block_img,
+                            "query": text_prompt,
+                        }
+                        for block_img, text_prompt in zip(block_imgs, text_prompts)
+                    ],
+                    skip_special_tokens=False if has_spotting else True,
+                    **kwargs,
+                )
             )
-        )
+        else:
+            table_min_pixels = kwargs.get("table_min_pixels", 112896)
+            table_max_pixels = kwargs.get("table_max_pixels", 1605632)
+            formula_min_pixels = kwargs.get("formula_min_pixels", 112896)
+            formula_max_pixels = kwargs.get("formula_max_pixels", 1003520)
+            chart_min_pixels = kwargs.get("chart_min_pixels", 112896)
+            chart_max_pixels = kwargs.get("chart_max_pixels", 1003520)
+            ocr_min_pixels = kwargs.get("ocr_min_pixels", 112896)
+            ocr_max_pixels = kwargs.get("ocr_max_pixels", 1003520)
+            vl_rec_results = []
+            for block_img, text_prompt in zip(block_imgs, text_prompts):
+                if text_prompt == "Table Recognition:":
+                    kwargs["min_pixels"] = table_min_pixels
+                    kwargs["max_pixels"] = table_max_pixels
+                elif text_prompt == "Formula Recognition:":
+                    kwargs["min_pixels"] = formula_min_pixels
+                    kwargs["max_pixels"] = formula_max_pixels
+                elif text_prompt == "Chart Recognition:":
+                    kwargs["min_pixels"] = chart_min_pixels
+                    kwargs["max_pixels"] = chart_max_pixels
+                elif text_prompt == "OCR:":
+                    kwargs["min_pixels"] = ocr_min_pixels
+                    kwargs["max_pixels"] = ocr_max_pixels
+                vl_rec_results.extend(
+                    self.vl_rec_model.predict(
+                        [
+                            {
+                                "image": block_img,
+                                "query": text_prompt,
+                            }
+                        ],
+                        skip_special_tokens=False if has_spotting else True,
+                        **kwargs,
+                    )
+                )
 
         parsing_res_lists = []
+        vl_rec_res_lists = []
         table_res_lists = []
+        spotting_res_list = []
         curr_vlm_block_idx = 0
         for i, blocks_for_img in enumerate(blocks):
             parsing_res_list = []
+            vl_rec_res_list = []
             table_res_list = []
+            spotting_res = {}
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
                 block_bbox = block["box"]
@@ -320,6 +408,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     block_img4vl = block_imgs[curr_vlm_block_idx]
                     curr_vlm_block_idx += 1
                     vl_rec_result["image"] = block_img4vl
+                    vl_rec_res_list.append(vl_rec_result)
                     result_str = vl_rec_result.get("result", "")
                     if result_str is None:
                         result_str = ""
@@ -344,14 +433,19 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         result_str = untokenize_figure_of_table(
                             result_str, figure_token_map
                         )
+                    if block_label == "spotting":
+                        h, w = block_img.shape[:2]
+                        result_str, spotting_res = post_process_for_grounding(
+                            result_str, w, h
+                        )
 
                     block_content = result_str
-
                 block_info = PaddleOCRVLBlock(
                     label=block_label,
                     bbox=block_bbox,
                     content=block_content,
                     group_id=block.get("group_id", None),
+                    polygon_points=block.get("polygon_points", None),
                 )
                 if block_label in image_labels and block_img is not None:
                     x_min, y_min, x_max, y_max = list(map(int, block_bbox))
@@ -369,9 +463,17 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
                 parsing_res_list.append(block_info)
             parsing_res_lists.append(parsing_res_list)
+            vl_rec_res_lists.append(vl_rec_res_list)
             table_res_lists.append(table_res_list)
+            spotting_res_list.append(spotting_res)
 
-        return parsing_res_lists, table_res_lists, imgs_in_doc
+        return (
+            parsing_res_lists,
+            vl_rec_res_lists,
+            table_res_lists,
+            spotting_res_list,
+            imgs_in_doc,
+        )
 
     def predict(
         self,
@@ -379,7 +481,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_doc_orientation_classify: Union[bool, None] = False,
         use_doc_unwarping: Union[bool, None] = False,
         use_layout_detection: Union[bool, None] = None,
+        use_polygon_points: Union[bool, None] = None,
         use_chart_recognition: Union[bool, None] = None,
+        use_seal_recognition: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
@@ -393,6 +497,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
         min_pixels: Optional[int] = None,
         max_pixels: Optional[int] = None,
         max_new_tokens: Optional[int] = None,
+        save_vl_images: Optional[bool] = None,
+        layout_gt_dir: Union[str, None] = None,
         merge_layout_blocks: Optional[bool] = None,
         markdown_ignore_labels: Optional[list[str]] = None,
         **kwargs,
@@ -433,8 +539,11 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_doc_orientation_classify,
             use_doc_unwarping,
             use_layout_detection,
+            use_polygon_points,
             use_chart_recognition,
+            use_seal_recognition,
             format_block_content,
+            save_vl_images,
             merge_layout_blocks,
             markdown_ignore_labels,
         )
@@ -449,11 +558,15 @@ class _PaddleOCRVLPipeline(BasePipeline):
             prompt_label = prompt_label if prompt_label else "ocr"
             if prompt_label.lower() == "chart":
                 model_settings["use_chart_recognition"] = True
+            elif prompt_label.lower() == "seal":
+                model_settings["use_seal_recognition"] = True
             assert prompt_label.lower() in [
                 "ocr",
                 "formula",
                 "table",
                 "chart",
+                "spotting",
+                "seal",
             ], f"Layout detection is disabled (use_layout_detection=False). 'prompt_label' must be one of ['ocr', 'formula', 'table', 'chart'], but got '{prompt_label}'."
 
         def _process_cv(batch_data, new_batch_size=None):
@@ -484,18 +597,78 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 doc_preprocessor_images = [
                     item["output_img"] for item in doc_preprocessor_results
                 ]
+                if layout_gt_dir:
+                    import json
+                    import os
 
-                if model_settings["use_layout_detection"]:
-                    layout_det_results = list(
-                        self.layout_det_model(
-                            doc_preprocessor_images,
-                            threshold=layout_threshold,
-                            layout_nms=layout_nms,
-                            layout_unclip_ratio=layout_unclip_ratio,
-                            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
-                        )
-                    )
+                    from ...models.object_detection.result import DetResult
 
+                    layout_det_results = []
+                    model_settings["use_polygon_points"] = False
+                    model_settings["use_layout_gt"] = True
+
+                    for idx, image in enumerate(doc_preprocessor_images):
+                        input = batch_data.instances[idx]
+                        doc_preprocessor_image = image
+                        label_dir = layout_gt_dir
+                        notes_path = f"{label_dir}/notes.json"
+                        labels = f"{label_dir}/labels"
+                        gt_file = os.path.basename(input).rsplit(".", 1)[0] + ".txt"
+                        gt_path = f"{labels}/{gt_file}"
+                        with open(notes_path, "r") as f:
+                            notes = json.load(f)
+                        categories_map = {}
+                        for categories in notes["categories"]:
+                            id = int(categories["id"])
+                            name = categories["name"]
+                            categories_map[id] = name
+                        with open(gt_path, "r") as f:
+                            lines = f.readlines()
+                        layout_det_res_dic = {
+                            "input_img": doc_preprocessor_image,
+                            "page_index": None,
+                            "boxes": [],
+                        }
+                        for idx, line in enumerate(lines):
+                            line = line.strip().split(" ")
+                            category_id = int(line[0])
+                            label = categories_map[category_id]
+                            img_h, img_w = doc_preprocessor_image.shape[:2]
+                            center_x = float(line[1]) * img_w
+                            center_y = float(line[2]) * img_h
+                            w = float(line[3]) * img_w
+                            h = float(line[4]) * img_h
+                            x0 = center_x - w / 2
+                            y0 = center_y - h / 2
+                            x1 = center_x + w / 2
+                            y1 = center_y + h / 2
+                            x0 = max(0, int(x0))
+                            y0 = max(0, int(y0))
+                            x1 = min(img_w, int(x1))
+                            y1 = min(img_h, int(y1))
+                            x_min = min(x0, x1)
+                            y_min = min(y0, y1)
+                            x_max = max(x0, x1)
+                            y_max = max(y0, y1)
+                            if (
+                                x_min >= img_w
+                                or y_min >= img_h
+                                or x_max <= 0
+                                or y_max <= 0
+                            ):
+                                continue
+                            box = [x_min, y_min, x_max, y_max]
+                            layout_det_res_dic["boxes"].append(
+                                {
+                                    "cls_id": category_id,
+                                    "label": label,
+                                    "coordinate": box,
+                                    "score": 1.0,
+                                    "order": idx,
+                                }
+                            )
+                        layout_det_res = DetResult(layout_det_res_dic)
+                        layout_det_results.append(layout_det_res)
                     imgs_in_doc = [
                         gather_imgs(doc_pp_img, layout_det_res["boxes"])
                         for doc_pp_img, layout_det_res in zip(
@@ -503,28 +676,48 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         )
                     ]
                 else:
-                    layout_det_results = []
-                    for doc_preprocessor_image in doc_preprocessor_images:
-                        layout_det_results.append(
-                            {
-                                "input_path": None,
-                                "page_index": None,
-                                "boxes": [
-                                    {
-                                        "cls_id": 0,
-                                        "label": prompt_label.lower(),
-                                        "score": 1,
-                                        "coordinate": [
-                                            0,
-                                            0,
-                                            doc_preprocessor_image.shape[1],
-                                            doc_preprocessor_image.shape[0],
-                                        ],
-                                    }
-                                ],
-                            }
+                    if model_settings["use_layout_detection"]:
+                        layout_det_results = list(
+                            self.layout_det_model(
+                                doc_preprocessor_images,
+                                threshold=layout_threshold,
+                                layout_nms=layout_nms,
+                                layout_unclip_ratio=layout_unclip_ratio,
+                                layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+                                use_polygon_points=model_settings["use_polygon_points"],
+                                filter_overlap_boxes=False,
+                            )
                         )
-                    imgs_in_doc = [[] for _ in layout_det_results]
+
+                        imgs_in_doc = [
+                            gather_imgs(doc_pp_img, layout_det_res["boxes"])
+                            for doc_pp_img, layout_det_res in zip(
+                                doc_preprocessor_images, layout_det_results
+                            )
+                        ]
+                    else:
+                        layout_det_results = []
+                        for doc_preprocessor_image in doc_preprocessor_images:
+                            layout_det_results.append(
+                                {
+                                    "input_path": None,
+                                    "page_index": None,
+                                    "boxes": [
+                                        {
+                                            "cls_id": 0,
+                                            "label": prompt_label.lower(),
+                                            "score": 1,
+                                            "coordinate": [
+                                                0,
+                                                0,
+                                                doc_preprocessor_image.shape[1],
+                                                doc_preprocessor_image.shape[0],
+                                            ],
+                                        }
+                                    ],
+                                }
+                            )
+                        imgs_in_doc = [[] for _ in layout_det_results]
 
                 yield input_paths, page_indexes, page_counts, doc_preprocessor_images, doc_preprocessor_results, layout_det_results, imgs_in_doc
 
@@ -539,22 +732,29 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 imgs_in_doc,
             ) = results_cv
 
-            parsing_res_lists, table_res_lists, imgs_in_doc = (
-                self.get_layout_parsing_results(
-                    doc_preprocessor_images,
-                    layout_det_results,
-                    imgs_in_doc,
-                    model_settings["use_chart_recognition"],
-                    {
-                        "repetition_penalty": repetition_penalty,
-                        "temperature": temperature,
-                        "top_p": top_p,
-                        "min_pixels": min_pixels,
-                        "max_pixels": max_pixels,
-                        "max_new_tokens": max_new_tokens,
-                    },
-                    model_settings["merge_layout_blocks"],
-                )
+            (
+                parsing_res_lists,
+                vl_rec_res_lists,
+                table_res_lists,
+                spotting_res_list,
+                imgs_in_doc,
+            ) = self.get_layout_parsing_results(
+                images=doc_preprocessor_images,
+                layout_det_results=layout_det_results,
+                imgs_in_doc=imgs_in_doc,
+                use_chart_recognition=model_settings["use_chart_recognition"],
+                use_seal_recognition=model_settings["use_seal_recognition"],
+                vlm_kwargs={
+                    "repetition_penalty": repetition_penalty,
+                    "temperature": temperature,
+                    "top_p": top_p,
+                    "min_pixels": min_pixels,
+                    "max_pixels": max_pixels,
+                    "max_new_tokens": max_new_tokens,
+                },
+                merge_layout_blocks=model_settings["merge_layout_blocks"],
+                use_polygon_points=model_settings["use_polygon_points"],
+                **kwargs,
             )
 
             for (
@@ -565,7 +765,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 doc_preprocessor_res,
                 layout_det_res,
                 table_res_list,
+                vl_rec_res_list,
                 parsing_res_list,
+                spotting_res,
                 imgs_in_doc_for_img,
             ) in zip(
                 input_paths,
@@ -575,7 +777,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 doc_preprocessor_results,
                 layout_det_results,
                 table_res_lists,
+                vl_rec_res_lists,
                 parsing_res_lists,
+                spotting_res_list,
                 imgs_in_doc,
             ):
                 single_img_res = {
@@ -587,7 +791,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     "doc_preprocessor_res": doc_preprocessor_res,
                     "layout_det_res": layout_det_res,
                     "table_res_list": table_res_list,
+                    "vl_rec_res_list": vl_rec_res_list,
                     "parsing_res_list": parsing_res_list,
+                    "spotting_res": spotting_res,
                     "imgs_in_doc": imgs_in_doc_for_img,
                     "model_settings": model_settings,
                 }

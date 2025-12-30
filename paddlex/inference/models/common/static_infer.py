@@ -91,6 +91,7 @@ def _collect_trt_shape_range_info(
     config.collect_shape_range_info(shape_range_info_path)
     # TODO: Add other needed options
     config.disable_glog_info()
+    config.delete_pass("matmul_add_act_fuse_pass")
     predictor = paddle.inference.create_predictor(config)
 
     input_names = predictor.get_input_names()
@@ -400,6 +401,7 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
+                config.delete_pass("matmul_add_act_fuse_pass")
             elif self._option.device_type == "npu":
                 config.enable_custom_device("npu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
