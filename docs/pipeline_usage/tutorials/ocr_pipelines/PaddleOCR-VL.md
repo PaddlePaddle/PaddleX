@@ -1087,8 +1087,8 @@ paddlex --get_pipeline_config PaddleOCR-VL
 VLRecognition:
   ...
   genai_config:
-    backend: vllm-server
-    server_url: http://127.0.0.1:8118/v1
+    backend: vllm
+    server_url: http://127.0.0.1:8118
 ```
 
 之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：

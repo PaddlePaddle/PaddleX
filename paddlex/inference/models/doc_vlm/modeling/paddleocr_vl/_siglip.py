@@ -111,9 +111,18 @@ def eager_attention_forward(
     attn_weights = paddle.matmul(x=query.scale(scaling), y=key, transpose_y=True)
     attn_weights = attn_weights.cast(paddle.float32)
 
+    origin_dtype = query.dtype
+
+    attn_weights = paddle.matmul(x=query.scale(scaling), y=key, transpose_y=True)
+    attn_weights = attn_weights.cast(paddle.float32)
+
     if attention_mask is not None:
         attnetion_mask = attention_mask.cast(paddle.float32)
+        attnetion_mask = attention_mask.cast(paddle.float32)
         attn_weights = attn_weights + attention_mask
+
+    attn_weights = F.softmax(attn_weights, axis=-1)
+    attn_weights = attn_weights.cast(origin_dtype)
 
     attn_weights = F.softmax(attn_weights, axis=-1)
     attn_weights = attn_weights.cast(origin_dtype)
@@ -121,6 +130,7 @@ def eager_attention_forward(
     attn_weights = F.dropout(attn_weights, p=dropout, training=module.training)
 
     attn_output = paddle.matmul(attn_weights, value)
+    attn_output = attn_output.transpose((0, 2, 1, 3))
     attn_output = attn_output.transpose((0, 2, 1, 3))
 
     return attn_output, attn_weights
@@ -187,7 +197,34 @@ class SiglipAttention(nn.Layer):
             q = q.transpose([0, 2, 1, 3])
             k = k.transpose([0, 2, 1, 3])
             v = v.transpose([0, 2, 1, 3])
+        if not self._supports_sdpa or q.dtype == paddle.float32:
+            # → [B, H, L, Dh]
+            q = q.transpose([0, 2, 1, 3])
+            k = k.transpose([0, 2, 1, 3])
+            v = v.transpose([0, 2, 1, 3])
 
+            attn_output, _ = eager_attention_forward(
+                self,
+                q,
+                k,
+                v,
+                attention_mask,
+                is_causal=self.is_causal,
+                scaling=self.scale,
+                dropout=0.0 if not self.training else self.dropout,
+            )
+            attn_output = attn_output.reshape([B, L, D])
+        else:
+            attn_output = paddle.nn.functional.scaled_dot_product_attention(
+                q,
+                k,
+                v,
+                attention_mask,
+                dropout_p=self.dropout,
+                is_causal=self.is_causal,
+                training=self.training,
+            )
+        attn_output = attn_output.reshape([B, L, D])
             attn_output, _ = eager_attention_forward(
                 self,
                 q,
