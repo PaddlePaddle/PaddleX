@@ -297,6 +297,7 @@ class PDFReaderBackend(_BaseReaderBackend):
     def load_file(self, in_path):
         """load pdf file"""
         doc = pdfium.PdfDocument(in_path)
+        doc.init_forms()
         return doc
 
     def read_file(self, in_path):
