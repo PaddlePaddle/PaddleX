@@ -105,21 +105,19 @@ def format_para_title_func(block):
     )
 
 
-def format_centered_by_html(string):
-    return (
-        f'<div style="text-align: center;">{string}</div>'.replace(
-            "-\n",
-            "",
-        ).replace("\n", " ")
-        + "\n"
-    )
+def format_centered_by_html(string, remove_symbol=True):
+    if remove_symbol:
+        string = string.replace("-\n", "").replace("\n", " ")
+    return f'<div style="text-align: center;">{string}</div>' + "\n"
 
 
 def format_text_plain_func(block):
     return block.content
 
 
-def format_image_scaled_by_html_func(block, original_image_width):
+def format_image_scaled_by_html_func(
+    block, original_image_width, show_ocr_content=False
+):
     img_tags = []
     image_path = block.image["path"]
     image_width = block.image["img"].width
@@ -129,17 +127,25 @@ def format_image_scaled_by_html_func(block, original_image_width):
             image_path.replace("-\n", "").replace("\n", " "), scale
         ),
     )
-    return "\n".join(img_tags)
+    image_info = "\n".join(img_tags)
+    if show_ocr_content:
+        ocr_content = block.content
+        image_info += "\n\n" + ocr_content + "\n\n"
+    return image_info
 
 
-def format_image_plain_func(block):
+def format_image_plain_func(block, show_ocr_content=False):
     img_tags = []
     if block.image:
         image_path = block.image["path"]
         img_tags.append(
             "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
         )
-        return "\n".join(img_tags)
+        image_info = "\n".join(img_tags)
+        if show_ocr_content:
+            ocr_content = block.content
+            image_info += "\n\n" + ocr_content + "\n\n"
+        return image_info
     return ""
 
 

@@ -18,10 +18,10 @@ import random
 from functools import partial
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.fonts import PINGFANG_FONT, SIMFANG_FONT
+from ....utils.fonts import SIMFANG_FONT
 from ...common.result import (
     BaseCVResult,
     HtmlMixin,
@@ -260,7 +260,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             dict: Keys are names, values are numpy arrays (images).
         """
-        from ..layout_parsing.utils import get_show_color
 
         res_img_dict = {}
         model_settings = self["model_settings"]
@@ -269,36 +268,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_img_dict[key] = value
         if self["model_settings"]["use_layout_detection"]:
             res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
-
-        # for layout ordering image
-        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
-        draw = ImageDraw.Draw(image, "RGBA")
-        font_size = int(0.018 * int(image.width)) + 2
-        font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
-        parsing_result = self["parsing_res_list"]
-
-        order_index = 0
-        for block in parsing_result:
-            bbox = block.bbox
-            label = block.label
-            fill_color = get_show_color(label, False)
-            draw.rectangle(bbox, fill=fill_color)
-            if label not in self.skip_order_labels:
-                text_position = (bbox[2] + 2, bbox[1] - font_size // 2)
-                if int(image.width) - bbox[2] < font_size:
-                    text_position = (
-                        int(bbox[2] - font_size * 1.1),
-                        bbox[1] - font_size // 2,
-                    )
-                draw.text(text_position, str(order_index + 1), font=font, fill="red")
-                order_index += 1
-
-        res_img_dict["layout_order_res"] = image
-
-        if model_settings["save_vl_images"]:
-            for index, vl_rec in enumerate(self["vl_rec_res_list"]):
-                image = vl_rec["image"]
-                res_img_dict[f"vl_res/vl_rec_res_{index}"] = image
 
         if self.get("spotting_res"):
             boxes = self["spotting_res"]["dt_polys"]
@@ -434,6 +403,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["model_settings"] = model_settings
         if self["model_settings"].get("format_block_content", False):
             original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+            use_ocr_for_image_block = self["model_settings"].get(
+                "use_ocr_for_image_block", False
+            )
             format_text_func = lambda block: format_centered_by_html(
                 format_text_plain_func(block)
             )
@@ -441,7 +413,18 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 format_image_scaled_by_html_func(
                     block,
                     original_image_width=original_image_width,
-                )
+                    show_ocr_content=use_ocr_for_image_block,
+                ),
+                remove_symbol= not use_ocr_for_image_block,
+            )
+
+            format_seal_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                    show_ocr_content=True,
+                ),
+                remove_symbol=False,
             )
 
             if self["model_settings"].get("use_chart_recognition", False):
@@ -450,7 +433,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 format_chart_func = format_image_func
 
             if self["model_settings"].get("use_seal_recognition", False):
-                format_seal_func = format_image_func
+                format_seal_func = format_seal_func
             else:
                 format_seal_func = format_text_func
 
@@ -519,6 +502,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         """
 
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+        use_ocr_for_image_block = self["model_settings"].get(
+            "use_ocr_for_image_block", False
+        )
 
         if pretty:
             format_text_func = lambda block: format_centered_by_html(
@@ -528,11 +514,24 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 format_image_scaled_by_html_func(
                     block,
                     original_image_width=original_image_width,
-                )
+                    show_ocr_content=use_ocr_for_image_block,
+                ),
+                remove_symbol=not use_ocr_for_image_block,
+            )
+            format_seal_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                    show_ocr_content=True,
+                ),
+                remove_symbol=False,
             )
         else:
             format_text_func = lambda block: block.content
-            format_image_func = format_image_plain_func
+            format_image_func = lambda block: format_image_plain_func(
+                block, use_ocr_for_image_block
+            )
+            format_seal_func = lambda block: format_image_plain_func(block, True)
 
         format_chart_func = (
             format_chart2table_func
@@ -543,7 +542,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         format_seal_func = (
             format_text_func
             if self["model_settings"]["use_seal_recognition"]
-            else format_image_func
+            else format_seal_func
         )
 
         if pretty:
