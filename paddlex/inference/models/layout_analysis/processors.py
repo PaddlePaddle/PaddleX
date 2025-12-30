@@ -326,7 +326,7 @@ def calculate_overlap_ratio(
 
 
 def filter_boxes(
-    src_boxes: Dict[str, List[Dict]], use_layout_mask: bool
+    src_boxes: Dict[str, List[Dict]], use_polygon_points: bool
 ) -> Dict[str, List[Dict]]:
     """
     Remove overlapping boxes from layout detection results based on a given overlap ratio.
@@ -352,7 +352,7 @@ def filter_boxes(
                 boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
             )
             if overlap_ratio > 0.7:
-                if use_layout_mask:
+                if use_polygon_points:
                     poly_overlap_ratio = calculate_polygon_overlap_ratio(
                         boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
                     )
@@ -699,7 +699,7 @@ class LayoutAnalysisProcess:
                 use_polygon_points,
             )
             if filter_overlap_boxes:
-                boxes = filter_boxes(boxes, self.labels)
+                boxes = filter_boxes(boxes, use_polygon_points)
             skip_order_labels = (
                 skip_order_labels if skip_order_labels else SKIP_ORDER_LABELS
             )
