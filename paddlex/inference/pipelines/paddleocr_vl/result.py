@@ -14,13 +14,15 @@
 
 from __future__ import annotations
 
+import random
 from functools import partial
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils import logging
-from ....utils.fonts import PINGFANG_FONT
+from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.fonts import PINGFANG_FONT, SIMFANG_FONT
 from ...common.result import (
     BaseCVResult,
     HtmlMixin,
@@ -38,35 +40,32 @@ from ..layout_parsing.result_v2 import (
     format_title_func,
     simplify_table_func,
 )
+from ..ocr.result import draw_box_txt_fine, get_minarea_rect
 
-VISUALIZE_ORDE_LABELS = [
-    "text",
-    "formula",
-    "inline_formula",
-    "display_formula",
-    "algorithm",
-    "reference",
-    "reference_content",
-    "content",
-    "abstract",
-    "paragraph_title",
-    "doc_title",
-    "vertical_text",
-    "ocr",
-    "number",
-    "footnote",
+SKIP_ORDER_LABELS = [
+    "figure_title",
+    "vision_footnote",
+    "image",
+    "chart",
+    "table",
     "header",
     "header_image",
     "footer",
     "footer_image",
+    "footnote",
     "aside_text",
 ]
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 class PaddleOCRVLBlock(object):
     """PaddleOCRVL Block Class"""
 
-    def __init__(self, label, bbox, content="", group_id=None) -> None:
+    def __init__(
+        self, label, bbox, content="", group_id=None, polygon_points=None
+    ) -> None:
         """
         Initialize a PaddleOCRVLBlock object.
 
@@ -79,6 +78,7 @@ class PaddleOCRVLBlock(object):
         self.bbox = list(map(int, bbox))
         self.content = content
         self.image = None
+        self.polygon_points = polygon_points
         self.group_id = group_id
 
     def __str__(self) -> str:
@@ -218,6 +218,7 @@ def build_handle_funcs_dict(
         ),
         "algorithm": lambda block: block.content.strip("\n"),
         "seal": seal_func,
+        "spotting": lambda block: block.content,
         "number": format_text_plain_func,
         "footnote": format_text_plain_func,
         "header": format_text_plain_func,
@@ -228,6 +229,7 @@ def build_handle_funcs_dict(
     }
 
 
+@class_requires_deps("opencv-contrib-python")
 class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
     """
     PaddleOCRVLResult class for holding and formatting OCR/VL parsing results.
@@ -248,10 +250,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         markdown_ignore_labels = self["model_settings"].get(
             "markdown_ignore_labels", []
         )
-        self.visualize_order_labels = [
-            label
-            for label in VISUALIZE_ORDE_LABELS
-            if label not in markdown_ignore_labels
+        self.skip_order_labels = [
+            label for label in SKIP_ORDER_LABELS + markdown_ignore_labels
         ]
 
     def _to_img(self) -> dict[str, np.ndarray]:
@@ -284,7 +284,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             label = block.label
             fill_color = get_show_color(label, False)
             draw.rectangle(bbox, fill=fill_color)
-            if label in self.visualize_order_labels:
+            if label not in self.skip_order_labels:
                 text_position = (bbox[2] + 2, bbox[1] - font_size // 2)
                 if int(image.width) - bbox[2] < font_size:
                     text_position = (
@@ -295,6 +295,55 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 order_index += 1
 
         res_img_dict["layout_order_res"] = image
+
+        if model_settings["save_vl_images"]:
+            for index, vl_rec in enumerate(self["vl_rec_res_list"]):
+                image = vl_rec["image"]
+                res_img_dict[f"vl_res/vl_rec_res_{index}"] = image
+
+        if self.get("spotting_res"):
+            boxes = self["spotting_res"]["dt_polys"]
+            txts = self["spotting_res"]["rec_texts"]
+            image = self["doc_preprocessor_res"]["output_img"][:, :, ::-1]
+            h, w = image.shape[0:2]
+            img_left = Image.fromarray(image)
+            img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
+            random.seed(0)
+            draw_left = ImageDraw.Draw(img_left)
+            vis_font = SIMFANG_FONT
+            for idx, (box, txt) in enumerate(zip(boxes, txts)):
+                try:
+                    color = (
+                        random.randint(0, 255),
+                        random.randint(0, 255),
+                        random.randint(0, 255),
+                    )
+                    box = np.array(box)
+                    if len(box) > 4:
+                        pts = [(x, y) for x, y in box.tolist()]
+                        draw_left.polygon(pts, outline=color, width=8, fill=color)
+                        box = get_minarea_rect(box)
+                        height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
+                        box[:2, 1] = np.mean(box[:, 1])
+                        box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
+                    else:
+                        box_pts = [(int(x), int(y)) for x, y in box.tolist()]
+                        draw_left.polygon(box_pts, fill=color)
+                    if isinstance(txt, tuple):
+                        txt = txt[0]
+                    img_right_text = draw_box_txt_fine((w, h), box, txt, vis_font.path)
+                    pts = np.array(box, np.int32).reshape((-1, 1, 2))
+                    cv2.polylines(img_right_text, [pts], True, color, 1)
+                    img_right = cv2.bitwise_and(img_right, img_right_text)
+                except:
+                    continue
+
+            img_left = Image.blend(Image.fromarray(image), img_left, 0.5)
+            img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))
+            img_show.paste(img_left, (0, 0, w, h))
+            img_show.paste(Image.fromarray(img_right), (w, 0, w * 2, h))
+
+            res_img_dict["spotting_res_img"] = img_show
 
         return res_img_dict
 
@@ -403,7 +452,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             else:
                 format_chart_func = format_image_func
 
-            format_seal_func = format_image_func
+            if self["model_settings"].get("use_seal_recognition", False):
+                format_seal_func = format_image_func
+            else:
+                format_seal_func = format_text_func
 
             format_table_func = lambda block: "\n" + format_table_center_func(block)
             format_formula_func = lambda block: block.content
@@ -422,7 +474,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         order_index = 1
         for idx, parsing_res in enumerate(parsing_res_list):
             label = parsing_res.label
-            if label in self.visualize_order_labels:
+            if label not in self.skip_order_labels:
                 order = order_index
                 order_index += 1
             else:
@@ -441,6 +493,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             if _keep_img and parsing_res.image is not None:
                 res_dict["image"] = parsing_res.image
 
+            if parsing_res.polygon_points is not None:
+                res_dict["block_polygon_points"] = parsing_res.polygon_points
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
                     res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
@@ -451,6 +505,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
             parsing_res_list_json.append(res_dict)
         data["parsing_res_list"] = parsing_res_list_json
+        if self.get("spotting_res"):
+            data["spotting_res"] = self["spotting_res"]
         if self["model_settings"]["use_doc_preprocessor"]:
             if isinstance(self["doc_preprocessor_res"], list):
                 data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
@@ -497,6 +553,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         format_chart_func = (
             format_chart2table_func
             if self["model_settings"]["use_chart_recognition"]
+            else format_image_func
+        )
+
+        format_seal_func = (
+            format_text_func
+            if self["model_settings"]["use_seal_recognition"]
             else format_image_func
         )
 
