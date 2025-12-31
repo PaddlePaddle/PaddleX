@@ -386,6 +386,11 @@ class _OCRPipeline(BasePipeline):
                 )
             ]
 
+            if return_word_box:
+                for res in results:
+                    res["text_word"] = []
+                    res["text_word_region"] = []
+
             indices = list(range(len(doc_preprocessor_images)))
             indices = [idx for idx in indices if len(dt_polys_list[idx]) > 0]
 
