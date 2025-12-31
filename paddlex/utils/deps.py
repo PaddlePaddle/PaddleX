@@ -176,11 +176,11 @@ def class_requires_deps(*deps):
 
 
 @lru_cache()
-def is_extra_available(extra):
+def is_extra_available(extra, error_if_missing=False):
     flags = [is_dep_available(dep) for dep in EXTRAS[extra]]
     if all(flags):
         return True
-    logging.debug(
+    getattr(logging, "error" if error_if_missing else "debug")(
         "These dependencies are not available: %s",
         [d for d, f in zip(EXTRAS[extra], flags) if not f],
     )
@@ -188,7 +188,7 @@ def is_extra_available(extra):
 
 
 def require_extra(extra, *, obj_name=None, alt=None):
-    if is_extra_available(extra) or (alt is not None and is_extra_available(alt)):
+    if is_extra_available(extra, error_if_missing=True) or (alt is not None and is_extra_available(alt, error_if_missing=True)):
         return
     if obj_name is not None:
         msg = f"`{obj_name}` requires additional dependencies."
