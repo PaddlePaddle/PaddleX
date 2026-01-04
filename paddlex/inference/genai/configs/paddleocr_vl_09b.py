@@ -13,16 +13,31 @@
 # limitations under the License.
 
 
+from ....utils.deps import require_deps
+
+
 def get_config(backend):
     if backend == "fastdeploy":
-        return {
+        require_deps("paddlepaddle")
+
+        import paddle.device
+
+        cfg = {
             "gpu-memory-utilization": 0.7,
             "max-model-len": 16384,
             "max-num-batched-tokens": 16384,
             "max-num-seqs": 256,
             "workers": 4,
-            "graph-optimization-config": '{"graph_opt_level":0, "use_cudagraph":true}',
         }
+        if paddle.device.is_compiled_with_cuda():
+            cfg["graph-optimization-config"] = (
+                '{"graph_opt_level":0, "use_cudagraph":true}'
+            )
+        elif paddle.device.is_compiled_with_custom_device("iluvatar_gpu"):
+            cfg["block-size"] = 16
+            cfg["max-num-seqs"] = 32
+            cfg["max-concurrency"] = 2048
+        return cfg
     elif backend == "vllm":
         return {
             "trust-remote-code": True,
