@@ -84,12 +84,16 @@ class InferResult(BaseModel):
 
 
 class ConcatenatePagesRequest(BaseModel):
-    pages: List[ocr.MarkdownData]
+    pages: List[dict]
+    mergeTable: bool = True
+    titleLevel: bool = True
+    prettifyMarkdown: bool = True
+    showFormulaNumber: bool = False
     logId: Optional[str] = None
 
 
 class ConcatenatePagesResult(BaseModel):
-    text: str
+    layoutParsingResult: LayoutParsingResult
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

@@ -1308,9 +1308,27 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>usePolygonPoints</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>use_polygon_points</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>useChartRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>use_chart_recognition</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useSealRecogntion</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrForImageBlock</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>use_ocr_for_image_block</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -1395,6 +1413,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>markdownIgnoreLabels</code></td>
 <td><code>array</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>markdown_ignore_labels</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vlmExtraArgs</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>vlm_extra_args</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -1500,22 +1524,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>object</code></td>
 <td>Key-value pairs of relative paths to Markdown images and Base64-encoded images.</td>
 </tr>
-<tr>
-<td><code>isStart</code></td>
-<td><code>boolean</code></td>
-<td>Whether the first element on the current page is the start of a paragraph.</td>
-</tr>
-<tr>
-<td><code>isEnd</code></td>
-<td><code>boolean</code></td>
-<td>Whether the last element on the current page is the end of a paragraph.</td>
-</tr>
 </tbody>
 </table>
 <ul>
   <li><b><code>concatenatePages</code></b></li>
 </ul>
-<p>Concatenate pages from Markdown results</p>
+<p>Concatenate results across multiple pages.</p>
 <p><code>POST /concatenate-pages</code></p>
 
 <ul>
@@ -1535,8 +1549,32 @@ Below are the API references for basic service-based deployment and examples of 
     <tr>
       <td><code>pages</code></td>
       <td><code>array</code></td>
-      <td>An array of pages. Each element is a Markdown object returned by the <code>infer</code> operation.</td>
+      <td>An array of pages. Each element is a <code>prunedResult</code> object returned by the <code>infer</code> operation.</td>
       <td>Yes</td>
+    </tr>
+    <tr>
+    <td><code>mergeTable</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to merge tables across pages. The default is <code>true</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>titleLevel</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to assign title levels. The default is <code>true</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>prettifyMarkdown</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>showFormulaNumber</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+    <td>No</td>
     </tr>
   </tbody>
 </table>
@@ -1555,9 +1593,9 @@ Below are the API references for basic service-based deployment and examples of 
   </thead>
   <tbody>
     <tr>
-      <td><code>text</code></td>
-      <td><code>string</code></td>
-      <td>The concatenated Markdown text.</td>
+      <td><code>layoutParsingResult</code></td>
+      <td><code>object</code></td>
+      <td>The concatenated layout parsing results. For the fields it contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images).</td>
     </tr>
   </tbody>
 </table>
@@ -1571,7 +1609,7 @@ import base64
 import requests
 import pathlib
 
-API_URL = "http://localhost:8080/layout-parsing" # Service URL
+BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
@@ -1585,14 +1623,14 @@ payload = {
     "fileType": 1, # File type, 1 indicates an image file
 }
 
-# Call the API
-response = requests.post(API_URL, json=payload)
+response = requests.post(BASE_URL + "/layout-parsing", json=payload)
+assert response.status_code == 200, response.content
 
-# Process the returned data from the interface
-assert response.status_code == 200
 result = response.json()["result"]
+pruned_results = []
 for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
+    pruned_results.append(res["prunedResult"])
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)
     (md_dir / "doc.md").write_text(res["markdown"]["text"])
@@ -1607,6 +1645,16 @@ for i, res in enumerate(result["layoutParsingResults"]):
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
+
+payload = {
+    "pages": pruned_results,
+}
+
+response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
+assert response.status_code == 200, response.content
+
+result = response.json()["result"]
+pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
 </code></pre></details>
 
 <details><summary>C++</summary>
