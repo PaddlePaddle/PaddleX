@@ -2461,6 +2461,18 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2669,7 +2681,7 @@ payload = {
 }
 
 response = requests.post(BASE_URL + "/layout-parsing", json=payload)
-assert response.status_code == 200, response.content
+assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
 pruned_results = []
@@ -2695,7 +2707,7 @@ payload = {
 }
 
 response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
-assert response.status_code == 200, response.content
+assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
 pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])

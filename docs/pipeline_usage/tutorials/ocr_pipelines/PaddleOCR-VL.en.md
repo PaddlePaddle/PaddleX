@@ -1624,7 +1624,7 @@ payload = {
 }
 
 response = requests.post(BASE_URL + "/layout-parsing", json=payload)
-assert response.status_code == 200, response.content
+assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
 pruned_results = []
@@ -1651,7 +1651,7 @@ payload = {
 }
 
 response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
-assert response.status_code == 200, response.content
+assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
 pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
