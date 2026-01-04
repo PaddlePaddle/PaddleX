@@ -311,7 +311,11 @@ class TritonPythonModel(BaseTritonPythonModel):
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, preds)):
             pruned_res = app_common.prune_result(item.json["res"])
-            md_data = item.markdown
+            # XXX
+            md_data = item._to_markdown(
+                pretty=input.prettifyMarkdown,
+                show_formula_number=input.showFormulaNumber,
+            )
             md_text = md_data["markdown_texts"]
             md_imgs = app_common.postprocess_images(
                 md_data["markdown_images"],
