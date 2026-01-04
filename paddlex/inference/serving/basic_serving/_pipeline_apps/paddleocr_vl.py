@@ -67,7 +67,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_layout_detection=request.useLayoutDetection,
             use_polygon_points=request.usePolygonPoints,
             use_chart_recognition=request.useChartRecognition,
-            use_seal_recognition=request.useSealRecogntion,
+            use_seal_recognition=request.useSealRecognition,
             use_ocr_for_image_block=request.useOcrForImageBlock,
             layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,

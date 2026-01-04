@@ -1320,7 +1320,7 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealRecogntion</code></td>
+<td><code>useSealRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>use_seal_recognition</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
 <td>No</td>
