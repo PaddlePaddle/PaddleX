@@ -40,7 +40,7 @@ class InferRequest(ocr.BaseInferRequest):
     useLayoutDetection: Optional[bool] = None
     usePolygonPoints: Optional[bool] = None
     useChartRecognition: Optional[bool] = None
-    useSealRecogntion: Optional[bool] = None
+    useSealRecognition: Optional[bool] = None
     useOcrForImageBlock: Optional[bool] = None
     layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None

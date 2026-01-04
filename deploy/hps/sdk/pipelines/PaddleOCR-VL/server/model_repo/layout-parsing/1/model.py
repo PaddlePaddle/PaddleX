@@ -201,7 +201,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 input.useLayoutDetection,
                                 input.usePolygonPoints,
                                 input.useChartRecognition,
-                                input.useSealRecogntion,
+                                input.useSealRecognition,
                                 input.useOcrForImageBlock,
                                 input.layoutThreshold,
                                 input.layoutNms,
