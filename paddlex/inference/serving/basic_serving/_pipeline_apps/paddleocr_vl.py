@@ -14,7 +14,9 @@
 
 from typing import Any, Dict, List
 
+from .....utils import logging
 from .....utils.deps import function_requires_deps, is_dep_available
+from ....pipelines.paddleocr_vl.result import PaddleOCRVLResult
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
@@ -31,7 +33,7 @@ from ._common import common
 from ._common import ocr as ocr_common
 
 if is_dep_available("fastapi"):
-    from fastapi import FastAPI
+    from fastapi import FastAPI, HTTPException
 
 
 @function_requires_deps("fastapi")
@@ -63,7 +65,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             use_doc_orientation_classify=request.useDocOrientationClassify,
             use_doc_unwarping=request.useDocUnwarping,
             use_layout_detection=request.useLayoutDetection,
+            use_polygon_points=request.usePolygonPoints,
             use_chart_recognition=request.useChartRecognition,
+            use_seal_recognition=request.useSealRecogntion,
+            use_ocr_for_image_block=request.useOcrForImageBlock,
             layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,
             layout_unclip_ratio=request.layoutUnclipRatio,
@@ -78,6 +83,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             max_new_tokens=request.maxNewTokens,
             merge_layout_blocks=request.mergeLayoutBlocks,
             markdown_ignore_labels=request.markdownIgnoreLabels,
+            vlm_extra_args=request.vlmExtraArgs,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []
@@ -143,25 +149,60 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         CONCATENATE_PAGES_ENDPOINT,
         "concatenatePages",
     )
-    def _concatenate_pages(
+    async def _concatenate_pages(
         request: ConcatenatePagesRequest,
     ) -> AIStudioResultResponse[ConcatenatePagesResult]:
         pipeline = ctx.pipeline
 
-        pages = []
-        for page in request.pages:
-            pages.append(
-                {
-                    "markdown_texts": page.text,
-                }
-            )
+        log_id = request.logId if request.logId else serving_utils.generate_log_id()
 
-        concatenated_text = pipeline.pipeline.concatenate_markdown_pages(pages)
+        pages = []
+        for i, page in enumerate(request.pages):
+            try:
+                page = PaddleOCRVLResult(page)
+            except Exception as e:
+                logging.error("Failed to parse page %d: %s", i, e)
+                raise HTTPException(
+                    status_code=422, detail=f"Page {i} is invalid"
+                ) from e
+            pages.append(page)
+
+        concatenated_result = await serving_utils.call_async(
+            pipeline.pipeline.concatenate_pages,
+            pages,
+            merge_table=request.mergeTable,
+            title_level=request.titleLevel,
+        )
+
+        layout_parsing_result = {}
+        layout_parsing_result["prunedResult"] = common.prune_result(
+            concatenated_result.json["res"]
+        )
+        # XXX
+        md_data = concatenated_result._to_markdown(
+            pretty=request.prettifyMarkdown,
+            show_formula_number=request.showFormulaNumber,
+        )
+        md_text = md_data["markdown_texts"]
+        # TODO: Reuse images from `infer`
+        md_imgs = await serving_utils.call_async(
+            common.postprocess_images,
+            md_data["markdown_images"],
+            log_id,
+            filename_template=f"markdown_{i}/{{key}}",
+            file_storage=ctx.extra["file_storage"],
+            return_urls=ctx.extra["return_img_urls"],
+            max_img_size=ctx.extra["max_output_img_size"],
+        )
+        layout_parsing_result["markdown"] = dict(
+            text=md_text,
+            images=md_imgs,
+        )
 
         return AIStudioResultResponse[ConcatenatePagesResult](
-            logId=request.logId if request.logId else serving_utils.generate_log_id(),
+            logId=log_id,
             result=ConcatenatePagesResult(
-                text=concatenated_text,
+                layoutParsingResult=layout_parsing_result,
             ),
         )
 
