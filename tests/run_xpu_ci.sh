@@ -1,0 +1,15 @@
+wget https://paddle-model-ecology.bj.bcebos.com/paddlex/tmp/PaddleTest.tar
+tar -xf PaddleTest.tar && rm -rf  PaddleTest.tar 
+xpu-smi 
+python --version
+python -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+python -m pip install --pre paddlepaddle-xpu -i https://www.paddlepaddle.org.cn/packages/nightly/xpu-p800/
+python -c "import paddle; paddle.version.show()"
+cp -r PaddleTest/models/PaddleX/ci ./
+export DEVICE_ID=${cudaid2}
+export MEM_SIZE=32
+export DEVICE_TYPE=xpu
+rm -rf  ci/pr_list.txt
+mv ci/pr_list_xpu.txt  ci/pr_list.txt
+export PIP_DEFAULT_RETRIES=1
+bash ci/ci_run.sh
