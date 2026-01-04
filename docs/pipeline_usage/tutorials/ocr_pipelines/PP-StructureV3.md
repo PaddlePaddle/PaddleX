@@ -2418,6 +2418,18 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -2620,7 +2632,7 @@ payload = {
 }
 
 response = requests.post(BASE_URL + "/layout-parsing", json=payload)
-assert response.status_code == 200, response.content
+assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
 pruned_results = []
@@ -2646,7 +2658,7 @@ payload = {
 }
 
 response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
-assert response.status_code == 200, response.content
+assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
 pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
