@@ -1,0 +1,261 @@
+
+pipeline_name: PP-DocTranslation
+
+use_layout_parser: True
+
+SubModules:
+  LLM_Chat:
+    module_name: chat_bot
+    model_name: ernie-3.5-8k
+    base_url: "https://qianfan.baidubce.com/v2"
+    api_type: openai
+    api_key: "api_key" # Set this to a real API key
+
+  PromptEngneering:
+    Translate_CommonText:
+      module_name: prompt_engneering
+      task_type: translate_prompt
+      
+      task_description: '你是一位资深的多语种语言翻译专家，精通多种语言的语法、词汇、文化背景以及语言风格。你的任务是将文本从一种语言准确地转换为另一种语言，同时精准地保留原文的语义、风格和语调，确保翻译内容在目标语言中自然流畅且富有文化适应性。'
+
+      output_format: '输出应为翻译后的文本，并与原文保持格式一致，包括标点符号和段落结构。如果原文中包含特定的格式（如表格、公式、列表等），翻译后的文本也应保持相同的格式。'
+
+      rules_str: '通用规则：
+              1. 翻译应确保语义准确完整，并符合目标语言的表达习惯。
+              2. 保留原文的风格和语调，以传达相同的情感和意图。
+              3. 专有名词（如人名、地名、品牌名等）应保持不变，除非它们在目标语言中有公认的翻译。
+              4. 文化特定的表达或成语需根据目标语言的文化背景进行适当的转换或解释。
+              5. 避免使用机器翻译工具的简单直译，需根据上下文进行调整和优化。
+              6. 原文中可能包含的非文本元素（如HTML语法中的图片、表格、公式等）应保持不变。
+              7. 原文中可能包含的代码块，如编程语言代码等，应保持代码块的完整性，不要对代码进行调整。
+              8. 翻译完成后，应仔细校对，确保没有语法和拼写错误。'
+      few_shot_demo_text_content:
+      few_shot_demo_key_value_list:
+
+SubPipelines:
+  LayoutParser:
+    pipeline_name: PP-StructureV3
+
+    batch_size: 8
+
+    use_doc_preprocessor: False
+    use_seal_recognition: False
+    use_table_recognition: True
+    use_formula_recognition: True
+    use_chart_recognition: False
+    use_region_detection: True
+
+    SubModules:
+      LayoutDetection:
+        module_name: layout_detection
+        model_name: PP-DocLayout_plus-L
+        model_dir: null
+        batch_size: 8
+        threshold: 
+          0: 0.3  # paragraph_title
+          1: 0.5  # image
+          2: 0.4  # text
+          3: 0.5  # number
+          4: 0.5  # abstract
+          5: 0.5  # content
+          6: 0.5  # figure_table_chart_title
+          7: 0.3  # formula
+          8: 0.5  # table
+          9: 0.5  # reference
+          10: 0.5 # doc_title
+          11: 0.5 # footnote
+          12: 0.5 # header
+          13: 0.5 # algorithm
+          14: 0.5 # footer
+          15: 0.45 # seal
+          16: 0.5 # chart
+          17: 0.5 # formula_number
+          18: 0.5 # aside_text
+          19: 0.5 # reference_content
+        layout_nms: True
+        layout_unclip_ratio: [1.0, 1.0] 
+        layout_merge_bboxes_mode: 
+          0: "large"  # paragraph_title
+          1: "large"  # image
+          2: "union"  # text
+          3: "union"  # number
+          4: "union"  # abstract
+          5: "union"  # content
+          6: "union"  # figure_table_chart_title
+          7: "large"  # formula
+          8: "union"  # table
+          9: "union"  # reference
+          10: "union" # doc_title
+          11: "union" # footnote
+          12: "union" # header
+          13: "union" # algorithm
+          14: "union" # footer
+          15: "union" # seal
+          16: "large" # chart
+          17: "union" # formula_number
+          18: "union" # aside_text
+          19: "union" # reference_content
+      ChartRecognition:
+        module_name: chart_recognition
+        model_name: PP-Chart2Table
+        model_dir: null
+        batch_size: 1 
+      RegionDetection:
+        module_name: layout_detection
+        model_name: PP-DocBlockLayout
+        model_dir: null
+        layout_nms: True
+        layout_merge_bboxes_mode: "small"
+
+    SubPipelines:
+      DocPreprocessor:
+        pipeline_name: doc_preprocessor
+        batch_size: 8
+        use_doc_orientation_classify: True
+        use_doc_unwarping: True
+        SubModules:
+          DocOrientationClassify:
+            module_name: doc_text_orientation
+            model_name: PP-LCNet_x1_0_doc_ori
+            model_dir: null
+            batch_size: 8
+          DocUnwarping:
+            module_name: image_unwarping
+            model_name: UVDoc
+            model_dir: null
+
+      GeneralOCR:
+        pipeline_name: OCR
+        batch_size: 8
+        text_type: general
+        use_doc_preprocessor: False
+        use_textline_orientation: True
+        SubModules:
+          TextDetection:
+            module_name: text_detection
+            model_name: PP-OCRv5_server_det
+            model_dir: null
+            limit_side_len: 736
+            limit_type: min
+            max_side_limit: 4000
+            thresh: 0.3
+            box_thresh: 0.6
+            unclip_ratio: 1.5
+          TextLineOrientation:
+            module_name: textline_orientation
+            model_name: PP-LCNet_x1_0_textline_ori
+            model_dir: null
+            batch_size: 8
+          TextRecognition:
+            module_name: text_recognition
+            model_name: PP-OCRv5_server_rec
+            model_dir: null
+            batch_size: 8
+            score_thresh: 0.0
+    
+
+      TableRecognition:
+        pipeline_name: table_recognition_v2
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        use_ocr_model: False
+        SubModules:  
+          TableClassification:
+            module_name: table_classification
+            model_name: PP-LCNet_x1_0_table_cls
+            model_dir: null
+
+          WiredTableStructureRecognition:
+            module_name: table_structure_recognition
+            model_name: SLANeXt_wired
+            model_dir: null
+          
+          WirelessTableStructureRecognition:
+            module_name: table_structure_recognition
+            model_name: SLANet_plus
+            model_dir: null
+          
+          WiredTableCellsDetection:
+            module_name: table_cells_detection
+            model_name: RT-DETR-L_wired_table_cell_det
+            model_dir: null
+          
+          WirelessTableCellsDetection:
+            module_name: table_cells_detection
+            model_name: RT-DETR-L_wireless_table_cell_det
+            model_dir: null
+
+          TableOrientationClassify:
+            module_name: doc_text_orientation
+            model_name: PP-LCNet_x1_0_doc_ori
+            model_dir: null
+        SubPipelines:
+          GeneralOCR:
+            pipeline_name: OCR
+            text_type: general
+            use_doc_preprocessor: False
+            use_textline_orientation: True
+            SubModules:
+              TextDetection:
+                module_name: text_detection
+                model_name: PP-OCRv5_server_det
+                model_dir: null
+                limit_side_len: 736
+                limit_type: min
+                max_side_limit: 4000
+                thresh: 0.3
+                box_thresh: 0.4
+                unclip_ratio: 1.5
+              TextLineOrientation:
+                module_name: textline_orientation
+                model_name: PP-LCNet_x1_0_textline_ori
+                model_dir: null
+                batch_size: 8
+              TextRecognition:
+                module_name: text_recognition
+                model_name: PP-OCRv5_server_rec
+                model_dir: null
+                batch_size: 8
+            score_thresh: 0.0
+
+      SealRecognition:
+        pipeline_name: seal_recognition
+        batch_size: 8
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        SubPipelines:
+          SealOCR:
+            pipeline_name: OCR
+            batch_size: 8
+            text_type: seal
+            use_doc_preprocessor: False
+            use_textline_orientation: False
+            SubModules:
+              TextDetection:
+                module_name: seal_text_detection
+                model_name: PP-OCRv4_server_seal_det
+                model_dir: null
+                limit_side_len: 736
+                limit_type: min
+                max_side_limit: 4000
+                thresh: 0.2
+                box_thresh: 0.6
+                unclip_ratio: 0.5
+              TextRecognition:
+                module_name: text_recognition
+                model_name: PP-OCRv5_server_rec
+                model_dir: null
+                batch_size: 8
+                score_thresh: 0
+        
+      FormulaRecognition:
+        pipeline_name: formula_recognition
+        batch_size: 8
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        SubModules:
+          FormulaRecognition:
+            module_name: formula_recognition
+            model_name: PP-FormulaNet_plus-L
+            model_dir: null
+            batch_size: 8

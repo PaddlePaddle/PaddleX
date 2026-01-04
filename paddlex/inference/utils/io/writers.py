@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
 # limitations under the License.
 
 
-import os
 import enum
 import json
 from pathlib import Path
 
-import cv2
 import numpy as np
-from PIL import Image
 import pandas as pd
+import yaml
+from PIL import Image
+
+from ....utils.deps import class_requires_deps, is_dep_available
 from .tablepyxl import document_to_xl
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+
+if is_dep_available("soundfile"):
+    import soundfile as sf
 
 
 __all__ = [
@@ -33,6 +40,9 @@ __all__ = [
     "CSVWriter",
     "HtmlWriter",
     "XlsxWriter",
+    "YAMLWriter",
+    "VideoWriter",
+    "MarkdownWriter",
 ]
 
 
@@ -46,6 +56,10 @@ class WriterType(enum.Enum):
     HTML = 5
     XLSX = 6
     CSV = 7
+    YAML = 8
+    MARKDOWN = 9
+    TXT = 10
+    AUDIO = 11
 
 
 class _BaseWriter(object):
@@ -109,6 +123,28 @@ class ImageWriter(_BaseWriter):
     def get_type(self):
         """get type"""
         return WriterType.IMAGE
+
+
+class VideoWriter(_BaseWriter):
+    """VideoWriter"""
+
+    def __init__(self, backend="opencv", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj):
+        """write"""
+        return self._backend.write_obj(str(out_path), obj)
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "opencv":
+            return OpenCVVideoWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.VIDEO
 
 
 class TextWriter(_BaseWriter):
@@ -189,15 +225,78 @@ class XlsxWriter(_BaseWriter):
         return WriterType.XLSX
 
 
+class YAMLWriter(_BaseWriter):
+    def __init__(self, backend="PyYAML", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj, **bk_args):
+        return self._backend.write_obj(str(out_path), obj, **bk_args)
+
+    def _init_backend(self, bk_type, bk_args):
+        if bk_type == "PyYAML":
+            return YAMLWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.YAML
+
+
+class MarkdownWriter(_BaseWriter):
+    """MarkdownWriter"""
+
+    def __init__(self, backend="markdown", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj):
+        """write"""
+        return self._backend.write_obj(str(out_path), obj)
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "markdown":
+            return MarkdownWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.MARKDOWN
+
+
+class AudioWriter(_BaseWriter):
+    """AudioWriter"""
+
+    def __init__(self, sample_rate=24000, backend="wav", **bk_args):
+        super().__init__(sample_rate=sample_rate, backend=backend, **bk_args)
+        self.sample_rate = sample_rate
+
+    def write(self, out_path, obj):
+        """write"""
+        return self._backend.write_obj(str(out_path), obj)
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "wav":
+            return AudioWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.AUDIO
+
+
 class _BaseWriterBackend(object):
     """_BaseWriterBackend"""
 
-    def write_obj(self, out_path, obj):
+    def write_obj(self, out_path, obj, **bk_args):
         """write object"""
         Path(out_path).parent.mkdir(parents=True, exist_ok=True)
-        return self._write_obj(out_path, obj)
+        return self._write_obj(out_path, obj, **bk_args)
 
-    def _write_obj(self, out_path, obj):
+    def _write_obj(self, out_path, obj, **bk_args):
         """write object"""
         raise NotImplementedError
 
@@ -236,16 +335,16 @@ class XlsxWriterBackend(_BaseWriterBackend):
 class _ImageWriterBackend(_BaseWriterBackend):
     """_ImageWriterBackend"""
 
-    pass
 
-
+@class_requires_deps("opencv-contrib-python")
 class OpenCVImageWriterBackend(_ImageWriterBackend):
     """OpenCVImageWriterBackend"""
 
     def _write_obj(self, out_path, obj):
         """write image object by OpenCV"""
         if isinstance(obj, Image.Image):
-            arr = np.asarray(obj)
+            # Assuming the channel order is RGB.
+            arr = np.asarray(obj)[:, :, ::-1]
         elif isinstance(obj, np.ndarray):
             arr = obj
         else:
@@ -273,6 +372,29 @@ class PILImageWriterBackend(_ImageWriterBackend):
         return img.save(out_path, format=self.format)
 
 
+class _VideoWriterBackend(_BaseWriterBackend):
+    """_VideoWriterBackend"""
+
+
+@class_requires_deps("opencv-contrib-python")
+class OpenCVVideoWriterBackend(_VideoWriterBackend):
+    """OpenCVImageWriterBackend"""
+
+    def _write_obj(self, out_path, obj):
+        """write video object by OpenCV"""
+        obj, fps = obj
+        if isinstance(obj, np.ndarray):
+            vr = obj
+            width, height = vr[0].shape[1], vr[0].shape[0]
+            fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # Alternatively, use 'XVID'
+            out = cv2.VideoWriter(out_path, fourcc, fps, (width, height))
+            for frame in vr:
+                out.write(frame)
+            out.release()
+        else:
+            raise TypeError("Unsupported object type")
+
+
 class _BaseJsonWriterBackend(object):
     def __init__(self, indent=4, ensure_ascii=False):
         super().__init__()
@@ -289,7 +411,7 @@ class _BaseJsonWriterBackend(object):
 
 class JsonWriterBackend(_BaseJsonWriterBackend):
     def _write_obj(self, out_path, obj, **bk_args):
-        with open(out_path, "w") as f:
+        with open(out_path, "w", encoding="utf-8") as f:
             json.dump(obj, f, **bk_args)
 
 
@@ -297,6 +419,19 @@ class UJsonWriterBackend(_BaseJsonWriterBackend):
     # TODO
     def _write_obj(self, out_path, obj, **bk_args):
         raise NotImplementedError
+
+
+class YAMLWriterBackend(_BaseWriterBackend):
+
+    def __init__(self, mode="w", encoding="utf-8"):
+        super().__init__()
+        self.mode = mode
+        self.encoding = encoding
+
+    def _write_obj(self, out_path, obj, **bk_args):
+        """write text object"""
+        with open(out_path, mode=self.mode, encoding=self.encoding) as f:
+            yaml.dump(obj, f, **bk_args)
 
 
 class CSVWriter(_BaseWriter):
@@ -324,8 +459,6 @@ class CSVWriter(_BaseWriter):
 class _CSVWriterBackend(_BaseWriterBackend):
     """_CSVWriterBackend"""
 
-    pass
-
 
 class PandasCSVWriterBackend(_CSVWriterBackend):
     """PILImageWriterBackend"""
@@ -340,3 +473,28 @@ class PandasCSVWriterBackend(_CSVWriterBackend):
         else:
             raise TypeError("Unsupported object type")
         return ts.to_csv(out_path)
+
+
+class MarkdownWriterBackend(_BaseWriterBackend):
+    """MarkdownWriterBackend"""
+
+    def __init__(self):
+        super().__init__()
+
+    def _write_obj(self, out_path, obj):
+        """write markdown obj"""
+        with open(out_path, mode="w", encoding="utf-8", errors="replace") as f:
+            f.write(obj)
+
+
+class AudioWriterBackend(_BaseWriterBackend):
+    """AudioWriterBackend"""
+
+    def __init__(self, sample_rate=24000):
+        super().__init__()
+        self.sample_rate = sample_rate
+
+    def _write_obj(self, out_path, obj):
+        """write audio obj"""
+        audio = obj["result"]
+        sf.write(out_path, audio, self.sample_rate)

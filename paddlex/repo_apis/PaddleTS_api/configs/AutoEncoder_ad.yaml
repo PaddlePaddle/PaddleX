@@ -4,6 +4,10 @@ epoch: 5
 training: True 
 do_eval: True
 task: anomaly
+to_static_train: False
+use_amp: False
+amp_level: O2
+
 
 dataset: 
   name: TSADDataset

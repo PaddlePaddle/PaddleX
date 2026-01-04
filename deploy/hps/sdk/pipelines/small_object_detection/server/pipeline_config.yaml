@@ -1,0 +1,10 @@
+
+pipeline_name: small_object_detection
+
+SubModules:
+  SmallObjectDetection:
+    module_name: small_object_detection
+    model_name: PP-YOLOE_plus_SOD-L
+    model_dir: null
+    batch_size: 1
+    threshold: 0.5

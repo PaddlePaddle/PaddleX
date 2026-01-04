@@ -40,24 +40,24 @@ PaddleX provides 18 end-to-end semantic segmentation models. For details, refer 
 <tr>
 <th>Model List</th>
 <th>mIoU (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>OCRNet_HRNet-W48</td>
 <td>82.15</td>
-<td>87.97</td>
-<td>2180.76</td>
+<td>582.92 / 536.28</td>
+<td>3513.72 / 2543.10</td>
 <td>270</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
 <td>77.04</td>
-<td>5.98</td>
-<td>140.02</td>
+<td>28.12 / 23.84</td>
+<td>398.31 / 398.31</td>
 <td>31</td>
 </tr>
 </tbody>
@@ -83,7 +83,7 @@ tar -xf ./dataset/semantic-segmentation-makassaridn-road-dataset.tar -C ./datase
 To verify the dataset, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset
 ```
@@ -110,9 +110,9 @@ After executing the above command, PaddleX will verify the dataset and collect b
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/semantic-segmentation-makassaridn-road-dataset",
+  "dataset_path": "semantic-segmentation-makassaridn-road-dataset",
   "show_type": "image",
-  "dataset_type": "COCODetDataset"
+  "dataset_type": "SegDataset"
 }
 ```
 
@@ -158,7 +158,7 @@ Data conversion and splitting can be enabled simultaneously. For data splitting,
 Before training, ensure that you have validated your dataset. To complete the training of a PaddleX model, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset \
     -o Train.num_classes=4
@@ -196,7 +196,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. To evaluate a model using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset
 ```
@@ -311,12 +311,12 @@ Changing Epoch Results:
 
 <b>Note: This tutorial is designed for 4 GPUs. If you have only 1 GPU, you can adjust the number of training GPUs to complete the experiment, but the final metrics may not align with the above indicators, which is normal.</b>
 
-## 6. Production Line Testing
+## 6. pipeline Testing
 
-Replace the model in the production line with the fine-tuned model for testing, for example:
+Replace the model in the pipeline with the fine-tuned model for testing, for example:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png"
@@ -330,23 +330,46 @@ The prediction results will be generated under `./output`, where the prediction 
 </center>
 
 ## 7. Development Integration/Deployment
-If the general semantic segmentation pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/semantic_segmentation.yaml` configuration file to your own model path:
+If the general semantic segmentation pipeline meets your requirements for inference speed and accuracy in the pipeline, you can proceed directly with development integration/deployment.
+
+1. If you need to use the fine-tuned model weights, you can obtain the configuration file for the semantic_segmentation pipeline and load it for prediction. You can execute the following command to save the results in my_path:
+
+```
+paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` field in the configuration file. If you need to directly apply the general semantic segmentation pipeline to your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: semantic_segmentation
+
+SubModules:
+  SemanticSegmentation:
+    module_name: semantic_segmentation
+    model_name: PP-LiteSeg-T
+    model_dir: null # Replace this with the local path to your trained model weights.
+    batch_size: 1
+    target_size: None
+```
+
+Subsequently, in your Python code, you can utilize the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/semantic_segmentation.yaml")
+pipeline = create_pipeline(pipeline="my_path/semantic_segmentation.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png")
 for res in output:
     res.print() # Print the structured output of the prediction
     res.save_to_img("./output/") # Save the visualized image of the result
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
+
 For more parameters, please refer to [General Semantic Segmentation Pipeline Usage Tutorial](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
-* Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy.en.md).
-* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
+* Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
+* On-Device Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../pipeline_deploy/on_device_deployment.en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.

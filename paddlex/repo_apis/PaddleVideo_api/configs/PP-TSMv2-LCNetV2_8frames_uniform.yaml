@@ -1,0 +1,148 @@
+Global:
+    checkpoints: null
+    pretrained_model: "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams"
+    output_dir: ./output/
+    device: gpu
+    use_visualdl: False
+    save_inference_dir: ./inference
+    # training model under @to_static
+    to_static: False
+    algorithm: PP-TSMv2-LCNetV2_8frames_uniform
+
+MODEL: #MODEL field
+    framework: "Recognizer2D" #Mandatory, indicate the type of network, associate to the 'paddlevideo/modeling/framework/' .
+    backbone: #Mandatory, indicate the type of backbone, associate to the 'paddlevideo/modeling/backbones/' .
+        name: "PPTSM_v2" #Mandatory, The name of backbone.
+        pretrained: null #Optional, pretrained model path.
+        num_seg: 8
+        class_num: 400
+    head:
+        name: "MoViNetHead" #Mandatory, indicate the type of head, associate to the 'paddlevideo/modeling/heads'
+
+
+DATASET: #DATASET field
+    batch_size: 16  #Mandatory, bacth size
+    num_workers: 4 #Mandatory, the number of subprocess on each GPU.
+    train:
+        format: "VideoDataset" #Mandatory, indicate the type of dataset, associate to the 'paddlevidel/loader/dateset'
+        data_prefix: "K400_dataset/K400/videos" #Mandatory, train data root path
+        file_path: "K400_dataset/K400/train.txt" #Mandatory, train data index file path
+    valid:
+        format: "VideoDataset" #Mandatory, indicate the type of dataset, associate to the 'paddlevidel/loader/dateset'
+        data_prefix: "K400_dataset/K400/videos" #Mandatory, valid data root path
+        file_path: "K400_dataset/K400/val.txt" #Mandatory, valid data index file path
+    test:
+        format: "VideoDataset" #Mandatory, indicate the type of dataset, associate to the 'paddlevidel/loader/dateset'
+        data_prefix: "K400_dataset/K400/videos" #Mandatory, valid data root path
+        file_path: "K400_dataset/K400/val.txt" #Mandatory, valid data index file path
+
+PIPELINE: #PIPELINE field
+    train: #Mandotary, indicate the pipeline to deal with the training data, associate to the 'paddlevideo/loader/pipelines/'
+        decode:
+            name: "VideoDecoder"
+            backend: "decord"
+        sample:
+            name: "Sampler"
+            num_seg: 8
+            seg_len: 1
+            valid_mode: False
+        transform: #Mandotary, image transform operator
+            - Scale:
+                short_size: 256
+            - MultiScaleCrop:
+                target_size: 256
+            - RandomCrop:
+                target_size: 224
+            - RandomFlip:
+            - Image2Array:
+            - Normalization:
+                mean: [0.485, 0.456, 0.406]
+                std: [0.229, 0.224, 0.225]
+    valid: #Mandatory, indicate the pipeline to deal with the validating data. associate to the 'paddlevideo/loader/pipelines/'
+        decode:
+            name: "VideoDecoder"
+            backend: "decord"
+        sample:
+            name: "Sampler"
+            num_seg: 8
+            seg_len: 1
+            valid_mode: True
+        transform:
+            - Scale:
+                short_size: 256
+            - CenterCrop:
+                target_size: 224
+            - Image2Array:
+            - Normalization:
+                mean: [0.485, 0.456, 0.406]
+                std: [0.229, 0.224, 0.225]
+    test:  #Mandatory, indicate the pipeline to deal with the validating data. associate to the 'paddlevideo/loader/pipelines/'
+        decode:
+            name: "VideoDecoder"
+            backend: "decord"
+        sample:
+            name: "Sampler"
+            num_seg: 8
+            seg_len: 1
+            valid_mode: True
+        transform:
+            - Scale:
+                short_size: 256
+            - CenterCrop:
+                target_size: 224
+            - Image2Array:
+            - Normalization:
+                mean: [0.485, 0.456, 0.406]
+                std: [0.229, 0.224, 0.225]
+
+OPTIMIZER: #OPTIMIZER field
+  name: 'Momentum'
+  momentum: 0.9
+  learning_rate:
+    iter_step: True
+    name: 'CustomWarmupCosineDecay'
+    max_epoch: 120
+    warmup_epochs: 10
+    warmup_start_lr: 0.005
+    cosine_base_lr: 0.01
+  weight_decay:
+    name: 'L2'
+    value: 1e-4
+  use_nesterov: True
+
+MIX:
+    name: "Mixup"
+    alpha: 0.2
+
+
+METRIC:
+    name: 'CenterCropMetric'
+
+INFERENCE:
+    name: 'ppTSM_Inference_helper'
+    num_seg: 8
+    target_size: 224
+
+Infer:
+    transforms:
+        - ReadVideo:
+            num_seg: 8
+            sample_type: 'uniform'
+        - Scale:
+            short_size: 256
+        - CenterCrop:
+            target_size: 224
+        - Image2Array:
+            data_format: 'tchw'
+        - NormalizeVideo:
+            mean: [0.485, 0.456, 0.406]
+            std: [0.229, 0.224, 0.225] 
+    PostProcess:
+        name: Topk
+        topk: 1
+        class_id_map_file: data/k400/Kinetics-400_label_list.txt     
+
+model_name: "ppTSMv2"
+log_interval: 10 #Optional, the interval of logger, default:10
+epochs: 120  #Mandatory, total epoch
+log_level: "INFO" #Optional, the logger level. default: "INFO"

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ class ShiTuRecEvaluator(ClsEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         self.pdx_config.update_dataset(

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,37 @@
 # limitations under the License.
 
 
+import json
 import os
 import os.path as osp
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
+from pathlib import Path
+
 from PIL import Image
-import json
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse
-
 from ..model_list import MODELS
+from .dataset_src import check, deep_analyse, split_dataset
 
 
 class TableRecDatasetChecker(BaseDatasetChecker):
     """Dataset Checker for Table Recognition Model"""
 
     entities = MODELS
+
+    def get_dataset_root(self, dataset_dir: str) -> str:
+        """find the dataset root dir
+
+        Args:
+            dataset_dir (str): the directory that contain dataset.
+
+        Returns:
+            str: the root directory of dataset.
+        """
+        anno_dirs = list(Path(dataset_dir).glob("**/train.txt"))
+        assert len(anno_dirs) == 1
+        dataset_dir = anno_dirs[0].parent.as_posix()
+        return dataset_dir
 
     def convert_dataset(self, src_dataset_dir: str) -> str:
         """convert the dataset from other type to specified type
@@ -64,7 +79,7 @@ class TableRecDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary.
         """
-        return check(dataset_dir, self.global_config.output, sample_num=10)
+        return check(dataset_dir, self.output, sample_num=10)
 
     def get_show_type(self) -> str:
         """get the show type of dataset

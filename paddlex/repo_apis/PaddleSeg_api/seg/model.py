@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 
 import os
 
+from ....utils.cache import DEFAULT_CACHE_DIR
+from ....utils.device import parse_device
+from ....utils.download import download
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.device import parse_device
-from ....utils.misc import abspath
-from ....utils.download import download
-from ....utils.cache import DEFAULT_CACHE_DIR
 
 
 class SegModel(BaseModel):
@@ -126,6 +126,10 @@ class SegModel(BaseModel):
         if log_iters is not None:
             cli_args.append(CLIArgument("--log_iters", log_iters))
 
+        input_shape = kwargs.pop("input_shape", None)
+        if input_shape is not None:
+            cli_args.append(CLIArgument("--input_shape", *input_shape))
+
         # Benchmarking mode settings
         benchmark = kwargs.pop("benchmark", None)
         if benchmark is not None:
@@ -167,8 +171,11 @@ class SegModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.set_val("uniform_output_enabled", uniform_output_enabled)
         config.set_val("pdx_model_name", self.name)
+        if export_with_pir:
+            config.set_val("export_with_pir", export_with_pir)
 
         self._assert_empty_kwargs(kwargs)
 
@@ -352,8 +359,11 @@ class SegModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.set_val("uniform_output_enabled", uniform_output_enabled)
         config.set_val("pdx_model_name", self.name)
+        if export_with_pir:
+            config.set_val("export_with_pir", export_with_pir)
 
         self._assert_empty_kwargs(kwargs)
 
@@ -378,7 +388,7 @@ class SegModel(BaseModel):
             save_dir (str, optional): the directory path to save output. Defaults to None.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         config = self.config.copy()
         cli_args = []

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 import os
 import os.path as osp
 
-import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image, ImageOps
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
-from .....utils.logging import info
+
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
 
 
+@function_requires_deps("matplotlib")
 def anaylse_dataset(dataset_dir, output):
     """class analysis for dataset"""
 

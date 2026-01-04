@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ MODELS = [
     "RT-DETR-R50",
     "RT-DETR-X",
     "PicoDet_layout_1x",
+    "PicoDet_layout_1x_table",
     "PicoDet-S_layout_3cls",
     "PicoDet-S_layout_17cls",
     "PicoDet-L_layout_3cls",
@@ -70,4 +71,17 @@ MODELS = [
     "BlazeFace",
     "BlazeFace-FPN-SSH",
     "PP-YOLOE_plus-S_face",
+    "PP-YOLOE-R-L",
+    "Co-Deformable-DETR-R50",
+    "Co-Deformable-DETR-Swin-T",
+    "Co-DINO-R50",
+    "Co-DINO-Swin-L",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout-S",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+    "PP-DocLayoutV2",
 ]

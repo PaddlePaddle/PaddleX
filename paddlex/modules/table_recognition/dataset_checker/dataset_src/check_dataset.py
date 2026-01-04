@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,14 @@
 # limitations under the License.
 
 
-import os
 import json
+import os
 import os.path as osp
 from collections import defaultdict
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+
+from PIL import Image, ImageOps
+
+from .....utils.errors import DatasetFileNotFoundError
 
 
 def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=10):
@@ -31,7 +34,6 @@ def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=
             raise DatasetFileNotFoundError(file_path=dataset_dir)
 
         tags = ["train", "val"]
-        max_recorded_sample_cnts = 50
         sample_cnts = dict()
         sample_paths = defaultdict(list)
 
@@ -54,28 +56,26 @@ def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=
                     for line in all_lines:
                         info = json.loads(line.strip("\n"))
                         file_name = info["filename"]
-                        cells = info["html"]["cells"].copy()
-                        structure = info["html"]["structure"]["tokens"].copy()
+                        info["html"]["cells"].copy()
+                        info["html"]["structure"]["tokens"].copy()
 
                         img_path = osp.join(dataset_dir, file_name)
-                        if len(sample_paths[tag]) < max_recorded_sample_cnts:
-                            sample_paths[tag].append(os.path.relpath(img_path, output))
 
                         if not os.path.exists(img_path):
                             raise DatasetFileNotFoundError(file_path=img_path)
-
-                        boxes_num = len(cells)
-                        tokens_num = sum(
-                            [
-                                structure.count(x)
-                                for x in ["<td>", "<td", "<eb></eb>", "<td></td>"]
-                            ]
-                        )
-                        if boxes_num != tokens_num:
-                            raise CheckFailedError(
-                                f"The number of cells needs to be consistent with the number of tokens "
-                                "but the number of cells is {boxes_num}, and the number of tokens is {tokens_num}."
+                        vis_save_dir = osp.join(output, "demo_img")
+                        if not osp.exists(vis_save_dir):
+                            os.makedirs(vis_save_dir)
+                        if len(sample_paths[tag]) < sample_num:
+                            img = Image.open(img_path)
+                            img = ImageOps.exif_transpose(img)
+                            vis_path = osp.join(vis_save_dir, osp.basename(file_name))
+                            img.save(vis_path)
+                            sample_path = osp.join(
+                                "check_dataset", os.path.relpath(vis_path, output)
                             )
+                            sample_paths[tag].append(sample_path)
+
         meta = {}
 
         meta["train_samples"] = sample_cnts["train"]

@@ -1,0 +1,12 @@
+Global:
+  model: whisper_base
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "whisper_base"
+  input: "https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav"
+  kernel_option:
+    run_mode: paddle

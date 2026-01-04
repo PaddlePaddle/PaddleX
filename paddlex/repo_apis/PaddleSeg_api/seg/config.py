@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,11 @@
 
 
 import os
-from functools import lru_cache
-
-import yaml
 from typing import Union
 
-from ..base_seg_config import BaseSegConfig
-from ....utils.misc import abspath
 from ....utils import logging
+from ....utils.misc import abspath
+from ..base_seg_config import BaseSegConfig
 
 
 class SegConfig(BaseSegConfig):
@@ -71,6 +68,15 @@ class SegConfig(BaseSegConfig):
             self.val_dataset["num_classes"] = num_classes
         if "model" in self:
             self.model["num_classes"] = num_classes
+
+        if self.model_name in ["MaskFormer_tiny", "MaskFormer_small"]:
+            for tf_cfg in self.train_dataset["transforms"]:
+                if tf_cfg["type"] == "GenerateInstanceTargets":
+                    tf_cfg["num_classes"] = num_classes
+
+            losses = self.loss["types"]
+            for loss_cfg in losses:
+                loss_cfg["num_classes"] = num_classes
 
     def update_train_crop_size(self, crop_size: Union[int, list]):
         """update the image cropping size of training preprocessing

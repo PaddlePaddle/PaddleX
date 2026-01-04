@@ -1,5 +1,5 @@
 batch_size: 1
-iters: 80000
+iters: 160000
 
 model:
   type: SegFormer
@@ -19,7 +19,7 @@ train_dataset:
       max_scale_factor: 2.0
       scale_step_size: 0.25
     - type: RandomPaddingCrop
-      crop_size: [512, 512]
+      crop_size: [1024, 512]
     - type: RandomHorizontalFlip
     - type: RandomDistort
       brightness_range: 0.4

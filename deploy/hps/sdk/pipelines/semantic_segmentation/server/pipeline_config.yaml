@@ -1,0 +1,10 @@
+
+pipeline_name: semantic_segmentation
+
+SubModules:
+  SemanticSegmentation:
+    module_name: semantic_segmentation
+    model_name: PP-LiteSeg-T
+    model_dir: null
+    batch_size: 1
+    target_size: None

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 
 
 import os
-import tempfile
 
 from ...base import BaseRunner
 from ...base.utils.arg import gather_opts_args
@@ -152,7 +151,7 @@ class SegRunner(BaseRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         # `device` unused
         cli_args = self._gather_opts_args(cli_args)

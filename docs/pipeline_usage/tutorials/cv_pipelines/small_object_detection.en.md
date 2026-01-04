@@ -7,111 +7,153 @@ comments: true
 ## 1. Introduction to Small Object Detection Pipeline
 Small object detection is a specialized technique for identifying tiny objects within images, widely applied in fields such as surveillance, autonomous driving, and satellite image analysis. It can accurately locate and classify small-sized objects like pedestrians, traffic signs, or small animals within complex scenes. By leveraging deep learning algorithms and optimized Convolutional Neural Networks (CNNs), small object detection significantly enhances the recognition capabilities for small objects, ensuring no critical information is overlooked in practical applications. This technology plays a pivotal role in enhancing safety and automation levels.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/01.png"/>
 <b>The small object detection pipeline includes a small object detection module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, opt for a model with a smaller storage size.</b>
 
-<details><summary> 👉Model List Details</summary>
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <thead>
 <tr>
-<th>Model Name</th>
+<th>Model Name</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>PP-YOLOE_plus_SOD-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Training Model</a></td>
 <td>25.1</td>
-<td>65.4608</td>
-<td>324.37</td>
-<td>77.3 M</td>
+<td>116.07 / 20.10</td>
+<td>176.44 / 40.21</td>
+<td>77.3</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Training Model</a></td>
 <td>31.9</td>
-<td>57.1448</td>
-<td>1006.98</td>
-<td>325.0 M</td>
+<td>100.02 / 48.33</td>
+<td>271.29 / 151.20</td>
+<td>325.0</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-largesize-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Training Model</a></td>
 <td>42.7</td>
-<td>458.521</td>
-<td>11172.7</td>
-<td>340.5 M</td>
+<td>515.69 / 460.17</td>
+<td>2816.08 / 1736.00</td>
+<td>340.5</td>
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are based on the </b><a href="https://github.com/VisDrone/VisDrone-Dataset">VisDrone-DET</a><b> validation set mAP(0.5:0.95). All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+               <li><strong>Test Dataset：</strong> <a href="https://github.com/VisDrone/VisDrone-Dataset">VisDrone-DET</a> validation set.</li>
+              <li><strong>Hardware Configuration:</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
-PaddleX supports experiencing the small object detection pipeline's effects through command line or Python locally.
 
-Before using the small object detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the small object detection pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the small object detection pipeline.
 
-### 2.1 Experience via Command Line
-Experience the small object detection pipeline with a single command, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg), and replace `--input` with the local path to perform prediction.
+### 2.1 Online Experience
 
+You can [experience the small object detection pipeline online](https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/small_obj_det_aistudio.jpg"/>
+
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+
+### 2.2 Local Experience
+Before using the small object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
+
+#### 2.2.1 Command Line Experience
+* You can quickly experience the small object detection pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg), and replace `--input` with the local path for prediction.
 
 ```bash
-paddlex --pipeline small_object_detection --input small_object_detection.jpg --device gpu:0
-```
-Parameter Explanation:
-
-```
---pipeline: The name of the pipeline, here it's the small object detection pipeline.
---input: The local path or URL of the input image to be processed.
---device: The GPU index to use (e.g., gpu:0 for the first GPU, gpu:1,2 for the second and third GPUs). Alternatively, you can choose to use CPU (--device cpu).
+paddlex --pipeline small_object_detection \
+        --input small_object_detection.jpg \
+        --threshold 0.5 \
+        --save_path ./output \
+        --device gpu:0
 ```
 
-When executing the above command, the default small object detection pipeline configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
+The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration](#222-python-script-integration). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
-<details><summary> 👉Click to Expand</summary>
+After running, the result will be printed to the terminal as follows:
 
-<pre><code class="language-bash">paddlex --get_pipeline_config small_object_detection
-</code></pre>
-<p>After execution, the small object detection pipeline configuration file will be saved in the current directory. If you wish to customize the save location, execute the following command (assuming the custom save location is <code>./my_path</code>):</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config small_object_detection --save_path ./my_path
-</code></pre>
-<p>After obtaining the pipeline configuration file, replace <code>--pipeline</code> with the configuration file's save path to make the configuration file effective. For example, if the configuration file's save path is <code>./small_object_detection.yaml</code>, simply execute:</p>
-<pre><code class="language-bash">paddlex --pipeline ./small_object_detection.yaml --input small_object_detection.jpg --device gpu:0
-</code></pre>
-<p>Here, parameters like <code>--model</code> and <code>--device</code> do not need to be specified, as they will use the parameters in the configuration file.```markdown</p></details>
-
-After running, the result will be:
-
-```
-{'input_path': 'small_object_detection.jpg', 'boxes': [{'cls_id': 3, 'label': 'car', 'score': 0.9243856072425842, 'coordinate': [624, 638, 682, 741]}, {'cls_id': 3, 'label': 'car', 'score': 0.9206348061561584, 'coordinate': [242, 561, 356, 613]}, {'cls_id': 3, 'label': 'car', 'score': 0.9194547533988953, 'coordinate': [670, 367, 705, 400]}, {'cls_id': 3, 'label': 'car', 'score': 0.9162291288375854, 'coordinate': [459, 259, 523, 283]}, {'cls_id': 4, 'label': 'van', 'score': 0.9075379371643066, 'coordinate': [467, 213, 498, 242]}, {'cls_id': 4, 'label': 'van', 'score': 0.9066920876502991, 'coordinate': [547, 351, 577, 397]}, {'cls_id': 3, 'label': 'car', 'score': 0.9041045308113098, 'coordinate': [502, 632, 562, 736]}, {'cls_id': 3, 'label': 'car', 'score': 0.8934890627861023, 'coordinate': [613, 383, 647, 427]}, {'cls_id': 3, 'label': 'car', 'score': 0.8803309202194214, 'coordinate': [640, 280, 671, 309]}, {'cls_id': 3, 'label': 'car', 'score': 0.8727016448974609, 'coordinate': [1199, 256, 1259, 281]}, {'cls_id': 3, 'label': 'car', 'score': 0.8705748915672302, 'coordinate': [534, 410, 570, 461]}, {'cls_id': 3, 'label': 'car', 'score': 0.8654043078422546, 'coordinate': [669, 248, 702, 271]}, {'cls_id': 3, 'label': 'car', 'score': 0.8555219769477844, 'coordinate': [525, 243, 550, 270]}, {'cls_id': 3, 'label': 'car', 'score': 0.8522038459777832, 'coordinate': [526, 220, 553, 243]}, {'cls_id': 3, 'label': 'car', 'score': 0.8392605185508728, 'coordinate': [557, 141, 575, 158]}, {'cls_id': 3, 'label': 'car', 'score': 0.8353804349899292, 'coordinate': [537, 120, 553, 133]}, {'cls_id': 3, 'label': 'car', 'score': 0.8322211503982544, 'coordinate': [585, 132, 603, 147]}, {'cls_id': 3, 'label': 'car', 'score': 0.8298957943916321, 'coordinate': [701, 283, 736, 313]}, {'cls_id': 3, 'label': 'car', 'score': 0.8217393159866333, 'coordinate': [885, 347, 943, 377]}, {'cls_id': 3, 'label': 'car', 'score': 0.820313572883606, 'coordinate': [493, 150, 511, 168]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8183429837226868, 'coordinate': [203, 701, 224, 743]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.815082848072052, 'coordinate': [185, 710, 201, 744]}, {'cls_id': 6, 'label': 'tricycle', 'score': 0.7892289757728577, 'coordinate': [311, 371, 344, 407]}, {'cls_id': 6, 'label': 'tricycle', 'score': 0.7812919020652771, 'coordinate': [345, 380, 388, 405]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7748346328735352, 'coordinate': [295, 500, 309, 532]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7688500285148621, 'coordinate': [851, 436, 863, 466]}, {'cls_id': 3, 'label': 'car', 'score': 0.7466475367546082, 'coordinate': [565, 114, 580, 128]}, {'cls_id': 3, 'label': 'car', 'score': 0.7156463265419006, 'coordinate': [483, 66, 495, 78]}, {'cls_id': 3, 'label': 'car', 'score': 0.704211950302124, 'coordinate': [607, 138, 642, 152]}, {'cls_id': 3, 'label': 'car', 'score': 0.7021926045417786, 'coordinate': [505, 72, 518, 83]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.6897469162940979, 'coordinate': [802, 460, 815, 488]}, {'cls_id': 3, 'label': 'car', 'score': 0.671891450881958, 'coordinate': [574, 123, 593, 136]}, {'cls_id': 9, 'label': 'motorcycle', 'score': 0.6712754368782043, 'coordinate': [445, 317, 472, 334]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.6695684790611267, 'coordinate': [479, 309, 489, 332]}, {'cls_id': 3, 'label': 'car', 'score': 0.6273623704910278, 'coordinate': [654, 210, 677, 234]}, {'cls_id': 3, 'label': 'car', 'score': 0.6070230603218079, 'coordinate': [640, 166, 667, 185]}, {'cls_id': 3, 'label': 'car', 'score': 0.6064521670341492, 'coordinate': [461, 59, 476, 71]}, {'cls_id': 3, 'label': 'car', 'score': 0.5860581398010254, 'coordinate': [464, 87, 484, 100]}, {'cls_id': 9, 'label': 'motorcycle', 'score': 0.5792551636695862, 'coordinate': [390, 390, 419, 408]}, {'cls_id': 3, 'label': 'car', 'score': 0.5559225678443909, 'coordinate': [481, 125, 496, 140]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.5531904697418213, 'coordinate': [869, 306, 880, 331]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.5468509793281555, 'coordinate': [895, 294, 904, 319]}, {'cls_id': 3, 'label': 'car', 'score': 0.5451828241348267, 'coordinate': [505, 94, 518, 108]}, {'cls_id': 3, 'label': 'car', 'score': 0.5398445725440979, 'coordinate': [657, 188, 681, 208]}, {'cls_id': 4, 'label': 'van', 'score': 0.5318890810012817, 'coordinate': [518, 88, 534, 102]}, {'cls_id': 3, 'label': 'car', 'score': 0.5296525359153748, 'coordinate': [527, 71, 540, 81]}, {'cls_id': 6, 'label': 'tricycle', 'score': 0.5168400406837463, 'coordinate': [528, 320, 563, 346]}, {'cls_id': 3, 'label': 'car', 'score': 0.5088561177253723, 'coordinate': [511, 84, 530, 95]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.502006471157074, 'coordinate': [841, 266, 850, 283]}]}
+```bash
+{'res': {'input_path': 'small_object_detection.jpg', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.8182944655418396, 'coordinate': [203.60147, 701.3809, 224.2007, 743.8429]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8150849342346191, 'coordinate': [185.01398, 710.8665, 201.76335, 744.9308]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7748839259147644, 'coordinate': [295.1978, 500.2161, 309.33438, 532.0253]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7688254714012146, 'coordinate': [851.5233, 436.13293, 863.2146, 466.8981]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.689735472202301, 'coordinate': [802.1584, 460.10693, 815.6586, 488.85086]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.6697502136230469, 'coordinate': [479.947, 309.43323, 489.1534, 332.5485]}, ...]}}
 ```
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/02.png">
+The explanation of the result parameters can be referred to in [2.2.2 Python Script Integration](#222-python脚本方式集成).
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
+The visualization results are saved under `save_path`, and the visualization result of small object detection is as follows:
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/02.png"/>
 
-### 2.2 Integration via Python Script
-A few lines of code can quickly enable inference on the production line. Taking the General Small Object Detection Pipeline as an example:
+#### 2.1.2 Python Script Integration
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
-
 pipeline = create_pipeline(pipeline="small_object_detection")
-
-output = pipeline.predict("small_object_detection.jpg")
+output = pipeline.predict(input="small_object_detection.jpg", threshold=0.5)
 for res in output:
-    res.print()  # Print the structured output of prediction
-    res.save_to_img("./output/")  # Save the visualized image of the result
-    res.save_to_json("./output/")  # Save the structured output of prediction
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
 ```
-The results obtained are the same as those from the command line method.
 
-In the above Python script, the following steps are executed:
+In the above Python script, the following steps are performed:
 
-(1) Instantiate the `create_pipeline` to create a pipeline object: Specific parameter descriptions are as follows:
+(1) Instantiate the small object detection pipeline object through `create_pipeline()`, with specific parameter descriptions as follows:
 
 <table>
 <thead>
@@ -125,135 +167,240 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the pipeline or the path to the pipeline configuration file. If it's a pipeline name, it must be supported by PaddleX.</td>
+<td>Pipeline name or path to pipeline config file, if it's set as a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
-<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for pipeline model inference. Supports: "gpu", "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
-<td>"gpu"</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available when the pipeline supports it.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
-(2) Call the `predict` method of the pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+
+(2) Call the `predict()` method of the small object detection pipeline object for inference prediction. This method will return a `generator`. The parameters of the `predict()` method and their descriptions are as follows:
 
 <table>
 <thead>
 <tr>
-<th>Parameter Type</th>
+<th>Parameter</th>
 <th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>Supports directly passing Python variables, such as numpy.ndarray representing image data.</td>
+<td><code>input</code></td>
+<td>Data to be predicted, supports multiple input types, required</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to specific file paths)</li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td><code>str</code></td>
-<td>Supports passing the path of the file to be predicted, such as the local path of an image file: <code>/root/data/img.jpg</code>.</td>
-</tr>
-<tr>
-<td><code>str</code></td>
-<td>Supports passing the URL of the file to be predicted, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg">Example</a>.</td>
-</tr>
-<tr>
-<td><code>str</code></td>
-<td>Supports passing a local directory, which should contain files to be predicted, such as the local path: <code>/root/data/</code>.</td>
-</tr>
-<tr>
-<td><code>dict</code></td>
-<td>Supports passing a dictionary type, where the key needs to correspond to a specific task, such as "img" for image classification tasks. The value of the dictionary supports the above data types, for example: <code>{"img": "/root/data1"}</code>.</td>
-</tr>
-<tr>
-<td><code>list</code></td>
-<td>Supports passing a list, where the list elements need to be the above data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>.</td>
-</tr>
-</tbody>
-</table>
-(3) Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained by iteration. The `predict` method predicts data in batches, so the prediction results are in the form of a list representing a set of prediction results.
+<td><code>threshold</code></td>
+<td>Filtering threshold for low-confidence object</td>
+<td><code>None|float|dict[int, float]</code></td>
+<td>
+<ul>
+<li><b>None</b>: If set to <code>None</code>, the default initialization parameter <code>0.5</code> will be used, i.e., 0.5 will be used as the low-score object filtering threshold for all categories</li>
+<li><b>float</b>: Any floating-point number greater than 0 and less than 1</li>
+<li><b>dict[int, float]</b>: The key represents the category ID, and the value represents the threshold corresponding to the category, indicating different low-score filtering thresholds for different categories, such as <code>{0:0.5, 1:0.35}</code> means using 0.5 and 0.35 as low-score filtering thresholds for category 0 and category 1 respectively</li>
+</ul>
+</td>
+<td><code>None</code></td>
 
-（4）Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving to files, with the supported file types depending on the specific pipeline. For example:
+</table>
+
+(3) Process the prediction results. The prediction result for each sample is of type `dict` and supports operations such as printing, saving as an image, and saving as a `json` file:
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
 <th>Description</th>
-<th>Method Parameters</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>Prints results to the terminal</td>
-<td><code>- format_json</code>: bool, whether to format the output content with json indentation, default is True;<br><code>- indent</code>: int, json formatting setting, only valid when format_json is True, default is 4;<br><code>- ensure_ascii</code>: bool, json formatting setting, only valid when format_json is True, default is False;</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>Saves results as a json file</td>
-<td><code>- save_path</code>: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br><code>- indent</code>: int, json formatting setting, default is 4;<br><code>- ensure_ascii</code>: bool, json formatting setting, default is False;</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
-<td>Saves results as an image file</td>
-<td><code>- save_path</code>: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
 </tr>
-</tbody>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a json file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>Path to save the file. If it is a directory, the saved file name will be consistent with the input file type</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>Path to save the file. Supports directory or file path</td>
+<td>None</td>
+</tr>
 </table>
-If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
-For example, if your configuration file is saved at `./my_path/small_object_detection`, you only need to execute:
+- Calling the `print()` method will print the result to the terminal. The content printed to the terminal is explained as follows:
 
+    - `input_path`: `(str)` Input path of the image to be predicted
+
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page of the PDF; otherwise, it is `None`
+
+    - `boxes`: `(list)` Detection box information, each element is a dictionary containing the following fields
+      - `cls_id`: `(int)` Class ID
+      - `label`: `(str)` Class name
+      - `score`: `(float)` Confidence
+      - `coordinates`: `(list)` Detection box coordinates, in the format `[xmin, ymin, xmax, ymax]`
+
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.json`. If specified as a file, it will be saved directly to that file. Since json files do not support saving numpy arrays, `numpy.array` types will be converted to lists.
+
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If specified as a file, it will be saved directly to that file.
+
+* In addition, you can also obtain the visualized image and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format</td>
+</tr>
+</table>
+
+- The prediction result obtained by the `json` attribute is a dictionary type, and the content is consistent with the content saved by calling the `save_to_json()` method.
+- The prediction result returned by the `img` attribute is a dictionary type. The key is `res`, and the corresponding value is an `Image.Image` object: an object used to display the prediction result of small object detection.
+
+In addition, you can obtain the small object detection pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+
+```
+paddlex --get_pipeline_config small_object_detection --save_path ./my_path
+```
+
+If you have obtained the configuration file, you can customize the settings for the small object detection pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(pipeline="./my_path/small_object_detection.yaml")
-output = pipeline.predict("small_object_detection.jpg")
+
+output = pipeline.predict(
+    input="./small_object_detection.jpg",
+    threshold=0.5,
+)
 for res in output:
-    res.print()  # Print the structured output of prediction
-    res.save_to_img("./output/")  # Save the visualization image of the result
-    res.save_to_json("./output/")  # Save the structured output of prediction
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
+
 ```
 
+<b>Note:</b> The parameters in the configuration file are the initialization parameters of the pipeline. If you wish to change the initialization parameters of the general small object detection pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in the configuration file, just specify the path of the configuration file with `--pipeline`.
+
 ## 3. Development Integration/Deployment
-If the pipeline meets your requirements for inference speed and accuracy in production, you can proceed with development integration/deployment directly.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
 
-If you need to apply the pipeline directly in your Python project, refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.1.2 Python Script Integration](#212-python-script-integration).
 
-Additionally, PaddleX provides three other deployment methods, detailed as follows:
+In addition, PaddleX also provides three other deployment methods, detailed as follows:
 
-🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, designed to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.en.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service deployment solutions. For detailed pipeline service deployment procedures, please refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references and multi-language service invocation examples:
-
+Below is the API reference for basic service deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
-
-<p>For all operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
-<li>Both the response body and the request body for POST requests are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the properties of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
@@ -262,23 +409,32 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed as <code>"Success"</code>.</td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>The result of the operation.</td>
 </tr>
 </tbody>
 </table>
-<p>The response body may also have a <code>result</code> property of type <code>object</code>, which stores the operation result information.</p>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the properties of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
@@ -287,25 +443,25 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
-<p>Operations provided by the service are as follows:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Performs object detection on an image.</p>
-<p><code>POST /object-detection</code></p>
+<p>Perform object detection on an image.</p>
+<p><code>POST /small-object-detection</code></p>
 <ul>
-<li>The request body properties are as follows:</li>
+<li>The properties of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -313,32 +469,58 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file accessible by the service or the Base64 encoded result of the image file content.</td>
+<td>The URL of an image file accessible by the server or the Base64-encoded content of an image file.</td>
 <td>Yes</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
+<td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>detectedObjects</code></td>
 <td><code>array</code></td>
-<td>Information about the location and category of the detected objects.</td>
+<td>Information about the location, category, and other details of detected objects.</td>
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
-<td>The image of the object detection result. The image is in JPEG format and encoded in Base64.</td>
+<td><code>string</code>| <code>null</code></td>
+<td>The result image of object detection. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
 </table>
@@ -348,57 +530,62 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>bbox</code></td>
 <td><code>array</code></td>
-<td>The location of the object. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box, respectively.</td>
+<td>The location of the detected object. The elements of the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.</td>
 </tr>
 <tr>
 <td><code>categoryId</code></td>
 <td><code>integer</code></td>
-<td>The ID of the object category.</td>
+<td>The category ID of the detected object.</td>
+</tr>
+<tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>The name of the target category.</td>
 </tr>
 <tr>
 <td><code>score</code></td>
 <td><code>number</code></td>
-<td>The score of the object.</td>
+<td>The score of the detected object.</td>
 </tr>
 </tbody>
 </table>
-<p>An example of <code>result</code> is as follows:</p>
+<p><code>result</code> example is as follows:</p>
 <pre><code class="language-json">{
-&quot;detectedObjects&quot;: [
+"detectedObjects": [
 {
-&quot;bbox&quot;: [
+"bbox": [
 404.4967956542969,
 90.15770721435547,
 506.2465515136719,
 285.4187316894531
 ],
-&quot;categoryId&quot;: 0,
-&quot;score&quot;: 0.7418514490127563
+"categoryId": 0,
+"categoryName": "person",
+"score": 0.7418514490127563
 },
 {
-&quot;bbox&quot;: [
+"bbox": [
 155.33145141601562,
 81.10954284667969,
 199.71136474609375,
 167.4235382080078
 ],
-&quot;categoryId&quot;: 1,
-&quot;score&quot;: 0.7328268885612488
+"categoryId": 1,
+"categoryName": "bottle",
+"score": 0.7328268885612488
 }
 ],
-&quot;image&quot;: &quot;xxxxxx&quot;
+"image": "xxxxxx"
 }
 </code></pre></details>
-
-<details><summary>Multi-Language Service Invocation Examples</summary>
-
+<details><summary>Multi-language Service Call Examples</summary>
 <details>
 <summary>Python</summary>
 
@@ -406,92 +593,94 @@ Below are the API references and multi-language service invocation examples:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/object-detection&quot;
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/small-object-detection" # Service URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
-with open(image_path, &quot;rb&quot;) as file:
+# Encode the local image using Base64
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}
+payload = {"image": image_data}  # Base64-encoded file content or image URL
 
+# Call the API
 response = requests.post(API_URL, json=payload)
 
+# Process the API response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected objects:&quot;)
-print(result[&quot;detectedObjects&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected objects:")
+print(result["detectedObjects"])
 </code></pre></details>
-
 <details><summary>C++</summary>
-
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
+<pre><code class="language-cpp">#include <iostream>
+#include "cpp-httplib/httplib.h" // [GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library](https://github.com/Huiyicc/cpp-httplib)
+#include "nlohmann/json.hpp" // [GitHub - nlohmann/json: JSON for Modern C++](https://github.com/nlohmann/json)
+#include "base64.hpp" // [GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder](https://github.com/tobiaslocker/base64)
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
+    httplib::Client client("localhost:8080");
+    const std::string imagePath = "./demo.jpg";
+    const std::string outputImagePath = "./out.jpg";
 
     httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
+        {"Content-Type", "application/json"}
     };
 
+    // Encode the local image using Base64
     std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    std::vector&lt;char&gt; buffer(size);
+    std::vector<char> buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
-    std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
+    std::string bufferStr(reinterpret_cast<const char*="">(buffer.data()), buffer.size());
     std::string encodedImage = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
+    jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
-    auto response = client.Post(&quot;/object-detection&quot;, headers, body, &quot;application/json&quot;);
+    // Call the API
+    auto response = client.Post("/small-object-detection", headers, body, "application/json");
+    // Process the API response data
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
+        auto result = jsonResponse["result"];
 
-        encodedImage = result[&quot;image&quot;];
+        encodedImage = result["image"];
         std::string decodedString = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
+        std::vector<unsigned char=""> decodedImage(decodedString.begin(), decodedString.end());
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
-            outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
+            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cout &lt;&lt; "Output image saved at " &lt;&lt; outputImagePath &lt;&lt; std::endl;
         } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cerr &lt;&lt; "Unable to open file for writing: " &lt;&lt; outputImagePath &lt;&lt; std::endl;
         }
 
-        auto detectedObjects = result[&quot;detectedObjects&quot;];
-        std::cout &lt;&lt; &quot;\nDetected objects:&quot; &lt;&lt; std::endl;
-        for (const auto&amp; obj : detectedObjects) {
-            std::cout &lt;&lt; obj &lt;&lt; std::endl;
+        auto detectedObjects = result["detectedObjects"];
+        std::cout &lt;&lt; "\nDetected objects:" &lt;&lt; std::endl;
+        for (const auto&amp; category : detectedObjects) {
+            std::cout &lt;&lt; category &lt;&lt; std::endl;
         }
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         return 1;
     }
 
     return 0;
 }
-</code></pre></details>
-
+</char*></unsigned></const></char></iostream></code></pre></details>
 <details><summary>Java</summary>
-
 <pre><code class="language-java">import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -504,132 +693,134 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/object-detection&quot;;
-        String imagePath = &quot;./demo.jpg&quot;;
-        String outputImagePath = &quot;./out.jpg&quot;;
+        String API_URL = "http://localhost:8080/small-object-detection"; // Service URL
+        String imagePath = "./demo.jpg"; // Local image
+        String outputImagePath = "./out.jpg"; // Output image
 
+        // Encode the local image using Base64
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
         String imageData = Base64.getEncoder().encodeToString(fileContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData);
+        params.put("image", imageData); // Base64-encoded file content or image URL
 
+        // Create OkHttpClient instance
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
+        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
         Request request = new Request.Builder()
                 .url(API_URL)
                 .post(body)
                 .build();
 
+        // Call the API and process the response data
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode detectedObjects = result.get(&quot;detectedObjects&quot;);
+                JsonNode result = resultNode.get("result");
+                String base64Image = result.get("image").asText();
+                JsonNode detectedObjects = result.get("detectedObjects");
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
-                System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                System.out.println(&quot;\nDetected objects: &quot; + detectedObjects.toString());
+                System.out.println("Output image saved at " + outputImagePath);
+                System.out.println("\nDetected objects: " + detectedObjects.toString());
             } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
+                System.err.println("Request failed with code: " + response.code());
             }
         }
     }
 }
 </code></pre></details>
-
 <details><summary>Go</summary>
-
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/object-detection&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
+    API_URL := "http://localhost:8080/small-object-detection"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
+    // Encode the local image to Base64
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
+        fmt.Println("Error reading image file:", err)
         return
     }
     imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData}
+    payload := map[string]string{"image": imageData} // Base64-encoded file content or image URL
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
+    // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
 
+    // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Image      string   `json:&quot;image&quot;`
-            DetectedObjects []map[string]interface{} `json:&quot;detectedObjects&quot;`
-        } `json:&quot;result&quot;`
+            Image            string   `json:"image"`
+            DetectedObjects  []map[string]interface{} `json:"detectedObjects"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
+        fmt.Println("Error decoding base64 image data:", err)
         return
     }
     err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
+        fmt.Println("Error writing image to file:", err)
         return
     }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nDetected objects:&quot;)
-    for _, obj := range respData.Result.DetectedObjects {
-        fmt.Println(obj)
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
+    fmt.Println("\nDetected objects:")
+    for _, category := range respData.Result.DetectedObjects {
+        fmt.Println(category)
     }
 }
 </code></pre></details>
-
 <details><summary>C#</summary>
-
 <pre><code class="language-csharp">using System;
 using System.IO;
 using System.Net.Http;
@@ -640,142 +831,166 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/object-detection&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
+    static readonly string API_URL = "http://localhost:8080/small-object-detection";
+    static readonly string imagePath = "./demo.jpg";
+    static readonly string outputImagePath = "./out.jpg";
 
     static async Task Main(string[] args)
     {
         var httpClient = new HttpClient();
 
+        // Encode the local image in Base64
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } };
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject{ { "image", image_data } }; // Base64-encoded file content or image URL
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
+        // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
         response.EnsureSuccessStatusCode();
 
+        // Process the returned data
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
+        string base64Image = jsonResponse["result"]["image"].ToString();
         byte[] outputImageBytes = Convert.FromBase64String(base64Image);
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nDetected objects:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;detectedObjects&quot;].ToString());
+        Console.WriteLine($"Output image saved at {outputImagePath}");
+        Console.WriteLine("\nDetected objects:");
+        Console.WriteLine(jsonResponse["result"]["detectedObjects"].ToString());
     }
 }
 </code></pre></details>
-
 <details><summary>Node.js</summary>
-
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
-const API_URL = 'http://localhost:8080/object-detection'
+const API_URL = 'http://localhost:8080/small-object-detection'
 const imagePath = './demo.jpg'
-const outputImagePath = &quot;./out.jpg&quot;;
+const outputImagePath = "./out.jpg";
 
 let config = {
    method: 'POST',
    maxBodyLength: Infinity,
    url: API_URL,
    data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)
+    'image': encodeImageToBase64(imagePath)  // Base64-encoded file content or image URL
   })
 };
 
+// Encode the local image using Base64
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
   return Buffer.from(bitmap).toString('base64');
 }
 
+// Call the API
 axios.request(config)
 .then((response) =&gt; {
-    const result = response.data[&quot;result&quot;];
-    const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
+    // Process the API response data
+    const result = response.data["result"];
+    const imageBuffer = Buffer.from(result["image"], 'base64');
     fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log(&quot;\nDetected objects:&quot;);
-    console.log(result[&quot;detectedObjects&quot;]);
+    console.log("\nDetected objects:");
+    console.log(result["detectedObjects"]);
 })
 .catch((error) =&gt; {
   console.log(error);
 });
 </code></pre></details>
-
 <details><summary>PHP</summary>
-
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/object-detection&quot;;
-$image_path = &quot;./demo.jpg&quot;;
-$output_image_path = &quot;./out.jpg&quot;;
+$API_URL = "http://localhost:8080/small-object-detection"; // Service URL
+$image_path = "./demo.jpg";
+$output_image_path = "./out.jpg";
 
+// Encode the local image with Base64
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data);
+$payload = array("image" =&gt; $image_data); // Base64 encoded file content or image URL
 
+// Call the API
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
 
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
-echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nDetected objects:\n&quot;;
-print_r($result[&quot;detectedObjects&quot;]);
+// Process the returned data from the interface
+$result = json_decode($response, true)["result"];
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image saved at " . $output_image_path . "\n";
+echo "\nDetected objects:\n";
+print_r($result["detectedObjects"]);
 
 ?&gt;
 </code></pre></details>
-
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
+📱 <b>On-Device Deployment</b>: Edge deployment is a method that places computing and data processing functions on the user's device itself. The device can process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
+You can choose the appropriate deployment method based on your needs to integrate the model into your AI application.
 
 ## 4. Custom Development
-If the default model weights provided by the General Small Object Detection Pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the small object detection pipeline in your scenario.
+If the default model weights provided by the general small object detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the small object detection pipeline in your scenario.
 
-### 4.1 Model Fine-tuning
-Since the General Small Object Detection Pipeline includes a small object detection module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/small_object_detection.en.md#iv-custom-development) section in the [Small Object Detection Module Tutorial](../../../module_usage/tutorials/cv_modules/small_object_detection.en.md) and use your private dataset to fine-tune the small object detection model.
+### 4.1 Model Fine-Tuning
+Since the general small object detection pipeline includes a small object detection module, if the pipeline's performance does not meet expectations, you can analyze the images with poor segmentation results and refer to the fine-tuning tutorial links in the table below for model fine-tuning.
+
+
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prediction results are not as expected</td>
+<td>Small Object Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/small_object_detection.html">Link</a></td>
+</tr>
+</tbody>
+</table>
 
 ### 4.2 Model Application
-After fine-tuning with your private dataset, you will obtain local model weight files.
+After fine-tuning with your private dataset, you will obtain the local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding location in the pipeline configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file and replace the local path of the fine-tuned model weights to the corresponding position in the pipeline configuration file:
 
-```python
-......
-Pipeline:
-  model: PP-YOLOE_plus_SOD-L  # Can be modified to the local path of the fine-tuned model
-  batch_size: 1
-  device: "gpu:0"
-......
-```
-Then, refer to the command line or Python script methods in the local experience section to load the modified pipeline configuration file.
-
-## Multi-hardware Support
-PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.
-
-For example, if you use an NVIDIA GPU for inference with the small object detection pipeline, the Python command would be:
-
-```bash
-paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device gpu:0
-``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
-
-```bash
-paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
+```yaml
+SubModules:
+  SmallObjectDetection:
+    module_name: small_object_detection
+    model_name: PP-YOLOE_plus_SOD-L
+    model_dir: null # Here replaced with the newly fine-tuned weight path.
+    batch_size: 1
+    threshold: 0.5
 ```
 
-If you want to use the General Small Object Detection Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+Subsequently, refer to the command-line method or Python script method in the [local experience](#21-local-experience) to load the modified pipeline configuration file.
+
+## 5. Multi-Hardware Support
+PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
+
+For example, if you use Ascend NPU for small object detection in the pipeline, the Python command used is:
+
+```bash
+paddlex --pipeline small_object_detection \
+        --input small_object_detection.jpg \
+        --threshold 0.5 \
+        --save_path ./output \
+        --device npu:0
+```
+
+If you want to use the universal small object detection pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

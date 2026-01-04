@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ from urllib.parse import urlparse
 
 import ruamel.yaml
 
-from ...base import BaseConfig
 from ....utils.misc import abspath, convert_and_remove_types
+from ...base import BaseConfig
 
 
 class BaseTSConfig(BaseConfig):
@@ -57,6 +57,9 @@ class BaseTSConfig(BaseConfig):
         Args:
             config_file_path (str): the path to save self as yaml file.
         """
+        output_dir = os.path.dirname(config_file_path)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         yaml = ruamel.yaml.YAML()
         with open(config_file_path, "w", encoding="utf-8") as f:
             dict_to_dump = self.dict
@@ -70,6 +73,26 @@ class BaseTSConfig(BaseConfig):
             epochs (int): the epochs number value to set
         """
         self.update({"epoch": epochs})
+
+    def update_to_static(self, dy2st: bool):
+        """update config to set dynamic to static mode
+
+        Args:
+            dy2st (bool): whether or not to use the dynamic to static mode.
+        """
+        self.update({"to_static_train": dy2st})
+
+    def update_amp(self, amp: str = "O2"):
+        """update AMP settings
+
+        Args:
+            amp (None | str): the AMP level if it is not None or `OFF`.
+        """
+        _cfg = {
+            "use_amp": True if amp is not None else False,
+            "amp_level": amp,
+        }
+        self.update(_cfg)
 
     def update_weights(self, weight_path: str):
         """update weight path
@@ -146,7 +169,6 @@ class BaseTSConfig(BaseConfig):
             device (str): the running device to set
         """
         # PaddleTS does not support multi-device training currently.
-        pass
 
     def update_print_mem_info(self, print_mem_info: bool):
         """setting print memory info"""

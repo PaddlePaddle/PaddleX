@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
 
 # Code copied from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/util/lazy_loader.py
 import importlib
-import types
+import inspect
 import os
+import types
 
 from . import logging
 from .flags import FLAGS_json_format_model
@@ -44,14 +45,15 @@ class LazyLoader(types.ModuleType):
         return self._module is not None
 
     def _load(self):
-        module = importlib.import_module(self.__name__)
-        self._parent_module_globals[self._local_name] = module
-        self._module = module
         # TODO(gaotingquan): disable PIR using Flag
         if self.__name__ == "paddle":
             disable_pir_bydefault()
+        module = importlib.import_module(self.__name__)
+        self._parent_module_globals[self._local_name] = module
+        self._module = module
 
     def __getattr__(self, item):
+        logging.debug("lazy load in : %s", inspect.currentframe().f_back)
         if not self.loaded:
             # HACK: For circumventing shared library symbol conflicts when
             # importing paddlex_hpi

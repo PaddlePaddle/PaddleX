@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ from pathlib import Path
 
 def get_pipeline_path(pipeline_name):
     # XXX: using dict class to handle all pipeline configs
+    config_subdir = "configs/pipelines"
     pipeline_path = (
-        Path(__file__).parent.parent.parent / "pipelines" / f"{pipeline_name}.yaml"
+        Path(__file__).parent.parent.parent / config_subdir / f"{pipeline_name}.yaml"
     ).resolve()
     if not Path(pipeline_path).exists():
         return None

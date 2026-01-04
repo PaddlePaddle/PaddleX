@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,17 @@
 
 import os
 from abc import ABC, abstractmethod
-from pathlib import Path
-from .build_model import build_model
-from ...utils.device import update_device_num, set_env_for_device
-from ...utils.misc import AutoRegisterABCMetaClass
+
 from ...utils.config import AttrDict
+from ...utils.device import (
+    check_supported_device,
+    set_env_for_device,
+    update_device_num,
+)
+from ...utils.flags import DISABLE_CINN_MODEL_WL, FLAGS_json_format_model
+from ...utils.misc import AutoRegisterABCMetaClass
+from .build_model import build_model
+from .utils.cinn_setting import CINN_WHITELIST, enable_cinn_backend
 
 
 def build_trainer(config: AttrDict) -> "BaseTrainer":
@@ -31,6 +37,10 @@ def build_trainer(config: AttrDict) -> "BaseTrainer":
         BaseTrainer: the trainer, which is subclass of BaseTrainer.
     """
     model_name = config.Global.model
+    try:
+        pass
+    except ModuleNotFoundError:
+        pass
     return BaseTrainer.get(model_name)(config)
 
 
@@ -49,9 +59,13 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         self.config = config
         self.global_config = config.Global
         self.train_config = config.Train
+        self.eval_config = config.Evaluate
         self.benchmark_config = config.get("Benchmark", None)
+        config_path = self.train_config.get("basic_config_path", None)
 
-        self.pdx_config, self.pdx_model = build_model(self.global_config.model)
+        self.pdx_config, self.pdx_model = build_model(
+            self.global_config.model, config_path=config_path
+        )
 
     def train(self, *args, **kwargs):
         """execute model training"""
@@ -61,13 +75,27 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         train_args = self.get_train_kwargs()
         if self.benchmark_config is not None:
             train_args.update({"benchmark": self.benchmark_config})
+        export_with_pir = (
+            self.global_config.get("export_with_pir", False) or FLAGS_json_format_model
+        )
         train_args.update(
             {
                 "uniform_output_enabled": self.train_config.get(
                     "uniform_output_enabled", True
-                )
+                ),
+                "export_with_pir": export_with_pir,
+                "ips": self.train_config.get("dist_ips", None),
             }
         )
+
+        # apply CINN when model is supported
+        if (
+            not DISABLE_CINN_MODEL_WL
+            and self.train_config.get("dy2st", False)
+            and self.global_config.model in CINN_WHITELIST
+        ):
+            enable_cinn_backend()
+
         train_result = self.pdx_model.train(**train_args)
         assert (
             train_result.returncode == 0
@@ -95,10 +123,16 @@ training!"
         Returns:
             str: device setting, such as: `gpu:0,1`, `npu:0,1` `cpu`.
         """
+        check_supported_device(self.global_config.device, self.global_config.model)
         set_env_for_device(self.global_config.device)
-        if using_device_number:
-            return update_device_num(self.global_config.device, using_device_number)
-        return self.global_config.device
+        device_setting = (
+            update_device_num(self.global_config.device, using_device_number)
+            if using_device_number
+            else self.global_config.device
+        )
+        # replace "dcu" with "gpu"
+        device_setting = device_setting.replace("dcu", "gpu")
+        return device_setting
 
     @abstractmethod
     def update_config(self):

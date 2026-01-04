@@ -1,0 +1,17 @@
+Global:
+  model: SAM-H_box
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "/path/to/SAM-H_box"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg"
+  prompts: 
+   box_prompt:
+    - [112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375]
+    - [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625]
+    - [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]
+  kernel_option:
+    run_mode: paddle

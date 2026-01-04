@@ -1,0 +1,241 @@
+
+pipeline_name: PP-ChatOCRv4-doc
+
+use_layout_parser: True
+
+use_mllm_predict: True
+
+SubModules:
+  LLM_Chat:
+    module_name: chat_bot
+    model_name: ernie-3.5-8k
+    base_url: "https://qianfan.baidubce.com/v2"
+    api_type: openai
+    api_key: "api_key" # Set this to a real API key
+
+  LLM_Retriever:
+    module_name: retriever
+    model_name: embedding-v1
+    base_url: "https://qianfan.baidubce.com/v2"
+    api_type: qianfan
+    api_key: "api_key" # Set this to a real API key
+
+  MLLM_Chat:
+    module_name: chat_bot
+    model_name: PP-DocBee
+    base_url: "http://127.0.0.1:8080/v1/chat/completions"
+    api_type: openai
+    api_key: "api_key"
+
+  PromptEngneering:
+    KIE_CommonText:
+      module_name: prompt_engneering
+      task_type: text_kie_prompt_v2
+      
+      task_description: '你是一个信息提取助手，你的任务是从OCR结果中提取每一个问题的答案。
+  
+  请注意：问题可分为两类，你需要**根据问题的语义自动判断任务类型**，并分别使用以下规则：
+  
+  1. **摘录型问题（适用于法规、定义、条款、原句类问题）**
+     - 特征：问题中常出现“是什么”“内容是什么”“规定是什么”等；
+     - 要求：答案必须**逐字摘录自 OCR 文本**，不可改写或简化。
+
+  2. **问答型问题（适用于需要计算、推理、提取数字信息的问题）**
+     - 特征：问题中含“多少”“增长了多少”“是多少元”等；
+     - 要求：可以基于 OCR 文本进行**理解、补全和单位推理**，但需严格以 OCR 信息为依据，不得引入外部常识或主观猜测。
+
+  OCR识别结果使用```符号包围，按图片中从左至右、从上至下排序。
+  问题列表使用[]符号包围。'
+
+      output_format: '输出以 JSON 格式返回，key 为问题内容，value 为对应答案。
+  - 所有答案必须是完整、可理解的语句或片段；
+  - 若 OCR 中无法确定答案，请将 value 设为 "未知"；
+  - 严格使用 "未知"，不允许使用 null、空字符串、"-" 等其他表示形式。'
+
+      rules_str: '通用规则：
+              1. **内容来源与完整性**
+                - 所有问题的答案必须**完全依据表格中的内容**进行作答；
+                - 回答时应**尽可能详细和完整**，不得省略或自行补充未在表格中明确出现的信息；
+                - 保持**原文的格式、数字、正负号、单位、符号和标点符号**完全一致。
+
+              2. **标点规范**
+                - 如果原文答案句末带有标点符号（如句号、逗号、分号等），请**保留并添加在答案结尾**。
+              3. **单位补全要求**
+                  - 由于评测可能涉及单位识别，**答案中的所有数字后必须添加单位**；
+                  - 如果原文上下文中已明确提供单位，**请直接使用该单位**；
+                  - 如果上下文中未出现单位，**请你根据语义补充一个合理的常见单位**，如“个”“项”“次”“年”“元”等；
+                  - 对于比率或百分比，请**务必添加“%”符号**；
+                  - **禁止省略单位**，也不得以“无单位”或空字符串代替；
+                  - 添加单位时，**直接紧跟在数字后，不允许加括号、引号或任何额外标注符号**。
+
+              4. **上下文语义保持**
+                - 请严格遵循原文语义；
+                - 如果原文描述为“在30分钟内完成”，请**完整回答“在30分钟内完成”**，而**不是简化为“30分钟”**；
+                - 不可断章取义、丢失时间、条件或限制性描述。
+              5. 如无法确定答案，必须填“未知”。
+  摘录型补充规则：
+  - 答案必须逐字摘抄自 OCR 文本；
+  - 不得缩写、改写或断章取义。
+  问答型补充规则：
+  - 可以合理组合 OCR 中的多个片段；
+  - 可进行单位补全和数值归纳；
+  - 不得引入非文本来源内容。'
+      few_shot_demo_text_content:
+      few_shot_demo_key_value_list:
+          
+    KIE_Table:
+      module_name: prompt_engneering
+      task_type: table_kie_prompt_v2
+
+      task_description: '你现在的任务是从输入的html格式的表格内容中提取问题列表中每一个问题的答案。
+          表格内容使用```符号包围，我指定的问题列表使用[]符号包围。'
+
+      output_format: '在返回结果时使用JSON格式，包含多个key-value对，key值为我指定的问题，value值为该问题对应的答案。
+          如果认为表格内容中，对于问题key，没有答案，则将value赋值为"未知"。请只输出json格式的结果，
+          并做json格式校验后返回，不要包含其它多余文字！'
+        
+      rules_str: '通用规则：
+              1. **内容来源与完整性**
+                - 所有问题的答案必须**完全依据表格中的内容**进行作答；
+                - 回答时应**尽可能详细和完整**，不得省略或自行补充未在表格中明确出现的信息；
+                - 保持**原文的格式、数字、正负号、单位、符号和标点符号**完全一致。
+
+              2. **标点规范**
+                - 如果原文答案句末带有标点符号（如句号、逗号、分号等），请**保留并添加在答案结尾**。
+              3. **单位补全要求**
+                  - 由于评测可能涉及单位识别，**答案中的所有数字后必须添加单位**；
+                  - 如果原文上下文中已明确提供单位，**请直接使用该单位**；
+                  - 如果上下文中未出现单位，**请你根据语义补充一个合理的常见单位**，如“个”“项”“次”“年”“元”等；
+                  - 对于比率或百分比，请**务必添加“%”符号**；
+                  - **禁止省略单位**，也不得以“无单位”或空字符串代替；
+                  - 添加单位时，**直接紧跟在数字后，不允许加括号、引号或任何额外标注符号**。
+
+              4. **上下文语义保持**
+                - 请严格遵循原文语义；
+                - 如果原文描述为“在30分钟内完成”，请**完整回答“在30分钟内完成”**，而**不是简化为“30分钟”**；
+                - 不可断章取义、丢失时间、条件或限制性描述。
+              5. 如无法确定答案，必须填“未知”。
+
+              摘录型补充规则：
+              - 答案必须逐字摘抄自 OCR 文本；
+              - 不得缩写、改写或断章取义。
+              问答型补充规则：
+              - 可以合理组合 OCR 中的多个片段；
+              - 可进行单位补全和数值归纳；
+              - 不得引入非文本来源内容。
+  '
+          
+      few_shot_demo_text_content:
+      few_shot_demo_key_value_list:
+
+    Ensemble:
+      module_name: prompt_engneering
+      task_type: ensemble_prompt
+
+      task_description: '你现在的任务是，对于一个问题，对比方法A和方法B的结果，选择更准确的一个回答。
+        问题用```符号包围。'
+      output_format: '请返回JSON格式的结果，包含多个key-value对，key值为我指定的问题，
+        value值为`方法A`或`方法B`。如果对于问题key，没有找到答案，将value赋值为"未知"。
+        请只输出json格式的结果，并做json格式校验后返回，不要包含其它多余文字！'
+      rules_str: '对于涉及数字的问题，请返回与问题描述最相关且数字表述正确的答案。
+        请特别注意数字中的标点使用是否合理。'
+      few_shot_demo_text_content:
+      few_shot_demo_key_value_list:
+
+SubPipelines:
+  LayoutParser:
+    pipeline_name: layout_parsing
+
+    use_doc_preprocessor: True
+    use_general_ocr: True
+    use_seal_recognition: True
+    use_table_recognition: True
+    use_formula_recognition: False
+
+    SubModules:
+      LayoutDetection:
+        module_name: layout_detection
+        model_name: RT-DETR-H_layout_3cls
+        model_dir: null
+
+    SubPipelines:
+      DocPreprocessor:
+        pipeline_name: doc_preprocessor
+        use_doc_orientation_classify: True
+        use_doc_unwarping: True
+        SubModules:
+          DocOrientationClassify:
+            module_name: doc_text_orientation
+            model_name: PP-LCNet_x1_0_doc_ori
+            model_dir: null
+          DocUnwarping:
+            module_name: image_unwarping
+            model_name: UVDoc
+            model_dir: null
+
+      GeneralOCR:
+        pipeline_name: OCR
+        text_type: general
+        use_doc_preprocessor: False
+        use_textline_orientation: True
+        SubModules:
+          TextDetection:
+            module_name: text_detection
+            model_name: PP-OCRv4_server_det
+            model_dir: null
+            limit_side_len: 960
+            limit_type: max
+            max_side_limit: 4000
+            thresh: 0.3
+            box_thresh: 0.6
+            unclip_ratio: 1.5
+          TextLineOrientation:
+            module_name: textline_orientation
+            model_name: PP-LCNet_x1_0_textline_ori 
+            model_dir: null
+            batch_size: 6   
+          TextRecognition:
+            module_name: text_recognition
+            model_name: PP-OCRv4_server_rec_doc
+            model_dir: null
+            batch_size: 6
+            score_thresh: 0.0
+
+      TableRecognition:
+        pipeline_name: table_recognition
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        use_ocr_model: False
+        SubModules:
+          TableStructureRecognition:
+            module_name: table_structure_recognition
+            model_name: SLANet_plus
+            model_dir: null
+
+      SealRecognition:
+        pipeline_name: seal_recognition
+        use_layout_detection: False
+        use_doc_preprocessor: False
+        SubPipelines:
+          SealOCR:
+            pipeline_name: OCR
+            text_type: seal
+            use_doc_preprocessor: False
+            use_textline_orientation: False
+            SubModules:
+              TextDetection:
+                module_name: seal_text_detection
+                model_name: PP-OCRv4_server_seal_det
+                model_dir: null
+                limit_side_len: 736
+                limit_type: min
+                max_side_limit: 4000
+                thresh: 0.2
+                box_thresh: 0.6
+                unclip_ratio: 0.5
+              TextRecognition:
+                module_name: text_recognition
+                model_name: PP-OCRv4_server_rec_doc
+                model_dir: null
+                batch_size: 1
+                score_thresh: 0

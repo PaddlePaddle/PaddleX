@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import numpy as np
-import json
-from pathlib import Path
 import PIL
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageDraw, ImageFont
 
-from ......utils.fonts import PINGFANG_FONT_FILE_PATH
+from ......utils.fonts import PINGFANG_FONT
 
 
 def colormap(rgb=False):
@@ -117,7 +114,7 @@ def draw_label(image, label, label_map_dict):
     min_font_size = int(image_size[0] * 0.02)
     max_font_size = int(image_size[0] * 0.05)
     for font_size in range(max_font_size, min_font_size - 1, -1):
-        font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+        font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
         if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
             text_width_tmp, text_height_tmp = draw.textsize(
                 label_map_dict[int(label)], font
@@ -130,7 +127,7 @@ def draw_label(image, label, label_map_dict):
         if text_width_tmp <= image_size[0]:
             break
         else:
-            font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, min_font_size)
+            font = ImageFont.truetype(PINGFANG_FONT.path, min_font_size)
     color_list = colormap(rgb=True)
     color = tuple(color_list[0])
     font_color = tuple(font_colormap(3))

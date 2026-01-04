@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import numpy as np
-import json
-from pathlib import Path
 import PIL
 from PIL import Image, ImageDraw, ImageFont
-from pycocotools.coco import COCO
 
-from ......utils.fonts import PINGFANG_FONT_FILE_PATH
 from ......utils import logging
+from ......utils.deps import function_requires_deps, is_dep_available
+from ......utils.fonts import PINGFANG_FONT
+
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
 
 
 def colormap(rgb=False):
@@ -114,7 +114,8 @@ def font_colormap(color_index):
         return dark.astype("int32")
 
 
-def draw_bbox(image, coco_info: COCO, img_id):
+@function_requires_deps("pycocotools")
+def draw_bbox(image, coco_info: "COCO", img_id):
     """
     Draw bbox on image
     """
@@ -123,7 +124,7 @@ def draw_bbox(image, coco_info: COCO, img_id):
         font_size = int(0.024 * int(image_info["width"])) + 2
     except:
         font_size = 12
-    font = ImageFont.truetype(PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8")
+    font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
 
     image = image.convert("RGB")
     draw = ImageDraw.Draw(image)
@@ -191,7 +192,8 @@ def draw_bbox(image, coco_info: COCO, img_id):
     return image
 
 
-def draw_mask(image, coco_info: COCO, img_id):
+@function_requires_deps("pycocotools")
+def draw_mask(image, coco_info: "COCO", img_id):
     """
     Draw mask on image
     """

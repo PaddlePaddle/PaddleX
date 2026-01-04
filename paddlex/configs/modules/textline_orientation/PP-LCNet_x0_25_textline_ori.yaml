@@ -1,0 +1,41 @@
+Global:
+  model: PP-LCNet_x0_25_textline_ori
+  mode: check_dataset # check_dataset/train/evaluate/predict
+  dataset_dir: "/paddle/dataset/paddlex/cls/textline_orientation_example_data"
+  device: gpu:0,1,2,3
+  output: "output"
+
+CheckDataset:
+  convert:
+    enable: False
+    src_dataset_type: null
+  split:
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  num_classes: 2
+  epochs_iters: 20
+  batch_size: 32
+  learning_rate: 0.8
+  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams
+  warmup_steps: 100
+  resume_path: null
+  log_interval: 10
+  eval_interval: 1
+  save_interval: 1
+
+Evaluate:
+  weight_path: "output/best_model/best_model.pdparams"
+  log_interval: 10
+
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams
+
+Predict:
+  batch_size: 1
+  model_dir: "output/best_model/inference"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_textline180_demo.jpg"
+  kernel_option:
+    run_mode: paddle

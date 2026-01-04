@@ -4,6 +4,9 @@ do_eval: True
 epoch: 5
 training: True 
 task: anomaly
+to_static_train: False
+use_amp: False
+amp_level: O2
 
 dataset: 
   name: TSADDataset
@@ -22,7 +25,7 @@ info_params:
 model: 
   name: NonStationary_AD
   model_cfg:
-    c_in: 2
+    c_in: 5
     factor: 3
     p_hidden_dims: [32, 32]
     d_model: 64

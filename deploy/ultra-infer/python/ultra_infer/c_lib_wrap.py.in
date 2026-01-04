@@ -1,0 +1,194 @@
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+from __future__ import absolute_import
+import logging
+import os
+import sys
+
+user_specified_dirs = ['@OPENCV_DIRECTORY@', '@ORT_DIRECTORY@', ]
+
+
+def is_built_with_gpu() -> bool:
+    return True if "@WITH_GPU@" == "ON" else False
+
+
+def is_built_with_ort() -> bool:
+    return True if "@ENABLE_ORT_BACKEND@" == "ON" else False
+
+
+def is_built_with_trt() -> bool:
+    return True if "@ENABLE_TRT_BACKEND@" == "ON" else False
+
+
+def is_built_with_paddle() -> bool:
+    return True if "@ENABLE_PADDLE_BACKEND@" == "ON" else False
+
+
+def is_built_with_poros() ->bool:
+    return True if "@ENABLE_POROS_BACKEND@" == "ON" else False
+
+
+def is_built_with_openvino() ->bool:
+    return True if "@ENABLE_OPENVINO_BACKEND@" == "ON" else False
+
+
+def is_built_with_om() ->bool:
+    return True if "@ENABLE_OM_BACKEND@" == "ON" else False
+
+
+def get_default_cuda_directory() -> str:
+    if not is_built_with_gpu():
+       return ""
+    return r"@CUDA_DIRECTORY@".strip()
+
+
+def get_default_cuda_major_version() -> str:
+    if not is_built_with_gpu():
+       return ""
+    # TODO(qiuyanjun): get cuda version from cmake.
+    return "11"
+
+
+def find_cudart(search_dir: str) -> bool:
+    if search_dir is None:
+        logging.info("[UltraInfer][ERROR]: search_dir can not be NoneTpye.")
+        return False
+    # TODO(qiuyanjun): add Linux cudart *.so check
+    cudart_lib_name = f"cudart64_{get_default_cuda_major_version()}0.dll"
+    cudart_lib_path = os.path.join(search_dir, cudart_lib_name)
+    return os.path.exists(cudart_lib_path)
+
+
+def find_cudart_from_sys() -> bool:
+    # TODO(qiuyanjun): add Linux system paths
+    sys_paths = os.environ["path"].strip().split(";")
+    for sys_path in sys_paths:
+        if find_cudart(sys_path):
+            logging.info(f"[UltraInfer][INFO]:  Successfully found CUDA ToolKit from system PATH env -> {sys_path}")
+            return True
+    return False
+
+
+def add_system_search_paths():
+    # TODO(qiuyanjun): add Linux system paths
+    sys_paths = os.environ["path"].strip().split(";")
+    for sys_path in sys_paths:
+        if os.path.exists(sys_path) and sys.version_info[:2] >= (3, 8):
+            try:
+                os.add_dll_directory(sys_path)
+            except:
+                continue
+
+
+def add_dll_search_dir(dir_path):
+    os.environ["path"] = dir_path + ";" + os.environ["path"]
+    sys.path.insert(0, dir_path)
+    if sys.version_info[:2] >= (3, 8):
+        os.add_dll_directory(dir_path)
+
+
+def add_custom_cuda_path():
+    if is_built_with_gpu():
+        # if UltraInfer built with gpu and want to run
+        # in windows, we need to add CUDA_DIRECTORY into
+        # dll search paths to make sure UltraInfer.dll
+        # can link cudart correctly. we search the
+        # default path firstly and try to add into
+        # paths. User should set it manually if the
+        # cuda toolkit is not locate in the default
+        # path we assume.
+        base_url = "https://github.com/PaddlePaddle/FastDeploy/blob/"
+        default_cuda_dir = get_default_cuda_directory()
+        default_cuda_version = get_default_cuda_major_version()  # 11
+        cuda_shared_lib_dir = os.path.join(default_cuda_dir, "bin")
+        custom_cuda_envs = ["CUDA_DIRECTORY", "CUDA_HOME", "CUDA_ROOT", "CUDA_PATH"]
+        custom_cuda_dir = "NOTFOUNDED"
+        if not os.path.exists(cuda_shared_lib_dir):
+            # try to get cuda directory from user's local env
+            for custom_env in custom_cuda_envs:
+                custom_cuda_dir = os.getenv(custom_env, "NOTFOUNDED")
+                custom_cuda_dir = custom_cuda_dir.strip().split(";")[0]
+                if os.path.exists(custom_cuda_dir) and custom_cuda_dir != "NOTFOUNDED":
+                    break
+            if not os.path.exists(custom_cuda_dir) or custom_cuda_dir == "NOTFOUNDED":
+                logging.warnings.warn(f"\n--- UltraInfer was built with gpu, \
+                    \n--- but the default cuda directory does not exists. \
+                    \n--- Please setup one of {custom_cuda_envs} manually, \
+                    \n--- this path should look like: {default_cuda_dir}. \
+                    \n--- Check FAQ: {base_url + 'develop/docs/FAQ.md'}")
+                return
+            # path to cuda dlls
+            cuda_shared_lib_dir = os.path.join(custom_cuda_dir, "bin")
+        add_dll_search_dir(cuda_shared_lib_dir)
+        # try pre find cudart with major version, e.g 11.x/10.x
+        if not find_cudart(cuda_shared_lib_dir):
+            custom_cuda_version = os.path.basename(custom_cuda_dir)
+            logging.warnings.warn(
+                f"\n--- UltraInfer was built with CUDA major version {default_cuda_version}, \
+                \n--- but found custom CUDA version {custom_cuda_version} at {custom_cuda_dir} \
+                \n--- Please setup one of {custom_cuda_envs} manually, \
+                \n--- this path should look like: {default_cuda_dir}. \
+                \n--- Check FAQ: {base_url + 'develop/docs/FAQ.md'}")
+            return
+        logging.info(f"[UltraInfer][INFO]:  Successfully found CUDA ToolKit from -> {cuda_shared_lib_dir}")
+
+
+if os.name == "nt":
+    # cuda/cudnn libs
+    if is_built_with_gpu():
+        add_system_search_paths()
+        if not find_cudart_from_sys():
+            add_custom_cuda_path()
+
+    current_path = os.path.abspath(__file__)
+    dirname = os.path.dirname(current_path)
+    third_libs_dir = os.path.join(dirname, "libs")
+    all_dirs = user_specified_dirs + [third_libs_dir]
+    for dir in all_dirs:
+        if os.path.exists(dir):
+            add_dll_search_dir(dir)
+            for root, dirs, filenames in os.walk(dir):
+                for d in dirs:
+                    if d == "lib" or d == "bin":
+                        add_dll_search_dir(os.path.join(dirname, root, d))
+
+
+try:
+    from .libs.@PY_LIBRARY_NAME@ import *
+except Exception as e:
+    raise RuntimeError(f"UltraInfer initialized failed! Error: {e}")
+
+
+def TensorInfoStr(tensor_info):
+    message = "TensorInfo(name : '{}', dtype : '{}', shape : '{}')".format(
+        tensor_info.name, tensor_info.dtype, tensor_info.shape)
+    return message
+
+
+def RuntimeOptionStr(runtime_option):
+    attrs = dir(runtime_option)
+    message = "RuntimeOption(\n"
+    for attr in attrs:
+        if attr.startswith("__"):
+            continue
+        if hasattr(getattr(runtime_option, attr), "__call__"):
+            continue
+        message += "  {} : {}\t\n".format(attr, getattr(runtime_option, attr))
+    message.strip("\n")
+    message += ")"
+    return message
+
+
+TensorInfo.__repr__ = TensorInfoStr
+RuntimeOption.__repr__ = RuntimeOptionStr

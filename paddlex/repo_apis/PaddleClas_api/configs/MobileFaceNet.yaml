@@ -99,7 +99,7 @@ DataLoader:
 
   Eval:
     dataset:
-      name: FiveEvalDataset
+      name: FaceEvalDataset
       transform_ops:
         - DecodeImage:
             to_rgb: True

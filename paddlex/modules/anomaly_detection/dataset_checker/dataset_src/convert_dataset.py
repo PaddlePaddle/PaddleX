@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
 # limitations under the License.
 
 
-import glob
 import json
 import os
 import os.path as osp
 import shutil
 
-import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
-from .....utils.file_interface import custom_open
 from .....utils import logging
+from .....utils.deps import function_requires_deps, is_dep_available
+from .....utils.file_interface import custom_open
 from .....utils.logging import info
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 def convert_dataset(dataset_type, input_dir):
@@ -38,6 +40,7 @@ def convert_dataset(dataset_type, input_dir):
         raise NotImplementedError(dataset_type)
 
 
+@function_requires_deps("opencv-contrib-python")
 def convert_labelme_dataset(input_dir):
     """convert labelme format to paddlex official format"""
     bg_name = "_background_"
@@ -97,9 +100,9 @@ def convert_labelme_dataset(input_dir):
                 if not os.path.exists(img_path):
                     logging.info("%s is not existed, skip this image" % img_path)
                     continue
-                img_name = img_path.split("/")[-1]
+                img_name = osp.basename(img_path)
                 img_file_list.append(f"images/{img_name}")
-                label_img_name = annotated_img_path.split("/")[-1]
+                label_img_name = osp.basename(annotated_img_path)
                 label_file_list.append(f"annotations/{label_img_name}")
 
                 img = np.asarray(cv2.imread(img_path))

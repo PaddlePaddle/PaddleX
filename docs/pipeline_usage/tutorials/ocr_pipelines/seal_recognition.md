@@ -7,323 +7,1446 @@ comments: true
 ## 1. 印章文本识别产线介绍
 印章文本识别是一种自动从文档或图像中提取和识别印章内容的技术，印章文本的识别是文档处理的一部分，在很多场景都有用途，例如合同比对，出入库审核以及发票报销审核等场景。
 
+印章文本识别产线用于识别印章的文本内容，提取印章图像中的文字信息以文本形式输出，本产线集成了业界知名的 PP-OCRv4 的端到端 OCR 串联系统，支持弯曲印章文本的检测和识别。同时，本产线集成了可选的版面区域定位模块，可以在整个文档中准确定位印章所在的版面位置。此外也增加可选的文档图像的方向矫正和扭曲矫正功能。基于本产线，可实现 CPU 上毫秒级的文本内容精准预测。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
-<img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png">
 
+<img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png"/>
+<b>印章文本识别</b>产线中包含印章印章文本检测模块和文本识别模块，以及可选的版面检测模块、文档图像方向分类模块、文本图像矫正模块。每个模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型。
 
-<b>印章文本识别</b>产线中包含版面区域分析模块、印章印章文本检测模块和文本识别模块。
+### 1.1 模型基准测试数据
 
 <b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
-<details><summary> 👉模型列表详情</summary>
+> 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
 
-<p><b>版面区域分析模块模型：</b></p>
+<p><b>版面区域检测模块（可选）：</b></p>
+
+* <b>版面检测模型，包含23个常见的类别：文档标题、段落标题、文本、页码、摘要、目录、参考文献、脚注、页眉、页脚、算法、公式、公式编号、图像、图表标题、表格、表格标题、印章、图表标题、图表、页眉图像、页脚图像、侧栏文本</b>
 <table>
 <thead>
 <tr>
-<th>模型</th>
+<th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x</td>
-<td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
-<td>7.4</td>
-<td>基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域</td>
+<td>PP-DocLayout-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
+<td>90.4</td>
+<td>33.59 / 33.59</td>
+<td>503.01 / 251.08</td>
+<td>123.76</td>
+<td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_3cls</td>
-<td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
-<td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
+<td>PP-DocLayout-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
+<td>75.2</td>
+<td>13.03 / 4.72</td>
+<td>43.39 / 24.44</td>
+<td>22.578</td>
+<td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_17cls</td>
-<td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
-<td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_3cls</td>
-<td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
-<td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_17cls</td>
-<td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
-<td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_3cls</td>
-<td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
-<td>470.1</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_17cls</td>
-<td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
-<td>470.2</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
+<td>PP-DocLayout-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
+<td>70.9</td>
+<td>11.54 / 3.86</td>
+<td>18.53 / 6.29</td>
+<td>4.834</td>
+<td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
-<p><b>印章文本检测模块模型：</b></p>
+
+
+>❗ 以上列出的是版面检测模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>11个全量模型</b>，包含多个预定义了不同类别的模型，其中包含印章类别的模型有9个，除上述3个核心模型外，其余模型列表如下：
+
+
+<details><summary> 👉模型列表详情</summary>
+
+* <b>3类版面检测模型，包含表格、图像、印章</b>
 <table>
 <thead>
 <tr>
-<th>模型</th>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>88.2</td>
+<td>8.43 / 3.44</td>
+<td>17.60 / 6.51</td>
+<td>4.8</td>
+<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>89.0</td>
+<td>12.80 / 9.57</td>
+<td>45.04 / 23.86</td>
+<td>22.6</td>
+<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>95.8</td>
+<td>114.80 / 25.65</td>
+<td>924.38 / 924.38</td>
+<td>470.1</td>
+<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
+</tr>
+</tbody></table>
+
+* <b>17类区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>87.4</td>
+<td>8.80 / 3.62</td>
+<td>17.51 / 6.35</td>
+<td>4.8</td>
+<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>89.0</td>
+<td>12.60 / 10.27</td>
+<td>43.70 / 24.42</td>
+<td>22.6</td>
+<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>98.3</td>
+<td>115.29 / 101.18</td>
+<td>964.75 / 964.75</td>
+<td>470.2</td>
+<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
+</tr>
+</tbody>
+</table>
+
+</details>
+<p><b>文档图像方向分类模块（可选）：</b></p>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>Top-1 Acc（%）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+<td>99.06</td>
+<td>2.62 / 0.59</td>
+<td>3.24 / 1.19</td>
+<td>7</td>
+<td>基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度</td>
+</tr>
+</tbody>
+</table>
+
+<p><b>文本图像矫正模块（可选）：</b></p>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>CER </th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UVDoc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
+<td>0.179</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
+<td>30.3</td>
+<td>高精度文本图像矫正模型</td>
+</tr>
+</tbody>
+</table>
+
+<p><b>文本检测模块：</b></p>
+<table>
+<thead>
+<tr>
+<th>模型</th><th>模型下载链接</th>
 <th>检测Hmean（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>PP-OCRv4_server_seal_det</td>
-<td>98.21</td>
-<td>84.341</td>
-<td>2425.06</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">训练模型</a></td>
+<td>98.40</td>
+<td>124.64 / 91.57</td>
+<td>545.68 / 439.86</td>
 <td>109</td>
 <td>PP-OCRv4的服务端印章文本检测模型，精度更高，适合在较好的服务器上部署</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td>
-<td>96.47</td>
-<td>10.5878</td>
-<td>131.813</td>
-<td>4.6</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td>
+<td>96.36</td>
+<td>9.70 / 3.56</td>
+<td>50.38 / 19.64</td>
+<td>4.7</td>
 <td>PP-OCRv4的移动端印章文本检测模型，效率更高，适合在端侧部署</td>
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是自建的数据集，包含500张圆形印章图像。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
-<p><b>文本识别模块模型：</b></p>
+
+<p><b>文本识别模块：</b></p>
 <table>
-<thead>
 <tr>
-<th>模型名称</th>
-<th>识别Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时</th>
-<th>模型存储大小（M）</th>
+<th>模型</th><th>模型下载链接</th>
+<th>识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
-</thead>
-<tbody>
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv5_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>86.38</td>
+<td>8.46 / 2.36</td>
+<td>31.21 / 31.21</td>
+<td>81</td>
+<td rowspan="2">PP-OCRv5_rec 是新一代文本识别模型。该模型致力于以单一模型高效、精准地支持简体中文、繁体中文、英文、日文四种主要语言，以及手写、竖版、拼音、生僻字等复杂文本场景的识别。在保持识别效果的同时，兼顾推理速度和模型鲁棒性，为各种场景下的文档理解提供高效、精准的技术支撑。</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>81.29</td>
+<td>5.43 / 1.46</td>
+<td>21.20 / 5.32</td>
+<td>16</td>
+</tr>
+<tr>
+<td>PP-OCRv4_server_rec_doc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv4_server_rec_doc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_doc_pretrained.pdparams">训练模型</a></td>
+<td>86.58</td>
+<td>8.69 / 2.78</td>
+<td>37.93 / 37.93</td>
+<td>182</td>
+<td>PP-OCRv4_server_rec_doc是在PP-OCRv4_server_rec的基础上，在更多中文文档数据和PP-OCR训练数据的混合数据训练而成，增加了部分繁体字、日文、特殊字符的识别能力，可支持识别的字符为1.5万+，除文档相关的文字识别能力提升外，也同时提升了通用文字的识别能力</td>
+</tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td>
-<td>78.20</td>
-<td>7.95018</td>
-<td>46.7868</td>
-<td>10.6 M</td>
-<td>PP-OCRv4的移动端文本识别模型，效率更高，适合在端侧部署</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>78.74</td>
+<td>5.26 / 1.12</td>
+<td>17.48 / 3.61</td>
+<td>10.5</td>
+<td>PP-OCRv4的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec</td>
-<td>79.20</td>
-<td>7.19439</td>
-<td>140.179</td>
-<td>71.2 M</td>
-<td>PP-OCRv4的服务端文本识别模型，精度更高，适合在较好的服务器上部署</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>85.19</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
+<td>173</td>
+<td>PP-OCRv4的服务器端模型，推理精度高，可以部署在多种不同的服务器上</td>
 </tr>
-</tbody>
+<tr>
+<td>en_PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+en_PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>70.39</td>
+<td>4.81 / 1.23</td>
+<td>17.20 / 4.18</td>
+<td>7.5</td>
+<td>基于PP-OCRv4识别模型训练得到的超轻量英文识别模型，支持英文、数字识别</td>
+</tr>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集 ，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+
+> ❗ 以上列出的是文本识别模块重点支持的<b>4个核心模型</b>，该模块总共支持<b>18个全量模型</b>，包含多个多语言文本识别模型，完整的模型列表如下：
+
+<details><summary> 👉模型列表详情</summary>
+
+* <b>PP-OCRv5 多场景模型</b>
+
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>中文识别 Avg Accuracy(%)</th>
+<th>英文识别 Avg Accuracy(%)</th>
+<th>繁体中文识别 Avg Accuracy(%)</th>
+<th>日文识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>PP-OCRv5_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv5_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>86.38</td>
+<td>64.70</td>
+<td>93.29</td>
+<td>60.35</td>
+<td>8.46 / 2.36</td>
+<td>31.21 / 31.21</td>
+<td>81</td>
+<td rowspan="2">PP-OCRv5_rec 是新一代文本识别模型。该模型致力于以单一模型高效、精准地支持简体中文、繁体中文、英文、日文四种主要语言，以及手写、竖版、拼音、生僻字等复杂文本场景的识别。在保持识别效果的同时，兼顾推理速度和模型鲁棒性，为各种场景下的文档理解提供高效、精准的技术支撑。</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv5_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>81.29</td>
+<td>66.00</td>
+<td>83.55</td>
+<td>54.65</td>
+<td>5.43 / 1.46</td>
+<td>21.20 / 5.32</td>
+<td>16</td>
+</tr>
+</table>
+
+* <b>中文识别模型</b>
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>PP-OCRv4_server_rec_doc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv4_server_rec_doc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_doc_pretrained.pdparams">训练模型</a></td>
+<td>86.58</td>
+<td>8.69 / 2.78</td>
+<td>37.93 / 37.93</td>
+<td>182</td>
+<td>PP-OCRv4_server_rec_doc是在PP-OCRv4_server_rec的基础上，在更多中文文档数据和PP-OCR训练数据的混合数据训练而成，增加了部分繁体字、日文、特殊字符的识别能力，可支持识别的字符为1.5万+，除文档相关的文字识别能力提升外，也同时提升了通用文字的识别能力</td>
+</tr>
+<tr>
+<td>PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>78.74</td>
+<td>5.26 / 1.12</td>
+<td>17.48 / 3.61</td>
+<td>10.5</td>
+<td>PP-OCRv4的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
+</tr>
+<tr>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
+<td>85.19</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
+<td>173</td>
+<td>PP-OCRv4的服务器端模型，推理精度高，可以部署在多种不同的服务器上</td>
+</tr>
+<tr>
+<td>PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>72.96</td>
+<td>3.89 / 1.16</td>
+<td>8.72 / 3.56</td>
+<td>10.3</td>
+<td>PP-OCRv3的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>ch_SVTRv2_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_SVTRv2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">训练模型</a></td>
+<td>68.81</td>
+<td>10.38 / 8.31</td>
+<td>66.52 / 30.83</td>
+<td>80.5</td>
+<td rowspan="1">
+SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队研发的服务端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，A榜端到端识别精度相比PP-OCRv4提升6%。
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>ch_RepSVTR_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_RepSVTR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">训练模型</a></td>
+<td>65.07</td>
+<td>6.29 / 1.57</td>
+<td>20.64 / 5.40</td>
+<td>48.8</td>
+<td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
+</tr>
+</table>
+
+* <b>英文识别模型</b>
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>en_PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+en_PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td> 70.39</td>
+<td>4.81 / 1.23</td>
+<td>17.20 / 4.18</td>
+<td>7.5</td>
+<td>基于PP-OCRv4识别模型训练得到的超轻量英文识别模型，支持英文、数字识别</td>
+</tr>
+<tr>
+<td>en_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+en_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>70.69</td>
+<td>3.56 / 0.78</td>
+<td>8.44 / 5.78</td>
+<td>17.3</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量英文识别模型，支持英文、数字识别</td>
+</tr>
+</table>
+
+* <b>多语言识别模型</b>
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>识别 Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>korean_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+korean_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/korean_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>60.21</td>
+<td>3.73 / 0.98</td>
+<td>8.76 / 2.91</td>
+<td>9.6</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量韩文识别模型，支持韩文、数字识别</td>
+</tr>
+<tr>
+<td>japan_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+japan_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/japan_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>45.69</td>
+<td>3.86 / 1.01</td>
+<td>8.62 / 2.92</td>
+<td>9.8</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量日文识别模型，支持日文、数字识别</td>
+</tr>
+<tr>
+<td>chinese_cht_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+chinese_cht_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/chinese_cht_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>82.06</td>
+<td>3.90 / 1.16</td>
+<td>9.24 / 3.18</td>
+<td>10.8</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量繁体中文识别模型，支持繁体中文、数字识别</td>
+</tr>
+<tr>
+<td>te_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+te_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/te_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>95.88</td>
+<td>3.59 / 0.81</td>
+<td>8.28 / 6.21</td>
+<td>8.7</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量泰卢固文识别模型，支持泰卢固文、数字识别</td>
+</tr>
+<tr>
+<td>ka_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+ka_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ka_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>96.96</td>
+<td>3.49 / 0.89</td>
+<td>8.63 / 2.77</td>
+<td>17.4</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量卡纳达文识别模型，支持卡纳达文、数字识别</td>
+</tr>
+<tr>
+<td>ta_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+ta_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ta_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>76.83</td>
+<td>3.49 / 0.86</td>
+<td>8.35 / 3.41</td>
+<td>8.7</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量泰米尔文识别模型，支持泰米尔文、数字识别</td>
+</tr>
+<tr>
+<td>latin_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+latin_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/latin_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>76.93</td>
+<td>3.53 / 0.78</td>
+<td>8.50 / 6.83</td>
+<td>8.7</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量拉丁文识别模型，支持拉丁文、数字识别</td>
+</tr>
+<tr>
+<td>arabic_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+arabic_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/arabic_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>73.55</td>
+<td>3.60 / 0.83</td>
+<td>8.44 / 4.69</td>
+<td>17.3</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量阿拉伯字母识别模型，支持阿拉伯字母、数字识别</td>
+</tr>
+<tr>
+<td>cyrillic_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+cyrillic_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/cyrillic_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>94.28</td>
+<td>3.56 / 0.79</td>
+<td>8.22 / 2.76</td>
+<td>8.7</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量斯拉夫字母识别模型，支持斯拉夫字母、数字识别</td>
+</tr>
+<tr>
+<td>devanagari_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/\
+devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/devanagari_PP-OCRv3_mobile_rec_pretrained.pdparams">训练模型</a></td>
+<td>96.44</td>
+<td>3.60 / 0.78</td>
+<td>6.95 / 2.87</td>
+<td>8.7</td>
+<td>基于PP-OCRv3识别模型训练得到的超轻量梵文字母识别模型，支持梵文字母、数字识别</td>
+</tr>
+</table>
+</details>
+
+<strong>测试环境说明:</strong>
+
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+            <li><strong>测试数据集：
+             </strong>
+                <ul>
+                  <li>文档图像方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。</li>
+                  <li>文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。</li>
+                   <li>版面区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。</li>
+                    <li>3类版面检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。</li>
+                  <li> 17类区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。</li>
+                  <li>文本检测模型：PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。</li>
+                   <li>中文识别模型： PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。</li>
+                    <li>ch_SVTRv2_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜评估集。</li>
+                  <li>ch_RepSVTR_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜评估集。</li>
+                  <li>英文识别模型：PaddleX 自建的英文数据集。</li>
+                   <li>多语言识别模型：PaddleX 自建的多语种数据集。</li>
+                    <li>文本行方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。</li>
+                   <li>印章文本检测模型：PaddleX 自建的数据集，包含500张圆形印章图像。</li>
+                </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>软件环境：</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
+
+### 1.2 产线基准测试数据
+
+<details>
+<summary>点击展开/折叠表格</summary>
+
+<table border="1">
+<tr><th>流水线配置</th><th>硬件</th><th>平均推理时间 (s)</th><th>峰值CPU利用率 (%)</th><th>平均CPU利用率 (%)</th><th>峰值主机内存 (MB)</th><th>平均主机内存 (MB)</th><th>峰值GPU利用率 (%)</th><th>平均GPU利用率 (%)</th><th>峰值设备内存 (MB)</th><th>平均设备内存 (MB)</th></tr>
+<tr>
+<td rowspan="9">seal_recognition-default</td>
+<td>Intel 6271C</td>
+<td>1.44</td>
+<td>1013.50</td>
+<td>1005.77</td>
+<td>2850.27</td>
+<td>2593.21</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>1.30</td>
+<td>1010.40</td>
+<td>970.29</td>
+<td>2797.28</td>
+<td>2550.80</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.10</td>
+<td>115.80</td>
+<td>112.72</td>
+<td>1647.39</td>
+<td>1636.58</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.07</td>
+<td>117.90</td>
+<td>115.03</td>
+<td>1519.09</td>
+<td>1501.98</td>
+<td>42</td>
+<td>36.22</td>
+<td>2508.00</td>
+<td>2245.78</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.12</td>
+<td>117.80</td>
+<td>115.16</td>
+<td>1425.80</td>
+<td>1402.56</td>
+<td>49</td>
+<td>40.27</td>
+<td>1862.00</td>
+<td>1700.93</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.08</td>
+<td>117.40</td>
+<td>111.64</td>
+<td>1721.26</td>
+<td>1706.75</td>
+<td>64</td>
+<td>54.90</td>
+<td>2502.00</td>
+<td>2316.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.08</td>
+<td>125.80</td>
+<td>118.96</td>
+<td>1727.16</td>
+<td>1711.59</td>
+<td>60</td>
+<td>48.55</td>
+<td>2212.00</td>
+<td>2042.91</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>1.54</td>
+<td>104.70</td>
+<td>101.57</td>
+<td>4526.11</td>
+<td>2082.03</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.16</td>
+<td>110.20</td>
+<td>108.01</td>
+<td>1690.79</td>
+<td>1667.58</td>
+<td>82</td>
+<td>70.95</td>
+<td>1564.00</td>
+<td>1397.90</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp</td>
+<td>Intel 6271C</td>
+<td>1.11</td>
+<td>1014.70</td>
+<td>1009.28</td>
+<td>3062.18</td>
+<td>2793.37</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>1.20</td>
+<td>1012.60</td>
+<td>1006.68</td>
+<td>3079.39</td>
+<td>2766.63</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.12</td>
+<td>116.90</td>
+<td>115.51</td>
+<td>1608.80</td>
+<td>1608.61</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.08</td>
+<td>118.90</td>
+<td>117.49</td>
+<td>1440.84</td>
+<td>1433.75</td>
+<td>51</td>
+<td>45.50</td>
+<td>2586.00</td>
+<td>2302.80</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.12</td>
+<td>119.80</td>
+<td>117.69</td>
+<td>1451.77</td>
+<td>1440.18</td>
+<td>53</td>
+<td>46.24</td>
+<td>2078.00</td>
+<td>1900.35</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.10</td>
+<td>117.90</td>
+<td>111.53</td>
+<td>1722.02</td>
+<td>1711.42</td>
+<td>72</td>
+<td>67.92</td>
+<td>2438.00</td>
+<td>2247.23</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.10</td>
+<td>120.80</td>
+<td>118.38</td>
+<td>1642.00</td>
+<td>1628.48</td>
+<td>63</td>
+<td>59.62</td>
+<td>2430.00</td>
+<td>2239.23</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>2.34</td>
+<td>104.30</td>
+<td>101.47</td>
+<td>4436.23</td>
+<td>2145.62</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.20</td>
+<td>109.80</td>
+<td>107.97</td>
+<td>1628.87</td>
+<td>1614.33</td>
+<td>82</td>
+<td>76.56</td>
+<td>1844.00</td>
+<td>1662.80</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-nolayout</td>
+<td>Intel 6271C</td>
+<td>0.66</td>
+<td>1021.40</td>
+<td>1014.05</td>
+<td>2541.84</td>
+<td>2317.52</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>0.77</td>
+<td>1013.70</td>
+<td>1009.71</td>
+<td>2558.11</td>
+<td>2321.48</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.10</td>
+<td>113.90</td>
+<td>112.78</td>
+<td>1556.05</td>
+<td>1555.78</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.06</td>
+<td>122.90</td>
+<td>120.53</td>
+<td>1323.04</td>
+<td>1314.25</td>
+<td>51</td>
+<td>44.89</td>
+<td>1814.00</td>
+<td>1814.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.10</td>
+<td>123.80</td>
+<td>121.95</td>
+<td>1349.10</td>
+<td>1344.00</td>
+<td>55</td>
+<td>48.31</td>
+<td>1208.00</td>
+<td>1208.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.10</td>
+<td>116.90</td>
+<td>113.28</td>
+<td>1620.22</td>
+<td>1601.19</td>
+<td>74</td>
+<td>65.77</td>
+<td>1850.00</td>
+<td>1850.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.08</td>
+<td>123.50</td>
+<td>120.70</td>
+<td>1477.95</td>
+<td>1465.51</td>
+<td>68</td>
+<td>56.82</td>
+<td>1570.00</td>
+<td>1570.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>2.05</td>
+<td>103.60</td>
+<td>101.33</td>
+<td>4115.47</td>
+<td>2480.96</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.17</td>
+<td>112.10</td>
+<td>109.61</td>
+<td>1477.02</td>
+<td>1466.66</td>
+<td>88</td>
+<td>78.00</td>
+<td>976.00</td>
+<td>976.00</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-lightweight</td>
+<td>Intel 6271C</td>
+<td>0.65</td>
+<td>1015.50</td>
+<td>1010.90</td>
+<td>1701.61</td>
+<td>1682.21</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>0.60</td>
+<td>1011.70</td>
+<td>1004.39</td>
+<td>1794.69</td>
+<td>1702.02</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.07</td>
+<td>120.90</td>
+<td>118.70</td>
+<td>1601.37</td>
+<td>1592.34</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.06</td>
+<td>123.90</td>
+<td>121.47</td>
+<td>1483.47</td>
+<td>1471.42</td>
+<td>25</td>
+<td>22.38</td>
+<td>926.00</td>
+<td>926.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.09</td>
+<td>125.80</td>
+<td>124.22</td>
+<td>1410.70</td>
+<td>1399.48</td>
+<td>27</td>
+<td>24.00</td>
+<td>724.00</td>
+<td>724.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.05</td>
+<td>131.90</td>
+<td>124.07</td>
+<td>1820.23</td>
+<td>1809.12</td>
+<td>29</td>
+<td>25.00</td>
+<td>940.00</td>
+<td>940.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.06</td>
+<td>131.80</td>
+<td>129.06</td>
+<td>1668.08</td>
+<td>1656.94</td>
+<td>38</td>
+<td>31.33</td>
+<td>680.00</td>
+<td>680.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>0.70</td>
+<td>106.60</td>
+<td>104.71</td>
+<td>1176.22</td>
+<td>1155.02</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.09</td>
+<td>120.80</td>
+<td>117.79</td>
+<td>1492.52</td>
+<td>1481.60</td>
+<td>49</td>
+<td>44.25</td>
+<td>490.00</td>
+<td>490.00</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-lightweightlayout</td>
+<td>Intel 6271C</td>
+<td>0.26</td>
+<td>1018.90</td>
+<td>1012.30</td>
+<td>2759.20</td>
+<td>2417.41</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>0.29</td>
+<td>1017.60</td>
+<td>1009.56</td>
+<td>2718.50</td>
+<td>2400.95</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.06</td>
+<td>136.30</td>
+<td>128.47</td>
+<td>1565.15</td>
+<td>1564.68</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.04</td>
+<td>115.90</td>
+<td>115.12</td>
+<td>1313.98</td>
+<td>1305.40</td>
+<td>42</td>
+<td>31.33</td>
+<td>2896.00</td>
+<td>2896.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.06</td>
+<td>119.80</td>
+<td>117.14</td>
+<td>1268.04</td>
+<td>1257.68</td>
+<td>54</td>
+<td>32.00</td>
+<td>1956.00</td>
+<td>1956.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.05</td>
+<td>119.00</td>
+<td>111.67</td>
+<td>1735.01</td>
+<td>1709.83</td>
+<td>66</td>
+<td>55.43</td>
+<td>2394.00</td>
+<td>2394.00</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.05</td>
+<td>118.90</td>
+<td>118.48</td>
+<td>1596.27</td>
+<td>1585.00</td>
+<td>63</td>
+<td>42.83</td>
+<td>2376.00</td>
+<td>2376.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>0.79</td>
+<td>112.40</td>
+<td>102.80</td>
+<td>6106.27</td>
+<td>2249.03</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.08</td>
+<td>111.90</td>
+<td>108.66</td>
+<td>1510.57</td>
+<td>1502.12</td>
+<td>83</td>
+<td>53.82</td>
+<td>1714.00</td>
+<td>1714.00</td>
+</tr>
+<tr>
+<td rowspan="9">seal_recognition-nopp-nolayout-lightweight</td>
+<td>Intel 6271C</td>
+<td>0.15</td>
+<td>1027.50</td>
+<td>1022.43</td>
+<td>1245.17</td>
+<td>1206.22</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C</td>
+<td>0.13</td>
+<td>1024.70</td>
+<td>1014.78</td>
+<td>1211.13</td>
+<td>1194.93</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Hygon 7490 + P800</td>
+<td>0.06</td>
+<td>131.70</td>
+<td>128.79</td>
+<td>1532.17</td>
+<td>1513.78</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 8350C + A100</td>
+<td>0.04</td>
+<td>133.00</td>
+<td>129.92</td>
+<td>1169.25</td>
+<td>1167.00</td>
+<td>13</td>
+<td>12.17</td>
+<td>610.00</td>
+<td>610.00</td>
+</tr>
+<tr>
+<td>Intel 6271C + V100</td>
+<td>0.07</td>
+<td>132.70</td>
+<td>128.90</td>
+<td>1269.38</td>
+<td>1264.15</td>
+<td>13</td>
+<td>11.44</td>
+<td>488.00</td>
+<td>488.00</td>
+</tr>
+<tr>
+<td>Intel 8563C + H20</td>
+<td>0.04</td>
+<td>134.90</td>
+<td>128.48</td>
+<td>1530.35</td>
+<td>1520.96</td>
+<td>12</td>
+<td>11.00</td>
+<td>690.00</td>
+<td>681.67</td>
+</tr>
+<tr>
+<td>Intel 8350C + A10</td>
+<td>0.05</td>
+<td>141.90</td>
+<td>139.48</td>
+<td>1458.07</td>
+<td>1454.14</td>
+<td>16</td>
+<td>13.57</td>
+<td>398.00</td>
+<td>398.00</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>0.28</td>
+<td>110.30</td>
+<td>109.19</td>
+<td>1100.36</td>
+<td>1097.53</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Intel 6271C + T4</td>
+<td>0.07</td>
+<td>125.90</td>
+<td>123.15</td>
+<td>1389.43</td>
+<td>1379.54</td>
+<td>32</td>
+<td>30.44</td>
+<td>254.00</td>
+<td>254.00</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr><th>Pipeline configuration</th><th>description</th></tr>
+<tr>
+<td>seal_recognition-default</td>
+<td>默认配置</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp</td>
+<td>默认配置基础上，关闭文档图像预处理</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-nolayout</td>
+<td>默认配置基础上，关闭文档图像预处理</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-lightweight</td>
+<td>默认配置基础上，关闭文档图像预处理，使用轻量级的 PP-OCRv4_mobile_seal_det 和 PP-OCRv4_mobile_rec 模型</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-lightweightlayout</td>
+<td>默认配置基础上，关闭文档图像预处理，使用轻量级版面区域检测模型 PP-DocLayout-S</td>
+</tr>
+<tr>
+<td>seal_recognition-nopp-nolayout-lightweight</td>
+<td>默认配置基础上，关闭文档图像预处理，关闭版面区域检测，使用轻量级的 PP-OCRv4_mobile_seal_det 和 PP-OCRv4_mobile_rec 模型</td>
+</tr>
+</table>
+</details>
+
+
+* 测试环境：
+    * PaddlePaddle 3.1.0、CUDA 11.8、cuDNN 8.9
+    * PaddleX @ develop (f1eb28e23cfa54ce3e9234d2e61fcb87c93cf407)
+    * Docker image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle:3.1.0-gpu-cuda11.8-cudnn8.9
+* 测试数据：
+    * 测试数据包含130张印章图像。
+* 测试策略：
+    * 使用 20 个样本进行预热，然后对整个数据集重复 1 次以进行速度性能测试。
+* 备注：
+    * 由于我们没有收集NPU和XPU的设备内存数据，因此表中相应位置的数据标记为N/A。
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验印章文本识别产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验印章文本识别产线的效果，也可以在本地使用命令行或 Python 体验印章文本识别产线的效果。
 
-在本地使用印章文本识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+### 2.1 在线体验
+您可以[在线体验](https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter)印章文本识别产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-### 2.1 命令行方式体验
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/seal_aistudio.png"/>
+
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
+
+### 2.2 本地体验
+❗ 在本地使用印章文本识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ocr`。
+
+#### 2.2.1 命令行方式体验
 一行命令即可快速体验印章文本识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png)，并将 `--input` 替换为本地路径，进行预测
 
-```
-paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --save_path ./output
-```
-参数说明：
-
-```
---pipeline：产线名称，此处为印章文本识别产线
---input：待处理的输入图片的本地路径或URL
---device: 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
---save_path: 输出结果保存路径
+```bash
+paddlex --pipeline seal_recognition \
+    --input seal_text_det.png \
+    --use_doc_orientation_classify False \
+    --use_doc_unwarping False \
+    --device gpu:0 \
+    --save_path ./output
 ```
 
-在执行上述 Python 脚本时，加载的是默认的印章文本识别产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+<b>注：</b>PaddleX 支持多个模型托管平台，官方模型默认优先从 HuggingFace 下载。PaddleX 也支持通过环境变量 `PADDLE_PDX_MODEL_SOURCE` 设置优先使用的托管平台，目前支持 `huggingface`、`aistudio`、`bos`、`modelscope`，如优先使用 `bos`：`PADDLE_PDX_MODEL_SOURCE="bos"`；
+
+相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。支持同时指定多个设备以进行并行推理，详情请参考 [产线并行推理](../../instructions/parallel_inference.md#指定多个推理设备)。
+
+运行后，会将结果打印到终端上，结果如下：
 
 <details><summary> 👉点击展开</summary>
 
-<pre><code>paddlex --get_pipeline_config seal_recognition
-</code></pre>
-<p>执行后，印章文本识别产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 <code>./my_path</code> ）：</p>
-<pre><code>paddlex --get_pipeline_config seal_recognition --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 <code>--pipeline</code> 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 <code>./seal_recognition.yaml</code>，只需执行：</p>
-<pre><code>paddlex --pipeline seal_recognition.yaml --input seal_text_det.png --save_path ./output
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
+```bash
+{'res': {'input_path': 'seal_text_det.png', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 16, 'label': 'seal', 'score': 0.975531280040741, 'coordinate': [6.195526, 0.1579895, 634.3982, 628.84595]}]}, 'seal_res_list': [{'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[320,  38],
+       ...,
+       [315,  38]]), array([[461, 347],
+       ...,
+       [456, 346]]), array([[439, 445],
+       ...,
+       [434, 444]]), array([[158, 468],
+       ...,
+       [154, 466]])], 'text_det_params': {'limit_side_len': 736, 'limit_type': 'min', 'thresh': 0.2, 'box_thresh': 0.6, 'unclip_ratio': 0.5}, 'text_type': 'seal', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['天津君和缘商贸有限公司', '发票专用章', '吗繁物', '5263647368706'], 'rec_scores': array([0.9934051 , ..., 0.99139398]), 'rec_polys': [array([[320,  38],
+       ...,
+       [315,  38]]), array([[461, 347],
+       ...,
+       [456, 346]]), array([[439, 445],
+       ...,
+       [434, 444]]), array([[158, 468],
+       ...,
+       [154, 466]])], 'rec_boxes': array([], dtype=float64)}]}}
+```
 
-运行后，得到的结果为：
+</details>
 
-<details><summary> 👉点击展开</summary>
+运行结果参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的结果解释。
 
-<pre><code>{'input_path': 'seal_text_det.png', 'layout_result': {'input_path': 'seal_text_det.png', 'boxes': [{'cls_id': 2, 'label': 'seal', 'score': 0.9813116192817688, 'coordinate': [0, 5.2238655, 639.59766, 637.6985]}]}, 'ocr_result': [{'input_path': PosixPath('/root/.paddlex/temp/tmp19fn93y5.png'), 'dt_polys': [array([[468, 469],
-       [472, 469],
-       [477, 471],
-       [507, 501],
-       [509, 505],
-       [509, 509],
-       [508, 513],
-       [506, 514],
-       [456, 553],
-       [454, 555],
-       [391, 581],
-       [388, 581],
-       [309, 590],
-       [306, 590],
-       [234, 577],
-       [232, 577],
-       [172, 548],
-       [170, 546],
-       [121, 504],
-       [118, 501],
-       [118, 496],
-       [119, 492],
-       [121, 490],
-       [152, 463],
-       [156, 461],
-       [160, 461],
-       [164, 463],
-       [202, 495],
-       [252, 518],
-       [311, 530],
-       [371, 522],
-       [425, 501],
-       [464, 471]]), array([[442, 439],
-       [445, 442],
-       [447, 447],
-       [449, 490],
-       [448, 494],
-       [446, 497],
-       [440, 499],
-       [197, 500],
-       [193, 499],
-       [190, 496],
-       [188, 491],
-       [188, 448],
-       [189, 444],
-       [192, 441],
-       [197, 439],
-       [438, 438]]), array([[465, 341],
-       [470, 344],
-       [472, 346],
-       [476, 356],
-       [476, 419],
-       [475, 424],
-       [472, 428],
-       [467, 431],
-       [462, 433],
-       [175, 434],
-       [170, 433],
-       [166, 430],
-       [163, 426],
-       [161, 420],
-       [161, 354],
-       [162, 349],
-       [165, 345],
-       [170, 342],
-       [175, 340],
-       [460, 340]]), array([[326,  34],
-       [481,  85],
-       [485,  88],
-       [488,  90],
-       [584, 220],
-       [586, 225],
-       [587, 229],
-       [589, 378],
-       [588, 383],
-       [585, 388],
-       [581, 391],
-       [576, 393],
-       [570, 392],
-       [507, 373],
-       [502, 371],
-       [498, 367],
-       [496, 359],
-       [494, 255],
-       [423, 162],
-       [322, 129],
-       [246, 151],
-       [205, 169],
-       [144, 252],
-       [139, 360],
-       [137, 365],
-       [134, 369],
-       [128, 373],
-       [ 66, 391],
-       [ 61, 392],
-       [ 56, 390],
-       [ 51, 387],
-       [ 48, 382],
-       [ 47, 377],
-       [ 49, 230],
-       [ 50, 225],
-       [ 52, 221],
-       [149,  89],
-       [153,  86],
-       [157,  84],
-       [318,  34],
-       [322,  33]])], 'dt_scores': [0.9943362380813267, 0.9994290391836306, 0.9945320407374245, 0.9908104427126033], 'rec_text': ['5263647368706', '吗繁物', '发票专用章', '天津君和缘商贸有限公司'], 'rec_score': [0.9921098351478577, 0.997374951839447, 0.9999369382858276, 0.9901710152626038]}]}
-</code></pre></details>
+可视化结果保存在`save_path`下，其中印章OCR的可视化结果如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/03.png">
-
-可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/03.png"/>
 
 
-### 2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以印章文本识别产线为例：
+#### 2.2.2 Python脚本方式集成
+
+* 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="seal_recognition")
 
-output = pipeline.predict("seal_text_det.png")
+output = pipeline.predict(
+    "seal_text_det.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+)
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存可视化结果
+    res.save_to_json("./output/") ## 保存可视化结果
 ```
-得到的结果与命令行方式相同。
+
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 印章文本识别 产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -339,92 +1462,372 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。支持同时指定多个设备以进行并行推理，详情请参考产线并行推理文档。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
-<td><code>enable_hpi</code></td>
-<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理插件。如果为 <code>None</code>，则使用配置文件或 <code>config</code> 中的配置。</td>
+<td><code>bool</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>高性能推理配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>无</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
-（2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+（2）调用 印章文本识别 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
+<td><code>use_doc_orientation_classify</code></td>
+<td>是否使用文档方向分类模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png">示例</a>。</td>
+<td><code>use_doc_unwarping</code></td>
+<td>是否使用文档扭曲矫正模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
+<td><code>use_layout_detection</code></td>
+<td>是否使用版面检测模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
-</table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
+<td><code>layout_threshold</code></td>
+<td>版面检测置信度阈值，得分大于该阈值才会被输出</td>
+<td><code>float|dict|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>dict</b>：key是int类别id， value是大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.5</code></li></li></li></ul></td>
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>是否使用版面检测后处理NMS</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>检测框的边长缩放倍数；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>float|list|None</code></td>
+<td>
+<ul>
+<li><b>float</b>, 大于0的浮点数，如 1.1 , 表示将模型输出的检测框中心不变，宽和高都扩张1.1倍</li>
+<li><b>列表</b>, 如 [1.2, 1.5] , 表示将模型输出的检测框中心不变，宽度扩张1.2倍，高度扩张1.5倍</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为1.0</li>
+</ul>
+</td>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>模型输出的检测框的合并处理模式；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>string|None</code></td>
+<td>
+<ul>
+<li><b>large</b>, 设置为large时，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留外部最大的框，删除重叠的内部框。</li>
+<li><b>small</b>, 设置为small，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留内部被包含的小框，删除重叠的外部框。</li>
+<li><b>union</b>, 不进行框的过滤处理，内外框都保留</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>large</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>seal_det_limit_side_len</code></td>
+<td>印章文本检测的图像边长限制</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>736</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_type</code></td>
+<td>印章文本检测的图像边长限制类型</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>min</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_thresh</code></td>
+<td>检测像素阈值，输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.2</code></li></li></ul></td>
+
+
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_box_thresh</code></td>
+<td>检测框阈值，检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></li></li></ul></td>
+
+
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_unclip_ratio</code></td>
+<td>文本检测扩张系数，使用该方法对文字区域进行扩张，该值越大，扩张的面积越大</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.5</code></li></li></ul></td>
+
+
+
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_rec_score_thresh</code></td>
+<td>文本识别阈值，得分大于该阈值的文本结果会被保留</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
+
+
+
+<td><code>None</code></td>
+</tr>
+</tr></table>
+
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br><code>- indent</code>：int类型，json格式化设置，默认为4；<br><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对印章文本识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/seal_recognition.yaml` ，则只需执行：
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+
+    - `input_path`: `(str)` 待预测图像的输入路径
+
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
+    - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
+
+        - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
+        - `use_layout_detection`: `(bool)` 控制是否启用版面检测子模块
+    - `layout_det_res`: `(Dict[str, Union[List[numpy.ndarray], List[float]]])` 版面检测子模块的输出结果。仅当`use_layout_detection=True`时存在
+        - `input_path`: `(Union[str, None])` 版面检测区域模块接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
+        - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+        - `boxes`: `(List[Dict])` 版面印章区域的检测框列表，每个列表中的元素，包含以下字段
+            - `cls_id`: `(int)` 检测框的印章类别id
+            - `score`: `(float)` 检测框的置信度
+            - `coordinate`: `(List[float])` 检测框的四个顶点坐标，顺序为x1,y1,x2,y2表示左上角的x坐标，左上角的y坐标，右下角x坐标，右下角的y坐标
+    - `seal_res_list`: `List[Dict]` 印章文本识别的结果列表，每个元素包含以下字段
+        - `input_path`: `(Union[str, None])` 印章文本识别产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
+        - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+        - `model_settings`: `(Dict[str, bool])` 印章文本识别产线的模型配置参数
+          - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
+          - `use_textline_orientation`: `(bool)` 控制是否启用文本行方向分类子模块
+    - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` 文档预处理子产线的输出结果。仅当`use_doc_preprocessor=True`时存在
+        - `input_path`: `(Union[str, None])` 图像预处理子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
+        - `model_settings`: `(Dict)` 预处理子产线的模型配置参数
+            - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类
+            - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正
+        - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,1,2,3]，分别对应[0°,90°,180°,270°]；未启用时为-1
+
+    - `dt_polys`: `(List[numpy.ndarray])` 印章文本检测的多边形框列表。每个检测框由多个顶点坐标构成的numpy数组表示，数组shape为(n, 2)
+
+    - `dt_scores`: `(List[float])` 文本检测框的置信度列表
+
+    - `text_det_params`: `(Dict[str, Dict[str, int, float]])` 文本检测模块的配置参数
+        - `limit_side_len`: `(int)` 图像预处理时的边长限制值
+        - `limit_type`: `(str)` 边长限制的处理方式
+        - `thresh`: `(float)` 文本像素分类的置信度阈值
+        - `box_thresh`: `(float)` 文本检测框的置信度阈值
+        - `unclip_ratio`: `(float)` 文本检测框的膨胀系数
+        - `text_type`: `(str)` 印章文本检测的类型，当前固定为"seal"
+
+
+    - `text_rec_score_thresh`: `(float)` 文本识别结果的过滤阈值
+
+    - `rec_texts`: `(List[str])` 文本识别结果列表，仅包含置信度超过`text_rec_score_thresh`的文本
+
+    - `rec_scores`: `(List[float])` 文本识别的置信度列表，已按`text_rec_score_thresh`过滤
+
+    - `rec_polys`: `(List[numpy.ndarray])` 经过置信度过滤的文本检测框列表，格式同`dt_polys`
+
+    - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，印章识别产线为空数组
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_seal_res_region1.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `layout_det_res` 、  `seal_res_region1`和 `preprocessed_img`，对应的值是三个 `Image.Image` 对象：一个用于显示版面检测可视化，一个用于显示印章文本识别结果的可视化图像，另一个用于展示图像预处理的可视化图像。如果没有使用图像预处理子模块，则字典中不包含preprocessed_img，如果没有使用版面区域检测模块，则字典中不包含layout_det_res。
+
+此外，您可以获取印章文本识别产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config seal_recognition --save_path ./my_path
+```
+
+若您获取了配置文件，即可对印章文本识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
@@ -433,7 +1836,12 @@ output = pipeline.predict("seal_text_det.png")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存可视化结果
+    res.save_to_json("./output/") ## 保存预测结果的json文件
 ```
+
+
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改印章文本识别产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
@@ -443,15 +1851,15 @@ for res in output:
 
 🚀 <b>高性能部署</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_inference.md)。
 
-☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving.md)。
 
-下面是API参考和多语言服务调用示例：
+以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
-<p>对于服务提供的所有操作：</p>
+<p>对于服务提供的主要操作：</p>
 <ul>
-<li>响应体以及POST请求的请求体均为JSON数据（JSON对象）。</li>
+<li>HTTP请求方法为POST。</li>
+<li>请求体和响应体均为JSON数据（JSON对象）。</li>
 <li>当请求处理成功时，响应状态码为<code>200</code>，响应体的属性如下：</li>
 </ul>
 <table>
@@ -464,6 +1872,11 @@ for res in output:
 </thead>
 <tbody>
 <tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>请求的UUID。</td>
+</tr>
+<tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
 <td>错误码。固定为<code>0</code>。</td>
@@ -473,9 +1886,13 @@ for res in output:
 <td><code>string</code></td>
 <td>错误说明。固定为<code>"Success"</code>。</td>
 </tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>操作结果。</td>
+</tr>
 </tbody>
 </table>
-<p>响应体还可能有<code>result</code>属性，类型为<code>object</code>，其中存储操作结果信息。</p>
 <ul>
 <li>当请求处理未成功时，响应体的属性如下：</li>
 </ul>
@@ -489,6 +1906,11 @@ for res in output:
 </thead>
 <tbody>
 <tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>请求的UUID。</td>
+</tr>
+<tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
 <td>错误码。与响应状态码相同。</td>
@@ -500,7 +1922,7 @@ for res in output:
 </tr>
 </tbody>
 </table>
-<p>服务提供的操作如下：</p>
+<p>服务提供的主要操作如下：</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
@@ -520,34 +1942,115 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>image</code></td>
+<td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认对于超过10页的PDF文件，只有前10页的内容会被处理。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: null
+</code></pre>
+</td>
 <td>是</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
+<td><code>fileType</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
-</tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
+<td>否</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>推理时，若文本检测模型的输入图像较长边的长度大于<code>maxLongSide</code>，则将对图像进行缩放，使其较长边的长度等于<code>maxLongSide</code>。</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_unwarping</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useLayoutDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_layout_detection</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_threshold</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_nms</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_unclip_ratio</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_merge_bboxes_mode</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_limit_side_len</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_limit_type</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_box_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_det_unclip_ratio</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>seal_rec_score_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>是否返回可视化结果图以及处理过程中的中间图像等。
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>传入 <code>true</code>：返回图像。</li>
+<li>传入 <code>false</code>：不返回图像。</li>
+<li>若请求体中未提供该参数或传入 <code>null</code>：遵循产线配置文件<code>Serving.visualize</code> 的设置。</li>
+</ul>
+<br/>例如，在产线配置文件中添加如下字段：<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
+</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -565,18 +2068,18 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>sealImpressions</code></td>
-<td><code>array</code></td>
-<td>印章文本识别结果。</td>
+<td><code>sealRecResults</code></td>
+<td><code>object</code></td>
+<td>印章文本识别结果。数组长度为1（对于图像输入）或实际处理的文档页数（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中实际处理的每一页的结果。</td>
 </tr>
 <tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>版面区域检测结果图。图像为JPEG格式，使用Base64编码。</td>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>输入数据信息。</td>
 </tr>
 </tbody>
 </table>
-<p><code>sealImpressions</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<p><code>sealRecResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -587,132 +2090,127 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>文本位置、内容和得分。</td>
-</tr>
-</tbody>
-</table>
-<p><code>texts</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>文本位置。数组中元素依次为包围文本的多边形的顶点坐标。</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 和 <code>page_index</code> 字段。</td>
 </tr>
 <tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>文本内容。</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线预测结果的 <code>img</code> 属性说明。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>文本识别得分。</td>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table></details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
 
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/seal-recognition&quot; # 服务URL
-image_path = &quot;./demo.jpg&quot;
-layout_image_path = &quot;./layout.jpg&quot;
+API_URL = "http://localhost:8080/seal-recognition"
+file_path = "./demo.jpg"
 
-# 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
-    image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64编码的文件内容或者图像URL
+payload = {"file": file_data, "fileType": 1}
 
-# 调用API
 response = requests.post(API_URL, json=payload)
 
-# 处理接口返回数据
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(layout_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;layoutImage&quot;]))
-print(f&quot;Output image saved at {layout_image_path}&quot;)
-print(&quot;\nDetected seal impressions:&quot;)
-print(result[&quot;sealImpressions&quot;])
+result = response.json()["result"]
+for i, res in enumerate(result["sealRecResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
+#include &lt;fstream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string layoutImagePath = &quot;./layout.jpg&quot;;
+    httplib::Client client("localhost", 8080);
 
-    httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
-    };
+    const std::string filePath = "./demo.jpg";
 
-    // 对本地图像进行Base64编码
-    std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector&lt;char&gt; buffer(size);
-    if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
+    if (!file) {
+        std::cerr << "Error opening file: " << filePath << std::endl;
         return 1;
     }
-    std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
-    std::string encodedImage = base64::to_base64(bufferStr);
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<char> buffer(size);
+    if (!file.read(buffer.data(), size)) {
+        std::cerr << "Error reading file." << std::endl;
+        return 1;
+    }
+
+    std::string bufferStr(buffer.data(), static_cast<size_t>(size));
+    std::string encodedFile = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
-    std::string body = jsonObj.dump();
+    jsonObj["file"] = encodedFile;
+    jsonObj["fileType"] = 1;
 
-    // 调用API
-    auto response = client.Post(&quot;/seal-recognition&quot;, headers, body, &quot;application/json&quot;);
-    // 处理接口返回数据
-    if (response &amp;&amp; response-&gt;status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
+    auto response = client.Post("/seal-recognition", jsonObj.dump(), "application/json");
 
-        encodedImage = result[&quot;layoutImage&quot;];
-        decodedString = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedLayoutImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputLayoutFile(layoutImagePath, std::ios::binary | std::ios::out);
-        if (outputLayoutFile.is_open()) {
-            outputLayoutFile.write(reinterpret_cast&lt;char*&gt;(decodedLayoutImage.data()), decodedLayoutImage.size());
-            outputLayoutFile.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; layoutImagePath &lt;&lt; std::endl;
-        } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; layoutImagePath &lt;&lt; std::endl;
+    if (response && response->status == 200) {
+        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
+        auto result = jsonResponse["result"];
+
+        if (!result.is_object() || !result["sealRecResults"].is_array()) {
+            std::cerr << "Unexpected response format." << std::endl;
+            return 1;
         }
 
-        auto impressions = result[&quot;sealImpressions&quot;];
-        std::cout &lt;&lt; &quot;\nDetected seal impressions:&quot; &lt;&lt; std::endl;
-        for (const auto&amp; impression : impressions) {
-            std::cout &lt;&lt; impression &lt;&lt; std::endl;
+        for (size_t i = 0; i < result["sealRecResults"].size(); ++i) {
+            auto res = result["sealRecResults"][i];
+
+            if (res.contains("prunedResult")) {
+                std::cout << "Recognized seal result: " << res["prunedResult"].dump() << std::endl;
+            }
+
+            if (res.contains("outputImages") && res["outputImages"].is_object()) {
+                for (auto& [imgName, imgData] : res["outputImages"].items()) {
+                    std::string outputPath = imgName + "_" + std::to_string(i) + ".jpg";
+                    std::string decodedImage = base64::from_base64(imgData.get<std::string>());
+
+                    std::ofstream outFile(outputPath, std::ios::binary);
+                    if (outFile.is_open()) {
+                        outFile.write(decodedImage.c_str(), decodedImage.size());
+                        outFile.close();
+                        std::cout << "Saved image: " << outputPath << std::endl;
+                    } else {
+                        std::cerr << "Failed to write image: " << outputPath << std::endl;
+                    }
+                }
+            }
         }
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cerr << "Request failed." << std::endl;
+        if (response) {
+            std::cerr << "HTTP status: " << response->status << std::endl;
+            std::cerr << "Response body: " << response->body << std::endl;
+        }
         return 1;
     }
 
@@ -734,46 +2232,60 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/seal-recognition&quot;; // 服务URL
-        String imagePath = &quot;./demo.jpg&quot;; // 本地图像
-        String layoutImagePath = &quot;./layout.jpg&quot;;
+        String API_URL = "http://localhost:8080/seal-recognition";
+        String imagePath = "./demo.jpg";
 
-        // 对本地图像进行Base64编码
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
-        String imageData = Base64.getEncoder().encodeToString(fileContent);
+        String base64Image = Base64.getEncoder().encodeToString(fileContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData); // Base64编码的文件内容或者图像URL
+        ObjectNode payload = objectMapper.createObjectNode();
+        payload.put("file", base64Image);
+        payload.put("fileType", 1);
 
-        // 创建 OkHttpClient 实例
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
-        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, payload.toString());
+
         Request request = new Request.Builder()
                 .url(API_URL)
                 .post(body)
                 .build();
 
-        // 调用API并处理接口返回数据
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
-                JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String layoutBase64Image = result.get(&quot;layoutImage&quot;).asText();
-                JsonNode impressions = result.get(&quot;sealImpressions&quot;);
+                JsonNode root = objectMapper.readTree(responseBody);
+                JsonNode result = root.get("result");
 
-                imageBytes = Base64.getDecoder().decode(layoutBase64Image);
-                try (FileOutputStream fos = new FileOutputStream(layoutImagePath)) {
-                    fos.write(imageBytes);
+                JsonNode sealRecResults = result.get("sealRecResults");
+                for (int i = 0; i < sealRecResults.size(); i++) {
+                    JsonNode item = sealRecResults.get(i);
+                    int finalI = i;
+
+                    JsonNode prunedResult = item.get("prunedResult");
+                    System.out.println("Pruned Result [" + i + "]: " + prunedResult.toString());
+
+                    JsonNode outputImages = item.get("outputImages");
+                    if (outputImages != null && outputImages.isObject()) {
+                        outputImages.fieldNames().forEachRemaining(imgName -> {
+                            try {
+                                String imgBase64 = outputImages.get(imgName).asText();
+                                byte[] imgBytes = Base64.getDecoder().decode(imgBase64);
+                                String imgPath = imgName + "_" + finalI + ".jpg";
+                                try (FileOutputStream fos = new FileOutputStream(imgPath)) {
+                                    fos.write(imgBytes);
+                                    System.out.println("Saved image: " + imgPath);
+                                }
+                            } catch (IOException e) {
+                                System.err.println("Failed to save image: " + e.getMessage());
+                            }
+                        });
+                    }
                 }
-                System.out.println(&quot;Output image saved at &quot; + layoutImagePath);
-
-                System.out.println(&quot;\nDetected seal impressions: &quot; + impressions.toString());
             } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
+                System.err.println("Request failed with HTTP code: " + response.code());
             }
         }
     }
@@ -785,83 +2297,97 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/seal-recognition&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    layoutImagePath := &quot;./layout.jpg&quot;
+    API_URL := "http://localhost:8080/seal-recognition"
+    filePath := "./demo.jpg"
 
-    // 对本地图像进行Base64编码
-    imageBytes, err := ioutil.ReadFile(imagePath)
+    fileBytes, err := ioutil.ReadFile(filePath)
     if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
+        fmt.Printf("Error reading file: %v\n", err)
         return
     }
-    imageData := base64.StdEncoding.EncodeToString(imageBytes)
+    fileData := base64.StdEncoding.EncodeToString(fileBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64编码的文件内容或者图像URL
+    payload := map[string]interface{}{
+        "file":     fileData,
+        "fileType": 1,
+    }
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Printf("Error marshaling payload: %v\n", err)
         return
     }
 
-    // 调用API
-    client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Printf("Error creating request: %v\n", err)
+        return
+    }
+    req.Header.Set("Content-Type", "application/json")
+
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Printf("Error sending request: %v\n", err)
+        return
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusOK {
+        fmt.Printf("Unexpected status code: %d\n", resp.StatusCode)
         return
     }
 
-    res, err := client.Do(req)
+    body, err := ioutil.ReadAll(resp.Body)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Printf("Error reading response body: %v\n", err)
         return
     }
-    defer res.Body.Close()
 
-    // 处理接口返回数据
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
-        return
+    type SealResult struct {
+        PrunedResult map[string]interface{}   `json:"prunedResult"`
+        OutputImages map[string]string        `json:"outputImages"`
+        InputImage   *string                  `json:"inputImage"`
     }
+
     type Response struct {
         Result struct {
-            LayoutImage      string   `json:&quot;layoutImage&quot;`
-            Impressions []map[string]interface{} `json:&quot;sealImpressions&quot;`
-        } `json:&quot;result&quot;`
+            SealRecResults []SealResult  `json:"sealRecResults"`
+            DataInfo       interface{}   `json:"dataInfo"`
+        } `json:"result"`
     }
+
     var respData Response
-    err = json.Unmarshal([]byte(string(body)), &amp;respData)
-    if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+    if err := json.Unmarshal(body, &respData); err != nil {
+        fmt.Printf("Error unmarshaling response: %v\n", err)
         return
     }
 
-    layoutImageData, err := base64.StdEncoding.DecodeString(respData.Result.LayoutImage)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(layoutImagePath, layoutImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, layoutImagePath)
+    for i, res := range respData.Result.SealRecResults {
+        fmt.Printf("Pruned Result %d: %+v\n", i, res.PrunedResult)
 
-    fmt.Println(&quot;\nDetected seal impressions:&quot;)
-    for _, impression := range respData.Result.Impressions {
-        fmt.Println(impression)
+        for name, imgBase64 := range res.OutputImages {
+            imgBytes, err := base64.StdEncoding.DecodeString(imgBase64)
+            if err != nil {
+                fmt.Printf("Error decoding image %s: %v\n", name, err)
+                continue
+            }
+
+            filename := fmt.Sprintf("%s_%d.jpg", name, i)
+            if err := ioutil.WriteFile(filename, imgBytes, 0644); err != nil {
+                fmt.Printf("Error saving image %s: %v\n", filename, err)
+                continue
+            }
+            fmt.Printf("Output image saved at %s\n", filename)
+        }
     }
 }
 </code></pre></details>
@@ -871,43 +2397,58 @@ func main() {
 <pre><code class="language-csharp">using System;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/seal-recognition&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string layoutImagePath = &quot;./layout.jpg&quot;;
+    static readonly string API_URL = "http://localhost:8080/seal-recognition";
+    static readonly string inputFilePath = "./demo.jpg";
 
     static async Task Main(string[] args)
     {
         var httpClient = new HttpClient();
 
-        // 对本地图像进行Base64编码
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
-        string image_data = Convert.ToBase64String(imageBytes);
+        byte[] fileBytes = File.ReadAllBytes(inputFilePath);
+        string fileData = Convert.ToBase64String(fileBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64编码的文件内容或者图像URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject
+        {
+            { "file", fileData },
+            { "fileType", 1 }
+        };
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
-        // 调用API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
         response.EnsureSuccessStatusCode();
 
-        // 处理接口返回数据
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string layoutBase64Image = jsonResponse[&quot;result&quot;][&quot;layoutImage&quot;].ToString();
-        byte[] layoutImageBytes = Convert.FromBase64String(layoutBase64Image);
-        File.WriteAllBytes(layoutImagePath, layoutImageBytes);
-        Console.WriteLine($&quot;Output image saved at {layoutImagePath}&quot;);
+        JArray sealRecResults = (JArray)jsonResponse["result"]["sealRecResults"];
+        for (int i = 0; i < sealRecResults.Count; i++)
+        {
+            var res = sealRecResults[i];
+            Console.WriteLine($"[{i}] prunedResult:\n{res["prunedResult"]}");
 
-        Console.WriteLine(&quot;\nDetected seal impressions:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;sealImpressions&quot;].ToString());
+            JObject outputImages = res["outputImages"] as JObject;
+            if (outputImages != null)
+            {
+                foreach (var img in outputImages)
+                {
+                    string imgName = img.Key;
+                    string base64Img = img.Value?.ToString();
+                    if (!string.IsNullOrEmpty(base64Img))
+                    {
+                        string imgPath = $"{imgName}_{i}.jpg";
+                        byte[] imageBytes = Convert.FromBase64String(base64Img);
+                        File.WriteAllBytes(imgPath, imageBytes);
+                        Console.WriteLine($"Output image saved at {imgPath}");
+                    }
+                }
+            }
+        }
     }
 }
 </code></pre></details>
@@ -916,94 +2457,133 @@ class Program
 
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
+const path = require('path');
 
-const API_URL = 'http://localhost:8080/seal-recognition'
-const imagePath = './demo.jpg'
-const layoutImagePath = &quot;./layout.jpg&quot;;
+const API_URL = 'http://localhost:8080/seal-recognition';
+const imagePath = './demo.jpg';
 
-let config = {
-   method: 'POST',
-   maxBodyLength: Infinity,
-   url: API_URL,
-   data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)  // Base64编码的文件内容或者图像URL
-  })
-};
-
-// 对本地图像进行Base64编码
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
   return Buffer.from(bitmap).toString('base64');
 }
 
-// 调用API
-axios.request(config)
-.then((response) =&gt; {
-    // 处理接口返回数据
-    const result = response.data[&quot;result&quot;];
+const payload = {
+  file: encodeImageToBase64(imagePath),
+  fileType: 1
+};
 
-    imageBuffer = Buffer.from(result[&quot;layoutImage&quot;], 'base64');
-    fs.writeFile(layoutImagePath, imageBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output image saved at ${layoutImagePath}`);
+axios.post(API_URL, payload)
+  .then((response) => {
+    const result = response.data["result"];
+    const sealRecResults = result["sealRecResults"];
+
+    sealRecResults.forEach((res, i) => {
+      console.log(`\n[${i}] prunedResult:\n`, res["prunedResult"]);
+
+      const outputImages = res["outputImages"];
+      if (outputImages) {
+        for (const [imgName, base64Img] of Object.entries(outputImages)) {
+          const imgBuffer = Buffer.from(base64Img, 'base64');
+          const fileName = `${imgName}_${i}.jpg`;
+          fs.writeFileSync(fileName, imgBuffer);
+          console.log(`Output image saved at ${fileName}`);
+        }
+      } else {
+        console.log(`[${i}] No outputImages found.`);
+      }
     });
-
-    console.log(&quot;\nDetected seal impressions:&quot;);
-    console.log(result[&quot;sealImpressions&quot;]);
-})
-.catch((error) =&gt; {
-  console.log(error);
-});
+  })
+  .catch((error) => {
+    console.error('Error occurred while calling the API:', error.message);
+  });
 </code></pre></details>
 
 <details><summary>PHP</summary>
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/seal-recognition&quot;; // 服务URL
-$image_path = &quot;./demo.jpg&quot;;
-$layout_image_path = &quot;./layout.jpg&quot;;
+$API_URL = "http://localhost:8080/seal-recognition";
+$image_path = "./demo.jpg";
 
-// 对本地图像进行Base64编码
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data); // Base64编码的文件内容或者图像URL
+$payload = array("file" => $image_data, "fileType" => 1);
 
-// 调用API
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
 
-// 处理接口返回数据
-$result = json_decode($response, true)[&quot;result&quot;];
+$result = json_decode($response, true)["result"]["sealRecResults"];
 
-file_put_contents($layout_image_path, base64_decode($result[&quot;layoutImage&quot;]));
-echo &quot;Output image saved at &quot; . $layout_image_path . &quot;\n&quot;;
+foreach ($result as $i => $item) {
+    echo "[$i] prunedResult:\n";
+    print_r($item["prunedResult"]);
 
-echo &quot;\nDetected seal impressions:\n&quot;;
-print_r($result[&quot;sealImpressions&quot;]);
-
+    if (!empty($item["outputImages"])) {
+        foreach ($item["outputImages"] as $img_name => $base64_img) {
+            if (!empty($base64_img)) {
+                $output_path = "{$img_name}_{$i}.jpg";
+                file_put_contents($output_path, base64_decode($base64_img));
+                echo "Output image saved at $output_path\n";
+            }
+        }
+    } else {
+        echo "No outputImages found for item $i\n";
+    }
+}
 ?&gt;
 </code></pre></details>
 </details>
 <br/>
 
-📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
+📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/on_device_deployment.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
 如果印章文本识别产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升印章文本识别产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于印章文本识别产线包含三个模块，模型产线的效果不及预期可能来自于其中任何一个模块。
+由于印章文本识别产线包含若干模块，模型产线的效果如果不及预期，可能来自于其中任何一个模块。您可以对识别效果差的图片进行分析，进而确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
-您可以对识别效果差的图片进行分析，参考如下规则进行分析和模型微调：
-
-* 印章区域在整体版面中定位错误，那么可能是版面区域定位模块存在不足，您需要参考[版面区域检测模块开发教程](../../../module_usage/tutorials/ocr_modules/layout_detection.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/layout_detection.md#四二次开发)章节，使用您的私有数据集对版面区域定位模型进行微调。
-* 有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[印章文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/seal_text_detection.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/seal_text_detection.md#四二次开发)章节，使用您的私有数据集对文本检测模型进行微调。
-* 已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/text_recognition.md#四二次开发)章节对文本识别模型进行微调。
+<table>
+<thead>
+<tr>
+<th>情形</th>
+<th>微调模块</th>
+<th>微调参考链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>印章位置检测不准或未检出</td>
+<td>版面检测模块</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/layout_detection.html">链接</a></td>
+</tr>
+<tr>
+<td>印章文本存在漏检</td>
+<td>印章文本检测模块</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/seal_text_detection.html">链接</a></td>
+</tr>
+<tr>
+<td>文本内容不准</td>
+<td>文本识别模块</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_recognition.html">链接</a></td>
+</tr>
+<tr>
+<td>整图旋转矫正不准</td>
+<td>文档图像方向分类模块</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">链接</a></td>
+</tr>
+<tr>
+<td>图像扭曲矫正不准</td>
+<td>文本图像矫正模块</td>
+<td>暂不支持微调</td>
+</tr>
+</tbody>
+</table>
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
@@ -1012,29 +2592,51 @@ print_r($result[&quot;sealImpressions&quot;]);
 
 ```python
 ......
- Pipeline:
-  layout_model: RT-DETR-H_layout_3cls #可修改为微调后模型的本地路径
-  text_det_model: PP-OCRv4_server_seal_det  #可修改为微调后模型的本地路径
-  text_rec_model: PP-OCRv4_server_rec #可修改为微调后模型的本地路径
-  layout_batch_size: 1
-  text_rec_batch_size: 1
-  device: "gpu:0"
-......
+SubModules:
+  LayoutDetection:
+    module_name: layout_detection
+    model_name: PP-DocLayout-L
+    model_dir: null # 修改此处为微调后的版面检测模型权重的本地路径
+    ...
+
+SubPipelines:
+  DocPreprocessor:
+    ...
+    SubModules:
+      DocOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null # 修改此处为微调后的文档图像方向分类模型权重的本地路径
+    ...
+    SubModules:
+      TextDetection:
+        module_name: seal_text_detection
+        model_name: PP-OCRv4_server_seal_det
+        model_dir: null # 修改此处为微调后的文本检测模型权重的本地路径
+        ...
+      TextRecognition:
+        module_name: text_recognition
+        model_name: PP-OCRv5_server_rec
+        model_dir: null # 修改此处为微调后的文本识别模型权重的本地路径
+        ...
 ```
-随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
+
+随后， 参考[2. 快速开始](#2-快速开始)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
 
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行印章文本识别产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行印章文本识别产线的推理，使用的 CLI 命令为：
 
+```bash
+paddlex --pipeline seal_recognition \
+    --input seal_text_det.png \
+    --use_doc_orientation_classify False \
+    --use_doc_unwarping False \
+    --device npu:0 \
+    --save_path ./output
 ```
-paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --save_path output
-```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为npu 即可：
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
 
-```
-paddlex --pipeline seal_recognition --input seal_text_det.png --device npu:0 --save_path output
-```
 若您想在更多种类的硬件上使用印章文本识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

@@ -43,22 +43,22 @@ PaddleX 提供了 18 个端到端的语义分割模型，具体可参考 [模型
 <th>mIoU (%)</th>
 <th>GPU 推理耗时(ms)</th>
 <th>CPU 推理耗时(ms)</th>
-<th>模型存储大小 (M)</th>
+<th>模型存储大小（MB）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>OCRNet_HRNet-W48</td>
 <td>82.15</td>
-<td>87.97</td>
-<td>2180.76</td>
+<td>582.92 / 536.28</td>
+<td>3513.72 / 2543.10</td>
 <td>270</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td>
 <td>77.04</td>
-<td>5.98</td>
-<td>140.02</td>
+<td>28.12 / 23.84</td>
+<td>398.31 / 398.31</td>
 <td>31</td>
 </tr>
 </tbody>
@@ -84,7 +84,7 @@ tar -xf ./dataset/semantic-segmentation-makassaridn-road-dataset.tar -C ./datase
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset
 ```
@@ -110,9 +110,9 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/semantic-segmentation-makassaridn-road-dataset",
+  "dataset_path": "semantic-segmentation-makassaridn-road-dataset",
   "show_type": "image",
-  "dataset_type": "COCODetDataset"
+  "dataset_type": "SegDataset"
 }
 ```
 上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：
@@ -156,7 +156,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset \
     -o Train.num_classes=4
@@ -194,7 +194,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset
 ```
@@ -314,7 +314,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 将产线中的模型替换为微调后的模型进行测试，如：
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png"
@@ -329,22 +329,43 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 
 ## 7. 开发集成/部署
 如果通用语义分割产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/semantic_segmentation.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
+1. 若您需要使用微调后的模型权重，可以获取 semantic_segmentation 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用语义分割产线直接应用在您的 Python 项目中，可以参考 如下示例：
+
+```yaml
+pipeline_name: semantic_segmentation
+
+SubModules:
+  SemanticSegmentation:
+    module_name: semantic_segmentation
+    model_name: PP-LiteSeg-T
+    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+    target_size: None
+```
+
+随后，在您的 Python 代码中，您可以这样使用产线：
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/semantic_segmentation.yaml")
+pipeline = create_pipeline(pipeline="my_path/semantic_segmentation.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png")
 for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_img("./output/") # 保存结果可视化图像
     res.save_to_json("./output/") # 保存预测的结构化输出
 ```
+
 更多参数请参考 [语义分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)。
 
 2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
-* 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
+* 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/on_device_deployment.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

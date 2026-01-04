@@ -1,0 +1,40 @@
+Global:
+  model: SegFormer-B2
+  mode: check_dataset # check_dataset/train/evaluate/predict
+  dataset_dir: "/paddle/dataset/paddlex/seg/seg_optic_examples"
+  device: gpu:0,1,2,3
+  output: "output"
+
+CheckDataset:
+  convert: 
+    enable: False
+    src_dataset_type: null
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  epochs_iters: 500
+  num_classes: 2
+  batch_size: 2
+  learning_rate: 0.01
+  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2_backbone_imagenet_pretrained.pdparams  # use MixVisionTransformer_B2 pretrained
+  warmup_steps: 0
+  resume_path: null
+  log_interval: 10
+  eval_interval: 100
+
+Evaluate:
+  weight_path: "output/best_model/model.pdparams"
+  log_interval: 10
+
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2_pretrained.pdparams
+
+Predict:
+  batch_size: 1
+  model_dir: "output/best_model/inference"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png"
+  kernel_option:
+    run_mode: paddle

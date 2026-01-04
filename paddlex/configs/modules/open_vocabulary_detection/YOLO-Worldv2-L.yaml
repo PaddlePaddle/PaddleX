@@ -1,0 +1,13 @@
+Global:
+  model: YOLO-Worldv2-L
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "/ChartQA/PaddleX_refactor/PaddleX/_zzl_test_yolow/YOLO-Worldv2-L"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg"
+  prompt: "bus, car, rearview mirror"
+  kernel_option:
+    run_mode: paddle

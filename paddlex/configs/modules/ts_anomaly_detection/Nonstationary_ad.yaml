@@ -1,0 +1,37 @@
+Global:
+  model: Nonstationary_ad
+  mode: check_dataset # check_dataset/train/evaluate/predict
+  dataset_dir: "/paddle/dataset/paddlex/ts_ad/ts_anomaly_examples/"
+  device: gpu:0
+  output: "output"
+
+CheckDataset:
+  convert: 
+    enable: False
+    src_dataset_type: null
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  time_col: timestamp
+  feature_cols: feature_0,feature_1
+  label_col: label
+  freq: 1
+  input_len: 96
+  epochs_iters: 20
+  batch_size: 16
+  learning_rate: 0.0005
+  log_interval: 10
+
+Evaluate:
+  weight_path: "output/best_model/model.pdparams"
+
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad.pdparams.tar
+
+Predict:
+  batch_size: 1
+  model_dir: "output/inference"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv"

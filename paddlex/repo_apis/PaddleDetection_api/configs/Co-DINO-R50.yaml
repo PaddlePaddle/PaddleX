@@ -1,0 +1,300 @@
+# Runtime
+find_unused_parameters: True
+use_gpu: true
+use_xpu: false
+use_mlu: false
+use_npu: false
+log_iter: 20
+save_dir: output
+snapshot_epoch: 1
+print_flops: false
+print_params: false
+use_ema: true
+
+
+# Dataset
+metric: COCO
+num_classes: 80
+
+TrainDataset:
+  name: COCODataSet
+  image_dir: train2017
+  anno_path: annotations/instances_train2017.json
+  dataset_dir: dataset/coco
+  allow_empty: true
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+  name: COCODataSet
+  image_dir: val2017
+  anno_path: annotations/instances_val2017.json
+  dataset_dir: dataset/coco
+  allow_empty: true
+
+TestDataset:
+  name: ImageFolder
+  anno_path: annotations/instances_val2017.json # also support txt (like VOC's label_list.txt)
+  dataset_dir: dataset/coco # if set, anno_path will be 'dataset_dir/anno_path'
+
+
+# Reader
+worker_num: 2
+TrainReader:
+  sample_transforms:
+  - Decode: {}
+  - RandomFlip: {prob: 0.5}
+  - RandomSelect: { transforms1: [ RandomShortSideResize: { short_side_sizes: [ 480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800 ], max_size: 1333 } ],
+                    transforms2: [
+                        RandomShortSideResize: { short_side_sizes: [ 400, 500, 600 ] },
+                        RandomSizeCrop: { min_size: 384, max_size: 600 },
+                        RandomShortSideResize: { short_side_sizes: [ 480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800 ], max_size: 1333 } ]
+  }
+  - NormalizeImage: {is_scale: true, mean: [0.485,0.456,0.406], std: [0.229, 0.224,0.225]}
+  - Permute: {}
+  batch_transforms:
+  - PadMaskBatch: {pad_to_stride: -1, return_pad_mask: true}
+  batch_size: 2
+  shuffle: true
+  drop_last: true
+  collate_batch: false
+  use_shared_memory: false
+
+EvalReader:
+  sample_transforms:
+  - Decode: {}
+  - Resize: {target_size: [800, 1333], keep_ratio: True}
+  - NormalizeImage: {is_scale: true, mean: [0.485,0.456,0.406], std: [0.229, 0.224,0.225]}
+  - Permute: {}
+  batch_size: 1
+  shuffle: false
+  drop_last: false
+
+TestReader:
+  sample_transforms:
+  - Decode: {}
+  - Resize: {target_size: [800, 1333], keep_ratio: True}
+  - NormalizeImage: {is_scale: true, mean: [0.485,0.456,0.406], std: [0.229, 0.224,0.225]}
+  - Permute: {}
+  batch_size: 1
+  shuffle: false
+  drop_last: false
+
+
+# Model
+architecture: CO_DETR
+pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_cos_pretrained.pdparams
+num_dec_layer: &num_dec_layer 6
+
+CO_DETR:
+  backbone: ResNet
+  backbone_lr_mult: 0.1
+  neck: ChannelMapper
+  query_head: CoDINOHead
+  rpn_head: RPNHead
+  roi_head: Co_RoiHead
+  bbox_head:
+    name: CoATSSHead
+    in_channels: 256
+    stacked_convs: 1
+    feat_channels: 256
+    bbox_weight: [10., 10., 5., 5.]
+    anchor_generator: 
+      name: CoAnchorGenerator
+      octave_base_scale: 8
+      scales_per_octave: 1
+      aspect_ratios: [1.0]
+      strides: [4., 8., 16., 32., 64., 128.]
+    assigner: 
+      name: ATSSAssigner
+      topk: 9
+      sm_use: True
+    loss_cls: 
+      name: Weighted_FocalLoss
+      use_sigmoid: true
+      gamma: 2.0
+      alpha: 0.25
+      loss_weight: 12.0
+    loss_bbox: 
+      name: GIoULoss
+      loss_weight: 24.0
+      reduction: sum
+    loss_cent_weight: 12.0
+
+ResNet:
+  # index 0 stands for res2
+  depth: 50
+  norm_type: bn
+  freeze_at: 0
+  return_idx: [0, 1, 2, 3]
+  num_stages: 4
+
+ChannelMapper:
+  in_channels: [256, 512, 1024, 2048]
+  kernel_size: 1
+  out_channels: 256
+  norm_type: "gn"
+  norm_groups: 32
+  act: None
+  num_outs: 5
+  strides: [4., 8., 16., 32., 64.]
+ 
+CoDINOHead:
+  num_query: 900
+  num_dn_query: 100
+  label_noise_ratio: 0.5
+  box_noise_scale: 1.0
+  in_channels: 2048
+  sync_cls_avg_factor: True
+  with_box_refine: True
+  as_two_stage: True
+  mixed_selection: True
+  transformer:
+    name: CoDINOTransformer
+    two_stage_num_proposals: 900
+    with_pos_coord: True
+    with_coord_feat: False
+    num_co_heads: 2
+    num_feature_levels: 5
+    as_two_stage: True
+    mixed_selection: True
+    embed_dims: &embed_dims 256
+    encoder:
+      name: DeformableTransformerEncoder
+      num_layers: *num_dec_layer
+      with_rp: 6
+      encoder_layer:
+        name: DeformableTransformerEncoderLayer
+        d_model: *embed_dims
+        n_head: 8
+        dim_feedforward: 2048
+        n_levels: 5
+        n_points: 4
+        dropout: 0.0
+    decoder:
+      name: DINOTransformerDecoder
+      hidden_dim: *embed_dims
+      num_layers: *num_dec_layer
+      decoder_layer:
+        name: DINOTransformerDecoderLayer
+        d_model: *embed_dims
+        n_head: 8
+        dim_feedforward: 2048
+        n_points: 4
+        n_levels: 5
+        dropout: 0.0
+  positional_encoding:
+    name: PositionEmbedding
+    num_pos_feats: 128
+    temperature: 20
+    normalize: true
+  loss_cls:
+    name: QualityFocalLoss
+    use_sigmoid: true
+    beta: 2.0
+    loss_weight: 1.0
+  loss_bbox:
+    name: L1Loss
+    loss_weight: 5.0
+  loss_iou:
+    name: GIoULoss
+    loss_weight: 2.0
+    reduction: sum
+  assigner:
+    name: HungarianAssigner
+    cls_cost:
+      name: FocalLossCost
+      weight: 2.0
+    reg_cost:
+      name: BBoxL1Cost
+      weight: 5.0
+      box_format: xywh
+    iou_cost:
+      name: IoUCost
+      iou_mode: giou
+      weight: 2.0
+  test_cfg:
+    max_per_img: 300
+    score_thr: 0.0
+  nms: 
+    name: MultiClassNMS
+    keep_top_k: -1
+    score_threshold: 0.0
+    nms_threshold: 0.8
+
+RPNHead:
+  loss_rpn_bbox: 
+    name: L1Loss
+    reduction: sum
+    loss_weight: 12.0
+  in_channel: 256
+  anchor_generator: 
+    name: RetinaAnchorGenerator
+    octave_base_scale: 4
+    scales_per_octave: 3
+    aspect_ratios: [0.5, 1.0, 2.0]
+    strides: [4., 8., 16., 32., 64., 128.]
+  rpn_target_assign:
+    batch_size_per_im: 256
+    fg_fraction: 0.5
+    negative_overlap: 0.3
+    positive_overlap: 0.7
+    use_random: True
+  train_proposal:
+    min_size: 0.0
+    nms_thresh: 0.7
+    pre_nms_top_n: 4000
+    post_nms_top_n: 1000
+    topk_after_collect: True
+  test_proposal:
+    min_size: 0.0
+    nms_thresh: 0.7
+    pre_nms_top_n: 1000
+    post_nms_top_n: 1000
+
+Co_RoiHead:
+  in_channel: 256
+  loss_normalize_pos: True
+  head: TwoFCHead
+  roi_extractor:
+    end_level: 4
+    resolution: 7
+    sampling_ratio: 0
+    aligned: True
+  bbox_assigner: 
+    name: BBoxAssigner
+    batch_size_per_im: 512
+    bg_thresh: 0.5
+    fg_thresh: 0.5
+    fg_fraction: 0.25
+    use_random: True
+  bbox_loss: 
+    name: GIoULoss
+    loss_weight: 120.0
+  cls_loss_weight: 12.0
+
+
+# Optimizer
+epoch: 12
+
+LearningRate:
+  base_lr: 0.0002
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 0.1
+    milestones: [11]
+    use_warmup: false
+
+OptimizerBuilder:
+  clip_grad_by_norm: 0.1
+  regularizer: false
+  optimizer:
+    type: AdamW
+    weight_decay: 0.0001
+
+
+# Exporting the model
+export:
+  post_process: True  # Whether post-processing is included in the network when export model.
+  nms: True           # Whether NMS is included in the network when export model.
+  benchmark: False    # It is used to testing model performance, if set `True`, post-process and NMS will not be exported.
+  fuse_conv_bn: False

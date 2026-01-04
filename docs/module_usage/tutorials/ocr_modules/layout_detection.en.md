@@ -2,85 +2,308 @@
 comments: true
 ---
 
-# Layout Detection Module Development Tutorial
+# Layout Detection Module Tutorial
 
 ## I. Overview
 The core task of structure analysis is to parse and segment the content of input document images. By identifying different elements in the image (such as text, charts, images, etc.), they are classified into predefined categories (e.g., pure text area, title area, table area, image area, list area, etc.), and the position and size of these regions in the document are determined.
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
+* <b>The layout detection model includes 20 common categories: document title, paragraph title, text, page number, abstract, table, references, footnotes, header, footer, algorithm, formula, formula number, image, table, seal, figure_table title, chart, and sidebar text and lists of references</b>
 <table>
 <thead>
 <tr>
-<th>Model</th>
+<th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout_plus-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams">Training Model</a></td>
+<td>83.2</td>
+<td>53.03 / 17.23</td>
+<td>634.62 / 378.32</td>
+<td>126.01</td>
+<td>A higher-precision layout area localization model trained on a self-built dataset containing Chinese and English papers, PPT, multi-layout magazines, contracts, books, exams, ancient books and research reports using RT-DETR-L</td>
+</tr>
+<tr>
+</tbody>
+</table>
+
+
+* <b>The layout detection model includes 1 category: Block:</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocBlockLayout</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBlockLayout_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocBlockLayout_pretrained.pdparams">Training Model</a></td>
+<td>95.9</td>
+<td>34.60 / 28.54</td>
+<td>506.43 / 256.83</td>
+<td>123.92</td>
+<td>A layout block localization model trained on a self-built dataset containing Chinese and English papers, PPT, multi-layout magazines, contracts, books, exams, ancient books and research reports using RT-DETR-L</td>
+</tr>
+<tr>
+</tbody>
+</table>
+
+
+* <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure title, table, table title, seal, chart title, chart, header image, footer image, and sidebar text</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
+<td>90.4</td>
+<td>33.59 / 33.59</td>
+<td>503.01 / 251.08</td>
+<td>123.76</td>
+<td>A high-precision layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using RT-DETR-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
+<td>75.2</td>
+<td>13.03 / 4.72</td>
+<td>43.39 / 24.44</td>
+<td>22.578</td>
+<td>A layout area localization model with balanced precision and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using PicoDet-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
+<td>70.9</td>
+<td>11.54 / 3.86</td>
+<td>18.53 / 6.29</td>
+<td>4.834</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using PicoDet-S.</td>
+</tr>
+</tbody>
+</table>
+
+> ❗ The above list includes the <b>4 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>12 full models</b>, including several predefined models with different categories. The complete model list is as follows:
+
+<details><summary> 👉 Details of Model List</summary>
+
+* <b>Table Layout Detection Model</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_layout_1x_table</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
+<td>97.5</td>
+<td>9.57 / 6.63</td>
+<td>27.66 / 16.75</td>
+<td>7.4</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset using PicoDet-1x, capable of detecting table regions.</td>
+</tr>
+</tbody></table>
+
+* <b>3-Class Layout Detection Model, including Table, Image, and Stamp</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>88.2</td>
+<td>8.43 / 3.44</td>
+<td>17.60 / 6.51</td>
+<td>4.8</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>12.80 / 9.57</td>
+<td>45.04 / 23.86</td>
+<td>22.6</td>
+<td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>95.8</td>
+<td>114.80 / 25.65</td>
+<td>924.38 / 924.38</td>
+<td>470.1</td>
+<td>A high-precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H.</td>
+</tr>
+</tbody></table>
+
+* <b>5-Class English Document Area Detection Model, including Text, Title, Table, Image, and List</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>PicoDet_layout_1x</td>
-<td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
+<td>97.8</td>
+<td>9.62 / 6.75</td>
+<td>26.96 / 12.77</td>
 <td>7.4</td>
-<td>An efficient layout area localization model trained on the PubLayNet dataset based on PicoDet-1x can locate five types of areas, including text, titles, tables, images, and lists.</td>
+<td>A high-efficiency English document layout area localization model trained on the PubLayNet dataset using PicoDet-1x.</td>
 </tr>
+</tbody></table>
+
+* <b>17-Class Area Detection Model, including 17 common layout categories: Paragraph Title, Image, Text, Number, Abstract, Content, Figure Caption, Formula, Table, Table Caption, References, Document Title, Footnote, Header, Algorithm, Footer, and Stamp</b>
+<table>
+<thead>
 <tr>
-<td>PicoDet-S_layout_3cls</td>
-<td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
-<td>4.8</td>
-<td>An high-efficient layout area localization model trained on a self-constructed dataset based on PicoDet-S for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals.</td>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>PicoDet-S_layout_17cls</td>
-<td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>87.4</td>
+<td>8.80 / 3.62</td>
+<td>17.51 / 6.35</td>
 <td>4.8</td>
-<td>A high-efficient layout area localization model trained on a self-constructed dataset based on PicoDet-S_layout_17cls for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_3cls</td>
-<td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
-<td>22.6</td>
-<td>An efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals.</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_17cls</td>
-<td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>12.60 / 10.27</td>
+<td>43.70 / 24.42</td>
 <td>22.6</td>
-<td>A efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L_layout_17cls for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_3cls</td>
-<td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
-<td>470.1</td>
-<td>A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals.</td>
+<td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_17cls</td>
-<td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>98.3</td>
+<td>115.29 / 101.18</td>
+<td>964.75 / 964.75</td>
 <td>470.2</td>
-<td>A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
+<td>A high-precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H.</td>
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+             <li><strong>Test Dataset：</strong>
+                 <ul>
+                   <li>Layout Detection Model: A self-built layout area detection dataset by PaddleOCR, containing 500 common document type images such as Chinese and English papers, magazines, contracts, books, exam papers, and research reports.</li>
+                   <li>Table Layout Detection Model: A self-built table area detection dataset by PaddleOCR, including 7,835 Chinese and English paper document type images with tables.</li>
+                   <li> 3-Class Layout Detection Model: A self-built layout area detection dataset by PaddleOCR, comprising 1,154 common document type images such as Chinese and English papers, magazines, and research reports.</li>
+                   <li>5-Class English Document Area Detection Model: The evaluation dataset of <a href="https://developer.ibm.com/exchanges/data/all/publaynet">PubLayNet</a>, containing 11,245 images of English documents.</li>
+                   <li>17-Class Area Detection Model: A self-built layout area detection dataset by PaddleOCR, including 892 common document type images such as Chinese and English papers, magazines, and research reports.</li>
+                 </ul>
+             </li>
+              <li><strong>Hardware Configuration:</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
+
+</details>
+
 
 ## III. Quick Integration  <a id="quick"> </a>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
@@ -90,17 +313,260 @@ After installing the wheel package, a few lines of code can complete the inferen
 ```python
 from paddlex import create_model
 
-model_name = "PicoDet-L_layout_3cls"
-
-model = create_model(model_name)
-output = model.predict("layout.jpg", batch_size=1)
+model_name = "PP-DocLayout_plus-L"
+model = create_model(model_name=model_name)
+output = model.predict("layout.jpg", batch_size=1, layout_nms=True)
 
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 
 ```
+
+<b>Note: </b>The official models would be download from HuggingFace by first. PaddleX also support to specify the preferred source by setting the environment variable `PADDLE_PDX_MODEL_SOURCE`. The supported values are `huggingface`, `aistudio`, `bos`, and `modelscope`. For example, to prioritize using `bos`, set: `PADDLE_PDX_MODEL_SOURCE="bos"`.
+
+<details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
+
+```bash
+{'res': {'input_path': 'layout.jpg', 'page_index': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9870226979255676, 'coordinate': [34.101906, 349.85275, 358.59213, 611.0772]}, {'cls_id': 2, 'label': 'text', 'score': 0.9866003394126892, 'coordinate': [34.500324, 647.1585, 358.29367, 848.66797]}, {'cls_id': 2, 'label': 'text', 'score': 0.9846674203872681, 'coordinate': [385.71445, 497.40973, 711.2261, 697.84265]}, {'cls_id': 8, 'label': 'table', 'score': 0.984126091003418, 'coordinate': [73.76879, 105.94899, 321.95303, 298.84888]}, {'cls_id': 8, 'label': 'table', 'score': 0.9834211468696594, 'coordinate': [436.95642, 105.81531, 662.7168, 313.48462]}, {'cls_id': 2, 'label': 'text', 'score': 0.9832247495651245, 'coordinate': [385.62787, 346.2288, 710.10095, 458.77127]}, {'cls_id': 2, 'label': 'text', 'score': 0.9816061854362488, 'coordinate': [385.7802, 735.1931, 710.56134, 849.9764]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9577341079711914, 'coordinate': [34.421448, 20.055151, 358.71283, 76.53663]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9505634307861328, 'coordinate': [385.72278, 20.053688, 711.29333, 74.92744]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9001723527908325, 'coordinate': [386.46344, 477.03488, 699.4023, 490.07474]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8845751285552979, 'coordinate': [35.413048, 627.73596, 185.58383, 640.52264]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8837394118309021, 'coordinate': [387.17603, 716.3423, 524.7841, 729.258]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8508939743041992, 'coordinate': [35.50064, 331.18445, 141.6444, 344.81097]}]}}
+```
+The meanings of the parameters are as follows:
+- `input_path`: The path to the input image for prediction.
+- `page_index`: If the input is a PDF file, it indicates which page of the PDF it is; otherwise, it is `None`.
+- `boxes`: Information about the predicted bounding boxes, a list of dictionaries. Each dictionary represents a detected object and contains the following information:
+  - `cls_id`: Class ID, an integer.
+  - `label`: Class label, a string.
+  - `score`: Confidence score of the bounding box, a float.
+  - `coordinate`: Coordinates of the bounding box, a list of floats in the format <code>[xmin, ymin, xmax, ymax]</code>.
+
+</details>
+
+The visualized image is as follows:
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_det/layout_res_plus.jpg"/>
+
+Relevant methods, parameters, and explanations are as follows:
+
+* `create_model` instantiates a target detection model (here, `PP-DocLayout_plus-L` is used as an example). The detailed explanation is as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>img_size</code></td>
+<td>Size of the input image; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>int/list/None</code></td>
+<td>
+<ul>
+<li><b>int</b>, e.g., 640, means resizing the input image to 640x640</li>
+<li><b>List</b>, e.g., [640, 512], means resizing the input image to a width of 640 and a height of 512</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold for filtering low-confidence prediction results; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, e.g., 0.2, means filtering out all bounding boxes with a confidence score less than 0.2</li>
+<li><b>Dictionary</b>, with keys as <b>int</b> representing <code>cls_id</code> and values as <b>float</b> thresholds. For example, <code>{0: 0.45, 2: 0.48, 7: 0.4}</code> means applying a threshold of 0.45 for cls_id 0, 0.48 for cls_id 2, and 0.4 for cls_id 7</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use NMS post-processing to filter overlapping boxes; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, indicates whether to use NMS for post-processing to filter overlapping boxes</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Scaling factor for the side length of the detection box; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>float/list/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, a positive float number, e.g., 1.1, means expanding the width and height of the detection box by 1.1 times while keeping the center unchanged</li>
+<li><b>List</b>, e.g., [1.2, 1.5], means expanding the width by 1.2 times and the height by 1.5 times while keeping the center unchanged</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as float scaling factors, e.g., <code>{0: (1.1, 2.0)}</code> means cls_id 0 expanding the width by 1.1 times and the height by 2.0 times while keeping the center unchanged</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Merging mode for the detection boxes output by the model; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>string/dict/None</code></td>
+<td>
+<ul>
+<li><b>large</b>, when set to large, only the largest external box will be retained for overlapping detection boxes, and the internal overlapping boxes will be deleted</li>
+<li><b>small</b>, when set to small, only the smallest internal box will be retained for overlapping detection boxes, and the external overlapping boxes will be deleted</li>
+<li><b>union</b>, no filtering of boxes will be performed, and both internal and external boxes will be retained</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes, e.g., <code>{0: "large", 2: "small"}</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+</table>
+
+* Note that `model_name` must be specified. After specifying `model_name`, the default PaddleX built-in model parameters will be used. If `model_dir` is specified, the user-defined model will be used.
+
+* The `predict()` method of the target detection model is called for inference prediction. The parameters of the `predict()` method are `input`, `batch_size`, and `threshold`, which are explained as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data for prediction, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+<li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">示例</a></li>
+<li><b>Local Directory</b>, the directory should contain the data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold for filtering low-confidence prediction results</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, e.g., 0.2, means filtering out all bounding boxes with a confidence score less than 0.2</li>
+<li><b>Dictionary</b>, with keys as <b>int</b> representing <code>cls_id</code> and values as <b>float</b> thresholds. For example, <code>{0: 0.45, 2: 0.48, 7: 0.4}</code> means applying a threshold of 0.45 for cls_id 0, 0.48 for cls_id 2, and 0.4 for cls_id 7</li>
+<li><b>None</b>, not specified, will use the <code>threshold</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use NMS post-processing to filter overlapping boxes; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, indicates whether to use NMS for post-processing to filter overlapping boxes</li>
+<li><b>None</b>, not specified, will use the <code>layout_nms</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Scaling factor for the side length of the detection box; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>float/list/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, a positive float number, e.g., 1.1, means expanding the width and height of the detection box by 1.1 times while keeping the center unchanged</li>
+<li><b>List</b>, e.g., [1.2, 1.5], means expanding the width by 1.2 times and the height by 1.5 times while keeping the center unchanged</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as float scaling factors, e.g., <code>{0: (1.1, 2.0)}</code> means cls_id 0 expanding the width by 1.1 times and the height by 2.0 times while keeping the center unchanged</li>
+<li><b>None</b>, not specified, will use the <code>layout_unclip_ratio</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Merging mode for the detection boxes output by the model; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>string/dict/None</code></td>
+<td>
+<ul>
+<li><b>large</b>, when set to large, only the largest external box will be retained for overlapping detection boxes, and the internal overlapping boxes will be deleted</li>
+<li><b>small</b>, when set to small, only the smallest internal box will be retained for overlapping detection boxes, and the external overlapping boxes will be deleted</li>
+<li><b>union</b>, no filtering of boxes will be performed, and both internal and external boxes will be retained</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes, e.g., <code>{0: "large", 2: "small"}</li>
+<li><b>None</b>, not specified, will use the <code>layout_merge_bboxes_mode</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+</tr></table>
+
+* Additionally, it also supports obtaining the visualized image with results and the prediction results via attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualized image in <code>dict</code> format</td>
+</tr>
+</table>
 
 For more information on using PaddleX's single-model inference API, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
@@ -123,7 +589,7 @@ tar -xf ./dataset/det_layout_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
@@ -131,32 +597,31 @@ python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml 
 After executing the above command, PaddleX will validate the dataset and collect its basic information. Upon successful execution, the log will print the message `Check dataset passed !`. The validation result file will be saved in `./output/check_dataset_result.json`, and related outputs will be saved in the `./output/check_dataset` directory of the current directory. The output directory includes visualized example images and histograms of sample distributions.
 
 <details><summary>👉 <b>Validation Result Details (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;num_classes&quot;: 11,
-    &quot;train_samples&quot;: 90,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/JPEGImages/train_0077.jpg&quot;,
-      &quot;check_dataset/demo_img/JPEGImages/train_0028.jpg&quot;,
-      &quot;check_dataset/demo_img/JPEGImages/train_0012.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 11,
+    "train_samples": 90,
+    "train_sample_paths": [
+      "check_dataset/demo_img/JPEGImages/train_0077.jpg",
+      "check_dataset/demo_img/JPEGImages/train_0028.jpg",
+      "check_dataset/demo_img/JPEGImages/train_0012.jpg"
     ],
-    &quot;val_samples&quot;: 20,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/JPEGImages/val_0007.jpg&quot;,
-      &quot;check_dataset/demo_img/JPEGImages/val_0019.jpg&quot;,
-      &quot;check_dataset/demo_img/JPEGImages/val_0010.jpg&quot;
+    "val_samples": 20,
+    "val_sample_paths": [
+      "check_dataset/demo_img/JPEGImages/val_0007.jpg",
+      "check_dataset/demo_img/JPEGImages/val_0019.jpg",
+      "check_dataset/demo_img/JPEGImages/val_0010.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/det_layout_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
+  "dataset_path": "det_layout_examples",
+  "show_type": "image",
+  "dataset_type": "COCODetDataset"
 }
 </code></pre>
 <p>The verification results mentioned above indicate that <code>check_pass</code> being <code>True</code> means the dataset format meets the requirements. Details of other indicators are as follows:</p>
@@ -168,14 +633,13 @@ After executing the above command, PaddleX will validate the dataset and collect
 <li><code>attributes.val_sample_paths</code>: The list of relative paths to the visualization images of validation samples in this dataset;</li>
 </ul>
 <p>The dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/layout_dec/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/layout_dec/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 
 After completing dataset verification, you can convert the dataset format or re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion/Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Layout detection does not support data format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -197,13 +661,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml  \
+<pre><code>python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples \
     -o CheckDataset.split.enable=True \
@@ -213,23 +677,22 @@ CheckDataset:
 
 ### 4.2 Model Training
 
-A single command is sufficient to complete model training, taking the training of PicoDet-L_layout_3cls as an example:
+A single command is sufficient to complete model training, taking the training of PP-DocLayout-L as an example:
 
 ```bash
-python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
 The steps required are:
 
-* Specify the path to the `.yaml` configuration file of the model (here it is `PicoDet-L_layout_3cls.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
+* Specify the path to the `.yaml` configuration file of the model (here it is `PP-DocLayout-L.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
-
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, defaulting to <code>output</code>. To specify a save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -241,26 +704,26 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 </li>
 <li><code>train.log</code>: Training log file, recording changes in model metrics and loss during training;</li>
 <li><code>config.yaml</code>: Training configuration file, recording the hyperparameter configuration for this training session;</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ### <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
 Similar to model training, the process involves the following steps:
 
-* Specify the path to the `.yaml` configuration file for the model（here it's `PicoDet-L_layout_3cls.yaml`）
+* Specify the path to the `.yaml` configuration file for the model（here it's `PP-DocLayout-L.yaml`）
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
 Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.en.md)。
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be generated, which records the evaluation results, specifically whether the evaluation task was completed successfully, and the model's evaluation metrics, including AP.</p></details>
 
@@ -270,14 +733,14 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="layout.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 
-* Specify the `.yaml` configuration file path of the model (here it is `PicoDet-L_layout_3cls.yaml`)
+* Specify the `.yaml` configuration file path of the model (here it is `PP-DocLayout-L.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the input data path: `-o Predict.input="..."`
@@ -289,7 +752,9 @@ Other related parameters can be set by modifying the fields under `Global` and `
 The model can be directly integrated into PaddleX pipelines or into your own projects.
 
 1. <b>Pipeline Integration</b>
-The structure analysis module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../..//pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.en.md). Simply replace the model path to update the layout area localization module. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The structure analysis module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3-doc)](../../..//pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the layout area localization module. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 1. <b>Module Integration</b>
 The weights you produce can be directly integrated into the layout area localization module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

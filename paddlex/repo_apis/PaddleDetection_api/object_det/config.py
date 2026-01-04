@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...base import BaseConfig
-from ....utils.misc import abspath
+from typing import List
+
 from ....utils import logging
+from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_helper import PPDetConfigMixin
 
 
@@ -51,11 +53,12 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
         dataset_path: str,
         dataset_type: str = None,
         *,
-        data_fields: list[str] = None,
+        data_fields: List[str] = None,
         image_dir: str = "images",
         train_anno_path: str = "annotations/instance_train.json",
         val_anno_path: str = "annotations/instance_val.json",
         test_anno_path: str = "annotations/instance_val.json",
+        metric: str = "COCO",
     ):
         """update dataset settings
 
@@ -70,6 +73,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
                 Defaults to "annotations/instance_val.json".
             test_anno_path (str, optional): the test annotations file that relative to `dataset_path`.
                 Defaults to "annotations/instance_val.json".
+            metric (str, optional): Evaluation metric. Defaults to "COCO".
 
         Raises:
             ValueError: the `dataset_type` error.
@@ -87,15 +91,31 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
                 val_anno_path,
                 test_anno_path,
             )
-            self.set_val("metric", "COCO")
+        elif dataset_type == "KeypointTopDownCocoDataset":
+            ds_cfg = {
+                "TrainDataset": {
+                    "image_dir": image_dir,
+                    "anno_path": train_anno_path,
+                    "dataset_dir": dataset_path,
+                },
+                "EvalDataset": {
+                    "image_dir": image_dir,
+                    "anno_path": val_anno_path,
+                    "dataset_dir": dataset_path,
+                },
+                "TestDataset": {
+                    "anno_path": test_anno_path,
+                },
+            }
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
         self.update(ds_cfg)
+        self.set_val("metric", metric)
 
     def _make_dataset_config(
         self,
         dataset_root_path: str,
-        data_fields: list[str,] = None,
+        data_fields: List[str,] = None,
         image_dir: str = "images",
         train_anno_path: str = "annotations/instance_train.json",
         val_anno_path: str = "annotations/instance_val.json",
@@ -211,7 +231,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
             if sch[key] == "CosineDecay":
                 sch["max_epochs"] = max_epochs
 
-    def update_milestone(self, milestones: list[int]):
+    def update_milestone(self, milestones: List[int]):
         """update milstone of `PiecewiseDecay` learning scheduler
 
         Args:
@@ -270,6 +290,12 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
             self["use_gpu"] = False
         elif device_type.lower() == "mlu":
             self["use_mlu"] = True
+            self["use_gpu"] = False
+        elif device_type.lower() == "gcu":
+            self["use_gcu"] = True
+            self["use_gpu"] = False
+        elif device_type.lower() == "metax_gpu":
+            self["use_metax_gpu"] = True
             self["use_gpu"] = False
         else:
             assert device_type.lower() == "cpu"
@@ -377,7 +403,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
                         "num_classes"
                     ] = num_classes
 
-    def update_random_size(self, randomsize: list[list[int, int]]):
+    def update_random_size(self, randomsize):
         """update `target_size` of `BatchRandomResize` op in TestReader
 
         Args:
@@ -400,7 +426,7 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
 
         Args:
             config (dict): the original config.
-            update_dict (dict): to be updated paramenters and its values
+            update_dict (dict): to be updated parameters and its values
 
         Example:
             self._recursively_set(self.HybridEncoder, {'encoder_layer': {'dim_feedforward': 2048}})

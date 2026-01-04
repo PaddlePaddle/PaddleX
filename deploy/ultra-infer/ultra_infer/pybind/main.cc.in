@@ -1,0 +1,183 @@
+// Copyright (c) 2022 PaddlePaddle Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "ultra_infer/pybind/main.h"
+
+
+
+namespace ultra_infer {
+
+void BindFDTensor(pybind11::module&);
+void BindRuntime(pybind11::module&);
+void BindFDModel(pybind11::module&);
+void BindVision(pybind11::module&);
+void BindText(pybind11::module&);
+void BindPipeline(pybind11::module&);
+
+pybind11::dtype FDDataTypeToNumpyDataType(const FDDataType& fd_dtype) {
+  pybind11::dtype dt;
+  if (fd_dtype == FDDataType::INT32) {
+    dt = pybind11::dtype::of<int32_t>();
+  } else if (fd_dtype == FDDataType::INT64) {
+    dt = pybind11::dtype::of<int64_t>();
+  } else if (fd_dtype == FDDataType::FP32) {
+    dt = pybind11::dtype::of<float>();
+  } else if (fd_dtype == FDDataType::FP64) {
+    dt = pybind11::dtype::of<double>();
+  } else if (fd_dtype == FDDataType::UINT8) {
+    dt = pybind11::dtype::of<uint8_t>();
+  } else if (fd_dtype == FDDataType::INT8) {
+    dt = pybind11::dtype::of<int8_t>();
+  } else if (fd_dtype == FDDataType::FP16) {
+    dt = pybind11::dtype::of<float16>();
+  } else if (fd_dtype == FDDataType::BOOL) {
+    dt = pybind11::dtype::of<bool>();
+  } else {
+    FDASSERT(false, "The function doesn't support data type of %s.",
+                        Str(fd_dtype).c_str());
+  }
+  return dt;
+}
+
+FDDataType NumpyDataTypeToFDDataType(const pybind11::dtype& np_dtype) {
+  if (np_dtype.is(pybind11::dtype::of<int32_t>())) {
+    return FDDataType::INT32;
+  } else if (np_dtype.is(pybind11::dtype::of<int64_t>())) {
+    return FDDataType::INT64;
+  } else if (np_dtype.is(pybind11::dtype::of<float>())) {
+    return FDDataType::FP32;
+  } else if (np_dtype.is(pybind11::dtype::of<double>())) {
+    return FDDataType::FP64;
+  } else if (np_dtype.is(pybind11::dtype::of<uint8_t>())) {
+    return FDDataType::UINT8;
+  } else if (np_dtype.is(pybind11::dtype::of<int8_t>())) {
+    return FDDataType::INT8;
+  } else if (np_dtype.is(pybind11::dtype::of<float16>())) {
+    return FDDataType::FP16;
+  }
+  FDASSERT(false,
+           "NumpyDataTypeToFDDataType() only support "
+           "int8/int32/int64/float32/float64/float16 now.");
+  return FDDataType::FP32;
+}
+
+void PyArrayToTensor(pybind11::array& pyarray, FDTensor* tensor,
+                     bool share_buffer) {
+  auto dtype = NumpyDataTypeToFDDataType(pyarray.dtype());
+  std::vector<int64_t> data_shape;
+  data_shape.insert(data_shape.begin(), pyarray.shape(),
+                    pyarray.shape() + pyarray.ndim());
+  if (share_buffer) {
+    tensor->SetExternalData(data_shape, dtype,
+                             pyarray.mutable_data());
+  } else {
+    tensor->Resize(data_shape, dtype);
+    memcpy(tensor->MutableData(), pyarray.mutable_data(), pyarray.nbytes());
+  }
+}
+
+void PyArrayToTensorList(std::vector<pybind11::array>& pyarrays, std::vector<FDTensor>* tensors,
+                     bool share_buffer) {
+  tensors->resize(pyarrays.size());
+  for(auto i = 0; i < pyarrays.size(); ++i) {
+    PyArrayToTensor(pyarrays[i], &(*tensors)[i], share_buffer);
+  }
+}
+
+pybind11::array TensorToPyArray(const FDTensor& tensor) {
+  auto numpy_dtype = FDDataTypeToNumpyDataType(tensor.dtype);
+  auto out = pybind11::array(numpy_dtype, tensor.shape);
+  memcpy(out.mutable_data(), tensor.CpuData(), tensor.Nbytes());
+  return out;
+}
+
+#ifdef ENABLE_VISION
+int NumpyDataTypeToOpenCvType(const pybind11::dtype& np_dtype) {
+  if (np_dtype.is(pybind11::dtype::of<int32_t>())) {
+    return CV_32S;
+  } else if (np_dtype.is(pybind11::dtype::of<int8_t>())) {
+    return CV_8S;
+  } else if (np_dtype.is(pybind11::dtype::of<uint8_t>())) {
+    return CV_8U;
+  } else if (np_dtype.is(pybind11::dtype::of<float>())) {
+    return CV_32F;
+  } else {
+    FDASSERT(
+        false,
+        "NumpyDataTypeToOpenCvType() only support int32/int8/uint8/float32 "
+        "now.");
+  }
+  return CV_8U;
+}
+
+int NumpyDataTypeToOpenCvTypeV2(pybind11::array& pyarray) {
+  if (pybind11::isinstance<pybind11::array_t<std::int32_t>>(pyarray)) {
+    return CV_32S;
+  } else if (pybind11::isinstance<pybind11::array_t<std::int8_t>>(pyarray)) {
+    return CV_8S;
+  } else if (pybind11::isinstance<pybind11::array_t<std::uint8_t>>(pyarray)) {
+    return CV_8U;
+  } else if (pybind11::isinstance<pybind11::array_t<std::float_t>>(pyarray)) {
+    return CV_32F;
+  } else {
+    FDASSERT(
+        false,
+        "NumpyDataTypeToOpenCvTypeV2() only support int32/int8/uint8/float32 "
+        "now.");
+  }
+  return CV_8U;
+}
+
+cv::Mat PyArrayToCvMat(pybind11::array& pyarray) {
+  // auto cv_type = NumpyDataTypeToOpenCvType(pyarray.dtype());
+  auto cv_type = NumpyDataTypeToOpenCvTypeV2(pyarray);
+  FDASSERT(
+      pyarray.ndim() == 3,
+      "Require rank of array to be 3 with HWC format while converting it to "
+      "cv::Mat.");
+  int channel = *(pyarray.shape() + 2);
+  int height = *(pyarray.shape());
+  int width = *(pyarray.shape() + 1);
+  return cv::Mat(height, width, CV_MAKETYPE(cv_type, channel),
+                 pyarray.mutable_data());
+}
+#endif
+
+PYBIND11_MODULE(@PY_LIBRARY_NAME@, m) {
+  m.doc() =
+      "Make programmer easier to deploy deeplearning model, save time to save "
+      "the world!";
+
+  m.def("set_logger", &SetLogger);
+
+  BindFDTensor(m);
+  BindRuntime(m);
+  BindFDModel(m);
+#ifdef ENABLE_VISION
+  auto vision_module =
+      m.def_submodule("vision", "Vision module of UltraInfer.");
+  BindVision(vision_module);
+  auto pipeline_module =
+      m.def_submodule("pipeline", "Pipeline module of UltraInfer.");
+  BindPipeline(pipeline_module);
+#endif
+
+#ifdef ENABLE_TEXT
+  auto text_module =
+      m.def_submodule("text", "Text module of UltraInfer.");
+  BindText(text_module);
+#endif
+}
+
+}  // namespace ultra_infer

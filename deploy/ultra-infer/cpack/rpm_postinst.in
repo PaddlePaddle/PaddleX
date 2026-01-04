@@ -1,0 +1,35 @@
+#!/bin/bash
+
+PLATFORM=`uname`
+ULTRAINFER_LIBRARY_PATH=@CMAKE_INSTALL_PREFIX@
+
+echo "=============== Information ======================"
+echo "UltraInfer Library Path: $ULTRAINFER_LIBRARY_PATH"
+echo "Platform: $PLATFORM"
+echo "=================================================="
+
+# Find all the .so files' path
+ALL_SO_FILES=`find $ULTRAINFER_LIBRARY_PATH -name "*.so*"`
+for SO_FILE in $ALL_SO_FILES;do
+    LIBS_DIRECOTRIES[${#LIBS_DIRECOTRIES[@]}]=${SO_FILE%/*}
+done
+
+# Remove the duplicate directories
+LIBS_DIRECOTRIES=($(awk -v RS=' ' '!a[$1]++' <<< ${LIBS_DIRECOTRIES[@]}))
+
+IMPORT_PATH=""
+for LIB_DIR in ${LIBS_DIRECOTRIES[@]};do
+    echo "Found Library Directory: $LIB_DIR"
+    echo ${LIB_DIR} >> @CMAKE_INSTALL_PREFIX@/@CPACK_PACKAGE_NAME@.conf
+done
+
+if [ ! -d /etc/ld.so.conf.d ]; then
+    mkdir -p /etc/ld.so.conf.d
+fi
+ln -sf @CMAKE_INSTALL_PREFIX@/@CPACK_PACKAGE_NAME@.conf /etc/ld.so.conf.d
+
+ldconfig
+
+echo "UltraInfer is successfully installed and configured."
+echo "Now please get started with UltraInfer examples at $ULTRAINFER_LIBRARY_PATH/examples."
+echo "And don't forget to set ULTRAINFER_INSTALL_DIR=$ULTRAINFER_LIBRARY_PATH in cmake when building examples."

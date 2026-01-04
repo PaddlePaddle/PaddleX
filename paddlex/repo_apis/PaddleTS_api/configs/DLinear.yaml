@@ -4,6 +4,10 @@ predict_len: 336
 sampling_stride: 1
 do_eval: True
 epoch: 10
+to_static_train: False
+use_amp: False
+amp_level: O2
+
 dataset:
   name: TSDataset
   dataset_root: /data/ 

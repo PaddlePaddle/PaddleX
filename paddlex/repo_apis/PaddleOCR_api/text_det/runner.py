@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-from ..text_rec.runner import TextRecRunner
 from ...base.utils.subprocess import CompletedProcess
+from ..text_rec.runner import TextRecRunner
 
 
 class TextDetRunner(TextRecRunner):
@@ -46,7 +46,7 @@ class TextDetRunner(TextRecRunner):
             device (str): unused.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         # `config_path` and `device` unused
         cmd = [self.python, "tools/infer/predict_det.py", *cli_args]

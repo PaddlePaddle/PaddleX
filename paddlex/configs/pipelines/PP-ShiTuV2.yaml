@@ -1,0 +1,18 @@
+pipeline_name: PP-ShiTuV2
+
+index: None
+det_threshold: 0.5
+rec_threshold: 0.5
+rec_topk: 5
+
+SubModules:
+  Detection:
+    module_name: text_detection
+    model_name: PP-ShiTuV2_det
+    model_dir: null
+    batch_size: 1    
+  Recognition:
+    module_name: text_recognition
+    model_name: PP-ShiTuV2_rec
+    model_dir: null
+    batch_size: 1

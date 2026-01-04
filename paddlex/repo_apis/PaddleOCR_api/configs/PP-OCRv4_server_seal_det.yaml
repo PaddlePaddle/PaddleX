@@ -15,6 +15,7 @@ Global:
   save_inference_dir: null
   use_visualdl: false
   distributed: true
+  d2s_train_image_shape: [3, 640, 640]
 
 Architecture:
   model_type: det

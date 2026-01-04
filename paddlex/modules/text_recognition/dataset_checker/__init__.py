@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,20 +13,17 @@
 # limitations under the License.
 
 
+import json
 import os
 import os.path as osp
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
+from pathlib import Path
 
 from PIL import Image
-import json
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse, convert
-
 from ..model_list import MODELS
-from ...formula_recognition.model_list import MODELS as MODELS_LaTeX
-
-MODELS = MODELS + MODELS_LaTeX
+from .dataset_src import check, convert, deep_analyse, split_dataset
 
 
 class TextRecDatasetChecker(BaseDatasetChecker):
@@ -34,6 +31,20 @@ class TextRecDatasetChecker(BaseDatasetChecker):
 
     entities = MODELS
     sample_num = 10
+
+    def get_dataset_root(self, dataset_dir: str) -> str:
+        """find the dataset root dir
+
+        Args:
+            dataset_dir (str): the directory that contain dataset.
+
+        Returns:
+            str: the root directory of dataset.
+        """
+        anno_dirs = list(Path(dataset_dir).glob("**/train.txt"))
+        assert len(anno_dirs) == 1
+        dataset_dir = anno_dirs[0].parent.as_posix()
+        return dataset_dir
 
     def convert_dataset(self, src_dataset_dir: str) -> str:
         """convert the dataset from other type to specified type
@@ -74,7 +85,7 @@ class TextRecDatasetChecker(BaseDatasetChecker):
         """
         return check(
             dataset_dir,
-            self.global_config.output,
+            self.output,
             sample_num=10,
             dataset_type=self.get_dataset_type(),
         )

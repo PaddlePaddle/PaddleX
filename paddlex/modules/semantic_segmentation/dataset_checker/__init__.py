@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 
 import os
 import os.path as osp
+from pathlib import Path
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check_dataset, convert_dataset, split_dataset, anaylse_dataset
-
 from ..model_list import MODELS
+from .dataset_src import anaylse_dataset, check_dataset, convert_dataset, split_dataset
 
 
 class SegDatasetChecker(BaseDatasetChecker):
@@ -27,6 +27,30 @@ class SegDatasetChecker(BaseDatasetChecker):
 
     entities = MODELS
     sample_num = 10
+
+    def get_dataset_root(self, dataset_dir: str) -> str:
+        """find the dataset root dir
+
+        Args:
+            dataset_dir (str): the directory that contain dataset.
+
+        Returns:
+            str: the root directory of dataset.
+        """
+        anno_dirs = list(Path(dataset_dir).glob("**/images"))
+        if len(anno_dirs) == 1:
+            dataset_dir = anno_dirs[0].parent.as_posix()
+        elif len(anno_dirs) == 0:
+            dataset_dir = Path(dataset_dir)
+        else:
+            raise ValueError(
+                f"Segmentation Dataset Format Error: We currently only support `PaddleX` and `Labelme` formats. "
+                f"For `PaddleX` format, your dataset root must contain exactly one `images` directory. "
+                f"For `Labelme` format, your dataset root must contain no `images` directories. "
+                f"However, your dataset root contains {len(anno_dirs)} `images` directories. "
+                f"Please adjust your dataset structure to comply with the supported formats."
+            )
+        return dataset_dir
 
     def convert_dataset(self, src_dataset_dir: str) -> str:
         """convert the dataset from other type to specified type

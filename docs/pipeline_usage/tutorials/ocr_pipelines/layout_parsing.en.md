@@ -11,507 +11,1304 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 
 <b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b>
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <details><summary> 👉Model List Details</summary>
-
-<p><b>Table Structure Recognition Module Models</b>:</p>
-<table>
-<tr>
-<th>Model</th>
-<th>Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>SLANet</td>
-<td>59.52</td>
-<td>522.536</td>
-<td>1845.37</td>
-<td>6.9 M</td>
-<td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
-</tr>
-<tr>
-<td>SLANet_plus</td>
-<td>63.69</td>
-<td>522.536</td>
-<td>1845.37</td>
-<td>6.9 M</td>
-<td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
-</tr>
-</table>
-
-<p><b>Note: The above accuracy metrics are measured on PaddleX's internally built English table recognition dataset. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Layout Detection Module Models</b>:</p>
+<p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
 <tr>
-<th>Model</th>
-<th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
+<th>Model</th><th>Model Download Link</th>
+<th>Top-1 Acc (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x</td>
-<td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
-<td>7.4</td>
-<td>An efficient layout area localization model trained on the PubLayNet dataset based on PicoDet-1x can locate five types of areas, including text, titles, tables, images, and lists.</td>
-</tr>
-<tr>
-<td>PicoDet-S_layout_3cls</td>
-<td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
-<td>4.8</td>
-<td>An high-efficient layout area localization model trained on a self-constructed dataset based on PicoDet-S for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals.</td>
-</tr>
-<tr>
-<td>PicoDet-S_layout_17cls</td>
-<td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
-<td>4.8</td>
-<td>A high-efficient layout area localization model trained on a self-constructed dataset based on PicoDet-S_layout_17cls for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_3cls</td>
-<td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
-<td>22.6</td>
-<td>An efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals.</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_17cls</td>
-<td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
-<td>22.6</td>
-<td>A efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L_layout_17cls for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_3cls</td>
-<td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
-<td>470.1</td>
-<td>A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals.</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_17cls</td>
-<td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
-<td>470.2</td>
-<td>A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
+<td>99.06</td>
+<td>2.62 / 0.59</td>
+<td>3.24 / 1.19</td>
+<td>7</td>
+<td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
 </tr>
 </tbody>
-</table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Text Detection Module Models</b>:</p>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-OCRv4_server_det</td>
-<td>82.69</td>
-<td>83.3501</td>
-<td>2434.01</td>
-<td>109</td>
-<td>PP-OCRv4's server-side text detection model, featuring higher accuracy, suitable for deployment on high-performance servers</td>
-</tr>
-<tr>
-<td>PP-OCRv4_mobile_det</td>
-<td>77.79</td>
-<td>10.6923</td>
-<td>120.177</td>
-<td>4.7</td>
-<td>PP-OCRv4's mobile text detection model, optimized for efficiency, suitable for deployment on edge devices</td>
-</tr>
-</tbody>
-</table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 500 images for detection. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Text Recognition Module Models</b>:</p>
-<table>
-<tr>
-<th>Model</th>
-<th>Recognition Avg Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>PP-OCRv4_mobile_rec</td>
-<td>78.20</td>
-<td>7.95018</td>
-<td>46.7868</td>
-<td>10.6 M</td>
-<td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
-</tr>
-<tr>
-<td>PP-OCRv4_server_rec</td>
-<td>79.20</td>
-<td>7.19439</td>
-<td>140.179</td>
-<td>71.2 M</td>
-</tr>
 </table>
 
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<table >
-<tr>
-<th>Model</th>
-<th>Recognition Avg Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>ch_SVTRv2_rec</td>
-<td>68.81</td>
-<td>8.36801</td>
-<td>165.706</td>
-<td>73.9 M</td>
-<td rowspan="1">
-SVTRv2 is a server-side text recognition model developed by the OpenOCR team at the Vision and Learning Lab (FVL) of Fudan University. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 6% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the A-list.
-</td>
-</tr>
-</table>
+<p><b>Text Image Correction Module (Optional):</b></p>
 
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> A-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<table >
-<tr>
-<th>Model</th>
-<th>Recognition Avg Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>ch_RepSVTR_rec</td>
-<td>65.07</td>
-<td>10.5047</td>
-<td>51.5647</td>
-<td>22.1 M</td>
-<td rowspan="1">
-The RepSVTR text recognition model is a mobile-oriented text recognition model based on SVTRv2. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the B-list, while maintaining similar inference speed.
-</td>
-</tr>
-</table>
-
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> B-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Formula Recognition Module Models</b>:</p>
 <table>
 <thead>
 <tr>
-<th>Model Name</th>
-<th>BLEU Score</th>
-<th>Normed Edit Distance</th>
-<th>ExpRate (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LaTeX_OCR_rec</td>
-<td>0.8821</td>
-<td>0.0823</td>
-<td>40.01</td>
-<td>-</td>
-<td>-</td>
-<td>89.7 M</td>
-</tr>
-</tbody>
-</table>
-<p><b>Note: The above accuracy metrics are measured on the <a href="https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO">LaTeX-OCR Formula Recognition Test Set</a>. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Seal Text Detection Module Models</b>:</p>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-OCRv4_server_seal_det</td>
-<td>98.21</td>
-<td>84.341</td>
-<td>2425.06</td>
-<td>109</td>
-<td>PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers</td>
-</tr>
-<tr>
-<td>PP-OCRv4_mobile_seal_det</td>
-<td>96.47</td>
-<td>10.5878</td>
-<td>131.813</td>
-<td>4.6</td>
-<td>PP-OCRv4's mobile seal text detection model, offering higher efficiency, suitable for deployment on edge devices</td>
-</tr>
-</tbody>
-</table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Text Image Rectification Module Models</b>:</p>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>MS-SSIM (%)</th>
-<th>Model Size (M)</th>
+<th>Model</th><th>Model Download Link</th>
+<th>CER</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>UVDoc</td>
-<td>54.40</td>
-<td>30.3 M</td>
-<td>High-precision text image rectification model</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
+<td>0.179</td>
+<td>19.05 / 19.05</td>
+<td>- / 869.82</td>
+<td>30.3</td>
+<td>High-accuracy text image rectification model</td>
 </tr>
 </tbody>
 </table>
-<p><b>The accuracy metrics of the models are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b></p>
-<p><b>Document Image Orientation Classification Module Models</b>:</p>
+<p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th>
+<th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x0_25_textline_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x0_25_textline_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x0_25_textline_ori_pretrained.pdparams">Training Model</a></td>
+<td>98.85</td>
+<td>2.16 / 0.41</td>
+<td>2.37 / 0.73</td>
+<td>0.96</td>
+<td>Text line classification model based on PP-LCNet_x0_25, with two classes: 0 degrees and 180 degrees</td>
+</tr>
+<tr>
+<td>PP-LCNet_x1_0_textline_ori</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_textline_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_textline_ori_pretrained.pdparams">Training Model</a></td>
+<td>99.42</td>
+<td>- / -</td>
+<td>2.98 / 2.98</td>
+<td>6.5</td>
+<td>Text line classification model based on PP-LCNet_x1_0, with two classes: 0 degrees and 180 degrees</td>
+</tr>
+</tbody>
+</table>
+<p><b>Table Structure Recognition Module Models</b>:</p>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>SLANet</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
+<td>59.52</td>
+<td>23.96 / 21.75</td>
+<td>- / 43.12</td>
+<td>6.9</td>
+<td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+</tr>
+<tr>
+<td>SLANet_plus</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
+<td>63.69</td>
+<td>23.43 / 22.16</td>
+<td>- / 41.80</td>
+<td>6.9</td>
+<td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
+</tr>
+</table>
+
+<p><b>Layout Detection Module Models</b>:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
+<td>90.4</td>
+<td>33.59 / 33.59</td>
+<td>503.01 / 251.08</td>
+<td>123.76</td>
+<td>A high-precision layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using RT-DETR-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
+<td>75.2</td>
+<td>13.03 / 4.72</td>
+<td>43.39 / 24.44</td>
+<td>22.578</td>
+<td>A layout area localization model with balanced precision and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using PicoDet-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
+<td>70.9</td>
+<td>11.54 / 3.86</td>
+<td>18.53 / 6.29</td>
+<td>4.834</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports using PicoDet-S.</td>
+</tr>
+</tbody>
+</table>
+<b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 500 common document-type images of Chinese and English papers, magazines, contracts, books, exams, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+> ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>11 full models</b>, including several predefined models with different categories. The complete model list is as follows:
+
+* <b>Table Layout Detection Model</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_layout_1x_table</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
+<td>97.5</td>
+<td>9.57 / 6.63</td>
+<td>27.66 / 16.75</td>
+<td>7.4</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset using PicoDet-1x, capable of detecting table regions.</td>
+</tr>
+</tbody></table>
+<b>Note: The evaluation dataset for the above precision metrics is a self-built layout table area detection dataset by PaddleOCR, containing 7835 Chinese and English document images with tables. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+* <b>3-Class Layout Detection Model, including Table, Image, and Stamp</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>88.2</td>
+<td>8.43 / 3.44</td>
+<td>17.60 / 6.51</td>
+<td>4.8</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>12.80 / 9.57</td>
+<td>45.04 / 23.86</td>
+<td>22.6</td>
+<td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_3cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>95.8</td>
+<td>114.80 / 25.65</td>
+<td>924.38 / 924.38</td>
+<td>470.1</td>
+<td>A high-precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H.</td>
+</tr>
+</tbody></table>
+<b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 1154 common document images of Chinese and English papers, magazines, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+* <b>5-Class English Document Area Detection Model, including Text, Title, Table, Image, and List</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_layout_1x</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
+<td>97.8</td>
+<td>9.62 / 6.75</td>
+<td>26.96 / 12.77</td>
+<td>7.4</td>
+<td>A high-efficiency English document layout area localization model trained on the PubLayNet dataset using PicoDet-1x.</td>
+</tr>
+</tbody></table>
+<b>Note: The evaluation dataset for the above precision metrics is the [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) dataset, containing 11245 English document images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+* <b>17-Class Area Detection Model, including 17 common layout categories: Paragraph Title, Image, Text, Number, Abstract, Content, Figure Caption, Formula, Table, Table Caption, References, Document Title, Footnote, Header, Algorithm, Footer, and Stamp</b>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>87.4</td>
+<td>8.80 / 3.62</td>
+<td>17.51 / 6.35</td>
+<td>4.8</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>12.60 / 10.27</td>
+<td>43.70 / 24.42</td>
+<td>22.6</td>
+<td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_17cls</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>98.3</td>
+<td>115.29 / 101.18</td>
+<td>964.75 / 964.75</td>
+<td>470.2</td>
+<td>A high-precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H.</td>
+</tr>
+</tbody>
+</table>
+
+<p><b>Text Detection Module Models</b>:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Detection Hmean (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td>
-<td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
-<td>7</td>
-<td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270°</td>
+<td>PP-OCRv5_server_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">Training Model</a></td>
+<td>83.8</td>
+<td>89.55 / 70.19</td>
+<td>383.15 / 383.15</td>
+<td>84.3</td>
+<td>PP-OCRv5 server-side text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
+</tr>
+<tr>
+<td>PP-OCRv5_mobile_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>79.0</td>
+<td>10.67 / 6.36</td>
+<td>57.77 / 28.15</td>
+<td>4.7</td>
+<td>PP-OCRv5 mobile-side text detection model with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
+<td>PP-OCRv4_server_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
+<td>69.2</td>
+<td>127.82 / 98.87</td>
+<td>585.95 / 489.77</td>
+<td>109</td>
+<td>PP-OCRv4 server-side text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
+</tr>
+<tr>
+<td>PP-OCRv4_mobile_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>63.8</td>
+<td>9.87 / 4.17</td>
+<td>56.60 / 20.79</td>
+<td>4.7</td>
+<td>PP-OCRv4 mobile-side text detection model with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
+<td>PP-OCRv3_mobile_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>Accuracy comparable to PP-OCRv4_mobile_det</td>
+<td>9.90 / 3.60</td>
+<td>41.93 / 20.76</td>
+<td>2.1</td>
+<td>PP-OCRv3 mobile text detection model with higher efficiency, suitable for edge device deployment</td>
+</tr>
+<tr>
+<td>PP-OCRv3_server_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">Training Model</a></td>
+<td>Accuracy comparable to PP-OCRv4_server_det</td>
+<td>119.50 / 75.00</td>
+<td>379.35 / 318.35</td>
+<td>102.1</td>
+<td>PP-OCRv3 server text detection model with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset covering various scenarios such as certificates and documents, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+
+<p><b>Text Recognition Module Models</b>:</p>
+* <b>Chinese Recognition Model</b>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>PP-OCRv4_server_rec_doc</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>86.58</td>
+<td>8.69 / 2.78</td>
+<td>37.93 / 37.93</td>
+<td>182</td>
+<td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
+</tr>
+<tr>
+<td>PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>78.74</td>
+<td>5.26 / 1.12</td>
+<td>17.48 / 3.61</td>
+<td>10.5</td>
+<td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
+</tr>
+<tr>
+<td>PP-OCRv4_server_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>85.19</td>
+<td>8.75 / 2.49</td>
+<td>36.93 / 36.93</td>
+<td>173</td>
+<td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
+</tr>
+<tr>
+<td>PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>72.96</td>
+<td>3.89 / 1.16</td>
+<td>8.72 / 3.56</td>
+<td>10.3</td>
+<td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>ch_SVTRv2_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
+<td>68.81</td>
+<td>10.38 / 8.31</td>
+<td>66.52 / 30.83</td>
+<td>80.5</td>
+<td rowspan="1">
+SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>ch_RepSVTR_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
+<td>65.07</td>
+<td>6.29 / 1.57</td>
+<td>20.64 / 5.40</td>
+<td>48.8</td>
+<td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
+</tr>
+</table>
+
+* <b>English Recognition Model</b>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>en_PP-OCRv4_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td> 70.39</td>
+<td>4.81 / 1.23</td>
+<td>17.20 / 4.18</td>
+<td>7.5</td>
+<td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
+</tr>
+<tr>
+<td>en_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>70.69</td>
+<td>3.56 / 0.78</td>
+<td>8.44 / 5.78</td>
+<td>17.3</td>
+<td>The ultra-lightweight English recognition model trained based on the PP-OCRv3 recognition model supports the recognition of English and numbers.</td>
+</tr>
+</table>
+
+* <b>Multilingual Recognition Model</b>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>korean_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>60.21</td>
+<td>3.73 / 0.98</td>
+<td>8.76 / 2.91</td>
+<td>9.6</td>
+<td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
+</tr>
+<tr>
+<td>japan_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>45.69</td>
+<td>3.86 / 1.01</td>
+<td>8.62 / 2.92</td>
+<td>9.8</td>
+<td>The ultra-lightweight Japanese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Japanese and numbers.</td>
+</tr>
+<tr>
+<td>chinese_cht_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>82.06</td>
+<td>3.90 / 1.16</td>
+<td>9.24 / 3.18</td>
+<td>10.8</td>
+<td>The ultra-lightweight Traditional Chinese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Traditional Chinese and numbers.</td>
+</tr>
+<tr>
+<td>te_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>95.88</td>
+<td>3.59 / 0.81</td>
+<td>8.28 / 6.21</td>
+<td>8.7</td>
+<td>The ultra-lightweight Telugu recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Telugu and numbers.</td>
+</tr>
+<tr>
+<td>ka_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>96.96</td>
+<td>3.49 / 0.89</td>
+<td>8.63 / 2.77</td>
+<td>17.4</td>
+<td>The ultra-lightweight Kannada recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Kannada and numbers.</td>
+</tr>
+<tr>
+<td>ta_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>76.83</td>
+<td>3.49 / 0.86</td>
+<td>8.35 / 3.41</td>
+<td>8.7</td>
+<td>The ultra-lightweight Tamil recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Tamil and numbers.</td>
+</tr>
+<tr>
+<td>latin_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>76.93</td>
+<td>3.53 / 0.78</td>
+<td>8.50 / 6.83</td>
+<td>8.7</td>
+<td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
+</tr>
+<tr>
+<td>arabic_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>73.55</td>
+<td>3.60 / 0.83</td>
+<td>8.44 / 4.69</td>
+<td>17.3</td>
+<td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
+</tr>
+<tr>
+<td>cyrillic_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>94.28</td>
+<td>3.56 / 0.79</td>
+<td>8.22 / 2.76</td>
+<td>8.7</td>
+<td>
+The ultra-lightweight cyrillic alphabet recognition model trained based on the PP-OCRv3 recognition model supports the recognition of cyrillic letters and numbers.</td>
+</tr>
+<tr>
+<td>devanagari_PP-OCRv3_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>96.44</td>
+<td>3.60 / 0.78</td>
+<td>6.95 / 2.87</td>
+<td>7.9</td>
+<td>The ultra-lightweight Devanagari script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Devanagari script and numbers.</td>
+</tr>
+</table>
+
+<p><b>Formula Recognition Module Models</b>:</p>
+<table>
+<thead>
+<tr>
+<th>Model Name</th><th>Model Download Link</th>
+<th>BLEU Score</th>
+<th>Normed Edit Distance</th>
+<th>ExpRate (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LaTeX_OCR_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
+<td>0.8821</td>
+<td>0.0823</td>
+<td>40.01</td>
+<td>1088.89 / 1088.89</td>
+<td>- / -</td>
+<td>99</td>
+</tr>
+</tbody>
+</table>
+
+<p><b>Seal Text Detection Module Models</b>:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Detection Hmean (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-OCRv4_server_seal_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Training Model</a></td>
+<td>98.40</td>
+<td>124.64 / 91.57</td>
+<td>545.68 / 439.86</td>
+<td>109</td>
+<td>PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers</td>
+</tr>
+<tr>
+<td>PP-OCRv4_mobile_seal_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Training Model</a></td>
+<td>96.36</td>
+<td>9.70 / 3.56</td>
+<td>50.38 / 19.64</td>
+<td>4.7</td>
+<td>PP-OCRv4's mobile seal text detection model, offering higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+</tbody>
+</table>
+
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                    <li><strong>Test Dataset：</strong>
+                        <ul>
+                        <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a></li>
+                          <li>Layout Region Detection Model: A self-built layout analysis dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                          <li>Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.</li>
+                          <li>Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
+                          <li>Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                          <li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a></li>
+                          <li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
+                          <li>English Recognition Model: A self-built English dataset using PaddleX.</li>
+                          <li>Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.</li>
+                          <li>Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.</li>
+                        </ul>
+                    </li>
+              <li><strong>Hardware Configuration:</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
+
+</details>
 
 ## 2. Quick Start
+The pipelines provided by PaddleX allow for quick experience of their effects. You can use the command line or Python to experience the effects of the General Layout Parsing pipeline locally.
 
-PaddleX provides pre-trained model pipelines that can be quickly experienced. You can experience the effect of the General Image Classification pipeline online, or locally using command line or Python.
-
-Before using the General Layout Parsing pipeline locally, please ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+Before using the General Layout Parsing pipeline locally, ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ocr`.
 
 ### 2.1 Experience via Command Line
-One command is all you need to quickly experience the effect of the Layout Parsing pipeline. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png) and replace `--input` with your local path to make predictions.
-
-```bash
-paddlex --pipeline layout_parsing --input demo_paper.png --device gpu:0
-```
-Parameter Explanation:
+You can quickly experience the effects of the Layout Parsing pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_demo.png) and replace `--input` with the local path for prediction:
 
 ```
---pipeline: The name of the pipeline, here it is the Layout Parsing pipeline.
---input: The local path or URL of the input image to be processed.
---device: The GPU index to use (e.g., gpu:0 indicates using the first GPU, gpu:1,2 indicates using the second and third GPUs). You can also choose to use CPU (--device cpu).
+paddlex --pipeline layout_parsing \
+        --input layout_parsing_demo.png \
+        --use_doc_orientation_classify False \
+        --use_doc_unwarping False \
+        --use_textline_orientation False \
+        --save_path ./output \
+        --device gpu:0
 ```
 
-When executing the above command, the default Layout Parsing pipeline configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
+<b>Note: </b>The official models would be download from HuggingFace by first. PaddleX also support to specify the preferred source by setting the environment variable `PADDLE_PDX_MODEL_SOURCE`. The supported values are `huggingface`, `aistudio`, `bos`, and `modelscope`. For example, to prioritize using `bos`, set: `PADDLE_PDX_MODEL_SOURCE="bos"`.
+
+For parameter descriptions, refer to the parameter explanations in [2.2.2 Integration via Python Script](#222-integration-via-python-script). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
+
+After running, the results will be printed to the terminal, as shown below:
 
 <details><summary> 👉Click to expand</summary>
-
-<pre><code class="language-bash">paddlex --get_pipeline_config layout_parsing
-</code></pre>
-<p>After execution, the layout parsing pipeline configuration file will be saved in the current directory. If you wish to customize the save location, you can execute the following command (assuming the custom save location is <code>./my_path</code>):</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config layout_parsing --save_path ./my_path
-</code></pre>
-<p>After obtaining the pipeline configuration file, you can replace <code>--pipeline</code> with the saved path of the configuration file to make it take effect. For example, if the configuration file is saved as <code>./layout_parsing.yaml</code>, simply execute:</p>
-<pre><code class="language-bash">paddlex --pipeline ./layout_parsing.yaml --input layout_parsing.jpg
-</code></pre>
-<p>Here, parameters such as <code>--model</code> and <code>--device</code> do not need to be specified, as they will use the parameters in the configuration file. If these parameters are still specified, the specified parameters will take precedence.</p></details>
-
-After running, the result will be:
-
-<details><summary> 👉Click to expand</summary>
-
-<pre><code>{'input_path': PosixPath('/root/.paddlex/temp/tmp5jmloefs.png'), 'parsing_result': [{'input_path': PosixPath('/root/.paddlex/temp/tmpshsq8_w0.png'), 'layout_bbox': [51.46833, 74.22329, 542.4082, 232.77504], 'image': {'img': array([[[255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255],
+<pre><code>{'res': {'input_path': 'layout_parsing_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': False}, 'parsing_res_list': [{'block_bbox': [133.37144, 40.12515, 1383.7618, 123.51433], 'block_label': 'text', 'block_content': '助力双方交往\n搭建友谊桥梁'}, {'block_bbox': [587.43024, 160.58405, 927.63995, 179.2846], 'block_label': 'figure_title', 'block_content': '本报记者沈小晓任彦黄培昭'}, {'block_bbox': [773.798, 200.63779, 1505.5233, 687.11847], 'block_label': 'image', 'block_content': ''}, {'block_bbox': [390.42462, 201.87276, 741.41675, 292.5969], 'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开\n设了中国语言课程和中国文化课程，注册学\n生2万余人次。10余年来，厄特孔院已成为\n当地民众了解中国的一扇窗口。'}, {'block_bbox': [9.70394, 202.7036, 359.6133, 340.30905], 'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青\n年依次登台表演中国民族舞、现代舞、扇子舞\n等，曼妙的舞姿赢得现场观众阵阵掌声。这\n是日前厄立特里亚高等教育与研究院孔子学\n院(以下简称"厄特孔院"举办“喜迎新年"中国\n歌舞比赛的场景。'}, {'block_bbox': [390.74887, 298.432, 740.7994, 436.79953], 'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益\n增多，阿斯马拉大学教学点已难以满足教学\n需要。2024年4月，由中企蜀道集团所属四\n川路桥承建的孔院教学楼项目在阿斯马拉开\n工建设，预计今年上半年峻工，建成后将为厄\n特孔院提供全新的办学场地。'}, {'block_bbox': [10.5880165, 346.2769, 359.125, 436.1819], 'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年\n来,在高质量共建“一带一路"框架下，中厄两\n国人文交流不断深化，互利合作的民意基础\n日益深厚。'}, {'block_bbox': [410.5304, 457.0797, 722.77606, 516.7847], 'block_label': 'text', 'block_content': '“在中国学习的经历\n让我看到更广阔的世界”'}, {'block_bbox': [30.340591, 457.54282, 341.95337, 516.82825], 'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的\n未来不是梦"'}, {'block_bbox': [390.90765, 538.18097, 742.19904, 604.67365], 'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和\n培训人员积极投身国家建设，成为助力该国\n发展的人才和厄中友好的见证者和推动者。'}, {'block_bbox': [9.953403, 538.3851, 359.45145, 652.02905], 'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你\n心中的每一个角落……"厄立特里亚阿斯马拉\n大学综合楼二层，一阵优美的歌声在走廊里回\n响。循着熟悉的旋律轻轻推开一间教室的门，\n学生们正跟着老师学唱中文歌曲《同一首歌》。'}, {'block_bbox': [390.89615, 610.6184, 741.1807, 747.9165], 'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰\n娜·特韦尔德·凯莱塔就是其中一位。她曾在\n中华女子学院攻读硕士学位，研究方向是女\n性领导力与社会发展。其间，她实地走访中国\n多个地区，获得了观察中国社会发展的第一\n手资料。'}, {'block_bbox': [10.181939, 658.8049, 359.41302, 771.31146], 'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一\n节中文歌曲课。为了让学生们更好地理解歌\n词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐\n字翻译和解释歌词。随着伴奏声响起，学生们\n边唱边随着节拍摇动身体，现场气氛热烈。'}, {'block_bbox': [809.68475, 705.4048, 1485.5435, 747.4364], 'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。\n中国驻厄立特里亚大使馆供图'}, {'block_bbox': [389.63492, 753.45245, 742.05634, 890.96497], 'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹\n新：“中国的发展在当今世界是独一无二的。\n沿着中国特色社会主义道路坚定前行，中国\n创造了发展奇迹，这一切都离不开中国共产党\n的领导。中国的发展经验值得许多国家学习\n借鉴。”'}, {'block_bbox': [9.884867, 777.39636, 360.3998, 843.4287], 'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学\n生大部分来自首都阿斯马拉的中小学，年龄\n最小的仅有6岁。"尤斯拉告诉记者。'}, {'block_bbox': [9.801341, 850.1048, 359.61642, 1059.8444], 'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立\n学校的艺术老师。她12岁开始在厄特孔院学\n习中文，在2017年第十届"汉语桥"世界中学生\n中文比赛中获得厄立特里亚赛区第一名，并和\n同伴代表厄立特里亚前往中国参加决赛，获得\n团体优胜奖。2022年起，尤斯拉开始在厄特孔\n院兼职教授中文歌曲，每周末两个课时。“中国\n文化博大精深，我希望我的学生们能够通过中\n文歌曲更好地理解中国文化。"她说。'}, {'block_bbox': [772.0007, 777.06, 1124.396, 1059.2354], 'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约\n好了在一起，我们欢迎你…"在一场中厄青\n年联谊活动上，四川路桥中方员工同当地大\n学生合唱《北京欢迎你》。厄立特里亚技术学\n院计算机科学与工程专业学生鲁夫塔·谢拉\n是其中一名演唱者，她很早便在孔院学习中\n文，一直在为去中国留学作准备。“这句歌词\n是我们两国人民友谊的生动写照。无论是投\n身于厄立特里亚基础设施建设的中企员工，\n还是在中国留学的厄立特里亚学子，两国人\n民携手努力，必将推动两国关系不断向前发\n展。"鲁夫塔说。'}, {'block_bbox': [1155.9297, 777.71344, 1331.4728, 795.6411], 'block_label': 'text', 'block_content': '瓦的北红海省博物馆。'}, {'block_bbox': [1153.7091, 801.56256, 1504.5591, 987.63544], 'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利\n斯古城的中国古代陶制酒器，罐身上写着\n“万”“和"“禅"“山"等汉字。“这件文物证\n明，很早以前我们就通过海上丝绸之路进行\n贸易往来与文化交流。这也是厄立特里亚\n与中国友好交往历史的有力证明。"北红海\n省博物馆研究与文献部负责人伊萨亚斯·特\n斯法兹吉说。'}, {'block_bbox': [390.203, 897.60095, 742.03674, 1035.7938], 'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生\n穆卢盖塔·泽穆伊对中国怀有深厚感情。8\n盖塔在社交媒体上写下这样一段话：“这是我\n人生的重要一步，自此我拥有了一双坚固的\n鞋子，赋予我穿越荆棘的力量。"'}, {'block_bbox': [1154.4471, 993.4835, 1503.8441, 1107.7363], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学\n研究员菲尔蒙·特韦尔德十分喜爱中国文\n化。他表示：“学习彼此的语言和文化，将帮\n助厄中两国人民更好地理解彼此，助力双方\n交往，搭建友谊桥梁。"'}, {'block_bbox': [391.17816, 1041.2622, 740.8725, 1131.4589], 'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教\n育等领域的发展，“中国在科研等方面的实力\n与日俱增。在中国学习的经历让我看到更广\n阔的世界，从中受益匪浅。”'}, {'block_bbox': [9.486691, 1065.2955, 360.2089, 1180.0446], 'block_label': 'text', 'block_content': '“姐姐，你想去中国吗？"“非常想！我想\n去看故宫、爬长城。"尤斯拉的学生中有一对\n能歌善舞的姐妹，姐姐露娅今年15岁，妹妹\n莉娅14岁，两人都已在厄特孔院学习多年，\n中文说得格外流利。'}, {'block_bbox': [771.51514, 1065.1091, 1123.4568, 1179.5624], 'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨\n马瑞表示：“每年我们都会组织学生到中国访\n问学习，目前有超过5000名厄立特里亚学生\n在中国留学。学习中国的教育经验，有助于\n提升厄立特里亚的教育水平。"'}, {'block_bbox': [1153.9272, 1114.0178, 1503.9585, 1347.0802], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努\n里达姆·优素福曾多次访问中国，对中华文明\n的传承与创新、现代化博物馆的建设与发展\n印象深刻。“中国博物馆不仅有许多保存完好\n的文物，还充分运用先进科技手段进行展示，\n帮助人们更好理解中华文明。"塔吉丁说，“厄\n立特里亚与中国都拥有悠久的文明，始终相\n互理解、相互尊重。我希望未来与中国同行\n加强合作，共同向世界展示非洲和亚洲的灿\n烂文明。”'}, {'block_bbox': [390.8594, 1137.4973, 741.0567, 1346.7653], 'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特\n孔院学习3年，在中国书法、中国画等方面表\n现十分优秀，在2024年厄立特里亚赛区的\n“汉语桥"比赛中获得一等奖。莉迪亚说：“学\n习中国书法让我的内心变得安宁和纯粹。我\n也喜欢中国的服饰，希望未来能去中国学习，\n把中国不同民族元素融入服装设计中，创作\n出更多精美作品，也把厄特文化分享给更多\n的中国朋友。”'}, {'block_bbox': [8.70449, 1186.1178, 359.8176, 1299.481], 'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文\n和中国文化的热爱，我们姐妹俩始终相互鼓\n励，一起学习。我们的中文一天比一天好，还\n学会了中文歌和中国舞。我们一定要到中国\n去。学好中文，我们的未来不是梦！”'}, {'block_bbox': [9.666538, 1305.0905, 359.62704, 1347.939], 'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所\n孔院成立于2013年3月，由贵州财经大学和'}, {'block_bbox': [791.9397, 1201.0502, 1104.4906, 1260.1833], 'block_label': 'text', 'block_content': '“共同向世界展示非\n洲和亚洲的灿烂文明”'}, {'block_bbox': [772.51917, 1281.01, 1123.4009, 1348.0028], 'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜓曲折的盘山\n公路一路向东寻找丝路印迹。驱车两个小\n时，记者来到位于厄立特里亚港口城市马萨'}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9853348731994629, 'coordinate': [773.798, 200.63779, 1505.5233, 687.11847]}, {'cls_id': 2, 'label': 'text', 'score': 0.9780634045600891, 'coordinate': [772.0007, 777.06, 1124.396, 1059.2354]}, {'cls_id': 2, 'label': 'text', 'score': 0.9771724343299866, 'coordinate': [1153.9272, 1114.0178, 1503.9585, 1347.0802]}, {'cls_id': 2, 'label': 'text', 'score': 0.9763692021369934, 'coordinate': [390.74887, 298.432, 740.7994, 436.79953]}, {'cls_id': 2, 'label': 'text', 'score': 0.9752321839332581, 'coordinate': [9.70394, 202.7036, 359.6133, 340.30905]}, {'cls_id': 2, 'label': 'text', 'score': 0.9751048684120178, 'coordinate': [1153.7091, 801.56256, 1504.5591, 987.63544]}, {'cls_id': 2, 'label': 'text', 'score': 0.9741119742393494, 'coordinate': [9.801341, 850.1048, 359.61642, 1059.8444]}, {'cls_id': 2, 'label': 'text', 'score': 0.9722761511802673, 'coordinate': [390.42462, 201.87276, 741.41675, 292.5969]}, {'cls_id': 2, 'label': 'text', 'score': 0.9718317985534668, 'coordinate': [390.8594, 1137.4973, 741.0567, 1346.7653]}, {'cls_id': 2, 'label': 'text', 'score': 0.9703624844551086, 'coordinate': [390.89615, 610.6184, 741.1807, 747.9165]}, {'cls_id': 2, 'label': 'text', 'score': 0.9677473306655884, 'coordinate': [8.70449, 1186.1178, 359.8176, 1299.481]}, {'cls_id': 2, 'label': 'text', 'score': 0.9674075841903687, 'coordinate': [390.203, 897.60095, 742.03674, 1035.7938]}, {'cls_id': 2, 'label': 'text', 'score': 0.9671176075935364, 'coordinate': [389.63492, 753.45245, 742.05634, 890.96497]}, {'cls_id': 2, 'label': 'text', 'score': 0.9656032919883728, 'coordinate': [10.5880165, 346.2769, 359.125, 436.1819]}, {'cls_id': 2, 'label': 'text', 'score': 0.9655402898788452, 'coordinate': [771.51514, 1065.1091, 1123.4568, 1179.5624]}, {'cls_id': 2, 'label': 'text', 'score': 0.96494060754776, 'coordinate': [1154.4471, 993.4835, 1503.8441, 1107.7363]}, {'cls_id': 2, 'label': 'text', 'score': 0.9630844593048096, 'coordinate': [772.51917, 1281.01, 1123.4009, 1348.0028]}, {'cls_id': 2, 'label': 'text', 'score': 0.9615732431411743, 'coordinate': [9.486691, 1065.2955, 360.2089, 1180.0446]}, {'cls_id': 2, 'label': 'text', 'score': 0.9598038792610168, 'coordinate': [10.181939, 658.8049, 359.41302, 771.31146]}, {'cls_id': 2, 'label': 'text', 'score': 0.9591749310493469, 'coordinate': [391.17816, 1041.2622, 740.8725, 1131.4589]}, {'cls_id': 2, 'label': 'text', 'score': 0.9563097953796387, 'coordinate': [9.953403, 538.3851, 359.45145, 652.02905]}, {'cls_id': 2, 'label': 'text', 'score': 0.95261549949646, 'coordinate': [390.90765, 538.18097, 742.19904, 604.67365]}, {'cls_id': 2, 'label': 'text', 'score': 0.9493226408958435, 'coordinate': [9.884867, 777.39636, 360.3998, 843.4287]}, {'cls_id': 2, 'label': 'text', 'score': 0.9399433135986328, 'coordinate': [9.666538, 1305.0905, 359.62704, 1347.939]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9254537224769592, 'coordinate': [809.68475, 705.4048, 1485.5435, 747.4364]}, {'cls_id': 2, 'label': 'text', 'score': 0.9046457409858704, 'coordinate': [1155.9297, 777.71344, 1331.4728, 795.6411]}, {'cls_id': 2, 'label': 'text', 'score': 0.8674532771110535, 'coordinate': [410.5304, 457.0797, 722.77606, 516.7847]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.7949447631835938, 'coordinate': [30.340591, 457.54282, 341.95337, 516.82825]}, {'cls_id': 2, 'label': 'text', 'score': 0.7313820719718933, 'coordinate': [791.9397, 1201.0502, 1104.4906, 1260.1833]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6073322892189026, 'coordinate': [587.43024, 160.58405, 927.63995, 179.2846]}, {'cls_id': 2, 'label': 'text', 'score': 0.5846534967422485, 'coordinate': [133.37144, 40.12515, 1383.7618, 123.51433]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 122,   28],
         ...,
-        [213, 221, 238],
-        [217, 223, 240],
-        [233, 234, 241]],
+        [ 122,  135]],
 
-       [[255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255],
+       ...,
+
+       [[1156, 1330],
         ...,
-        [255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255]]], dtype=uint8), 'image_text': ''}, 'layout': 'single'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpcd2q9uyu.png'), 'layout_bbox': [47.68295, 243.08054, 546.28253, 295.71045], 'figure_title': 'Overview of RT-DETR, We feed th', 'layout': 'single'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpr_iqa8b3.png'), 'layout_bbox': [58.416977, 304.1531, 275.9134, 400.07513], 'image': {'img': array([[[255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255],
+        [1156, 1351]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '西', '本报记者沈小晓任彦黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等，曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院"举办“喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建“一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦"', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落……"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新：“中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起，我们欢迎你………"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和”“禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明，很早以前我们就通过海上丝绸之路进行', '习中文，在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话：“这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。"', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。”', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。"', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '印象深刻。“中国博物馆不仅有许多保存完好', '“共同向世界展示非', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，“厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰，希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！”', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99982363, ..., 0.93620157]), 'rec_polys': array([[[ 122,   28],
         ...,
-        [255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255]]], dtype=uint8), 'image_text': ''}, 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmphpblxl3p.png'), 'layout_bbox': [100.62961, 405.97458, 234.79774, 414.77414], 'figure_title': 'Figure 5. The fusion block in CCFF.', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmplgnczrsf.png'), 'layout_bbox': [47.81724, 421.9041, 288.01566, 550.538], 'text': 'D, Ds, not only significantly reduces latency (35% faster),\nRut\nnproves accuracy (0.4% AP higher), CCFF is opti\nased on the cross-scale fusion module, which\nnsisting of convolutional lavers intc\npath.\nThe role of the fusion block is t\n into a new feature, and its\nFigure 5. The f\nblock contains tw\n1 x1\nchannels, /V RepBlock\n. anc\n: two-path outputs are fused by element-wise add. We\ntormulate the calculation ot the hvbrid encoder as:', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpsq0ey9md.png'), 'layout_bbox': [94.60716, 558.703, 288.04193, 600.19434], 'formula': '\\begin{array}{l}{{\\Theta=K=\\mathrm{p.s.sp{\\pm}}\\mathrm{i.s.s.}(\\mathrm{l.s.}(\\mathrm{l.s.}(\\mathrm{l.s.}}),{\\qquad\\mathrm{{a.s.}}\\mathrm{s.}}}\\\\ {{\\tau_{\\mathrm{{s.s.s.s.s.}}(\\mathrm{l.s.},\\mathrm{l.s.},\\mathrm{s.s.}}\\mathrm{s.}\\mathrm{s.}}\\end{array}),}}\\\\ {{\\bar{\\mathrm{e-c.c.s.s.}(\\mathrm{s.},\\mathrm{s.s.},\\ s_{s}}\\mathrm{s.s.},\\tau),}}\\end{array}', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpv30qy0v4.png'), 'layout_bbox': [47.975555, 607.12024, 288.5776, 629.1252], 'text': 'tened feature to the same shape as Ss.\nwhere Re shape represents restoring the shape of the flat-', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmp0jejzwwv.png'), 'layout_bbox': [48.383354, 637.581, 245.96404, 648.20496], 'paragraph_title': '4.3. Uncertainty-minimal Query Selection', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpushex416.png'), 'layout_bbox': [47.80134, 656.002, 288.50192, 713.24994], 'text': 'To reduce the difficulty of optimizing object queries in\nDETR, several subsequent works [42, 44, 45] propose query\nselection schemes, which have in common that they use the\nconfidence score to select the top K’ features from the en-\ncoder to initialize object queries (or just position queries).', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpki7e_6wc.png'), 'layout_bbox': [306.6371, 302.1026, 546.3772, 419.76724], 'text': 'The confidence score represents the likelihood that the fea\nture includes foreground objects. Nevertheless, the \nare required to simultaneously model the category\nojects, both of which determine the quality of the\npertor\ncore of the fes\nBased on the analysis, the current query\n considerable level of uncertainty in the\nresulting in sub-optimal initialization for\nand hindering the performance of the detector.', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmppbxrfehp.png'), 'layout_bbox': [306.0642, 422.7347, 546.9216, 539.45734], 'text': 'To address this problem, we propose the uncertainty mini\nmal query selection scheme, which explicitly const\noptim\n the epistemic uncertainty to model the\nfeatures, thereby providing \nhigh-quality\nr the decoder. Specifically,\n the discrepancy between i\nalization P\nand classificat\n.(2\ntunction for the gradie', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmp1mgiyd21.png'), 'layout_bbox': [331.52808, 549.32635, 546.5229, 586.15546], 'formula': '\\begin{array}{c c c}{{}}&amp;{{}}&amp;{{\\begin{array}{c}{{i\\langle X\\rangle=({\\bar{Y}}({\\bar{X}})+{\\bar{Z}}({\\bar{X}})\\mid X\\in{\\bar{\\pi}}^{\\prime}}}&amp;{{}}\\\\ {{}}&amp;{{}}&amp;{{}}\\end{array}}}&amp;{{\\emptyset}}\\\\ {{}}&amp;{{}}&amp;{{C(\\bar{X},{\\bar{X}})=C..\\scriptstyle(\\bar{0},{\\bar{Y}})+{\\mathcal{L}}_{{\\mathrm{s}}}({\\bar{X}}),\\ 6)}}&amp;{{}}\\end{array}', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmp8t73dpym.png'), 'layout_bbox': [306.44016, 592.8762, 546.84314, 630.60126], 'text': 'where  and y denote the prediction and ground truth,\n= (c, b), c and b represent the category and bounding\nbox respectively, X represent the encoder feature.', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpftnxeyjm.png'), 'layout_bbox': [306.15652, 632.3142, 546.2463, 713.19073], 'text': 'Effectiveness analysis. To analyze the effectiveness of the\nuncertainty-minimal query selection, we visualize the clas-\nsificatior\nscores and IoU scores of the selected fe\nCOCO\na 12017, Figure 6. We draw the scatterplo\nt with\ndots\nrepresent the selected features from the model trained\nwith uncertainty-minimal query selection and vanilla query', 'layout': 'right'}]}
+        [ 122,  135]],
+
+       ...,
+
+       [[1156, 1330],
+        ...,
+        [1156, 1351]]], dtype=int16), 'rec_boxes': array([[ 122, ...,  135],
+       ...,
+       [1156, ..., 1351]], dtype=int16)}}}
 </code></pre></details>
 
-### 2.2 Python Script Integration
-A few lines of code are all you need to quickly perform inference on your production line. Taking the general layout parsing pipeline as an example:
+### 2.2 Integrating via Python Script
+A few lines of code suffice for rapid inference on the pipeline, taking the general layout parsing pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="layout_parsing")
 
-output = pipeline.predict("demo_paper.png")
+output = pipeline.predict(
+    input="./layout_parsing_demo.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
 for res in output:
-    res.print()  # Print the structured output of the prediction
-    res.save_to_img("./output/")  # Save the result as an image file
-    res.save_to_xlsx("./output/")  # Save the result as an Excel file
-    res.save_to_html("./output/")  # Save the result as an HTML file
+    res.print()  ## Print the structured output of the prediction
+    res.save_to_img(save_path="./output/")  ## Save the visualized image results of all submodules for the current image
+    res.save_to_json(save_path="./output/")  ## Save the structured JSON results for the current image
+    res.save_to_xlsx(save_path="./output/")  ## Save the sub-table results in XLSX format for the current image
+    res.save_to_html(save_path="./output/")  ## Save the sub-table results in HTML format for the current image
 ```
-The results obtained are the same as those from the command line method.
 
 In the above Python script, the following steps are executed:
 
-(1) Instantiate the `create_pipeline` to create a pipeline object: Specific parameter descriptions are as follows:
+（1）Instantiate the `create_pipeline` to create a pipeline object: The specific parameter descriptions are as follows:
 
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Description</th>
-<th>Type</th>
-<th>Default</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Default Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the pipeline or the path to the pipeline configuration file. If it's a pipeline name, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
-<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>The path to the pipeline configuration file.</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for pipeline model inference. Supports: "gpu", "cpu".</td>
+<td>The inference device for the pipeline. Supports specifying the specific card number for GPUs, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", and CPUs as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
-<td>"gpu"</td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available if the pipeline supports it.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
-(2) Call the `predict` method of the pipeline object to perform inference: The `predict` method takes `x` as a parameter, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+
+### (2) Invoke the `predict()` method of the Layout Analysis Pipeline object for inference prediction. This method will return a `generator`. Below are the parameters of the `predict()` method and their descriptions:
 
 <table>
 <thead>
 <tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
 <th>Parameter Type</th>
-<th>Description</th>
+<th>Options</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>Supports directly passing Python variables, such as numpy.ndarray representing image data.</td>
+<td><code>input</code></td>
+<td>The data to be predicted, supporting multiple input types, required</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+<li><b>Python Var</b>: Such as <code>numpy.ndarray</code> representing image data</li>
+<li><b>str</b>: Such as the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files within directories, PDF files need to be specified to the specific file path)</li>
+<li><b>List</b>: List elements need to be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing the path of the file to be predicted, such as the local path of an image file: <code>/root/data/img.jpg</code>.</td>
+<td><code>use_doc_orientation_classify</code></td>
+<td>Whether to use the document orientation classification module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing the URL of the file to be predicted, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">Example</a>.</td>
+<td><code>use_doc_unwarping</code></td>
+<td>Whether to use the document distortion correction module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing a local directory, which should contain files to be predicted, such as the local path: <code>/root/data/</code>.</td>
+<td><code>use_textline_orientation</code></td>
+<td>Whether to use the text line orientation classification module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>dict</code></td>
-<td>Supports passing a dictionary type, where the key needs to correspond to the specific task, e.g., "img" for image classification tasks, and the value of the dictionary supports the above data types, e.g., <code>{"img": "/root/data1"}</code>.</td>
+<td><code>use_general_ocr</code></td>
+<td>Whether to use the OCR sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>list</code></td>
-<td>Supports passing a list, where the list elements need to be of the above data types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>.</td>
+<td><code>use_seal_recognition</code></td>
+<td>Whether to use the seal recognition sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-</tbody>
+<tr>
+<td><code>use_table_recognition</code></td>
+<td>Whether to use the table recognition sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_formula_recognition</code></td>
+<td>Whether to use the formula recognition sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_threshold</code></td>
+<td>Score threshold for the layout model</td>
+<td><code>float|dict|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number between <code>0-1</code>;</li>
+<li><b>dict</b>: <code>{0:0.1}</code> where the key is the class ID and the value is the threshold for that class;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>0.5</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use NMS post-processing for the layout region detection model</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Expansion coefficient for the detection box of the layout region detection model</td>
+<td><code>float|Tuple[float,float]|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
+<li><b>Tuple[float,float]</b>: Expansion coefficients in the horizontal and vertical directions respectively;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>1.0</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Overlapping box filtering method for layout region detection</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>: <code>large</code>, <code>small</code>, <code>union</code>, indicating whether to keep the larger box, smaller box, or both when overlapping boxes are filtered</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>large</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_limit_side_len</code></td>
+<td>Image side length limit for text detection</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than <code>0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>960</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_limit_type</code></td>
+<td>Image side length limit type for text detection</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>, where <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>max</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_thresh</code></td>
+<td>Detection pixel threshold, where pixels with scores greater than this threshold in the output probability map are considered text pixels</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.3</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_box_thresh</code></td>
+<td>Detection box threshold, where detection results with an average score of all pixels within the border greater than this threshold are considered text regions</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.6</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_unclip_ratio</code></td>
+<td>Text detection expansion coefficient, which expands the text region. The larger this value, the larger the expansion area</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>2.0</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_rec_score_thresh</code></td>
+<td>Text recognition threshold, where text results with scores greater than this threshold are retained</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.0</code>. I.e., no threshold is set</li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_side_len</code></td>
+<td>Image side length limit for seal detection</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than <code>0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>960</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_type</code></td>
+<td>Image side length limit type for seal detection</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>, where <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>max</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_thresh</code></td>
+<td>Detection pixel threshold, where pixels with scores greater than this threshold in the output probability map are considered seal pixels</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.3</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_box_thresh</code></td>
+<td>Detection box threshold, where detection results with an average score of all pixels within the border greater than this threshold are considered seal regions</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.6</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_unclip_ratio</code></td>
+<td>Seal detection expansion coefficient, which expands the seal region. The larger this value, the larger the expansion area</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>2.0</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_rec_score_thresh</code></td>
+<td>Seal recognition threshold, where text results with scores greater than this threshold are retained</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.0</code>. I.e., no threshold is set</li></li></ul></td>
+<td><code>None</code></td>
+</tr>
 </table>
-(3) Obtain the prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through iteration. The `predict` method predicts data in batches, so the prediction results are in the form of a list.
 
-(4) Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving as files, with the supported file types depending on the specific pipeline, such as:
+(3) Processing Prediction Results: Each sample's prediction result is encapsulated in a corresponding Result object, supporting operations such as printing, saving as an image, and saving as a `json` file:
+
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
-<th>Description</th>
-<th>Method Parameters</th>
+<th>Method Description</th>
+<th>Parameters</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td><code>save_to_img</code></td>
-<td>Saves the result as an image file.</td>
-<td><code>- save_path</code>: <code>str</code> type, the path to save the file. When it's a directory, the saved file name is consistent with the input file name.</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with JSON indentation</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td><code>save_to_html</code></td>
-<td>Saves the result as an HTML file.</td>
-<td><code>- save_path</code>: <code>str</code> type, the path to save the file. When it's a directory, the saved file name is consistent with the input file name.</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output JSON data for better readability, only valid when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
 </tr>
-</tbody>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Controls whether to escape non-ASCII characters to Unicode. When set to <code>True</code>, all non-ASCII characters will be escaped; <code>False</code> retains the original characters, only valid when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save results as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, when it is a directory, the saved file name will be consistent with the input file type</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output JSON data for better readability, only valid when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Controls whether to escape non-ASCII characters to Unicode. When set to <code>True</code>, all non-ASCII characters will be escaped; <code>False</code> retains the original characters, only valid when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the visual images of intermediate modules in PNG format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supports directories or file paths</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>save_to_html()</code></td>
+<td>Save the tables in the file as an HTML file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supports directories or file paths</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>save_to_xlsx()</code></td>
+<td>Save the tables in the file as an XLSX file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supports directories or file paths</td>
+<td>N/A</td>
+</tr>
 </table>
-| `save_to_xlsx` | Saves the result as an Excel file. | `- save_path`: `str` type, the path to save the file. When it's a directory, the saved file name is consistent with the input file name.
 
-Within this tutorial on Artificial Intelligence and Computer Vision, we will explore the capabilities of saving and exporting results from various processes, including OCR (Optical Character Recognition), layout analysis, and table structure recognition. Specifically, the `save_to_img` function enables saving visualization results, `save_to_html` converts tables directly into HTML files, and `save_to_xlsx` exports tables as Excel files.
+- Calling the `print()` method will print the results to the terminal. The content printed to the terminal is explained as follows:
+    - `input_path`: `(str)` The input path of the image to be predicted
 
-Upon obtaining the configuration file, you can customize various settings for the layout parsing pipeline by simply modifying the `pipeline` parameter within the `create_pipeline` method to point to your configuration file path.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`
 
-For instance, if your configuration file is saved at `./my_path/layout_parsing.yaml`, you can execute the following code:
+    - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring the pipeline
 
+        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing pipeline
+        - `use_general_ocr`: `(bool)` Controls whether to enable the OCR pipeline
+        - `use_seal_recognition`: `(bool)` Controls whether to enable the seal recognition pipeline
+        - `use_table_recognition`: `(bool)` Controls whether to enable the table recognition pipeline
+        - `use_formula_recognition`: `(bool)` Controls whether to enable the formula recognition pipeline
+
+    - `parsing_res_list`: `(List[Dict])` A list of parsing results, each element is a dictionary, and the list order follows the reading order after parsing.
+        - `block_bbox`: `(np.ndarray)` The bounding box of the layout area.
+        - `block_label`: `(str)` The label of the layout area, such as `text`, `table`, etc.
+        - `block_content`: `(str)` The content within the layout area.
+
+    - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` A dictionary of global OCR results
+      - `input_path`: `(Union[str, None])` The image path received by the OCR pipeline, when the input is `numpy.ndarray`, it is saved as `None`
+      - `model_settings`: `(Dict)` Model configuration parameters for the OCR pipeline
+      - `dt_polys`: `(List[numpy.ndarray])` A list of polygon boxes for text detection. Each detection box is represented by a numpy array consisting of 4 vertex coordinates, with a shape of (4, 2) and a data type of int16
+      - `dt_scores`: `(List[float])` A list of confidence scores for text detection boxes
+      - `text_det_params`: `(Dict[str, Dict[str, int, float]])` Configuration parameters for the text detection module
+        - `limit_side_len`: `(int)` The side length limit for image preprocessing
+        - `limit_type`: `(str)` The processing method for the side length limit
+        - `thresh`: `(float)` The confidence threshold for text pixel classification
+        - `box_thresh`: `(float)` The confidence threshold for text detection boxes
+        - `unclip_ratio`: `(float)` The inflation coefficient for text detection boxes
+        - `text_type`: `(str)` The type of text detection, currently fixed as "general"
+
+      - `text_type`: `(str)` The type of text detection, currently fixed as "general"
+      - `textline_orientation_angles`: `(List[int])` The prediction results for text line orientation classification. When enabled, it returns actual angle values (e.g., [0,0,1])
+      - `text_rec_score_thresh`: `(float)` The filtering threshold for text recognition results
+      - `rec_texts`: `(List[str])` A list of text recognition results, only including texts with confidence scores exceeding `text_rec_score_thresh`
+      - `rec_scores`: `(List[float])` A list of confidence scores for text recognition, already filtered by `text_rec_score_thresh`
+      - `rec_polys`: `(List[numpy.ndarray])` A list of text detection boxes after confidence filtering, with the same format as `dt_polys`
+
+    - `formula_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` A list of formula recognition results, each element is a dictionary
+        - `rec_formula`: `(str)` The formula recognition result
+        - `rec_polys`: `(numpy.ndarray)` The formula detection box, with a shape of (4, 2) and a dtype of int16
+        - `formula_region_id`: `(int)` The region ID where the formula is located
+
+    - `seal_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` A list of seal recognition results, each element is a dictionary
+        - `input_path`: `(str)` The input path of the seal image
+        - `model_settings`: `(Dict)` Model configuration parameters for```markdown
+**AI and Computer Vision Tutorial**
+
+- Calling the `save_to_json()` method will save the aforementioned content to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, `numpy.array` types will be converted to list form.
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (pipelines often contain many result images, so it is not recommended to specify a specific file path directly, as multiple images will be overwritten, leaving only the last one.)
+
+In addition, attributes are also supported for obtaining visual images with results and prediction results, specifically as follows:
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Obtain the predicted results in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Obtain the visual image in <code>dict</code> format</td>
+</tr>
+</table>
+
+- The prediction results obtained by the `json` attribute are data of the `dict` type, with content consistent with that saved by calling the `save_to_json()` method.
+- The prediction results returned by the `img` attribute are data of the `dict` type. The keys are `layout_det_res`, `overall_ocr_res`, `text_paragraphs_ocr_res`, `formula_res_region1`, `table_cell_img`, and `seal_res_region1`, and the corresponding values are `Image.Image` objects: used to display the visual images of layout area detection, OCR, OCR text paragraphs, formulas, tables, and seal results, respectively. If optional modules are not used, only `layout_det_res` will be included in the dictionary.
+
+Furthermore, you can obtain the layout parsing pipeline configuration file and load it for prediction. Execute the following command to save the results in `my_path`:
+```
+paddlex --get_pipeline_config layout_parsing --save_path ./my_path
+```
+Once you have obtained the configuration file, you can customize the configurations of the layout parsing pipeline by modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. An example is as follows:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/layout_parsing.yaml")
-output = pipeline.predict("layout_parsing.jpg")
+output = pipeline.predict(
+    input="./demo_paper.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
 for res in output:
-    res.print()  # Prints the structured output of the layout parsing prediction
-    res.save_to_img("./output/")  # Saves the img format results from each submodule of the pipeline
-    res.save_to_xlsx("./output/")  # Saves the xlsx format results from the table recognition module
-    res.save_to_html("./output/")  # Saves the html results from the table recognition module
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
+**Note**: The parameters in the configuration file are pipeline initialization parameters. If you wish to change the initialization parameters of the general layout parsing pipeline, you can directly modify the parameters in the configuration file and load it for prediction. Additionally, CLI prediction also supports passing in configuration files by specifying the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 
@@ -523,26 +1320,31 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 
 🚀 <b>High-Performance Inference</b>: In production environments, many applications require stringent performance metrics, especially response speed, to ensure efficient operation and smooth user experience. PaddleX provides a high-performance inference plugin that deeply optimizes model inference and pre/post-processing for significant end-to-end speedups. For detailed instructions on high-performance inference, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service Deployment</b>: Service deployment is a common form in production environments, where reasoning functions are encapsulated as services accessible via network requests. PaddleX enables cost-effective service deployment of pipelines. For detailed instructions on service deployment, refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/service_deploy.md).
+☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.md).
 
-Below are the API references and multi-language service invocation examples:
+Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-
-<p>For all operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
-<li>Both the response body and the request body for POST requests are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body attributes are as follows:</li>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
@@ -551,23 +1353,32 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed as <code>"Success"</code>.</td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>The result of the operation.</td>
 </tr>
 </tbody>
 </table>
-<p>The response body may also have a <code>result</code> attribute, of type <code>object</code>, which stores the operation result information.</p>
 <ul>
-<li>When the request is not processed successfully, the response body attributes are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
@@ -576,25 +1387,25 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
-<p>Operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Performs layout parsing.</p>
+<p>Perform layout parsing.</p>
 <p><code>POST /layout-parsing</code></p>
 <ul>
-<li>Request body attributes:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -602,76 +1413,195 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the service, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. By default, for PDF files exceeding 10 pages, only the content of the first 10 pages will be processed.<br />
+To remove the page limit, please add the following configuration to the pipeline configuration file:
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: null
+</code></pre></td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, <code>1</code> indicates an image file. If this attribute is not present in the request body, the service will attempt to infer the file type automatically based on the URL.</td>
+<td><code>integer</code>｜<code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, and <code>1</code> represents an image file. If this attribute is missing from the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This function is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwrapping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image rectification. This function is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This function is enabled by default.</td>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_textline_orientation</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>Attributes of <code>inferenceParams</code>:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_table_recognition</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>During inference, if the length of the longer side of the input image for the text detection model is greater than <code>maxLongSide</code>, the image will be scaled so that the length of the longer side equals <code>maxLongSide</code>.</td>
+<td><code>useFormulaRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_formula_recognition</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>object</code> | </code><code>null</code></td>
+<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_nms</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_type</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_box_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_side_len</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_type</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_box_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_rec_score_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is processed successfully, the response body's <code>result</code> has the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Layout parsing results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The layout parsing results. The array length is 1 (for image input) or the actual number of document pages processed (for PDF input). For PDF input, each element in the array represents the result of each page actually processed in the PDF file.</td>
+</tr>
+<tr>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>Information about the input data.</td>
 </tr>
 </tbody>
 </table>
@@ -681,98 +1611,493 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>layoutElements</code></td>
-<td><code>array</code></td>
-<td>Layout element information.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation generated by the <code>predict</code> method of the production object, with the <code>input_path</code> and the <code>page_index</code> fields removed.</td>
+</tr>
+<tr>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>See the description of the <code>img</code> attribute of the result of the pipeline prediction. The images are in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutElements</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Position of the layout element. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box, respectively.</td>
-</tr>
-<tr>
-<td><code>label</code></td>
-<td><code>string</code></td>
-<td>Label of the layout element.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text contained in the layout element.</td>
-</tr>
-<tr>
-<td><code>layoutType</code></td>
-<td><code>string</code></td>
-<td>Arrangement of the layout element.</td>
-</tr>
-<tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>Image of the layout element, in JPEG format, encoded using Base64.</td>
-</tr>
-</tbody>
-</table></details>
 </details>
 
-<details><summary>Multi-language Service Invocation Examples</summary>
-
+<details><summary>Multi-language Service Call Example</summary>
 <details>
 <summary>Python</summary>
-
 
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/layout-parsing&quot; # 服务URL
+API_URL = "http://localhost:8080/layout-parsing" # Service URL
+file_path = "./demo.jpg"
 
-# 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
-    image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
 payload = {
-    &quot;file&quot;: image_data, # Base64编码的文件内容或者文件URL
-    &quot;fileType&quot;: 1,
-    &quot;useImgOrientationCls&quot;: True,
-    &quot;useImgUnwrapping&quot;: True,
-    &quot;useSealTextDet&quot;: True,
+    "file": file_data, # Base64-encoded file content or file URL
+    "fileType": 1,
 }
 
-# 调用API
+# Call the API
 response = requests.post(API_URL, json=payload)
 
-# 处理接口返回数据
+# Process the response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-print(&quot;\nDetected layout elements:&quot;)
-for res in result[&quot;layoutParsingResults&quot;]:
-    for ele in res[&quot;layoutElements&quot;]:
-        print(&quot;===============================&quot;)
-        print(&quot;bbox:&quot;, ele[&quot;bbox&quot;])
-        print(&quot;label:&quot;, ele[&quot;label&quot;])
-        print(&quot;text:&quot;, repr(ele[&quot;text&quot;]))
+result = response.json()["result"]
+for i, res in enumerate(result["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
+</code></pre></details>
+
+<details><summary>C++</summary>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
+
+int main() {
+    httplib::Client client("localhost", 8080);
+
+    const std::string filePath = "./demo.jpg";
+
+    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
+    if (!file) {
+        std::cerr << "Error opening file: " << filePath << std::endl;
+        return 1;
+    }
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<char> buffer(size);
+    if (!file.read(buffer.data(), size)) {
+        std::cerr << "Error reading file." << std::endl;
+        return 1;
+    }
+
+    std::string bufferStr(buffer.data(), static_cast<size_t>(size));
+    std::string encodedFile = base64::to_base64(bufferStr);
+
+    nlohmann::json jsonObj;
+    jsonObj["file"] = encodedFile;
+    jsonObj["fileType"] = 1;
+
+    auto response = client.Post("/layout-parsing", jsonObj.dump(), "application/json");
+
+    if (response && response->status == 200) {
+        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
+        auto result = jsonResponse["result"];
+
+        if (!result.is_object() || !result.contains("layoutParsingResults")) {
+            std::cerr << "Unexpected response format." << std::endl;
+            return 1;
+        }
+
+        const auto& results = result["layoutParsingResults"];
+        for (size_t i = 0; i < results.size(); ++i) {
+            const auto& res = results[i];
+
+            if (res.contains("prunedResult")) {
+                std::cout << "Layout result [" << i << "]: " << res["prunedResult"].dump() << std::endl;
+            }
+
+            if (res.contains("outputImages") && res["outputImages"].is_object()) {
+                for (auto& [imgName, imgBase64] : res["outputImages"].items()) {
+                    std::string outputPath = imgName + "_" + std::to_string(i) + ".jpg";
+                    std::string decodedImage = base64::from_base64(imgBase64.get<std::string>());
+
+                    std::ofstream outFile(outputPath, std::ios::binary);
+                    if (outFile.is_open()) {
+                        outFile.write(decodedImage.c_str(), decodedImage.size());
+                        outFile.close();
+                        std::cout << "Saved image: " << outputPath << std::endl;
+                    } else {
+                        std::cerr << "Failed to save image: " << outputPath << std::endl;
+                    }
+                }
+            }
+        }
+    } else {
+        std::cerr << "Request failed." << std::endl;
+        if (response) {
+            std::cerr << "HTTP status: " << response->status << std::endl;
+            std::cerr << "Response body: " << response->body << std::endl;
+        }
+        return 1;
+    }
+
+    return 0;
+}
+</code></pre></details>
+
+<details><summary>Java</summary>
+
+<pre><code class="language-java">import okhttp3.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        String API_URL = "http://localhost:8080/layout-parsing";
+        String imagePath = "./demo.jpg";
+
+        File file = new File(imagePath);
+        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
+        String base64Image = Base64.getEncoder().encodeToString(fileContent);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode payload = objectMapper.createObjectNode();
+        payload.put("file", base64Image);
+        payload.put("fileType", 1);
+
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        RequestBody body = RequestBody.create(JSON, payload.toString());
+
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                JsonNode root = objectMapper.readTree(responseBody);
+                JsonNode result = root.get("result");
+
+                JsonNode layoutParsingResults = result.get("layoutParsingResults");
+                for (int i = 0; i < layoutParsingResults.size(); i++) {
+                    JsonNode item = layoutParsingResults.get(i);
+                    int finalI = i;
+                    JsonNode prunedResult = item.get("prunedResult");
+                    System.out.println("Pruned Result [" + i + "]: " + prunedResult.toString());
+
+                    JsonNode outputImages = item.get("outputImages");
+                    outputImages.fieldNames().forEachRemaining(imgName -> {
+                        try {
+                            String imgBase64 = outputImages.get(imgName).asText();
+                            byte[] imgBytes = Base64.getDecoder().decode(imgBase64);
+                            String imgPath = imgName + "_" + finalI + ".jpg";
+                            try (FileOutputStream fos = new FileOutputStream(imgPath)) {
+                                fos.write(imgBytes);
+                                System.out.println("Saved image: " + imgPath);
+                            }
+                        } catch (IOException e) {
+                            System.err.println("Failed to save image: " + e.getMessage());
+                        }
+                    });
+                }
+            } else {
+                System.err.println("Request failed with HTTP code: " + response.code());
+            }
+        }
+    }
+}
+</code></pre></details>
+
+<details><summary>Go</summary>
+
+<pre><code class="language-go">package main
+
+import (
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "os"
+    "path/filepath"
+)
+
+func main() {
+    API_URL := "http://localhost:8080/layout-parsing"
+    filePath := "./demo.jpg"
+
+    fileBytes, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        fmt.Printf("Error reading file: %v\n", err)
+        return
+    }
+    fileData := base64.StdEncoding.EncodeToString(fileBytes)
+
+    payload := map[string]interface{}{
+        "file":     fileData,
+        "fileType": 1,
+    }
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Printf("Error marshaling payload: %v\n", err)
+        return
+    }
+
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Printf("Error creating request: %v\n", err)
+        return
+    }
+    req.Header.Set("Content-Type", "application/json")
+
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Printf("Error sending request: %v\n", err)
+        return
+    }
+    defer res.Body.Close()
+
+    if res.StatusCode != http.StatusOK {
+        fmt.Printf("Unexpected status code: %d\n", res.StatusCode)
+        return
+    }
+
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Printf("Error reading response: %v\n", err)
+        return
+    }
+
+    type Markdown struct {
+        Text   string            `json:"text"`
+        Images map[string]string `json:"images"`
+    }
+
+    type LayoutResult struct {
+        PrunedResult map[string]interface{} `json:"prunedResult"`
+        Markdown     Markdown               `json:"markdown"`
+        OutputImages map[string]string      `json:"outputImages"`
+        InputImage   *string                `json:"inputImage"`
+    }
+
+    type Response struct {
+        Result struct {
+            LayoutParsingResults []LayoutResult `json:"layoutParsingResults"`
+            DataInfo             interface{}    `json:"dataInfo"`
+        } `json:"result"`
+    }
+
+    var respData Response
+    if err := json.Unmarshal(body, &respData); err != nil {
+        fmt.Printf("Error parsing response: %v\n", err)
+        return
+    }
+
+    for i, res := range respData.Result.LayoutParsingResults {
+        fmt.Printf("Result %d - prunedResult: %+v\n", i, res.PrunedResult)
+
+        mdDir := fmt.Sprintf("markdown_%d", i)
+        os.MkdirAll(mdDir, 0755)
+        mdFile := filepath.Join(mdDir, "doc.md")
+        if err := os.WriteFile(mdFile, []byte(res.Markdown.Text), 0644); err != nil {
+            fmt.Printf("Error writing markdown file: %v\n", err)
+        } else {
+            fmt.Printf("Markdown document saved at %s\n", mdFile)
+        }
+
+        for path, imgBase64 := range res.Markdown.Images {
+            fullPath := filepath.Join(mdDir, path)
+            os.MkdirAll(filepath.Dir(fullPath), 0755)
+            imgBytes, err := base64.StdEncoding.DecodeString(imgBase64)
+            if err != nil {
+                fmt.Printf("Error decoding markdown image: %v\n", err)
+                continue
+            }
+            if err := os.WriteFile(fullPath, imgBytes, 0644); err != nil {
+                fmt.Printf("Error saving markdown image: %v\n", err)
+            }
+        }
+
+        for name, imgBase64 := range res.OutputImages {
+            imgBytes, err := base64.StdEncoding.DecodeString(imgBase64)
+            if err != nil {
+                fmt.Printf("Error decoding output image %s: %v\n", name, err)
+                continue
+            }
+            filename := fmt.Sprintf("%s_%d.jpg", name, i)
+            if err := os.WriteFile(filename, imgBytes, 0644); err != nil {
+                fmt.Printf("Error saving output image %s: %v\n", filename, err)
+            } else {
+                fmt.Printf("Output image saved at %s\n", filename)
+            }
+        }
+    }
+}
+</code></pre></details>
+
+<details><summary>C#</summary>
+
+<pre><code class="language-csharp">using System;
+using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
+class Program
+{
+    static readonly string API_URL = "http://localhost:8080/layout-parsing";
+    static readonly string inputFilePath = "./demo.jpg";
+
+    static async Task Main(string[] args)
+    {
+        var httpClient = new HttpClient();
+
+        byte[] fileBytes = File.ReadAllBytes(inputFilePath);
+        string fileData = Convert.ToBase64String(fileBytes);
+
+        var payload = new JObject
+        {
+            { "file", fileData },
+            { "fileType", 1 }
+        };
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
+        response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        JObject jsonResponse = JObject.Parse(responseBody);
+
+        JArray layoutParsingResults = (JArray)jsonResponse["result"]["layoutParsingResults"];
+        for (int i = 0; i < layoutParsingResults.Count; i++)
+        {
+            var res = layoutParsingResults[i];
+            Console.WriteLine($"[{i}] prunedResult:\n{res["prunedResult"]}");
+
+            JObject outputImages = res["outputImages"] as JObject;
+            if (outputImages != null)
+            {
+                foreach (var img in outputImages)
+                {
+                    string imgName = img.Key;
+                    string base64Img = img.Value?.ToString();
+                    if (!string.IsNullOrEmpty(base64Img))
+                    {
+                        string imgPath = $"{imgName}_{i}.jpg";
+                        byte[] imageBytes = Convert.FromBase64String(base64Img);
+                        File.WriteAllBytes(imgPath, imageBytes);
+                        Console.WriteLine($"Output image saved at {imgPath}");
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre></details>
+
+<details><summary>Node.js</summary>
+
+<pre><code class="language-js">const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+
+const API_URL = 'http://localhost:8080/layout-parsing';
+const imagePath = './demo.jpg';
+const fileType = 1;
+
+function encodeImageToBase64(filePath) {
+  const bitmap = fs.readFileSync(filePath);
+  return Buffer.from(bitmap).toString('base64');
+}
+
+const payload = {
+  file: encodeImageToBase64(imagePath),
+  fileType: fileType
+};
+
+axios.post(API_URL, payload)
+  .then(response => {
+    const results = response.data.result.layoutParsingResults;
+    results.forEach((res, index) => {
+      console.log(`\n[${index}] prunedResult:`);
+      console.log(res.prunedResult);
+
+      const outputImages = res.outputImages;
+      if (outputImages) {
+        Object.entries(outputImages).forEach(([imgName, base64Img]) => {
+          const imgPath = `${imgName}_${index}.jpg`;
+          fs.writeFileSync(imgPath, Buffer.from(base64Img, 'base64'));
+          console.log(`Output image saved at ${imgPath}`);
+        });
+      } else {
+        console.log(`[${index}] No outputImages.`);
+      }
+    });
+  })
+  .catch(error => {
+    console.error('Error during API request:', error.message || error);
+  });
+</code></pre></details>
+
+<details><summary>PHP</summary>
+
+<pre><code class="language-php">&lt;?php
+
+$API_URL = "http://localhost:8080/layout-parsing";
+$image_path = "./demo.jpg";
+
+$image_data = base64_encode(file_get_contents($image_path));
+$payload = array("file" => $image_data, "fileType" => 1);
+
+$ch = curl_init($API_URL);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+
+$result = json_decode($response, true)["result"]["layoutParsingResults"];
+
+foreach ($result as $i => $item) {
+    echo "[$i] prunedResult:\n";
+    print_r($item["prunedResult"]);
+
+    if (!empty($item["outputImages"])) {
+        foreach ($item["outputImages"] as $img_name => $img_base64) {
+            $output_image_path = "{$img_name}_{$i}.jpg";
+            file_put_contents($output_image_path, base64_decode($img_base64));
+            echo "Output image saved at $output_image_path\n";
+        }
+    } else {
+        echo "No outputImages found for item $i\n";
+    }
+}
+?&gt;
 </code></pre></details>
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment refers to placing computational and data processing capabilities directly on user devices, enabling them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+📱 <b>On-Device Deployment</b>: Edge deployment refers to placing computational and data processing capabilities directly on user devices, enabling them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
 
 You can choose an appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
@@ -780,22 +2105,70 @@ You can choose an appropriate method to deploy your model pipeline based on your
 If the default model weights provided by the general layout parsing pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can try to further fine-tune the existing models using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general layout parsing pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general layout parsing pipeline consists of 7 modules, unsatisfactory performance may stem from any of these modules.
 
-You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
+Since the general layout analysis pipeline includes several modules, the underperformance of the model pipeline might be due to any one of them. You can analyze cases with poor extraction results by visualizing images to determine which module has the issue. Then, refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model:
 
-* Incorrect table structure detection (e.g., wrong row/column recognition, incorrect cell positions) may indicate deficiencies in the table structure recognition module. You need to refer to the <b>Customization</b> section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md) and fine-tune the table structure recognition model using your private dataset.
-* Misplaced layout elements (e.g., incorrect positioning of tables, seals) may suggest issues with the layout detection module. You should consult the <b>Customization</b> section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection.md) and fine-tune the layout detection model with your private dataset.
-* Frequent undetected texts (i.e., text missing detection) indicate potential weaknesses in the text detection model. Follow the <b>Customization</b> section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection.md) to fine-tune the text detection model using your private dataset.
-* High text recognition errors (i.e., recognized text content does not match the actual text) suggest further improvements to the text recognition model. Refer to the <b>Customization</b> section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition.md) to fine-tune the text recognition model.
-* Frequent recognition errors in detected seal texts indicate the need for improvements to the seal text detection model. Consult the <b>Customization</b> section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/) to fine-tune the seal text detection model.
-* High recognition errors in detected formulas (i.e., recognized formula content does not match the actual formula) suggest further enhancements to the formula recognition model. Follow the [Customization](../../../module_usage/tutorials/ocr_modules/formula_recognition.md#Customization) section in the [Formula Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/formula_recognition.md) to fine-tune the formula recognition model.
-* Frequent misclassifications of document or certificate orientations with text areas indicate the need for improvements to the document image orientation classification model. Refer to the <b>Customization</b> section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md) to fine-tune the model.
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Module to Fine-tune</th>
+<th>Fine-tuning Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inaccurate layout area detection, such as undetected stamps or tables</td>
+<td>Layout Area Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate table structure recognition</td>
+<td>Table Structure Recognition Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate formula recognition</td>
+<td>Formula Recognition Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/formula_recognition.html">Link</a></td>
+</tr>
+<tr>
+<td>Seal text missed</td>
+<td>Seal Text Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/seal_text_detection.html">Link</a></td>
+</tr>
+<tr>
+<td>Text missed</td>
+<td>Text Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
+</tr>
+<tr>
+<td>Text content is inaccurate</td>
+<td>Text Recognition Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate correction of vertical or rotated text lines</td>
+<td>Text Line Orientation Classification Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/textline_orientation_classification.html">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate full image rotation correction</td>
+<td>Document Image Orientation Classification Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate image distortion correction</td>
+<td>Text Image Correction Module</td>
+<td>Not supported for fine-tuning</td>
+</tr>
+</tbody>
+</table>
 
 ### 4.2 Model Application
 After fine-tuning your model with a private dataset, you will obtain local model weights files.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local paths of the fine-tuned model weights to the corresponding positions in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the fine-tuned model weights to the corresponding positions in the configuration file:
 
 ```python
 ......
@@ -814,7 +2187,7 @@ To use the fine-tuned model weights, simply modify the production line configura
   device: "gpu:0"
 ......
 ```
-Subsequently, refer to the command line or Python script methods in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command line or Python script methods in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.

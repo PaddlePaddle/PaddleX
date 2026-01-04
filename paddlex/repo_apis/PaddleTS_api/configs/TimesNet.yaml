@@ -4,6 +4,9 @@ predict_len: 96 #
 do_eval: True #
 sampling_stride: 1
 epoch: 10 # max_epochs
+to_static_train: False
+use_amp: False
+amp_level: O2
 
 
 dataset: 
@@ -23,8 +26,8 @@ info_params:
 model: 
   name: TimesNetModel
   model_cfg:
-    c_in: 1 #
-    c_out: 1 #
+    c_in: 321 #
+    c_out: 321 #
     e_layers: 2 #
     num_kernels: 6 #
     d_model: 32 #

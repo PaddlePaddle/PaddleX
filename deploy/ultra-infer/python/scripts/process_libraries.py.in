@@ -1,0 +1,207 @@
+
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os
+import sys
+import shutil
+import subprocess
+import platform
+
+user_specified_dirs = ['@OPENCV_DIRECTORY@', '@ORT_DIRECTORY@', ]
+PACKAGE_NAME = os.getenv("PACKAGE_NAME", "ultra_infer")
+PY_PACKAGE_NAME = PACKAGE_NAME + "_main"
+
+
+def process_on_linux(current_dir):
+    rpaths = ["$ORIGIN:$ORIGIN/libs"]
+    fd_libs = list()
+    libs_path = os.path.join(current_dir, PACKAGE_NAME, "libs")
+    for f in os.listdir(libs_path):
+        filename = os.path.join(libs_path, f)
+        if not os.path.isfile(filename):
+            continue
+        if f.count(PACKAGE_NAME) and f.count(".so") > 0:
+            fd_libs.append(filename)
+
+    cmake_build_dir = os.path.join(current_dir, ".setuptools-cmake-build")
+    patchelf_bin_path = os.path.join(cmake_build_dir, "third_libs/patchelf/bin/patchelf")
+    if not os.path.exists(patchelf_bin_path):
+        patchelf_bin_path = "patchelf"
+
+    third_libs_path = os.path.join(libs_path, "third_libs")
+
+    # remove some useless opencv file in python wheels to decrease package size
+    if os.path.exists(os.path.join(third_libs_path, "opencv")):
+        for root, dirs, files in os.walk(os.path.join(third_libs_path, "opencv")):
+            for f in files:
+                items = f.strip().split('.')
+                if len(items) != 4:
+                    os.remove(os.path.join(root, f))
+                    continue
+                if items[0].strip() not in ["libopencv_highgui", "libopencv_video", "libopencv_videoio", "libopencv_imgcodecs", "libopencv_imgproc", "libopencv_core",  "libopencv_calib3d", "libopencv_features2d", "libopencv_flann"]:
+                    os.remove(os.path.join(root, f))
+
+    all_libs_paths = [third_libs_path] + user_specified_dirs
+    for path in all_libs_paths:
+        for root, dirs, files in os.walk(path):
+            for d in dirs:
+                if d not in ["lib", "lib64"]:
+                    continue
+                rel_path = os.path.relpath(os.path.join(root, d), libs_path)
+                if path in user_specified_dirs:
+                    # Note(zhoushunjie): Use the absolute path for user_specified_dirs
+                    rpath = os.path.join(root, d)
+                else:
+                    rpath = "$ORIGIN/" + rel_path
+                rpaths.append(rpath)
+    for lib in fd_libs:
+        command = "{} --set-rpath '{}' {}".format(patchelf_bin_path, ":".join(rpaths), lib)
+        if platform.machine() != 'sw_64' and platform.machine() != 'mips64':
+            assert subprocess.Popen(
+                command,
+                shell=True) != 0, "patchelf {} failed, the command: {}".format(
+                    command, lib)
+
+
+def process_on_mac(current_dir):
+    fd_libs = list()
+    libs_path = os.path.join(current_dir, PACKAGE_NAME, "libs")
+    cmake_build_dir = os.path.join(current_dir, ".setuptools-cmake-build")
+    for f in os.listdir(libs_path):
+        filename = os.path.join(libs_path, f)
+        if not os.path.isfile(filename):
+            continue
+        if f.count(PACKAGE_NAME) > 0 and (f.count(".dylib") > 0 or
+                                          f.count(".so") > 0):
+            fd_libs.append(filename)
+
+    commands = list()
+    pre_commands = list()
+    for lib in fd_libs:
+        if lib.count(PY_PACKAGE_NAME) > 0:
+            pre_commands.append(
+                "install_name_tool -delete_rpath {} ".format(cmake_build_dir) + lib)
+            commands.append("install_name_tool -id @loader_path " + lib)
+            commands.append("install_name_tool -add_rpath @loader_path " + lib)
+
+    third_libs_path = os.path.join(libs_path, "third_libs")
+    cmake_third_libs_path = os.path.join(cmake_build_dir, "third_libs", "install")
+    all_libs_paths = [cmake_third_libs_path] + user_specified_dirs
+    for path in all_libs_paths:
+        for root, dirs, files in os.walk(path):
+            for d in dirs:
+                if d not in ["lib", "lib64"]:
+                    continue
+                rel_path = os.path.relpath(os.path.join(root, d), cmake_third_libs_path)
+                if path in user_specified_dirs:
+                    # Note(zhoushunjie): Use the absolute path for user_specified_dirs
+                    need_delete_rpath = os.path.join(root, d)
+                    need_add_rpath = os.path.join(root, d)
+                else:
+                    need_delete_rpath = os.path.join(root, d)
+                    need_add_rpath = "@loader_path/third_libs/" + rel_path
+                for lib in fd_libs:
+                    if lib.count(PY_PACKAGE_NAME) > 0:
+                        pre_commands.append(
+                            "install_name_tool -delete_rpath {} {}".format(need_delete_rpath, lib))
+                        commands.append(
+                            "install_name_tool -add_rpath {} {}".format(need_add_rpath, lib))
+
+    for command in pre_commands:
+        try:
+            os.system(command)
+        except:
+            print("Skip execute command: " + command)
+
+    for command in commands:
+        assert os.system(
+            command) == 0, "command execute failed! command: {}".format(
+            command)
+
+def process_on_windows(current_dir):
+    libs_path = os.path.join(current_dir, PACKAGE_NAME, "libs")
+    third_libs_path = os.path.join(libs_path, "third_libs")
+    for root, dirs, files in os.walk(third_libs_path):
+        for f in files:
+            file_path = os.path.join(root, f)
+            if f.count('onnxruntime') > 0 and f.endswith('.dll'):
+                shutil.copy(file_path, libs_path)
+
+
+def get_all_files(dirname):
+    files = list()
+    for root, dirs, filenames in os.walk(dirname):
+        for f in filenames:
+            fullname = os.path.join(root, f)
+            files.append(fullname)
+    return files
+
+
+def process_libraries(current_dir):
+    if platform.system().lower() == "linux":
+        process_on_linux(current_dir)
+    elif platform.system().lower() == "darwin":
+        process_on_mac(current_dir)
+    elif platform.system().lower() == "windows":
+        process_on_windows(current_dir)
+
+    all_files = get_all_files(os.path.join(current_dir, PACKAGE_NAME, "libs"))
+    package_data = list()
+
+    if platform.system().lower() == "windows":
+
+        def check_windows_legal_file(f):
+            # Note(zhoushunjie): Special case for some library
+            # File 'plugins.xml' is special case of openvino.
+            for special_file in ['plugins.xml']:
+                if special_file in f:
+                    return True
+            return False
+
+        for f in all_files:
+            if f.endswith(".pyd") or f.endswith("lib") or f.endswith(
+                    "dll") or check_windows_legal_file(f):
+                package_data.append(
+                    os.path.relpath(f, os.path.join(current_dir,
+                                                    PACKAGE_NAME)))
+
+        return package_data
+
+    filters = [".vcxproj", ".png", ".java", ".h", ".cc", ".cpp", ".hpp"]
+    for f in all_files:
+        remain = True
+        for flt in filters:
+            if f.count(flt) > 0:
+                remain = False
+        filename = os.path.split(f)[-1]
+# Note(zhoushunjie): To add the trt libs below will increase the size of whl package by 450M.
+        if filename in [
+                "libnvinfer_plugin.so",
+                "libnvinfer.so", "libnvonnxparser.so",
+                "libnvparsers.so", "libnvcaffe_parser.so"
+        ]:
+            continue
+
+        for lib_prefix in ["libnvinfer_plugin.so.8.",
+            "libnvinfer.so.8.", "libnvonnxparser.so.8.",
+            "libnvparsers.so.8.", "libnvcaffe_parser.so.8."]:
+            if filename.startswith(lib_prefix):
+                remain = False
+                break
+
+        if remain:
+            package_data.append(
+                os.path.relpath(f, os.path.join(current_dir, PACKAGE_NAME)))
+    return package_data

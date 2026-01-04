@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,26 +25,30 @@ REPO_NAMES = [
     "PaddleSeg",
     "PaddleNLP",
     "PaddleTS",
+    "Paddle3D",
+    "PaddleVideo",
 ]
 
 REPO_META = {
     "PaddleSeg": {
         "git_path": "/PaddlePaddle/PaddleSeg.git",
         "platform": "github",
-        "branch": "release/2.10",
-        "pkg_name": "paddleseg",
-        "lib_name": "paddleseg",
+        "branch": "develop",
+        "install_pkg": True,
+        "dist_name": "paddleseg",
+        "import_name": "paddleseg",
         "pdx_pkg_name": "PaddleSeg_api",
         "editable": False,
-        "extra_req_files": ["Matting/requirements.txt"],
+        "extra_pkgs": ["Matting/requirements.txt"],
         "path_env": "PADDLE_PDX_PADDLESEG_PATH",
     },
     "PaddleClas": {
         "git_path": "/PaddlePaddle/PaddleClas.git",
         "platform": "github",
-        "branch": "release/2.6",
-        "pkg_name": "paddleclas",
-        "lib_name": "paddleclas",
+        "branch": "develop",
+        "install_pkg": True,
+        "dist_name": "paddleclas",
+        "import_name": "paddleclas",
         "pdx_pkg_name": "PaddleClas_api",
         # PaddleClas must be installed in non-editable mode, otherwise it throws
         # an Import error.
@@ -54,9 +58,10 @@ REPO_META = {
     "PaddleDetection": {
         "git_path": "/PaddlePaddle/PaddleDetection.git",
         "platform": "github",
-        "branch": "release/2.8",
-        "pkg_name": "paddledet",
-        "lib_name": "ppdet",
+        "branch": "develop",
+        "install_pkg": True,
+        "dist_name": "paddledet",
+        "import_name": "ppdet",
         "pdx_pkg_name": "PaddleDetection_api",
         "editable": False,
         "path_env": "PADDLE_PDX_PADDLEDETECTION_PATH",
@@ -64,14 +69,12 @@ REPO_META = {
     "PaddleOCR": {
         "git_path": "/PaddlePaddle/PaddleOCR.git",
         "platform": "github",
-        "branch": "release/2.9",
-        "pkg_name": "paddleocr",
-        "lib_name": "paddleocr",
+        "branch": "main",
+        "install_pkg": False,
         "pdx_pkg_name": "PaddleOCR_api",
-        "editable": False,
-        "extra_req_files": [
+        "extra_pkgs": [
             "ppstructure/kie/requirements.txt",
-            "docs/algorithm/formula_recognition/requirements.txt",
+            "docs/version2.x/algorithm/formula_recognition/requirements.txt",
         ],
         "path_env": "PADDLE_PDX_PADDLEOCR_PATH",
         "requires": ["PaddleNLP"],
@@ -80,8 +83,9 @@ REPO_META = {
         "git_path": "/PaddlePaddle/PaddleTS.git",
         "platform": "github",
         "branch": "release_v1.1",
-        "pkg_name": "paddlets",
-        "lib_name": "paddlets",
+        "install_pkg": True,
+        "dist_name": "paddlets",
+        "import_name": "paddlets",
         "pdx_pkg_name": "PaddleTS_api",
         "editable": False,
         "path_env": "PADDLE_PDX_PADDLETS_PATH",
@@ -91,8 +95,9 @@ REPO_META = {
         "git_path": "/PaddlePaddle/PaddleNLP.git",
         "platform": "github",
         "branch": "release/2.9",
-        "pkg_name": "paddlenlp",
-        "lib_name": "paddlenlp",
+        "install_pkg": True,
+        "dist_name": "paddlenlp",
+        "import_name": "paddlenlp",
         "pdx_pkg_name": "PaddleNLP_api",
         "editable": False,
         "path_env": "PADDLE_PDX_PADDLENLP_PATH",
@@ -101,8 +106,9 @@ REPO_META = {
         "git_path": "/PaddlePaddle/PaddleSpeech.git",
         "platform": "github",
         "branch": "develop",
-        "pkg_name": "paddlespeech",
-        "lib_name": "paddlespeech",
+        "install_pkg": True,
+        "dist_name": "paddlespeech",
+        "import_name": "paddlespeech",
         "pdx_pkg_name": "PaddleSpeech_api",
         "editable": False,
         "path_env": "PADDLE_PDX_PADDLESPEECH_PATH",
@@ -112,8 +118,9 @@ REPO_META = {
         "git_path": "/PaddlePaddle/PARL.git",
         "platform": "github",
         "branch": "develop",
-        "pkg_name": "parl",
-        "lib_name": "parl",
+        "install_pkg": True,
+        "dist_name": "parl",
+        "import_name": "parl",
         "pdx_pkg_name": "PARL_api",
         "editable": False,
         "path_env": "PADDLE_PDX_PARL_PATH",
@@ -122,14 +129,44 @@ REPO_META = {
         "git_path": "/PaddlePaddle/PaddleMIX.git",
         "platform": "github",
         "branch": "develop",
-        "pkg_name": "paddlemix",
-        "lib_name": "paddlemix",
+        "install_pkg": True,
+        "dist_name": "paddlemix",
+        "import_name": "paddlemix",
         "pdx_pkg_name": "PaddleMIX_api",
         "editable": True,
-        "extra_editable": "ppdiffusers",
+        "extra_pkgs": [("ppdiffusers", "ppdiffusers", None, True)],
         "path_env": "PADDLE_PDX_PADDLEMIX_PATH",
         "requires": ["PaddleNLP"],
     },
+    "Paddle3D": {
+        "git_path": "/PaddlePaddle/Paddle3D.git",
+        "platform": "github",
+        "branch": "develop",
+        "install_pkg": True,
+        "dist_name": "paddle3d",
+        "import_name": "paddle3d",
+        "pdx_pkg_name": "Paddle3D_api",
+        "editable": False,
+        "path_env": "PADDLE_PDX_PADDLE3D_PATH",
+        "requires": ["PaddleSeg", "PaddleDetection"],
+        "main_req_file": "requirements_pdx.txt",
+    },
+    "PaddleVideo": {
+        "git_path": "/PaddlePaddle/PaddleVideo.git",
+        "platform": "github",
+        "branch": "develop",
+        "install_pkg": True,
+        "dist_name": "paddlevideo",
+        "import_name": "ppvideo",
+        "pdx_pkg_name": "PaddleVideo_api",
+        "editable": False,
+        "main_req_file": "requirements_paddlex.txt",
+        "path_env": "PADDLE_PDX_PADDLEVIDEO_PATH",
+    },
+}
+
+REPO_DIST_NAMES = {
+    item["dist_name"] for item in REPO_META.values() if "dist_name" in item
 }
 
 

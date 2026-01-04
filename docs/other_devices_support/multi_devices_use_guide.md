@@ -18,6 +18,8 @@ comments: true
 
 海光 DCU：[海光 DCU 飞桨安装教程](./paddlepaddle_install_DCU.md)
 
+燧原 GCU：[燧原 GCU 飞桨安装教程](./paddlepaddle_install_GCU.md)
+
 ### 1.2 PaddleX安装
 欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请先明确您的开发需求，并根据您的需求选择合适的安装模式。
 
@@ -161,4 +163,39 @@ paddlex --install --platform gitee.com
 All packages are installed.
 ```
 ## 2、使用
-基于昇腾 NPU、寒武纪 MLU、昆仑 XPU、海光DCU 硬件平台的 PaddleX 模型产线开发工具使用方法与 GPU 相同，只需根据所属硬件平台，修改配置设备的参数，详细的使用教程可以查阅[PaddleX产线开发工具本地使用教程](../pipeline_usage/pipeline_develop_guide.md)
+基于昇腾 NPU、寒武纪 MLU、昆仑 XPU、海光DCU、燧原 GCU 硬件平台的 PaddleX 模型产线开发工具使用方法与 GPU 相同，只需根据所属硬件平台，修改配置设备的参数。
+下面以通用 OCR 产线为例介绍使用方法。通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA，可以直接使用该产线提供的预训练模型进行推理：
+* 命令行方式
+
+```bash
+paddlex --pipeline OCR --input general_ocr_002.png --device npu:0 # 将设备名修改为 npu、mlu、xpu、dcu 或 gcu
+```
+* Python脚本方式
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="OCR", device="npu:0") # 将设备名修改为 npu、mlu、xpu、dcu 或 gcu
+
+output = pipeline.predict("general_ocr_002.png")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
+```
+如果对预训练模型的效果不满意，可以进行模型微调，以 PP-OCRv4 移动端文本检测模型（`PP-OCRv4_mobile_det`）为例介绍单模型开发：
+
+```bash
+# 训练
+python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
+    -o Global.mode=train \
+    -o Global.dataset_dir=./dataset/ocr_det_dataset_examples \ # 修改为自己的数据集路径
+    -o Global.device=npu:0,1,2,3 # 多卡训练，将设备名修改为 npu、mlu、xpu 或 dcu
+
+# 推理
+python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir="./output/best_accuracy/inference" \
+    -o Predict.input="general_ocr_001.png"
+    -o Global.device=npu # 将设备名修改为 npu、mlu、xpu、dcu 或 gcu
+```
+更多产线的使用教程可以查阅[PaddleX产线开发工具本地使用教程](../pipeline_usage/pipeline_develop_guide.md)

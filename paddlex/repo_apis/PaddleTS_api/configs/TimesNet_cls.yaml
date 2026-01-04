@@ -7,6 +7,9 @@ epoch: 30 # max_epochs
 training: True # 
 eval_metrics:  ['acc', ] 
 task: classification
+to_static_train: False
+use_amp: False
+amp_level: O2
 
 dataset: 
   name: TSCLSDataset
@@ -25,15 +28,15 @@ info_params:
 model: 
   name: TimesNet_CLS
   model_cfg:
-    e_layers: 3 #
+    e_layers: 2 #
     num_kernels: 6 #
     d_model: 32 #
-    d_ff: 32 #
+    d_ff: 64 #
     top_k: 3 # 
     window_sampling_limit: Null # 
     patience: 10 #
     optimizer_params:
-      learning_rate: 0.001
+      learning_rate: 0.0005
       gamma: 0.9
 
 output: 'output/'

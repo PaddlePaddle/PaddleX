@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 
 import os
 
+from ....utils.device import parse_device
+from ....utils.errors import raise_unsupported_api_error
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.device import parse_device
-from ....utils.misc import abspath
-from ....utils.errors import raise_unsupported_api_error
 
 
 class TSModel(BaseModel):
@@ -73,11 +73,11 @@ class TSModel(BaseModel):
         if resume_path:
             raise ValueError("`resume_path` is not supported.")
         # No need to handle `ips`
-        if amp is not None and amp != "OFF":
-            raise ValueError(f"`amp`={amp} is not supported.")
-
-        if dy2st:
-            raise ValueError(f"`dy2st`={dy2st} is not supported.")
+        benchmark = kwargs.pop("benchmark", None)
+        if benchmark is not None:
+            amp = benchmark.get("amp", None)
+            if amp in ["O1", "O2"]:
+                config.update_amp(amp)
 
         if use_vdl:
             raise ValueError(f"`use_vdl`={use_vdl} is not supported.")
@@ -85,7 +85,6 @@ class TSModel(BaseModel):
         if device is not None:
             device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
-
         if save_dir is not None:
             save_dir = abspath(save_dir)
         else:
@@ -111,8 +110,11 @@ class TSModel(BaseModel):
                 cli_args.append(CLIArgument("--num_workers", num_workers))
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.update({"uniform_output_enabled": uniform_output_enabled})
         config.update({"pdx_model_name": self.name})
+        if export_with_pir:
+            config.update({"export_with_pir": export_with_pir})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -235,13 +237,15 @@ class TSModel(BaseModel):
         if device is not None:
             device_type, _ = parse_device(device)
             cli_args.append(CLIArgument("--device", device_type))
-
+        export_with_pir = kwargs.pop("export_with_pir", False)
         self._assert_empty_kwargs(kwargs)
         with self._create_new_config_file() as config_path:
             # Update YAML config file
             config = self.config.copy()
             config.update_pretrained_weights(weight_path)
             config.update({"pdx_model_name": self.name})
+            if export_with_pir:
+                config.update({"export_with_pir": export_with_pir})
             config.dump(config_path)
 
             return self.runner.export(config_path, cli_args, device)

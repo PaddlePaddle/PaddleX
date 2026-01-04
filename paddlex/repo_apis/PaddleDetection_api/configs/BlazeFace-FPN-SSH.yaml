@@ -79,7 +79,7 @@ OptimizerBuilder:
     type: L2
 
 # Dataset
-metric: WiderFace
+metric: COCO
 num_classes: 1
 TrainDataset:
   name: COCODataSet

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm -f /etc/ld.so.conf.d/@CPACK_PACKAGE_NAME@.conf
+rm @CMAKE_INSTALL_PREFIX@/@CPACK_PACKAGE_NAME@.conf
+rm -rf @CMAKE_INSTALL_PREFIX@/third_libs/install/tensorrt/lib/
+
+ldconfig
+echo "UltraInfer has been uninstalled."

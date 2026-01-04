@@ -22,18 +22,18 @@ assignees: ''
 
     * 您是否完全按照[高性能推理文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/high_performance_inference.html)跑通了流程？
 
-    * 您使用的是离线激活方式还是在线激活方式？
-
 2. 服务化部署
 
-    * 您是否完全按照[服务化部署文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/service_deploy.html)跑通了流程？
+    * 您是否完全按照[服务化部署文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/serving.html)跑通了流程？
 
-    * 您在服务化部署中是否有使用高性能推理插件，如果是，您使用的是离线激活方式还是在线激活方式？
+    * 您在服务化部署中是否有使用高性能推理插件？
+
+    * 您使用了哪一种服务化部署方案？
 
     * 如果是多语言调用的问题，请给出调用示例子。
 
 3. 端侧部署
-    * 您是否完全按照[端侧部署文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/edge_deploy.html)跑通了流程？
+    * 您是否完全按照[端侧部署文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/on_device_deployment.html)跑通了流程？
 
     * 您使用的端侧设备是？对应的PaddlePaddle版本和PaddleLite版本分别是什么？
 

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 
 import os
 
+from ....utils import logging
+from ....utils.device import parse_device
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.device import parse_device
-from ....utils.misc import abspath
-from ....utils import logging
 
 
 class TextRecModel(BaseModel):
@@ -136,7 +136,8 @@ class TextRecModel(BaseModel):
         device_type = device.split(":")[0]
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         config.update({"Global.uniform_output_enabled": uniform_output_enabled})
-        config.update({"Global.pdx_model_name": self.name})
+        config.update({"Global.model_name": self.name})
+        config.update({"Global.export_with_pir": kwargs.pop("export_with_pir", False)})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -270,7 +271,8 @@ class TextRecModel(BaseModel):
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         config.update({"Global.uniform_output_enabled": uniform_output_enabled})
-        config.update({"Global.pdx_model_name": self.name})
+        config.update({"Global.model_name": self.name})
+        config.update({"Global.export_with_pir": kwargs.pop("export_with_pir", False)})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -295,7 +297,7 @@ class TextRecModel(BaseModel):
             save_dir (str, optional): the directory path to save output. Defaults to None.
 
         Returns:
-            CompletedProcess: the result of infering subprocess execution.
+            CompletedProcess: the result of inferring subprocess execution.
         """
         config = self.config.copy()
         cli_args = []

@@ -1,0 +1,41 @@
+Global:
+  model: STFPM
+  mode: check_dataset # check_dataset/train/evaluate/predict
+  dataset_dir: "/paddle/dataset/paddlex/seg/mvtec_examples"
+  device: gpu:0,1,2,3
+  output: "output"
+
+CheckDataset:
+  convert: 
+    enable: False
+    src_dataset_type: null
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  epochs_iters: 50
+  num_classes: 1
+  batch_size: 1
+  learning_rate: 0.4
+  pretrain_weight_path: null
+  warmup_steps: 100
+  resume_path: null
+  log_interval: 10
+  eval_interval: 100
+
+Evaluate:
+  weight_path: "output/best_model/model.pdparams"
+  log_interval: 10
+
+Predict:
+  batch_size: 1
+  model_dir: "output/best_model/inference"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
+  kernel_option:
+    run_mode: paddle
+
+  
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams

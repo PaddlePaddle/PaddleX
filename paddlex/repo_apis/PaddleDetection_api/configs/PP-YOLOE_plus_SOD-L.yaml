@@ -86,6 +86,7 @@ use_ema: true
 ema_decay: 0.9998
 ema_black_list: ['proj_conv.weight']
 custom_black_list: ['reduce_mean']
+find_unused_parameters: True
 
 YOLOv3:
   backbone: CSPResNet

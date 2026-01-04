@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ import abc
 import collections.abc
 from collections import OrderedDict
 
-from .register import get_registered_model_info, get_registered_suite_info
 from ...utils.errors import UnsupportedParamError
+from .register import get_registered_model_info, get_registered_suite_info
 
 __all__ = ["Config", "BaseConfig"]
 
@@ -106,7 +106,7 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
     """
     Abstract base class of Config.
 
-    Config provides the funtionality to load, parse, or dump to a configuration
+    Config provides the functionality to load, parse, or dump to a configuration
     file with a specific format. Also, it provides APIs to update configurations
     of several important hyperparameters and model components.
     """
@@ -132,7 +132,6 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
 
     def update_device(self, device):
         """Update the device"""
-        pass
 
     @abc.abstractmethod
     def load(self, config_path):

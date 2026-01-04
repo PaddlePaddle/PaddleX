@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,9 @@ import os
 import os.path as osp
 from collections import defaultdict
 
-from PIL import Image
-import json
-import numpy as np
+from PIL import Image, ImageOps
 
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 
 
 def check(
@@ -35,7 +33,6 @@ def check(
         tags = ["train", "val"]
         delim = "\t"
         valid_num_parts = 2
-        max_recorded_sample_cnts = 50
         sample_cnts = dict()
         sample_paths = defaultdict(list)
         if dataset_type == "LaTeXOCRDataset":
@@ -79,11 +76,21 @@ def check(
                             )
                         file_name = substr[0]
                         img_path = osp.join(dataset_dir, file_name)
-                        if len(sample_paths[tag]) < max_recorded_sample_cnts:
-                            sample_paths[tag].append(os.path.relpath(img_path, output))
 
                         if not os.path.exists(img_path):
                             raise DatasetFileNotFoundError(file_path=img_path)
+                        vis_save_dir = osp.join(output, "demo_img")
+                        if not osp.exists(vis_save_dir):
+                            os.makedirs(vis_save_dir)
+                        if len(sample_paths[tag]) < sample_num:
+                            img = Image.open(img_path)
+                            img = ImageOps.exif_transpose(img)
+                            vis_path = osp.join(vis_save_dir, osp.basename(file_name))
+                            img.save(vis_path)
+                            sample_path = osp.join(
+                                "check_dataset", os.path.relpath(vis_path, output)
+                            )
+                            sample_paths[tag].append(sample_path)
 
         meta = {}
         meta["train_samples"] = sample_cnts["train"]

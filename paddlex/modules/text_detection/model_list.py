@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,14 @@
 # limitations under the License.
 
 MODELS = [
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_server_det",
     "PP-OCRv4_mobile_det",
     "PP-OCRv4_server_det",
     "PP-OCRv4_mobile_seal_det",
     "PP-OCRv4_server_seal_det",
+    "PP-OCRv3_mobile_det",
+    "PP-OCRv3_server_det",
 ]
 
 CURVE_MODELS = ["PP-OCRv4_mobile_seal_det", "PP-OCRv4_server_seal_det"]

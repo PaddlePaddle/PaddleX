@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
+from .model import _ModelBasedConfig
+from .utils.config import get_config, parse_args
+from .utils.errors import raise_unsupported_api_error
+from .utils.flags import INFER_BENCHMARK
 from .utils.lazy_loader import disable_pir_bydefault
 from .utils.result_saver import try_except_decorator
-from .utils.config import parse_args, get_config
-from .utils.errors import raise_unsupported_api_error
-from .model import _ModelBasedConfig
 
 
 class Engine(object):
@@ -47,7 +47,9 @@ class Engine(object):
             return self._model.export()
         elif self._mode == "predict":
             for res in self._model.predict():
-                res.print(json_format=False)
+                if INFER_BENCHMARK:
+                    continue
+                res.print()
                 if self._output:
                     res.save_all(save_path=self._output)
         else:

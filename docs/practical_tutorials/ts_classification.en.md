@@ -33,7 +33,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 <tr>
 <th>Model Name</th>
 <th>Acc (%)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -41,7 +41,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 <tr>
 <td>TimesNet_cls</td>
 <td>87.5</td>
-<td>792K</td>
+<td>0.792</td>
 <td>TimesNet is an adaptive and high-precision time series classification model through multi-cycle analysis</td>
 </tr>
 </tbody>
@@ -73,7 +73,7 @@ Missing Value Handling: To guarantee the quality and integrity of the data, miss
 Data Validation can be completed with just one command:
 
 ```
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -121,7 +121,7 @@ If you need to convert the dataset format or re-split the dataset, please refer 
 Before training, ensure that you have validated the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
 -o Global.mode=train \
 -o Global.dataset_dir=./dataset/ts_classify_examples \
 -o Train.epochs_iters=5 \
@@ -175,7 +175,7 @@ For more hyperparameter introductions, please refer to [PaddleX Time Series Task
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```
-    python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+    python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o Evaluate.weight_path=./output/best_model/model.pdparams
@@ -273,11 +273,11 @@ Results of Increasing Training Epochs:
 </tr>
 </tbody>
 </table>
-## 6. Production Line Testing
+## 6. pipeline Testing
 Set the model directory to the trained model for testing, using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv) to perform predictions:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv"
@@ -294,20 +294,40 @@ Other related parameters can be set by modifying the fields under `Global` and `
 ## 7. Development Integration/Deployment
 If the general time series classification pipeline meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.
 
-1. If you need to directly apply the general time series classification pipeline in your Python project, you can refer to the following sample code:
+1. If you need to use the fine-tuned model weights, you can obtain the ts_classification production configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```
+paddlex --get_pipeline_config ts_classification --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` in the production configuration file. If you need to directly apply the general time-series classification pipeline in your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: ts_classification
+
+SubModules:
+  TSClassification:
+    module_name: ts_classification
+    model_name: TimesNet_cls
+    model_dir: ./output/inference  # Fine-tuned model weights path
+    batch_size: 1
+```
+
+Subsequently, in your Python code, you can use the pipeline as follows:
+
+
+```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="ts_classification")
+pipeline = create_pipeline(pipeline="my_path/ts_classification.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_csv("./output/") # 保存csv格式结果
+    res.print()
+    res.save_to_csv("./output/")
 ```
 
 For more parameters, please refer to the [Time Series Classification Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.en.md)
 
-2. Additionally, PaddleX's time series classification pipeline also offers a service-oriented deployment method, detailed as follows:
+2. Additionally, PaddleX's time series classification pipeline also offers a serving deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy.en.md).
+Serving Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving serving deployment of pipelines at low cost. For detailed instructions on serving deployment, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

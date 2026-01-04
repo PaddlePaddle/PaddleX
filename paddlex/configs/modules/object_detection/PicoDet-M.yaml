@@ -1,0 +1,42 @@
+Global:
+  model: PicoDet-M
+  mode: check_dataset # check_dataset/train/evaluate/predict
+  dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
+  device: gpu:0,1,2,3
+  output: "output"
+
+CheckDataset:
+  convert:
+    enable: False
+    src_dataset_type: null
+  split:
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  num_classes: 4
+  epochs_iters: 50
+  batch_size: 2
+  learning_rate: 0.24
+  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams
+  warmup_steps: 100
+  resume_path: null
+  log_interval: 10
+  eval_interval: 1
+
+Evaluate:
+  weight_path: "output/best_model/best_model.pdparams"
+  log_interval: 10
+
+Predict:
+  batch_size: 1
+  model_dir: "output/best_model/inference"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png"
+  kernel_option:
+    run_mode: paddle
+
+
+
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams

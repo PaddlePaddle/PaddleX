@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,20 +14,22 @@
 
 
 import os
-import json
 import platform
-from pathlib import Path
 from collections import defaultdict
-from PIL import Image
+
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import font_manager
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from pycocotools.coco import COCO
 
-from .....utils.fonts import PINGFANG_FONT_FILE_PATH
+from .....utils.deps import function_requires_deps, is_dep_available
+from .....utils.fonts import PINGFANG_FONT
+
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
 
 
+@function_requires_deps("pycocotools", "matplotlib")
 def deep_analyse(dataset_dir, output):
     """class analysis for dataset"""
     tags = ["train", "val"]
@@ -62,7 +64,7 @@ def deep_analyse(dataset_dir, output):
     if os_system == "windows":
         plt.rcParams["font.sans-serif"] = "FangSong"
     else:
-        font = font_manager.FontProperties(fname=PINGFANG_FONT_FILE_PATH)
+        font = font_manager.FontProperties(fname=PINGFANG_FONT.path)
     fig, ax = plt.subplots(figsize=(max(8, int(len(classes) / 5)), 5), dpi=120)
     ax.bar(x, cnts_train_sorted, width=0.5, label="train")
     ax.bar(x + width, cnts_val_sorted, width=0.5, label="val")

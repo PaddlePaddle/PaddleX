@@ -5,118 +5,166 @@ comments: true
 # General Image Multi-Label Classification Pipeline Tutorial
 
 ## 1. Introduction to the General Image Multi-Label Classification Pipeline
-Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.
+Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.This pipeline also offers a flexible serving deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this pipeline provides the capability for custom development. You can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/01.png">
 
 <b>The General Image Multi-Label Classification Pipeline includes a module for image multi-label classification. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b>
 
-<details><summary> 👉Model List Details</summary>
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <thead>
 <tr>
-<th>Model Name</th>
+<th>Model Name</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>Model Storage Size (M)</th>
+<th>Model Storage Size (MB)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>CLIP_vit_base_patch16_448_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/CLIP_vit_base_patch16_448_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">Training Model</a></td>
 <td>89.15</td>
-<td>-</td>
+<td>325.6</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B0_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">Training Model</a></td>
 <td>80.98</td>
 <td>39.6</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B4_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B4_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">Training Model</a></td>
 <td>87.96</td>
 <td>88.5</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B6_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-HGNetV2-B6_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">Training Model</a></td>
 <td>91.25</td>
 <td>286.5</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-LCNet_x1_0_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">Training Model</a></td>
 <td>77.96</td>
 <td>29.4</td>
 </tr>
 <tr>
 <td>ResNet50_ML</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ResNet50_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">Training Model</a></td>
 <td>83.50</td>
 <td>108.9</td>
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are mAP for the multi-label classification task on </b><a href="https://cocodataset.org/#home">COCO2017</a><b>. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+             <li><strong>Test Dataset：</strong>multi-label classification task on <b><a href="https://cocodataset.org/#home">COCO2017</a></b>.</li>
+              <li><strong>Hardware Configuration:</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
-PaddleX supports experiencing the effects of the General Image Multi-Label Classification Pipeline locally using command line or Python.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the image multi-label classification pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the image multi-label classification pipeline.
 
-Before using the General Image Multi-Label Classification Pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+### 2.1 Online Experience
+You can [experience the image multi-label classification pipeline online](https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
 
-### 2.1 Experience via Command Line
-Experience the effects of the image multi-label classification pipeline with a single command:
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/multi_label_cls.png"/>
+
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+
+### 2.2 Local Experience
+> ❗ Before using the image multi-label classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
+
+#### 2.2.1 Command Line Experience
+You can quickly experience the image multi-label classification pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg), and replace `--input` with the local path for prediction.
 
 ```bash
-paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
-```
-Parameter Explanation:
-
-```
---pipeline: The name of the pipeline, here it is the image multi-label classification pipeline.
---input: The local path or URL of the input image to be processed.
---device: The GPU index to use (e.g., gpu:0 for the first GPU, gpu:1,2 for the second and third GPUs). You can also choose to use CPU (--device cpu).
+paddlex --pipeline image_multilabel_classification --input general_image_classification_001.jpg --device gpu:0
 ```
 
-When executing the above command, the default configuration file for the image multi-label classification pipeline is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
+The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration](). Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.
 
-<details><summary> 👉Click to Expand</summary>
+After running, the result will be printed to the terminal as follows:
 
-<pre><code class="language-bash">paddlex --get_pipeline_config multi_label_image_classification
-</code></pre>
-<p>After execution, the configuration file for the image multi-label classification pipeline will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is <code>./my_path</code>):</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config multi_label_image_classification --save_path ./my_path
-</code></pre>
-<p>After obtaining the pipeline configuration file, replace <code>--pipeline</code> with the saved path of the configuration file to make it effective. For example, if the configuration file is saved at <code>./multi_label_image_classification.yaml</code>, simply execute:</p>
-<pre><code class="language-bash">paddlex --pipeline ./multi_label_image_classification.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
-</code></pre>
-<p>Where <code>--model</code>, <code>--device</code>, and other parameters are not specified, the parameters in the configuration file will be used. If parameters are specified, the specified parameters will take precedence.</p></details>
-
-After running, the result obtained is:
-
+```bash
+{'res': {'input_path': 'test_imgs/general_image_classification_001.jpg', 'page_index': None, 'class_ids': array([21]), 'scores': array([0.99962]), 'label_names': ['bear']}}
 ```
-{'input_path': 'general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
-```
+
+The explanation of the result parameters can be referred to in [2.2.2 Python Script Integration](#222-python脚本方式集成).
+
+The visualization results are saved under `save_path`, and the visualization result is as follows:
+
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png">
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
+#### 2.2.2 Python Script Integration
 
-### 2.2 Integration via Python Script
-A few lines of code can complete the rapid inference of the pipeline. Taking the general image multi-label classification pipeline as an example:
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="multi_label_image_classification")
+pipeline = create_pipeline(pipeline="image_multilabel_classification")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+output = pipeline.predict("general_image_classification_001.jpg")
 for res in output:
-    res.print()  # Print the structured output of the prediction
-    res.save_to_img("./output/")  # Save the result visualization image
-    res.save_to_json("./output/")  # Save the structured output of the prediction
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
-The result obtained is the same as that of the command line method.
 
-In the above Python script, the following steps are executed:
+The result obtained is the same as the command line method.
 
-(1) Instantiate the `create_pipeline` to create a pipeline object: Specific parameter descriptions are as follows:
+In the above Python script, the following steps are performed:
+
+(1) Instantiate the general image multi-label classification pipeline object through `create_pipeline()`, with specific parameter descriptions as follows:
 
 <table>
 <thead>
@@ -124,129 +172,227 @@ In the above Python script, the following steps are executed:
 <th>Parameter</th>
 <th>Description</th>
 <th>Type</th>
-<th>Default Value</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the pipeline or the path of the pipeline configuration file. If it is the name of the pipeline, it must be a pipeline supported by PaddleX.</td>
+<td>Pipeline name or pipeline configuration file path. If it is a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
-<td>The device for pipeline model inference. Supports: "gpu", "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu". Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to <a href="../../instructions/parallel_inference.en.md#specifying-multiple-inference-devices">Pipeline Parallel Inference</a>.</td>
 <td><code>str</code></td>
-<td>"gpu"</td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, which is only available when the pipeline supports it.</td>
+<td>Whether to enable the high-performance inference plugin. If set to <code>None</code>, the setting from the configuration file or <code>config</code> will be used.</td>
 <td><code>bool</code></td>
-<td><code>False</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
-(2) Call the `predict` method of the multi-label classification pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+
+(2) Call the `predict()` method of the general image multi-label classification pipeline object for inference prediction. This method will return a `generator`. The parameters of the `predict()` method and their descriptions are as follows:
 
 <table>
 <thead>
 <tr>
-<th>Parameter Type</th>
+<th>Parameter</th>
 <th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>Supports directly passing in Python variables, such as numpy.ndarray representing image data.</td>
+<td><code>input</code></td>
+<td>Data to be predicted, supports multiple input types, required</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+  <li><b>str</b>: Local path of an image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code></li>
+  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>Supports passing in the file path of the data file to be predicted, such as the local path of an image file: <code>/root/data/img.jpg</code>.</td>
+<td><code>threshold</code></td>
+<td>Multi-label classification threshold</td>
+<td><code>float | dict | list | None</code></td>
+<td>
+<ul>
+  <li><b>float</b>: Represents a unified threshold for multi-label classification;</li>
+  <li><b>list</b>: Such as <code>[0.5, 0.45, 0.48, 0.4]</code>, representing different category thresholds in the order of the <code>label list</code>;</li>
+  <li><b>dict</b>: Dictionary keys are <code>default</code> and <code>int</code> types, values are <code>float</code> type thresholds, such as <code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>, <code>default</code> represents a unified threshold for multi-label classification, other <code>int</code> types apply thresholds of 0.45 for cls_id 0, 0.48 for cls_id 1, and 0.4 for cls_id 7;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, which is <code>0.7</code>;</li>
+</ul>
+</td>
+<td><code>0.5</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>Supports passing in the URL of the data file to be predicted, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg">Example</a>.</td>
-</tr>
-<tr>
-<td>str</td>
-<td>Supports passing in a local directory, which should contain the data files to be predicted, such as the local path: <code>/root/data/</code>.</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>Supports passing in a dictionary type, where the key of the dictionary needs to correspond to the specific task, such as "img" for image classification tasks, and the value of the dictionary supports the above data types, for example: <code>{"img": "/root/data1"}</code>.</td>
-</tr>
-<tr>
-<td>list</td>
-<td>Supports passing in a list, where the list elements need to be the above data types, such as <code>[numpy.ndarray, numpy.ndarray], ["/root/data/img1.jpg", "/root/data/img2.jpg"], ["/root/data1", "/root/data2"], [{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>.</td>
-</tr>
-</tbody>
 </table>
-（3）Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through iteration. The `predict` method predicts data in batches, so the prediction results are in the form of a list.
 
-（4）Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving to files, with the supported file types depending on the specific pipeline. For example:
+3) Process the prediction results. The prediction result for each sample is of type `dict` and supports operations such as printing, saving as an image, and saving as a `json` file:
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
 <th>Description</th>
-<th>Method Parameters</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>Prints results to the terminal</td>
-<td><code>- format_json</code>: bool, whether to format the output content with json indentation, default is True;<br><code>- indent</code>: int, json formatting setting, only valid when format_json is True, default is 4;<br><code>- ensure_ascii</code>: bool, json formatting setting, only valid when format_json is True, default is False;</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>Saves results as a json file</td>
-<td><code>- save_path</code>: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br><code>- indent</code>: int, json formatting setting, default is 4;<br><code>- ensure_ascii</code>: bool, json formatting setting, default is False;</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
-<td>Saves results as an image file</td>
-<td><code>- save_path</code>: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
 </tr>
-</tbody>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">Save the result as a json file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>Path to save the file. If it is a directory, the saved file name will be consistent with the input file type</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>Path to save the file. Supports directory or file path</td>
+<td>None</td>
+</tr>
 </table>
-If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
-For example, if your configuration file is saved at `./my_path/multi_label_image_classification.yaml`, you only need to execute:
+- Calling the `print()` method will print the result to the terminal. The content printed to the terminal is explained as follows:
+
+    - `input_path`: `(str)` Input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
+    - `class_ids`: `(List[numpy.ndarray])` Indicates the class IDs of the prediction results.
+    - `scores`: `(List[numpy.ndarray])` Indicates the confidence scores of the prediction results.
+    - `label_names`: `(List[str])` Indicates the class names of the prediction results.
+
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.json`. If specified as a file, it will be saved directly to that file. Since json files do not support saving numpy arrays, `numpy.array` types will be converted to lists.
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
+
+* In addition, you can also obtain the visualized image and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+</tr>
+</table>
+
+- The prediction result obtained by the `json` attribute is a dictionary type, and the content is consistent with the content saved by calling the `save_to_json()` method.
+- The prediction result returned by the `img` attribute is a dictionary type. The key is `res` and the corresponding value is an `Image.Image` object: an object used to display the visualized image of the attribute recognition result.
+
+In addition, you can obtain the general image multi-label classification pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+
+```
+paddlex --get_pipeline_config image_multilabel_classification --save_path ./my_path
+```
+
+If you have obtained the configuration file, you can customize the settings for the image multi-label classification pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/multi_label_image_classification.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+
+pipeline = create_pipeline(pipeline="./my_path/image_multilabel_classification.yaml")
+
+output = pipeline.predict(
+    input="./general_image_classification_001.jpg",
+)
 for res in output:
-    res.print()  # Print the structured output of prediction
-    res.save_to_img("./output/")  # Save the visualization image of the result
-    res.save_to_json("./output/")  # Save the structured output of prediction
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
+
 ```
 
+<b>Note:</b> The parameters in the configuration file are the initialization parameters of the pipeline. If you want to change the initialization parameters of the general image multi-label classification pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in the configuration file, and you can specify the path of the configuration file with `--pipeline`.
+
 ## 3. Development Integration/Deployment
-If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment directly.
 
-If you need to directly apply the pipeline in your Python project, refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python脚本方式集成).
 
-Additionally, PaddleX provides three other deployment methods, detailed as follows:
+In addition, PaddleX also provides three other deployment methods, detailed as follows:
 
-🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. Therefore, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance inference processes, please refer to [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.en.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service deployment solutions. For detailed pipeline service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references and multi-language service invocation examples:
+Below is the API reference for basic service deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
 
-<p>For all operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
-<li>Both the response body and the request body for POST requests are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -258,20 +404,29 @@ Below are the API references and multi-language service invocation examples:
 </thead>
 <tbody>
 <tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
-<td>Error code. Fixed to <code>0</code>.</td>
+<td>Error code. Fixed at <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message. Fixed to <code>"Success"</code>.</td>
+<td>Error description. Fixed at <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>Operation result.</td>
 </tr>
 </tbody>
 </table>
-<p>The response body may also have a <code>result</code> property of type <code>object</code>, which stores the operation result information.</p>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -282,6 +437,11 @@ Below are the API references and multi-language service invocation examples:
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
@@ -290,18 +450,18 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message.</td>
+<td>Error description.</td>
 </tr>
 </tbody>
 </table>
-<p>Operations provided by the service are as follows:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Classify images.</p>
+<p>Perform image classification.</p>
 <p><code>POST /multilabel-image-classification</code></p>
 <ul>
-<li>The request body properties are as follows:</li>
+<li>The properties of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -316,38 +476,39 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>The URL of the image file accessible by the service or the Base64 encoded result of the image file content.</td>
+<td>The URL of an image file accessible by the server or the Base64-encoded content of the image file.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>The properties of <code>inferenceParams</code> are as follows:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>topK</code></td>
-<td><code>integer</code></td>
-<td>Only the top <code>topK</code> categories with the highest scores will be retained in the result.</td>
+<td><code>visualize</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>
+Whether to return the final visualization image and intermediate images during the processing.<br/>
+<ul style="margin: 0 0 0 1em; padding-left: 0em;">
+<li>If <code>true</code> is provided: return images.</li>
+<li>If <code>false</code> is provided: do not return any images.</li>
+<li>If this parameter is omitted from the request body, or if <code>null</code> is explicitly passed, the behavior will follow the value of <code>Serving.visualize</code> in the pipeline configuration.</li>
+</ul>
+<br/>
+For example, adding the following setting to the pipeline config file:<br/>
+<pre><code>Serving:
+  visualize: False
+</code></pre>
+will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
+If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
+</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -365,8 +526,8 @@ Below are the API references and multi-language service invocation examples:
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
-<td>Image classification result image. The image is in JPEG format and encoded in Base64.</td>
+<td><code>string</code>| <code>null</code></td>
+<td>The image classification result. The image is in JPEG format and is encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
@@ -410,27 +571,29 @@ Below are the API references and multi-language service invocation examples:
 }
 </code></pre></details>
 
-<details><summary>Multi-Language Service Invocation Examples</summary>
+<details><summary>Multi-Language Service Call Examples</summary>
 
 <details>
 <summary>Python</summary>
 
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/multilabel-image-classification&quot;
+API_URL = &quot;http://localhost:8080/multilabel-image-classification&quot; # Service URL
 image_path = &quot;./demo.jpg&quot;
 output_image_path = &quot;./out.jpg&quot;
 
+# Encode the local image in Base64
 with open(image_path, &quot;rb&quot;) as file:
     image_bytes = file.read()
     image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
 
-payload = {&quot;image&quot;: image_data}
+payload = {&quot;image&quot;: image_data}  # Base64-encoded file content or image URL
 
+# Call the API
 response = requests.post(API_URL, json=payload)
 
+# Process the returned data
 assert response.status_code == 200
 result = response.json()[&quot;result&quot;]
 with open(output_image_path, &quot;wb&quot;) as file:
@@ -439,12 +602,13 @@ print(f&quot;Output image saved at {output_image_path}&quot;)
 print(&quot;\nCategories:&quot;)
 print(result[&quot;categories&quot;])
 </code></pre></details>
+
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
+#include &quot;cpp-httplib/httplib.h&quot; // <url>https://github.com/Huiyicc/cpp-httplib</url>
+#include &quot;nlohmann/json.hpp&quot; // <url>https://github.com/nlohmann/json</url>
+#include &quot;base64.hpp&quot; // <url>https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
@@ -455,6 +619,7 @@ int main() {
         {&quot;Content-Type&quot;, &quot;application/json&quot;}
     };
 
+    // Encode the local image in Base64
     std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
@@ -471,7 +636,9 @@ int main() {
     jsonObj[&quot;image&quot;] = encodedImage;
     std::string body = jsonObj.dump();
 
+    // Call the API
     auto response = client.Post(&quot;/multilabel-image-classification&quot;, headers, body, &quot;application/json&quot;);
+    // Process the returned data
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
         auto result = jsonResponse[&quot;result&quot;];
@@ -479,13 +646,13 @@ int main() {
         encodedImage = result[&quot;image&quot;];
         std::string decodedString = base64::from_base64(encodedImage);
         std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
             outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outputImagePath &lt;&lt; std::endl;
         } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outputImagePath &lt;&lt; std::endl;
         }
 
         auto categories = result[&quot;categories&quot;];
@@ -516,42 +683,45 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/multilabel-image-classification&quot;;
-        String imagePath = &quot;./demo.jpg&quot;;
-        String outputImagePath = &quot;./out.jpg&quot;;
+        String API_URL = "http://localhost:8080/multilabel-image-classification"; // Service URL
+        String imagePath = "./demo.jpg"; // Local image
+        String outputImagePath = "./out.jpg"; // Output image
 
+        // Encode the local image using Base64
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
         String imageData = Base64.getEncoder().encodeToString(fileContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData);
+        params.put("image", imageData); // Base64-encoded file content or image URL
 
+        // Create OkHttpClient instance
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
+        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
         Request request = new Request.Builder()
                 .url(API_URL)
                 .post(body)
                 .build();
 
+        // Call the API and process the response data
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode categories = result.get(&quot;categories&quot;);
+                JsonNode result = resultNode.get("result");
+                String base64Image = result.get("image").asText();
+                JsonNode categories = result.get("categories");
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
-                System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                System.out.println(&quot;\nCategories: &quot; + categories.toString());
+                System.out.println("Output image saved at " + outputImagePath);
+                System.out.println("\nCategories: " + categories.toString());
             } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
+                System.err.println("Request failed with code: " + response.code());
             }
         }
     }
@@ -563,77 +733,80 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/multilabel-image-classification&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
+    API_URL := "http://localhost:8080/multilabel-image-classification"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
+    // Encode the local image using Base64
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
+        fmt.Println("Error reading image file:", err)
         return
     }
     imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData}
+    payload := map[string]string{"image": imageData} // Base64-encoded file content or image URL
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
-    client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    // Call the API
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
 
+    // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Image      string   `json:&quot;image&quot;`
-            Categories []map[string]interface{} `json:&quot;categories&quot;`
-        } `json:&quot;result&quot;`
+            Image      string   `json:"image"`
+            Categories []map[string]interface{} `json:"categories"`
+        } `json:"result"`
     }
     var respData Response
-    err = json.Unmarshal([]byte(string(body)), &amp;respData)
+    err = json.Unmarshal([]byte(string(body)), &respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
+        fmt.Println("Error decoding base64 image data:", err)
         return
     }
     err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
+        fmt.Println("Error writing image to file:", err)
         return
     }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nCategories:&quot;)
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
+    fmt.Println("\nCategories:")
     for _, category := range respData.Result.Categories {
         fmt.Println(category)
     }
@@ -660,15 +833,18 @@ class Program
     {
         var httpClient = new HttpClient();
 
+        // Encode the local image to Base64
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } };
+        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64-encoded file content or image URL
         var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
 
+        // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
         response.EnsureSuccessStatusCode();
 
+        // Process the response data
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
@@ -697,17 +873,20 @@ let config = {
    maxBodyLength: Infinity,
    url: API_URL,
    data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)
+    'image': encodeImageToBase64(imagePath)  // Base64-encoded file content or image URL
   })
 };
 
+// Encode the local image in Base64
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
   return Buffer.from(bitmap).toString('base64');
 }
 
+// Call the API
 axios.request(config)
 .then((response) =&gt; {
+    // Process the returned data
     const result = response.data[&quot;result&quot;];
     const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
     fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
@@ -721,24 +900,29 @@ axios.request(config)
   console.log(error);
 });
 </code></pre></details>
+
 <details><summary>PHP</summary>
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/multilabel-image-classification&quot;;
+$API_URL = &quot;http://localhost:8080/multilabel-image-classification&quot;; // Service URL
 $image_path = &quot;./demo.jpg&quot;;
 $output_image_path = &quot;./out.jpg&quot;;
 
+// Encode the local image in Base64
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data);
+$payload = array(&quot;image&quot; =&gt; $image_data); // Base64-encoded file content or image URL
 
+// Call the API
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
 
+// Process the returned data
 $result = json_decode($response, true)[&quot;result&quot;];
 file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
 echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
@@ -747,45 +931,62 @@ print_r($result[&quot;categories&quot;]);
 ?&gt;
 </code></pre></details>
 </details>
-
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a way to place computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
+📱 <b>On-Device Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX On-Device Deployment Guide](../../../pipeline_deploy/on_device_deployment.en.md).
+You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
 ## 4. Custom Development
-If the default model weights provided by the general image multi-label classification pipeline do not meet your requirements in terms of accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general image multi-label classification pipeline in your scenario.
+If the default model weights provided by the general image multi-label classification pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general image multi-label classification pipeline in your scenario.
 
-### 4.1 Model Fine-tuning
-Since the general image multi-label classification pipeline includes an image multi-label classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/image_multilabel_classification.en.md#Customization) section in the [Image Multi-Label Classification Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_multilabel_classification.en.md) to fine-tune the image multi-label classification model using your private dataset.
+### 4.1 Model Fine-Tuning
+
+Since the general image multi-label classification pipeline includes an image multi-label classification module, if the performance of the model pipeline is not as expected, you need to refer to the fine-tuning tutorial link in the table below to fine-tune the model.
+
+<table>
+  <thead>
+    <tr>
+      <th>Situation</th>
+      <th>Fine-Tuning Module</th>
+      <th>Fine-Tuning Reference Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Multi-label classification is inaccurate</td>
+      <td>Multi-label classification module</td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/image_multilabel_classification.html">Link</a></td>
+    </tr>
+  </tbody>
+</table>
 
 ### 4.2 Model Application
-After you have completed fine-tuning training using your private dataset, you will obtain local model weights files.
+After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding location in the pipeline configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
 
-```python
-......
-Pipeline:
-  model: PP-LCNet_x1_0_ML   # Can be modified to the local path of the fine-tuned model
-  batch_size: 1
-  device: "gpu:0"
-......
+``` yaml
+pipeline_name: image_multilabel_classification
+
+SubModules:
+  ImageMultiLabelClassification:
+    module_name: image_multilabel_classification
+    model_name: PP-HGNetV2-B6_ML
+    model_dir: null # Modify this path to the local fine-tuned model weight file
+    batch_size: 4
 ```
-Then, refer to the command line method or Python script method in the local experience section to load the modified pipeline configuration file.
 
-## 5. Multi-hardware Support
-PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.
+Subsequently, refer to the command line method or Python script method in the local experience section to load the modified pipeline configuration file.
 
-For example, if you use an NVIDIA GPU for inference of the image multi-label classification pipeline, the Python command is:
+##  5. Multi-Hardware Support
+PaddleX supports various mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>You only need to modify the `--device` parameter</b> to achieve seamless switching between different hardware.
+
+For example, if you use Ascend NPU for inference of the general image multi-label classification pipeline, the Python command used is:
 
 ```bash
-paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/padd
+paddlex --pipeline image_multilabel_classification \
+        --input general_image_classification_001.jpg \
+        --device npu:0
 ```
 
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
-
-```bash
-paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device npu:0
-```
-If you want to use the General Image Multi-label Classification Pipeline on more diverse hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general image multi-label classification pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

@@ -1,0 +1,7 @@
+wheel
+requests
+tqdm
+numpy
+# Compatible with paddlex
+opencv-contrib-python
+pyyaml

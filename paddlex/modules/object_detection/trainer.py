@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
 # limitations under the License.
 
 
-from pathlib import Path
-
-from ..base import BaseTrainer
-from ...utils.config import AttrDict
 from ...utils import logging
+from ..base import BaseTrainer
 from .model_list import MODELS
 
 
@@ -28,7 +25,19 @@ class DetTrainer(BaseTrainer):
 
     def _update_dataset(self):
         """update dataset settings"""
-        self.pdx_config.update_dataset(self.global_config.dataset_dir, "COCODetDataset")
+        metric = self.pdx_config.metric if "metric" in self.pdx_config else "COCO"
+        data_fields = (
+            self.pdx_config.TrainDataset["data_fields"]
+            if "data_fields" in self.pdx_config.TrainDataset
+            else None
+        )
+
+        self.pdx_config.update_dataset(
+            self.global_config.dataset_dir,
+            "COCODetDataset",
+            data_fields=data_fields,
+            metric=metric,
+        )
 
     def update_config(self):
         """update training config"""
@@ -57,6 +66,8 @@ class DetTrainer(BaseTrainer):
             epochs_iters = self.train_config.epochs_iters
         else:
             epochs_iters = self.pdx_config.get_epochs_iters()
+        if self.train_config.warmup_steps is not None:
+            self.pdx_config.update_warmup_steps(self.train_config.warmup_steps)
         if self.global_config.output is not None:
             self.pdx_config.update_save_dir(self.global_config.output)
 
@@ -82,4 +93,6 @@ class DetTrainer(BaseTrainer):
         ):
             train_args["resume_path"] = self.train_config.resume_path
         train_args["dy2st"] = self.train_config.get("dy2st", False)
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         return train_args

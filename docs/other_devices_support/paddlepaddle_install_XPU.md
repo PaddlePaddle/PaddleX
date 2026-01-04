@@ -4,7 +4,8 @@ comments: true
 
 # 昆仑 XPU 飞桨安装教程
 
-当前 PaddleX 支持昆仑 R200/R300 等芯片。考虑到环境差异性，我们推荐使用<b>飞桨官方发布的昆仑 XPU 开发镜像</b>，该镜像预装有昆仑基础运行环境库（XRE）。
+当前 PaddleX 支持昆仑 R200/R300/P800 等芯片。考虑到环境差异性，我们推荐使用<b>飞桨官方发布的昆仑 XPU 开发镜像</b>，该镜像预装有昆仑基础运行环境库（XRE）。
+如果您使用的是 P800 芯片，请参考飞桨官网文档进行安装：[P800 安装教程](https://www.paddlepaddle.org.cn/documentation/docs/zh/hardware_support/xpu/xpu-p800_install_cn.html)
 
 ## 1、docker环境准备
 拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包

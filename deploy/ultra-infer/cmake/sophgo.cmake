@@ -1,0 +1,7 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
+
+find_package(libsophon REQUIRED)
+message(${LIBSOPHON_LIB_DIRS})
+include_directories(${LIBSOPHON_INCLUDE_DIRS})
+message(${LIBSOPHON_LIB_DIRS})
+set(SOPHGO_RT_LIB ${LIBSOPHON_LIB_DIRS}/libbmrt.so)

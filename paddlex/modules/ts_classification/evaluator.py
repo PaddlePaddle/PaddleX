@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,11 +41,11 @@ class TSCLSEvaluator(BaseEvaluator):
         return config_path
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         self.pdx_config.update_dataset(self.global_config.dataset_dir, "TSCLSDataset")
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

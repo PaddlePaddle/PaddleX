@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@ from pathlib import Path
 
 from ..base import BaseEvaluator
 from .model_list import MODELS
-from ..formula_recognition.model_list import MODELS as MODELS_LaTeX
-
-MODELS = MODELS + MODELS_LaTeX
 
 
 class TextRecEvaluator(BaseEvaluator):
@@ -28,12 +25,16 @@ class TextRecEvaluator(BaseEvaluator):
     entities = MODELS
 
     def update_config(self):
-        """update evalution config"""
+        """update evaluation config"""
         if self.eval_config.log_interval:
             self.pdx_config.update_log_interval(self.eval_config.log_interval)
         if self.global_config["model"] == "LaTeX_OCR_rec":
             self.pdx_config.update_dataset(
                 self.global_config.dataset_dir, "LaTeXOCRDataSet"
+            )
+        elif "PP-OCRv3" in self.global_config["model"]:
+            self.pdx_config.update_dataset(
+                self.global_config.dataset_dir, "SimpleDataSet"
             )
         else:
             self.pdx_config.update_dataset(
@@ -52,7 +53,7 @@ class TextRecEvaluator(BaseEvaluator):
             self.pdx_config.update_label_dict_path(label_dict_path)
 
     def get_eval_kwargs(self) -> dict:
-        """get key-value arguments of model evalution function
+        """get key-value arguments of model evaluation function
 
         Returns:
             dict: the arguments of evaluation function.

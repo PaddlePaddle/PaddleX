@@ -54,7 +54,7 @@ labelme images --nodata --autosave --output annotations
 ```
 * `nodata` 停止将图像数据存储到JSON文件
 * `autosave` 自动存储
-* `ouput` 标签文件存储路径
+* `output` 标签文件存储路径
 #### 2.3.3 开始图片标注
 * 启动 `labelme` 后如图所示：
 

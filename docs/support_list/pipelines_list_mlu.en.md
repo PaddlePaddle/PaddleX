@@ -21,7 +21,7 @@ comments: true
     <td>
       <ul>
         <li>Automatic classification and recognition of product images</li>
-        <li>Real-time monitoring of defective products on production lines</li>
+        <li>Real-time monitoring of defective products on pipelines</li>
         <li>Personnel recognition in security surveillance</li>
       </ul>
     </td>

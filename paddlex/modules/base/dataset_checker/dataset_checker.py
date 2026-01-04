@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 import os
 from abc import ABC, abstractmethod
 
-from .utils import build_res_dict
-from ....utils.misc import AutoRegisterABCMetaClass
 from ....utils.config import AttrDict
 from ....utils.logging import info
+from ....utils.misc import AutoRegisterABCMetaClass
+from .utils import build_res_dict
 
 
 def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
@@ -32,6 +32,11 @@ def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
         BaseDatasetChecker: the dataset checker, which is subclass of BaseDatasetChecker.
     """
     model_name = config.Global.model
+    try:
+        pass
+    except ModuleNotFoundError:
+        pass
+
     return BaseDatasetChecker.get(model_name)(config)
 
 
@@ -77,7 +82,7 @@ class BaseDatasetChecker(ABC, metaclass=AutoRegisterABCMetaClass):
         check_result = build_res_dict(True)
         check_result["attributes"] = attrs
         check_result["analysis"] = analysis
-        check_result["dataset_path"] = self.global_config.dataset_dir
+        check_result["dataset_path"] = os.path.basename(dataset_dir)
         check_result["show_type"] = self.get_show_type()
         check_result["dataset_type"] = self.get_dataset_type()
         info("Check dataset passed !")

@@ -1,0 +1,40 @@
+Global:
+  model: LaTeX_OCR_rec
+  mode: check_dataset # check_dataset/train/evaluate/predict
+  dataset_dir: "./dataset/ocr_rec_latexocr_dataset_example"
+  device: gpu:0,1,2,3
+  output: "output"
+
+CheckDataset:
+  convert: 
+    enable: True
+    src_dataset_type: FormulaRecDataset
+  split: 
+    enable: False
+    train_percent: null
+    val_percent: null
+
+Train:
+  epochs_iters: 20
+  batch_size: 30
+  learning_rate: 0.0001
+  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams
+  resume_path: null
+  log_interval: 20
+  eval_interval: 1
+  save_interval: 1
+
+Evaluate:
+  batch_size: 10
+  weight_path: output/best_accuracy/best_accuracy.pdparams
+  log_interval: 1
+
+Export:
+  weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams
+
+Predict:
+  batch_size: 1
+  model_dir: "output/best_accuracy/inference"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png"
+  kernel_option:
+    run_mode: paddle

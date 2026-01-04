@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
 # limitations under the License.
 
 
-import os
-import io
-import sys
 import abc
-import shlex
-import locale
 import asyncio
-
-from .utils.arg import CLIArgument
-from .utils.subprocess import run_cmd as _run_cmd, CompletedProcess
+import io
+import locale
+import os
+import shlex
+import sys
 
 from ...utils import logging
-from ...utils.misc import abspath
 from ...utils.device import parse_device
+from ...utils.errors import CalledProcessError, raise_unsupported_api_error
 from ...utils.flags import DRY_RUN
-from ...utils.errors import raise_unsupported_api_error, CalledProcessError
+from ...utils.misc import abspath
+from .utils.arg import CLIArgument
+from .utils.subprocess import CompletedProcess
+from .utils.subprocess import run_cmd as _run_cmd
 
 __all__ = ["BaseRunner", "InferOnlyRunner"]
 
@@ -48,7 +48,6 @@ class BaseRunner(metaclass=abc.ABCMeta):
             runner_root_path (str): Path of the directory where the scripts reside.
         """
         super().__init__()
-
         self.runner_root_path = abspath(runner_root_path)
         # Path to python interpreter
         self.python = sys.executable
@@ -60,7 +59,6 @@ class BaseRunner(metaclass=abc.ABCMeta):
         For example, download prerequisites and install dependencies.
         """
         # By default we do nothing
-        pass
 
     @abc.abstractmethod
     def train(self, config_path, cli_args, device, ips, save_dir, do_eval=True):
@@ -205,6 +203,10 @@ class BaseRunner(metaclass=abc.ABCMeta):
                 new_env["ASCEND_RT_VISIBLE_DEVICES"] = dev_ids
             elif device == "mlu":
                 new_env["MLU_VISIBLE_DEVICES"] = dev_ids
+            elif device == "gcu":
+                new_env["TOPS_VISIBLE_DEVICES"] = dev_ids
+            elif device == "metax_gpu":
+                new_env["MACA_VISIBLE_DEVICES"] = dev_ids
             else:
                 new_env["CUDA_VISIBLE_DEVICES"] = dev_ids
             return args, new_env

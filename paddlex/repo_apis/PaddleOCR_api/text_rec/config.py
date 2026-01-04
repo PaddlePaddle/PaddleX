@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
+from typing import Union
 
 import yaml
-from typing import Union
-from ...base import BaseConfig
+
 from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_utils import load_config, merge_config
 
 
@@ -91,6 +92,17 @@ class TextRecConfig(BaseConfig):
                 "Global.character_dict_path": os.path.join(dataset_path, "dict.txt"),
             }
             self.update(_cfg)
+        elif dataset_type == "SimpleDataSet":
+            _cfg = {
+                "Train.dataset.name": dataset_type,
+                "Train.dataset.data_dir": dataset_path,
+                "Train.dataset.label_file_list": [train_list_path],
+                "Eval.dataset.name": "SimpleDataSet",
+                "Eval.dataset.data_dir": dataset_path,
+                "Eval.dataset.label_file_list": [os.path.join(dataset_path, "val.txt")],
+                "Global.character_dict_path": os.path.join(dataset_path, "dict.txt"),
+            }
+            self.update(_cfg)
         elif dataset_type == "LaTeXOCRDataSet":
             _cfg = {
                 "Train.dataset.name": dataset_type,
@@ -106,6 +118,14 @@ class TextRecConfig(BaseConfig):
             self.update(_cfg)
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
+
+    def update_dataset_by_list(self, label_file_list, ratio_list):
+        _cfg = {
+            "Train.dataset.name": "MSTextRecDataset",
+            "Train.dataset.label_file_list": label_file_list,
+            "Train.dataset.ratio_list": ratio_list,
+        }
+        self.update(_cfg)
 
     def update_batch_size(self, batch_size: int, mode: str = "train"):
         """update batch size setting
@@ -228,6 +248,9 @@ class TextRecConfig(BaseConfig):
             "Global.use_xpu": False,
             "Global.use_npu": False,
             "Global.use_mlu": False,
+            "Global.use_gcu": False,
+            "Global.use_iluvatar_gpu": False,
+            "Global.use_metax_gpu": False,
         }
 
         device_cfg = {
@@ -236,6 +259,9 @@ class TextRecConfig(BaseConfig):
             "xpu": {"Global.use_xpu": True},
             "mlu": {"Global.use_mlu": True},
             "npu": {"Global.use_npu": True},
+            "gcu": {"Global.use_gcu": True},
+            "iluvatar_gpu": {"Global.use_iluvatar_gpu": True},
+            "metax_gpu": {"Global.use_metax_gpu": True},
         }
         default_cfg.update(device_cfg[device])
         self.update(default_cfg)
@@ -391,11 +417,11 @@ class TextRecConfig(BaseConfig):
         self._update_save_interval(save_interval)
 
     def _update_infer_img(self, infer_img: str, infer_list: str = None):
-        """update image list to be infered
+        """update image list to be inferred
 
         Args:
-            infer_img (str): path to the image file to be infered. It would be ignored when `infer_list` is be set.
-            infer_list (str, optional): path to the .txt file containing the paths to image to be infered.
+            infer_img (str): path to the image file to be inferred. It would be ignored when `infer_list` is be set.
+            infer_list (str, optional): path to the .txt file containing the paths to image to be inferred.
                 Defaults to None.
         """
         if infer_list:

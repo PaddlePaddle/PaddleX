@@ -2,33 +2,82 @@
 comments: true
 ---
 
-# Unsupervised Anomaly Detection Module Development Tutorial
+# Unsupervised Anomaly Detection Module Tutorial
 
 ## I. Overview
 Unsupervised anomaly detection is a technology that automatically identifies and detects anomalies or rare samples that are significantly different from the majority of data in a dataset, without labels or with a small amount of labeled data. This technology is widely used in many fields such as industrial manufacturing quality control and medical diagnosis.
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
 
 <table>
 <thead>
 <tr>
-<th>Model</th>
+<th>Model</th><th>Model Download Link</th>
 <th>ROCAUC（Avg）</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>STFPM</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td>
 <td>0.962</td>
 <td>22.5</td>
 <td>An unsupervised anomaly detection algorithm based on representation consists of a pre-trained teacher network and a student network with the same structure. The student network detects anomalies by matching its own features with the corresponding features in the teacher network.</td>
 </tr>
 </tbody>
 </table>
-<b>The above model accuracy indicators are measured from the MVTec_AD dataset.</b>
+
+<strong>Test Environment Description:</strong>
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong>The above model accuracy indicators are measured from the MVTec_AD dataset.</li>
+              <li><strong>Hardware Configuration:</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## III. Quick Integration  <a id="quick"> </a>
 Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md). After installing the wheel package, a few lines of code can complete the inference of the unsupervised anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the unsupervised anomaly detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png) to your local machine.
@@ -38,14 +87,197 @@ from paddlex import create_model
 
 model_name = "STFPM"
 
-model = create_model(model_name)
+model = create_model(model_name=model_name)
 output = model.predict("uad_grid.png", batch_size=1)
 
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+After running, the result obtained is:
+
+```bash
+{'res': "{'input_path': 'uad_grid.png', 'pred': '...'}"}
+```
+
+The meanings of the running result parameters are as follows:
+- `input_path`: Indicates the path of the input image to be detected for anomalies.
+- `doctr_img`: Indicates the visualization result of the anomaly detection image. Since there is too much data to print directly, `...` is used here as a placeholder. The prediction result can be saved as an image through `res.save_to_img()` and as a JSON file through `res.save_to_json()`.
+
+The visualization image is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_ad/uad_grid_res.png">
+
+Relevant methods, parameters, and explanations are as follows:
+
+* `create_model` instantiates an image anomaly detection model (STFPM is used as an example here). The specific explanation is as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX will be used. If `model_dir` is specified, the user-defined model will be used.
+
+* The `predict()` method of the image anomaly detection model is called for inference prediction. The parameters of the `predict()` method are `input` and `batch_size`, with specific explanations as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer</td>
+<td>1</td>
+</tr>
+</table>
+
+* The prediction results are processed, with each sample's prediction result being of type `dict`, and supporting operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualized image in <code>dict</code> format</td>
+</tr>
+</table>
 
 For more information on the usage of PaddleX's single-model inference API, please refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
@@ -68,7 +300,7 @@ tar -xf ./dataset/mvtec_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/mvtec_examples
 ```
@@ -99,7 +331,7 @@ After executing the above command, PaddleX will validate the dataset and collect
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/mvtec_examples&quot;,
+  &quot;dataset_path&quot;: &quot;mvtec_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;SegDataset&quot;
 }
@@ -118,7 +350,7 @@ After executing the above command, PaddleX will validate the dataset and collect
 A single command is sufficient to complete model training, taking the training of STFPM as an example:
 
 ```bash
-python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/mvtec_examples
 ```
@@ -127,8 +359,8 @@ The steps required are:
 * Specify the path to the `.yaml` configuration file of the model (here it is `STFPM.yaml`，When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
-
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 
@@ -143,14 +375,15 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 </li>
 <li><code>train.log</code>: Training log file, recording changes in model metrics and loss during training;</li>
 <li><code>config.yaml</code>: Training configuration file, recording the hyperparameter configuration for this training session;</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
 
 ### <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/mvtec_examples
 ```
@@ -172,7 +405,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png) to your local machine.
 ```bash
-python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="uad_grid.png"
@@ -190,8 +423,10 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. <b>Pipeline Integration</b>
 
-The unsupervised anomaly detection module can be integrated into PaddleX pipelines such as [Image_anomaly_detection](../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.en.md). Simply replace the model path to update the unsupervised anomaly detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The unsupervised anomaly detection module can be integrated into PaddleX pipelines such as [Image_anomaly_detection](../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.en.md). Simply replace the model path to update the unsupervised anomaly detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2. <b>Module Integration</b>
 
 The weights you produce can be directly integrated into the unsupervised anomaly detection module. You can refer to the Python example code in [Quick Integration](#quick), simply replace the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

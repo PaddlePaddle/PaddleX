@@ -1,7 +1,0 @@
-Global:
-  pipeline_name: instance_segmentation
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png
-  
-Pipeline:
-  model: Mask-RT-DETR-S
-  batch_size: 1

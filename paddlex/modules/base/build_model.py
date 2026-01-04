@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import os
 from ...repo_apis.base import Config, PaddleModel
 
 
@@ -22,7 +21,7 @@ def build_model(model_name: str, config_path: str = None) -> tuple:
 
     Args:
         model_name (str): model name
-        device (str): device, such as gpu, cpu, npu, xpu, mlu
+        device (str): device, such as gpu, cpu, npu, xpu, mlu, gcu, metax_gpu
         config_path (str, optional): path to the PaddleX config yaml file.
             Defaults to None, i.e. using the default config file.
 

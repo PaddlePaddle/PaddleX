@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,11 +56,13 @@ MODELS = [
     "PP-HGNetV2-B5",
     "PP-HGNetV2-B6",
     "PP-LCNet_x0_25",
+    "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x0_35",
     "PP-LCNet_x0_5",
     "PP-LCNet_x0_75",
     "PP-LCNet_x1_0",
     "PP-LCNet_x1_0_doc_ori",
+    "PP-LCNet_x1_0_textline_ori",
     "PP-LCNet_x1_5",
     "PP-LCNet_x2_0",
     "PP-LCNet_x2_5",
@@ -94,4 +96,5 @@ MODELS = [
     "FasterNet-T0",
     "FasterNet-T1",
     "FasterNet-T2",
+    "PP-LCNet_x1_0_table_cls",
 ]

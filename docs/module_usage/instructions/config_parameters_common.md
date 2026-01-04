@@ -47,6 +47,7 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # CheckDataset
 <table>
 <thead>
@@ -102,6 +103,7 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Train
 <table>
 <thead>
@@ -175,6 +177,7 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Evaluate
 <table>
 <thead>
@@ -200,6 +203,7 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Export
 <table>
 <thead>
@@ -219,6 +223,7 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Predict
 <table>
 <thead>
@@ -248,5 +253,26 @@ comments: true
 <td>预测输入路径</td>
 <td>yaml文件中指定的预测输入路径</td>
 </tr>
+
+<tr>
+<td>kernel_option</td>
+<td>dict</td>
+<td>推理引擎设置，如：“run_mode: paddle”</td>
+<td></td>
+</tr>
+
+<tr>
+<td>use_hpip</td>
+<td>bool</td>
+<td>是否启用高性能推理插件</td>
+<td></td>
+</tr>
+<tr>
+<td>hpip_config</td>
+<td>dict | None</td>
+<td>高性能推理配置</td>
+<td></td>
+</tr>
+
 </tbody>
 </table>

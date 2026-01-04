@@ -2,63 +2,145 @@
 comments: true
 ---
 
-# Time Series Forecasting Module Development Tutorial
+# Time Series Forecasting Module Tutorial
 
 ## I. Overview
 Time series forecasting aims to predict the possible values or states at a future point in time or within a future time period by analyzing patterns, trends, periodicity, and other characteristics in historical data. This helps enterprises and organizations make more accurate decisions, optimize resource allocation, reduce risks, and seize potential market opportunities. These time series data typically originate from various sensors, economic activities, social behaviors, and other real-world application scenarios. For example, stock prices, temperature changes, website traffic, sales data, and the like are all typical examples of time series data.
 
 ## II. Supported Model List
 
+> The inference time only includes the model inference time and does not include the time for pre- or post-processing.
+
 <table>
 <thead>
 <tr>
-<th>Model Name</th>
+<th>Model Name</th><th>Model Download Link</th>
 <th>mse</th>
 <th>mae</th>
-<th>Model Size (M)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Introduce</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>DLinear</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.382</td>
 <td>0.394</td>
-<td>76k</td>
+<td>0.34 / 0.12</td>
+<td>0.64 / 0.06</td>
+<td>0.076</td>
 <td>Simple structure, high efficiency and easy-to-use time series prediction model</td>
 </tr>
+<td>NLinear</td>
+<td>0.386</td>
+<td>0.392</td>
+<td>0.27 / 0.10</td>
+<td>0.49 / 0.08</td>
+<td>0.04</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td></tr>
 <tr>
 <td>Nonstationary</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
 <td>0.600</td>
 <td>0.515</td>
-<td>60.3M</td>
+<td>3.92 / 2.59</td>
+<td>18.09 / 13.36</td>
+<td>60.3</td>
 <td>Based on the transformer structure, targeted optimization of long-term time series prediction models for non-stationary time series</td>
 </tr>
 <tr>
 <td>PatchTST</td>
-<td>0.385</td>
-<td>0.397</td>
-<td>2.2M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
+<td>0.379</td>
+<td>0.391</td>
+<td>1.81 / 0.45</td>
+<td>5.79 / 0.77</td>
+<td>2.2</td>
 <td>High-precision long-term time series prediction model that takes into account both local patterns and global dependencies</td>
 </tr>
 <tr>
+<td>RLinear</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
+<td>0.385</td>
+<td>0.392</td>
+<td>0.39 / 0.18</td>
+<td>0.82 / 0.08</td>
+<td>0.04</td>
+</tr>
+<tr>
 <td>TiDE</td>
-<td>0.405</td>
-<td>0.412</td>
-<td>34.9M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
+<td>0.407</td>
+<td>0.414</td>
+<td>- / -</td>
+<td>4.54 / 1.09</td>
+<td>34.9</td>
 <td>High-precision model suitable for handling multivariate, long-term time series prediction problems</td>
 </tr>
 <tr>
 <td>TimesNet</td>
-<td>0.417</td>
-<td>0.431</td>
-<td>5.2M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
+<td>0.416</td>
+<td>0.429</td>
+<td>15.19 / 13.77</td>
+<td>23.14 / 12.42</td>
+<td>5.2</td>
 <td>Through multi-period analysis, TimesNet is a highly adaptable high-precision time series analysis model</td>
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are measured on the [ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar) test dataset, with an input sequence length of 96, and a prediction sequence length of 96 for all models except TiDE, which has a prediction sequence length of 720.</b>
 
+<strong>Test Environment Description:</strong>
+
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong> <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a> test dataset.</li>
+              <li><strong>Hardware Configuration:</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                  </ul>
+              </li>
+              <li><strong>Software Environment:</strong>
+                  <ul>
+                      <li>Ubuntu 20.04 / CUDA 11.8 / cuDNN 8.9 / TensorRT 8.6.1.6</li>
+                      <li>paddlepaddle 3.0.0 / paddlex 3.0.3</li>
+                  </ul>
+              </li>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
@@ -68,12 +150,208 @@ Just a few lines of code can complete the inference of the Time Series Forecasti
 
 ```bash
 from paddlex import create_model
-model = create_model("DLinear")
+model = create_model(model_name="DLinear")
 output = model.predict("ts_fc.csv", batch_size=1)
 for res in output:
     res.print(json_format=False)
-    res.save_to_csv("./output/")
+    res.save_to_csv(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{'res': {'input_path': 'ts_fc.csv', 'forecast':                            OT
+date
+2018-06-26 20:00:00  9.586131
+2018-06-26 21:00:00  9.379762
+2018-06-26 22:00:00  9.252275
+2018-06-26 23:00:00  9.249993
+2018-06-27 00:00:00  9.164998
+...                       ...
+2018-06-30 15:00:00  8.830340
+2018-06-30 16:00:00  9.291553
+2018-06-30 17:00:00  9.097666
+2018-06-30 18:00:00  8.905430
+2018-06-30 19:00:00  8.993793
+
+[96 rows x 1 columns]}}
+```
+
+The meanings of the parameters in the running results are as follows:
+- `input_path`: Indicates the path to the input time-series file for prediction.
+- `forecast`: Indicates the time-series forecast result. You can save the forecast results to a CSV file using `res.save_to_csv()` or to a JSON file using `res.save_to_json()`.
+
+Descriptions of related methods, parameters, etc., are as follows:
+
+* The `create_model` method instantiates a time-series forecasting model (using `DLinear` as an example). Specific descriptions are as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>The name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>The storage path of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable the high-performance inference plugin</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, PaddleX's built-in model parameters are used by default. If `model_dir` is specified, the user-defined model is used.
+
+* The `predict()` method of the time-series forecasting model is called for inference prediction. The parameters of the `predict()` method are `input` and `batch_size`, with specific descriptions as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as time-series data represented by <code>pandas.DataFrame</code></li>
+  <li><b>File path</b>, such as the local path of a time-series file: <code>/root/data/ts.csv</code></li>
+  <li><b>URL link</b>, such as the network URL of a time-series file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv">Example</a></li>
+  <li><b>Local directory</b>, which must contain data files for prediction, such as the local path: <code>/root/data/</code></li>
+  <li><b>List</b>, elements of the list must be of the above types, such as <code>[pandas.DataFrame, pandas.DataFrame]</code>, <code>[\"/root/data/ts1.csv\", \"/root/data/ts2.csv\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code>, <code>[{\"ts\": \"/root/data1\"}, {\"ts\": \"/root/data2/ts.csv\"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+</table>
+
+* The prediction results are processed for each sample, with the prediction result being of type `dict`, and support operations such as printing, saving as a `csv` file, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Explanation</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a <code>json</code> file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is provided, the saved file name matches the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_csv()</code></td>
+<td>Save the result as a time-series <code>csv</code> file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is provided, the saved file name matches the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining the visualized time-series with results and the prediction results via attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>csv</code></td>
+<td rowspan="1">Get the time-series prediction result in <code>csv</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
@@ -98,7 +376,7 @@ tar -xf ./dataset/ts_dataset_examples.tar -C ./dataset/
 Data validation can be completed with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
@@ -211,7 +489,7 @@ The verification results above indicate that `check_pass` being `True` means the
 <li><code>enable</code>: Whether to enable dataset format conversion, supporting <code>xlsx</code> and <code>xls</code> format conversion, default is <code>False</code>;</li>
 <li><code>src_dataset_type</code>: If dataset format conversion is enabled, the source dataset format needs to be set, default is <code>null</code>.</li>
 </ul>
-<p>Modify the <code>paddlex/configs/ts_forecast/DLinear.yaml</code> configuration as follows:</p>
+<p>Modify the <code>paddlex/configs/modules/ts_forecast/DLinear.yaml</code> configuration as follows:</p>
 <pre><code class="language-bash">......
 CheckDataset:
   ......
@@ -221,12 +499,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_forecast_to_convert
 </code></pre>
 <p>Of course, the above parameters also support being set by appending command-line arguments. For a <code>LabelMe</code> format dataset, the command is:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_forecast_to_convert \
     -o CheckDataset.convert.enable=True \
@@ -250,13 +528,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -269,7 +547,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the Time Series Forecasting model (DLinear) as an example:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
@@ -279,8 +557,8 @@ You need to follow these steps:
 * Specify the `.yaml` configuration file path for the model (here it's `DLinear.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
-
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX TS Configuration Parameters Documentation](../../instructions/config_parameters_time_series.en.md).
+* Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX TS Configuration Parameters Documentation](../../instructions/config_parameters_time_series.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 
@@ -302,7 +580,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After model training, you can evaluate the specified model weights on the validation set to verify model accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
@@ -332,7 +610,7 @@ To perform inference predictions via the command line, use the following command
 Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="ts_fc.csv"
@@ -361,3 +639,5 @@ The Time Series Forecasting module can be integrated into PaddleX pipelines such
 2. <b>Module Integration</b>
 
 The weights you produce can be directly integrated into the Time Series Forecasting module. You can refer to the Python sample code in [Quick Integration](#iii-quick-integration) and just replace the model with the path to the model you trained.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

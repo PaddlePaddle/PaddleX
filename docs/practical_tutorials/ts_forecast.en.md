@@ -32,9 +32,11 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <thead>
 <tr>
 <th>Model Name</th>
-<th>MSE</th>
-<th>MAE</th>
-<th>Model Size (M)</th>
+<th>mse</th>
+<th>mae</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -43,35 +45,45 @@ PaddleX provides five end-to-end time series forecasting models. For details, re
 <td>DLinear</td>
 <td>0.382</td>
 <td>0.394</td>
-<td>76k</td>
+<td>0.34 / 0.12</td>
+<td>0.64 / 0.06</td>
+<td>0.076</td>
 <td>A simple, efficient, and easy-to-use time series forecasting model</td>
 </tr>
 <tr>
 <td>Nonstationary</td>
 <td>0.600</td>
 <td>0.515</td>
-<td>60.3M</td>
+<td>3.92 / 2.59</td>
+<td>18.09 / 13.36</td>
+<td>60.3</td>
 <td>Based on transformer architecture, optimized for long-term forecasting of non-stationary time series</td>
 </tr>
 <tr>
 <td>PatchTST</td>
-<td>0.385</td>
-<td>0.397</td>
-<td>2.2M</td>
+<td>0.379</td>
+<td>0.391</td>
+<td>1.81 / 0.45</td>
+<td>5.79 / 0.77</td>
+<td>2.2</td>
 <td>A high-accuracy long-term forecasting model that balances local patterns and global dependencies</td>
 </tr>
 <tr>
 <td>TiDE</td>
-<td>0.405</td>
-<td>0.412</td>
-<td>34.9M</td>
+<td>0.407</td>
+<td>0.414</td>
+<td>- / -</td>
+<td>4.54 / 1.09</td>
+<td>34.9</td>
 <td>A high-accuracy model suitable for handling multivariate, long-term time series forecasting problems</td>
 </tr>
 <tr>
 <td>TimesNet</td>
-<td>0.417</td>
-<td>0.431</td>
-<td>5.2M</td>
+<td>0.416</td>
+<td>0.429</td>
+<td>15.19 / 13.77</td>
+<td>23.14 / 12.42</td>
+<td>5.2</td>
 <td>Through multi-period analysis, TimesNet is an adaptable and high-accuracy time series analysis model</td>
 </tr>
 </tbody>
@@ -105,7 +117,7 @@ tar -xf ./dataset/electricity.tar -C ./dataset/
 Data Validation can be completed with just one command:
 
 ```
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/electricity
 ```
@@ -240,7 +252,7 @@ If you need to convert the dataset format or re-split the dataset, you can modif
 Before training, ensure that you have validated the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
 -o Global.mode=train \
 -o Global.dataset_dir=./dataset/electricity \
 -o Train.epochs_iters=5 \
@@ -300,7 +312,7 @@ For more hyperparameter introductions, refer to [PaddleX Time Series Task Model 
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```
-    python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+    python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/electricity \
 ```
@@ -455,11 +467,11 @@ After increasing the training epochs, Experiment 4 achieves the highest accuracy
 </tr>
 </tbody>
 </table>
-## 6. Production Line Testing
-Replace the model in the production line with the fine-tuned model and test using [this power test data](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv) for prediction:
+## 6. pipeline Testing
+Replace the model in the pipeline with the fine-tuned model and test using [this power test data](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv) for prediction:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv
@@ -476,10 +488,30 @@ Other related parameters can be set by modifying the `Global` and `Evaluate` fie
 
 If the general-purpose time series forecast pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-1. If you need to apply the general-purpose time series forecast pipeline directly in your Python project, you can refer to the following sample code:
+1. If you need to use the fine-tuned model weights, you can obtain the ts_forecast production configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+
 ```
+paddlex --get_pipeline_config ts_forecast --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` in the production configuration file. If you need to directly apply the general time-series classification pipeline in your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: ts_forecast
+
+SubModules:
+  TSForecast:
+    module_name: ts_forecast
+    model_name: ./output/inference
+    model_dir: null # fine-tuned model path
+    batch_size: 1
+```
+
+Subsequently, in your Python code, you can use the pipeline as follows:
+
+```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="ts_forecast")
+pipeline = create_pipeline(pipeline="my_path/ts_forecast.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
     res.print()
@@ -487,7 +519,7 @@ for res in output:
 ```
 For more parameters, please refer to the [Time Series forecast Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.en.md)
 
-2. Additionally, PaddleX's time series forecast pipeline also offers a service-oriented deployment method, detailed as follows:
+1. Additionally, PaddleX's time series forecast pipeline also offers a serving deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PPaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy.en.md).
+Serving Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving serving deployment of pipelines at low cost. For detailed instructions on serving deployment, please refer to the [PPaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

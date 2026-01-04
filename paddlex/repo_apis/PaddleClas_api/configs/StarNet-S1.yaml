@@ -142,7 +142,9 @@ Infer:
         to_rgb: True
         channel_first: False
     - ResizeImage:
-        resize_short: 224
+        interpolation: bicubic
+        backend: pil
+        resize_short: 256
     - CropImage:
         size: 224
     - NormalizeImage:
