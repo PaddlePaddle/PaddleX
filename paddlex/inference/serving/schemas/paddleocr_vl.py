@@ -38,7 +38,10 @@ class InferRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
     useLayoutDetection: Optional[bool] = None
+    usePolygonPoints: Optional[bool] = None
     useChartRecognition: Optional[bool] = None
+    useSealRecogntion: Optional[bool] = None
+    useOcrForImageBlock: Optional[bool] = None
     layoutThreshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
@@ -53,6 +56,7 @@ class InferRequest(ocr.BaseInferRequest):
     maxNewTokens: Optional[int] = None
     mergeLayoutBlocks: Optional[bool] = None
     markdownIgnoreLabels: Optional[List[str]] = None
+    vlmExtraArgs: Optional[dict] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
     visualize: Optional[bool] = None
@@ -77,12 +81,16 @@ class InferResult(BaseModel):
 
 
 class ConcatenatePagesRequest(BaseModel):
-    pages: List[MarkdownData]
+    pages: List[dict]
+    mergeTable: bool = True
+    titleLevel: bool = True
+    prettifyMarkdown: bool = True
+    showFormulaNumber: bool = False
     logId: Optional[str] = None
 
 
 class ConcatenatePagesResult(BaseModel):
-    text: str
+    layoutParsingResult: LayoutParsingResult
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

@@ -2527,7 +2527,7 @@ for res in output:
 <ul>
 <li><b><code>concatenatePages</code></b></li>
 </ul>
-<p>对Markdown结果进行页面拼接</p>
+<p>拼接多个页面的结果。</p>
 <p><code>POST /concatenate-pages</code></p>
 <ul>
 <li>请求体的属性如下：</li>
@@ -2545,9 +2545,34 @@ for res in output:
 <tr>
 <td><code>pages</code></td>
 <td><code>array</code></td>
-<td>页面数组。每个元素为<code>infer</code>操作返回的Markdown对象。
+<td>页面数组。每个元素为<code>infer</code>操作返回的<code>prunedResult</code>对象。
 </td>
 <td>是</td>
+</tr>
+<tr>
+<td><code>mergeTable</code></td>
+<td><code>boolean</code></td>
+<td>是否跨页合并表格。默认为<code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>titleLevel</code></td>
+<td><code>boolean</code></td>
+<td>是否配置分级标题。默认为<code>true</code>。</td>
+<td>否</td>
+</tr>
+</tr>
+<tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
+<td>否</td>
 </tr>
 </tbody>
 </table>
@@ -2564,9 +2589,9 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>拼接后的Markdown文本。</td>
+<td><code>layoutParsingResult</code></td>
+<td><code>object</code></td>
+<td>拼接后的版面解析结果。其中包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
 </tr>
 </tbody>
 </table>
@@ -2580,7 +2605,7 @@ import base64
 import requests
 import pathlib
 
-API_URL = "http://localhost:8080/layout-parsing" # 服务URL
+BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
@@ -2594,14 +2619,14 @@ payload = {
     "fileType": 1, # 文件类型，1表示图像文件
 }
 
-# 调用API
-response = requests.post(API_URL, json=payload)
+response = requests.post(BASE_URL + "/layout-parsing", json=payload)
+assert response.status_code == 200, response.content
 
-# 处理接口返回数据
-assert response.status_code == 200
 result = response.json()["result"]
+pruned_results = []
 for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
+    pruned_results.append(res["prunedResult"])
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)
     (md_dir / "doc.md").write_text(res["markdown"]["text"])
@@ -2615,6 +2640,16 @@ for i, res in enumerate(result["layoutParsingResults"]):
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
+
+payload = {
+    "pages": pruned_results,
+}
+
+response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
+assert response.status_code == 200, response.content
+
+result = response.json()["result"]
+pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
 </code></pre></details>
 
 <details><summary>C++</summary>
