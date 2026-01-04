@@ -47,7 +47,7 @@ jobs:
           git config --global user.name "PaddleXCI"
           git config --global user.email "paddlex_ci@example.com"
           git clone ${REPO} ${REPO_NAME} -b ${BASE_BRANCH}
-          cd FastDeploy
+          cd PaddleX
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             git fetch origin pull/${{ github.event.pull_request.number }}/head:pr/${{ github.event.pull_request.number }}
             git merge pr/${{ github.event.pull_request.number }}
