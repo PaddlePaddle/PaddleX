@@ -7,6 +7,7 @@ python -m pip install https://paddle-qa.bj.bcebos.com/paddle-pipeline/Develop-Ta
 python -c "import paddle; paddle.version.show()"
 cp -r PaddleTest/models/PaddleX/ci ./
 export DEVICE_ID=${cudaid2}
+export PADDLE_PDX_DISABLE_DEV_MODEL_WL=true
 export MEM_SIZE=32
 export DEVICE_TYPE=xpu
 rm -rf  ci/pr_list.txt
