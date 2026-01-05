@@ -79,8 +79,10 @@ def _format_data(obj):
     Returns:
         Any: The formatted object.
     """
-    if isinstance(obj, np.float32):
+    if isinstance(obj, (np.float32, np.float64)):
         return float(obj)
+    elif isinstance(obj, (np.int32, np.int64)):
+        return int(obj)
     elif isinstance(obj, np.ndarray):
         return [_format_data(item) for item in obj.tolist()]
     elif isinstance(obj, pd.DataFrame):
