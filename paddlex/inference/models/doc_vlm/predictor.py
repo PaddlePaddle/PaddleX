@@ -220,14 +220,6 @@ class DocVLMPredictor(BasePredictor):
                 warnings.warn(
                     "`top_p` is currently not supported by the local model and will be ignored."
                 )
-            if min_pixels is not None:
-                warnings.warn(
-                    "`min_pixels` is currently not supported by the local model and will be ignored."
-                )
-            if max_pixels is not None:
-                warnings.warn(
-                    "`max_pixels` is currently not supported by the local model and will be ignored."
-                )
             if use_cache is not None:
                 generate_kwargs["use_cache"] = use_cache
             with TemporaryDeviceChanger(self.device):
