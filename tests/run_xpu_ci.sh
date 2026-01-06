@@ -6,7 +6,7 @@ python -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simp
 python -m pip install https://paddle-qa.bj.bcebos.com/paddle-pipeline/Develop-TagBuild-Training-Linux-Xpu-P800-SelfBuiltPypiUse/latest/paddlepaddle_xpu-0.0.0-cp310-cp310-linux_x86_64.whl
 python -c "import paddle; paddle.version.show()"
 cp -r PaddleTest/models/PaddleX/ci ./
-export DEVICE_ID=0,1
+export DEVICE_ID=6,7
 export PADDLE_PDX_DISABLE_DEV_MODEL_WL=true
 export MEM_SIZE=32
 export DEVICE_TYPE=xpu
