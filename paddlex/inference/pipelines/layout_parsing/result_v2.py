@@ -44,7 +44,7 @@ def compile_title_pattern():
         r"(?:" + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|" + r"[\(\（](?:[1-9][0-9]*|["
         r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
         r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
-        r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.?" + r")"
+        r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)(?:\.|\s)" + r")"
     )
     return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
 
