@@ -40,7 +40,7 @@ from .uilts import (
     crop_margin,
     filter_overlap_boxes,
     merge_blocks,
-    post_process_for_grounding,
+    post_process_for_spotting,
     tokenize_figure_of_table,
     truncate_repetitive_content,
     untokenize_figure_of_table,
@@ -424,7 +424,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     result_str = vl_rec_result.get("result", "")
                     if result_str is None:
                         result_str = ""
-                    result_str = truncate_repetitive_content(result_str)
+                    min_count = 5000 if block_label == "table" else 50
+                    result_str = truncate_repetitive_content(
+                        result_str, min_count=min_count
+                    )
                     if ("\\(" in result_str and "\\)" in result_str) or (
                         "\\[" in result_str and "\\]" in result_str
                     ):
@@ -447,7 +450,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         )
                     if block_label == "spotting":
                         h, w = block_img.shape[:2]
-                        result_str, spotting_res = post_process_for_grounding(
+                        result_str, spotting_res = post_process_for_spotting(
                             result_str, w, h
                         )
 

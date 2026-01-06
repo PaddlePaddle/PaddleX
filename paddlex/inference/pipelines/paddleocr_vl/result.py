@@ -113,10 +113,10 @@ def merge_formula_and_number(formula, formula_number):
 
 def format_chart2table_func(block):
     lines_list = block.content.split("\n")
-    # 提取表头和内容
+    # get header and rows
     header = lines_list[0].split("|")
     rows = [line.split("|") for line in lines_list[1:]]
-    # 构造HTML表格
+    # construct html table
     html = "<table border=1 style='margin: auto; width: max-content;'>\n"
     html += (
         "  <thead><tr>"
@@ -141,11 +141,18 @@ def format_chart2table_func(block):
 
 def format_table_center_func(block):
     tabel_content = block.content
+
     tabel_content = tabel_content.replace(
-        "<table>", "<table border=1 style='margin: auto; width: max-content;'>"
+        "<table>", "<table border=1 style='margin: auto; word-wrap: break-word;'>"
     )
-    tabel_content = tabel_content.replace("<th>", "<th style='text-align: center;'>")
-    tabel_content = tabel_content.replace("<td>", "<td style='text-align: center;'>")
+
+    tabel_content = tabel_content.replace(
+        "<th>", "<th style='text-align: center; word-wrap: break-word;'>"
+    )
+    tabel_content = tabel_content.replace(
+        "<td>", "<td style='text-align: center; word-wrap: break-word;'>"
+    )
+
     return tabel_content
 
 
