@@ -146,7 +146,7 @@ class SiglipImageProcessor(object):
         self.patch_size = patch_size
         self.temporal_patch_size = temporal_patch_size
         self.merge_size = merge_size
-        self.size = {"min_pixels": min_pixels, "max_pixels": max_pixels}  # not used
+        self.size = {"min_pixels": min_pixels, "max_pixels": max_pixels}
         self.do_convert_rgb = do_convert_rgb
 
     @classmethod
@@ -160,6 +160,7 @@ class SiglipImageProcessor(object):
     def _preprocess(
         self,
         images,
+        size: Optional[Dict[str, int]] = None,
         do_resize: Optional[bool] = None,
         do_rescale: Optional[bool] = None,
         rescale_factor: Optional[float] = None,
@@ -183,8 +184,8 @@ class SiglipImageProcessor(object):
                     height,
                     width,
                     factor=self.patch_size * self.merge_size,
-                    min_pixels=self.min_pixels,
-                    max_pixels=self.max_pixels,
+                    min_pixels=size["min_pixels"],
+                    max_pixels=size["max_pixels"],
                 )
 
                 image = image.resize(
@@ -267,6 +268,7 @@ class SiglipImageProcessor(object):
             for image in images:
                 patches, image_grid_thw = self._preprocess(
                     image,
+                    size=size,
                     do_resize=do_resize,
                     do_rescale=do_rescale,
                     rescale_factor=rescale_factor,
