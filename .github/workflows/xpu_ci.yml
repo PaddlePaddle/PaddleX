@@ -45,7 +45,7 @@ jobs:
           '
           git config --global user.name "PaddleCI"
           git config --global user.email "paddle_ci@example.com"
-          wget -q https://paddle-qa.bj.bcebos.com/CodeSync/develop/PaddleX.tar
+          wget https://paddle-qa.bj.bcebos.com/CodeSync/develop/PaddleX.tar
           tar -xf PaddleX.tar && rm -rf PaddleX.tar
           cd PaddleX
           if [ "${{ github.event_name }}" = "pull_request" ]; then
