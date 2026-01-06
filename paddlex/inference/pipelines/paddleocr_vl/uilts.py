@@ -96,7 +96,7 @@ def filter_overlap_boxes(
     for i in range(len(boxes)):
         x1, y1, x2, y2 = boxes[i]["coordinate"]
         w, h = x2 - x1, y2 - y1
-        if w < 2 or h < 2:
+        if w < 4 or h < 4:
             dropped_indexes.add(i)
         for j in range(i + 1, len(boxes)):
             if i in dropped_indexes or j in dropped_indexes:
@@ -258,7 +258,10 @@ def merge_blocks(blocks, non_merge_labels, use_polygon_points=False):
         y2 = max(prev_bbox[3], block_bbox[3])
         min_box = [x1, y1, x2, y2]
         for idx, other_block in enumerate(blocks):
-            if idx in [block_idx, prev_idx]:
+            if (
+                idx in [block_idx, prev_idx]
+                or other_block["label"] not in non_merge_labels
+            ):
                 continue
             other_bbox = other_block["box"]
             if calculate_overlap_ratio(min_box, other_bbox) > 0:
@@ -929,7 +932,11 @@ def find_repeating_suffix(
 
 
 def truncate_repetitive_content(
-    content: str, line_threshold: int = 10, char_threshold: int = 10, min_len: int = 10
+    content: str,
+    line_threshold: int = 10,
+    char_threshold: int = 10,
+    min_len: int = 10,
+    min_count: int = 3000,
 ) -> str:
     """
     Detect and truncate character-level, phrase-level, or line-level repetition in content.
@@ -943,6 +950,9 @@ def truncate_repetitive_content(
     Returns:
         Union[str, str]: (truncated_content, info_string)
     """
+    if len(content) < min_count:
+        return content
+
     stripped_content = content.strip()
     if not stripped_content:
         return content
@@ -1015,7 +1025,7 @@ LOC_BLOCK_RE = re.compile(r"<\|LOC_BEGIN\|>(.*?)<\|LOC_END\|>", re.S)
 LOC_ITEM_RE = re.compile(r"<\|LOC_(\d+)\|>")
 
 
-def post_process_for_grounding(
+def post_process_for_spotting(
     input_str: str, w: int, h: int
 ) -> Tuple[str, Dict[str, List]]:
     """
