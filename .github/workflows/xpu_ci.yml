@@ -27,7 +27,7 @@ jobs:
 
       - name: Code Checkout
         env:
-          docker_image: registry.baidubce.com/device/paddle-xpu:ubuntu20-x86_64-gcc84-py310
+          docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/fastdeploy-xpu:2.3.0
         run: |
           REPO="https://github.com/${{ github.repository }}.git"
           FULL_REPO="${{ github.repository }}"
@@ -58,7 +58,7 @@ jobs:
 
       - name: Run CI unittest
         env:
-          docker_image: registry.baidubce.com/device/paddle-xpu:ubuntu20-x86_64-gcc84-py310
+          docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/fastdeploy-xpu:2.3.0
         run: |
           runner_name="${{ runner.name }}"
           PARENT_DIR=$(dirname "$WORKSPACE")
