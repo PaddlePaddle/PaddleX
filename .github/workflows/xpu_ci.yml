@@ -16,8 +16,7 @@ concurrency:
 jobs:
   CI_XPU:
     timeout-minutes: 60
-    runs-on:
-      group: Kunlun
+    runs-on: [self-hosted, XPU-P800-2Card]
     steps:
       - name: Print current runner name
         run: |
