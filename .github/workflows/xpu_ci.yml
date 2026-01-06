@@ -45,8 +45,7 @@ jobs:
           '
           git config --global user.name "PaddleCI"
           git config --global user.email "paddle_ci@example.com"
-          wget https://paddle-qa.bj.bcebos.com/CodeSync/develop/PaddleX.tar
-          tar -xf PaddleX.tar && rm -rf PaddleX.tar
+          git clone ${REPO} ${REPO_NAME} -b ${BASE_BRANCH}
           cd PaddleX
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             git fetch origin pull/${{ github.event.pull_request.number }}/head:pr/${{ github.event.pull_request.number }}
