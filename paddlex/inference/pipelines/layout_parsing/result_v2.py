@@ -44,7 +44,7 @@ def compile_title_pattern():
         r"(?:" + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|" + r"[\(\（](?:[1-9][0-9]*|["
         r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
         r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
-        r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.?" + r")"
+        r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)(?:\.|\s)" + r")"
     )
     return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
 
@@ -96,7 +96,7 @@ def format_para_title_func(block):
     :return: Normalized chapter title string.
     """
     if not hasattr(block, "title_level"):
-        return block.content
+        return format_title_func(block)
     level = block.title_level
     title = block.content
     return f"#{'#' * level} {title}".replace("-\n", "").replace(
