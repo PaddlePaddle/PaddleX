@@ -185,7 +185,21 @@ class DocVLMPredictor(BasePredictor):
         if self._use_local_model:
             src_data = copy.copy(data)
             # preprocess
-            data = self.processor.preprocess(data)
+            if self.model_name in self.model_group["PaddleOCR-VL"]:
+                data = self.processor.preprocess(
+                    data, min_pixels=min_pixels, max_pixels=max_pixels
+                )
+            else:
+                data = self.processor.preprocess(data)
+                if min_pixels is not None:
+                    warnings.warn(
+                        f"`min_pixels` is currently not supported by the {repr(self.model_name)} model and will be ignored."
+                    )
+                if max_pixels is not None:
+                    warnings.warn(
+                        f"`max_pixels` is currently not supported by the {repr(self.model_name)} model and will be ignored."
+                    )
+
             data = self._switch_inputs_to_device(data)
 
             # do infer
