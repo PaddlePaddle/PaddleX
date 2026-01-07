@@ -1036,7 +1036,7 @@ def post_process_for_spotting(
     texts = ANNOT_TEXT_RE.findall(input_str)
     loc_blocks = LOC_BLOCK_RE.findall(input_str)
 
-    dt_polys = []
+    rec_polys = []
     rec_texts = []
 
     n = min(len(texts), len(loc_blocks))
@@ -1049,12 +1049,10 @@ def post_process_for_spotting(
         vals = list(map(int, loc_items[:8]))
         pts = [(vals[j], vals[j + 1]) for j in range(0, 8, 2)]
         pts = [(p[0] / 1000.0 * w, p[1] / 1000.0 * h) for p in pts]
-        dt_polys.append(pts)
+        rec_polys.append(pts)
         rec_texts.append(txt)
 
-    # 拼接文本
     result_str = "\n\n".join(rec_texts)
 
-    # 返回结果
-    grounding_res = {"dt_polys": dt_polys, "rec_texts": rec_texts}
+    grounding_res = {"rec_polys": rec_polys, "rec_texts": rec_texts}
     return result_str, grounding_res
