@@ -208,11 +208,11 @@ class DocVLMPredictor(BasePredictor):
                 data = self.processor.preprocess(data)
                 if min_pixels is not None:
                     warnings.warn(
-                        "`min_pixels` is currently not supported by the local model and will be ignored."
+                        f"`min_pixels` is currently not supported by the {self.model_name} and will be ignored."
                     )
                 if max_pixels is not None:
                     warnings.warn(
-                        "`max_pixels` is currently not supported by the local model and will be ignored."
+                        f"`max_pixels` is currently not supported by the {self.model_name} and will be ignored."
                     )
 
             data = self._switch_inputs_to_device(data)
