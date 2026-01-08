@@ -21,9 +21,7 @@ import numpy as np
 
 from .....utils.deps import is_dep_available
 
-if all(
-    map(is_dep_available, ("einops", "torch", "transformers", "vllm", "flash-attn"))
-):
+if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
     import torch
     import torch.nn as nn
     from einops import rearrange, repeat

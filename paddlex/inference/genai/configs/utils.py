@@ -32,10 +32,12 @@ def set_config_defaults(config, defaults):
             config[k] = v
 
 
-def backend_config_to_args(config):
+def backend_config_to_args(config, convert_underscores_to_dashes=True):
     # Limited support
     args = []
     for k, v in config.items():
+        if convert_underscores_to_dashes:
+            k = k.replace("_", "-")
         opt = "--" + k
         args.append(opt)
         if not isinstance(v, bool):

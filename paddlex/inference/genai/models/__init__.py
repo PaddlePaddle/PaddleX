@@ -17,6 +17,7 @@ import importlib
 from pathlib import Path
 from typing import Any, Dict, Optional, Type
 
+from packaging.version import Version
 from pydantic import BaseModel
 
 from ....utils import logging
@@ -29,14 +30,42 @@ CONFIG_GETTER_KEY = "get_config"
 CHAT_TEMPLATE_PATH_GETTER_KEY = "get_chat_template_path"
 DEFAULT_CHAT_TEMPLATE_FILENAME = "chat_template.jinja"
 
-ALL_MODEL_NAMES = {"PaddleOCR-VL-0.9B"}
+ALL_MODEL_INFO = {
+    "PaddleOCR-VL-0.9B": {
+        "min_vllm_version": "0.11.1",
+        "min_sglang_version": "0.5.7",
+    }
+}
 
 
 def _check_model_name_and_backend(model_name, backend):
-    if model_name not in ALL_MODEL_NAMES:
+    if model_name not in ALL_MODEL_INFO:
         raise ValueError(f"Unknown model: {model_name}")
 
     check_backend(backend)
+
+
+def is_integrated_model_available(model_name, backend):
+    _check_model_name_and_backend(model_name, backend)
+
+    model_info = ALL_MODEL_INFO[model_name]
+
+    if f"min_{backend}_version" in model_info:
+        if backend == "vllm":
+            import vllm
+
+            backend_lib_version = vllm.__version__
+        elif backend == "sglang":
+            import sglang
+
+            backend_lib_version = sglang.__version__
+        else:
+            backend_lib_version = "0.0.0"
+        return Version(backend_lib_version) >= Version(
+            model_info[f"min_{backend}_version"]
+        )
+
+    return False
 
 
 def get_model_dir(model_name, backend):
