@@ -1023,36 +1023,54 @@ def crop_margin(img):
 ANNOT_TEXT_RE = re.compile(r"<\|TEXT_START\|>(.*?)<\|TEXT_END\|>", re.S)
 LOC_BLOCK_RE = re.compile(r"<\|LOC_BEGIN\|>(.*?)<\|LOC_END\|>", re.S)
 LOC_ITEM_RE = re.compile(r"<\|LOC_(\d+)\|>")
+LOC_TOKEN_RE = re.compile(r"<\|LOC_(\d+)\|>")
 
-
-def post_process_for_spotting(
-    input_str: str, w: int, h: int
-) -> Tuple[str, Dict[str, List]]:
+def post_process_for_spotting(input_str: str, w: int, h: int) -> Tuple[str, Dict[str, List]]:
     """
-    提取模型输出中的文本和多边形坐标，并组合为 result_str 和 grounding_res 格式。
+    Post-process the input string to extract text and location blocks.
     """
     assert isinstance(input_str, str)
 
+    # Extract text and location blocks
     texts = ANNOT_TEXT_RE.findall(input_str)
     loc_blocks = LOC_BLOCK_RE.findall(input_str)
 
     rec_polys = []
     rec_texts = []
 
+    # Process the extracted text and location blocks
     n = min(len(texts), len(loc_blocks))
     for i in range(n):
         txt = texts[i].strip()
         loc_items = LOC_ITEM_RE.findall(loc_blocks[i])
         if len(loc_items) < 8:
             continue
-        # 只取前8个坐标点（四边形），每2个为一个点
+        # Take the first 8 items (4 points)
         vals = list(map(int, loc_items[:8]))
         pts = [(vals[j], vals[j + 1]) for j in range(0, 8, 2)]
         pts = [(p[0] / 1000.0 * w, p[1] / 1000.0 * h) for p in pts]
         rec_polys.append(pts)
         rec_texts.append(txt)
 
-    result_str = "\n\n".join(rec_texts)
+    # If no polys or texts are extracted, try an alternative parsing method
+    if not rec_polys or not rec_texts:
+        matches = list(LOC_TOKEN_RE.finditer(input_str))
+        last_end = 0
+        i = 0
+        while i + 7 < len(matches):
+            group = matches[i:i+8]
+            vals = [int(m.group(1)) for m in group]
+            pts = [(vals[j], vals[j+1]) for j in range(0, 8, 2)]
+            pts = [(p[0] / 1000.0 * w, p[1] / 1000.0 * h) for p in pts]
+            text_span = input_str[last_end:group[0].start()]
+            txt = text_span.strip()
+            rec_texts.append(txt)
+            rec_polys.append(pts)
+            last_end = group[-1].end()
+            i += 8
 
-    grounding_res = {"rec_polys": rec_polys, "rec_texts": rec_texts}
-    return result_str, grounding_res
+    # Join the extracted texts into a single string separated by newlines
+    result_str = "\n\n".join(rec_texts)
+    spotting_res = {"rec_polys": rec_polys, "rec_texts": rec_texts}
+
+    return result_str, spotting_res

@@ -330,7 +330,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             "formula_max_pixels", default_max_pixels
                         )
                     elif block_label == "spotting":
-                        text_prompt = "Grounding:"
+                        text_prompt = "Spotting:"
                         has_spotting = True
                         min_pixels = vlm_kwargs.pop(
                             "spotting_min_pixels", default_min_pixels
@@ -625,7 +625,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             layout_unclip_ratio=layout_unclip_ratio,
                             layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                             use_polygon_points=model_settings["use_polygon_points"],
-                            filter_overlap_boxes=True,
+                            filter_overlap_boxes=False,
                         )
                     )
 
