@@ -701,7 +701,7 @@ class LayoutAnalysisProcess:
             if filter_overlap_boxes:
                 boxes = filter_boxes(boxes, use_polygon_points)
             skip_order_labels = (
-                skip_order_labels if skip_order_labels else SKIP_ORDER_LABELS
+                skip_order_labels if skip_order_labels is not None else SKIP_ORDER_LABELS
             )
             boxes = update_order_index(boxes, skip_order_labels)
             outputs.append(boxes)
