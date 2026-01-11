@@ -29,7 +29,7 @@ from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import DocVLMBatchSampler
-from ...utils.misc import is_bfloat16_available, is_float16_available
+from ...utils.misc import is_bfloat16_available
 from ..base import BasePredictor
 from .result import DocVLMResult
 
@@ -56,8 +56,6 @@ class DocVLMPredictor(BasePredictor):
             self.device = kwargs.get("device", None)
             if is_bfloat16_available(self.device):
                 self.dtype = "bfloat16"
-            elif is_float16_available(self.device):
-                self.dtype = "float16"
             else:
                 self.dtype = "float32"
 
@@ -187,7 +185,21 @@ class DocVLMPredictor(BasePredictor):
         if self._use_local_model:
             src_data = copy.copy(data)
             # preprocess
-            data = self.processor.preprocess(data)
+            if self.model_name in self.model_group["PaddleOCR-VL"]:
+                data = self.processor.preprocess(
+                    data, min_pixels=min_pixels, max_pixels=max_pixels
+                )
+            else:
+                data = self.processor.preprocess(data)
+                if min_pixels is not None:
+                    warnings.warn(
+                        f"`min_pixels` is currently not supported by the {repr(self.model_name)} model and will be ignored."
+                    )
+                if max_pixels is not None:
+                    warnings.warn(
+                        f"`max_pixels` is currently not supported by the {repr(self.model_name)} model and will be ignored."
+                    )
+
             data = self._switch_inputs_to_device(data)
 
             # do infer
@@ -207,14 +219,6 @@ class DocVLMPredictor(BasePredictor):
             if top_p is not None:
                 warnings.warn(
                     "`top_p` is currently not supported by the local model and will be ignored."
-                )
-            if min_pixels is not None:
-                warnings.warn(
-                    "`min_pixels` is currently not supported by the local model and will be ignored."
-                )
-            if max_pixels is not None:
-                warnings.warn(
-                    "`max_pixels` is currently not supported by the local model and will be ignored."
                 )
             if use_cache is not None:
                 generate_kwargs["use_cache"] = use_cache

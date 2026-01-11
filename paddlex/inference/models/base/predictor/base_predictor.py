@@ -132,12 +132,13 @@ class BasePredictor(
             self.config = config
             self._genai_config = genai_config
             assert genai_config.server_url is not None
+            client_kwargs = {"model_name": model_name}
+            client_kwargs.update(genai_config.client_kwargs or {})
             self._genai_client = GenAIClient(
                 backend=genai_config.backend,
                 base_url=genai_config.server_url,
                 max_concurrency=genai_config.max_concurrency,
-                model_name=model_name,
-                **(genai_config.client_kwargs or {}),
+                **client_kwargs,
             )
             self._use_local_model = False
 
