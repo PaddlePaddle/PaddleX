@@ -36,5 +36,7 @@ class BaseCVResult(BaseResult, ImgMixin):
         if (page_idx := self.get("page_index", None)) is not None:
             fp = Path(fn)
             stem, suffix = fp.stem, fp.suffix
+            if isinstance(page_idx, list):
+                page_idx = f"{page_idx[0]}-{page_idx[-1]}"
             fn = f"{stem}_{page_idx}{suffix}"
         return fn
