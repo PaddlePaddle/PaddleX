@@ -34,7 +34,7 @@ from ..components import CropByBoxes
 from ..layout_parsing.merge_table import merge_tables_across_pages
 from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import gather_imgs
-from .result import PaddleOCRVLBlock, PaddleOCRVLResult
+from .result import PaddleOCRVLBlock, PaddleOCRVLPagesResult, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
     crop_margin,
@@ -829,7 +829,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 blocks.append(block)
         layout_parsing_result["parsing_res_list"] = blocks
 
-        return PaddleOCRVLResult(layout_parsing_result)
+        return PaddleOCRVLPagesResult(layout_parsing_result)
 
 
 @pipeline_requires_extra("ocr")
