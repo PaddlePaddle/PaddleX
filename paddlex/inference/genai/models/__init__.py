@@ -34,7 +34,11 @@ ALL_MODEL_INFO = {
     "PaddleOCR-VL-0.9B": {
         "min_vllm_version": "0.11.1",
         "min_sglang_version": "0.5.7",
-    }
+    },
+    "PaddleOCR-VL-1.5-0.9B": {
+        "min_vllm_version": "0.11.1",
+        "min_sglang_version": "0.5.7",
+    },
 }
 
 
