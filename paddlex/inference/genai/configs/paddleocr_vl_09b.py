@@ -15,6 +15,8 @@
 
 from ....utils.deps import require_deps
 
+__all__ = ["get_config"]
+
 # TODO: Allow setting `trust-remote-code` to `False` to use `transformers` processors
 
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,6 @@
 # limitations under the License.
 
 
-MODELS = [
-    "PP-DocBee-2B",
-    "PP-DocBee-7B",
-    "PP-Chart2Table",
-    "PP-DocBee2-3B",
-    "PaddleOCR-VL-0.9B",
-    "PaddleOCR-VL-1.5-0.9B",
-]
+from .paddleocr_vl_09b import get_config
+
+__all__ = ["get_config"]
