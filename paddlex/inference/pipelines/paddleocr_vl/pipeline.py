@@ -377,6 +377,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 "max_pixels": max_pixels,
                 **vlm_kwargs,
             }
+            if has_spotting:
+                kwargs.pop("min_pixels", None)
+                kwargs.pop("max_pixels", None)
             images = batch_dict_by_pixel[pixel_key]["images"]
             queries = batch_dict_by_pixel[pixel_key]["queries"]
             batch_results = list(
