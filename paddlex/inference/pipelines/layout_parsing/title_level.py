@@ -282,6 +282,7 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
 
     for page_index, one_page_blocks in enumerate(blocks_by_page):
         for block in one_page_blocks:
+            # setattr(block, "page_index", page_index)
             block["page_index"] = page_index
             parsing_res_list.append(block)
 
@@ -314,6 +315,7 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
         if e["origin_block"]["block_label"] == "doc_title":
             setattr(block, "title_level", 0)
         block = e["origin_block"]
+        # setattr(block, "title_level", e["level"])
         block["title_level"] = e["level"]
 
     return blocks_by_page

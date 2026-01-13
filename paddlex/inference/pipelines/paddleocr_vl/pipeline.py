@@ -957,7 +957,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         for idx, single_img_res in enumerate(res_list):
             if isinstance(single_img_res, PaddleOCRVLResult):
-                single_img_res = single_img_res._to_json(keep_img=True)
+                single_img_res = single_img_res.json
 
             parsing_res_list = single_img_res["res"]["parsing_res_list"]
             layout_parsing_result["parsing_res_list"].extend(parsing_res_list)
@@ -975,7 +975,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 else:
                     layout_parsing_result[key].append(value)
 
-            # TODO
             # for block in parsing_res_list:
             #     setattr(block, "page_index", idx)
 
@@ -999,10 +998,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     content=block["block_content"],
                     group_id=block.get("group_id", None),
                 )
-
-                if img := get_img_obj(block):
-                    blk_obj.image = img
-
+                if block.get("image", None):
+                    blk_obj.image = block["image"]
                 blocks.append(blk_obj)
 
         layout_parsing_result["parsing_res_list"] = blocks
