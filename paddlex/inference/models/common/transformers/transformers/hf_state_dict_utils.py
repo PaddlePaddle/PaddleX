@@ -36,7 +36,6 @@ class BatchNormHFStateDictMixin:
         model_state_dict = self.state_dict(*args, **kwargs)
         hf_state_dict = {}
         rules = self._get_forward_key_rules()
-
         for old_key, value in model_state_dict.items():
             new_key = old_key
             for match_key, old_sub, new_sub in rules:
@@ -55,13 +54,11 @@ class BatchNormHFStateDictMixin:
 
         key_mapping = {}
         rules = self._get_reverse_key_rules()
-
         for old_key in list(state_dict.keys()):
             for match_key, old_sub, new_sub in rules:
                 if match_key in old_key:
                     key_mapping[old_key] = old_key.replace(old_sub, new_sub)
                     break
-
         for old_key, new_key in key_mapping.items():
             state_dict[new_key] = state_dict.pop(old_key)
         return self.set_state_dict(state_dict, *args, **kwargs)

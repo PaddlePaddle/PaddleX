@@ -18,7 +18,6 @@ import numpy as np
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
-import six
 from paddle import ParamAttr
 from paddle.nn.initializer import Constant, Normal, XavierUniform
 from paddle.regularizer import L2Decay
@@ -418,7 +417,7 @@ class AnchorGeneratorSSD(object):
             step = int(
                 math.floor(((self.max_ratio - self.min_ratio)) / (num_layer - 2))
             )
-            for ratio in six.moves.range(self.min_ratio, self.max_ratio + 1, step):
+            for ratio in range(self.min_ratio, self.max_ratio + 1, step):
                 self.min_sizes.append(self.base_size * ratio / 100.0)
                 self.max_sizes.append(self.base_size * (ratio + step) / 100.0)
             self.min_sizes = [self.base_size * 0.10] + self.min_sizes

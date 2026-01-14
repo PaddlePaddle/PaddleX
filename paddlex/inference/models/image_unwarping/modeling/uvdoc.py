@@ -12,18 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Any, List, Optional
+
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
+from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
-    PretrainedConfig,
     PretrainedModel,
 )
+from ._config import UVDocNetConfig
 
 
-def conv3x3(in_channels, out_channels, kernel_size, stride=1):
+def conv3x3(
+    in_channels: int, out_channels: int, kernel_size: int, stride: int = 1
+) -> nn.Conv2D:
+    """
+    conv3x3: 3x3 convolution layer with same padding
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of convolution layer
+        stride (int, optional): Convolution stride, default is 1
+
+    Returns:
+        nn.Conv2D: Convolutional layer with same padding (padding = kernel_size // 2)
+    """
+
     return nn.Conv2D(
         in_channels=in_channels,
         out_channels=out_channels,
@@ -33,7 +51,21 @@ def conv3x3(in_channels, out_channels, kernel_size, stride=1):
     )
 
 
-def dilated_conv_bn_act(in_channels, out_channels, act_fn, BatchNorm, dilation):
+def dilated_conv_bn_act(
+    in_channels: int, out_channels: int, dilation: int
+) -> nn.Sequential:
+    """
+    dilated_conv_bn_act: Dilated convolution block with BN and ReLU activation
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        dilation (int): Dilation rate for dilated convolution
+
+    Returns:
+        nn.Sequential: Sequential block containing dilated conv, BN and ReLU layers
+    """
+
     model = nn.Sequential(
         nn.Conv2D(
             in_channels=in_channels,
@@ -44,13 +76,32 @@ def dilated_conv_bn_act(in_channels, out_channels, act_fn, BatchNorm, dilation):
             padding=dilation,
             dilation=dilation,
         ),
-        BatchNorm(out_channels),
-        act_fn,
+        nn.BatchNorm2D(out_channels),
+        nn.ReLU(),
     )
     return model
 
 
-def dilated_conv(in_channels, out_channels, kernel_size, dilation, stride=1):
+def dilated_conv(
+    in_channels: int,
+    out_channels: int,
+    kernel_size: int,
+    dilation: int,
+    stride: int = 1,
+) -> nn.Sequential:
+    """
+    dilated_conv: Pure dilated convolution layer for multi-scale feature learning
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of dilated convolution
+        dilation (int): Dilation rate for dilated convolution
+        stride (int, optional): Convolution stride, default is 1
+
+    Returns:
+        nn.Sequential: Sequential block containing only the dilated convolution layer
+    """
     model = nn.Sequential(
         nn.Conv2D(
             in_channels=in_channels,
@@ -65,17 +116,31 @@ def dilated_conv(in_channels, out_channels, kernel_size, dilation, stride=1):
 
 
 class ResidualBlockWithDilation(nn.Layer):
+    """
+    ResidualBlockWithDilation: Residual block with optional dilated convolution and downsampling
+
+    Args:
+        in_channels (int): Number of input channels
+        out_channels (int): Number of output channels
+        kernel_size (int): Kernel size of convolution layers
+        stride (int, optional): Convolution stride for first conv layer, default is 1
+        downsample (Optional[nn.Layer]): Downsampling layer for residual connection, default is None
+        is_activation (bool, optional): Whether to apply activation (unused in current implementation), default is True
+        is_top (bool, optional): Whether it is the top block (uses standard conv instead of dilated conv), default is False
+
+    Returns:
+        paddle.Tensor: Output tensor after residual block with conv/dilated conv and ReLU activation
+    """
 
     def __init__(
         self,
-        in_channels,
-        out_channels,
-        BatchNorm,
-        kernel_size,
-        stride=1,
-        downsample=None,
-        is_activation=True,
-        is_top=False,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int,
+        stride: int = 1,
+        downsample: Optional[nn.Layer] = None,
+        is_activation: bool = True,
+        is_top: bool = False,
     ):
         super(ResidualBlockWithDilation, self).__init__()
         self.stride = stride
@@ -92,11 +157,11 @@ class ResidualBlockWithDilation(nn.Layer):
             self.conv2 = dilated_conv(
                 out_channels, out_channels, kernel_size, dilation=3
             )
-        self.bn1 = BatchNorm(out_channels)
+        self.bn1 = nn.BatchNorm2D(out_channels)
         self.relu = nn.ReLU()
-        self.bn2 = BatchNorm(out_channels)
+        self.bn2 = nn.BatchNorm2D(out_channels)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         residual = x
         if self.downsample is not None:
             residual = self.downsample(x)
@@ -108,51 +173,48 @@ class ResidualBlockWithDilation(nn.Layer):
 
 
 class ResnetStraight(nn.Layer):
+    """
+    ResnetStraight: Straightforward ResNet architecture with residual blocks and optional dilated convolution
+
+    Args:
+        num_filter (int): Base number of filters/channels for the network
+        map_num (List[int]): List of channel scaling factors for each layer
+        block_nums (List[int]): List of residual block numbers for each layer
+        kernel_size (int): Kernel size of convolution layers in residual blocks
+        stride (List[int]): List of stride values for each layer's first residual block
+
+    Returns:
+        paddle.Tensor: Output tensor from the third residual layer of the ResNet
+    """
 
     def __init__(
         self,
-        num_filter,
-        map_num,
-        BatchNorm,
-        block_nums=[3, 4, 6, 3],
-        block=ResidualBlockWithDilation,
-        kernel_size=5,
-        stride=[1, 1, 2, 2],
+        num_filter: int,
+        map_num: List[int],
+        block_nums: List[int],
+        kernel_size: int,
+        stride: List[int],
     ):
         super(ResnetStraight, self).__init__()
         self.in_channels = num_filter * map_num[0]
         self.stride = stride
-        self.relu = nn.ReLU()
         self.block_nums = block_nums
         self.kernel_size = kernel_size
-        self.layer1 = self.blocklayer(
-            block,
-            num_filter * map_num[0],
-            self.block_nums[0],
-            BatchNorm,
-            kernel_size=self.kernel_size,
-            stride=self.stride[0],
-        )
-        self.layer2 = self.blocklayer(
-            block,
-            num_filter * map_num[1],
-            self.block_nums[1],
-            BatchNorm,
-            kernel_size=self.kernel_size,
-            stride=self.stride[1],
-        )
-        self.layer3 = self.blocklayer(
-            block,
-            num_filter * map_num[2],
-            self.block_nums[2],
-            BatchNorm,
-            kernel_size=self.kernel_size,
-            stride=self.stride[2],
-        )
+
+        for layer_idx, (map_num_val, block_num, stride_val) in enumerate(
+            zip(map_num[:3], block_nums[:3], stride[:3])
+        ):
+            layer = self.blocklayer(
+                num_filter * map_num_val,
+                block_num,
+                kernel_size=self.kernel_size,
+                stride=stride_val,
+            )
+            setattr(self, f"layer{layer_idx + 1}", layer)
 
     def blocklayer(
-        self, block, out_channels, block_nums, BatchNorm, kernel_size, stride=1
-    ):
+        self, out_channels: int, block_nums: int, kernel_size: int, stride: int = 1
+    ) -> nn.Sequential:
         downsample = None
         if stride != 1 or self.in_channels != out_channels:
             downsample = nn.Sequential(
@@ -162,35 +224,25 @@ class ResnetStraight(nn.Layer):
                     kernel_size=kernel_size,
                     stride=stride,
                 ),
-                BatchNorm(out_channels),
+                nn.BatchNorm2D(out_channels),
             )
+
         layers = []
-        layers.append(
-            block(
-                self.in_channels,
-                out_channels,
-                BatchNorm,
-                kernel_size,
-                stride,
-                downsample,
-                is_top=True,
-            )
-        )
-        self.in_channels = out_channels
-        for i in range(1, block_nums):
+        for i in range(block_nums):
             layers.append(
-                block(
-                    out_channels,
-                    out_channels,
-                    BatchNorm,
-                    kernel_size,
-                    is_activation=True,
-                    is_top=False,
+                ResidualBlockWithDilation(
+                    in_channels=self.in_channels if i == 0 else out_channels,
+                    out_channels=out_channels,
+                    kernel_size=kernel_size,
+                    stride=stride if i == 0 else 1,
+                    downsample=downsample if i == 0 else None,
+                    is_top=True if i == 0 else False,
                 )
             )
+        self.in_channels = out_channels
         return nn.Sequential(*layers)
 
-    def forward(self, x):
+    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
         out1 = self.layer1(x)
         out2 = self.layer2(out1)
         out3 = self.layer3(out2)
@@ -198,158 +250,139 @@ class ResnetStraight(nn.Layer):
 
 
 class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
-    config_class = PretrainedConfig
+    """
+    UVDocNet: Image rectification network based on ResNet and multi-scale dilated convolution
 
-    def __init__(self, config: PretrainedConfig):
+    Args:
+        config (UVDocNetConfig): Configuration object containing network hyperparameters
+
+    Returns:
+        List: List containing the transformed document image tensor (converted to numpy array on CPU)
+    """
+
+    config_class = UVDocNetConfig
+
+    def __init__(self, config: UVDocNetConfig):
         super(UVDocNet, self).__init__(config)
 
-        self.num_filter = 32
-        self.in_channels = 3
-        self.kernel_size = 5
-        self.stride = [1, 2, 2, 2]
-        BatchNorm = nn.BatchNorm2D
-        act_fn = nn.ReLU()
-        map_num = [1, 2, 4, 8, 16]
+        self.num_filter = config.num_filter
+        self.in_channels = config.in_channels
+        self.kernel_size = config.kernel_size
+        self.stride = config.stride
+        self.map_num = config.map_num
+        self.block_nums = config.block_nums
+        self.dilation_values = config.dilation_values
+        self.padding_mode = config.padding_mode
+        self.upsample_size = config.upsample_size
+        self.upsample_mode = config.upsample_mode
 
         self.resnet_head = nn.Sequential(
             nn.Conv2D(
                 in_channels=self.in_channels,
-                out_channels=self.num_filter * map_num[0],
+                out_channels=self.num_filter * self.map_num[0],
                 bias_attr=False,
                 kernel_size=self.kernel_size,
                 stride=2,
                 padding=self.kernel_size // 2,
             ),
-            BatchNorm(self.num_filter * map_num[0]),
-            act_fn,
+            nn.BatchNorm2D(self.num_filter * self.map_num[0]),
+            nn.ReLU(),
             nn.Conv2D(
-                in_channels=self.num_filter * map_num[0],
-                out_channels=self.num_filter * map_num[0],
+                in_channels=self.num_filter * self.map_num[0],
+                out_channels=self.num_filter * self.map_num[0],
                 bias_attr=False,
                 kernel_size=self.kernel_size,
                 stride=2,
                 padding=self.kernel_size // 2,
             ),
-            BatchNorm(self.num_filter * map_num[0]),
-            act_fn,
+            nn.BatchNorm2D(self.num_filter * self.map_num[0]),
+            nn.ReLU(),
         )
 
         self.resnet_down = ResnetStraight(
             self.num_filter,
-            map_num,
-            BatchNorm,
-            block_nums=[3, 4, 6, 3],
-            block=ResidualBlockWithDilation,
+            self.map_num,
+            block_nums=self.block_nums,
             kernel_size=self.kernel_size,
             stride=self.stride,
         )
 
-        map_num_i = 2
-        self.bridge_1 = nn.Sequential(
-            dilated_conv_bn_act(
-                self.num_filter * map_num[map_num_i],
-                self.num_filter * map_num[map_num_i],
-                act_fn,
-                BatchNorm,
-                dilation=1,
-            )
-        )
-        self.bridge_2 = nn.Sequential(
-            dilated_conv_bn_act(
-                self.num_filter * map_num[map_num_i],
-                self.num_filter * map_num[map_num_i],
-                act_fn,
-                BatchNorm,
-                dilation=2,
-            )
-        )
-        self.bridge_3 = nn.Sequential(
-            dilated_conv_bn_act(
-                self.num_filter * map_num[map_num_i],
-                self.num_filter * map_num[map_num_i],
-                act_fn,
-                BatchNorm,
-                dilation=5,
-            )
-        )
-        self.bridge_4 = nn.Sequential(
-            *[
-                dilated_conv_bn_act(
-                    self.num_filter * map_num[map_num_i],
-                    self.num_filter * map_num[map_num_i],
-                    act_fn,
-                    BatchNorm,
-                    dilation=d,
+        bridge_in_channels = self.num_filter * self.map_num[2]
+
+        def _build_bridge(bridge_key: str) -> nn.Sequential:
+            dilation = self.dilation_values[bridge_key]
+            if isinstance(dilation, int):
+                return nn.Sequential(
+                    dilated_conv_bn_act(
+                        bridge_in_channels, bridge_in_channels, dilation=dilation
+                    )
                 )
-                for d in [8, 3, 2]
-            ]
-        )
-        self.bridge_5 = nn.Sequential(
-            *[
-                dilated_conv_bn_act(
-                    self.num_filter * map_num[map_num_i],
-                    self.num_filter * map_num[map_num_i],
-                    act_fn,
-                    BatchNorm,
-                    dilation=d,
+            else:
+                return nn.Sequential(
+                    *[
+                        dilated_conv_bn_act(
+                            bridge_in_channels, bridge_in_channels, dilation=d
+                        )
+                        for d in dilation
+                    ]
                 )
-                for d in [12, 7, 4]
-            ]
-        )
-        self.bridge_6 = nn.Sequential(
-            *[
-                dilated_conv_bn_act(
-                    self.num_filter * map_num[map_num_i],
-                    self.num_filter * map_num[map_num_i],
-                    act_fn,
-                    BatchNorm,
-                    dilation=d,
-                )
-                for d in [18, 12, 6]
-            ]
-        )
+
+        self.bridge_1 = _build_bridge("bridge_1")
+        self.bridge_2 = _build_bridge("bridge_2")
+        self.bridge_3 = _build_bridge("bridge_3")
+        self.bridge_4 = _build_bridge("bridge_4")
+        self.bridge_5 = _build_bridge("bridge_5")
+        self.bridge_6 = _build_bridge("bridge_6")
 
         self.bridge_concat = nn.Sequential(
             nn.Conv2D(
-                in_channels=self.num_filter * map_num[map_num_i] * 6,
-                out_channels=self.num_filter * map_num[2],
+                in_channels=self.num_filter * self.map_num[2] * 6,
+                out_channels=self.num_filter * self.map_num[2],
                 bias_attr=False,
                 kernel_size=1,
                 stride=1,
                 padding=0,
             ),
-            BatchNorm(self.num_filter * map_num[2]),
-            act_fn,
+            nn.BatchNorm2D(self.num_filter * self.map_num[2]),
+            nn.ReLU(),
         )
 
         self.out_point_positions2D = nn.Sequential(
             nn.Conv2D(
-                in_channels=self.num_filter * map_num[2],
-                out_channels=self.num_filter * map_num[0],
+                in_channels=self.num_filter * self.map_num[2],
+                out_channels=self.num_filter * self.map_num[0],
                 bias_attr=False,
                 kernel_size=self.kernel_size,
                 stride=1,
                 padding=self.kernel_size // 2,
-                padding_mode="reflect",
+                padding_mode=self.padding_mode,
             ),
-            BatchNorm(self.num_filter * map_num[0]),
+            nn.BatchNorm2D(self.num_filter * self.map_num[0]),
             nn.PReLU(),
             nn.Conv2D(
-                in_channels=self.num_filter * map_num[0],
+                in_channels=self.num_filter * self.map_num[0],
                 out_channels=2,
                 kernel_size=self.kernel_size,
                 stride=1,
                 padding=self.kernel_size // 2,
-                padding_mode="reflect",
+                padding_mode=self.padding_mode,
             ),
         )
 
-    def forward(self, x):
+    add_inference_operations("uvdoc_forward")
+
+    @benchmark.timeit_with_options(name="uvdoc_forward")
+    def forward(self, x: Any) -> List[paddle.Tensor]:
         x = paddle.to_tensor(x[0])
 
         image = x
         h_ori, w_ori = x.shape[2:]
-        x = F.upsample(x, size=(712, 488), mode="bilinear", align_corners=True)
+        x = F.upsample(
+            x,
+            size=(self.upsample_size[0], self.upsample_size[1]),
+            mode=self.upsample_mode,
+            align_corners=True,
+        )
         resnet_head = self.resnet_head(x)
         resnet_down = self.resnet_down(resnet_head)
 
@@ -369,7 +402,7 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         bm_up = F.upsample(
             out_point_positions2D,
             size=(h_ori, w_ori),
-            mode="bilinear",
+            mode=self.upsample_mode,
             align_corners=True,
         )
         bm = bm_up.transpose([0, 2, 3, 1])

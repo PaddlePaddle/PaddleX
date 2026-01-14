@@ -74,6 +74,8 @@ class PaddleOCRVLProcessor(object):
     def preprocess(
         self,
         input_dicts,
+        min_pixels=None,
+        max_pixels=None,
     ):
         images = [fetch_image(input_dict["image"]) for input_dict in input_dicts]
 
@@ -98,8 +100,18 @@ class PaddleOCRVLProcessor(object):
             "video_kwargs": copy.deepcopy(self._DEFAULT_VIDEO_KWARGS),
         }
 
+        if min_pixels is not None or max_pixels is not None:
+            size = {
+                "min_pixels": min_pixels or self.image_processor.min_pixels,
+                "max_pixels": max_pixels or self.image_processor.max_pixels,
+            }
+        else:
+            size = None
+
         if images is not None:
-            image_inputs = self.image_processor(images=images, return_tensors="pd")
+            image_inputs = self.image_processor(
+                images=images, size=size, return_tensors="pd"
+            )
             image_inputs["pixel_values"] = image_inputs["pixel_values"]
             image_grid_thw = image_inputs["image_grid_thw"]
 

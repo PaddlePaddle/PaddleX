@@ -128,8 +128,12 @@ class TextDetPredictor(BasePredictor):
         batch_imgs = self.pre_tfs["Normalize"](imgs=batch_imgs)
         batch_imgs = self.pre_tfs["ToCHW"](imgs=batch_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-        with TemporaryDeviceChanger(self.device):
+
+        if self._use_static_model:
             batch_preds = self.infer(x=x)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
         polys, scores = self.post_op(
             batch_preds,
             batch_shapes,

@@ -107,7 +107,7 @@ class PPMSDeformableAttention(MSDeformableAttention):
             )
 
         if not isinstance(query, paddle.Tensor):
-            from ppdet.modeling.transformers.utils import deformable_attention_core_func
+            from .modules.utils import deformable_attention_core_func
 
             output = deformable_attention_core_func(
                 value,

@@ -19,6 +19,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
+from ...common.transformers.transformers import BatchNormHFStateDictMixin
 from ...common.transformers.transformers.model_outputs import CausalLMOutputWithPast
 from .qwen2 import Qwen2Config, Qwen2ForCausalLM, Qwen2Model
 
@@ -811,36 +812,23 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
         return model_inputs
 
 
-class PPChart2TableInference(GOTQwenForCausalLM):
+class PPChart2TableInference(BatchNormHFStateDictMixin, GOTQwenForCausalLM):
 
     def get_transpose_weight_keys(self):
         t_layers = [
-            "fc",
-            "channelwise",
-            "mapper_crp",
-            "mapper_sca",
-            ".mapper.",
-            "txt_mapper",
-            "txt_pooled_mapper",
-            "clip_img_mapper",
-            "kv_mapper",
-            "clip_mapper",
-            "out_proj",
-            # "patch_embedding",
             "q_proj",
             "k_proj",
             "v_proj",
-            "lm_head",
             "gate_proj",
             "up_proj",
             "down_proj",
             "o_proj",
             "lm_head",
-            "linear_1",
-            "linear_2",
             "attn.qkv",
             "mlp.lin1",
             "mlp.lin2",
+            "attn.proj",
+            "mm_projector_vary",
         ]
         keys = []
         for key, _ in self.get_hf_state_dict().items():
@@ -848,36 +836,6 @@ class PPChart2TableInference(GOTQwenForCausalLM):
                 if t_layer in key and key.endswith("weight"):
                     keys.append(key)
         return keys
-
-    def get_hf_state_dict(self, *args, **kwargs):
-
-        model_state_dict = self.state_dict(*args, **kwargs)
-
-        hf_state_dict = {}
-        for old_key, value in model_state_dict.items():
-            if "_mean" in old_key:
-                new_key = old_key.replace("_mean", "running_mean")
-            elif "_variance" in old_key:
-                new_key = old_key.replace("_variance", "running_var")
-            else:
-                new_key = old_key
-            hf_state_dict[new_key] = value
-
-        return hf_state_dict
-
-    def set_hf_state_dict(self, state_dict, *args, **kwargs):
-
-        key_mapping = {}
-        for old_key in list(state_dict.keys()):
-            if "running_mean" in old_key:
-                key_mapping[old_key] = old_key.replace("running_mean", "_mean")
-            elif "running_var" in old_key:
-                key_mapping[old_key] = old_key.replace("running_var", "_variance")
-
-        for old_key, new_key in key_mapping.items():
-            state_dict[new_key] = state_dict.pop(old_key)
-
-        return self.set_state_dict(state_dict, *args, **kwargs)
 
     def generate(self, inputs, **kwargs):
         max_new_tokens = kwargs.get("max_new_tokens", 1024)

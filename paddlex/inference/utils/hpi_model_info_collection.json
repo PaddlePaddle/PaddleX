@@ -11844,6 +11844,10 @@
         "onnxruntime",
         "paddle"
       ],
+      "eslav_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
       "arabic_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"

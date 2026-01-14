@@ -13,21 +13,30 @@
 # limitations under the License.
 
 from ....utils import logging
-from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
+from ....utils.deps import (
+    get_dep_version,
+    is_genai_engine_plugin_available,
+    require_genai_engine_plugin,
+)
 from ..configs.utils import (
     backend_config_to_args,
     set_config_defaults,
     update_backend_config,
 )
-from ..models import ALL_MODEL_NAMES, get_model_components
+from ..models import ALL_MODEL_INFO, get_model_components, is_integrated_model_available
 
 
 def register_models():
     from vllm import ModelRegistry
 
+    vllm_version = get_dep_version("vllm")
+
     if is_genai_engine_plugin_available("vllm-server"):
-        for model_name in ALL_MODEL_NAMES:
-            if model_name not in ModelRegistry.get_supported_archs():
+        for model_name in ALL_MODEL_INFO:
+            if (
+                not is_integrated_model_available(model_name, "vllm")
+                and model_name not in ModelRegistry.get_supported_archs()
+            ):
                 net_cls, _ = get_model_components(model_name, "vllm")
                 ModelRegistry.register_model(net_cls.__name__, net_cls)
 

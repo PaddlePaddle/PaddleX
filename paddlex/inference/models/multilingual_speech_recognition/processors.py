@@ -22,11 +22,7 @@ import numpy as np
 import paddle
 
 from ....utils.deps import function_requires_deps, is_dep_available
-from ...utils.benchmark import (
-    benchmark,
-    get_inference_operations,
-    set_inference_operations,
-)
+from ...utils.benchmark import add_inference_operations, benchmark
 from ..common.tokenizer import GPTTokenizer
 
 if is_dep_available("soundfile"):
@@ -1836,7 +1832,7 @@ class Whisper(paddle.nn.Layer):
         return cache, hooks
 
     detect_language = detect_language
-    set_inference_operations(get_inference_operations() + ["speech_transcribe"])
+    add_inference_operations("speech_transcribe")
     transcribe = benchmark.timeit_with_options(name="speech_transcribe")(transcribe)
     decode = decode
 

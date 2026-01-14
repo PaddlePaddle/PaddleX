@@ -96,8 +96,11 @@ class WarpPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_raw_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        with TemporaryDeviceChanger(self.device):
+        if self._use_static_model:
             batch_preds = self.infer(x=x)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
         batch_warp_preds = self.postprocessors["DocTrPostProcess"](batch_preds)
 
         return {
