@@ -1555,13 +1555,13 @@ Below are the API references for basic service-based deployment and examples of 
     <tr>
     <td><code>mergeTable</code></td>
     <td><code>boolean</code></td>
-    <td>Whether to merge tables across pages. The default is <code>true</code>.</td>
+    <td>Please refer to the description of the <code>merge_table</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object. The default is <code>true</code>.</td>
     <td>No</td>
     </tr>
     <tr>
     <td><code>titleLevel</code></td>
     <td><code>boolean</code></td>
-    <td>Whether to assign title levels. The default is <code>true</code>.</td>
+    <td>Please refer to the description of the <code>title_level</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object. The default is <code>true</code>.</td>
     <td>No</td>
     </tr>
     <tr>
