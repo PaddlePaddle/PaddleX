@@ -337,6 +337,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             threshold=0.5,
             smaller=True,
         )
+        
+        if isinstance(layout_det_res.get("boxes"), np.ndarray):
+            # RT-DETR / Paddle detector sometimes outputs np.ndarray instead of list
+            layout_det_res["boxes"] = layout_det_res["boxes"].tolist()
+
+        # If empty ndarray, make sure it is a list
+        if layout_det_res.get("boxes") is None:
+            layout_det_res["boxes"] = []
 
         # convert formula_res_list to OCRResult format
         convert_formula_res_to_ocr_format(formula_res_list, overall_ocr_res)
@@ -511,7 +519,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
                     {
                         "label": "text",
                         "coordinate": ocr_rec_box,
-                        "score": overall_ocr_res["rec_scores"][idx],
+                        "score": float(overall_ocr_res["rec_scores"][idx]),
                     }
                 )
                 block_to_ocr_map[idx] = [idx]
