@@ -47,7 +47,7 @@ def run_sglang_server(host, port, model_name, model_dir, config, chat_template_p
         set_config_defaults,
         update_backend_config,
     )
-    from paddlex.inference.genai.models import get_model_components
+    from paddlex.inference.genai.models import get_model_components, is_integrated_model_available
     from sglang.srt.configs.model_config import multimodal_model_archs
     from sglang.srt.entrypoints.http_server import launch_server
     from sglang.srt.managers.multimodal_processor import PROCESSOR_MAPPING
@@ -64,11 +64,12 @@ def run_sglang_server(host, port, model_name, model_dir, config, chat_template_p
     config = data["config"]
     chat_template_path = data["chat_template_path"]
 
-    network_class, processor_class = get_model_components(model_name, "sglang")
+    if not is_integrated_model_available(model_name, "sglang"):
+        network_class, processor_class = get_model_components(model_name, "sglang")
 
-    ModelRegistry.models[network_class.__name__] = network_class
-    multimodal_model_archs.append(network_class.__name__)
-    PROCESSOR_MAPPING[network_class] = processor_class
+        ModelRegistry.models[network_class.__name__] = network_class
+        multimodal_model_archs.append(network_class.__name__)
+        PROCESSOR_MAPPING[network_class] = processor_class
 
     set_config_defaults(config, {{"served-model-name": model_name}})
 

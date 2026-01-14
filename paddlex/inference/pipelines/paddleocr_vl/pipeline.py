@@ -34,7 +34,7 @@ from ..components import CropByBoxes
 from ..layout_parsing.merge_table import merge_tables_across_pages
 from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import gather_imgs
-from .result import PaddleOCRVLBlock, PaddleOCRVLResult
+from .result import PaddleOCRVLBlock, PaddleOCRVLPagesResult, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
     crop_margin,
@@ -798,14 +798,14 @@ class _PaddleOCRVLPipeline(BasePipeline):
         blocks_by_page = []
 
         for idx, single_img_res in enumerate(res_list):
+            if isinstance(single_img_res, PaddleOCRVLResult):
+                single_img_res = single_img_res.json
 
-            layout_parsing_result["parsing_res_list"].extend(
-                single_img_res.get("parsing_res_list", [])
-            )
+            parsing_res_list = single_img_res["res"]["parsing_res_list"]
+            layout_parsing_result["parsing_res_list"].extend(parsing_res_list)
+            blocks_by_page.append(parsing_res_list)
 
-            blocks_by_page.append(single_img_res.get("parsing_res_list", []))
-
-            for key, value in single_img_res.items():
+            for key, value in single_img_res["res"].items():
                 if key == "parsing_res_list":
                     continue
 
@@ -817,8 +817,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 else:
                     layout_parsing_result[key].append(value)
 
-            for block in single_img_res["parsing_res_list"]:
-                setattr(block, "page_index", idx)
+            # for block in parsing_res_list:
+            #     setattr(block, "page_index", idx)
 
         if merge_table:
             blocks_by_page = merge_tables_across_pages(blocks_by_page)
@@ -834,10 +834,19 @@ class _PaddleOCRVLPipeline(BasePipeline):
         blocks = []
         for one_page_blocks in blocks_by_page:
             for block in one_page_blocks:
-                blocks.append(block)
+                blk_obj = PaddleOCRVLBlock(
+                    label=block["block_label"],
+                    bbox=block["block_bbox"],
+                    content=block["block_content"],
+                    group_id=block.get("group_id", None),
+                )
+                if block.get("image", None):
+                    blk_obj.image = block["image"]
+                blocks.append(blk_obj)
+
         layout_parsing_result["parsing_res_list"] = blocks
 
-        return PaddleOCRVLResult(layout_parsing_result)
+        return PaddleOCRVLPagesResult(layout_parsing_result)
 
 
 @pipeline_requires_extra("ocr")
