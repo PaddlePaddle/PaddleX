@@ -14,26 +14,17 @@
 
 from typing import Any, Dict, List
 
-from .....utils import logging
 from .....utils.deps import function_requires_deps, is_dep_available
-from ....pipelines.layout_parsing.result_v2 import LayoutParsingResultV2
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
-from ...schemas.pp_structurev3 import (
-    CONCATENATE_PAGES_ENDPOINT,
-    INFER_ENDPOINT,
-    ConcatenatePagesRequest,
-    ConcatenatePagesResult,
-    InferRequest,
-    InferResult,
-)
+from ...schemas.pp_structurev3 import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
 
 if is_dep_available("fastapi"):
-    from fastapi import FastAPI, HTTPException
+    from fastapi import FastAPI
 
 
 @function_requires_deps("fastapi")
@@ -154,68 +145,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             result=InferResult(
                 layoutParsingResults=layout_parsing_results,
                 dataInfo=data_info,
-            ),
-        )
-
-    @primary_operation(
-        app,
-        CONCATENATE_PAGES_ENDPOINT,
-        "concatenatePages",
-    )
-    async def _concatenate_pages(
-        request: ConcatenatePagesRequest,
-    ) -> AIStudioResultResponse[ConcatenatePagesResult]:
-        pipeline = ctx.pipeline
-
-        log_id = request.logId if request.logId else serving_utils.generate_log_id()
-
-        pages = []
-        for i, page in enumerate(request.pages):
-            try:
-                page = LayoutParsingResultV2(page)
-            except Exception as e:
-                logging.error("Failed to parse page %d: %s", i, e)
-                raise HTTPException(
-                    status_code=422, detail=f"Page {i} is invalid"
-                ) from e
-            pages.append(page)
-
-        concatenated_result = await serving_utils.call_async(
-            pipeline.pipeline.concatenate_pages,
-            pages,
-            merge_table=request.mergeTable,
-            title_level=request.titleLevel,
-        )
-
-        layout_parsing_result = {}
-        layout_parsing_result["prunedResult"] = common.prune_result(
-            concatenated_result.json["res"]
-        )
-        # XXX
-        md_data = concatenated_result._to_markdown(
-            pretty=request.prettifyMarkdown,
-            show_formula_number=request.showFormulaNumber,
-        )
-        md_text = md_data["markdown_texts"]
-        # TODO: Reuse images from `infer`
-        md_imgs = await serving_utils.call_async(
-            common.postprocess_images,
-            md_data["markdown_images"],
-            log_id,
-            filename_template=f"markdown_{i}/{{key}}",
-            file_storage=ctx.extra["file_storage"],
-            return_urls=ctx.extra["return_img_urls"],
-            max_img_size=ctx.extra["max_output_img_size"],
-        )
-        layout_parsing_result["markdown"] = dict(
-            text=md_text,
-            images=md_imgs,
-        )
-
-        return AIStudioResultResponse[ConcatenatePagesResult](
-            logId=log_id,
-            result=ConcatenatePagesResult(
-                layoutParsingResult=layout_parsing_result,
             ),
         )
 

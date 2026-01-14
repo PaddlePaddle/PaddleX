@@ -2582,79 +2582,6 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 </tr>
 </tbody>
 </table>
-<ul>
-  <li><b><code>concatenatePages</code></b></li>
-</ul>
-<p>Concatenate results across multiple pages.</p>
-<p><code>POST /concatenate-pages</code></p>
-
-<ul>
-  <li>The request body has the following properties:</li>
-</ul>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Description</th>
-      <th>Required</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>pages</code></td>
-      <td><code>array</code></td>
-      <td>An array of pages. Each element is a <code>prunedResult</code> object returned by the <code>infer</code> operation.</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-    <td><code>mergeTable</code></td>
-    <td><code>boolean</code></td>
-    <td>Whether to merge tables across pages. The default is <code>true</code>.</td>
-    <td>No</td>
-    </tr>
-    <tr>
-    <td><code>titleLevel</code></td>
-    <td><code>boolean</code></td>
-    <td>Whether to assign title levels. The default is <code>true</code>.</td>
-    <td>No</td>
-    </tr>
-    <tr>
-    <td><code>prettifyMarkdown</code></td>
-    <td><code>boolean</code></td>
-    <td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
-    <td>No</td>
-    </tr>
-    <tr>
-    <td><code>showFormulaNumber</code></td>
-    <td><code>boolean</code></td>
-    <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
-    <td>No</td>
-    </tr>
-  </tbody>
-</table>
-
-<ul>
-  <li>When the request is processed successfully, the <code>result</code> field in the response body has the following properties:</li>
-</ul>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>layoutParsingResult</code></td>
-      <td><code>object</code></td>
-      <td>The concatenated layout parsing results. For the fields it contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images).</td>
-    </tr>
-  </tbody>
-</table>
 </details>
 
 <details><summary>Multi-language Service Call Example</summary>
@@ -2666,7 +2593,7 @@ import base64
 import requests
 import pathlib
 
-BASE_URL = "http://localhost:8080"
+API_URL = "http://localhost:8080/layout-parsing" # Service URL
 
 image_path = "./demo.jpg"
 
@@ -2680,14 +2607,15 @@ payload = {
     "fileType": 1, # file type, 1 represents image file
 }
 
-response = requests.post(BASE_URL + "/layout-parsing", json=payload)
-assert response.status_code == 200, (response.status_code, response.content)
+# Call the API
+response = requests.post(API_URL, json=payload)
 
+# Process the response data
+assert response.status_code == 200
 result = response.json()["result"]
-pruned_results = []
+print("\nDetected layout elements:")
 for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
-    pruned_results.append(res["prunedResult"])
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)
     (md_dir / "doc.md").write_text(res["markdown"]["text"])
@@ -2701,16 +2629,6 @@ for i, res in enumerate(result["layoutParsingResults"]):
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
-
-payload = {
-    "pages": pruned_results,
-}
-
-response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
-assert response.status_code == 200, (response.status_code, response.content)
-
-result = response.json()["result"]
-pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
 </code></pre></details>
 
 <details><summary>C++</summary>

@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from paddlex.inference.pipelines.paddleocr_vl.result import PaddleOCRVLResult
 from paddlex_hps_server import (
     BaseTritonPythonModel,
     app_common,
-    logging,
-    protocol,
     schemas,
 )
 
@@ -34,17 +31,13 @@ class TritonPythonModel(BaseTritonPythonModel):
         return schemas.paddleocr_vl.ConcatenatePagesResult
 
     def run(self, input, log_id):
+        def _to_original_result(page):
+            page = {"res": page}
+            return page
+
         pages = []
         for i, page in enumerate(input.pages):
-            try:
-                page = PaddleOCRVLResult(page)
-            except Exception as e:
-                logging.error("Failed to parse page %d: %s", i, e)
-                return protocol.create_aistudio_output_without_result(
-                    422,
-                    "Unsupported file type",
-                    log_id=log_id,
-                )
+            page = _to_original_result(page)
             pages.append(page)
 
         concatenated_result = self.pipeline.concatenate_pages(
