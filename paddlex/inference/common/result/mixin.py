@@ -615,10 +615,6 @@ class JsonMixin:
 
         json_data = self._to_json()
 
-        for blk in json_data["res"]["parsing_res_list"]:
-            if blk["block_label"] == "image":
-                blk.pop("image")
-
         if not _is_json_file(save_path):
             fn = Path(self._get_input_fn())
             stem = fn.stem
