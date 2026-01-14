@@ -232,10 +232,10 @@ def merge_tables_across_pages(pages):
             prev_block["block_content"] = merged_html
             curr_block["block_content"] = ""
             # one table spilt into more than two pages, the group_id should be the same
-            if curr_block.group_id is not None:
-                prev_block.group_id = curr_block.group_id
+            if curr_block["group_id"] is not None:
+                prev_block["group_id"] = curr_block["group_id"]
             else:
                 new_id = pages[i - 1].index(prev_block) + sum(page_lens[: i - 1])
-                prev_block.group_id = new_id
-                curr_block.group_id = new_id
+                prev_block["group_id"] = new_id
+                curr_block["group_id"] = new_id
     return pages

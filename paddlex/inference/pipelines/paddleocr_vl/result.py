@@ -376,6 +376,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             dict: A dictionary containing the object's data in JSON format.
         """
+        _keep_img = kwargs.pop("keep_img", False)
+
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
@@ -435,8 +437,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     parsing_res.group_id if parsing_res.group_id is not None else idx
                 ),
             }
-            if parsing_res.label == "image":
+
+            if _keep_img and parsing_res.image is not None:
                 res_dict["image"] = parsing_res.image
+
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
                     res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
