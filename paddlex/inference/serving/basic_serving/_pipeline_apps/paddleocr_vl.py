@@ -14,9 +14,7 @@
 
 from typing import Any, Dict, List
 
-from .....utils import logging
 from .....utils.deps import function_requires_deps, is_dep_available
-from ....pipelines.paddleocr_vl.result import PaddleOCRVLResult
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
@@ -33,7 +31,7 @@ from ._common import common
 from ._common import ocr as ocr_common
 
 if is_dep_available("fastapi"):
-    from fastapi import FastAPI, HTTPException
+    from fastapi import FastAPI
 
 
 @function_requires_deps("fastapi")
@@ -152,19 +150,17 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     async def _concatenate_pages(
         request: ConcatenatePagesRequest,
     ) -> AIStudioResultResponse[ConcatenatePagesResult]:
+        def _to_original_result(page):
+            page = {"res": page}
+            return page
+
         pipeline = ctx.pipeline
 
         log_id = request.logId if request.logId else serving_utils.generate_log_id()
 
         pages = []
         for i, page in enumerate(request.pages):
-            try:
-                page = PaddleOCRVLResult(page)
-            except Exception as e:
-                logging.error("Failed to parse page %d: %s", i, e)
-                raise HTTPException(
-                    status_code=422, detail=f"Page {i} is invalid"
-                ) from e
+            page = _to_original_result(page)
             pages.append(page)
 
         concatenated_result = await serving_utils.call_async(

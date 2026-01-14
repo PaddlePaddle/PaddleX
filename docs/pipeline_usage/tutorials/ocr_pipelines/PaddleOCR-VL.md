@@ -1602,13 +1602,13 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>mergeTable</code></td>
 <td><code>boolean</code></td>
-<td>是否跨页合并表格。默认为<code>true</code>。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。默认为<code>true</code>。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>titleLevel</code></td>
 <td><code>boolean</code></td>
-<td>是否配置分级标题。默认为<code>true</code>。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。默认为<code>true</code>。</td>
 <td>否</td>
 </tr>
 </tr>

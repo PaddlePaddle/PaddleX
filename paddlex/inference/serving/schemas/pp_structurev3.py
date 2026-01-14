@@ -24,14 +24,10 @@ __all__ = [
     "InferRequest",
     "LayoutParsingResult",
     "InferResult",
-    "CONCATENATE_PAGES_ENDPOINT",
-    "ConcatenatePagesRequest",
-    "ConcatenatePagesResult",
     "PRIMARY_OPERATIONS",
 ]
 
 INFER_ENDPOINT: Final[str] = "/layout-parsing"
-CONCATENATE_PAGES_ENDPOINT: Final[str] = "/concatenate-pages"
 
 
 class InferRequest(ocr.BaseInferRequest):
@@ -85,24 +81,6 @@ class InferResult(BaseModel):
     dataInfo: DataInfo
 
 
-class ConcatenatePagesRequest(BaseModel):
-    pages: List[dict]
-    mergeTable: bool = True
-    titleLevel: bool = True
-    prettifyMarkdown: bool = True
-    showFormulaNumber: bool = False
-    logId: Optional[str] = None
-
-
-class ConcatenatePagesResult(BaseModel):
-    layoutParsingResult: LayoutParsingResult
-
-
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
     "infer": (INFER_ENDPOINT, InferRequest, InferResult),
-    "concatenate-pages": (
-        CONCATENATE_PAGES_ENDPOINT,
-        ConcatenatePagesRequest,
-        ConcatenatePagesResult,
-    ),
 }
