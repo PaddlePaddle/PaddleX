@@ -1352,9 +1352,27 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>usePolygonPoints</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_polygon_points</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>useChartRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_chart_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useOcrForImageBlock</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_ocr_for_image_block</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1439,6 +1457,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>markdownIgnoreLabels</code></td>
 <td><code>array</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>mardown_ignore_labels</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>vlmExtraArgs</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>vlm_extra_args</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1548,18 +1572,102 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>object</code></td>
 <td>Markdown图片相对路径和Base64编码图像的键值对。</td>
 </tr>
+</tbody>
+</table>
+<ul>
+<li><b><code>concatenatePages</code></b></li>
+</ul>
+<p>拼接多个页面的结果。</p>
+<p><code>POST /concatenate-pages</code></p>
+<ul>
+<li>请求体的属性如下：</li>
+</ul>
+<table>
+<thead>
 <tr>
-<td><code>isStart</code></td>
-<td><code>boolean</code></td>
-<td>当前页面第一个元素是否为段开始。</td>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pages</code></td>
+<td><code>array</code></td>
+<td>页面数组。
+</td>
+<td>是</td>
 </tr>
 <tr>
-<td><code>isEnd</code></td>
+<td><code>mergeTable</code></td>
 <td><code>boolean</code></td>
-<td>当前页面最后一个元素是否为段结束。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。默认为<code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>titleLevel</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。默认为<code>true</code>。</td>
+<td>否</td>
+</tr>
+</tr>
+<tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
+<td>否</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<p><code>pages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>对应<code>infer</code>操作返回的<code>prunedResult</code>对象。</td>
+</tr>
+<tr>
+<td><code>markdownImages</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>对应<code>infer</code>操作返回的<code>markdown</code>对象的<code>images</code>属性。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layoutParsingResult</code></td>
+<td><code>object</code></td>
+<td>拼接后的版面解析结果。其中包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+</tr>
+</tbody>
+</table>
+</details>
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
@@ -1569,28 +1677,28 @@ import base64
 import requests
 import pathlib
 
-API_URL = "http://localhost:8080/layout-parsing" # 服务URL
+BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
-# 对本地图像进行Base64编码
+# Encode the local image in Base64
 with open(image_path, "rb") as file:
     image_bytes = file.read()
     image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": image_data, # Base64编码的文件内容或者文件URL
-    "fileType": 1, # 文件类型，1表示图像文件
+    "file": image_data, # Base64-encoded file content or file URL
+    "fileType": 1, # File type, 1 indicates an image file
 }
 
-# 调用API
-response = requests.post(API_URL, json=payload)
+response = requests.post(BASE_URL + "/layout-parsing", json=payload)
+assert response.status_code == 200, (response.status_code, response.content)
 
-# 处理接口返回数据
-assert response.status_code == 200
 result = response.json()["result"]
+pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
+    pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)
     (md_dir / "doc.md").write_text(res["markdown"]["text"])
@@ -1605,6 +1713,16 @@ for i, res in enumerate(result["layoutParsingResults"]):
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
+
+payload = {
+    "pages": pages,
+}
+
+response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
+assert response.status_code == 200, (response.status_code, response.content)
+
+result = response.json()["result"]
+pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
 </code></pre></details>
 
 <details><summary>C++</summary>

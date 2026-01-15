@@ -2461,6 +2461,18 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2569,7 +2581,8 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td>Whether the last element on the current page is the end of a segment.</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+</details>
 
 <details><summary>Multi-language Service Call Example</summary>
 <details>

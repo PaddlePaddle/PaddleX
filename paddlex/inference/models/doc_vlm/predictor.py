@@ -53,6 +53,9 @@ class DocVLMPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
 
+        if self.batch_sampler.batch_size == -1:
+            self.batch_sampler.batch_size = self._determine_batch_size()
+
         if self._use_local_model:
             if self._use_static_model:
                 raise RuntimeError("Static graph models are not supported")
@@ -169,6 +172,18 @@ class DocVLMPredictor(BasePredictor):
             raise NotImplementedError(f"Model {self.model_name} is not supported.")
 
         return model, processor
+
+    def _determine_batch_size(self):
+        if self._model_name == "PaddleOCR-VL-0.9B":
+            batch_size = 1
+            if not self._use_local_model:
+                batch_size = 4096
+            logging.debug(
+                f"The batch size of {self._model_name} is determined to be {batch_size}."
+            )
+            return batch_size
+        else:
+            raise RuntimeError(f"Could not determine batch size for {self._model_name}")
 
     def process(
         self,

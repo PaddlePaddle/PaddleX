@@ -72,7 +72,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             output_image_base64 = None
 
         return AIStudioResultResponse[InferResult](
-            logId=serving_utils.generate_log_id(),
+            logId=request.logId if request.logId else serving_utils.generate_log_id(),
             result=InferResult(detectedObjects=objects, image=output_image_base64),
         )
 
