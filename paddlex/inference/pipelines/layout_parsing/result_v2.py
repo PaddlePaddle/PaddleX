@@ -122,7 +122,7 @@ def format_text_plain_func(block):
 def format_image_scaled_by_html_func(block, original_image_width):
     img_tags = []
     image_path = block.image["path"]
-    image_width = block.image["img"].width
+    image_width = block.bbox[2] - block.bbox[0]
     scale = int(image_width / original_image_width * 100)
     img_tags.append(
         '<img src="{}" alt="Image" width="{}%" />'.format(
