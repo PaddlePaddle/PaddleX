@@ -1595,7 +1595,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>pages</code></td>
 <td><code>array</code></td>
-<td>页面数组。每个元素为<code>infer</code>操作返回的<code>prunedResult</code>对象。
+<td>页面数组。
 </td>
 <td>是</td>
 </tr>
@@ -1623,6 +1623,28 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>boolean</code></td>
 <td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
 <td>否</td>
+</tr>
+</tbody>
+</table>
+<p><code>pages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>对应<code>infer</code>操作返回的<code>prunedResult</code>对象。</td>
+</tr>
+<tr>
+<td><code>markdownImages</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>对应<code>infer</code>操作返回的<code>markdown</code>对象的<code>images</code>属性。</td>
 </tr>
 </tbody>
 </table>
@@ -1659,24 +1681,24 @@ BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
-# 对本地图像进行Base64编码
+# Encode the local image in Base64
 with open(image_path, "rb") as file:
     image_bytes = file.read()
     image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": image_data, # Base64编码的文件内容或者文件URL
-    "fileType": 1, # 文件类型，1表示图像文件
+    "file": image_data, # Base64-encoded file content or file URL
+    "fileType": 1, # File type, 1 indicates an image file
 }
 
 response = requests.post(BASE_URL + "/layout-parsing", json=payload)
 assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
-pruned_results = []
+pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
-    pruned_results.append(res["prunedResult"])
+    pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)
     (md_dir / "doc.md").write_text(res["markdown"]["text"])
@@ -1687,12 +1709,13 @@ for i, res in enumerate(result["layoutParsingResults"]):
     print(f"Markdown document saved at {md_dir / 'doc.md'}")
     for img_name, img in res["outputImages"].items():
         img_path = f"{img_name}_{i}.jpg"
+        pathlib.Path(img_path).parent.mkdir(exist_ok=True)
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
 
 payload = {
-    "pages": pruned_results,
+    "pages": pages,
 }
 
 response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
