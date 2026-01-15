@@ -15,6 +15,8 @@
 
 from ....utils.deps import require_deps
 
+# TODO: Allow setting `trust-remote-code` to `False` to use `transformers` processors
+
 
 def get_config(backend):
     if backend == "fastdeploy":

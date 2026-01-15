@@ -167,7 +167,7 @@ class DetResizeForTest:
 
         if max(resize_h, resize_w) > max_side_limit:
             logging.warning(
-                f"Resized image size ({resize_h}x{resize_w}) exceeds max_side_limit of {max_side_limit}. "
+                f"Resized image size ({resize_w}x{resize_h}) exceeds max_side_limit of {max_side_limit}. "
                 f"Resizing to fit within limit."
             )
             ratio = float(max_side_limit) / max(resize_h, resize_w)

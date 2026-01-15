@@ -20,6 +20,7 @@ from functools import partial
 import numpy as np
 from PIL import Image, ImageDraw
 
+from ....utils import logging
 from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import SIMFANG_FONT
 from ...common.result import (
@@ -404,6 +405,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             dict: A dictionary containing the object's data in JSON format.
         """
+        _keep_img = kwargs.pop("keep_img", False)
+
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
@@ -482,6 +485,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             }
             if parsing_res.polygon_points is not None:
                 res_dict["block_polygon_points"] = parsing_res.polygon_points
+
+            if _keep_img and parsing_res.image is not None:
+                res_dict["image"] = parsing_res.image
+
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
                     res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
@@ -499,16 +506,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 data["spotting_res"] = self["spotting_res"]
         if self["model_settings"]["use_doc_preprocessor"]:
             if isinstance(self["doc_preprocessor_res"], list):
-                data["doc_preprocessor_res"] = [
-                    res.json["res"] for res in self["doc_preprocessor_res"]
-                ]
+                data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
             else:
                 data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         if self["model_settings"]["use_layout_detection"]:
             if isinstance(self["layout_det_res"], list):
-                data["layout_det_res"] = [
-                    res.json["res"] for res in self["layout_det_res"]
-                ]
+                data["layout_det_res"] = self["layout_det_res"]
             else:
                 data["layout_det_res"] = self["layout_det_res"].json["res"]
         return JsonMixin._to_json(data, *args, **kwargs)
@@ -525,16 +528,13 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: Markdown information with text and images.
         """
 
-        if isinstance(self["doc_preprocessor_res"], list):
-            original_image_width = self["doc_preprocessor_res"][0]["output_img"].shape[
-                1
-            ]
-        else:
-            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
-
         use_ocr_for_image_block = self["model_settings"].get(
             "use_ocr_for_image_block", False
         )
+        if isinstance(self["width"], list):
+            original_image_width = self["width"][0]
+        else:
+            original_image_width = self["width"]
 
         if pretty:
             format_text_func = lambda block: format_centered_by_html(
@@ -629,3 +629,23 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             markdown_info["markdown_images"][img["path"]] = img["img"]
 
         return markdown_info
+
+
+class PaddleOCRVLPagesResult(PaddleOCRVLResult):
+    def save_to_img(self, *args, **kwargs):
+        logging.warning(
+            f"The result of multi-pages don't support to save as image format!"
+        )
+        return None
+
+    def save_to_html(self, *args, **kwargs):
+        logging.warning(
+            f"The result of multi-pages don't support to save as html format!"
+        )
+        return None
+
+    def save_to_xlsx(self, *args, **kwargs):
+        logging.warning(
+            f"The result of multi-pages don't support to save as xlsx format!"
+        )
+        return None
