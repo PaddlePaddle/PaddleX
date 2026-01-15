@@ -33,7 +33,7 @@ from ..base import BasePipeline
 from ..components import CropByBoxes
 from ..layout_parsing.merge_table import merge_tables_across_pages
 from ..layout_parsing.title_level import assign_levels_to_parsing_res
-from ..layout_parsing.utils import gather_imgs
+from ..layout_parsing.utils import construct_img_path, gather_imgs
 from .result import PaddleOCRVLBlock, PaddleOCRVLPagesResult, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
@@ -362,8 +362,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     group_id=block.get("group_id", None),
                 )
                 if block_label in image_labels and block_img is not None:
-                    x_min, y_min, x_max, y_max = list(map(int, block_bbox))
-                    img_path = f"imgs/img_in_{block_label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                    img_path = construct_img_path(block["label"], block["box"])
                     if img_path not in drop_figures_set:
                         import cv2
 
@@ -775,6 +774,22 @@ class _PaddleOCRVLPipeline(BasePipeline):
         Returns:
             PaddleOCRVLResult: Combined OCR-VL result after merge_table or title_level policy
         """
+
+        def get_img_obj(block):
+            if block.get("image", None):
+                return block["image"]
+            if block["block_label"] in ("image", "seal") or (
+                block["block_label"] == "chart"
+                and not layout_parsing_result["model_settings"].get(
+                    "use_chart_recognition", False
+                )
+            ):
+                path = construct_img_path(block["block_label"], block["block_bbox"])
+                # TODO
+                # return {"path": path, "img": Image.fromarray(block_img)}
+                return {"path": path, "img": None}
+            return None
+
         # Initialize result data structure
         layout_parsing_result = {
             "input_path": [],
@@ -799,7 +814,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         for idx, single_img_res in enumerate(res_list):
             if isinstance(single_img_res, PaddleOCRVLResult):
-                single_img_res = single_img_res.json
+                single_img_res = single_img_res._to_json(keep_img=True)
 
             parsing_res_list = single_img_res["res"]["parsing_res_list"]
             layout_parsing_result["parsing_res_list"].extend(parsing_res_list)
@@ -817,6 +832,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 else:
                     layout_parsing_result[key].append(value)
 
+            # TODO
             # for block in parsing_res_list:
             #     setattr(block, "page_index", idx)
 
@@ -840,8 +856,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     content=block["block_content"],
                     group_id=block.get("group_id", None),
                 )
-                if block.get("image", None):
-                    blk_obj.image = block["image"]
+
+                if img := get_img_obj(block):
+                    blk_obj.image = img
+
                 blocks.append(blk_obj)
 
         layout_parsing_result["parsing_res_list"] = blocks
