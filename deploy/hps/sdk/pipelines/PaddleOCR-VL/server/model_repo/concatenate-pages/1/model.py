@@ -31,17 +31,19 @@ class TritonPythonModel(BaseTritonPythonModel):
         return schemas.paddleocr_vl.ConcatenatePagesResult
 
     def run(self, input, log_id):
-        def _to_original_result(page):
-            page = {"res": page}
-            return page
+        def _to_original_result(pruned_res):
+            orig_res = {"res": pruned_res}
+            return orig_res
 
-        pages = []
+        original_results = []
+        markdown_images = {}
         for i, page in enumerate(input.pages):
-            page = _to_original_result(page)
-            pages.append(page)
+            orig_res = _to_original_result(page.prunedResult)
+            original_results.append(orig_res)
+            markdown_images.update(page.markdownImages)
 
         concatenated_result = self.pipeline.concatenate_pages(
-            pages,
+            original_results,
             merge_table=input.mergeTable,
             title_level=input.titleLevel,
         )
@@ -55,19 +57,9 @@ class TritonPythonModel(BaseTritonPythonModel):
             pretty=input.prettifyMarkdown,
             show_formula_number=input.showFormulaNumber,
         )
-        md_text = md_data["markdown_texts"]
-        # TODO: Reuse images from `infer`
-        md_imgs = app_common.postprocess_images(
-            md_data["markdown_images"],
-            log_id,
-            filename_template=f"markdown_{i}/{{key}}",
-            file_storage=self.context["file_storage"],
-            return_urls=self.context["return_img_urls"],
-            max_img_size=self.context["max_output_img_size"],
-        )
         layout_parsing_result["markdown"] = dict(
-            text=md_text,
-            images=md_imgs,
+            text=md_data["markdown_texts"],
+            images=markdown_images,
         )
 
         return schemas.paddleocr_vl.ConcatenatePagesResult(

@@ -1549,7 +1549,7 @@ Below are the API references for basic service-based deployment and examples of 
     <tr>
       <td><code>pages</code></td>
       <td><code>array</code></td>
-      <td>An array of pages. Each element is a <code>prunedResult</code> object returned by the <code>infer</code> operation.</td>
+      <td>An array of pages.</td>
       <td>Yes</td>
     </tr>
     <tr>
@@ -1577,6 +1577,29 @@ Below are the API references for basic service-based deployment and examples of 
     <td>No</td>
     </tr>
   </tbody>
+</table>
+
+<p>Each element in <code>pages</code> is an <code>object</code> with the following properties:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>The <code>prunedResult</code> object returned by the <code>infer</code> operation.</td>
+</tr>
+<tr>
+<td><code>markdownImages</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>The <code>images</code> property of the <code>markdown</code> object returned by the <code>infer</code> operation.</td>
+</tr>
+</tbody>
 </table>
 
 <ul>
@@ -1627,10 +1650,10 @@ response = requests.post(BASE_URL + "/layout-parsing", json=payload)
 assert response.status_code == 200, (response.status_code, response.content)
 
 result = response.json()["result"]
-pruned_results = []
+pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
-    pruned_results.append(res["prunedResult"])
+    pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)
     (md_dir / "doc.md").write_text(res["markdown"]["text"])
@@ -1647,7 +1670,7 @@ for i, res in enumerate(result["layoutParsingResults"]):
         print(f"Output image saved at {img_path}")
 
 payload = {
-    "pages": pruned_results,
+    "pages": pages,
 }
 
 response = requests.post(BASE_URL + "/concatenate-pages", json=payload)

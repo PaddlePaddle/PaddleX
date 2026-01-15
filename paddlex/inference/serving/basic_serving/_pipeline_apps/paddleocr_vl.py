@@ -150,22 +150,24 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     async def _concatenate_pages(
         request: ConcatenatePagesRequest,
     ) -> AIStudioResultResponse[ConcatenatePagesResult]:
-        def _to_original_result(page):
-            page = {"res": page}
-            return page
+        def _to_original_result(pruned_res):
+            orig_res = {"res": pruned_res}
+            return orig_res
 
         pipeline = ctx.pipeline
 
         log_id = request.logId if request.logId else serving_utils.generate_log_id()
 
-        pages = []
+        original_results = []
+        markdown_images = {}
         for i, page in enumerate(request.pages):
-            page = _to_original_result(page)
-            pages.append(page)
+            orig_res = _to_original_result(page.prunedResult)
+            original_results.append(orig_res)
+            markdown_images.update(page.markdownImages)
 
         concatenated_result = await serving_utils.call_async(
             pipeline.pipeline.concatenate_pages,
-            pages,
+            original_results,
             merge_table=request.mergeTable,
             title_level=request.titleLevel,
         )
@@ -179,20 +181,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             pretty=request.prettifyMarkdown,
             show_formula_number=request.showFormulaNumber,
         )
-        md_text = md_data["markdown_texts"]
-        # TODO: Reuse images from `infer`
-        md_imgs = await serving_utils.call_async(
-            common.postprocess_images,
-            md_data["markdown_images"],
-            log_id,
-            filename_template=f"markdown_{i}/{{key}}",
-            file_storage=ctx.extra["file_storage"],
-            return_urls=ctx.extra["return_img_urls"],
-            max_img_size=ctx.extra["max_output_img_size"],
-        )
         layout_parsing_result["markdown"] = dict(
-            text=md_text,
-            images=md_imgs,
+            text=md_data["markdown_texts"],
+            images=markdown_images,
         )
 
         return AIStudioResultResponse[ConcatenatePagesResult](
