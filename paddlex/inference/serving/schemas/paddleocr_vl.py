@@ -28,6 +28,8 @@ __all__ = [
     "ConcatenatePagesRequest",
     "ConcatenatePagesResult",
     "PRIMARY_OPERATIONS",
+    "MarkdownData",
+    "Page",
 ]
 
 INFER_ENDPOINT: Final[str] = "/layout-parsing"
@@ -80,8 +82,13 @@ class InferResult(BaseModel):
     dataInfo: DataInfo
 
 
+class Page(BaseModel):
+    prunedResult: dict
+    markdownImages: Optional[Dict[str, str]] = None
+
+
 class ConcatenatePagesRequest(BaseModel):
-    pages: List[dict]
+    pages: List[Page]
     mergeTable: bool = True
     titleLevel: bool = True
     prettifyMarkdown: bool = True
