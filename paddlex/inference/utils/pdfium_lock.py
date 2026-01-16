@@ -28,4 +28,4 @@ pypdfium2 operations across the application.
 
 import threading
 
-PDFIUM_LOCK = threading.Lock()
+pdfium_lock = threading.Lock()

@@ -30,7 +30,7 @@ from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
 from ....utils.deps import function_requires_deps, is_dep_available
-from ...utils.pdfium_lock import PDFIUM_LOCK
+from ...utils.pdfium_lock import pdfium_lock
 from .models import ImageInfo, PDFInfo, PDFPageInfo
 
 if is_dep_available("aiohttp"):
@@ -183,7 +183,7 @@ def read_pdf(
 ) -> Tuple[List[np.ndarray], PDFInfo]:
     images: List[np.ndarray] = []
     page_info_list: List[PDFPageInfo] = []
-    with PDFIUM_LOCK:
+    with pdfium_lock:
         doc = pdfium.PdfDocument(bytes_)
         doc.init_forms()
         try:

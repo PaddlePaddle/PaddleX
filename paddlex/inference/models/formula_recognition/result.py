@@ -34,7 +34,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("pypdfium2"):
     import pypdfium2 as pdfium
-    from ...utils.pdfium_lock import PDFIUM_LOCK
+    from ...utils.pdfium_lock import pdfium_lock
 
 
 class FormulaRecResult(BaseCVResult):
@@ -277,7 +277,7 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
     Returns:
         np.ndarray: The resulting image as a NumPy array, or None if the PDF is not single-page.
     """
-    with PDFIUM_LOCK:
+    with pdfium_lock:
         pdfDoc = pdfium.PdfDocument(pdf_path)
         try:
             if len(pdfDoc) != 1:
