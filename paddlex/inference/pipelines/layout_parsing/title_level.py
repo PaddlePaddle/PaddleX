@@ -117,74 +117,27 @@ def get_title_height(block, layout_det_res):
 
     import math
 
-    import cv2
-
-    if block.label == "doc_title":
+    if block["block_label"] == "doc_title":
         return 0
 
-    page_image = layout_det_res[block.page_index]["input_img"]
-
     # Round down for top-left
-    x1 = int(block.bbox[0])
-    y1 = int(block.bbox[1])
+    x1 = int(block["block_bbox"][0])
+    y1 = int(block["block_bbox"][1])
     # Round up for bottom-right to ensure full coverage
-    x2 = int(math.ceil(block.bbox[2]))
-    y2 = int(math.ceil(block.bbox[3]))
-    # Boundary clamping: Ensure coordinates do not exceed image dimensions
-    h, w = page_image.shape[:2]
-    x1, y1, x2, y2 = max(0, x1), max(0, y1), min(w, x2), min(h, y2)
+    x2 = int(math.ceil(block["block_bbox"][2]))
+    y2 = int(math.ceil(block["block_bbox"][3]))
 
-    title_image = page_image[y1:y2, x1:x2]
-    # Convert to grayscale
-    title_image = cv2.cvtColor(title_image, cv2.COLOR_RGB2GRAY)
-    # Binarization using Otsu's method
-    ret, binary = cv2.threshold(
-        title_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
-    )
-
-    # Determine orientation based on aspect ratio
-    h, w = binary.shape[:2]
+    h, w = y2 - y1, x2 - x1
     aspect_ratio = w / h
 
-    projection = None
+    lines_num = block["block_content"].strip().count("\n") + 1
 
     if aspect_ratio >= 1.0:
         # orizontal text: Project to Y-axis
-        projection = np.sum(binary, axis=1)
+        return int(h / lines_num)
     else:
         # Vertical text: Project to X-axis
-        projection = np.sum(binary, axis=0)
-
-    heights_list = []
-    current_height = 0
-    in_block = False
-
-    # Signals below this are considered background/gap
-    threshold = np.max(projection) * 0.05
-
-    for val in projection:
-        if val > threshold:
-            # Entering or inside a text line
-            in_block = True
-            current_height += 1
-        else:
-            if in_block:
-                if current_height > 2:
-                    heights_list.append(current_height)
-                current_height = 0
-            in_block = False
-
-    # Edge Case: If the loop ends while still inside a text block
-    if in_block and current_height > 2:
-        heights_list.append(current_height)
-
-    # Filter for dominant lines: keep lines that are > 80% of the max height
-    max_height = max(heights_list)
-    threshold = max_height * 0.8
-    big_lines = [h for h in heights_list if h > threshold]
-    avg_height = sum(big_lines) / len(big_lines)
-
-    return int(round(avg_height))
+        return int(w / lines_num)
 
 
 def cluster_global_heights(entries, k_clusters=4):
@@ -329,22 +282,22 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
 
     for page_index, one_page_blocks in enumerate(blocks_by_page):
         for block in one_page_blocks:
-            setattr(block, "page_index", page_index)
+            block["page_index"] = page_index
             parsing_res_list.append(block)
 
     entries = []
 
     for block in parsing_res_list:
 
-        if block.label == "paragraph_title":
-            content = block.content
+        if block["block_label"] == "paragraph_title":
+            content = block["block_content"]
             height = get_title_height(block, layout_det_res)
 
             if height is None:
                 continue
 
             # Document title has fixed level 0
-            init_level = 0 if block.label == "doc_title" else None
+            init_level = 0 if block["block_label"] == "doc_title" else None
 
             entries.append(
                 {
@@ -358,9 +311,9 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
     entries = compute_levels_for_entries(entries)
 
     for e in entries:
-        if e["origin_block"].label == "doc_title":
+        if e["origin_block"]["block_label"] == "doc_title":
             setattr(block, "title_level", 0)
         block = e["origin_block"]
-        setattr(block, "title_level", e["level"])
+        block["title_level"] = e["level"]
 
     return blocks_by_page

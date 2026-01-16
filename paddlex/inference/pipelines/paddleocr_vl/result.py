@@ -376,6 +376,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             dict: A dictionary containing the object's data in JSON format.
         """
+        _keep_img = kwargs.pop("keep_img", False)
+
         data = {}
         data["input_path"] = self["input_path"]
         data["page_index"] = self["page_index"]
@@ -435,6 +437,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     parsing_res.group_id if parsing_res.group_id is not None else idx
                 ),
             }
+
+            if _keep_img and parsing_res.image is not None:
+                res_dict["image"] = parsing_res.image
+
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
                     res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
@@ -447,16 +453,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["parsing_res_list"] = parsing_res_list_json
         if self["model_settings"]["use_doc_preprocessor"]:
             if isinstance(self["doc_preprocessor_res"], list):
-                data["doc_preprocessor_res"] = [
-                    res.json["res"] for res in self["doc_preprocessor_res"]
-                ]
+                data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
             else:
                 data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         if self["model_settings"]["use_layout_detection"]:
             if isinstance(self["layout_det_res"], list):
-                data["layout_det_res"] = [
-                    res.json["res"] for res in self["layout_det_res"]
-                ]
+                data["layout_det_res"] = self["layout_det_res"]
             else:
                 data["layout_det_res"] = self["layout_det_res"].json["res"]
         return JsonMixin._to_json(data, *args, **kwargs)
@@ -473,12 +475,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: Markdown information with text and images.
         """
 
-        if isinstance(self["doc_preprocessor_res"], list):
-            original_image_width = self["doc_preprocessor_res"][0]["output_img"].shape[
-                1
-            ]
+        if isinstance(self["width"], list):
+            original_image_width = self["width"][0]
         else:
-            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+            original_image_width = self["width"]
 
         if pretty:
             format_text_func = lambda block: format_centered_by_html(
