@@ -31,6 +31,7 @@ from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
+from ..pp_doctranslation.result import MarkdownResult
 from .layout_objects import LayoutBlock, LayoutRegion
 from .result_v2 import LayoutParsingResultV2
 from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
@@ -41,6 +42,7 @@ from .utils import (
     convert_formula_res_to_ocr_format,
     gather_imgs,
     get_bbox_intersection,
+    get_seg_flag,
     get_sub_regions_ocr_res,
     remove_overlap_blocks,
     shrink_supplement_region_bbox,
@@ -1362,7 +1364,70 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 page_last_element_paragraph_end_flag
             )
 
-        return markdown_texts
+        markdown_result = {"markdown_texts": markdown_texts}
+
+        return MarkdownResult(markdown_result)
+
+    def merge_text_across_page(self, blocks_by_page):
+
+        merged_blocks_by_page = []
+
+        global_prev_block = None
+
+        global_block_id = 0
+
+        for page_index, one_page_blocks in enumerate(blocks_by_page):
+            current_page_new_blocks = []
+
+            prev_block = None
+
+            for block in one_page_blocks:
+
+                setattr(block, "group_id", global_block_id)
+
+                seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
+
+                prev_block = block
+
+                is_text = block.label == "text"
+                prev_is_text = (
+                    global_prev_block is not None and global_prev_block.label == "text"
+                )
+
+                if is_text and prev_is_text and not seg_start_flag:
+
+                    prev_text = global_prev_block.content
+                    curr_text = block.content
+
+                    last_char = prev_text[-1] if prev_text else ""
+                    first_char = curr_text[0] if curr_text else ""
+
+                    is_last_chinese = re.match(r"[\u4e00-\u9fff]", last_char)
+                    is_first_chinese = re.match(r"[\u4e00-\u9fff]", first_char)
+
+                    separator = ""
+                    if (
+                        not (is_last_chinese or is_first_chinese)
+                        and last_char
+                        and first_char
+                    ):
+                        separator = " "
+
+                    global_prev_block.content += separator + curr_text
+
+                    setattr(block, "group_id", global_prev_block.group_id)
+
+                else:
+                    # after merge, block don't add to current page
+                    current_page_new_blocks.append(block)
+
+                    global_prev_block = block
+
+                global_block_id += 1
+
+            merged_blocks_by_page.append(current_page_new_blocks)
+
+        return merged_blocks_by_page
 
 
 @pipeline_requires_extra("ocr")

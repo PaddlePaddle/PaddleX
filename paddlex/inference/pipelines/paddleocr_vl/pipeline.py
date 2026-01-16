@@ -31,8 +31,10 @@ from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
+from ..layout_parsing.merge_table import merge_tables_across_pages
+from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import gather_imgs
-from .result import PaddleOCRVLBlock, PaddleOCRVLResult
+from .result import PaddleOCRVLBlock, PaddleOCRVLPagesResult, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
     crop_margin,
@@ -748,6 +750,86 @@ class _PaddleOCRVLPipeline(BasePipeline):
             markdown_texts += "\n\n" + res["markdown_texts"]
 
         return markdown_texts
+
+    def concatenate_pages(
+        self,
+        res_list: list,
+        merge_table: bool = True,
+        title_level: bool = True,
+    ):
+        """Concatenate layout parsing results from multiple pages.
+
+        Args:
+            res_list: List of page parsing results
+            merge_talble: Whether to merge tables across pages
+            title_level: Whether to assign title levels
+
+        Returns:
+            PaddleOCRVLResult: Combined OCR-VL result after merge_table or title_level policy
+        """
+        # Initialize result data structure
+        layout_parsing_result = {
+            "input_path": [],
+            "page_index": [],
+            "page_count": [],
+            "width": [],
+            "height": [],
+            "parsing_res_list": [],
+            "doc_preprocessor_res": [],
+            "layout_det_res": [],
+            "region_det_res": [],
+            "overall_ocr_res": [],
+            "table_res_list": [],
+            "seal_res_list": [],
+            "chart_res_list": [],
+            "formula_res_list": [],
+            "imgs_in_doc": [],
+            "model_settings": [],
+        }
+
+        blocks_by_page = []
+
+        for idx, single_img_res in enumerate(res_list):
+
+            layout_parsing_result["parsing_res_list"].extend(
+                single_img_res.get("parsing_res_list", [])
+            )
+
+            blocks_by_page.append(single_img_res.get("parsing_res_list", []))
+
+            for key, value in single_img_res.items():
+                if key == "parsing_res_list":
+                    continue
+
+                if key not in layout_parsing_result:
+                    layout_parsing_result[key] = []
+
+                if isinstance(value, (list, tuple, set)):
+                    layout_parsing_result[key].extend(list(value))
+                else:
+                    layout_parsing_result[key].append(value)
+
+            for block in single_img_res["parsing_res_list"]:
+                setattr(block, "page_index", idx)
+
+        if merge_table:
+            blocks_by_page = merge_tables_across_pages(blocks_by_page)
+        if title_level:
+            blocks_by_page = assign_levels_to_parsing_res(
+                blocks_by_page, layout_parsing_result["layout_det_res"]
+            )
+
+        layout_parsing_result["model_settings"] = layout_parsing_result[
+            "model_settings"
+        ][0]
+
+        blocks = []
+        for one_page_blocks in blocks_by_page:
+            for block in one_page_blocks:
+                blocks.append(block)
+        layout_parsing_result["parsing_res_list"] = blocks
+
+        return PaddleOCRVLPagesResult(layout_parsing_result)
 
 
 @pipeline_requires_extra("ocr")

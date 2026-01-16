@@ -379,7 +379,7 @@ class TextLine(object):
 class LayoutBlock(object):
     """Layout Block Class"""
 
-    def __init__(self, label, bbox, content="") -> None:
+    def __init__(self, label, bbox, content="", group_id=None) -> None:
         """
         Initialize a LayoutBlock object.
 
@@ -392,6 +392,7 @@ class LayoutBlock(object):
         self.order_label = None
         self.bbox = list(map(int, bbox))
         self.content = content
+        self.group_id = group_id
         self.seg_start_coordinate = float("inf")
         self.seg_end_coordinate = float("-inf")
         self.width = bbox[2] - bbox[0]
