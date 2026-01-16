@@ -19,6 +19,7 @@ from typing import Any, Dict, Final, List, Tuple
 from paddlex_hps_server import (
     BaseTritonPythonModel,
     app_common,
+    logging,
     protocol,
     schemas,
     utils,
@@ -123,7 +124,10 @@ class TritonPythonModel(BaseTritonPythonModel):
                             ].useDocOrientationClassify,
                             use_doc_unwarping=inputs_g[0].useDocUnwarping,
                             use_layout_detection=inputs_g[0].useLayoutDetection,
+                            use_polygon_points=inputs_g[0].usePolygonPoints,
                             use_chart_recognition=inputs_g[0].useChartRecognition,
+                            use_seal_recognition=inputs_g[0].useSealRecognition,
+                            use_ocr_for_image_block=inputs_g[0].useOcrForImageBlock,
                             layout_threshold=inputs_g[0].layoutThreshold,
                             layout_nms=inputs_g[0].layoutNms,
                             layout_unclip_ratio=inputs_g[0].layoutUnclipRatio,
@@ -138,6 +142,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                             max_new_tokens=inputs_g[0].maxNewTokens,
                             merge_layout_blocks=inputs_g[0].mergeLayoutBlocks,
                             markdown_ignore_labels=inputs_g[0].markdownIgnoreLabels,
+                            vlm_extra_args=inputs_g[0].vlmExtraArgs,
                         )
                     )
 
@@ -174,10 +179,13 @@ class TritonPythonModel(BaseTritonPythonModel):
 
     def _group_inputs(self, inputs):
         def _to_hashable(obj):
-            if isinstance(obj, list):
-                return tuple(obj)
-            elif isinstance(obj, dict):
-                return tuple(sorted(obj.items()))
+            if isinstance(obj, dict):
+                return tuple(
+                    (_to_hashable(k), _to_hashable(v))
+                    for k, v in sorted(obj.items(), key=lambda x: repr(x[0]))
+                )
+            elif isinstance(obj, list):
+                return tuple(_to_hashable(x) for x in obj)
             else:
                 return obj
 
@@ -191,7 +199,10 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 input.useDocOrientationClassify,
                                 input.useDocUnwarping,
                                 input.useLayoutDetection,
+                                input.usePolygonPoints,
                                 input.useChartRecognition,
+                                input.useSealRecognition,
+                                input.useOcrForImageBlock,
                                 input.layoutThreshold,
                                 input.layoutNms,
                                 input.layoutUnclipRatio,
@@ -206,6 +217,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 input.maxNewTokens,
                                 input.mergeLayoutBlocks,
                                 input.markdownIgnoreLabels,
+                                input.vlmExtraArgs,
                             )
                         ),
                     )
@@ -248,12 +260,20 @@ class TritonPythonModel(BaseTritonPythonModel):
             else self.app_config.visualize
         )
 
-        file_bytes = utils.get_raw_bytes(input.file)
-        images, data_info = utils.file_to_images(
-            file_bytes,
-            file_type,
-            max_num_imgs=self.context["max_num_input_imgs"],
-        )
+        try:
+            file_bytes = utils.get_raw_bytes(input.file)
+            images, data_info = utils.file_to_images(
+                file_bytes,
+                file_type,
+                max_num_imgs=self.context["max_num_input_imgs"],
+            )
+        except Exception as e:
+            logging.error("Failed to get input file bytes: %s", e)
+            return protocol.create_aistudio_output_without_result(
+                422,
+                "Input file is invalid",
+                log_id=log_id,
+            )
 
         return images, data_info, visualize_enabled
 

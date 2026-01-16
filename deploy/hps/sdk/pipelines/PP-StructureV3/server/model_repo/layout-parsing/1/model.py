@@ -19,6 +19,7 @@ from typing import Any, Dict, Final, List, Tuple
 from paddlex_hps_server import (
     BaseTritonPythonModel,
     app_common,
+    logging,
     protocol,
     schemas,
     utils,
@@ -200,10 +201,13 @@ class TritonPythonModel(BaseTritonPythonModel):
 
     def _group_inputs(self, inputs):
         def _to_hashable(obj):
-            if isinstance(obj, list):
-                return tuple(obj)
-            elif isinstance(obj, dict):
-                return tuple(sorted(obj.items()))
+            if isinstance(obj, dict):
+                return tuple(
+                    (_to_hashable(k), _to_hashable(v))
+                    for k, v in sorted(obj.items(), key=lambda x: repr(x[0]))
+                )
+            elif isinstance(obj, list):
+                return tuple(_to_hashable(x) for x in obj)
             else:
                 return obj
 
@@ -286,12 +290,20 @@ class TritonPythonModel(BaseTritonPythonModel):
             else self.app_config.visualize
         )
 
-        file_bytes = utils.get_raw_bytes(input.file)
-        images, data_info = utils.file_to_images(
-            file_bytes,
-            file_type,
-            max_num_imgs=self.context["max_num_input_imgs"],
-        )
+        try:
+            file_bytes = utils.get_raw_bytes(input.file)
+            images, data_info = utils.file_to_images(
+                file_bytes,
+                file_type,
+                max_num_imgs=self.context["max_num_input_imgs"],
+            )
+        except Exception as e:
+            logging.error("Failed to get input file bytes: %s", e)
+            return protocol.create_aistudio_output_without_result(
+                422,
+                "Input file is invalid",
+                log_id=log_id,
+            )
 
         return images, data_info, visualize_enabled
 
@@ -299,7 +311,11 @@ class TritonPythonModel(BaseTritonPythonModel):
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, preds)):
             pruned_res = app_common.prune_result(item.json["res"])
-            md_data = item.markdown
+            # XXX
+            md_data = item._to_markdown(
+                pretty=input.prettifyMarkdown,
+                show_formula_number=input.showFormulaNumber,
+            )
             md_text = md_data["markdown_texts"]
             md_imgs = app_common.postprocess_images(
                 md_data["markdown_images"],
