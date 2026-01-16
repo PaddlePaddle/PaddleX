@@ -127,6 +127,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 )
 
             self.use_chart_recognition = config.get("use_chart_recognition", True)
+            self.use_seal_recognition = config.get("use_seal_recognition", True)
 
             vl_rec_config = config.get("SubModules", {}).get(
                 "VLRecognition",
@@ -136,6 +137,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             self.vl_rec_model = self.create_model(vl_rec_config)
             self.format_block_content = config.get("format_block_content", False)
 
+            self.use_polygon_points = config.get("use_polygon_points", False)
             self.batch_sampler = ImageBatchSampler(
                 batch_size=config.get("batch_size", 1)
             )
