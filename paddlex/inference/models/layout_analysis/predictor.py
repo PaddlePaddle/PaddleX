@@ -30,7 +30,6 @@ class LayoutAnalysisPredictor(DetPredictor):
         self,
         *args,
         img_size: Optional[Union[int, Tuple[int, int]]] = None,
-        use_polygon_points: bool = True,
         **kwargs,
     ):
         """Initializes LayoutAnalysisPredictor.
@@ -60,7 +59,6 @@ class LayoutAnalysisPredictor(DetPredictor):
                 raise ValueError(
                     f"The type of `img_size` must be int or Tuple[int, int], but got {type(img_size)}."
                 )
-        self.use_polygon_points = use_polygon_points
         super().__init__(*args, **kwargs)
 
     def _get_result_class(self):
@@ -73,7 +71,7 @@ class LayoutAnalysisPredictor(DetPredictor):
         layout_nms: bool = False,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[Union[str, dict]] = None,
-        use_polygon_points: Optional[bool] = None,
+        layout_shape_mode: Optional[str] = "auto",
         filter_overlap_boxes: Optional[bool] = True,
         skip_order_labels: Optional[List[str]] = None,
     ):
@@ -86,6 +84,9 @@ class LayoutAnalysisPredictor(DetPredictor):
             layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to None.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
             layout_merge_bboxes_mode (Optional[Union[str, dict]], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_shape_mode (Optional[str], optional): The mode for layout shape. Defaults to "auto", [ "rect", "quad","poly", "auto"]. are supported.
+            filter_overlap_boxes (Optional[bool], optional): Whether to filter out overlap boxes. Defaults to True.
+            skip_order_labels (Optional[List[str]], optional): The labels to skip order. Defaults to None.
 
         Returns:
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names
@@ -113,11 +114,7 @@ class LayoutAnalysisPredictor(DetPredictor):
             layout_unclip_ratio=layout_unclip_ratio or self.layout_unclip_ratio,
             layout_merge_bboxes_mode=layout_merge_bboxes_mode
             or self.layout_merge_bboxes_mode,
-            use_polygon_points=(
-                use_polygon_points
-                if use_polygon_points is not None
-                else self.use_polygon_points
-            ),
+            layout_shape_mode=layout_shape_mode,
             filter_overlap_boxes=filter_overlap_boxes,
             skip_order_labels=skip_order_labels,
         )

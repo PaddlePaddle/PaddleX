@@ -139,7 +139,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
             self.format_block_content = config.get("format_block_content", False)
             self.use_ocr_for_image_block = config.get("use_ocr_for_image_block", False)
 
-            self.use_polygon_points = config.get("use_polygon_points", False)
             self.batch_sampler = ImageBatchSampler(
                 batch_size=config.get("batch_size", 1)
             )
@@ -170,7 +169,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_doc_orientation_classify: Union[bool, None],
         use_doc_unwarping: Union[bool, None],
         use_layout_detection: Union[bool, None],
-        use_polygon_points: Union[bool, None],
         use_chart_recognition: Union[bool, None],
         use_seal_recognition: Union[bool, None],
         use_ocr_for_image_block: Union[bool, None],
@@ -212,9 +210,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
         if format_block_content is None:
             format_block_content = self.format_block_content
 
-        if use_polygon_points is None:
-            use_polygon_points = self.use_polygon_points
-
         if merge_layout_blocks is None:
             merge_layout_blocks = self.merge_layout_blocks
 
@@ -228,7 +223,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_seal_recognition=use_seal_recognition,
             use_ocr_for_image_block=use_ocr_for_image_block,
             format_block_content=format_block_content,
-            use_polygon_points=use_polygon_points,
             merge_layout_blocks=merge_layout_blocks,
             markdown_ignore_labels=markdown_ignore_labels,
         )
@@ -262,7 +256,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_ocr_for_image_block=False,
         vlm_kwargs=None,
         merge_layout_blocks=True,
-        use_polygon_points=None,
+        layout_shape_mode="auto",
     ):
         blocks = []
         has_spotting = False
@@ -274,6 +268,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         batch_dict_by_pixel = {}
         id2pixel_key_map = {}
+        image_path_to_obj_map = {}
         vis_image_labels = IMAGE_LABELS + ["seal"]
         image_labels = [] if use_ocr_for_image_block else IMAGE_LABELS
         if not use_chart_recognition:
@@ -284,9 +279,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
         for i, (image, layout_det_res, imgs_in_doc_for_img) in enumerate(
             zip(images, layout_det_results, imgs_in_doc)
         ):
-            layout_det_res = filter_overlap_boxes(layout_det_res, use_polygon_points)
+            layout_det_res = filter_overlap_boxes(layout_det_res, layout_shape_mode)
             boxes = layout_det_res["boxes"]
-            blocks_for_img = self.crop_by_boxes(image, boxes, use_polygon_points)
+            blocks_for_img = self.crop_by_boxes(image, boxes, layout_shape_mode)
             if merge_layout_blocks:
                 blocks_for_img = merge_blocks(
                     blocks_for_img, non_merge_labels=image_labels + ["table"]
@@ -405,6 +400,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         parsing_res_lists = []
         table_res_lists = []
         spotting_res_list = []
+        table_blocks = []
         for i, blocks_for_img in enumerate(blocks):
             parsing_res_list = []
             table_res_list = []
@@ -414,6 +410,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 block_bbox = block["box"]
                 block_label = block["label"]
                 block_content = ""
+                figure_token_map = {}
                 if (i, j) in id2pixel_key_map:
                     pixel_key = id2pixel_key_map[(i, j)]
                     pixel_info = batch_dict_by_pixel[pixel_key]
@@ -453,9 +450,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         html_str = convert_otsl_to_html(result_str)
                         if html_str != "":
                             result_str = html_str
-                        result_str = untokenize_figure_of_table(
-                            result_str, figure_token_map
-                        )
+                        # result_str = untokenize_figure_of_table(
+                        #     result_str, figure_token_map
+                        # )
                     if block_label == "spotting":
                         h, w = block_img.shape[:2]
                         result_str, spotting_res = post_process_for_spotting(
@@ -470,8 +467,16 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     group_id=block.get("group_id", None),
                     polygon_points=block.get("polygon_points", None),
                 )
+                if block_label == "table":
+                    table_blocks.append(
+                        {
+                            "figure_token_map": figure_token_map,
+                            "block": block_info,
+                        }
+                    )
                 if block_label in vis_image_labels and block_img is not None:
                     img_path = construct_img_path(block["label"], block["box"])
+                    image_path_to_obj_map[img_path] = block_info
                     if img_path not in drop_figures_set:
                         import cv2
 
@@ -484,6 +489,12 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         continue
 
                 parsing_res_list.append(block_info)
+            for blk_info in table_blocks:
+                block = blk_info["block"]
+                figure_token_map = blk_info["figure_token_map"]
+                block.content = untokenize_figure_of_table(
+                    block.content, figure_token_map, image_path_to_obj_map
+                )
             parsing_res_lists.append(parsing_res_list)
             table_res_lists.append(table_res_list)
             spotting_res_list.append(spotting_res)
@@ -501,7 +512,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_doc_orientation_classify: Union[bool, None] = False,
         use_doc_unwarping: Union[bool, None] = False,
         use_layout_detection: Union[bool, None] = None,
-        use_polygon_points: Union[bool, None] = None,
         use_chart_recognition: Union[bool, None] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_ocr_for_image_block: Union[bool, None] = None,
@@ -509,6 +519,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
+        layout_shape_mode: Optional[str] = "auto",
         use_queues: Optional[bool] = None,
         prompt_label: Optional[Union[str, None]] = None,
         format_block_content: Union[bool, None] = None,
@@ -532,7 +543,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
             use_layout_detection (Optional[bool]): Whether to use layout detection. Default is None.
-            use_polygon_points (Optional[bool]): Whether to use polygon points. Default is None.
             use_chart_recognition (Optional[bool]): Whether to use chart recognition. Default is None.
             use_seal_recognition (Optional[bool]): Whether to use seal recognition. Default is None.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
@@ -543,6 +553,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
             layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_shape_mode (Optional[str], optional): The mode for layout shape. Defaults to "auto", [ "rect", "quad","poly", "auto"] are supported.
             use_queues (Optional[bool], optional): Whether to use queues. Defaults to None.
             prompt_label (Optional[Union[str, None]], optional): The label of the prompt in ['ocr', 'formula', 'table', 'chart']. Defaults to None.
             format_block_content (Optional[bool]): Whether to format the block content. Default is None.
@@ -563,7 +574,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_doc_orientation_classify,
             use_doc_unwarping,
             use_layout_detection,
-            use_polygon_points,
             use_chart_recognition,
             use_seal_recognition,
             use_ocr_for_image_block,
@@ -632,7 +642,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             layout_nms=layout_nms,
                             layout_unclip_ratio=layout_unclip_ratio,
                             layout_merge_bboxes_mode=layout_merge_bboxes_mode,
-                            use_polygon_points=model_settings["use_polygon_points"],
+                            layout_shape_mode=layout_shape_mode,
                             filter_overlap_boxes=False,
                         )
                     )
@@ -702,7 +712,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     **vlm_extra_args,
                 },
                 merge_layout_blocks=model_settings["merge_layout_blocks"],
-                use_polygon_points=model_settings["use_polygon_points"],
+                layout_shape_mode=layout_shape_mode,
             )
 
             for (
