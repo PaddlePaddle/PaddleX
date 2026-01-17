@@ -470,7 +470,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     group_id=block.get("group_id", None),
                     polygon_points=block.get("polygon_points", None),
                 )
-                if block_label in image_labels and block_img is not None:
+                if block_label in vis_image_labels and block_img is not None:
                     img_path = construct_img_path(block["label"], block["box"])
                     if img_path not in drop_figures_set:
                         import cv2
