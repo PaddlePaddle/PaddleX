@@ -76,7 +76,7 @@ def calculate_polygon_overlap_ratio(
 
 
 def filter_overlap_boxes(
-    layout_det_res: Dict[str, List[Dict]], use_polygon_points: bool
+    layout_det_res: Dict[str, List[Dict]], layout_shape_mode: str
 ) -> Dict[str, List[Dict]]:
     """
     Remove overlapping boxes from layout detection results based on a given overlap ratio.
@@ -105,7 +105,7 @@ def filter_overlap_boxes(
                 boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
             )
             if overlap_ratio > 0.7:
-                if use_polygon_points:
+                if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
                     poly_overlap_ratio = calculate_polygon_overlap_ratio(
                         boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
                     )
@@ -113,9 +113,12 @@ def filter_overlap_boxes(
                         continue
                 box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
                 box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
-                if (
-                    boxes[i]["label"] == "image" or boxes[j]["label"] == "image"
-                ) and boxes[i]["label"] != boxes[j]["label"]:
+                if {boxes[i]["label"], boxes[j]["label"]} & {
+                    "image",
+                    "table",
+                    "seal",
+                    "chart",
+                } and boxes[i]["label"] != boxes[j]["label"]:
                     continue
                 if box_area_i >= box_area_j:
                     dropped_indexes.add(j)
@@ -174,7 +177,7 @@ def calc_merged_wh(images):
     return w, h
 
 
-def merge_images(images, aligns="center", use_polygon_points=False):
+def merge_images(images, aligns="center", layout_shape_mode="auto"):
     """
     Merge images vertically with given alignment.
 
@@ -193,6 +196,7 @@ def merge_images(images, aligns="center", use_polygon_points=False):
         aligns = [aligns] * (len(images) - 1)
     if len(aligns) != len(images) - 1:
         raise ValueError("The length of aligns must be len(images) - 1")
+    # TODO(changdazhou): need to support merge by polygon
     merged = to_pil_image(images[0])
     for i in range(1, len(images)):
         img2 = to_pil_image(images[i])
@@ -214,7 +218,7 @@ def merge_images(images, aligns="center", use_polygon_points=False):
     return to_np_array(merged)
 
 
-def merge_blocks(blocks, non_merge_labels, use_polygon_points=False):
+def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
     """
     Merge blocks based on alignment and overlap logic, except for those with labels in non_merge_labels.
 
@@ -348,7 +352,7 @@ def merge_blocks(blocks, non_merge_labels, use_polygon_points=False):
                         result_blocks.append(block)
                         used_indices.add(block_idx)
                 else:
-                    merged_img = merge_images(imgs, merge_aligns, use_polygon_points)
+                    merged_img = merge_images(imgs, merge_aligns, layout_shape_mode)
                     for j, block_idx in enumerate(group_indices):
                         block = blocks[block_idx].copy()
                         block["img"] = merged_img if j == 0 else None
@@ -490,12 +494,13 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
             ]
             token_str = "[F" + str(random_map[figure_id]) + "]"
             table_block_img = paint_token(table_block_img, draw_box, token_str)
-            token_map[token_str] = f'<img src="{figure["path"]}" >'
+            # token_map[token_str] = f'<img src="{figure["path"]}" >'
+            token_map[token_str] = figure["path"]
     drop_figures = [f["path"] for i, f in enumerate(figures) if i in drop_idxes]
     return table_block_img, token_map, drop_figures
 
 
-def untokenize_figure_of_table(table_res_str, figure_token_map):
+def untokenize_figure_of_table(table_res_str, figure_token_map, image_path_to_obj_map):
     """
     Replace tokens in a string with their HTML image equivalents.
 
@@ -510,7 +515,22 @@ def untokenize_figure_of_table(table_res_str, figure_token_map):
     def repl(match):
         token_id = match.group(1)
         token = f"[F{token_id}]"
-        return figure_token_map.get(token, match.group(0))
+        img_path = figure_token_map.get(token, match.group(0))
+        img_block = image_path_to_obj_map.get(img_path, None)
+        if img_block is None:
+            return match.group(0)
+        else:
+            img_tags = []
+            img_tags.append(
+                '<img src="{}" alt="Image"" />'.format(
+                    img_path.replace("-\n", "").replace("\n", " ")
+                ),
+            )
+            image_info = "\n".join(img_tags)
+            if img_block.content != "":
+                ocr_content = img_block.content
+                image_info += "\n\n" + ocr_content + "\n\n"
+            return image_info
 
     pattern = r"\[F(\d+)\]"
     return re.sub(pattern, repl, table_res_str)
@@ -1025,7 +1045,10 @@ LOC_BLOCK_RE = re.compile(r"<\|LOC_BEGIN\|>(.*?)<\|LOC_END\|>", re.S)
 LOC_ITEM_RE = re.compile(r"<\|LOC_(\d+)\|>")
 LOC_TOKEN_RE = re.compile(r"<\|LOC_(\d+)\|>")
 
-def post_process_for_spotting(input_str: str, w: int, h: int) -> Tuple[str, Dict[str, List]]:
+
+def post_process_for_spotting(
+    input_str: str, w: int, h: int
+) -> Tuple[str, Dict[str, List]]:
     """
     Post-process the input string to extract text and location blocks.
     """
@@ -1058,11 +1081,11 @@ def post_process_for_spotting(input_str: str, w: int, h: int) -> Tuple[str, Dict
         last_end = 0
         i = 0
         while i + 7 < len(matches):
-            group = matches[i:i+8]
+            group = matches[i : i + 8]
             vals = [int(m.group(1)) for m in group]
-            pts = [(vals[j], vals[j+1]) for j in range(0, 8, 2)]
+            pts = [(vals[j], vals[j + 1]) for j in range(0, 8, 2)]
             pts = [(p[0] / 1000.0 * w, p[1] / 1000.0 * h) for p in pts]
-            text_span = input_str[last_end:group[0].start()]
+            text_span = input_str[last_end : group[0].start()]
             txt = text_span.strip()
             rec_texts.append(txt)
             rec_polys.append(pts)

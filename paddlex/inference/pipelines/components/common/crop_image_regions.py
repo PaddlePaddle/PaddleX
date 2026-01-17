@@ -38,7 +38,7 @@ class CropByBoxes(BaseOperator):
         super().__init__()
 
     def __call__(
-        self, img: np.ndarray, boxes: List[dict], use_layout_mask=False
+        self, img: np.ndarray, boxes: List[dict], layout_shape_mode="auto"
     ) -> List[dict]:
         """
         Process the input image and bounding boxes to produce a list of cropped images
@@ -64,7 +64,7 @@ class CropByBoxes(BaseOperator):
             xmin, ymin, xmax, ymax = [int(i) for i in box]
             img_crop = img[ymin:ymax, xmin:xmax].copy()
             out_info = {"img": img_crop, "box": box, "label": label}
-            if use_layout_mask and "polygon_points" in box_info:
+            if layout_shape_mode != "rect" and "polygon_points" in box_info:
                 mask = np.zeros(img_crop.shape[:2], dtype=np.int32)
                 polygon = np.array(box_info["polygon_points"], dtype=np.int32)
                 polygon = polygon.reshape((-1, 1, 2))
