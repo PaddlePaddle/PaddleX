@@ -24,7 +24,7 @@ markdown_ignore_labels:
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PP-DocLayoutV2
+    model_name: PP-DocLayoutV3
     model_dir: null
     batch_size: 8
     threshold: 0.3

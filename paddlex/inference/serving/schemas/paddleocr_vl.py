@@ -62,6 +62,9 @@ class InferRequest(ocr.BaseInferRequest):
     vlmExtraArgs: Optional[dict] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
+    concatenatePages: bool = False
+    mergeTable: bool = True
+    titleLevel: bool = True
     visualize: Optional[bool] = None
     logId: Optional[str] = None
 
@@ -235,7 +238,7 @@ class ConcatenatePagesRequest(BaseModel):
 
 
 class ConcatenatePagesResult(BaseModel):
-    layoutParsingResult: LayoutParsingResult
+    layoutParsingResults: List[LayoutParsingResult]
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

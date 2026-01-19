@@ -1478,6 +1478,24 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>concatenatePages</code></td>
+<td><code>boolean</code></td>
+<td>是否拼接多页结果。默认为 <code>false</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mergeTable</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。仅当<code>concatenatePages</code>为<code>true</code>时生效。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>titleLevel</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。仅当<code>concatenatePages</code>为<code>true</code>时生效。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -1602,13 +1620,13 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>mergeTable</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。默认为<code>true</code>。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>titleLevel</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。默认为<code>true</code>。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tr>
@@ -1661,9 +1679,9 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 </thead>
 <tbody>
 <tr>
-<td><code>layoutParsingResult</code></td>
-<td><code>object</code></td>
-<td>拼接后的版面解析结果。其中包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+<td><code>layoutParsingResults</code></td>
+<td><code>array</code></td>
+<td>拼接后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
 </tr>
 </tbody>
 </table>
@@ -1697,16 +1715,7 @@ assert response.status_code == 200, (response.status_code, response.text)
 result = response.json()["result"]
 pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
-    print(res["prunedResult"])
     pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
-    md_dir = pathlib.Path(f"markdown_{i}")
-    md_dir.mkdir(exist_ok=True)
-    (md_dir / "doc.md").write_text(res["markdown"]["text"])
-    for img_path, img in res["markdown"]["images"].items():
-        img_path = md_dir / img_path
-        img_path.parent.mkdir(parents=True, exist_ok=True)
-        img_path.write_bytes(base64.b64decode(img))
-    print(f"Markdown document saved at {md_dir / 'doc.md'}")
     for img_name, img in res["outputImages"].items():
         img_path = f"{img_name}_{i}.jpg"
         pathlib.Path(img_path).parent.mkdir(exist_ok=True)
@@ -1722,7 +1731,16 @@ response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
 assert response.status_code == 200, (response.status_code, response.text)
 
 result = response.json()["result"]
-pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
+for i, res in enumerate(result["layoutParsingResults"]):
+    print(res["prunedResult"])
+    md_dir = pathlib.Path(f"markdown_{i}")
+    md_dir.mkdir(exist_ok=True)
+    (md_dir / "doc.md").write_text(res["markdown"]["text"])
+    for img_path, img in res["markdown"]["images"].items():
+        img_path = md_dir / img_path
+        img_path.parent.mkdir(parents=True, exist_ok=True)
+        img_path.write_bytes(base64.b64decode(img))
+    print(f"Markdown document saved at {md_dir / 'doc.md'}")
 </code></pre></details>
 
 <details><summary>C++</summary>
