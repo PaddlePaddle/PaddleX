@@ -1308,12 +1308,6 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
-<td><code>usePolygonPoints</code></td>
-<td><code>boolean</code>|<code>null</code></td>
-<td>Please refer to the description of the <code>use_polygon_points</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
-<td>No</td>
-</tr>
-<tr>
 <td><code>useChartRecognition</code></td>
 <td><code>boolean</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>use_chart_recognition</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
@@ -1353,6 +1347,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code>|<code>object</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutShapeMode</code></td>
+<td><code>string</code></td>
+<td>Please refer to the description of the <code>layout_shape_mode</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
 <td>No</td>
 </tr>
 <tr>

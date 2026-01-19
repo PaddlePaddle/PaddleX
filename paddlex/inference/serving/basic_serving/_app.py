@@ -30,6 +30,7 @@ from typing import (
     TypeVar,
 )
 
+import pydantic
 from typing_extensions import ParamSpec, TypeGuard
 
 from ....utils import logging
@@ -195,15 +196,55 @@ def create_app(
             logId=generate_log_id(), errorCode=0, errorMsg="Healthy"
         )
 
+    async def _try_get_log_id(request: fastapi.Request) -> Optional[str]:
+        try:
+            body = await request.json()
+        except Exception:
+            return None
+        if isinstance(body, dict) and "logId" in body:
+            return body["logId"]
+        return None
+
+    # Circumvent FastAPI bug: https://github.com/fastapi/fastapi/discussions/11923
+    # adapted from the Pydantic docs:
+    # https://docs.pydantic.dev/latest/errors/errors/#custom-errors
+    def _loc_to_dot_sep(loc: Tuple[str | int, ...]) -> str:
+        path = ""
+        for i, x in enumerate(loc):
+            if isinstance(x, str):
+                if i > 0:
+                    path += "."
+                path += x
+            elif isinstance(x, int):
+                path += f"[{x}]"
+            else:
+                raise TypeError("Unexpected type")
+        return path
+
+    def _convert_validation_errors(
+        validation_error: pydantic.ValidationError | RequestValidationError,
+    ) -> List[Dict[str, Any]]:
+        converted_errors = []
+        for error in validation_error.errors():
+            converted_error = {
+                "type": error["type"],
+                "loc": _loc_to_dot_sep(error["loc"]),
+                "msg": error["msg"],
+            }
+            converted_errors.append(converted_error)
+        return converted_errors
+
     @app.exception_handler(RequestValidationError)
     async def _validation_exception_handler(
         request: fastapi.Request, exc: RequestValidationError
     ) -> JSONResponse:
+        log_id = await _try_get_log_id(request) or generate_log_id()
+        errors = _convert_validation_errors(exc)
         json_compatible_data = jsonable_encoder(
             AIStudioNoResultResponse(
-                logId=generate_log_id(),
+                logId=log_id,
                 errorCode=422,
-                errorMsg=json.dumps(exc.errors()),
+                errorMsg=json.dumps(errors),
             )
         )
         return JSONResponse(content=json_compatible_data, status_code=422)
@@ -212,9 +253,10 @@ def create_app(
     async def _http_exception_handler(
         request: fastapi.Request, exc: HTTPException
     ) -> JSONResponse:
+        log_id = await _try_get_log_id(request) or generate_log_id()
         json_compatible_data = jsonable_encoder(
             AIStudioNoResultResponse(
-                logId=generate_log_id(), errorCode=exc.status_code, errorMsg=exc.detail
+                logId=log_id, errorCode=exc.status_code, errorMsg=exc.detail
             )
         )
         return JSONResponse(content=json_compatible_data, status_code=exc.status_code)
@@ -223,12 +265,14 @@ def create_app(
     async def _unexpected_exception_handler(
         request: fastapi.Request, exc: Exception
     ) -> JSONResponse:
+        # FIXME: Request body is not available here, and the log ID cannot be retrieved.
+        log_id = await _try_get_log_id(request) or generate_log_id()
         # XXX: The default server will duplicate the error message. Is it
         # necessary to log the exception info here?
         logging.exception("Unhandled exception")
         json_compatible_data = jsonable_encoder(
             AIStudioNoResultResponse(
-                logId=generate_log_id(),
+                logId=log_id,
                 errorCode=500,
                 errorMsg="Internal server error",
             )
