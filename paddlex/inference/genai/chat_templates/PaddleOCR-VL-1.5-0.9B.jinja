@@ -23,7 +23,7 @@
         {%- endfor -%}
         {{ "\n" -}}
     {%- elif message["role"] == "assistant" -%}
-        {{- "Assistant: " -}}
+        {{- "Assistant:\n" -}}
         {%- for content in message["content"] -%}
             {%- if content["type"] == "text" -%}
                 {{ content["text"] }}
@@ -39,5 +39,5 @@
     {%- endif -%}
 {%- endfor -%}
 {%- if add_generation_prompt -%}
-    {{- "Assistant: " -}}
+    {{- "Assistant:\n" -}}
 {%- endif -%}
