@@ -1352,12 +1352,6 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
-<td><code>usePolygonPoints</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_polygon_points</code> 参数相关说明。</td>
-<td>否</td>
-</tr>
-<tr>
 <td><code>useChartRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_chart_recognition</code> 参数相关说明。</td>
@@ -1397,6 +1391,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code> | <code>object</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>layout_merge_bboxes_mode</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutShapeMode</code></td>
+<td><code>string</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>layout_shape_mode</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
