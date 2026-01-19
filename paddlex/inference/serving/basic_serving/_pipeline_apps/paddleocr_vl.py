@@ -84,6 +84,14 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             vlm_extra_args=request.vlmExtraArgs,
         )
 
+        if request.concatenatePages:
+            result = await serving_utils.call_async(
+                pipeline.pipeline.concatenate_pages,
+                result,
+                merge_table=request.mergeTable,
+                title_level=request.titleLevel,
+            )
+
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
@@ -165,31 +173,34 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             original_results.append(orig_res)
             markdown_images.update(page.markdownImages)
 
-        concatenated_result = await serving_utils.call_async(
+        concatenated_results = await serving_utils.call_async(
             pipeline.pipeline.concatenate_pages,
             original_results,
             merge_table=request.mergeTable,
             title_level=request.titleLevel,
         )
 
-        layout_parsing_result = {}
-        layout_parsing_result["prunedResult"] = common.prune_result(
-            concatenated_result.json["res"]
-        )
-        # XXX
-        md_data = concatenated_result._to_markdown(
-            pretty=request.prettifyMarkdown,
-            show_formula_number=request.showFormulaNumber,
-        )
-        layout_parsing_result["markdown"] = dict(
-            text=md_data["markdown_texts"],
-            images=markdown_images,
-        )
+        layout_parsing_results = []
+        for new_res, old_page in zip(concatenated_results, request.pages):
+            layout_parsing_result = {}
+            layout_parsing_result["prunedResult"] = common.prune_result(
+                new_res.json["res"]
+            )
+            # XXX
+            md_data = new_res._to_markdown(
+                pretty=request.prettifyMarkdown,
+                show_formula_number=request.showFormulaNumber,
+            )
+            layout_parsing_result["markdown"] = dict(
+                text=md_data["markdown_texts"],
+                images=old_page.markdownImages,
+            )
+            layout_parsing_results.append(layout_parsing_result)
 
         return AIStudioResultResponse[ConcatenatePagesResult](
             logId=log_id,
             result=ConcatenatePagesResult(
-                layoutParsingResult=layout_parsing_result,
+                layoutParsingResults=layout_parsing_results,
             ),
         )
 

@@ -1434,6 +1434,24 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>concatenatePages</code></td>
+<td><code>boolean</code></td>
+<td>Whether to concatenate results across multiple pages. The default is <code>false</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mergeTable</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>merge_table</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object. Valid only when <code>concatenatePages</code> is <code>true</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>titleLevel</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>title_level</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object. Valid only when <code>concatenatePages</code> is <code>true</code>.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code>|<code>null</code></td>
 <td>Whether to return visualization result images and intermediate images during the processing.<ul style="margin: 0 0 0 1em; padding-left: 0em;">
@@ -1555,13 +1573,13 @@ Below are the API references for basic service-based deployment and examples of 
     <tr>
     <td><code>mergeTable</code></td>
     <td><code>boolean</code></td>
-    <td>Please refer to the description of the <code>merge_table</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object. The default is <code>true</code>.</td>
+    <td>Please refer to the description of the <code>merge_table</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object.</td>
     <td>No</td>
     </tr>
     <tr>
     <td><code>titleLevel</code></td>
     <td><code>boolean</code></td>
-    <td>Please refer to the description of the <code>title_level</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object. The default is <code>true</code>.</td>
+    <td>Please refer to the description of the <code>title_level</code> parameter in the <code>concatenate_pages</code> method of the PaddleOCR-VL object.</td>
     <td>No</td>
     </tr>
     <tr>
@@ -1616,9 +1634,9 @@ Below are the API references for basic service-based deployment and examples of 
   </thead>
   <tbody>
     <tr>
-      <td><code>layoutParsingResult</code></td>
-      <td><code>object</code></td>
-      <td>The concatenated layout parsing results. For the fields it contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images).</td>
+      <td><code>layoutParsingResults</code></td>
+      <td><code>array</code></td>
+      <td>The concatenated layout parsing results. For the fields that every element contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images).</td>
     </tr>
   </tbody>
 </table>
@@ -1652,16 +1670,7 @@ assert response.status_code == 200, (response.status_code, response.text)
 result = response.json()["result"]
 pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
-    print(res["prunedResult"])
     pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
-    md_dir = pathlib.Path(f"markdown_{i}")
-    md_dir.mkdir(exist_ok=True)
-    (md_dir / "doc.md").write_text(res["markdown"]["text"])
-    for img_path, img in res["markdown"]["images"].items():
-        img_path = md_dir / img_path
-        img_path.parent.mkdir(parents=True, exist_ok=True)
-        img_path.write_bytes(base64.b64decode(img))
-    print(f"Markdown document saved at {md_dir / 'doc.md'}")
     for img_name, img in res["outputImages"].items():
         img_path = f"{img_name}_{i}.jpg"
         pathlib.Path(img_path).parent.mkdir(exist_ok=True)
@@ -1677,7 +1686,16 @@ response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
 assert response.status_code == 200, (response.status_code, response.text)
 
 result = response.json()["result"]
-pathlib.Path("concatenated_doc.md").write_text(result["layoutParsingResult"]["markdown"]["text"])
+for i, res in enumerate(result["layoutParsingResults"]):
+    print(res["prunedResult"])
+    md_dir = pathlib.Path(f"markdown_{i}")
+    md_dir.mkdir(exist_ok=True)
+    (md_dir / "doc.md").write_text(res["markdown"]["text"])
+    for img_path, img in res["markdown"]["images"].items():
+        img_path = md_dir / img_path
+        img_path.parent.mkdir(parents=True, exist_ok=True)
+        img_path.write_bytes(base64.b64decode(img))
+    print(f"Markdown document saved at {md_dir / 'doc.md'}")
 </code></pre></details>
 
 <details><summary>C++</summary>
