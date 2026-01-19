@@ -14,16 +14,30 @@
 
 
 import os
+import sys
 
 __all__ = ["get_pdx_version", "get_version_dict", "show_versions"]
 
 
+def _get_package_dir():
+    """Get the paddlex package directory, compatible with PyInstaller."""
+    # When running in a PyInstaller bundle, sys._MEIPASS points to the
+    # temporary folder where the bundled files are extracted
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, "paddlex")
+    return os.path.dirname(__file__)
+
+
 def get_pdx_version():
     """get_pdx_version"""
-    with open(
-        os.path.join(os.path.dirname(__file__), ".version"), "r", encoding="ascii"
-    ) as fv:
-        ver = fv.read().rstrip()
+    version_file = os.path.join(_get_package_dir(), ".version")
+    try:
+        with open(version_file, "r", encoding="ascii") as fv:
+            ver = fv.read().rstrip()
+    except FileNotFoundError:
+        # Fallback version if .version file is not found (e.g., in some
+        # PyInstaller configurations where the file wasn't included)
+        ver = "unknown"
     return ver
 
 
