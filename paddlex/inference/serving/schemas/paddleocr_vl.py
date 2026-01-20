@@ -25,16 +25,16 @@ __all__ = [
     "InferRequest",
     "LayoutParsingResult",
     "InferResult",
-    "CONCATENATE_PAGES_ENDPOINT",
-    "ConcatenatePagesRequest",
-    "ConcatenatePagesResult",
+    "RESTRUCTURE_PAGES_ENDPOINT",
+    "RestructurePagesRequest",
+    "RestructurePagesResult",
     "PRIMARY_OPERATIONS",
     "MarkdownData",
     "Page",
 ]
 
 INFER_ENDPOINT: Final[str] = "/layout-parsing"
-CONCATENATE_PAGES_ENDPOINT: Final[str] = "/concatenate-pages"
+RESTRUCTURE_PAGES_ENDPOINT: Final[str] = "/restructure-pages"
 
 
 class InferRequest(ocr.BaseInferRequest):
@@ -62,9 +62,9 @@ class InferRequest(ocr.BaseInferRequest):
     vlmExtraArgs: Optional[dict] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
-    concatenatePages: bool = False
-    mergeTable: bool = True
-    titleLevel: bool = True
+    restructurePages: bool = False
+    mergeTables: bool = True
+    relevelTitles: bool = True
     visualize: Optional[bool] = None
     logId: Optional[str] = None
 
@@ -228,24 +228,25 @@ class Page(BaseModel):
     markdownImages: Optional[Dict[str, str]] = None
 
 
-class ConcatenatePagesRequest(BaseModel):
+class RestructurePagesRequest(BaseModel):
     pages: List[Page]
-    mergeTable: bool = True
-    titleLevel: bool = True
+    mergeTables: bool = True
+    relevelTitles: bool = True
+    concatenatePages: bool = False
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
     logId: Optional[str] = None
 
 
-class ConcatenatePagesResult(BaseModel):
+class RestructurePagesResult(BaseModel):
     layoutParsingResults: List[LayoutParsingResult]
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
     "infer": (INFER_ENDPOINT, InferRequest, InferResult),
-    "concatenate-pages": (
-        CONCATENATE_PAGES_ENDPOINT,
-        ConcatenatePagesRequest,
-        ConcatenatePagesResult,
+    "restructure-pages": (
+        RESTRUCTURE_PAGES_ENDPOINT,
+        RestructurePagesRequest,
+        RestructurePagesResult,
     ),
 }
