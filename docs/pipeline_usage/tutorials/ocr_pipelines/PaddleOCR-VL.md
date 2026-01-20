@@ -1478,21 +1478,21 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
-<td><code>concatenatePages</code></td>
+<td><code>restructurePages</code></td>
 <td><code>boolean</code></td>
-<td>是否拼接多页结果。默认为 <code>false</code>。</td>
+<td>是否重构多页结果。默认为 <code>false</code>。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>mergeTable</code></td>
+<td><code>mergeTables</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。仅当<code>concatenatePages</code>为<code>true</code>时生效。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>merge_table</code> 参数相关说明。仅当<code>restructurePages</code>为<code>true</code>时生效。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>titleLevel</code></td>
+<td><code>relevelTitles</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。仅当<code>concatenatePages</code>为<code>true</code>时生效。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>relevel_titles</code> 参数相关说明。仅当<code>restructurePages</code>为<code>true</code>时生效。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1593,10 +1593,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 </tbody>
 </table>
 <ul>
-<li><b><code>concatenatePages</code></b></li>
+<li><b><code>restructurePages</code></b></li>
 </ul>
-<p>拼接多个页面的结果。</p>
-<p><code>POST /concatenate-pages</code></p>
+<p>重构多页结果。</p>
+<p><code>POST /restructure-pages</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>
@@ -1618,17 +1618,22 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>是</td>
 </tr>
 <tr>
-<td><code>mergeTable</code></td>
+<td><code>mergeTables</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>merge_table</code> 参数相关说明。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>merge_tables</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>titleLevel</code></td>
+<td><code>relevelTitles</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>concatenate_pages</code> 方法的 <code>title_level</code> 参数相关说明。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>relevel_titles</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>concatenatePages</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>concatenate_pages</code> 参数相关说明。</td>
+<td>否</td>
 </tr>
 <tr>
 <td><code>prettifyMarkdown</code></td>
@@ -1681,7 +1686,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>拼接后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+<td>重构后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
 </tr>
 </tbody>
 </table>
@@ -1725,22 +1730,23 @@ for i, res in enumerate(result["layoutParsingResults"]):
 
 payload = {
     "pages": pages,
+    "concatenatePages": True,
 }
 
-response = requests.post(BASE_URL + "/concatenate-pages", json=payload)
+response = requests.post(BASE_URL + "/restructure-pages", json=payload)
 assert response.status_code == 200, (response.status_code, response.text)
 
 result = response.json()["result"]
-for i, res in enumerate(result["layoutParsingResults"]):
-    print(res["prunedResult"])
-    md_dir = pathlib.Path(f"markdown_{i}")
-    md_dir.mkdir(exist_ok=True)
-    (md_dir / "doc.md").write_text(res["markdown"]["text"])
-    for img_path, img in res["markdown"]["images"].items():
-        img_path = md_dir / img_path
-        img_path.parent.mkdir(parents=True, exist_ok=True)
-        img_path.write_bytes(base64.b64decode(img))
-    print(f"Markdown document saved at {md_dir / 'doc.md'}")
+res = result["layoutParsingResults"][0]
+print(res["prunedResult"])
+md_dir = pathlib.Path("markdown")
+md_dir.mkdir(exist_ok=True)
+(md_dir / "doc.md").write_text(res["markdown"]["text"])
+for img_path, img in res["markdown"]["images"].items():
+    img_path = md_dir / img_path
+    img_path.parent.mkdir(parents=True, exist_ok=True)
+    img_path.write_bytes(base64.b64decode(img))
+print(f"Markdown document saved at {md_dir / 'doc.md'}")
 </code></pre></details>
 
 <details><summary>C++</summary>

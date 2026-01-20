@@ -890,6 +890,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
         finally:
             if use_queues:
                 event_shutdown.set()
+                thread_input.join(timeout=5)
+                if thread_input.is_alive():
+                    logging.warning("Input worker did not terminate in time")
                 thread_cv.join(timeout=5)
                 if thread_cv.is_alive():
                     logging.warning("CV worker did not terminate in time")
