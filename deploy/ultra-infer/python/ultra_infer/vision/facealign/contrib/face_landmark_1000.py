@@ -29,9 +29,9 @@ class FaceLandmark1000(UltraInferModel):
         """Load a face alignment model exported by FaceLandmark1000.
 
         :param model_file: (str)Path of model file, e.g ./FaceLandmark1000.onnx
-        :param params_file: (str)Path of parameters file, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model, default is ONNX
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model, default is ONNX
         """
 
         super(FaceLandmark1000, self).__init__(runtime_option)
