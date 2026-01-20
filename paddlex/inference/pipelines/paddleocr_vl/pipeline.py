@@ -34,7 +34,7 @@ from ..components import CropByBoxes
 from ..layout_parsing.merge_table import merge_tables_across_pages
 from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import construct_img_path, gather_imgs
-from .result import PaddleOCRVLBlock, PaddleOCRVLPagesResult, PaddleOCRVLResult
+from .result import BaseResult, PaddleOCRVLBlock, PaddleOCRVLResult
 from .uilts import (
     convert_otsl_to_html,
     crop_margin,
@@ -448,9 +448,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         html_str = convert_otsl_to_html(result_str)
                         if html_str != "":
                             result_str = html_str
-                        # result_str = untokenize_figure_of_table(
-                        #     result_str, figure_token_map
-                        # )
                     if block_label == "spotting":
                         h, w = block_img.shape[:2]
                         result_str, spotting_res = post_process_for_spotting(
@@ -487,6 +484,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         continue
 
                 parsing_res_list.append(block_info)
+            # TODO(changdazhou): append table res to table_res_list
             for blk_info in table_blocks:
                 block = blk_info["block"]
                 figure_token_map = blk_info["figure_token_map"]
@@ -578,6 +576,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
             format_block_content,
             merge_layout_blocks,
             markdown_ignore_labels,
+        )
+
+        model_settings["return_layout_polygon_points"] = (
+            False if layout_shape_mode == "rect" else True
         )
 
         if not self.check_model_settings_valid(model_settings):
@@ -918,6 +920,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         res_list: list,
         merge_table: bool = True,
         title_level: bool = True,
+        merge_pages: bool = False,
     ):
         """Concatenate layout parsing results from multiple pages.
 
@@ -925,19 +928,43 @@ class _PaddleOCRVLPipeline(BasePipeline):
             res_list: List of page parsing results
             merge_talble: Whether to merge tables across pages
             title_level: Whether to assign title levels
+            merge_pages: Whether to concatenate pages using the new consolidate_pages() logic
 
         Returns:
             PaddleOCRVLResult: Combined OCR-VL result after merge_table or title_level policy
         """
+        logging.warning(
+            f"DeprecationWarning: [concatenate_pages()] is deprecated as of v3.3.14 and will be removed in v3.4.0. Please use [consolidate_pages()] instead. It provides better support for table merging and title restructuring."
+        )
+        return self.restructure_pages(res_list, merge_table, title_level, merge_pages)
 
-        def get_img_obj(block):
+    def restructure_pages(
+        self,
+        res_list: list,
+        merge_tables: bool = True,
+        relevel_titles: bool = True,
+        concatenate_pages: bool = False,
+    ):
+        """Restructure layout parsing results from multiple pages.
+        Args:
+            res_list: List of page parsing results
+            merge_tables: Whether to merge tables across pages
+            relevel_titles: Whether to relevel titles
+            concatenate_pages: Whether to concatenate pages to a single document
+
+        Returns:
+            PaddleOCRVLResult: Combined OCR-VL result after merge_tables or relevel_titles policy
+        """
+
+        if len(res_list) == 0:
+            return []
+
+        def _get_img_obj(block):
             if block.get("image", None):
                 return block["image"]
             if block["block_label"] in ("image", "seal") or (
                 block["block_label"] == "chart"
-                and not layout_parsing_result["model_settings"].get(
-                    "use_chart_recognition", False
-                )
+                and not model_settings.get("use_chart_recognition", False)
             ):
                 path = construct_img_path(block["block_label"], block["block_bbox"])
                 # TODO
@@ -945,81 +972,73 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 return {"path": path, "img": None}
             return None
 
-        # Initialize result data structure
-        layout_parsing_result = {
-            "input_path": [],
-            "page_index": [],
-            "page_count": [],
-            "width": [],
-            "height": [],
-            "parsing_res_list": [],
-            "doc_preprocessor_res": [],
-            "layout_det_res": [],
-            "region_det_res": [],
-            "overall_ocr_res": [],
-            "table_res_list": [],
-            "seal_res_list": [],
-            "chart_res_list": [],
-            "formula_res_list": [],
-            "imgs_in_doc": [],
-            "model_settings": [],
-        }
-
-        blocks_by_page = []
-
-        for idx, single_img_res in enumerate(res_list):
-            if isinstance(single_img_res, PaddleOCRVLResult):
-                single_img_res = single_img_res._to_json(keep_img=True)
-
-            parsing_res_list = single_img_res["res"]["parsing_res_list"]
-            layout_parsing_result["parsing_res_list"].extend(parsing_res_list)
-            blocks_by_page.append(parsing_res_list)
-
-            for key, value in single_img_res["res"].items():
-                if key == "parsing_res_list":
-                    continue
-
-                if key not in layout_parsing_result:
-                    layout_parsing_result[key] = []
-
-                if isinstance(value, (list, tuple, set)):
-                    layout_parsing_result[key].extend(list(value))
-                else:
-                    layout_parsing_result[key].append(value)
-
-            # TODO
-            # for block in parsing_res_list:
-            #     setattr(block, "page_index", idx)
-
-        if merge_table:
-            blocks_by_page = merge_tables_across_pages(blocks_by_page)
-        if title_level:
-            blocks_by_page = assign_levels_to_parsing_res(
-                blocks_by_page, layout_parsing_result["layout_det_res"]
-            )
-
-        layout_parsing_result["model_settings"] = layout_parsing_result[
-            "model_settings"
-        ][0]
-
-        blocks = []
-        for one_page_blocks in blocks_by_page:
-            for block in one_page_blocks:
-                blk_obj = PaddleOCRVLBlock(
+        def _conver_blocks_to_obj(blocks):
+            res = []
+            for block in blocks:
+                obj = PaddleOCRVLBlock(
                     label=block["block_label"],
                     bbox=block["block_bbox"],
                     content=block["block_content"],
                     group_id=block.get("group_id", None),
+                    global_block_id=block.get("global_block_id", None),
+                    global_group_id=block.get("global_group_id", None),
                 )
+                if img := _get_img_obj(block):
+                    obj.image = img
+                res.append(obj)
+            return res
 
-                if img := get_img_obj(block):
-                    blk_obj.image = img
+        # Extract blocks and layout detection results from each page
+        res_list = [
+            (
+                res._to_json(keep_img=True)["res"]
+                if isinstance(res, BaseResult)
+                else res["res"]
+            )
+            for res in res_list
+        ]
 
-                blocks.append(blk_obj)
+        blocks_by_page = [res["parsing_res_list"] for res in res_list]
+        layout_det_res_by_page = [res["layout_det_res"] for res in res_list]
+        model_settings = res_list[0]["model_settings"]
+        blocks_by_page = []
 
-        layout_parsing_result["parsing_res_list"] = blocks
+        global_block_id = 0
+        for one_page_blocks in res_list:
+            for block in one_page_blocks["parsing_res_list"]:
+                block["global_block_id"] = global_block_id
+                block["global_group_id"] = global_block_id
+                global_block_id += 1
+            blocks_by_page.append(one_page_blocks["parsing_res_list"])
 
-        return PaddleOCRVLPagesResult(layout_parsing_result)
+        if merge_tables:
+            blocks_by_page = merge_tables_across_pages(blocks_by_page)
+        if relevel_titles:
+            blocks_by_page = assign_levels_to_parsing_res(
+                blocks_by_page, layout_det_res_by_page
+            )
+
+        concatenate_res = []
+        if concatenate_pages:
+            from itertools import chain
+
+            all_page_res = res_list[0]
+            all_page_res["parsing_res_list"] = _conver_blocks_to_obj(
+                chain.from_iterable(blocks_by_page)
+            )
+            all_page_res["page_index"] = None
+            all_page_res["page_count"] = len(res_list)
+            all_page_res["imgs_in_doc"] = []
+            concatenate_res.append(PaddleOCRVLResult(all_page_res))
+        else:
+            for page_idx, one_page_res in enumerate(res_list):
+                one_page_res["parsing_res_list"] = _conver_blocks_to_obj(
+                    blocks_by_page[page_idx]
+                )
+                one_page_res["imgs_in_doc"] = []
+                concatenate_res.append(PaddleOCRVLResult(one_page_res))
+
+        yield from concatenate_res
 
 
 class _BasePaddleOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
