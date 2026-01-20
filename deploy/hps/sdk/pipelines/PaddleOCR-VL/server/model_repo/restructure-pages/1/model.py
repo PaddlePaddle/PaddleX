@@ -44,7 +44,7 @@ class TritonPythonModel(BaseTritonPythonModel):
             if input.concatenatePages:
                 markdown_images.update(page.markdownImages)
 
-        restructured_results = self.pipeline.concatenate_pages(
+        restructured_results = self.pipeline.restructure_pages(
             original_results,
             merge_tables=input.mergeTables,
             relevel_titles=input.relevelTitles,
