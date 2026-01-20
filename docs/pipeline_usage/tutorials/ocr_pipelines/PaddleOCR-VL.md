@@ -1704,14 +1704,14 @@ BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
-# Encode the local image in Base64
+# 对本地图像进行Base64编码
 with open(image_path, "rb") as file:
     image_bytes = file.read()
     image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": image_data, # Base64-encoded file content or file URL
-    "fileType": 1, # File type, 1 indicates an image file
+    "file": image_data, # Base64编码的文件内容或者文件URL
+    "fileType": 1, # 文件类型，1表示图像文件
 }
 
 response = requests.post(BASE_URL + "/layout-parsing", json=payload)
