@@ -15,3 +15,14 @@
 PIPELINE_APP_ROUTER = {
     "PaddleOCR-VL-1.5": "PaddleOCR-VL",
 }
+
+
+def pipeline_name_to_mod_name(pipeline_name: str) -> str:
+    if not pipeline_name:
+        raise ValueError("Empty pipeline name")
+    if pipeline_name in PIPELINE_APP_ROUTER:
+        pipeline_name = PIPELINE_APP_ROUTER[pipeline_name]
+    mod_name = pipeline_name.lower().replace("-", "_").replace(".", "")
+    if mod_name[0].isdigit():
+        return "m_" + mod_name
+    return mod_name
