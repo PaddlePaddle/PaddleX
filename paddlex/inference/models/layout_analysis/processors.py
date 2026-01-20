@@ -171,6 +171,10 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
         if polygon is not None and len(polygon) > 0:
             polygon = polygon + np.array([x_min, y_min])
 
+        if len(polygon) < 4:
+            polygon_points.append(rect)
+            continue
+
         # 处理 rect 模式
         if layout_shape_mode == "rect":
             polygon_points.append(rect)
@@ -452,7 +456,10 @@ def filter_boxes(
             overlap_ratio = calculate_overlap_ratio(
                 boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
             )
-            if boxes[i]["label"] == "inline_formula" or boxes[j]["label"] == "inline_formula":
+            if (
+                boxes[i]["label"] == "inline_formula"
+                or boxes[j]["label"] == "inline_formula"
+            ):
                 if overlap_ratio > 0.5:
                     if boxes[i]["label"] == "inline_formula":
                         dropped_indexes.add(i)
