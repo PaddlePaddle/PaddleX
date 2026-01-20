@@ -143,7 +143,6 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
         y_min_s = max(0, min(y_min_s, h - 1))
         y_max_s = max(0, min(y_max_s, h))
 
-        # 构建rect（4点矩形，顺时针从左上角开始）
         rect = np.array(
             [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
             dtype=np.float32,
@@ -171,7 +170,7 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
         if polygon is not None and len(polygon) > 0:
             polygon = polygon + np.array([x_min, y_min])
 
-        if len(polygon) < 4:
+        if polygon is not None and len(polygon) < 4:
             polygon_points.append(rect)
             continue
 
