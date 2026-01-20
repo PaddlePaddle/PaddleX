@@ -1021,13 +1021,20 @@ class _PaddleOCRVLPipeline(BasePipeline):
         return PaddleOCRVLPagesResult(layout_parsing_result)
 
 
-@pipeline_requires_extra("ocr")
-class PaddleOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
-    entities = "PaddleOCR-VL"
-
+class _BasePaddleOCRVLPipeline(AutoParallelImageSimpleInferencePipeline):
     @property
     def _pipeline_cls(self):
         return _PaddleOCRVLPipeline
 
     def _get_batch_size(self, config):
         return config.get("batch_size", 1)
+
+
+@pipeline_requires_extra("ocr")
+class PaddleOCRVLPipeline(_BasePaddleOCRVLPipeline):
+    entities = "PaddleOCR-VL"
+
+
+@pipeline_requires_extra("ocr")
+class PaddleOCRVL15Pipeline(_BasePaddleOCRVLPipeline):
+    entities = "PaddleOCR-VL-1.5"
