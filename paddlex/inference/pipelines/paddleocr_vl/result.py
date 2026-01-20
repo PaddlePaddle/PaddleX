@@ -493,9 +493,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     parsing_res.group_id if parsing_res.group_id is not None else idx
                 ),
             }
-            if hasattr(parsing_res, "global_block_id"):
+            if hasattr(parsing_res, "global_block_id") and parsing_res.global_block_id is not None:
                 res_dict["global_block_id"] = parsing_res.global_block_id
-            if hasattr(parsing_res, "global_group_id"):
+            if hasattr(parsing_res, "global_group_id") and parsing_res.global_group_id is not None:
                 res_dict["global_group_id"] = parsing_res.global_group_id
             if parsing_res.polygon_points is not None:
                 res_dict["block_polygon_points"] = parsing_res.polygon_points
