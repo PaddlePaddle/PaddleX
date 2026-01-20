@@ -452,13 +452,20 @@ def filter_boxes(
             overlap_ratio = calculate_overlap_ratio(
                 boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
             )
+            if boxes[i]["label"] == "inline_formula" or boxes[j]["label"] == "inline_formula":
+                if overlap_ratio > 0.5:
+                    if boxes[i]["label"] == "inline_formula":
+                        dropped_indexes.add(i)
+                    if boxes[j]["label"] == "inline_formula":
+                        dropped_indexes.add(j)
+                    continue
             if overlap_ratio > 0.7:
-                # if layout_shape_mode == "polygon":
-                #     poly_overlap_ratio = calculate_polygon_overlap_ratio(
-                #         boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
-                #     )
-                #     if poly_overlap_ratio < 0.7:
-                #         continue
+                if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
+                    poly_overlap_ratio = calculate_polygon_overlap_ratio(
+                        boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
+                    )
+                    if poly_overlap_ratio < 0.7:
+                        continue
                 box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
                 box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
                 if (

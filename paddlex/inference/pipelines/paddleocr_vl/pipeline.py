@@ -934,7 +934,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             PaddleOCRVLResult: Combined OCR-VL result after merge_table or title_level policy
         """
         logging.warning(
-            f"DeprecationWarning: [concatenate_pages()] is deprecated as of v3.3.14 and will be removed in v3.4.0. Please use [consolidate_pages()] instead. It provides better support for table merging and title restructuring."
+            f"DeprecationWarning: `concatenate_pages()` is deprecated as of v3.3.14 and will be removed in v3.4.0. Please use `restructure_pages()` instead. It provides better support for table merging and title restructuring."
         )
         return self.restructure_pages(res_list, merge_table, title_level, merge_pages)
 
@@ -958,6 +958,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         if len(res_list) == 0:
             return []
+
+        logging.warning(
+            f"DeprecationWarning: `concatenate_pages()` is deprecated as of v3.3.14 and will be removed in v3.4.0. Please use `restructure_pages()` instead. It provides better support for table merging and title restructuring."
+        )
 
         def _get_img_obj(block):
             if block.get("image", None):
