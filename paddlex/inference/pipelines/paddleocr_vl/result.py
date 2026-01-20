@@ -25,6 +25,7 @@ from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import SIMFANG_FONT
 from ...common.result import (
     BaseCVResult,
+    BaseResult,
     HtmlMixin,
     JsonMixin,
     MarkdownMixin,
@@ -64,7 +65,14 @@ class PaddleOCRVLBlock(object):
     """PaddleOCRVL Block Class"""
 
     def __init__(
-        self, label, bbox, content="", group_id=None, polygon_points=None
+        self,
+        label,
+        bbox,
+        content="",
+        group_id=None,
+        polygon_points=None,
+        global_block_id=None,
+        global_group_id=None,
     ) -> None:
         """
         Initialize a PaddleOCRVLBlock object.
@@ -80,6 +88,8 @@ class PaddleOCRVLBlock(object):
         self.image = None
         self.polygon_points = polygon_points
         self.group_id = group_id
+        self.global_block_id = global_block_id
+        self.global_group_id = global_group_id
 
     def __str__(self) -> str:
         """
@@ -271,13 +281,13 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         res_img_dict = {}
         model_settings = self["model_settings"]
-        if model_settings["use_doc_preprocessor"] and not isinstance(
-            self["doc_preprocessor_res"], list
+        if model_settings["use_doc_preprocessor"] and isinstance(
+            self["doc_preprocessor_res"], BaseResult
         ):
             for key, value in self["doc_preprocessor_res"].img.items():
                 res_img_dict[key] = value
-        if self["model_settings"]["use_layout_detection"] and not isinstance(
-            self["layout_det_res"], list
+        if self["model_settings"]["use_layout_detection"] and isinstance(
+            self["layout_det_res"], BaseResult
         ):
             res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
@@ -335,7 +345,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: The str type HTML representation result.
         """
         res_html_dict = {}
-        if len(self["table_res_list"]) > 0:
+        if self.get("table_res_list") and len(self["table_res_list"]) > 0:
             for sno in range(len(self["table_res_list"])):
                 table_res = self["table_res_list"][sno]
                 table_region_id = table_res["table_region_id"]
@@ -351,7 +361,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: The str type XLSX representation result.
         """
         res_xlsx_dict = {}
-        if len(self["table_res_list"]) > 0:
+        if self.get("table_res_list") and len(self["table_res_list"]) > 0:
             for sno in range(len(self["table_res_list"])):
                 table_res = self["table_res_list"][sno]
                 table_region_id = table_res["table_region_id"]
@@ -483,6 +493,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     parsing_res.group_id if parsing_res.group_id is not None else idx
                 ),
             }
+            if hasattr(parsing_res, "global_block_id"):
+                res_dict["global_block_id"] = parsing_res.global_block_id
+            if hasattr(parsing_res, "global_group_id"):
+                res_dict["global_group_id"] = parsing_res.global_group_id
             if parsing_res.polygon_points is not None:
                 res_dict["block_polygon_points"] = parsing_res.polygon_points
 
@@ -505,15 +519,15 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             else:
                 data["spotting_res"] = self["spotting_res"]
         if self["model_settings"]["use_doc_preprocessor"]:
-            if isinstance(self["doc_preprocessor_res"], list):
-                data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
-            else:
+            if isinstance(self["doc_preprocessor_res"], BaseResult):
                 data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
-        if self["model_settings"]["use_layout_detection"]:
-            if isinstance(self["layout_det_res"], list):
-                data["layout_det_res"] = self["layout_det_res"]
             else:
+                data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
+        if self["model_settings"]["use_layout_detection"]:
+            if isinstance(self["layout_det_res"], BaseResult):
                 data["layout_det_res"] = self["layout_det_res"].json["res"]
+            else:
+                data["layout_det_res"] = self["layout_det_res"]
         return JsonMixin._to_json(data, *args, **kwargs)
 
     def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
@@ -645,3 +659,113 @@ class PaddleOCRVLPagesResult(PaddleOCRVLResult):
             f"The result of multi-pages don't support to save as xlsx format!"
         )
         return None
+
+    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
+        """
+        Save the parsing result to a Markdown file.
+
+        Args:
+            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
+            show_formula_number (bool): whether to show formula numbers.
+
+        Returns:
+            dict: Markdown information with text and images.
+        """
+
+        use_ocr_for_image_block = self["model_settings"].get(
+            "use_ocr_for_image_block", False
+        )
+        use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
+        if isinstance(self["width"], list):
+            original_image_width = self["width"][0]
+        else:
+            original_image_width = self["width"]
+
+        if pretty:
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                    show_ocr_content=use_ocr_for_image_block,
+                ),
+                remove_symbol=not use_ocr_for_image_block,
+            )
+            format_seal_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                    show_ocr_content=use_seal_recognition,
+                ),
+                remove_symbol=False,
+            )
+        else:
+            format_text_func = lambda block: block.content
+            format_image_func = lambda block: format_image_plain_func(
+                block, use_ocr_for_image_block
+            )
+            format_seal_func = lambda block: format_image_plain_func(
+                block, use_seal_recognition
+            )
+
+        format_chart_func = (
+            format_chart2table_func
+            if self["model_settings"]["use_chart_recognition"]
+            else format_image_func
+        )
+
+        if pretty:
+            format_table_func = lambda block: "\n" + format_table_center_func(block)
+        else:
+            format_table_func = lambda block: simplify_table_func("\n" + block.content)
+
+        format_formula_func = lambda block: block.content
+
+        handle_funcs_dict = build_handle_funcs_dict(
+            text_func=format_text_func,
+            image_func=format_image_func,
+            chart_func=format_chart_func,
+            table_func=format_table_func,
+            formula_func=format_formula_func,
+            seal_func=format_seal_func,
+        )
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
+
+        markdown_content = ""
+        markdown_info = {}
+        markdown_info["markdown_images"] = {}
+        for idx, block in enumerate(self["parsing_res_list"]):
+            label = block.label
+            if block.image is not None:
+                markdown_info["markdown_images"][block.image["path"]] = block.image[
+                    "img"
+                ]
+            handle_func = handle_funcs_dict.get(label, None)
+            if (
+                show_formula_number
+                and (label == "display_formula" or label == "formula")
+                and idx != len(self["parsing_res_list"]) - 1
+            ):
+                next_block = self["parsing_res_list"][idx + 1]
+                next_block_label = next_block.label
+                if next_block_label == "formula_number":
+                    block.content = merge_formula_and_number(
+                        block.content, next_block.content
+                    )
+            if handle_func:
+                markdown_content += (
+                    "\n\n" + handle_func(block)
+                    if markdown_content
+                    else handle_func(block)
+                )
+
+        markdown_info["page_index"] = self["page_index"]
+        markdown_info["input_path"] = self["input_path"]
+        markdown_info["markdown_texts"] = markdown_content
+        for img in self["imgs_in_doc"]:
+            markdown_info["markdown_images"][img["path"]] = img["img"]
+
+        return markdown_info

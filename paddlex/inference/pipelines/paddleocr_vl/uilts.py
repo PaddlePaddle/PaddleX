@@ -532,7 +532,8 @@ def untokenize_figure_of_table(table_res_str, figure_token_map, image_path_to_ob
                 image_info += "\n\n" + ocr_content + "\n\n"
             return image_info
 
-    pattern = r"\[F(\d+)\]"
+    # pattern = r"\[F(\d+)\]"
+    pattern = r"[$$ \【]F(\d+)[ $$\】]"
     return re.sub(pattern, repl, table_res_str)
 
 
