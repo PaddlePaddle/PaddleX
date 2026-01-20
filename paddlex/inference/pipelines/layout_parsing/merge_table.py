@@ -230,7 +230,9 @@ def merge_tables_across_pages(pages):
         if can_merge:
             merged_html = perform_table_merge(soup_prev, soup_curr)
             prev_block["block_content"] = merged_html
+            prev_block_global_id = prev_block["global_block_id"]
             curr_block["block_content"] = ""
+            curr_block["global_group_id"] = prev_block_global_id
             # one table spilt into more than two pages, the group_id should be the same
             if curr_block["group_id"] is not None:
                 prev_block["group_id"] = curr_block["group_id"]
