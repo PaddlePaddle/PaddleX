@@ -17,19 +17,10 @@ from typing import Any, Dict
 
 from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra.config import create_app_config
-from ...pipeline_app_router import PIPELINE_APP_ROUTER
+from ...infra.name_mappings import pipeline_name_to_mod_name
 
 if is_dep_available("fastapi"):
     from fastapi import FastAPI
-
-
-def _pipeline_name_to_mod_name(pipeline_name: str) -> str:
-    if not pipeline_name:
-        raise ValueError("Empty pipeline name")
-    mod_name = pipeline_name.lower().replace("-", "_").replace(".", "")
-    if mod_name[0].isdigit():
-        return "m_" + mod_name
-    return mod_name
 
 
 # XXX: A dynamic approach is used here for writing fewer lines of code, at the
@@ -37,9 +28,7 @@ def _pipeline_name_to_mod_name(pipeline_name: str) -> str:
 @function_requires_deps("fastapi")
 def create_pipeline_app(pipeline: Any, pipeline_config: Dict[str, Any]) -> "FastAPI":
     pipeline_name = pipeline_config["pipeline_name"]
-    if pipeline_name in PIPELINE_APP_ROUTER:
-        pipeline_name = PIPELINE_APP_ROUTER[pipeline_name]
-    mod_name = _pipeline_name_to_mod_name(pipeline_name)
+    mod_name = pipeline_name_to_mod_name(pipeline_name)
     mod = importlib.import_module(f".{mod_name}", package=__package__)
     app_config = create_app_config(pipeline_config)
     app_creator = getattr(mod, "create_pipeline_app")

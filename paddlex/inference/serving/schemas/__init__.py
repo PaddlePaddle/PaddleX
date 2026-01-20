@@ -11,3 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import importlib
+from types import ModuleType
+
+from ..infra.name_mappings import pipeline_name_to_mod_name
+
+
+def get_pipeline_schema_mod(pipeline_name: str) -> ModuleType:
+    mod_name = pipeline_name_to_mod_name(pipeline_name)
+    mod = importlib.import_module(f".{mod_name}", package=__package__)
+    return mod
