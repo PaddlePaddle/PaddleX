@@ -425,6 +425,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["height"] = self["height"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
+        use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
         if self["model_settings"].get("format_block_content", False):
             original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
             use_ocr_for_image_block = self["model_settings"].get(
@@ -448,7 +449,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     original_image_width=original_image_width,
                     show_ocr_content=True,
                 ),
-                remove_symbol=False,
+                remove_symbol=use_seal_recognition,
             )
 
             if self["model_settings"].get("use_chart_recognition", False):
@@ -456,9 +457,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             else:
                 format_chart_func = format_image_func
 
-            if self["model_settings"].get("use_seal_recognition", False):
-                format_seal_func = format_seal_func
-            else:
+            if self["model_settings"].get("use_layout_detection", False):
                 format_seal_func = format_text_func
 
             format_table_func = lambda block: "\n" + format_table_center_func(block)
@@ -585,6 +584,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             if self["model_settings"]["use_chart_recognition"]
             else format_image_func
         )
+
+        if self["model_settings"].get("use_layout_detection", False):
+            format_seal_func = format_text_func
 
         if pretty:
             format_table_func = lambda block: "\n" + format_table_center_func(block)

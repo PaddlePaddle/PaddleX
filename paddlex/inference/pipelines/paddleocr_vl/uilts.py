@@ -96,7 +96,7 @@ def filter_overlap_boxes(
     for i in range(len(boxes)):
         x1, y1, x2, y2 = boxes[i]["coordinate"]
         w, h = x2 - x1, y2 - y1
-        if w < 4 or h < 4:
+        if w < 6 or h < 6:
             dropped_indexes.add(i)
         for j in range(i + 1, len(boxes)):
             if i in dropped_indexes or j in dropped_indexes:
