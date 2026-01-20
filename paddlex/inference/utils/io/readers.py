@@ -28,6 +28,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("pypdfium2"):
     import pypdfium2 as pdfium
+    from ..pdfium_lock import pdfium_lock
 if is_dep_available("soundfile"):
     import soundfile
 
@@ -296,20 +297,24 @@ class PDFReaderBackend(_BaseReaderBackend):
 
     def load_file(self, in_path):
         """load pdf file"""
-        doc = pdfium.PdfDocument(in_path)
-        doc.init_forms()
-        return doc
+        with pdfium_lock:
+            doc = pdfium.PdfDocument(in_path)
+            doc.init_forms()
+            return doc
 
     def read_file(self, in_path):
-        if isinstance(in_path, pdfium.PdfDocument):
-            doc = in_path
-        else:
-            doc = self.load_file(str(in_path))
-        try:
-            for page in doc:
-                yield page.render(scale=self._scale, rotation=self._rotation).to_numpy()
-        finally:
-            doc.close()
+        with pdfium_lock:
+            if isinstance(in_path, pdfium.PdfDocument):
+                doc = in_path
+            else:
+                doc = self.load_file(str(in_path))
+            try:
+                for page in doc:
+                    image = page.render(scale=self._scale, rotation=self._rotation).to_numpy()
+                    page.close()
+                    yield image
+            finally:
+                doc.close()
 
 
 class TXTReaderBackend(_BaseReaderBackend):

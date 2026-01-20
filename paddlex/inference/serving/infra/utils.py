@@ -18,7 +18,6 @@ import io
 import mimetypes
 import re
 import tempfile
-import threading
 import uuid
 from functools import partial
 from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, overload
@@ -31,6 +30,7 @@ from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
 from ....utils.deps import function_requires_deps, is_dep_available
+from ...utils.pdfium_lock import pdfium_lock
 from .models import ImageInfo, PDFInfo, PDFPageInfo
 
 if is_dep_available("aiohttp"):
@@ -177,21 +177,19 @@ def base64_encode(data: bytes) -> str:
     return base64.b64encode(data).decode("ascii")
 
 
-_lock = threading.Lock()
-
-
 @function_requires_deps("pypdfium2", "opencv-contrib-python")
 def read_pdf(
     bytes_: bytes, max_num_imgs: Optional[int] = None
 ) -> Tuple[List[np.ndarray], PDFInfo]:
     images: List[np.ndarray] = []
     page_info_list: List[PDFPageInfo] = []
-    with _lock:
+    with pdfium_lock:
         doc = pdfium.PdfDocument(bytes_)
         doc.init_forms()
         try:
             for page in doc:
                 if max_num_imgs is not None and len(images) >= max_num_imgs:
+                    page.close()
                     break
                 # TODO: Do not always use zoom=2.0
                 zoom = 2.0
@@ -203,6 +201,7 @@ def read_pdf(
                     height=image.shape[0],
                 )
                 page_info_list.append(page_info)
+                page.close()
         finally:
             doc.close()
     pdf_info = PDFInfo(
