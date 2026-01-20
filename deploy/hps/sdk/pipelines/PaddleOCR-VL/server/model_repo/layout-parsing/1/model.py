@@ -278,12 +278,14 @@ class TritonPythonModel(BaseTritonPythonModel):
         return images, data_info, visualize_enabled
 
     def _postprocess(self, images, data_info, visualize_enabled, preds, log_id, input):
-        if input.concatenatePages:
-            preds = self.pipeline.concatenate_pages(
+        if input.restructurePages:
+            preds = self.pipeline.restructure_pages(
                 preds,
-                merge_table=input.mergeTable,
-                title_level=input.titleLevel,
+                merge_tables=input.mergeTables,
+                relevel_titles=input.relevelTitles,
+                concatenate_pages=False,
             )
+            preds = list(preds)
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, preds)):
             pruned_res = app_common.prune_result(item.json["res"])

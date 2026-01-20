@@ -19,12 +19,12 @@ from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
 from ...schemas.paddleocr_vl import (
-    CONCATENATE_PAGES_ENDPOINT,
     INFER_ENDPOINT,
-    ConcatenatePagesRequest,
-    ConcatenatePagesResult,
+    RESTRUCTURE_PAGES_ENDPOINT,
     InferRequest,
     InferResult,
+    RestructurePagesRequest,
+    RestructurePagesResult,
 )
 from .._app import create_app, primary_operation
 from ._common import common
@@ -84,13 +84,15 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             vlm_extra_args=request.vlmExtraArgs,
         )
 
-        if request.concatenatePages:
+        if request.restructurePages:
             result = await serving_utils.call_async(
-                pipeline.pipeline.concatenate_pages,
+                pipeline.pipeline.restructure_pages,
                 result,
-                merge_table=request.mergeTable,
-                title_level=request.titleLevel,
+                merge_tables=request.mergeTables,
+                relevel_titles=request.relevelTitles,
+                concatenate_pages=False,
             )
+            result = list(result)
 
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
@@ -152,14 +154,15 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
     @primary_operation(
         app,
-        CONCATENATE_PAGES_ENDPOINT,
-        "concatenatePages",
+        RESTRUCTURE_PAGES_ENDPOINT,
+        "restructurePages",
     )
-    async def _concatenate_pages(
-        request: ConcatenatePagesRequest,
-    ) -> AIStudioResultResponse[ConcatenatePagesResult]:
-        def _to_original_result(pruned_res):
-            orig_res = {"res": pruned_res}
+    async def _restructure_pages(
+        request: RestructurePagesRequest,
+    ) -> AIStudioResultResponse[RestructurePagesResult]:
+        def _to_original_result(pruned_res, page_index):
+            res = {**pruned_res, "input_path": "", "page_index": page_index}
+            orig_res = {"res": res}
             return orig_res
 
         pipeline = ctx.pipeline
@@ -169,37 +172,56 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         original_results = []
         markdown_images = {}
         for i, page in enumerate(request.pages):
-            orig_res = _to_original_result(page.prunedResult)
+            orig_res = _to_original_result(page.prunedResult, i)
             original_results.append(orig_res)
-            markdown_images.update(page.markdownImages)
+            if request.concatenatePages:
+                markdown_images.update(page.markdownImages)
 
-        concatenated_results = await serving_utils.call_async(
-            pipeline.pipeline.concatenate_pages,
+        restructured_results = await serving_utils.call_async(
+            pipeline.pipeline.restructure_pages,
             original_results,
-            merge_table=request.mergeTable,
-            title_level=request.titleLevel,
+            merge_tables=request.mergeTables,
+            relevel_titles=request.relevelTitles,
+            concatenate_pages=request.concatenatePages,
         )
+        restructured_results = list(restructured_results)
 
         layout_parsing_results = []
-        for new_res, old_page in zip(concatenated_results, request.pages):
+        if request.concatenatePages:
             layout_parsing_result = {}
             layout_parsing_result["prunedResult"] = common.prune_result(
-                new_res.json["res"]
+                restructured_results[0].json["res"]
             )
             # XXX
-            md_data = new_res._to_markdown(
+            md_data = restructured_results[0]._to_markdown(
                 pretty=request.prettifyMarkdown,
                 show_formula_number=request.showFormulaNumber,
             )
             layout_parsing_result["markdown"] = dict(
                 text=md_data["markdown_texts"],
-                images=old_page.markdownImages,
+                images=markdown_images,
             )
             layout_parsing_results.append(layout_parsing_result)
+        else:
+            for new_res, old_page in zip(restructured_results, request.pages):
+                layout_parsing_result = {}
+                layout_parsing_result["prunedResult"] = common.prune_result(
+                    new_res.json["res"]
+                )
+                # XXX
+                md_data = new_res._to_markdown(
+                    pretty=request.prettifyMarkdown,
+                    show_formula_number=request.showFormulaNumber,
+                )
+                layout_parsing_result["markdown"] = dict(
+                    text=md_data["markdown_texts"],
+                    images=old_page.markdownImages,
+                )
+                layout_parsing_results.append(layout_parsing_result)
 
-        return AIStudioResultResponse[ConcatenatePagesResult](
+        return AIStudioResultResponse[RestructurePagesResult](
             logId=log_id,
-            result=ConcatenatePagesResult(
+            result=RestructurePagesResult(
                 layoutParsingResults=layout_parsing_results,
             ),
         )
