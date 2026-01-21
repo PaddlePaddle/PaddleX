@@ -193,6 +193,7 @@ EXTRAS = {
             "shapely",
             "tiktoken",
             "tokenizers",
+            "beautifulsoup4",
         ],
         "speech": [
             "ftfy",
