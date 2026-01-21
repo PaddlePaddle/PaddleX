@@ -427,7 +427,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["model_settings"] = model_settings
         use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
         if self["model_settings"].get("format_block_content", False):
-            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+            original_image_width = self["width"]
             use_ocr_for_image_block = self["model_settings"].get(
                 "use_ocr_for_image_block", False
             )
@@ -492,9 +492,15 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     parsing_res.group_id if parsing_res.group_id is not None else idx
                 ),
             }
-            if hasattr(parsing_res, "global_block_id") and parsing_res.global_block_id is not None:
+            if (
+                hasattr(parsing_res, "global_block_id")
+                and parsing_res.global_block_id is not None
+            ):
                 res_dict["global_block_id"] = parsing_res.global_block_id
-            if hasattr(parsing_res, "global_group_id") and parsing_res.global_group_id is not None:
+            if (
+                hasattr(parsing_res, "global_group_id")
+                and parsing_res.global_group_id is not None
+            ):
                 res_dict["global_group_id"] = parsing_res.global_group_id
             if parsing_res.polygon_points is not None:
                 res_dict["block_polygon_points"] = parsing_res.polygon_points
