@@ -14,8 +14,8 @@
 
 from typing import Dict, Generic, List, Tuple, TypeVar, Union
 
-from pydantic import BaseModel, Discriminator
-from typing_extensions import Annotated, Literal, TypeAlias
+from pydantic import BaseModel
+from typing_extensions import Literal, TypeAlias
 
 from ....utils.deps import is_dep_available
 
@@ -73,7 +73,7 @@ class PDFInfo(BaseModel):
     type: Literal["pdf"] = "pdf"
 
 
-DataInfo: TypeAlias = Annotated[Union[ImageInfo, PDFInfo], Discriminator("type")]
+DataInfo: TypeAlias = Union[ImageInfo, PDFInfo]
 
 # Should we use generics?
 PrimaryOperations: TypeAlias = Dict[str, Tuple[str, BaseModel, BaseModel]]
