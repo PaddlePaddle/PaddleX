@@ -278,6 +278,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         return images, data_info, visualize_enabled
 
     def _postprocess(self, images, data_info, visualize_enabled, preds, log_id, input):
+        orig_preds = preds
         if input.restructurePages:
             preds = self.pipeline.restructure_pages(
                 preds,
@@ -287,7 +288,7 @@ class TritonPythonModel(BaseTritonPythonModel):
             )
             preds = list(preds)
         layout_parsing_results: List[Dict[str, Any]] = []
-        for i, (img, item) in enumerate(zip(images, preds)):
+        for i, (img, item, orig_item) in enumerate(zip(images, preds, orig_preds)):
             pruned_res = app_common.prune_result(item.json["res"])
             # XXX
             md_data = item._to_markdown(
@@ -296,7 +297,7 @@ class TritonPythonModel(BaseTritonPythonModel):
             )
             md_text = md_data["markdown_texts"]
             md_imgs = app_common.postprocess_images(
-                md_data["markdown_images"],
+                orig_item.markdown["markdown_images"],
                 log_id,
                 filename_template=f"markdown_{i}/{{key}}",
                 file_storage=self.context["file_storage"],
@@ -306,7 +307,7 @@ class TritonPythonModel(BaseTritonPythonModel):
             if visualize_enabled:
                 imgs = {
                     "input_img": img,
-                    **item.img,
+                    **orig_item.img,
                 }
                 imgs = app_common.postprocess_images(
                     imgs,
