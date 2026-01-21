@@ -1245,9 +1245,10 @@ class MarkdownMixin:
             if isinstance(value, dict):
                 base_save_path = save_path.parent
                 for img_path, img_data in value.items():
-                    save_img_func(
-                        (base_save_path / img_path).as_posix(),
-                        img_data,
-                        *args,
-                        **kwargs,
-                    )
+                    if img_data:
+                        save_img_func(
+                            (base_save_path / img_path).as_posix(),
+                            img_data,
+                            *args,
+                            **kwargs,
+                        )

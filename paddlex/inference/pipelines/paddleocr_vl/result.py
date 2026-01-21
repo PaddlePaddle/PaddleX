@@ -281,15 +281,24 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         res_img_dict = {}
         model_settings = self["model_settings"]
-        if model_settings["use_doc_preprocessor"] and isinstance(
-            self["doc_preprocessor_res"], BaseResult
-        ):
-            for key, value in self["doc_preprocessor_res"].img.items():
-                res_img_dict[key] = value
-        if self["model_settings"]["use_layout_detection"] and isinstance(
-            self["layout_det_res"], BaseResult
-        ):
-            res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
+        if model_settings["use_doc_preprocessor"]:
+            if isinstance(self["doc_preprocessor_res"], BaseResult):
+                for key, value in self["doc_preprocessor_res"].img.items():
+                    res_img_dict[key] = value
+            if isinstance(self["doc_preprocessor_res"], list):
+                for idx, doc_preprocessor_res in enumerate(
+                    self["doc_preprocessor_res"]
+                ):
+                    if isinstance(doc_preprocessor_res, BaseResult):
+                        for key, value in doc_preprocessor_res.img.items():
+                            res_img_dict[f"{key}_{idx}"] = value
+        if self["model_settings"]["use_layout_detection"]:
+            if isinstance(self["layout_det_res"], BaseResult):
+                res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
+            if isinstance(self["layout_det_res"], list):
+                for idx, layout_res in enumerate(self["layout_det_res"]):
+                    if isinstance(layout_res, BaseResult):
+                        res_img_dict[f"layout_det_res_{idx}"] = layout_res.img["res"]
 
         if self.get("spotting_res") and not isinstance(self["spotting_res"], list):
             boxes = self["spotting_res"]["rec_polys"]
