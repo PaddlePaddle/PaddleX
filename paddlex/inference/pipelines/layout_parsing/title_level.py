@@ -110,27 +110,27 @@ SPECIAL_KEYWORDS = {
 }
 
 
-def get_title_height(block, layout_det_res):
+def get_title_height(block):
     """
     Calculate the average height of the dominant text lines within a layout block.
     """
 
     import math
 
-    if block["block_label"] == "doc_title":
+    if block.label == "doc_title":
         return 0
 
     # Round down for top-left
-    x1 = int(block["block_bbox"][0])
-    y1 = int(block["block_bbox"][1])
+    x1 = int(block.bbox[0])
+    y1 = int(block.bbox[1])
     # Round up for bottom-right to ensure full coverage
-    x2 = int(math.ceil(block["block_bbox"][2]))
-    y2 = int(math.ceil(block["block_bbox"][3]))
+    x2 = int(math.ceil(block.bbox[2]))
+    y2 = int(math.ceil(block.bbox[3]))
 
     h, w = y2 - y1, x2 - x1
     aspect_ratio = w / h
 
-    lines_num = block["block_content"].strip().count("\n") + 1
+    lines_num = block.content.strip().count("\n") + 1
 
     if aspect_ratio >= 1.0:
         # orizontal text: Project to Y-axis
@@ -273,7 +273,7 @@ def compute_levels_for_entries(entries):
     return entries
 
 
-def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
+def assign_levels_to_parsing_res(blocks_by_page):
     """
     Write computed levels back to the parsing results
     """
@@ -282,22 +282,22 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
 
     for page_index, one_page_blocks in enumerate(blocks_by_page):
         for block in one_page_blocks:
-            block["page_index"] = page_index
+            setattr(block, "page_index", page_index)
             parsing_res_list.append(block)
 
     entries = []
 
     for block in parsing_res_list:
 
-        if block["block_label"] == "paragraph_title":
-            content = block["block_content"]
-            height = get_title_height(block, layout_det_res)
+        if block.label == "paragraph_title":
+            content = block.content
+            height = get_title_height(block)
 
             if height is None:
                 continue
 
             # Document title has fixed level 0
-            init_level = 0 if block["block_label"] == "doc_title" else None
+            init_level = 0 if block.label == "doc_title" else None
 
             entries.append(
                 {
@@ -311,9 +311,9 @@ def assign_levels_to_parsing_res(blocks_by_page, layout_det_res):
     entries = compute_levels_for_entries(entries)
 
     for e in entries:
-        if e["origin_block"]["block_label"] == "doc_title":
-            setattr(block, "title_level", 0)
+        if e["origin_block"].label == "doc_title":
+            setattr(e["origin_block"], "title_level", 0)
         block = e["origin_block"]
-        block["title_level"] = e["level"]
+        block.title_level = e["level"]
 
     return blocks_by_page
