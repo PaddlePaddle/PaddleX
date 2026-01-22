@@ -993,6 +993,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         for one_page_res in res_list:
             if not isinstance(one_page_res, BaseResult):
                 one_page_res = one_page_res["res"]
+                one_page_res["imgs_in_doc"] = []
                 blocks = one_page_res.get("parsing_res_list", [])
                 model_settings = one_page_res.get("model_settings", {})
                 blocks = _conver_blocks_to_obj(blocks, model_settings)
@@ -1032,7 +1033,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 all_page_res["doc_preprocessor_res"] = [
                     res["doc_preprocessor_res"] for res in res_list
                 ]
-            all_page_res["imgs_in_doc"] = []
             concatenate_res.append(PaddleOCRVLResult(all_page_res))
         else:
             for page_idx, one_page_res in enumerate(res_list):
