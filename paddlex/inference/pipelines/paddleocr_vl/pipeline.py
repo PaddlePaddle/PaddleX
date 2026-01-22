@@ -959,7 +959,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         if len(res_list) == 0:
             return []
 
-        def _get_img_obj(block):
+        def _get_img_obj(block, model_settings):
             if block.get("image", None):
                 return block["image"]
             if block["block_label"] in ("image", "seal") or (
@@ -970,7 +970,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 return {"path": path, "img": None}
             return None
 
-        def _conver_blocks_to_obj(blocks):
+        def _conver_blocks_to_obj(blocks, model_settings):
             res = []
             for block in blocks:
                 obj = PaddleOCRVLBlock(
@@ -980,7 +980,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     content=block["block_content"],
                     group_id=block.get("group_id", None),
                 )
-                if img := _get_img_obj(block):
+                if img := _get_img_obj(block, model_settings):
                     obj.image = img
                 res.append(obj)
             return res
@@ -991,7 +991,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
             if not isinstance(one_page_res, BaseResult):
                 one_page_res = one_page_res["res"]
                 blocks = one_page_res.get("parsing_res_list", [])
-                blocks = _conver_blocks_to_obj(blocks)
+                model_settings = one_page_res.get("model_settings", {})
+                blocks = _conver_blocks_to_obj(blocks, model_settings)
             else:
                 blocks = one_page_res["parsing_res_list"]
             parsing_res_list = []
@@ -1006,7 +1007,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
         res_list = obj_res_list
 
         blocks_by_page = [res["parsing_res_list"] for res in res_list]
-        model_settings = res_list[0]["model_settings"]
 
         if merge_tables:
             blocks_by_page = merge_tables_across_pages(blocks_by_page)
