@@ -96,7 +96,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             result = list(result)
 
         layout_parsing_results: List[Dict[str, Any]] = []
-        for i, (img, item, orig_item) in enumerate(zip(images, result, orig_result)):
+        for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
             # XXX
             md_data = item._to_markdown(
@@ -106,7 +106,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             md_text = md_data["markdown_texts"]
             md_imgs = await serving_utils.call_async(
                 common.postprocess_images,
-                orig_item.markdown["markdown_images"],
+                item.markdown["markdown_images"],
                 log_id,
                 filename_template=f"markdown_{i}/{{key}}",
                 file_storage=ctx.extra["file_storage"],
@@ -116,7 +116,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             if visualize_enabled:
                 imgs = {
                     "input_img": img,
-                    **orig_item.img,
+                    **item.img,
                 }
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
