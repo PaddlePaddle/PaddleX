@@ -119,6 +119,8 @@ def format_image_scaled_by_html_func(
     block, original_image_width, show_ocr_content=False
 ):
     img_tags = []
+    if block.image is None:
+        return ""
     image_path = block.image["path"]
     image_width = block.bbox[2] - block.bbox[0]
     scale = int(image_width / original_image_width * 100)

@@ -125,7 +125,7 @@ def is_skippable(block, allowed_labels):
 
     continue_keywords = ["continue", "continued", "cont'd", "续", "cont‘d", "續"]
 
-    if block["block_label"] in allowed_labels:
+    if block.label in allowed_labels:
         return True
 
     b_text = str(getattr(block, "text", "") or "").lower()
@@ -145,9 +145,9 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
 
     from bs4 import BeautifulSoup
 
-    x0, y0, x1, y1 = prev_block["block_bbox"]
+    x0, y0, x1, y1 = prev_block.bbox
     prev_width = x1 - x0
-    x2, y2, x3, y4 = curr_block["block_bbox"]
+    x2, y2, x3, y4 = curr_block.bbox
     curr_width = x3 - x2
     if curr_width == 0 or prev_width == 0:
         return False, None, None
@@ -156,8 +156,7 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
 
     prev_index = prev_page.index(prev_block)
     allowed_follow = all(
-        b["block_label"]
-        in ["footer", "vision_footnote", "number", "footnote", "footer_image"]
+        b.label in ["footer", "vision_footnote", "number", "footnote", "footer_image"]
         for b in prev_page[prev_index + 1 :]
     )
     if not allowed_follow:
@@ -172,8 +171,8 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
     if not allowed_before:
         return False, None, None
 
-    html_prev = prev_block["block_content"]
-    html_curr = curr_block["block_content"]
+    html_prev = prev_block.content
+    html_curr = curr_block.content
     if not html_prev or not html_curr:
         return False, None, None
     soup_prev = BeautifulSoup(html_prev, "html.parser")
@@ -206,14 +205,14 @@ def merge_tables_across_pages(pages):
         page_prev = pages[i - 1]
 
         for block in page_curr:
-            if block["block_label"] == "table":
+            if block.label == "table":
                 curr_block = block
                 break
         else:
             curr_block = None
 
         for block in reversed(page_prev):
-            if block["block_label"] == "table":
+            if block.label == "table":
                 prev_block = block
                 break
         else:
@@ -229,15 +228,15 @@ def merge_tables_across_pages(pages):
 
         if can_merge:
             merged_html = perform_table_merge(soup_prev, soup_curr)
-            prev_block["block_content"] = merged_html
-            prev_block_global_id = prev_block["global_block_id"]
-            curr_block["block_content"] = ""
-            curr_block["global_group_id"] = prev_block_global_id
+            prev_block.content = merged_html
+            prev_block_global_id = prev_block.global_block_id
+            curr_block.content = ""
+            curr_block.global_group_id = prev_block_global_id
             # one table spilt into more than two pages, the group_id should be the same
-            if curr_block["group_id"] is not None:
-                prev_block["group_id"] = curr_block["group_id"]
+            if curr_block.group_id is not None:
+                prev_block.group_id = curr_block.group_id
             else:
                 new_id = pages[i - 1].index(prev_block) + sum(page_lens[: i - 1])
-                prev_block["group_id"] = new_id
-                curr_block["group_id"] = new_id
+                prev_block.group_id = new_id
+                curr_block.group_id = new_id
     return pages

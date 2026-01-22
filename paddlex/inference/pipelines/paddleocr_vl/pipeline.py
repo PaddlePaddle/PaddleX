@@ -969,8 +969,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 and not model_settings.get("use_chart_recognition", False)
             ):
                 path = construct_img_path(block["block_label"], block["block_bbox"])
-                # TODO
-                # return {"path": path, "img": Image.fromarray(block_img)}
                 return {"path": path, "img": None}
             return None
 
@@ -980,64 +978,64 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 obj = PaddleOCRVLBlock(
                     label=block["block_label"],
                     bbox=block["block_bbox"],
+                    polygon_points=block.get("block_polygon_points", None),
                     content=block["block_content"],
                     group_id=block.get("group_id", None),
-                    global_block_id=block.get("global_block_id", None),
-                    global_group_id=block.get("global_group_id", None),
                 )
                 if img := _get_img_obj(block):
                     obj.image = img
                 res.append(obj)
             return res
 
-        # Extract blocks and layout detection results from each page
-        res_list = [
-            (
-                res._to_json(keep_img=True)["res"]
-                if isinstance(res, BaseResult)
-                else res["res"]
-            )
-            for res in res_list
-        ]
+        global_block_id = 0
+        obj_res_list = []
+        for one_page_res in res_list:
+            if not isinstance(one_page_res, BaseResult):
+                one_page_res = one_page_res["res"]
+                blocks = one_page_res.get("parsing_res_list", [])
+                blocks = _conver_blocks_to_obj(blocks)
+            else:
+                blocks = one_page_res["parsing_res_list"]
+            parsing_res_list = []
+            for block in blocks:
+                block.global_block_id = global_block_id
+                block.global_group_id = global_block_id
+                global_block_id += 1
+                parsing_res_list.append(block)
+
+            one_page_res["parsing_res_list"] = parsing_res_list
+            obj_res_list.append(one_page_res)
+        res_list = obj_res_list
 
         blocks_by_page = [res["parsing_res_list"] for res in res_list]
-        layout_det_res_by_page = [res["layout_det_res"] for res in res_list]
         model_settings = res_list[0]["model_settings"]
-        blocks_by_page = []
-
-        global_block_id = 0
-        for one_page_blocks in res_list:
-            for block in one_page_blocks["parsing_res_list"]:
-                block["global_block_id"] = global_block_id
-                block["global_group_id"] = global_block_id
-                global_block_id += 1
-            blocks_by_page.append(one_page_blocks["parsing_res_list"])
 
         if merge_tables:
             blocks_by_page = merge_tables_across_pages(blocks_by_page)
         if relevel_titles:
-            blocks_by_page = assign_levels_to_parsing_res(
-                blocks_by_page, layout_det_res_by_page
-            )
+            blocks_by_page = assign_levels_to_parsing_res(blocks_by_page)
 
         concatenate_res = []
         if concatenate_pages:
-            from itertools import chain
-
             all_page_res = res_list[0]
-            all_page_res["parsing_res_list"] = _conver_blocks_to_obj(
-                chain.from_iterable(blocks_by_page)
-            )
+            all_page_res["parsing_res_list"] = [
+                blk for blks in blocks_by_page for blk in blks
+            ]
             all_page_res["page_index"] = None
             all_page_res["page_count"] = len(res_list)
+            if model_settings["use_layout_detection"]:
+                all_page_res["layout_det_res"] = [
+                    res["layout_det_res"] for res in res_list
+                ]
+            if model_settings["use_doc_preprocessor"]:
+                all_page_res["doc_preprocessor_res"] = [
+                    res["doc_preprocessor_res"] for res in res_list
+                ]
             all_page_res["imgs_in_doc"] = []
             concatenate_res.append(PaddleOCRVLResult(all_page_res))
         else:
             for page_idx, one_page_res in enumerate(res_list):
-                one_page_res["parsing_res_list"] = _conver_blocks_to_obj(
-                    blocks_by_page[page_idx]
-                )
-                one_page_res["imgs_in_doc"] = []
+                one_page_res["parsing_res_list"] = blocks_by_page[page_idx]
                 concatenate_res.append(PaddleOCRVLResult(one_page_res))
 
         yield from concatenate_res
