@@ -106,7 +106,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             md_text = md_data["markdown_texts"]
             md_imgs = await serving_utils.call_async(
                 common.postprocess_images,
-                item.markdown["markdown_images"],
+                md_data["markdown_images"],
                 log_id,
                 filename_template=f"markdown_{i}/{{key}}",
                 file_storage=ctx.extra["file_storage"],
