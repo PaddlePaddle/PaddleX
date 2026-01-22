@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import queue
+import re
 import threading
 import time
 from itertools import chain
@@ -979,7 +980,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     label=block["block_label"],
                     bbox=block["block_bbox"],
                     polygon_points=block.get("block_polygon_points", None),
-                    content=block["block_content"],
+                    content=re.sub(r"^#+\s", "", block["block_content"]),
                     group_id=block.get("group_id", None),
                 )
                 if img := _get_img_obj(block, model_settings):
