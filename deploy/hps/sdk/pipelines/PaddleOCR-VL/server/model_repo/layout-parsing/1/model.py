@@ -296,7 +296,7 @@ class TritonPythonModel(BaseTritonPythonModel):
             )
             md_text = md_data["markdown_texts"]
             md_imgs = app_common.postprocess_images(
-                item.markdown["markdown_images"],
+                md_data["markdown_images"],
                 log_id,
                 filename_template=f"markdown_{i}/{{key}}",
                 file_storage=self.context["file_storage"],
