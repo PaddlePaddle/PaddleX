@@ -347,15 +347,21 @@ class DocVLMPredictor(BasePredictor):
             model_preds = [model_preds]
         if not isinstance(src_data, list):
             src_data = [src_data]
-        if len(model_preds) != len(src_data):
+        input_info = []
+        for data in src_data:
+            image = data.get("image", None)
+            if isinstance(image, str):
+                data["input_path"] = image
+            input_info.append(data)
+        if len(model_preds) != len(input_info):
             raise ValueError(
-                f"Model predicts {len(model_preds)} results while src data has {len(src_data)} samples."
+                f"Model predicts {len(model_preds)} results while src data has {len(input_info)} samples."
             )
 
-        rst_format_dict = {k: [] for k in src_data[0].keys()}
+        rst_format_dict = {k: [] for k in input_info[0].keys()}
         rst_format_dict["result"] = []
 
-        for data_sample, model_pred in zip(src_data, model_preds):
+        for data_sample, model_pred in zip(input_info, model_preds):
             for k in data_sample.keys():
                 rst_format_dict[k].append(data_sample[k])
             rst_format_dict["result"].append(model_pred)
