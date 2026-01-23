@@ -17,9 +17,7 @@ import copy
 import io
 import os
 import warnings
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from threading import Lock
 from typing import List, Optional
 
 import numpy as np
@@ -75,11 +73,6 @@ class DocVLMPredictor(BasePredictor):
                     f"Currently, the {repr(self.model_name)} local model only supports batch size of 1. The batch size will be updated to 1."
                 )
                 self.batch_sampler.batch_size = 1
-        else:
-            if self.batch_sampler.batch_size > 1:
-                self._thread_pool = ThreadPoolExecutor(
-                    max_workers=min(self.batch_sampler.batch_size, os.cpu_count() or 1)
-                )
 
     def _build_batch_sampler(self):
         """Builds and returns an DocVLMBatchSampler instance.
@@ -337,11 +330,6 @@ class DocVLMPredictor(BasePredictor):
         else:
             raise NotImplementedError
 
-    def close(self):
-        super().close()
-        if hasattr(self, "_thread_pool"):
-            self._thread_pool.shutdown()
-
     def _format_result_dict(self, model_preds, src_data):
         if not isinstance(model_preds, list):
             model_preds = [model_preds]
@@ -426,9 +414,8 @@ class DocVLMPredictor(BasePredictor):
         min_pixels,
         max_pixels,
     ):
-        lock = Lock()
-
-        def _process(item):
+        futures = []
+        for item in data:
             image = item["image"]
             if isinstance(image, str):
                 if image.startswith("http://") or image.startswith("https://"):
@@ -520,27 +507,22 @@ class DocVLMPredictor(BasePredictor):
                         f"{repr(self._genai_client.backend)} does not support `max_pixels`."
                     )
 
-            with lock:
-                future = self._genai_client.create_chat_completion(
-                    [
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "image_url", "image_url": {"url": image_url}},
-                                {"type": "text", "text": item["query"]},
-                            ],
-                        }
-                    ],
-                    return_future=True,
-                    timeout=600,
-                    **kwargs,
-                )
-                return future
+            future = self._genai_client.create_chat_completion(
+                [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image_url", "image_url": {"url": image_url}},
+                            {"type": "text", "text": item["query"]},
+                        ],
+                    }
+                ],
+                return_future=True,
+                timeout=600,
+                **kwargs,
+            )
 
-        if len(data) > 1:
-            futures = list(map(_process, data))
-        else:
-            futures = [_process(data[0])]
+            futures.append(future)
 
         results = []
         for future in futures:
