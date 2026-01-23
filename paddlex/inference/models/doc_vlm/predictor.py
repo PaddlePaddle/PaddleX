@@ -538,7 +538,7 @@ class DocVLMPredictor(BasePredictor):
                 return future
 
         if len(data) > 1:
-            futures = list(self._thread_pool.map(_process, data))
+            futures = list(map(_process, data))
         else:
             futures = [_process(data[0])]
 
