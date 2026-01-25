@@ -113,7 +113,25 @@ def filter_overlap_boxes(
     n = len(boxes)
     dropped_indexes = set()
     special_labels = {"image", "table", "seal", "chart"}
+    allowed_inside_table = {"seal", "image", "chart"}
     processed_containment = set()
+
+    for i in range(n):
+        box_i = boxes[i]
+        label_i = box_i["label"]
+        coord_i = box_i["coordinate"]
+
+        if label_i == "table" and is_valid_size(coord_i):
+            for j in range(n):
+                if i == j:
+                    continue
+
+                box_j = boxes[j]
+                label_j = box_j["label"]
+                coord_j = box_j["coordinate"]
+                if is_contained(coord_i, coord_j):
+                    if label_j not in allowed_inside_table:
+                        dropped_indexes.add(j)
 
     for i in range(n):
         if i in dropped_indexes:
@@ -616,8 +634,7 @@ def untokenize_figure_of_table(table_res_str, figure_token_map, image_path_to_ob
                 image_info += "\n\n" + ocr_content + "\n\n"
             return image_info
 
-    # pattern = r"\[F(\d+)\]"
-    pattern = r"[$$ \【]F(\d+)[ $$\】]"
+    pattern = r"\[F(\d+)\]"
     return re.sub(pattern, repl, table_res_str)
 
 
