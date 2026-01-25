@@ -46,7 +46,6 @@ def draw_box(img: Image.Image, boxes: List[dict]) -> Image.Image:
     color_list = get_colormap(rgb=True)
 
     for i, dt in enumerate(boxes):
-        # clsid = dt["cls_id"]
         label, bbox, score = dt["label"], dt["coordinate"], dt["score"]
         if label not in label2color:
             color_index = i % len(color_list)
