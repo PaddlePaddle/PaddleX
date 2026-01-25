@@ -51,7 +51,7 @@ def is_convex(p_prev, p_curr, p_next):
     v1 = p_curr - p_prev
     v2 = p_next - p_curr
     cross = v1[0] * v2[1] - v1[1] * v2[0]
-    return cross < 0  # 如果是顺时针多边形则cross<0
+    return cross < 0
 
 
 def angle_between_vectors(v1, v2):
@@ -252,7 +252,6 @@ def convert_polygon_to_quad(polygon):
     min_rect = cv2.minAreaRect(points)
     quad = cv2.boxPoints(min_rect)
 
-    # 按顺时针排序，从左上角开始
     center = quad.mean(axis=0)
     angles = np.arctan2(quad[:, 1] - center[1], quad[:, 0] - center[0])
     sorted_indices = np.argsort(angles)
@@ -467,61 +466,124 @@ def calculate_overlap_ratio(
     return inter_area / ref_area
 
 
+def is_contained(big_coord, small_coord):
+    """
+    Check if the small box is completely inside the big box.
+    """
+    x1b, y1b, x2b, y2b = big_coord
+    x1s, y1s, x2s, y2s = small_coord
+    return x1b <= x1s and y1b <= y1s and x2b >= x2s and y2b >= y2s
+
+
+def is_valid_size(coord, min_size=4):
+    """
+    Check if the width and height of the box are greater than or equal to the minimum size.
+    """
+    x1, y1, x2, y2 = coord
+    return (x2 - x1) >= min_size and (y2 - y1) >= min_size
+
+
 def filter_boxes(
     src_boxes: Dict[str, List[Dict]], layout_shape_mode: str
-) -> Dict[str, List[Dict]]:
+) -> List[Dict]:
     """
-    Remove overlapping boxes from layout detection results based on a given overlap ratio.
-
-    Args:
-        boxes (Dict[str, List[Dict]]): Layout detection result dict containing a 'boxes' list.
-
-    Returns:
-        Dict[str, List[Dict]]: Filtered dict with overlapping boxes removed.
+    Remove overlapping boxes from layout detection results based on a given overlap ratio,
+    and compare scores between big boxes and the small boxes they contain.
     """
+
+    # Filter out reference boxes
     boxes = [box for box in src_boxes if box["label"] != "reference"]
+    n = len(boxes)
     dropped_indexes = set()
 
-    for i in range(len(boxes)):
-        x1, y1, x2, y2 = boxes[i]["coordinate"]
-        w, h = x2 - x1, y2 - y1
-        if w < 2 or h < 2:
+    special_labels = {"image", "table", "seal", "chart"}
+    processed_containment = set()
+
+    for i in range(n):
+        if i in dropped_indexes:
+            continue
+
+        box_i = boxes[i]
+        coord_i = box_i["coordinate"]
+        label_i = box_i["label"]
+
+        if not is_valid_size(coord_i):
             dropped_indexes.add(i)
-        for j in range(i + 1, len(boxes)):
-            if i in dropped_indexes or j in dropped_indexes:
+            continue
+
+        for j in range(i + 1, n):
+            if j in dropped_indexes:
                 continue
-            overlap_ratio = calculate_overlap_ratio(
-                boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
+
+            box_j = boxes[j]
+            coord_j = box_j["coordinate"]
+            label_j = box_j["label"]
+
+            if not is_valid_size(coord_j):
+                dropped_indexes.add(j)
+                continue
+
+            # check if the pair is special
+            is_special_pair = ({label_i, label_j} & special_labels) and (
+                label_i != label_j
             )
-            if (
-                boxes[i]["label"] == "inline_formula"
-                or boxes[j]["label"] == "inline_formula"
-            ):
-                if overlap_ratio > 0.5:
-                    if boxes[i]["label"] == "inline_formula":
-                        dropped_indexes.add(i)
-                    if boxes[j]["label"] == "inline_formula":
-                        dropped_indexes.add(j)
-                    continue
-            if overlap_ratio > 0.7:
-                if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
-                    poly_overlap_ratio = calculate_polygon_overlap_ratio(
-                        boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
-                    )
-                    if poly_overlap_ratio < 0.7:
-                        continue
-                box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
-                box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
-                if (
-                    boxes[i]["label"] == "image" or boxes[j]["label"] == "image"
-                ) and boxes[i]["label"] != boxes[j]["label"]:
-                    continue
-                if box_area_i >= box_area_j:
-                    dropped_indexes.add(j)
-                else:
+            if is_special_pair:
+                continue
+
+            area_i, area_j = calculate_bbox_area(coord_i), calculate_bbox_area(coord_j)
+            if area_i >= area_j:
+                big_idx, small_idx = i, j
+                big_coord, small_coord = coord_i, coord_j
+                big_box, small_box = box_i, box_j
+            else:
+                big_idx, small_idx = j, i
+                big_coord, small_coord = coord_j, coord_i
+                big_box, small_box = box_j, box_i
+
+            if is_contained(big_coord, small_coord):
+                if big_idx not in processed_containment:
+                    contained_small_idxs = [
+                        k
+                        for k in range(n)
+                        if k != big_idx
+                        and k not in dropped_indexes
+                        and boxes[k]["label"] != "inline_formula"
+                        and is_contained(big_coord, boxes[k]["coordinate"])
+                    ]
+
+                    if contained_small_idxs:
+                        avg_small_score = sum(
+                            boxes[k]["score"] for k in contained_small_idxs
+                        ) / len(contained_small_idxs)
+
+                        if avg_small_score > big_box.get("score", 0):
+                            dropped_indexes.add(big_idx)
+                        else:
+                            dropped_indexes.update(contained_small_idxs)
+
+                    processed_containment.add(big_idx)
+                continue
+
+            overlap_ratio = calculate_overlap_ratio(coord_i, coord_j, "small")
+
+            if overlap_ratio > 0.5 and "inline_formula" in (label_i, label_j):
+                if label_i == "inline_formula":
                     dropped_indexes.add(i)
-    out_boxes = [box for idx, box in enumerate(boxes) if idx not in dropped_indexes]
-    return out_boxes
+                if label_j == "inline_formula":
+                    dropped_indexes.add(j)
+                continue
+
+            if overlap_ratio > 0.7:
+                if layout_shape_mode != "rect" and "polygon_points" in box_i:
+                    poly_overlap = calculate_polygon_overlap_ratio(
+                        box_i["polygon_points"], box_j["polygon_points"], "small"
+                    )
+                    if poly_overlap < 0.7:
+                        continue
+
+                dropped_indexes.add(small_idx)
+
+    return [box for idx, box in enumerate(boxes) if idx not in dropped_indexes]
 
 
 def update_order_index(boxes: List[Dict], skip_order_labels: List[str]):
