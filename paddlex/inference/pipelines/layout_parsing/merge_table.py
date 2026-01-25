@@ -156,14 +156,15 @@ def can_merge_tables(prev_page, prev_block, curr_page, curr_block):
 
     prev_index = prev_page.index(prev_block)
     allowed_follow = all(
-        b.label in ["footer", "vision_footnote", "number", "footnote", "footer_image"]
+        b.label
+        in ["footer", "vision_footnote", "number", "footnote", "footer_image", "seal"]
         for b in prev_page[prev_index + 1 :]
     )
     if not allowed_follow:
         return False, None, None
 
     curr_index = curr_page.index(curr_block)
-    curr_allowed_labels = ["header", "header_image", "number"]
+    curr_allowed_labels = ["header", "header_image", "number", "seal"]
 
     allowed_before = all(
         is_skippable(b, curr_allowed_labels) for b in curr_page[:curr_index]
@@ -197,9 +198,6 @@ def perform_table_merge(soup_prev, soup_curr):
 
 
 def merge_tables_across_pages(pages):
-    nums = 0
-    # get the length of each page
-    page_lens = [len(page) for page in pages]
     for i in range(len(pages) - 1, 0, -1):
         page_curr = pages[i]
         page_prev = pages[i - 1]
@@ -232,11 +230,11 @@ def merge_tables_across_pages(pages):
             prev_block_global_id = prev_block.global_block_id
             curr_block.content = ""
             curr_block.global_group_id = prev_block_global_id
-            # one table spilt into more than two pages, the group_id should be the same
-            # if curr_block.group_id is not None:
-            #     prev_block.group_id = curr_block.group_id
-            # else:
-            #     new_id = pages[i - 1].index(prev_block) + sum(page_lens[: i - 1])
-            #     prev_block.group_id = new_id
-            #     curr_block.group_id = new_id
+    all_blocks = [block for page in pages for block in page]
+    for page in pages:
+        for block in page:
+            if block.global_block_id != block.global_group_id:
+                block.global_group_id = all_blocks[
+                    block.global_group_id
+                ].global_group_id
     return pages
