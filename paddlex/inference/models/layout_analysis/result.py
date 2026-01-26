@@ -167,8 +167,21 @@ def draw_mask(im, boxes, img_size):
         font_color = tuple(catid2fontcolor[label])
 
         polygon_points = box_info["polygon_points"]
-        left_top = min(polygon_points, key=lambda p: (p[1], p[0]))
-        right_top = min(polygon_points, key=lambda p: (p[1], -p[0]))
+
+        image_left_top = (0, 0)
+        image_right_top = (img.width, 0)
+        left_top = min(
+            polygon_points,
+            key=lambda p: (
+                (p[0] - image_left_top[0]) ** 2 + (p[1] - image_left_top[1]) ** 2
+            ),
+        )
+        right_top = min(
+            polygon_points,
+            key=lambda p: (
+                (p[0] - image_right_top[0]) ** 2 + (p[1] - image_right_top[1]) ** 2
+            ),
+        )
 
         # label
         text = "{} {:.2f}".format(label, score)
