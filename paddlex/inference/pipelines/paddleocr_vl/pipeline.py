@@ -445,7 +445,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
                         result_str = (
                             result_str.replace("\\(", " $ ")
-                            .replace("\\)", " $ ")
+                            .replace("\\)", " $")
+                            .replace("\\[\\[", "\\[")
+                            .replace("\\]\\]", "\\]")
                             .replace("\\[", " $$ ")
                             .replace("\\]", " $$ ")
                         )
