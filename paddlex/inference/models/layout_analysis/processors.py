@@ -265,14 +265,6 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
             polygon = polygon + np.array([x_min, y_min])
         if layout_shape_mode == "poly":
             polygon_points.append(polygon)
-        elif layout_shape_mode == "poly1":
-            polygon = mask2polygon(resized_mask, max_allowed_dist, extract_custom=False)
-            if polygon is not None and len(polygon) < 4:
-                polygon_points.append(rect)
-                continue
-            if polygon is not None and len(polygon) > 0:
-                polygon = polygon + np.array([x_min, y_min])
-            polygon_points.append(polygon)
         elif layout_shape_mode == "quad":
             # convert polygon to quadrilateral
             quad = convert_polygon_to_quad(polygon)
