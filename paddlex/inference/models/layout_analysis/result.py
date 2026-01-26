@@ -170,33 +170,33 @@ def draw_mask(im, boxes, img_size):
         left_top = min(polygon_points, key=lambda p: (p[1], p[0]))
         right_top = min(polygon_points, key=lambda p: (p[1], -p[0]))
 
-        # # label
-        # text = "{} {:.2f}".format(label, score)
-        # if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
-        #     tw, th = draw.textsize(text, font=font)
-        # else:
-        #     left, top, right, bottom = draw.textbbox((0, 0), text, font)
-        #     tw, th = right - left, bottom - top + 4
-        # lx, ly = left_top
-        # if ly < th:
-        #     draw.rectangle([(lx, ly), (lx + tw + 4, ly + th + 1)], fill=color)
-        #     draw.text((lx + 2, ly - 2), text, fill=font_color, font=font)
-        # else:
-        #     draw.rectangle([(lx, ly - th), (lx + tw + 4, ly + 1)], fill=color)
-        #     draw.text((lx + 2, ly - th - 2), text, fill=font_color, font=font)
+        # label
+        text = "{} {:.2f}".format(label, score)
+        if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
+            tw, th = draw.textsize(text, font=font)
+        else:
+            left, top, right, bottom = draw.textbbox((0, 0), text, font)
+            tw, th = right - left, bottom - top + 4
+        lx, ly = left_top
+        if ly < th:
+            draw.rectangle([(lx, ly), (lx + tw + 4, ly + th + 1)], fill=color)
+            draw.text((lx + 2, ly - 2), text, fill=font_color, font=font)
+        else:
+            draw.rectangle([(lx, ly - th), (lx + tw + 4, ly + 1)], fill=color)
+            draw.text((lx + 2, ly - th - 2), text, fill=font_color, font=font)
 
-        # # order
-        # order = box_info.get("order", None)
-        # if order:
-        #     order_text = str(order)
-        #     rx, ry = right_top
-        #     text_position = (rx + 2, ry - font_size // 2)
-        #     if int(img.width) - rx < font_size:
-        #         text_position = (
-        #             int(rx - font_size * 1.1),
-        #             ry - font_size // 2,
-        #         )
-        #     draw.text(text_position, order_text, font=font, fill="red")
+        # order
+        order = box_info.get("order", None)
+        if order:
+            order_text = str(order)
+            rx, ry = right_top
+            text_position = (rx + 2, ry - font_size // 2)
+            if int(img.width) - rx < font_size:
+                text_position = (
+                    int(rx - font_size * 1.1),
+                    ry - font_size // 2,
+                )
+            draw.text(text_position, order_text, font=font, fill="red")
 
     return img
 
