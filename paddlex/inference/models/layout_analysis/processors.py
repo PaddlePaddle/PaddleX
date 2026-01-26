@@ -44,6 +44,64 @@ SKIP_ORDER_LABELS = [
 ]
 
 
+def is_convex(p_prev, p_curr, p_next):
+    """
+    Calculate if the polygon is convex.
+    """
+    v1 = p_curr - p_prev
+    v2 = p_next - p_curr
+    cross = v1[0] * v2[1] - v1[1] * v2[0]
+    return cross < 0
+
+
+def angle_between_vectors(v1, v2):
+    """
+    Calculate the angle between two vectors.
+    """
+
+    unit_v1 = v1 / np.linalg.norm(v1)
+    unit_v2 = v2 / np.linalg.norm(v2)
+    dot_prod = np.clip(np.dot(unit_v1, unit_v2), -1.0, 1.0)
+    angle_rad = np.arccos(dot_prod)
+    return np.degrees(angle_rad)
+
+
+def calc_new_point(p_curr, v1, v2, distance=20):
+    """
+    Calculate the new point based on the direction of two vectors.
+    """
+    dir_vec = v1 / np.linalg.norm(v1) + v2 / np.linalg.norm(v2)
+    dir_vec = dir_vec / np.linalg.norm(dir_vec)
+    p_new = p_curr + dir_vec * distance
+    return p_new
+
+
+def extract_custom_vertices(polygon, sharp_angle_thresh=45):
+    poly = np.array(polygon)
+    n = len(poly)
+    res = []
+    i = 0
+    while i < n:
+        p_prev = poly[(i - 1) % n]
+        p_curr = poly[i]
+        p_next = poly[(i + 1) % n]
+        v1 = p_prev - p_curr
+        v2 = p_next - p_curr
+        angle = angle_between_vectors(v1, v2)
+        if is_convex(p_prev, p_curr, p_next):
+            if abs(angle - sharp_angle_thresh) < 1:
+                # Calculate the new point based on the direction of two vectors.
+                dir_vec = v1 / np.linalg.norm(v1) + v2 / np.linalg.norm(v2)
+                dir_vec = dir_vec / np.linalg.norm(dir_vec)
+                d = (np.linalg.norm(v1) + np.linalg.norm(v2)) / 2
+                p_new = p_curr + dir_vec * d
+                res.append(tuple(p_new))
+            else:
+                res.append(tuple(p_curr))
+        i += 1
+    return res
+
+
 @function_requires_deps("opencv-contrib-python")
 def mask2polygon(mask, epsilon_ratio=0.004):
     """
@@ -64,6 +122,114 @@ def mask2polygon(mask, epsilon_ratio=0.004):
     approx_cnt = cv2.approxPolyDP(cnt, epsilon, True)
     polygon_points = approx_cnt.squeeze()
     polygon_points = np.atleast_2d(polygon_points)
+
+    polygon_points = extract_custom_vertices(polygon_points)
+
+    return polygon_points
+
+
+def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode):
+    """
+    修改后的提取函数：auto 模式下信任几何决策
+    """
+    scale_w, scale_h = scale_ratio[0] / 4, scale_ratio[1] / 4
+    h_m, w_m = masks.shape[1:]
+    polygon_points = []
+    iou_threshold = 0.95
+
+    for i in range(len(boxes)):
+        x_min, y_min, x_max, y_max = boxes[i, 2:6].astype(np.int32)
+        box_w, box_h = x_max - x_min, y_max - y_min
+
+        # default rect
+        rect = np.array(
+            [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
+            dtype=np.float32,
+        )
+
+        if box_w <= 0 or box_h <= 0:
+            polygon_points.append(rect)
+            continue
+
+        # crop mask
+        x_s = np.clip(
+            [int(round(x_min * scale_w)), int(round(x_max * scale_w))], 0, w_m
+        )
+        y_s = np.clip(
+            [int(round(y_min * scale_h)), int(round(y_max * scale_h))], 0, h_m
+        )
+
+        cropped = masks[i, y_s[0] : y_s[1], x_s[0] : x_s[1]]
+        if cropped.size == 0 or np.sum(cropped) == 0:
+            polygon_points.append(rect)
+            continue
+
+        if layout_shape_mode == "rect":
+            polygon_points.append(rect)
+            continue
+
+        # resize mask to match box size
+        resized_mask = cv2.resize(
+            cropped.astype(np.uint8), (box_w, box_h), interpolation=cv2.INTER_NEAREST
+        )
+
+        polygon = mask2polygon(resized_mask)
+        if polygon is not None and len(polygon) < 4:
+            polygon_points.append(rect)
+            continue
+        if polygon is not None and len(polygon) > 0:
+            polygon = polygon + np.array([x_min, y_min])
+        if layout_shape_mode == "poly":
+            polygon_points.append(polygon)
+        elif layout_shape_mode == "quad":
+            # convert polygon to quadrilateral
+            quad = convert_polygon_to_quad(polygon)
+            polygon_points.append(quad if quad is not None else rect)
+        elif layout_shape_mode == "auto":
+            iou_threshold = 0.8
+
+            rect_list = rect.tolist()
+            quad = convert_polygon_to_quad(polygon)
+            if quad is not None:
+                quad_list = quad.tolist()
+
+                iou_quad = calculate_polygon_overlap_ratio(
+                    rect_list,
+                    quad_list,
+                    mode="union",
+                )
+                if iou_quad >= 0.95:
+                    # if quad is very similar to rect, use rect instead
+                    quad = rect
+
+                poly_list = (
+                    polygon.tolist() if isinstance(polygon, np.ndarray) else polygon
+                )
+
+                iou_quad = calculate_polygon_overlap_ratio(
+                    poly_list, quad_list, mode="union"
+                )
+
+                pre_poly = polygon_points[-1] if len(polygon_points) > 0 else None
+                iou_pre = 0
+                if pre_poly is not None:
+                    iou_pre = calculate_polygon_overlap_ratio(
+                        pre_poly.tolist(),
+                        rect_list,
+                        mode="small",
+                    )
+
+                if iou_quad >= iou_threshold and iou_pre < 0.01:
+                    # if quad is similar to polygon, use quad
+                    polygon_points.append(quad)
+                    continue
+
+            # if all ious are less than threshold, use polygon
+            polygon_points.append(polygon)
+        else:
+            raise ValueError(
+                "layout_shape_mode must be one of ['rect', 'poly', 'quad', 'auto']"
+            )
 
     return polygon_points
 
@@ -86,7 +252,6 @@ def convert_polygon_to_quad(polygon):
     min_rect = cv2.minAreaRect(points)
     quad = cv2.boxPoints(min_rect)
 
-    # 按顺时针排序，从左上角开始
     center = quad.mean(axis=0)
     angles = np.arctan2(quad[:, 1] - center[1], quad[:, 0] - center[0])
     sorted_indices = np.argsort(angles)
@@ -96,134 +261,6 @@ def convert_polygon_to_quad(polygon):
     quad = np.roll(quad, -top_left_idx, axis=0)
 
     return quad
-
-
-@function_requires_deps("opencv-contrib-python")
-def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode):
-    """
-    Extract polygon points from masks.
-    Args:
-        boxes (ndarray): The bounding boxes of shape [N, 5] or [N, 6].
-        masks (ndarray): The segmentation masks of shape [N, H, W].
-        scale_ratio (tuple): The scale ratio of width and height.
-        layout_shape_mode (str): The shape mode for output polygon.
-            - "rect": Convert 2-point box to 4-point rectangle.
-            - "quad": Compute minimum bounding rectangle from polygon.
-            - "poly": Keep original polygon.
-            - "auto": Auto select based on 0.95 IoU threshold (rect -> quad -> poly).
-    Returns:
-        polygon_points (list): The extracted polygon points.
-    """
-    if layout_shape_mode not in ["rect", "quad", "poly", "auto"]:
-        raise ValueError(
-            f"Invalid layout_shape_mode: {layout_shape_mode}. "
-            f"Must be one of ['rect', 'quad', 'poly', 'auto']"
-        )
-
-    scale_w, scale_h = scale_ratio
-    scale_w /= 4
-    scale_h /= 4
-    N = len(boxes)
-    h, w = masks.shape[1:]
-    polygon_points = []
-    iou_threshold = 0.8
-
-    for i in range(N):
-        x_min, y_min, x_max, y_max = np.int32(boxes[i, 2:6])
-        box_w = int(x_max - x_min)
-        box_h = int(y_max - y_min)
-
-        x_min_s = int(round(x_min * scale_w))
-        y_min_s = int(round(y_min * scale_h))
-        x_max_s = int(round(x_max * scale_w))
-        y_max_s = int(round(y_max * scale_h))
-
-        x_min_s = max(0, min(x_min_s, w - 1))
-        x_max_s = max(0, min(x_max_s, w))
-        y_min_s = max(0, min(y_min_s, h - 1))
-        y_max_s = max(0, min(y_max_s, h))
-
-        rect = np.array(
-            [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
-            dtype=np.float32,
-        )
-
-        if x_max_s <= x_min_s or y_max_s <= y_min_s or box_w <= 0 or box_h <= 0:
-            polygon_points.append(
-                rect if layout_shape_mode in ["rect", "auto"] else None
-            )
-            continue
-
-        cropped_mask = masks[i, y_min_s:y_max_s, x_min_s:x_max_s]
-        if cropped_mask.size == 0:
-            polygon_points.append(
-                rect if layout_shape_mode in ["rect", "auto"] else None
-            )
-            continue
-
-        resized_mask = cv2.resize(
-            cropped_mask.astype(np.uint8),
-            (box_w, box_h),
-            interpolation=cv2.INTER_LINEAR,
-        )
-        polygon = mask2polygon(resized_mask)
-        if polygon is not None and len(polygon) > 0:
-            polygon = polygon + np.array([x_min, y_min])
-
-        if polygon is not None and len(polygon) < 4:
-            polygon_points.append(rect)
-            continue
-
-        # 处理 rect 模式
-        if layout_shape_mode == "rect":
-            polygon_points.append(rect)
-            continue
-
-        # 处理 poly 模式
-        if layout_shape_mode == "poly":
-            polygon_points.append(polygon)
-            continue
-
-        # 处理 quad 模式
-        if layout_shape_mode == "quad":
-            quad = convert_polygon_to_quad(polygon)
-            polygon_points.append(quad if quad is not None else rect)
-            continue
-
-        # 处理 auto 模式：按 rect -> quad -> poly 顺序选择
-        if layout_shape_mode == "auto":
-            if polygon is None or len(polygon) < 3:
-                polygon_points.append(rect)
-                continue
-
-            polygon_list = (
-                polygon.tolist() if isinstance(polygon, np.ndarray) else polygon
-            )
-            rect_list = rect.tolist()
-
-            # 尝试 rect
-            iou_rect = calculate_polygon_overlap_ratio(
-                polygon_list, rect_list, mode="union"
-            )
-            if iou_rect >= iou_threshold:
-                polygon_points.append(rect)
-                continue
-
-            # 尝试 quad
-            quad = convert_polygon_to_quad(polygon)
-            if quad is not None:
-                quad_list = quad.tolist()
-                iou_quad = calculate_polygon_overlap_ratio(
-                    polygon_list, quad_list, mode="union"
-                )
-                if iou_quad >= iou_threshold:
-                    polygon_points.append(quad)
-                    continue
-
-            # 使用 poly
-            polygon_points.append(polygon)
-
-    return polygon_points
 
 
 def restructured_boxes(
@@ -429,61 +466,153 @@ def calculate_overlap_ratio(
     return inter_area / ref_area
 
 
+def is_contained(big_coord, small_coord):
+    """
+    Check if the small box is completely inside the big box.
+    """
+    x1b, y1b, x2b, y2b = big_coord
+    x1s, y1s, x2s, y2s = small_coord
+    return x1b <= x1s and y1b <= y1s and x2b >= x2s and y2b >= y2s
+
+
+def is_valid_size(coord, min_size=4):
+    """
+    Check if the width and height of the box are greater than or equal to the minimum size.
+    """
+    x1, y1, x2, y2 = coord
+    return (x2 - x1) >= min_size and (y2 - y1) >= min_size
+
+
 def filter_boxes(
     src_boxes: Dict[str, List[Dict]], layout_shape_mode: str
-) -> Dict[str, List[Dict]]:
+) -> List[Dict]:
     """
-    Remove overlapping boxes from layout detection results based on a given overlap ratio.
-
-    Args:
-        boxes (Dict[str, List[Dict]]): Layout detection result dict containing a 'boxes' list.
-
-    Returns:
-        Dict[str, List[Dict]]: Filtered dict with overlapping boxes removed.
+    Remove overlapping boxes from layout detection results based on a given overlap ratio,
+    and compare scores between big boxes and the small boxes they contain.
     """
+
+    # Filter out reference boxes
     boxes = [box for box in src_boxes if box["label"] != "reference"]
+    n = len(boxes)
     dropped_indexes = set()
 
-    for i in range(len(boxes)):
-        x1, y1, x2, y2 = boxes[i]["coordinate"]
-        w, h = x2 - x1, y2 - y1
-        if w < 2 or h < 2:
-            dropped_indexes.add(i)
-        for j in range(i + 1, len(boxes)):
-            if i in dropped_indexes or j in dropped_indexes:
-                continue
-            overlap_ratio = calculate_overlap_ratio(
-                boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
-            )
-            if (
-                boxes[i]["label"] == "inline_formula"
-                or boxes[j]["label"] == "inline_formula"
-            ):
-                if overlap_ratio > 0.5:
-                    if boxes[i]["label"] == "inline_formula":
-                        dropped_indexes.add(i)
-                    if boxes[j]["label"] == "inline_formula":
+    special_labels = {"image", "table", "seal", "chart"}
+    allowed_inside_table = {"seal", "image", "chart"}
+    processed_containment = set()
+
+    for i in range(n):
+        box_i = boxes[i]
+        label_i = box_i["label"]
+        coord_i = box_i["coordinate"]
+
+        if label_i == "table" and is_valid_size(coord_i):
+            for j in range(n):
+                if i == j:
+                    continue
+
+                box_j = boxes[j]
+                label_j = box_j["label"]
+                coord_j = box_j["coordinate"]
+                if is_contained(coord_i, coord_j):
+                    if label_j not in allowed_inside_table:
                         dropped_indexes.add(j)
-                    continue
-            if overlap_ratio > 0.7:
-                if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
-                    poly_overlap_ratio = calculate_polygon_overlap_ratio(
-                        boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
-                    )
-                    if poly_overlap_ratio < 0.7:
-                        continue
-                box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
-                box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
-                if (
-                    boxes[i]["label"] == "image" or boxes[j]["label"] == "image"
-                ) and boxes[i]["label"] != boxes[j]["label"]:
-                    continue
-                if box_area_i >= box_area_j:
-                    dropped_indexes.add(j)
-                else:
+
+    for i in range(n):
+        if i in dropped_indexes:
+            continue
+
+        box_i = boxes[i]
+        coord_i = box_i["coordinate"]
+        label_i = box_i["label"]
+
+        if not is_valid_size(coord_i):
+            dropped_indexes.add(i)
+            continue
+
+        for j in range(i + 1, n):
+            if j in dropped_indexes:
+                continue
+
+            box_j = boxes[j]
+            coord_j = box_j["coordinate"]
+            label_j = box_j["label"]
+
+            if not is_valid_size(coord_j):
+                dropped_indexes.add(j)
+                continue
+
+            # check if the pair is special
+            is_special_pair = ({label_i, label_j} & special_labels) and (
+                label_i != label_j
+            )
+            if is_special_pair:
+                continue
+
+            area_i, area_j = calculate_bbox_area(coord_i), calculate_bbox_area(coord_j)
+            if area_i >= area_j:
+                big_idx, small_idx = i, j
+                big_coord, small_coord = coord_i, coord_j
+                big_box, small_box = box_i, box_j
+            else:
+                big_idx, small_idx = j, i
+                big_coord, small_coord = coord_j, coord_i
+                big_box, small_box = box_j, box_i
+
+            if is_contained(big_coord, small_coord):
+                if big_idx not in processed_containment:
+                    contained_small_idxs = [
+                        k
+                        for k in range(n)
+                        if k != big_idx
+                        and k not in dropped_indexes
+                        and is_contained(big_coord, boxes[k]["coordinate"])
+                    ]
+
+                    inline_formula_idx = [
+                        k
+                        for k in contained_small_idxs
+                        if boxes[k]["label"] == "inline_formula"
+                    ]
+
+                    dropped_indexes.update(inline_formula_idx)
+
+                    contained_small_idxs = [
+                        k for k in contained_small_idxs if k not in inline_formula_idx
+                    ]
+
+                    if contained_small_idxs:
+                        avg_small_score = sum(
+                            boxes[k]["score"] for k in contained_small_idxs
+                        ) / len(contained_small_idxs)
+
+                        if avg_small_score > big_box.get("score", 0):
+                            dropped_indexes.add(big_idx)
+                        else:
+                            dropped_indexes.update(contained_small_idxs)
+
+                    processed_containment.add(big_idx)
+                continue
+
+            overlap_ratio = calculate_overlap_ratio(coord_i, coord_j, "small")
+
+            if overlap_ratio > 0.5 and "inline_formula" in (label_i, label_j):
+                if label_i == "inline_formula":
                     dropped_indexes.add(i)
-    out_boxes = [box for idx, box in enumerate(boxes) if idx not in dropped_indexes]
-    return out_boxes
+                if label_j == "inline_formula":
+                    dropped_indexes.add(j)
+                continue
+
+            if overlap_ratio > 0.7:
+                if layout_shape_mode != "rect" and "polygon_points" in box_i:
+                    poly_overlap = calculate_polygon_overlap_ratio(
+                        box_i["polygon_points"], box_j["polygon_points"], "small"
+                    )
+                    if poly_overlap < 0.7:
+                        continue
+
+                dropped_indexes.add(small_idx)
+
+    return [box for idx, box in enumerate(boxes) if idx not in dropped_indexes]
 
 
 def update_order_index(boxes: List[Dict], skip_order_labels: List[str]):
@@ -568,7 +697,6 @@ class LayoutAnalysisProcess:
         Returns:
             Boxes: The post-processed detection boxes.
         """
-        polygon_points = None
         if layout_shape_mode == "rect":
             masks = None
         boxes[:, 2:6] = np.round(boxes[:, 2:6]).astype(int)
@@ -604,17 +732,12 @@ class LayoutAnalysisProcess:
                     if category_filtered_masks
                     else np.array([])
                 )
-        if masks is not None:
-            scale_ratio = [h / s for h, s in zip(self.scale_size, img_size)]
-            polygon_points = extract_polygon_points_by_masks(
-                boxes, masks, scale_ratio, layout_shape_mode
-            )
 
         if layout_nms:
             selected_indices = nms(boxes[:, :6], iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
             if masks is not None:
-                polygon_points = [polygon_points[i] for i in selected_indices]
+                masks = [masks[i] for i in selected_indices]
 
         filter_large_image = True
         # boxes.shape[1] == 6 is object detection, 7 is new ordered object detection, 8 is ordered object detection
@@ -626,7 +749,7 @@ class LayoutAnalysisProcess:
             image_index = self.labels.index("image") if "image" in self.labels else None
             img_area = img_size[0] * img_size[1]
             filtered_boxes = []
-            filtered_polygon_points = []
+            filtered_masks = []
             for idx, box in enumerate(boxes):
                 (
                     label_index,
@@ -644,19 +767,19 @@ class LayoutAnalysisProcess:
                     box_area = (xmax - xmin) * (ymax - ymin)
                     if box_area <= area_thres * img_area:
                         filtered_boxes.append(box)
-                        if polygon_points is not None:
-                            filtered_polygon_points.append(polygon_points[idx])
+                        if masks is not None:
+                            filtered_masks.append(masks[idx])
                 else:
                     filtered_boxes.append(box)
-                    if polygon_points is not None:
-                        filtered_polygon_points.append(polygon_points[idx])
+                    if masks is not None:
+                        filtered_masks.append(masks[idx])
             if len(filtered_boxes) == 0:
                 filtered_boxes = boxes
                 if masks is not None:
-                    filtered_polygon_points = polygon_points
+                    filtered_masks = masks
             boxes = np.array(filtered_boxes)
             if masks is not None:
-                polygon_points = filtered_polygon_points
+                masks = filtered_masks
 
         if layout_merge_bboxes_mode:
             formula_index = (
@@ -678,17 +801,17 @@ class LayoutAnalysisProcess:
                     if layout_merge_bboxes_mode == "large":
                         boxes = boxes[contained_by_other == 0]
                         if masks is not None:
-                            polygon_points = [
-                                polygon_points
-                                for i, polygon_points in enumerate(polygon_points)
+                            masks = [
+                                mask
+                                for i, mask in enumerate(masks)
                                 if contained_by_other[i] == 0
                             ]
                     elif layout_merge_bboxes_mode == "small":
                         boxes = boxes[(contains_other == 0) | (contained_by_other == 1)]
                         if masks is not None:
-                            polygon_points = [
-                                polygon
-                                for i, polygon in enumerate(polygon_points)
+                            masks = [
+                                mask
+                                for i, mask in enumerate(masks)
                                 if (contains_other[i] == 0)
                                 | (contained_by_other[i] == 1)
                             ]
@@ -725,11 +848,7 @@ class LayoutAnalysisProcess:
                             )
                 boxes = boxes[keep_mask]
                 if masks is not None:
-                    polygon_points = [
-                        polygon
-                        for i, polygon in enumerate(polygon_points)
-                        if keep_mask[i]
-                    ]
+                    masks = [mask for i, mask in enumerate(masks) if keep_mask[i]]
 
         if boxes.size == 0:
             return np.array([])
@@ -740,8 +859,8 @@ class LayoutAnalysisProcess:
             sorted_boxes = boxes[sorted_idx]
             boxes = sorted_boxes[:, :6]
             if masks is not None:
-                sorted_polygon_points = [polygon_points[i] for i in sorted_idx]
-                polygon_points = sorted_polygon_points
+                sorted_masks = [masks[i] for i in sorted_idx]
+                masks = sorted_masks
 
         if boxes.shape[1] == 7:
             # Sort boxes by their order
@@ -749,8 +868,15 @@ class LayoutAnalysisProcess:
             sorted_boxes = boxes[sorted_idx]
             boxes = sorted_boxes[:, :6]
             if masks is not None:
-                sorted_polygon_points = [polygon_points[i] for i in sorted_idx]
-                polygon_points = sorted_polygon_points
+                sorted_masks = [masks[i] for i in sorted_idx]
+                masks = sorted_masks
+
+        polygon_points = None
+        if masks is not None:
+            scale_ratio = [h / s for h, s in zip(self.scale_size, img_size)]
+            polygon_points = extract_polygon_points_by_masks(
+                boxes, np.array(masks), scale_ratio, layout_shape_mode
+            )
 
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):

@@ -128,8 +128,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     layout_det_config, **layout_kwargs
                 )
 
-            self.use_chart_recognition = config.get("use_chart_recognition", True)
-            self.use_seal_recognition = config.get("use_seal_recognition", True)
+            self.use_chart_recognition = config.get("use_chart_recognition", False)
+            self.use_seal_recognition = config.get("use_seal_recognition", False)
 
             vl_rec_config = config.get("SubModules", {}).get(
                 "VLRecognition",
@@ -445,7 +445,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
                         result_str = (
                             result_str.replace("\\(", " $ ")
-                            .replace("\\)", " $ ")
+                            .replace("\\)", " $")
+                            .replace("\\[\\[", "\\[")
+                            .replace("\\]\\]", "\\]")
                             .replace("\\[", " $$ ")
                             .replace("\\]", " $$ ")
                         )
