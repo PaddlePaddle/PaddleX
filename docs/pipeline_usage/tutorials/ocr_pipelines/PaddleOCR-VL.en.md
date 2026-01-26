@@ -1112,7 +1112,10 @@ The following configurations are tailored for scenarios with a one-to-one corres
 **NVIDIA RTX 3060**
 
 - **Server-Side**
-  - vLLM: `gpu-memory-utilization=0.8`
+  - vLLM: `gpu-memory-utilization=0.7`
+  - FastDeploy：
+    - `gpu-memory-utilization: 0.7`
+    - `max-concurrency: 2048`
 
 ## 4. Serving
 
