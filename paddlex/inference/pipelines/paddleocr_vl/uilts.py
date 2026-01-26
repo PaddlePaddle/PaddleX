@@ -179,17 +179,27 @@ def filter_overlap_boxes(
                         for k in range(n)
                         if k != big_idx
                         and k not in dropped_indexes
-                        and boxes[k]["label"] != "inline_formula"
                         and is_contained(big_coord, boxes[k]["coordinate"])
+                    ]
+
+                    inline_formula_idx = [
+                        k
+                        for k in contained_small_idxs
+                        if boxes[k]["label"] == "inline_formula"
+                    ]
+
+                    dropped_indexes.update(inline_formula_idx)
+
+                    contained_small_idxs = [
+                        k for k in contained_small_idxs if k not in inline_formula_idx
                     ]
 
                     if contained_small_idxs:
                         avg_small_score = sum(
                             boxes[k].get("score", 0) for k in contained_small_idxs
                         ) / len(contained_small_idxs)
-                        big_score = big_box.get("score", 0)
 
-                        if avg_small_score > big_score:
+                        if avg_small_score > big_box.get("score", 0):
                             dropped_indexes.add(big_idx)
                         else:
                             dropped_indexes.update(contained_small_idxs)
