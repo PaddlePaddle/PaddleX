@@ -466,7 +466,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             else:
                 format_chart_func = format_image_func
 
-            if self["model_settings"].get("use_layout_detection", False):
+            if not self["model_settings"].get("use_layout_detection", False):
                 format_seal_func = format_text_func
 
             format_table_func = lambda block: "\n" + format_table_center_func(block)
@@ -600,7 +600,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             else format_image_func
         )
 
-        if self["model_settings"].get("use_layout_detection", False):
+        if not self["model_settings"].get("use_layout_detection", False):
             format_seal_func = format_text_func
 
         if pretty:
