@@ -76,34 +76,111 @@ def calc_new_point(p_curr, v1, v2, distance=20):
     return p_new
 
 
-def extract_custom_vertices(polygon, sharp_angle_thresh=45):
+def extract_custom_vertices(
+    polygon, max_allowed_dist, sharp_angle_thresh=45, max_dist_ratio=0.3
+):
     poly = np.array(polygon)
     n = len(poly)
-    res = []
-    i = 0
-    while i < n:
-        p_prev = poly[(i - 1) % n]
-        p_curr = poly[i]
-        p_next = poly[(i + 1) % n]
-        v1 = p_prev - p_curr
-        v2 = p_next - p_curr
+    max_allowed_dist *= max_dist_ratio
+
+    point_info = []
+    for i in range(n):
+        p_prev, p_curr, p_next = poly[(i - 1) % n], poly[i], poly[(i + 1) % n]
+        v1, v2 = p_prev - p_curr, p_next - p_curr
+        is_convex_point = is_convex(p_prev, p_curr, p_next)
         angle = angle_between_vectors(v1, v2)
-        if is_convex(p_prev, p_curr, p_next):
-            if abs(angle - sharp_angle_thresh) < 1:
-                # Calculate the new point based on the direction of two vectors.
-                dir_vec = v1 / np.linalg.norm(v1) + v2 / np.linalg.norm(v2)
-                dir_vec = dir_vec / np.linalg.norm(dir_vec)
-                d = (np.linalg.norm(v1) + np.linalg.norm(v2)) / 2
-                p_new = p_curr + dir_vec * d
-                res.append(tuple(p_new))
+        point_info.append(
+            {
+                "index": i,
+                "is_convex": is_convex_point,
+                "angle": angle,
+                "v1": v1,
+                "v2": v2,
+            }
+        )
+
+    concave_indices = [i for i, info in enumerate(point_info) if not info["is_convex"]]
+    preserve_concave = set()
+
+    if concave_indices:
+        groups = []
+        current_group = [concave_indices[0]]
+
+        for i in range(1, len(concave_indices)):
+            if concave_indices[i] - concave_indices[i - 1] == 1 or (
+                concave_indices[i - 1] == n - 1 and concave_indices[i] == 0
+            ):
+                current_group.append(concave_indices[i])
             else:
-                res.append(tuple(p_curr))
-        i += 1
+                if len(current_group) >= 2:
+                    groups.extend(current_group)
+                current_group = [concave_indices[i]]
+
+        if len(current_group) >= 2:
+            groups.extend(current_group)
+
+        if (
+            len(concave_indices) >= 2
+            and concave_indices[0] == 0
+            and concave_indices[-1] == n - 1
+        ):
+            if 0 in groups and n - 1 in groups:
+                preserve_concave.update(groups)
+        else:
+            preserve_concave.update(groups)
+
+    kept_points = [
+        i
+        for i, info in enumerate(point_info)
+        if info["is_convex"] or (i in preserve_concave and info["angle"] >= 120)
+    ]
+
+    final_points = []
+    for idx in range(len(kept_points)):
+        current_idx = kept_points[idx]
+        next_idx = kept_points[(idx + 1) % len(kept_points)]
+        final_points.append(current_idx)
+
+        dist = np.linalg.norm(poly[current_idx] - poly[next_idx])
+        if dist > max_allowed_dist:
+            intermediate = (
+                list(range(current_idx + 1, next_idx))
+                if next_idx > current_idx
+                else list(range(current_idx + 1, n)) + list(range(0, next_idx))
+            )
+
+            if intermediate:
+                num_needed = int(np.ceil(dist / max_allowed_dist)) - 1
+                if len(intermediate) <= num_needed:
+                    final_points.extend(intermediate)
+                else:
+                    step = len(intermediate) / num_needed
+                    final_points.extend(
+                        [intermediate[int(i * step)] for i in range(num_needed)]
+                    )
+
+    final_points = sorted(set(final_points))
+    res = []
+
+    for i in final_points:
+        info = point_info[i]
+        p_curr = poly[i]
+
+        if info["is_convex"] and abs(info["angle"] - sharp_angle_thresh) < 1:
+            v1_norm = info["v1"] / np.linalg.norm(info["v1"])
+            v2_norm = info["v2"] / np.linalg.norm(info["v2"])
+            dir_vec = v1_norm + v2_norm
+            dir_vec /= np.linalg.norm(dir_vec)
+            d = (np.linalg.norm(info["v1"]) + np.linalg.norm(info["v2"])) / 2
+            res.append(tuple(p_curr + dir_vec * d))
+        else:
+            res.append(tuple(p_curr))
+
     return res
 
 
 @function_requires_deps("opencv-contrib-python")
-def mask2polygon(mask, epsilon_ratio=0.004):
+def mask2polygon(mask, max_allowed_dist, epsilon_ratio=0.004, extract_custom=True):
     """
     Postprocess mask by removing small noise.
     Args:
@@ -122,8 +199,8 @@ def mask2polygon(mask, epsilon_ratio=0.004):
     approx_cnt = cv2.approxPolyDP(cnt, epsilon, True)
     polygon_points = approx_cnt.squeeze()
     polygon_points = np.atleast_2d(polygon_points)
-
-    polygon_points = extract_custom_vertices(polygon_points)
+    if extract_custom:
+        polygon_points = extract_custom_vertices(polygon_points, max_allowed_dist)
 
     return polygon_points
 
@@ -136,6 +213,8 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
     h_m, w_m = masks.shape[1:]
     polygon_points = []
     iou_threshold = 0.95
+
+    max_box_w = max(boxes[:, 4] - boxes[:, 3])
 
     for i in range(len(boxes)):
         x_min, y_min, x_max, y_max = boxes[i, 2:6].astype(np.int32)
@@ -173,13 +252,26 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
             cropped.astype(np.uint8), (box_w, box_h), interpolation=cv2.INTER_NEAREST
         )
 
-        polygon = mask2polygon(resized_mask)
+        if box_w > max_box_w * 0.6:
+            max_allowed_dist = box_w
+        else:
+            max_allowed_dist = max_box_w
+
+        polygon = mask2polygon(resized_mask, max_allowed_dist)
         if polygon is not None and len(polygon) < 4:
             polygon_points.append(rect)
             continue
         if polygon is not None and len(polygon) > 0:
             polygon = polygon + np.array([x_min, y_min])
         if layout_shape_mode == "poly":
+            polygon_points.append(polygon)
+        elif layout_shape_mode == "poly1":
+            polygon = mask2polygon(resized_mask, max_allowed_dist, extract_custom=False)
+            if polygon is not None and len(polygon) < 4:
+                polygon_points.append(rect)
+                continue
+            if polygon is not None and len(polygon) > 0:
+                polygon = polygon + np.array([x_min, y_min])
             polygon_points.append(polygon)
         elif layout_shape_mode == "quad":
             # convert polygon to quadrilateral
