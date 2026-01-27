@@ -685,7 +685,12 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 split_texts = []
                 for box in split_boxes:
                     x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
-                    if y2 - y1 > 1 and x2 - x1 > 1:
+                    if (
+                        y2 - y1 > 1
+                        and x2 - x1 > 1
+                        and y1 < ori_img.shape[0]
+                        and x1 < ori_img.shape[1]
+                    ):
                         ocr_result = list(
                             self.general_ocr_pipeline.text_rec_model(
                                 ori_img[y1:y2, x1:x2, :]
