@@ -36,7 +36,7 @@ def _parse_triton_output(data):
     return data
 
 
-def triton_request(client, model_name, data, *, request_kwargs=None):
+def triton_request(client, model_name, data, *, timeout=None, request_kwargs=None):
     """
     Make a synchronous request to Triton Inference Server.
 
@@ -44,6 +44,7 @@ def triton_request(client, model_name, data, *, request_kwargs=None):
         client: Triton gRPC client (tritonclient.grpc.InferenceServerClient)
         model_name: Name of the model to call
         data: Request payload dict
+        timeout: Request timeout in seconds
         request_kwargs: Additional kwargs passed to client.infer()
 
     Returns:
@@ -51,6 +52,9 @@ def triton_request(client, model_name, data, *, request_kwargs=None):
     """
     if request_kwargs is None:
         request_kwargs = {}
+    if timeout is not None:
+        request_kwargs.setdefault("timeout", timeout)
+        request_kwargs.setdefault("client_timeout", timeout)
     input_ = triton_grpc.InferInput(constants.INPUT_NAME, [1, 1], "BYTES")
     input_.set_data_from_numpy(_create_triton_input(data))
     results = client.infer(model_name, inputs=[input_], **request_kwargs)
@@ -58,7 +62,7 @@ def triton_request(client, model_name, data, *, request_kwargs=None):
     return _parse_triton_output(output)
 
 
-async def triton_request_async(client, model_name, data, *, timeout=None):
+async def triton_request_async(client, model_name, data, *, timeout=None, request_kwargs=None):
     """
     Make an async request to Triton Inference Server.
 
@@ -67,18 +71,18 @@ async def triton_request_async(client, model_name, data, *, timeout=None):
         model_name: Name of the model to call
         data: Request payload dict
         timeout: Request timeout in seconds
+        request_kwargs: Additional kwargs passed to client.infer()
 
     Returns:
         Response dict from Triton
     """
+    if request_kwargs is None:
+        request_kwargs = {}
+    if timeout is not None:
+        request_kwargs.setdefault("timeout", timeout)
+        request_kwargs.setdefault("client_timeout", timeout)
     input_ = triton_grpc_aio.InferInput(constants.INPUT_NAME, [1, 1], "BYTES")
     input_.set_data_from_numpy(_create_triton_input(data))
-
-    infer_kwargs = {}
-    if timeout is not None:
-        infer_kwargs["timeout"] = timeout
-        infer_kwargs["client_timeout"] = timeout
-
-    results = await client.infer(model_name, inputs=[input_], **infer_kwargs)
+    results = await client.infer(model_name, inputs=[input_], **request_kwargs)
     output = results.as_numpy(constants.OUTPUT_NAME)
     return _parse_triton_output(output)
