@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import abc
+import os
 import subprocess
 from os import PathLike
 from pathlib import Path
@@ -415,6 +416,7 @@ class PaddleInfer(StaticInfer):
                     config.enable_new_executor()
                 config.delete_pass("conv2d_bn_xpu_fuse_pass")
                 config.delete_pass("transfer_layout_pass")
+                os.environ["XPU_PADDLE_CONV_FLOAT"] = 1
             elif self._option.device_type == "mlu":
                 config.enable_custom_device("mlu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):

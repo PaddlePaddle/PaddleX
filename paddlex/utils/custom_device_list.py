@@ -217,6 +217,7 @@ XPU_WHITELIST = [
     "PP-OCRv5_mobile_det",
     "PP-Chart2Table",
     "PP-DocLayoutV2",
+    "PP-DocLayoutV3",
 ]
 
 GCU_WHITELIST = [
