@@ -6,7 +6,7 @@ comments: true
 
 PaddleOCR-VL is a SOTA and resource-efficient model tailored for document parsing. Its core component is PaddleOCR-VL-0.9B, a compact yet powerful vision-language model (VLM) that integrates a NaViT-style dynamic resolution visual encoder with the ERNIE-4.5-0.3B language model to enable accurate element recognition. This innovative model efficiently supports 109 languages and excels in recognizing complex elements (e.g., text, tables, formulas, and charts), while maintaining minimal resource consumption. Through comprehensive evaluations on widely used public benchmarks and in-house benchmarks, PaddleOCR-VL achieves SOTA performance in both page-level document parsing and element-level recognition. It significantly outperforms existing solutions, exhibits strong competitiveness against top-tier VLMs, and delivers fast inference speeds. These strengths make it highly suitable for practical deployment in real-world scenarios.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl/metrics/allmetric.png"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl_1_5/paddleocr-vl-1.5_metrics.png"/>
 
 ## 1. Environment Preparation
 
@@ -321,49 +321,30 @@ for res in output:
     res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
 ```
 
-For PDF files, each page will be processed individually and generate a separate Markdown file. If you want to convert the entire PDF to a single Markdown file, use the following method:
+For PDF files, each page will be processed individually, and a separate Markdown file will be generated for each page. If you wish to perform cross-page table merging, reconstruct multi-level labels, or merge multi-page results, you can achieve this using the following method:
 
 ```python
-from pathlib import Path
 from paddlex import create_pipeline
+
+input_file = "./your_pdf_file.pdf"
 
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
-input_file = "./your_pdf_file.pdf"
-output_path = Path("./output")
 
-output = pipeline.predict(
-    input=input_file,
-    use_doc_orientation_classify=False,
-    use_doc_unwarping=False)
+output = pipeline.predict(input=input_file)
 
-markdown_list = []
-markdown_images = []
+pages_res = list(output)
 
+output = pipeline.restructure_pages(pages_res)
+# output = pipeline.restructure_pages(pages_res, merge_table=True) # Merge tables across pages
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True) # Merge tables across pages and reconstruct multi-level titles
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, merge_pages=True) # Merge tables across pages, reconstruct multi-level titles, and merge multiple pages
 for res in output:
-    md_info = res.markdown
-    markdown_list.append(md_info)
-    markdown_images.append(md_info.get("markdown_images", {}))
-
-markdown_texts = pipeline.concatenate_markdown_pages(markdown_list)
-
-mkd_file_path = output_path / f"{Path(input_file).stem}.md"
-mkd_file_path.parent.mkdir(parents=True, exist_ok=True)
-
-with open(mkd_file_path, "w", encoding="utf-8") as f:
-    f.write(markdown_texts)
-
-for item in markdown_images:
-    if item:
-        for path, image in item.items():
-            file_path = output_path / path
-            file_path.parent.mkdir(parents=True, exist_ok=True)
-            image.save(file_path)
+    res.print() ## Print the structured prediction output
+    res.save_to_json(save_path="output") ## Save the current image's structured result in JSON format
+    res.save_to_markdown(save_path="output") ## Save the current image's result in Markdown format
 ```
 
-**Note:**
-
-- In the example code, the parameters `use_doc_orientation_classify` and  `use_doc_unwarping` are all set to `False` by default. These indicate that document orientation classification and document image unwarping are disabled. You can manually set them to `True` if needed.
 
 The above Python script performs the following steps:
 
@@ -637,6 +618,18 @@ If not set, the initialized parameter value will be used.
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>use_seal_recognition</code></td>
+<td><b>Meaning:</b>Whether to use the seal recognition function. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_ocr_for_image_block</code></td>
+<td><b>Meaning:</b>Whether to perform OCR on text within image blocks. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>layout_threshold</code></td>
 <td>The parameter meaning is basically the same as the instantiation parameter. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
 <td><code>float|dict|None</code></td>
@@ -671,6 +664,39 @@ If not set, the initialized parameter value will be used.
 <td>Layout labels that need to be ignored in Markdown. If not set, the initialized default value will be used.</td>
 <td><code>str</code></td>
 <td></td>
+</tr>
+<tr>
+  <td><code>layout_shape_mode</code></td>
+  <td>
+    <b>Meaning:</b>Specifies the geometric representation mode for layout detection results. It defines how the boundaries of detected regions (e.g., text blocks, images, tables) are calculated and displayed.<br/>
+    <b>Description:</b> Value descriptions:
+    <ul>
+      <li>
+        <b>rect (rectangle)</b>:
+        Outputs an axis-aligned bounding box (including x1, y1, x2, y2).
+        Suitable for standard horizontally aligned layouts.
+      </li>
+      <li>
+        <b>quad (quadrilateral)</b>:
+        Outputs an arbitrary quadrilateral composed of four vertices.
+        Suitable for regions with skew or perspective distortion.
+      </li>
+      <li>
+        <b>poly (polygon)</b>:
+        Outputs a closed contour composed of multiple coordinate points.
+        Suitable for irregularly shaped or curved layout elements,
+        offering the highest precision.
+      </li>
+      <li>
+        <b>auto (automatic)</b>:
+        The system automatically selects the most appropriate shape
+        representation based on the complexity and confidence of the
+        detected targets.
+      </li>
+    </ul>
+  </td>
+  <td><code>str</code></td>
+  <td>"auto"</td>
 </tr>
 <tr>
 <td><code>use_queues</code></td>
@@ -738,9 +764,67 @@ If not set, the initialized parameter value will be used.
 <td><code>list|None</code></td>
 <td></td>
 </tr>
+<tr>
+<td><code>vlm_extra_args</code></td>
+<td><b>Meaning:</b>Additional configuration parameters for the VLM. The currently supported custom parameters are as follows:
+<ul>
+  <li><code>ocr_min_pixels</code>: Minimum resolution for OCR</li>
+  <li><code>ocr_max_pixels</code>: Maximum resolution for OCR</li>
+  <li><code>table_min_pixels</code>: Minimum resolution for tables</li>
+  <li><code>table_max_pixels</code>: Maximum resolution for tables</li>
+  <li><code>chart_min_pixels</code>: Minimum resolution for charts</li>
+  <li><code>chart_max_pixels</code>: Maximum resolution for charts</li>
+  <li><code>formula_min_pixels</code>: Minimum resolution for formulas</li>
+  <li><code>formula_max_pixels</code>: Maximum resolution for formulas</li>
+  <li><code>seal_min_pixels</code>: Minimum resolution for seals</li>
+  <li><code>seal_max_pixels</code>: Maximum resolution for seals</li>
+</ul></td>
+<td><code>dict|None</code></td>
+<td><code>None</code></td>
+</tr>
 </table>
 </details>
-<details><summary>(3) Process the prediction results: The prediction result for each sample is a corresponding Result object, supporting operations such as printing, saving as an image, and saving as a <code>json</code> file:</summary>
+
+<details><summary>(3) Call the <code>restructure_pages()</code> method of the PaddleOCR-VL object to reconstruct pages from the multi-page results list of inference predictions. This method will return a reconstructed multi-page result or a merged single-page result. Below are the parameters of the <code>restructure_pages()</code> method and their descriptions:</summary>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>res_list</code></td>
+<td><b>Meaning:</b> The list of results predicted from a multi-page PDF inference.</td>
+<td><code>list|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>merge_tables</code></td>
+<td><b>Meaning:</b> Controls whether to merge tables across pages.</td>
+<td><code>Bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>relevel_titles</code></td>
+<td><b>Meaning:</b> Controls whether to perform multi-level table grading.</td>
+<td><code>Bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>concatenate_pages</code></td>
+<td><b>Meaning:</b> Controls whether to concatenate multi-page results into one page.</td>
+<td><code>Bool</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</details>
+
+<details><summary>(4) Process the prediction results: The prediction result for each sample is a corresponding Result object, supporting operations such as printing, saving as an image, and saving as a <code>json</code> file:</summary>
 <table>
 <thead>
 <tr>
