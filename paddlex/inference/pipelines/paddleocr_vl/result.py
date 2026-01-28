@@ -106,6 +106,23 @@ class PaddleOCRVLBlock(object):
         return _str
 
 
+def clean_latex_delimiters(formula):
+    """Clean LaTeX delimiters from formula string.
+    
+    Handles common LaTeX math delimiters:
+    - $$ ... $$ (display math)
+    - \\[ ... \\] (display math)
+    - $ ... $ (inline math)
+    """
+    # Remove $$ delimiters
+    formula = formula.replace("$$", "")
+    # Remove \[ \] delimiters (display math)
+    formula = formula.replace(r"\[", "").replace(r"\]", "")
+    # Remove leading/trailing $ (inline math)
+    formula = formula.strip("$")
+    return formula.strip()
+
+
 def merge_formula_and_number(formula, formula_number):
     """
     Merge a formula and its formula number for display.
@@ -117,7 +134,7 @@ def merge_formula_and_number(formula, formula_number):
     Returns:
         str: The merged formula with tag.
     """
-    formula = formula.replace("$$", "")
+    formula = clean_latex_delimiters(formula)
     merge_formula = r"{} \tag*{{{}}}".format(formula, formula_number)
     return f"$${merge_formula}$$"
 
@@ -470,7 +487,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 format_seal_func = format_text_func
 
             format_table_func = lambda block: "\n" + format_table_center_func(block)
-            format_formula_func = lambda block: block.content
+            format_formula_func = lambda block: clean_latex_delimiters(block.content)
 
             handle_funcs_dict = build_handle_funcs_dict(
                 text_func=format_text_func,
@@ -608,7 +625,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         else:
             format_table_func = lambda block: simplify_table_func("\n" + block.content)
 
-        format_formula_func = lambda block: block.content
+        format_formula_func = lambda block: clean_latex_delimiters(block.content)
 
         handle_funcs_dict = build_handle_funcs_dict(
             text_func=format_text_func,
@@ -738,7 +755,7 @@ class PaddleOCRVLPagesResult(PaddleOCRVLResult):
         else:
             format_table_func = lambda block: simplify_table_func("\n" + block.content)
 
-        format_formula_func = lambda block: block.content
+        format_formula_func = lambda block: clean_latex_delimiters(block.content)
 
         handle_funcs_dict = build_handle_funcs_dict(
             text_func=format_text_func,
