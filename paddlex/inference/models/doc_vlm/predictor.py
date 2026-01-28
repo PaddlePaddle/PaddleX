@@ -456,10 +456,15 @@ class DocVLMPredictor(BasePredictor):
                 if top_p is not None:
                     kwargs["top_p"] = top_p
 
+            if self._genai_client.backend == "mlx-vlm-server":
+                max_tokens_name = "max_tokens"
+            else:
+                max_tokens_name = "max_completion_tokens"
+
             if max_new_tokens is not None:
-                kwargs["max_completion_tokens"] = max_new_tokens
+                kwargs[max_tokens_name] = max_new_tokens
             elif self.model_name in self.model_group["PaddleOCR-VL"]:
-                kwargs["max_completion_tokens"] = 8192
+                kwargs[max_tokens_name] = 8192
 
             kwargs["extra_body"] = {}
             if skip_special_tokens is not None:
@@ -467,6 +472,7 @@ class DocVLMPredictor(BasePredictor):
                     "fastdeploy-server",
                     "vllm-server",
                     "sglang-server",
+                    "mlx-vlm-server",
                 ):
                     kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
                 else:
