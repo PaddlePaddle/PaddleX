@@ -42,6 +42,7 @@ from .uilts import (
     filter_overlap_boxes,
     merge_blocks,
     post_process_for_spotting,
+    pre_process_for_spotting,
     tokenize_figure_of_table,
     truncate_repetitive_content,
     untokenize_figure_of_table,
@@ -334,12 +335,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     elif block_label == "spotting":
                         text_prompt = "Spotting:"
                         has_spotting = True
-                        min_pixels = vlm_kwargs.pop(
-                            "spotting_min_pixels", default_min_pixels
-                        )
-                        max_pixels = vlm_kwargs.pop(
-                            "spotting_max_pixels", default_max_pixels
-                        )
+                        min_pixels = 112896
+                        max_pixels = 1605632
+                        block_img = pre_process_for_spotting(block_img)
                     elif block_label == "seal" and use_seal_recognition:
                         text_prompt = "Seal Recognition:"
                         min_pixels = vlm_kwargs.pop(
@@ -381,9 +379,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 "max_pixels": max_pixels,
                 **vlm_kwargs,
             }
-            if has_spotting:
-                kwargs.pop("min_pixels", None)
-                kwargs.pop("max_pixels", None)
             images = batch_dict_by_pixel[pixel_key]["images"]
             queries = batch_dict_by_pixel[pixel_key]["queries"]
             batch_results = list(
@@ -1015,6 +1010,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 blocks = _conver_blocks_to_obj(blocks, model_settings)
             else:
                 blocks = one_page_res["parsing_res_list"]
+                model_settings = one_page_res.get("model_settings", {})
             parsing_res_list = []
             for block in blocks:
                 block.global_block_id = global_block_id

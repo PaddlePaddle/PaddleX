@@ -1056,6 +1056,27 @@ LOC_ITEM_RE = re.compile(r"<\|LOC_(\d+)\|>")
 LOC_TOKEN_RE = re.compile(r"<\|LOC_(\d+)\|>")
 
 
+def pre_process_for_spotting(image: np.ndarray) -> Dict[str, List]:
+    """
+    Post-process the input image to extract location information.
+    """
+    h, w = image.shape[:2]
+
+    if w < 1500 and h < 1500:
+        image = to_pil_image(image)
+        process_w, process_h = w * 2, h * 2
+        try:
+            resample_filter = Image.Resampling.LANCZOS
+        except AttributeError:
+            resample_filter = Image.LANCZOS
+
+        image = image.resize((process_w, process_h), resample_filter)
+        inference_img = to_np_array(image)
+    else:
+        inference_img = image
+    return inference_img
+
+
 def post_process_for_spotting(
     input_str: str, w: int, h: int
 ) -> Tuple[str, Dict[str, List]]:
