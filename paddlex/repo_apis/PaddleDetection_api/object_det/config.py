@@ -347,14 +347,14 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
         assert isinstance(print_mem_info, bool), "print_mem_info should be a bool"
         self.update({"print_mem_info": f"{print_mem_info}"})
 
-    def update_shared_memory(self, shared_memeory: bool):
+    def update_shared_memory(self, shared_memory: bool):
         """update shared memory setting of train and eval dataloader
 
         Args:
-            shared_memeory (bool): whether or not to use shared memory
+            shared_memory (bool): whether or not to use shared memory
         """
-        assert isinstance(shared_memeory, bool), "shared_memeory should be a bool"
-        self.update({"print_mem_info": f"{shared_memeory}"})
+        assert isinstance(shared_memory, bool), "shared_memory should be a bool"
+        self.update({"print_mem_info": f"{shared_memory}"})
 
     def update_shuffle(self, shuffle: bool):
         """update shuffle setting of train and eval dataloader
