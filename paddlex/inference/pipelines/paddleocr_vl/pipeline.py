@@ -1008,6 +1008,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 blocks = _conver_blocks_to_obj(blocks, model_settings)
             else:
                 blocks = one_page_res["parsing_res_list"]
+                model_settings = one_page_res.get("model_settings", {})
             parsing_res_list = []
             for block in blocks:
                 block.global_block_id = global_block_id

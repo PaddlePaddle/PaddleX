@@ -300,7 +300,11 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     if isinstance(layout_res, BaseResult):
                         res_img_dict[f"layout_det_res_{idx}"] = layout_res.img["res"]
 
-        if self.get("spotting_res") and not isinstance(self["spotting_res"], list):
+        if (
+            self.get("spotting_res")
+            and not isinstance(self["spotting_res"], list)
+            and self.get("doc_preprocessor_res")
+        ):
             boxes = self["spotting_res"]["rec_polys"]
             txts = self["spotting_res"]["rec_texts"]
             image = self["doc_preprocessor_res"]["output_img"][:, :, ::-1]
