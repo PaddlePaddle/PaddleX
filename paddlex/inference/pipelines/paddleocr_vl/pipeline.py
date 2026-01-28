@@ -42,6 +42,7 @@ from .uilts import (
     filter_overlap_boxes,
     merge_blocks,
     post_process_for_spotting,
+    pre_process_for_spotting,
     tokenize_figure_of_table,
     truncate_repetitive_content,
     untokenize_figure_of_table,
@@ -334,6 +335,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         has_spotting = True
                         min_pixels = 112896
                         max_pixels = 1605632
+                        block_img = pre_process_for_spotting(block_img)
                     elif block_label == "seal" and use_seal_recognition:
                         text_prompt = "Seal Recognition:"
                         min_pixels = vlm_kwargs.pop(
