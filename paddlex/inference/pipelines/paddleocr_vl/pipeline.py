@@ -332,12 +332,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     elif block_label == "spotting":
                         text_prompt = "Spotting:"
                         has_spotting = True
-                        min_pixels = vlm_kwargs.pop(
-                            "spotting_min_pixels", default_min_pixels
-                        )
-                        max_pixels = vlm_kwargs.pop(
-                            "spotting_max_pixels", default_max_pixels
-                        )
+                        min_pixels = 112896
+                        max_pixels = 1605632
                     elif block_label == "seal" and use_seal_recognition:
                         text_prompt = "Seal Recognition:"
                         min_pixels = vlm_kwargs.pop(
@@ -379,9 +375,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 "max_pixels": max_pixels,
                 **vlm_kwargs,
             }
-            if has_spotting:
-                kwargs.pop("min_pixels", None)
-                kwargs.pop("max_pixels", None)
             images = batch_dict_by_pixel[pixel_key]["images"]
             queries = batch_dict_by_pixel[pixel_key]["queries"]
             batch_results = list(
