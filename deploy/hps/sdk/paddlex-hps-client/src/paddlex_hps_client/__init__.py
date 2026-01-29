@@ -14,9 +14,9 @@
 
 from importlib import metadata as _metadata
 
-from .request import triton_request
+from .request import triton_request, triton_request_async
 
-__all__ = ["__version__", "triton_request"]
+__all__ = ["__version__", "triton_request", "triton_request_async"]
 
 # Ref: https://github.com/langchain-ai/langchain/blob/493e474063817b9a4c2521586b2dbc34d20b4cf1/libs/core/langchain_core/__init__.py
 try:
