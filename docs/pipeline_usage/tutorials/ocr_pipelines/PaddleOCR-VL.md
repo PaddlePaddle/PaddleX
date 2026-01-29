@@ -336,11 +336,9 @@ MKL-DNN 缓存容量。
 ```python
 from paddlex import create_pipeline
 
-input_file = "./your_pdf_file.pdf"
-
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
-output = pipeline.predict(input="./pp_ocr_vl_demo.png")
+output = pipeline.predict(input="./pp_ocr_vl_demo.png") # 传入图像文件或PDF文件
 
 for res in output:
     res.print() ## 打印预测的结构化输出
@@ -355,14 +353,15 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
+output = pipeline.predict(input="./your_pdf_file.pdf")
+
 pages_res = list(output)
 
 output = pipeline.restructure_pages(pages_res)
 
 # output = pipeline.restructure_pages(pages_res, merge_table=True) # 合并跨页表格
 # output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True) # 合并跨页表格，重建多级标题
-# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, merge_pages=True) # 合并跨页表格，重建多级标题，合并多页结果为一页
-
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, concatenate_pages=True) # 合并跨页表格，重建多级标题，合并多页结果为一页
 
 for res in output:
     res.print() ## 打印预测的结构化输出
