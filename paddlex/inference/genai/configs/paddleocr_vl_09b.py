@@ -41,6 +41,8 @@ def get_config(backend):
             cfg["block-size"] = 16
             cfg["max-num-seqs"] = 32
             cfg["max-concurrency"] = 2048
+        elif paddle.device.is_compiled_with_xpu():
+            cfg["max-concurrency"] = 2048
         return cfg
     elif backend == "vllm":
         return {
