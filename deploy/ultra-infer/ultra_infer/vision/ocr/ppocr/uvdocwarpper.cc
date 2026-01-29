@@ -20,8 +20,8 @@ namespace ultra_infer {
 namespace vision {
 namespace ocr {
 
-UVDocWrapper::UVDocWrapper() {}
-UVDocWrapper::UVDocWrapper(const std::string &model_file,
+UVDocWarpper::UVDocWarpper() {}
+UVDocWarpper::UVDocWarpper(const std::string &model_file,
                            const std::string &params_file,
                            const RuntimeOption &custom_option,
                            const ModelFormat &model_format) {
@@ -46,7 +46,7 @@ UVDocWrapper::UVDocWrapper(const std::string &model_file,
 }
 
 // Init
-bool UVDocWrapper::Initialize() {
+bool UVDocWarpper::Initialize() {
   if (!InitRuntime()) {
     FDERROR << "Failed to initialize ultra_infer backend." << std::endl;
     return false;
@@ -54,18 +54,18 @@ bool UVDocWrapper::Initialize() {
   return true;
 }
 
-std::unique_ptr<UVDocWrapper> UVDocWrapper::Clone() const {
-  std::unique_ptr<UVDocWrapper> clone_model =
-      utils::make_unique<UVDocWrapper>(UVDocWrapper(*this));
+std::unique_ptr<UVDocWarpper> UVDocWarpper::Clone() const {
+  std::unique_ptr<UVDocWarpper> clone_model =
+      utils::make_unique<UVDocWarpper>(UVDocWarpper(*this));
   clone_model->SetRuntime(clone_model->CloneRuntime());
   return clone_model;
 }
 
-bool UVDocWrapper::Predict(cv::Mat *im, FDTensor *result) {
+bool UVDocWarpper::Predict(cv::Mat *im, FDTensor *result) {
   return Predict(*im, result);
 }
 
-bool UVDocWrapper::Predict(const cv::Mat &img, FDTensor *result) {
+bool UVDocWarpper::Predict(const cv::Mat &img, FDTensor *result) {
   std::vector<FDTensor> results;
   if (!BatchPredict({img}, &results)) {
     return false;
@@ -74,7 +74,7 @@ bool UVDocWrapper::Predict(const cv::Mat &img, FDTensor *result) {
   return true;
 }
 
-bool UVDocWrapper::BatchPredict(const std::vector<cv::Mat> &images,
+bool UVDocWarpper::BatchPredict(const std::vector<cv::Mat> &images,
                                 std::vector<FDTensor> *results) {
   std::vector<FDMat> fd_images = WrapMat(images);
   if (!preprocessor_.Run(&fd_images, &reused_input_tensors_)) {

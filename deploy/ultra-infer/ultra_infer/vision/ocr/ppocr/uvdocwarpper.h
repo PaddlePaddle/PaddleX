@@ -27,12 +27,12 @@ namespace vision {
  */
 namespace ocr {
 
-/*! @brief UVDocWrapper object is used to load the detection model provided by
+/*! @brief UVDocWarpper object is used to load the detection model provided by
  * PaddleOCR.
  */
-class ULTRAINFER_DECL UVDocWrapper : public UltraInferModel {
+class ULTRAINFER_DECL UVDocWarpper : public UltraInferModel {
 public:
-  UVDocWrapper();
+  UVDocWarpper();
   /** \brief Set path of model file, and the configuration of runtime
    *
    * \param[in] model_file Path of model file, e.g
@@ -43,17 +43,17 @@ public:
    * backend defined in `valid_cpu_backends`. \param[in] model_format Model
    * format of the loaded model, default is Paddle format.
    */
-  UVDocWrapper(const std::string &model_file,
+  UVDocWarpper(const std::string &model_file,
                const std::string &params_file = "",
                const RuntimeOption &custom_option = RuntimeOption(),
                const ModelFormat &model_format = ModelFormat::PADDLE);
 
-  /** \brief Clone a new UVDocWrapper with less memory usage when multiple
+  /** \brief Clone a new UVDocWarpper with less memory usage when multiple
    * instances of the same model are created
    *
-   * \return new UVDocWrapper* type unique pointer
+   * \return new UVDocWarpper* type unique pointer
    */
-  virtual std::unique_ptr<UVDocWrapper> Clone() const;
+  virtual std::unique_ptr<UVDocWarpper> Clone() const;
 
   /// Get model's name
   std::string ModelName() const { return "pp-uvdoc"; }
@@ -87,10 +87,10 @@ public:
    * OCR detection model result will be written to this structure. \return true
    * if the prediction is succeeded, otherwise false.
    */
-  /// Get preprocessor reference of UVDocWrapperPreprocessor
+  /// Get preprocessor reference of UVDocWarpperPreprocessor
   virtual UVDocPreprocessor &GetPreprocessor() { return preprocessor_; }
 
-  // / Get postprocessor reference of UVDocWrapperPostprocessor
+  // / Get postprocessor reference of UVDocWarpperPostprocessor
   virtual UVDocPostprocessor &GetPostprocessor() { return postprocessor_; }
 
 private:
