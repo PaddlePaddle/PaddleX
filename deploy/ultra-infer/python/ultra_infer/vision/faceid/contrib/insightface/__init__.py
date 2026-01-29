@@ -99,9 +99,9 @@ class InsightFaceRecognitionBase(UltraInferModel):
         """Load a InsightFaceRecognitionBase model exported by PaddleClas.
 
         :param model_file: (str)Path of model file, e.g InsightFaceRecognitionBase/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g InsightFaceRecognitionBase/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g InsightFaceRecognitionBase/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
         super(InsightFaceRecognitionBase, self).__init__(runtime_option)
         self._model = C.vision.faceid.InsightFaceRecognitionBase(
@@ -155,9 +155,9 @@ class ArcFace(InsightFaceRecognitionBase):
     ):
         """Load a ArcFace model exported by PaddleClas.
         :param model_file: (str)Path of model file, e.g ArcFace/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ArcFace/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ArcFace/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
 
         super(InsightFaceRecognitionBase, self).__init__(runtime_option)
@@ -178,9 +178,9 @@ class CosFace(InsightFaceRecognitionBase):
     ):
         """Load a CosFace model exported by PaddleClas.
         :param model_file: (str)Path of model file, e.g CosFace/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g CosFace/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g CosFace/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
 
         super(InsightFaceRecognitionBase, self).__init__(runtime_option)
@@ -201,9 +201,9 @@ class PartialFC(InsightFaceRecognitionBase):
     ):
         """Load a PartialFC model exported by PaddleClas.
         :param model_file: (str)Path of model file, e.g PartialFC/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g PartialFC/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g PartialFC/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
 
         super(InsightFaceRecognitionBase, self).__init__(runtime_option)
@@ -224,9 +224,9 @@ class VPL(InsightFaceRecognitionBase):
     ):
         """Load a VPL model exported by PaddleClas.
         :param model_file: (str)Path of model file, e.g VPL/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g VPL/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g VPL/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
 
         super(InsightFaceRecognitionBase, self).__init__(runtime_option)

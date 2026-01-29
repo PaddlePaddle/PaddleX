@@ -174,9 +174,9 @@ class YOLOv5Seg(UltraInferModel):
         """Load a YOLOv5Seg model exported by YOLOv5.
 
         :param model_file: (str)Path of model file, e.g ./yolov5s-seg.onnx
-        :param params_file: (str)Path of parameters file, e.g yolox/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolox/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
         super(YOLOv5Seg, self).__init__(runtime_option)
 

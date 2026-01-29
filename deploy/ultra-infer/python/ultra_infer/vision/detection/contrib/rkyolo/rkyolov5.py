@@ -148,9 +148,9 @@ class RKYOLOV5(UltraInferModel):
         """Load a RKYOLOV5 model exported by RKYOLOV5.
 
         :param model_file: (str)Path of model file, e.g ./yolov5.rknn
-        :param params_file: (str)Path of parameters file, e.g , if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g , if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
         # 调用基函数进行backend_option的初始化
         # 初始化后的option保存在self._runtime_option
@@ -207,7 +207,7 @@ class RKYOLOX(UltraInferModel):
 
         :param model_file: (str)Path of model file, e.g ./yolox.rknn
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
         # 调用基函数进行backend_option的初始化
         # 初始化后的option保存在self._runtime_option
@@ -264,7 +264,7 @@ class RKYOLOV7(UltraInferModel):
 
         :param model_file: (str)Path of model file, e.g ./yolov7.rknn
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
         """
         # 调用基函数进行backend_option的初始化
         # 初始化后的option保存在self._runtime_option
