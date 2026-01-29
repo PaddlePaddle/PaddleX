@@ -521,9 +521,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             if _keep_img and parsing_res.image is not None:
                 res_dict["image"] = parsing_res.image
 
-            if parsing_res.polygon_points is not None:
-                res_dict["block_polygon_points"] = parsing_res.polygon_points
-
             if self["model_settings"].get("format_block_content", False):
                 if handle_funcs_dict.get(parsing_res.label):
                     res_dict["block_content"] = handle_funcs_dict[parsing_res.label](
@@ -571,10 +568,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             original_image_width = self["width"][0]
         else:
             original_image_width = self["width"]
-
-        use_ocr_for_image_block = self["model_settings"].get(
-            "use_ocr_for_image_block", False
-        )
 
         if pretty:
             format_text_func = lambda block: format_centered_by_html(

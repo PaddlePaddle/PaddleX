@@ -102,9 +102,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     {"model_config_error": "config error for layout_det_model!"},
                 )
                 model_name = layout_det_config.get("model_name", None)
-                assert (
-                    model_name is not None and model_name == "PP-DocLayoutV2"
-                ), "model_name must be PP-DocLayoutV2"
+                assert model_name is not None and model_name in [
+                    "PP-DocLayoutV2",
+                    "PP-DocLayoutV3",
+                ], "model_name must be PP-DocLayoutV2 or PP-DocLayoutV3"
                 layout_kwargs = {}
                 if (threshold := layout_det_config.get("threshold", None)) is not None:
                     layout_kwargs["threshold"] = threshold
@@ -138,6 +139,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
             self.vl_rec_model = self.create_model(vl_rec_config)
             self.format_block_content = config.get("format_block_content", False)
+            self.use_ocr_for_image_block = config.get("use_ocr_for_image_block", False)
 
             self.batch_sampler = ImageBatchSampler(
                 batch_size=config.get("batch_size", 1)
