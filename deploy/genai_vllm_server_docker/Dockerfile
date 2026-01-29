@@ -21,6 +21,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     else \
         python -m pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.3.14/flash_attn-2.8.2+cu128torch2.8-cp310-cp310-linux_x86_64.whl; \
     fi \
+    && python -m pip install transformers==4.57.6 \
     && paddlex --install genai-vllm-server
 
 EXPOSE 8080
