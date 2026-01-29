@@ -104,12 +104,16 @@ class TritonPythonModel(BaseTritonPythonModel):
 
                 ret = executor.map(self._preprocess, inputs_g, log_ids_g)
                 ind_img_lsts, ind_data_info_lst, ind_visualize_enabled_lst = [], [], []
+                ind_input_ids_lst, ind_log_ids_lst, ind_inputs_lst = [], [], []
                 for i, item in enumerate(ret):
                     if isinstance(item, tuple):
                         assert len(item) == 3, len(item)
                         ind_img_lsts.append(item[0])
                         ind_data_info_lst.append(item[1])
                         ind_visualize_enabled_lst.append(item[2])
+                        ind_input_ids_lst.append(input_ids_g[i])
+                        ind_log_ids_lst.append(log_ids_g[i])
+                        ind_inputs_lst.append(inputs_g[i])
                     else:
                         input_id = input_ids_g[i]
                         result_or_output_dic[input_id] = item
@@ -179,19 +183,19 @@ class TritonPythonModel(BaseTritonPythonModel):
                         ind_preds.append(preds[start_idx : start_idx + len(item)])
                         start_idx += len(item)
 
-                    for i, result in zip(
-                        input_ids_g,
+                    for input_id, result in zip(
+                        ind_input_ids_lst,
                         executor.map(
                             self._postprocess,
                             ind_img_lsts,
                             ind_data_info_lst,
                             ind_visualize_enabled_lst,
                             ind_preds,
-                            log_ids_g,
-                            inputs_g,
+                            ind_log_ids_lst,
+                            ind_inputs_lst,
                         ),
                     ):
-                        result_or_output_dic[i] = result
+                        result_or_output_dic[input_id] = result
 
             assert len(result_or_output_dic) == len(
                 inputs
