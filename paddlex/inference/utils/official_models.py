@@ -596,7 +596,7 @@ class _ModelManager:
 
     def _get_model_local_path(self, model_name):
         if "PaddleOCR-VL" in model_name:
-            model_name.replace("-0.9B", "")
+            model_name = model_name.replace("-0.9B", "")
 
         model_dir = self._save_dir / f"{model_name}"
         if os.path.exists(model_dir):
