@@ -318,9 +318,9 @@ pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 output = pipeline.predict(input="./pp_ocr_vl_demo.png")
 
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_json(save_path="output") ## 保存当前图像的结构化json结果
-    res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
+    res.print() # Print the structured prediction output
+    res.save_to_json(save_path="output") # Save the current image's structured result in JSON format
+    res.save_to_markdown(save_path="output") # Save the current image's result in Markdown format
 ```
 
 For PDF files, each page will be processed individually, and a separate Markdown file will be generated for each page. If you wish to perform cross-page table merging, reconstruct multi-level labels, or merge multi-page results, you can achieve this using the following method:
@@ -328,23 +328,21 @@ For PDF files, each page will be processed individually, and a separate Markdown
 ```python
 from paddlex import create_pipeline
 
-input_file = "./your_pdf_file.pdf"
-
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
-
-output = pipeline.predict(input=input_file)
+output = pipeline.predict(input="./your_pdf_file.pdf")
 
 pages_res = list(output)
 
 output = pipeline.restructure_pages(pages_res)
+
 # output = pipeline.restructure_pages(pages_res, merge_table=True) # Merge tables across pages
 # output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True) # Merge tables across pages and reconstruct multi-level titles
-# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, merge_pages=True) # Merge tables across pages, reconstruct multi-level titles, and merge multiple pages
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, concatenate_pages=True) # Merge tables across pages, reconstruct multi-level titles, and merge multiple pages
 for res in output:
-    res.print() ## Print the structured prediction output
-    res.save_to_json(save_path="output") ## Save the current image's structured result in JSON format
-    res.save_to_markdown(save_path="output") ## Save the current image's result in Markdown format
+    res.print() # Print the structured prediction output
+    res.save_to_json(save_path="output") # Save the current image's structured result in JSON format
+    res.save_to_markdown(save_path="output") # Save the current image's result in Markdown format
 ```
 
 
