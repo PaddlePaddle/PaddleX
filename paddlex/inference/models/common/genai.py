@@ -24,13 +24,18 @@ from typing_extensions import Literal
 from ....utils import logging
 from ....utils.deps import class_requires_deps
 
-SERVER_BACKENDS = ["fastdeploy-server", "vllm-server", "sglang-server"]
+SERVER_BACKENDS = [
+    "fastdeploy-server",
+    "vllm-server",
+    "sglang-server",
+    "mlx-vlm-server",
+]
 
 
 class GenAIConfig(BaseModel):
-    backend: Literal["native", "fastdeploy-server", "vllm-server", "sglang-server"] = (
-        "native"
-    )
+    backend: Literal[
+        "native", "fastdeploy-server", "vllm-server", "sglang-server", "mlx-vlm-server"
+    ] = "native"
     server_url: Optional[str] = None
     max_concurrency: int = 200
     client_kwargs: Optional[Dict[str, Any]] = None
@@ -342,9 +347,7 @@ class _AsyncThreadManager:
         Returns:
             bool: True if the loop is running and not closed/stopped
         """
-        return (
-            self.loop is not None and not self.loop.is_closed() and not self.stopped
-        )
+        return self.loop is not None and not self.loop.is_closed() and not self.stopped
 
     @property
     def is_shutting_down(self):
@@ -464,9 +467,7 @@ def run_async(coro, return_future=False, timeout=None):
 
     # Check if loop is shutting down (will raise RuntimeError if so)
     if manager.is_shutting_down:
-        raise RuntimeError(
-            "Event loop is shutting down, cannot accept new tasks"
-        )
+        raise RuntimeError("Event loop is shutting down, cannot accept new tasks")
 
     future = manager.run_async(coro)
 
