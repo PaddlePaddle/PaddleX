@@ -402,9 +402,15 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         if self["model_settings"]["use_doc_preprocessor"]:
-            data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
+            if isinstance(self["doc_preprocessor_res"], BaseResult):
+                data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
+            else:
+                data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
         if self["model_settings"]["use_layout_detection"]:
-            data["layout_det_res"] = self["layout_det_res"].str["res"]
+            if isinstance(self["layout_det_res"], BaseResult):
+                data["layout_det_res"] = self["layout_det_res"].str["res"]
+            else:
+                data["layout_det_res"] = self["layout_det_res"]
         parsing_res_list = self["parsing_res_list"]
         parsing_res_list = [
             {
@@ -539,13 +545,30 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if self["model_settings"]["use_doc_preprocessor"]:
             if isinstance(self["doc_preprocessor_res"], BaseResult):
                 data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
+            elif isinstance(self["doc_preprocessor_res"], list):
+                doc_preprocessor_res = []
+                for res in self["doc_preprocessor_res"]:
+                    if isinstance(res, BaseResult):
+                        doc_preprocessor_res.append(res.json["res"])
+                    else:
+                        doc_preprocessor_res.append(res)
+                data["doc_preprocessor_res"] = doc_preprocessor_res
             else:
                 data["doc_preprocessor_res"] = self["doc_preprocessor_res"]
         if self["model_settings"]["use_layout_detection"]:
             if isinstance(self["layout_det_res"], BaseResult):
                 data["layout_det_res"] = self["layout_det_res"].json["res"]
+            elif isinstance(self["layout_det_res"], list):
+                layout_det_res = []
+                for res in self["layout_det_res"]:
+                    if isinstance(res, BaseResult):
+                        layout_det_res.append(res.json["res"])
+                    else:
+                        layout_det_res.append(res)
+                data["layout_det_res"] = layout_det_res
             else:
                 data["layout_det_res"] = self["layout_det_res"]
+
         return JsonMixin._to_json(data, *args, **kwargs)
 
     def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
