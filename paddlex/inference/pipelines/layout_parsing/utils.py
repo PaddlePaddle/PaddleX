@@ -242,8 +242,8 @@ def calculate_overlap_ratio(
     x_max_inter = np.minimum(bbox1[2], bbox2[2])
     y_max_inter = np.minimum(bbox1[3], bbox2[3])
 
-    inter_width = np.maximum(0, x_max_inter - x_min_inter)
-    inter_height = np.maximum(0, y_max_inter - y_min_inter)
+    inter_width = float(np.maximum(0, abs(x_max_inter - x_min_inter)))
+    inter_height = float(np.maximum(0, abs(y_max_inter - y_min_inter)))
 
     inter_area = inter_width * inter_height
 
