@@ -268,7 +268,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             "markdown_ignore_labels", []
         )
         self.skip_order_labels = [
-            label for label in SKIP_ORDER_LABELS + markdown_ignore_labels
+            label for label in SKIP_ORDER_LABELS.copy() + markdown_ignore_labels
         ]
 
     def _to_img(self) -> dict[str, np.ndarray]:
