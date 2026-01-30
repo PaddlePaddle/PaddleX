@@ -228,7 +228,7 @@ EXTRAS = {
         "genai-vllm-server": [
             "einops",
             "torch == 2.8.0",
-            "transformers <= 5.0.0",
+            "transformers < 5.0.0",
             "uvloop",
             "vllm == 0.10.2",
         ],
