@@ -165,11 +165,11 @@ class BasePredictor(
             else:
                 self._use_static_model = True
             if self._use_static_model:
-                if not use_hpip:
-                    self._pp_option = self._prepare_pp_option(pp_option, device)
-                else:
+                self._pp_option = self._prepare_pp_option(pp_option, device)
+                if use_hpip:
                     require_hpip()
                     self._hpi_config = self._prepare_hpi_config(hpi_config, device)
+                    self.sync_threads()
         else:
             self._use_hpip = False
             self._use_static_model = False
@@ -474,6 +474,15 @@ class BasePredictor(
         hpi_config = HPIConfig.model_validate(hpi_config)
 
         return hpi_config
+
+    def sync_threads(self):
+        if self._pp_option and self._pp_option.cpu_threads:
+            # If the user specified threads in the old system,
+            # force it into the new HPI system
+            if self._hpi_config.backend_config is None:
+                self._hpi_config.backend_config = {}
+            if "cpu_num_threads" not in self._hpi_config.backend_config:
+                self._hpi_config.backend_config["cpu_num_threads"] = self._pp_option.cpu_threads
 
     # Should this be static?
     def _get_device_info(self, device):
