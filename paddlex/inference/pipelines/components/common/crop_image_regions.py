@@ -59,6 +59,12 @@ class CropByBoxes(BaseOperator):
             box = bbox_info["coordinate"]
             label = bbox_info.get("label", label_id)
             xmin, ymin, xmax, ymax = [int(i) for i in box]
+            xmin = max(0, min(xmin, img.shape[1]-1))
+            xmax = max(0, min(xmax, img.shape[1]-1))
+            ymin = max(0, min(ymin, img.shape[0]-1))
+            ymax = max(0, min(ymax, img.shape[0]-1))
+            if xmax <= xmin or ymax <= ymin:
+                continue
             img_crop = img[ymin:ymax, xmin:xmax].copy()
             output_list.append({"img": img_crop, "box": box, "label": label})
         return output_list
@@ -178,14 +184,18 @@ class CropByPolys(BaseOperator):
                 [0, img_crop_height],
             ]
         )
-        M = cv2.getPerspectiveTransform(points, pts_std)
-        dst_img = cv2.warpPerspective(
-            img,
-            M,
-            (img_crop_width, img_crop_height),
-            borderMode=cv2.BORDER_REPLICATE,
-            flags=cv2.INTER_CUBIC,
-        )
+        try:
+            M = cv2.getPerspectiveTransform(points, pts_std)
+            dst_img = cv2.warpPerspective(
+                img,
+                M,
+                (img_crop_width, img_crop_height),
+                borderMode=cv2.BORDER_REPLICATE,
+                flags=cv2.INTER_CUBIC,
+            )
+        except cv2.error:
+            return img
+
         dst_img_height, dst_img_width = dst_img.shape[0:2]
         if dst_img_height * 1.0 / dst_img_width >= 1.5:
             dst_img = np.rot90(dst_img)
@@ -514,6 +524,8 @@ class CropByPolys(BaseOperator):
         return： 矫正后的图片 ndarray格式
         """
         points = np.array(points).astype(np.int32).reshape(-1, 2)
+        if not Polygon(points).is_valid or Polygon(points).area < 1:
+            return img
         temp_crop_img, temp_box = self.get_minarea_rect(img, points)
 
         # 计算最小外接矩形与polygon的IoU
@@ -553,4 +565,8 @@ class CropByPolys(BaseOperator):
         if len(img.shape) == 2:
             img = np.stack((img,) * 3, axis=-1)
         img_crop, image = rectifier.run(img, new_points_list, mode="homography")
-        return np.array(img_crop[0], dtype=np.uint8)
+        img_crop = np.array(img_crop[0], dtype=np.uint8)
+        if img_crop.size == 0:
+            return img.copy()
+        return img_crop
+
