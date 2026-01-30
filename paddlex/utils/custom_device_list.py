@@ -418,6 +418,7 @@ METAX_GPU_WHITELIST = [
     "PP-OCRv4_mobile_rec",
     "PP-OCRv4_server_rec",
     "PP-DocLayoutV2",
+    "PP-DocLayoutV3",
     "PP-ShiTuV2_rec",
     "PP-ShiTuV2_det",
     "PP-OCRv5_mobile_det",
