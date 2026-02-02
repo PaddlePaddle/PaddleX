@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import argparse
-import json
 import pathlib
 import shutil
 import subprocess
@@ -30,7 +29,6 @@ BASE_DIR = pathlib.Path.cwd()
 PIPELINES_DIR = BASE_DIR / "pipelines"
 COMMON_DIR = BASE_DIR / "common"
 CLIENT_LIB_PATH = BASE_DIR / "paddlex-hps-client"
-VERSIONS_PATH = BASE_DIR / "versions.json"
 OUTPUT_DIR = BASE_DIR / "output"
 
 
@@ -88,17 +86,12 @@ if __name__ == "__main__":
             )
             client_lib_whl_path = next(OUTPUT_DIR.glob("paddlex_hps_client*.whl"))
 
-    with VERSIONS_PATH.open("r", encoding="utf-8") as f:
-        versions = json.load(f)
-
     for pipeline_name in pipeline_names:
         print("=" * 30)
         print(f"Pipeline: {pipeline_name}")
         pipeline_dir = PIPELINES_DIR / pipeline_name
         if not pipeline_dir.exists():
             sys.exit(f"{pipeline_dir} not found")
-        if pipeline_name not in versions:
-            sys.exit(f"Version is missing for {repr(pipeline_name)}")
 
         tgt_name = TARGET_NAME_PATTERN.format(pipeline_name=pipeline_name)
         tgt_dir = OUTPUT_DIR / tgt_name
@@ -125,8 +118,7 @@ if __name__ == "__main__":
             shutil.copytree(pipeline_dir / "client", tgt_dir / "client")
             shutil.copy(client_lib_whl_path, tgt_dir / "client")
 
-        version = versions[pipeline_name]
-        (tgt_dir / "version.txt").write_text(version + "\n", encoding="utf-8")
+        shutil.copy(pipeline_dir / "version.txt", tgt_dir / "version.txt")
 
         arch_path = tgt_dir.with_suffix(ARCHIVE_SUFFIX)
         print(f"Creating archive: {arch_path}")

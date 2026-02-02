@@ -17,9 +17,7 @@ import copy
 import io
 import os
 import warnings
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from threading import Lock
 from typing import List, Optional
 
 import numpy as np
@@ -42,7 +40,7 @@ class DocVLMPredictor(BasePredictor):
         "PP-DocBee": {"PP-DocBee-2B", "PP-DocBee-7B"},
         "PP-DocBee2": {"PP-DocBee2-3B"},
         "PP-Chart2Table": {"PP-Chart2Table"},
-        "PaddleOCR-VL": {"PaddleOCR-VL-0.9B"},
+        "PaddleOCR-VL": {"PaddleOCR-VL-0.9B", "PaddleOCR-VL-1.5-0.9B"},
     }
 
     def __init__(self, *args, **kwargs):
@@ -52,6 +50,9 @@ class DocVLMPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
+
+        if self.batch_sampler.batch_size == -1:
+            self.batch_sampler.batch_size = self._determine_batch_size()
 
         if self._use_local_model:
             if self._use_static_model:
@@ -65,18 +66,13 @@ class DocVLMPredictor(BasePredictor):
             self.infer, self.processor = self._build(**kwargs)
 
             if (
-                self.model_name == "PaddleOCR-VL-0.9B"
+                self.model_name in self.model_group["PaddleOCR-VL"]
                 and self.batch_sampler.batch_size > 1
             ):
                 logging.warning(
-                    "Currently, the PaddleOCR-VL-0.9B local model only supports batch size of 1. The batch size will be updated to 1."
+                    f"Currently, the {repr(self.model_name)} local model only supports batch size of 1. The batch size will be updated to 1."
                 )
                 self.batch_sampler.batch_size = 1
-        else:
-            if self.batch_sampler.batch_size > 1:
-                self._thread_pool = ThreadPoolExecutor(
-                    max_workers=min(self.batch_sampler.batch_size, os.cpu_count() or 1)
-                )
 
     def _build_batch_sampler(self):
         """Builds and returns an DocVLMBatchSampler instance.
@@ -169,6 +165,18 @@ class DocVLMPredictor(BasePredictor):
             raise NotImplementedError(f"Model {self.model_name} is not supported.")
 
         return model, processor
+
+    def _determine_batch_size(self):
+        if self._model_name == "PaddleOCR-VL-0.9B":
+            batch_size = 1
+            if not self._use_local_model:
+                batch_size = 4096
+            logging.debug(
+                f"The batch size of {self._model_name} is determined to be {batch_size}."
+            )
+            return batch_size
+        else:
+            raise RuntimeError(f"Could not determine batch size for {self._model_name}")
 
     def process(
         self,
@@ -322,25 +330,26 @@ class DocVLMPredictor(BasePredictor):
         else:
             raise NotImplementedError
 
-    def close(self):
-        super().close()
-        if hasattr(self, "_thread_pool"):
-            self._thread_pool.shutdown()
-
     def _format_result_dict(self, model_preds, src_data):
         if not isinstance(model_preds, list):
             model_preds = [model_preds]
         if not isinstance(src_data, list):
             src_data = [src_data]
-        if len(model_preds) != len(src_data):
+        input_info = []
+        for data in src_data:
+            image = data.get("image", None)
+            if isinstance(image, str):
+                data["input_path"] = image
+            input_info.append(data)
+        if len(model_preds) != len(input_info):
             raise ValueError(
-                f"Model predicts {len(model_preds)} results while src data has {len(src_data)} samples."
+                f"Model predicts {len(model_preds)} results while src data has {len(input_info)} samples."
             )
 
-        rst_format_dict = {k: [] for k in src_data[0].keys()}
+        rst_format_dict = {k: [] for k in input_info[0].keys()}
         rst_format_dict["result"] = []
 
-        for data_sample, model_pred in zip(src_data, model_preds):
+        for data_sample, model_pred in zip(input_info, model_preds):
             for k in data_sample.keys():
                 rst_format_dict[k].append(data_sample[k])
             rst_format_dict["result"].append(model_pred)
@@ -405,9 +414,8 @@ class DocVLMPredictor(BasePredictor):
         min_pixels,
         max_pixels,
     ):
-        lock = Lock()
-
-        def _process(item):
+        futures = []
+        for item in data:
             image = item["image"]
             if isinstance(image, str):
                 if image.startswith("http://") or image.startswith("https://"):
@@ -499,27 +507,22 @@ class DocVLMPredictor(BasePredictor):
                         f"{repr(self._genai_client.backend)} does not support `max_pixels`."
                     )
 
-            with lock:
-                future = self._genai_client.create_chat_completion(
-                    [
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "image_url", "image_url": {"url": image_url}},
-                                {"type": "text", "text": item["query"]},
-                            ],
-                        }
-                    ],
-                    return_future=True,
-                    timeout=600,
-                    **kwargs,
-                )
-                return future
+            future = self._genai_client.create_chat_completion(
+                [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image_url", "image_url": {"url": image_url}},
+                            {"type": "text", "text": item["query"]},
+                        ],
+                    }
+                ],
+                return_future=True,
+                timeout=600,
+                **kwargs,
+            )
 
-        if len(data) > 1:
-            futures = list(self._thread_pool.map(_process, data))
-        else:
-            futures = [_process(data[0])]
+            futures.append(future)
 
         results = []
         for future in futures:

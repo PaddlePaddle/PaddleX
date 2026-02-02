@@ -37,7 +37,9 @@ class CropByBoxes(BaseOperator):
         """Initializes the class."""
         super().__init__()
 
-    def __call__(self, img: np.ndarray, boxes: List[dict]) -> List[dict]:
+    def __call__(
+        self, img: np.ndarray, boxes: List[dict], layout_shape_mode="auto"
+    ) -> List[dict]:
         """
         Process the input image and bounding boxes to produce a list of cropped images
         with their corresponding bounding box coordinates and labels.
@@ -48,19 +50,33 @@ class CropByBoxes(BaseOperator):
                 information including 'cls_id' (class ID), 'coordinate' (bounding box
                 coordinates as a list or tuple, left, top, right, bottom),
                 and optionally 'label' (label text).
+            use_layout_mask (bool, optional): Whether to use layout mask. Defaults to False.
 
         Returns:
             list[dict]: A list of dictionaries, each containing a cropped image ('img'),
                 the original bounding box coordinates ('box'), and the label ('label').
         """
         output_list = []
-        for bbox_info in boxes:
-            label_id = bbox_info["cls_id"]
-            box = bbox_info["coordinate"]
-            label = bbox_info.get("label", label_id)
+        for box_info in boxes:
+            label_id = box_info["cls_id"]
+            box = box_info["coordinate"]
+            label = box_info.get("label", label_id)
             xmin, ymin, xmax, ymax = [int(i) for i in box]
             img_crop = img[ymin:ymax, xmin:xmax].copy()
-            output_list.append({"img": img_crop, "box": box, "label": label})
+            out_info = {"img": img_crop, "box": box, "label": label}
+            if layout_shape_mode != "rect" and "polygon_points" in box_info:
+                mask = np.zeros(img_crop.shape[:2], dtype=np.int32)
+                polygon = np.array(box_info["polygon_points"], dtype=np.int32)
+                polygon = polygon.reshape((-1, 1, 2))
+                if polygon is not None and len(polygon) > 0:
+                    polygon = polygon - np.array([xmin, ymin])
+                cv2.fillPoly(mask, [polygon], 1)
+                mask = mask.astype(bool)
+                img_crop[~mask] = 255
+                out_info["img"] = img_crop
+                out_info["polygon_points"] = box_info["polygon_points"]
+
+            output_list.append(out_info)
         return output_list
 
 

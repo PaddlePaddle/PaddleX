@@ -17,6 +17,7 @@ from typing import Final, List, Tuple, Union
 import numpy as np
 from typing_extensions import Literal
 
+from ......utils import logging
 from ......utils.deps import function_requires_deps, is_dep_available
 from ....infra import utils as serving_utils
 from ....infra.models import ImageInfo, PDFInfo
@@ -79,17 +80,19 @@ async def get_images(
     request: BaseInferRequest, app_context: AppContext
 ) -> Tuple[List[np.ndarray], Union[ImageInfo, PDFInfo]]:
     file_type = get_file_type(request)
-    # XXX: Should we return 422?
 
-    file_bytes = await serving_utils.get_raw_bytes_async(
-        request.file,
-        app_context.aiohttp_session,
-    )
-    images, data_info = await serving_utils.call_async(
-        serving_utils.file_to_images,
-        file_bytes,
-        file_type,
-        max_num_imgs=app_context.extra["max_num_input_imgs"],
-    )
-
+    try:
+        file_bytes = await serving_utils.get_raw_bytes_async(
+            request.file,
+            app_context.aiohttp_session,
+        )
+        images, data_info = await serving_utils.call_async(
+            serving_utils.file_to_images,
+            file_bytes,
+            file_type,
+            max_num_imgs=app_context.extra["max_num_input_imgs"],
+        )
+    except Exception as e:
+        logging.error("Failed to read input file: %s", e)
+        raise HTTPException(status_code=422, detail="Invalid input file") from e
     return images, data_info

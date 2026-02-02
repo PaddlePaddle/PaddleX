@@ -2418,6 +2418,18 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -2523,7 +2535,8 @@ for res in output:
 <td>当前页面最后一个元素是否为段结束。</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+</details>
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>

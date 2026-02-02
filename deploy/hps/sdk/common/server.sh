@@ -14,10 +14,12 @@ rm -rf "${MODEL_REPO_DIR}"
 cp -r model_repo "${MODEL_REPO_DIR}"
 
 find "${MODEL_REPO_DIR}" -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d '' dir_; do
-    if [ "${PADDLEX_HPS_DEVICE_TYPE}" = 'gpu' ]; then
-        cp -f "${dir_}/config_gpu.pbtxt" "${dir_}/config.pbtxt"
-    else
-        cp -f "${dir_}/config_cpu.pbtxt" "${dir_}/config.pbtxt"
+    if [ ! -f "${dir_}/config.pbtxt" ]; then
+        if [ "${PADDLEX_HPS_DEVICE_TYPE:-gpu}" = 'gpu' ]; then
+            cp -f "${dir_}/config_gpu.pbtxt" "${dir_}/config.pbtxt"
+        else
+            cp -f "${dir_}/config_cpu.pbtxt" "${dir_}/config.pbtxt"
+        fi
     fi
 done
 

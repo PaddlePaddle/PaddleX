@@ -114,7 +114,6 @@ EXTRAS = {
             # Currently `pypdfium2` is required by the image batch sampler
             "pypdfium2",
             "scikit-image",
-            "scipy",
         ],
         "multimodal": [
             "einops",
@@ -193,6 +192,7 @@ EXTRAS = {
             "shapely",
             "tiktoken",
             "tokenizers",
+            "beautifulsoup4",
         ],
         "speech": [
             "ftfy",
@@ -228,7 +228,7 @@ EXTRAS = {
         "genai-vllm-server": [
             "einops",
             "torch == 2.8.0",
-            "transformers",
+            "transformers < 5.0.0",
             "uvloop",
             "vllm == 0.10.2",
         ],
