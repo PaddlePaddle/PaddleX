@@ -70,7 +70,9 @@ DISABLE_MODEL_SOURCE_CHECK = os.environ.get(
     "PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", False
 )
 
-HUGGING_FACE_ENDPOINT = os.environ.get("PADDLE_PDX_HUGGING_FACE_ENDPOINT", "https://huggingface.co")
+HUGGING_FACE_ENDPOINT = os.environ.get(
+    "PADDLE_PDX_HUGGING_FACE_ENDPOINT", "https://huggingface.co"
+)
 
 # Inference Benchmark
 INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)
@@ -87,3 +89,5 @@ INFER_BENCHMARK_ITERS = get_flag_from_env_var(
 INFER_BENCHMARK_USE_CACHE_FOR_READ = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ", False
 )
+
+PDF_RENDER_SCALE = get_flag_from_env_var("PADDLE_PDX_PDF_RENDER_SCALE", 2.0, float)
