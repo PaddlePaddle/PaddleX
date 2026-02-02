@@ -159,7 +159,9 @@ class BOS(Storage):
     def get_url(self, key: str) -> str:
         key = self._get_full_key(key)
         return self._client.generate_pre_signed_url(
-            self._bucket_name, key, expiration_in_seconds=-1
+            self._bucket_name,
+            key,
+            expiration_in_seconds=3600,
         ).decode("ascii")
 
     def _get_full_key(self, key: str) -> str:
