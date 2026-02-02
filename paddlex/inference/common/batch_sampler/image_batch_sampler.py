@@ -20,6 +20,7 @@ import numpy as np
 from ....utils import logging
 from ....utils.cache import CACHE_DIR
 from ....utils.download import download
+from ....utils.flags import PDF_RENDER_SCALE
 from ...utils.io import PDFReader
 from .base_batch_sampler import BaseBatchSampler, Batch
 
@@ -48,7 +49,7 @@ class ImageBatchSampler(BaseBatchSampler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pdf_reader = PDFReader()
+        self.pdf_reader = PDFReader(zoom=PDF_RENDER_SCALE)
 
     # XXX: auto download for url
     def _download_from_url(self, in_path):
