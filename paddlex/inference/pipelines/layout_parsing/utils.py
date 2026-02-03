@@ -347,6 +347,7 @@ def gather_imgs(original_img, layout_det_objs):
                 {
                     "path": img_path,
                     "img": img,
+                    "label": label,
                     "coordinate": (x_min, y_min, x_max, y_max),
                     "score": det_obj["score"],
                 }

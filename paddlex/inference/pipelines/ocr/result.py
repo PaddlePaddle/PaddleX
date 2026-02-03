@@ -31,40 +31,6 @@ if is_dep_available("opencv-contrib-python"):
 class OCRResult(BaseCVResult):
     """OCR result"""
 
-    def get_minarea_rect(self, points: np.ndarray) -> np.ndarray:
-        """
-        Get the minimum area rectangle for the given points using OpenCV.
-
-        Args:
-            points (np.ndarray): An array of 2D points.
-
-        Returns:
-            np.ndarray: An array of 2D points representing the corners of the minimum area rectangle
-                     in a specific order (clockwise or counterclockwise starting from the top-left corner).
-        """
-        bounding_box = cv2.minAreaRect(points)
-        points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
-
-        index_a, index_b, index_c, index_d = 0, 1, 2, 3
-        if points[1][1] > points[0][1]:
-            index_a = 0
-            index_d = 1
-        else:
-            index_a = 1
-            index_d = 0
-        if points[3][1] > points[2][1]:
-            index_b = 2
-            index_c = 3
-        else:
-            index_b = 3
-            index_c = 2
-
-        box = np.array(
-            [points[index_a], points[index_b], points[index_c], points[index_d]]
-        ).astype(np.int32)
-
-        return box
-
     def _to_img(self) -> Dict[str, Image.Image]:
         """
         Converts the internal data to a PIL Image with detection and recognition results.
@@ -122,7 +88,7 @@ class OCRResult(BaseCVResult):
                 if len(box) > 4:
                     pts = [(x, y) for x, y in box.tolist()]
                     draw_left.polygon(pts, outline=color, width=8, fill=color)
-                    box = self.get_minarea_rect(box)
+                    box = get_minarea_rect(box)
                     height = int(0.5 * (max(box[:, 1]) - min(box[:, 1])))
                     box[:2, 1] = np.mean(box[:, 1])
                     box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
@@ -291,3 +257,38 @@ def draw_vertical_text(draw, position, text, font, fill=(0, 0, 0), line_spacing=
         bbox = font.getbbox(char)
         char_height = bbox[3] - bbox[1]
         y += char_height + line_spacing
+
+
+def get_minarea_rect(points: np.ndarray) -> np.ndarray:
+    """
+    Get the minimum area rectangle for the given points using OpenCV.
+
+    Args:
+        points (np.ndarray): An array of 2D points.
+
+    Returns:
+        np.ndarray: An array of 2D points representing the corners of the minimum area rectangle
+                 in a specific order (clockwise or counterclockwise starting from the top-left corner).
+    """
+    bounding_box = cv2.minAreaRect(points)
+    points = sorted(list(cv2.boxPoints(bounding_box)), key=lambda x: x[0])
+
+    index_a, index_b, index_c, index_d = 0, 1, 2, 3
+    if points[1][1] > points[0][1]:
+        index_a = 0
+        index_d = 1
+    else:
+        index_a = 1
+        index_d = 0
+    if points[3][1] > points[2][1]:
+        index_b = 2
+        index_c = 3
+    else:
+        index_b = 3
+        index_c = 2
+
+    box = np.array(
+        [points[index_a], points[index_b], points[index_c], points[index_d]]
+    ).astype(np.int32)
+
+    return box

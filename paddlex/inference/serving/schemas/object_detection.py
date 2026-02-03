@@ -34,6 +34,7 @@ class InferRequest(BaseModel):
     image: str
     threshold: Optional[Union[float, Dict[int, float]]] = None
     visualize: Optional[bool] = None
+    logId: Optional[str] = None
 
 
 class DetectedObject(BaseModel):
