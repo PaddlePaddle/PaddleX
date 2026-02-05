@@ -164,6 +164,14 @@ def create_pipeline(
     else:
         config.pop("hpi_config", None)
 
+    # 支持自定义pipeline类的加载，根据pipeline_cls
+    pipeline_cls = config.pop("pipeline_cls", None)
+    if pipeline_cls and isinstance(pipeline_cls, str):
+        # 支持"module.submodule:ClassName"格式的字符串导入
+        if ":" in pipeline_cls:
+            module_path, class_name = pipeline_cls.rsplit(":", 1)
+            __import__(module_path, fromlist=[class_name])
+
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
