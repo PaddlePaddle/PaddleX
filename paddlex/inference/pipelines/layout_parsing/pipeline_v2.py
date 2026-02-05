@@ -703,11 +703,15 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 - "block_bbox": The coordinates of the layout box.
         """
 
-        table_index = 0
+        table_cell_bboxes_list = [
+            [[int(pos) for pos in box] for box in table_res["cell_box_list"]]
+            for table_res in table_res_list
+        ] if table_res_list else []
+        table_bboxes = [calculate_minimum_enclosing_bbox(table_cell_bboxes)
+                        for table_cell_bboxes in table_cell_bboxes_list]
         seal_index = 0
         chart_index = 0
         layout_parsing_blocks: List[LayoutBlock] = []
-
         for box_idx, box_info in enumerate(layout_det_res["boxes"]):
 
             label = box_info["label"]
@@ -717,8 +721,10 @@ class _LayoutParsingPipelineV2(BasePipeline):
             block = LayoutBlock(label=label, bbox=block_bbox)
 
             if label == "table" and len(table_res_list) > 0:
+                # The table index is obtained by calculating the overlap ratio between the bounding boxes of the tables.
+                table_overlap_ratio_list = [calculate_overlap_ratio(bbox1=block_bbox, bbox2=table_bbox) for table_bbox in table_bboxes]
+                table_index, table_overlap_ratio = max(enumerate(table_overlap_ratio_list), key=lambda x: x[1])
                 block.content = table_res_list[table_index]["pred_html"]
-                table_index += 1
             elif label == "seal" and len(seal_res_list) > 0:
                 block.content = "\n".join(seal_res_list[seal_index]["rec_texts"])
                 seal_index += 1
