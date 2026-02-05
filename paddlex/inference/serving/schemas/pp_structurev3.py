@@ -63,7 +63,10 @@ class InferRequest(ocr.BaseInferRequest):
     useE2eWiredTableRecModel: bool = False
     useE2eWirelessTableRecModel: bool = True
     markdownIgnoreLabels: Optional[List[str]] = None
+    prettifyMarkdown: bool = True
+    showFormulaNumber: bool = False
     visualize: Optional[bool] = None
+    logId: Optional[str] = None
 
 
 class LayoutParsingResult(BaseModel):

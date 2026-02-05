@@ -6,7 +6,9 @@ comments: true
 
 PaddleOCR-VL is a SOTA and resource-efficient model tailored for document parsing. Its core component is PaddleOCR-VL-0.9B, a compact yet powerful vision-language model (VLM) that integrates a NaViT-style dynamic resolution visual encoder with the ERNIE-4.5-0.3B language model to enable accurate element recognition. This innovative model efficiently supports 109 languages and excels in recognizing complex elements (e.g., text, tables, formulas, and charts), while maintaining minimal resource consumption. Through comprehensive evaluations on widely used public benchmarks and in-house benchmarks, PaddleOCR-VL achieves SOTA performance in both page-level document parsing and element-level recognition. It significantly outperforms existing solutions, exhibits strong competitiveness against top-tier VLMs, and delivers fast inference speeds. These strengths make it highly suitable for practical deployment in real-world scenarios.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl/metrics/allmetric.png"/>
+**On January 29, 2026, we released PaddleOCR-VL-1.5. PaddleOCR-VL-1.5 not only significantly improved the accuracy on the OmniDocBench v1.5 evaluation set to 94.5%, but also innovatively supports irregular-shaped bounding box localization. As a result, PaddleOCR-VL-1.5 demonstrates outstanding performance in real-world scenarios such as Skew, Warping, Screen Photography, Illumination, and Scanning. In addition, the model has added new capabilities for seal (stamp) recognition and text detection and recognition, with key metrics continuing to lead the industry.**
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl_1_5/paddleocr-vl-1.5_metrics.png"/>
 
 ## 1. Environment Preparation
 
@@ -316,54 +318,33 @@ pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 output = pipeline.predict(input="./pp_ocr_vl_demo.png")
 
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_json(save_path="output") ## 保存当前图像的结构化json结果
-    res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
+    res.print() # Print the structured prediction output
+    res.save_to_json(save_path="output") # Save the current image's structured result in JSON format
+    res.save_to_markdown(save_path="output") # Save the current image's result in Markdown format
 ```
 
-For PDF files, each page will be processed individually and generate a separate Markdown file. If you want to convert the entire PDF to a single Markdown file, use the following method:
+For PDF files, each page will be processed individually, and a separate Markdown file will be generated for each page. If you wish to perform cross-page table merging, reconstruct multi-level labels, or merge multi-page results, you can achieve this using the following method:
 
 ```python
-from pathlib import Path
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
-input_file = "./your_pdf_file.pdf"
-output_path = Path("./output")
+output = pipeline.predict(input="./your_pdf_file.pdf")
 
-output = pipeline.predict(
-    input=input_file,
-    use_doc_orientation_classify=False,
-    use_doc_unwarping=False)
+pages_res = list(output)
 
-markdown_list = []
-markdown_images = []
+output = pipeline.restructure_pages(pages_res)
 
+# output = pipeline.restructure_pages(pages_res, merge_table=True) # Merge tables across pages
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True) # Merge tables across pages and reconstruct multi-level titles
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, concatenate_pages=True) # Merge tables across pages, reconstruct multi-level titles, and merge multiple pages
 for res in output:
-    md_info = res.markdown
-    markdown_list.append(md_info)
-    markdown_images.append(md_info.get("markdown_images", {}))
-
-markdown_texts = pipeline.concatenate_markdown_pages(markdown_list)
-
-mkd_file_path = output_path / f"{Path(input_file).stem}.md"
-mkd_file_path.parent.mkdir(parents=True, exist_ok=True)
-
-with open(mkd_file_path, "w", encoding="utf-8") as f:
-    f.write(markdown_texts)
-
-for item in markdown_images:
-    if item:
-        for path, image in item.items():
-            file_path = output_path / path
-            file_path.parent.mkdir(parents=True, exist_ok=True)
-            image.save(file_path)
+    res.print() # Print the structured prediction output
+    res.save_to_json(save_path="output") # Save the current image's structured result in JSON format
+    res.save_to_markdown(save_path="output") # Save the current image's result in Markdown format
 ```
 
-**Note:**
-
-- In the example code, the parameters `use_doc_orientation_classify` and  `use_doc_unwarping` are all set to `False` by default. These indicate that document orientation classification and document image unwarping are disabled. You can manually set them to `True` if needed.
 
 The above Python script performs the following steps:
 
@@ -637,6 +618,18 @@ If not set, the initialized parameter value will be used.
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>use_seal_recognition</code></td>
+<td><b>Meaning:</b>Whether to use the seal recognition function. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_ocr_for_image_block</code></td>
+<td><b>Meaning:</b>Whether to perform OCR on text within image blocks. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>layout_threshold</code></td>
 <td>The parameter meaning is basically the same as the instantiation parameter. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
 <td><code>float|dict|None</code></td>
@@ -671,6 +664,39 @@ If not set, the initialized parameter value will be used.
 <td>Layout labels that need to be ignored in Markdown. If not set, the initialized default value will be used.</td>
 <td><code>str</code></td>
 <td></td>
+</tr>
+<tr>
+  <td><code>layout_shape_mode</code></td>
+  <td>
+    <b>Meaning:</b>Specifies the geometric representation mode for layout detection results. It defines how the boundaries of detected regions (e.g., text blocks, images, tables) are calculated and displayed.<br/>
+    <b>Description:</b> Value descriptions:
+    <ul>
+      <li>
+        <b>rect (rectangle)</b>:
+        Outputs an axis-aligned bounding box (including x1, y1, x2, y2).
+        Suitable for standard horizontally aligned layouts.
+      </li>
+      <li>
+        <b>quad (quadrilateral)</b>:
+        Outputs an arbitrary quadrilateral composed of four vertices.
+        Suitable for regions with skew or perspective distortion.
+      </li>
+      <li>
+        <b>poly (polygon)</b>:
+        Outputs a closed contour composed of multiple coordinate points.
+        Suitable for irregularly shaped or curved layout elements,
+        offering the highest precision.
+      </li>
+      <li>
+        <b>auto (automatic)</b>:
+        The system automatically selects the most appropriate shape
+        representation based on the complexity and confidence of the
+        detected targets.
+      </li>
+    </ul>
+  </td>
+  <td><code>str</code></td>
+  <td>"auto"</td>
 </tr>
 <tr>
 <td><code>use_queues</code></td>
@@ -738,9 +764,67 @@ If not set, the initialized parameter value will be used.
 <td><code>list|None</code></td>
 <td></td>
 </tr>
+<tr>
+<td><code>vlm_extra_args</code></td>
+<td><b>Meaning:</b>Additional configuration parameters for the VLM. The currently supported custom parameters are as follows:
+<ul>
+  <li><code>ocr_min_pixels</code>: Minimum resolution for OCR</li>
+  <li><code>ocr_max_pixels</code>: Maximum resolution for OCR</li>
+  <li><code>table_min_pixels</code>: Minimum resolution for tables</li>
+  <li><code>table_max_pixels</code>: Maximum resolution for tables</li>
+  <li><code>chart_min_pixels</code>: Minimum resolution for charts</li>
+  <li><code>chart_max_pixels</code>: Maximum resolution for charts</li>
+  <li><code>formula_min_pixels</code>: Minimum resolution for formulas</li>
+  <li><code>formula_max_pixels</code>: Maximum resolution for formulas</li>
+  <li><code>seal_min_pixels</code>: Minimum resolution for seals</li>
+  <li><code>seal_max_pixels</code>: Maximum resolution for seals</li>
+</ul></td>
+<td><code>dict|None</code></td>
+<td><code>None</code></td>
+</tr>
 </table>
 </details>
-<details><summary>(3) Process the prediction results: The prediction result for each sample is a corresponding Result object, supporting operations such as printing, saving as an image, and saving as a <code>json</code> file:</summary>
+
+<details><summary>(3) Call the <code>restructure_pages()</code> method of the PaddleOCR-VL object to reconstruct pages from the multi-page results list of inference predictions. This method will return a reconstructed multi-page result or a merged single-page result. Below are the parameters of the <code>restructure_pages()</code> method and their descriptions:</summary>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>res_list</code></td>
+<td><b>Meaning:</b> The list of results predicted from a multi-page PDF inference.</td>
+<td><code>list|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>merge_tables</code></td>
+<td><b>Meaning:</b> Controls whether to merge tables across pages.</td>
+<td><code>Bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>relevel_titles</code></td>
+<td><b>Meaning:</b> Controls whether to perform multi-level table grading.</td>
+<td><code>Bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>concatenate_pages</code></td>
+<td><b>Meaning:</b> Controls whether to concatenate multi-page results into one page.</td>
+<td><code>Bool</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</details>
+
+<details><summary>(4) Process the prediction results: The prediction result for each sample is a corresponding Result object, supporting operations such as printing, saving as an image, and saving as a <code>json</code> file:</summary>
 <table>
 <thead>
 <tr>
@@ -1112,7 +1196,10 @@ The following configurations are tailored for scenarios with a one-to-one corres
 **NVIDIA RTX 3060**
 
 - **Server-Side**
-  - vLLM: `gpu-memory-utilization=0.8`
+  - vLLM: `gpu-memory-utilization=0.7`
+  - FastDeploy：
+    - `gpu-memory-utilization: 0.7`
+    - `max-concurrency: 2048`
 
 ## 4. Serving
 
@@ -1314,6 +1401,18 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrForImageBlock</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>use_ocr_for_image_block</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>layoutThreshold</code></td>
 <td><code>number</code>|<code>object</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>layout_threshold</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
@@ -1335,6 +1434,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code>|<code>object</code>|<code>null</code></td>
 <td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutShapeMode</code></td>
+<td><code>string</code></td>
+<td>Please refer to the description of the <code>layout_shape_mode</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -1398,6 +1503,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>vlmExtraArgs</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>Please refer to the description of the <code>vlm_extra_args</code> parameter in the <code>predict</code> method of the PaddleOCR-VL object.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>prettifyMarkdown</code></td>
 <td><code>boolean</code></td>
 <td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
@@ -1407,6 +1518,24 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>showFormulaNumber</code></td>
 <td><code>boolean</code></td>
 <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>restructurePages</code></td>
+<td><code>boolean</code></td>
+<td>Whether to restructure results across multiple pages. The default is <code>false</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mergeTables</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>merge_tables</code> parameter in the <code>restructure_pages</code> method of the PaddleOCR-VL object. Valid only when <code>restructurePages</code> is <code>true</code>.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>relevelTitles</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>relevel_titles</code> parameter in the <code>restructure_pages</code> method of the PaddleOCR-VL object. Valid only when <code>restructurePages</code> is <code>true</code>.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -1500,18 +1629,111 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>object</code></td>
 <td>Key-value pairs of relative paths to Markdown images and Base64-encoded images.</td>
 </tr>
+</tbody>
+</table>
+<ul>
+  <li><b><code>restructurePages</code></b></li>
+</ul>
+<p>Restructure results across multiple pages.</p>
+<p><code>POST /restructure-pages</code></p>
+
+<ul>
+  <li>The request body has the following properties:</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>pages</code></td>
+      <td><code>array</code></td>
+      <td>An array of pages.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+    <td><code>mergeTables</code></td>
+    <td><code>boolean</code></td>
+    <td>Please refer to the description of the <code>merge_tables</code> parameter in the <code>restructure_pages</code> method of the PaddleOCR-VL object.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>relevelTitles</code></td>
+    <td><code>boolean</code></td>
+    <td>Please refer to the description of the <code>relevel_titles</code> parameter in the <code>restructure_pages</code> method of the PaddleOCR-VL object.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>concatenatePages</code></td>
+    <td><code>boolean</code></td>
+    <td>Please refer to the description of the <code>concatenate_pages</code> parameter in the <code>restructure_pages</code> method of the PaddleOCR-VL object.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>prettifyMarkdown</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to output beautified Markdown text. The default is <code>true</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>showFormulaNumber</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+    <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Each element in <code>pages</code> is an <code>object</code> with the following properties:</p>
+<table>
+<thead>
 <tr>
-<td><code>isStart</code></td>
-<td><code>boolean</code></td>
-<td>Whether the first element on the current page is the start of a paragraph.</td>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>The <code>prunedResult</code> object returned by the <code>infer</code> operation.</td>
 </tr>
 <tr>
-<td><code>isEnd</code></td>
-<td><code>boolean</code></td>
-<td>Whether the last element on the current page is the end of a paragraph.</td>
+<td><code>markdownImages</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>The <code>images</code> property of the <code>markdown</code> object returned by the <code>infer</code> operation.</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+
+<ul>
+  <li>When the request is processed successfully, the <code>result</code> field in the response body has the following properties:</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>layoutParsingResults</code></td>
+      <td><code>array</code></td>
+      <td>The restructured layout parsing results. For the fields that every element contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images).</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 <details><summary>Multilingual Service Invocation Example</summary>
 <details>
 <summary>Python</summary>
@@ -1521,7 +1743,7 @@ import base64
 import requests
 import pathlib
 
-API_URL = "http://localhost:8080/layout-parsing" # Service URL
+BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
@@ -1535,28 +1757,39 @@ payload = {
     "fileType": 1, # File type, 1 indicates an image file
 }
 
-# Call the API
-response = requests.post(API_URL, json=payload)
+response = requests.post(BASE_URL + "/layout-parsing", json=payload)
+assert response.status_code == 200, (response.status_code, response.text)
 
-# Process the returned data from the interface
-assert response.status_code == 200
 result = response.json()["result"]
+pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
-    print(res["prunedResult"])
-    md_dir = pathlib.Path(f"markdown_{i}")
-    md_dir.mkdir(exist_ok=True)
-    (md_dir / "doc.md").write_text(res["markdown"]["text"])
-    for img_path, img in res["markdown"]["images"].items():
-        img_path = md_dir / img_path
-        img_path.parent.mkdir(parents=True, exist_ok=True)
-        img_path.write_bytes(base64.b64decode(img))
-    print(f"Markdown document saved at {md_dir / 'doc.md'}")
+    pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
     for img_name, img in res["outputImages"].items():
         img_path = f"{img_name}_{i}.jpg"
         pathlib.Path(img_path).parent.mkdir(exist_ok=True)
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
+
+payload = {
+    "pages": pages,
+    "concatenatePages": True,
+}
+
+response = requests.post(BASE_URL + "/restructure-pages", json=payload)
+assert response.status_code == 200, (response.status_code, response.text)
+
+result = response.json()["result"]
+res = result["layoutParsingResults"][0]
+print(res["prunedResult"])
+md_dir = pathlib.Path("markdown")
+md_dir.mkdir(exist_ok=True)
+(md_dir / "doc.md").write_text(res["markdown"]["text"])
+for img_path, img in res["markdown"]["images"].items():
+    img_path = md_dir / img_path
+    img_path.parent.mkdir(parents=True, exist_ok=True)
+    img_path.write_bytes(base64.b64decode(img))
+print(f"Markdown document saved at {md_dir / 'doc.md'}")
 </code></pre></details>
 
 <details><summary>C++</summary>

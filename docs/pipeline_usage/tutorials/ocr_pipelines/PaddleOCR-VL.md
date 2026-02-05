@@ -6,7 +6,9 @@ comments: true
 
 PaddleOCR-VL 是一款先进、高效的文档解析模型，专为文档中的元素识别设计。其核心组件为 PaddleOCR-VL-0.9B，这是一种紧凑而强大的视觉语言模型（VLM），它由 NaViT 风格的动态分辨率视觉编码器与 ERNIE-4.5-0.3B 语言模型组成，能够实现精准的元素识别。该模型支持 109 种语言，并在识别复杂元素（如文本、表格、公式和图表）方面表现出色，同时保持极低的资源消耗。通过在广泛使用的公开基准与内部基准上的全面评测，PaddleOCR-VL 在页级级文档解析与元素级识别均达到 SOTA 表现。它显著优于现有的基于Pipeline方案和文档解析多模态方案以及先进的通用多模态大模型，并具备更快的推理速度。这些优势使其非常适合在真实场景中落地部署。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl/metrics/allmetric.png"/>
+**2026年1月29日，我们发布了PaddleOCR-VL-1.5。PaddleOCR-VL-1.5不仅以94.5%精度大幅刷新了评测集OmniDocBench v1.5，更创新性地支持了异形框定位，使得PaddleOCR-VL-1.5 在扫描、倾斜、弯折、屏幕拍摄及复杂光照等真实场景中均表现优异。此外，模型还新增了印章识别与文本检测识别能力，关键指标持续领跑。**
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl_1_5/paddleocr-vl-1.5_metrics.png"/>
 
 ## 1. 环境准备
 
@@ -336,7 +338,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
-output = pipeline.predict(input="./pp_ocr_vl_demo.png")
+output = pipeline.predict(input="./pp_ocr_vl_demo.png") # 传入图像文件或PDF文件
 
 for res in output:
     res.print() ## 打印预测的结构化输出
@@ -344,49 +346,28 @@ for res in output:
     res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
 ```
 
-如果是 PDF 文件，会将 PDF 的每一页单独处理，每一页的 Markdown 文件也会对应单独的结果。如果希望整个 PDF 文件转换为 Markdown 文件，建议使用以下的方式运行：
+如果是 PDF 文件，会将 PDF 的每一页单独处理，每一页的 Markdown 文件也会对应单独的结果。如果您希望对多页的推理结果进行跨页表格合并、重建多级标和合并多页结果等需求，可以通过如下方式实现：
 
 ```python
-from pathlib import Path
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="PaddleOCR-VL")
 
-input_file = "./your_pdf_file.pdf"
-output_path = Path("./output")
+output = pipeline.predict(input="./your_pdf_file.pdf")
 
-output = pipeline.predict(
-    input=input_file,
-    use_doc_orientation_classify=False,
-    use_doc_unwarping=False)
+pages_res = list(output)
 
-markdown_list = []
-markdown_images = []
+output = pipeline.restructure_pages(pages_res)
+
+# output = pipeline.restructure_pages(pages_res, merge_table=True) # 合并跨页表格
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True) # 合并跨页表格，重建多级标题
+# output = pipeline.restructure_pages(pages_res, merge_table=True, relevel_titles=True, concatenate_pages=True) # 合并跨页表格，重建多级标题，合并多页结果为一页
 
 for res in output:
-    md_info = res.markdown
-    markdown_list.append(md_info)
-    markdown_images.append(md_info.get("markdown_images", {}))
-
-markdown_texts = pipeline.concatenate_markdown_pages(markdown_list)
-
-mkd_file_path = output_path / f"{Path(input_file).stem}.md"
-mkd_file_path.parent.mkdir(parents=True, exist_ok=True)
-
-with open(mkd_file_path, "w", encoding="utf-8") as f:
-    f.write(markdown_texts)
-
-for item in markdown_images:
-    if item:
-        for path, image in item.items():
-            file_path = output_path / path
-            file_path.parent.mkdir(parents=True, exist_ok=True)
-            image.save(file_path)
+    res.print() ## 打印预测的结构化输出
+    res.save_to_json(save_path="output") ## 保存当前图像的结构化json结果
+    res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
 ```
-
-**注：**
-
-- 在示例代码中，`use_doc_orientation_classify`、`use_doc_unwarping` 参数默认均设置为 `False`，分别表示关闭文档方向分类、文本图像矫正功能，如果需要使用这些功能，可以手动设置为 `True`。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
@@ -669,6 +650,20 @@ MKL-DNN 缓存容量。
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>use_seal_recognition</code></td>
+<td><b>含义：</b>是否使用印章识别功能。<br/>
+<b>说明：</b>设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_ocr_for_image_block</code></td>
+<td><b>含义：</b>是否对图片中的文字进行识别。<br/>
+<b>说明：</b>设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
+<td><code>bool|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>layout_threshold</code></td>
 <td>参数含义与实例化参数基本相同。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
 <td><code>float|dict|None</code></td>
@@ -691,6 +686,20 @@ MKL-DNN 缓存容量。
 <td>参数含义与实例化参数基本相同。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
 <td><code>str|dict|None</code></td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_shape_mode</code></td>
+<td><b>含义：</b>用于指定版面检测结果的几何形状表示模式。该参数决定了检测区域（如文本块、图片、表格等）边界的计算方式及展示形态。<br/>
+<b>说明：</b>取值说明：
+    <ul>
+    <li><b>rect (矩形)</b>: 输出水平正向的边界框（包含 x1, y1, x2, y2）。适用于标准的水平排版版面。</li>
+    <li><b>quad (四边形)</b>: 输出由四个顶点组成的任意四边形。适用于存在倾斜、透视变形的区域。</li>
+    <li><b>poly (多边形)</b>: 输出由多个坐标点组成的闭合轮廓。适用于形状不规则或具有弧度的版面元素，精度最高。</li>
+    <li><b>auto (自动)</b>: 系统根据检测目标的复杂程度和置信度，自动选择最合适的形状表达方式。</li>
+    </ul>
+</td>
+<td><code>str</code></td>
+<td>"auto"</td>
 </tr>
 <tr>
 <td><code>merge_layout_blocks</code></td>
@@ -770,10 +779,63 @@ MKL-DNN 缓存容量。
 <td><code>list|None</code></td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>vlm_extra_args</code></td>
+<td><b>含义：</b>VLM额外配置参数。<br/>
+<b>说明：</b>目前支持的自定义参数如下：
+<ul>
+  <li><code>ocr_min_pixels</code>：OCR 最小分辨率</li>
+  <li><code>ocr_max_pixels</code>：OCR 最大分辨率</li>
+  <li><code>table_min_pixels</code>：表格最小分辨率</li>
+  <li><code>table_max_pixels</code>：表格最大分辨率</li>
+  <li><code>chart_min_pixels</code>：图表最小分辨率</li>
+  <li><code>chart_max_pixels</code>：图表最大分辨率</li>
+  <li><code>formula_min_pixels</code>：公式最小分辨率</li>
+  <li><code>formula_max_pixels</code>：公式最大分辨率</li>
+  <li><code>seal_min_pixels</code>：印章最小分辨率</li>
+  <li><code>seal_max_pixels</code>：印章最大分辨率</li>
+</ul></td>
+<td><code>dict|None</code></td>
+<td><code>None</code></td>
+</tr>
 </table>
 </details>
 
-<details><summary>（3）对预测结果进行处理：每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为<code>json</code>文件的操作:</summary>
+<details><summary>（3）调用 PaddleOCR-VL 对象的 <code>restructure_pages()</code> 方法对推理预测的多页结果列表进行页面重建，该方法会返回一个重建后的多页结果或合并后的单页结果。以下是 <code>restructure_pages()</code> 方法的参数及其说明：</summary>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>默认值</th>
+<tr>
+<td><code>res_list</code></td>
+<td><b>含义：</b>多页 PDF 推理预测出的结果列表。</td>
+<td><code>list|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>merge_tables</code></td>
+<td><b>含义：</b>控制是否进行跨页表格合并。</td>
+<td><code>Bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>relevel_titles</code></td>
+<td><b>含义：</b>控制是否进行多级表格分级</td>
+<td><code>Bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>concatenate_pages</code></td>
+<td><b>含义：</b>控制是否拼接多页结果为一页</td>
+<td><code>Bool</code></td>
+<td><code>False</code></td>
+</tr>
+</details>
+
+<details><summary>（4）对预测结果进行处理：每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为<code>json</code>文件的操作:</summary>
 
 <table>
 <thead>
@@ -1153,7 +1215,10 @@ PaddleX 会将来自单张或多张输入图像中的子图分组并对服务器
 **NVIDIA RTX 3060**
 
 - **服务端**
-  - vLLM：`gpu-memory-utilization=0.8`
+    - vLLM：`gpu-memory-utilization: 0.7`
+    - FastDeploy：
+        - `gpu-memory-utilization: 0.7`
+        - `max-concurrency: 2048`
 
 
 ## 4. 服务化部署
@@ -1358,6 +1423,18 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useOcrForImageBlock</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>use_ocr_for_image_block</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>layoutThreshold</code></td>
 <td><code>number</code> | <code>object</code> | </code><code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>layout_threshold</code> 参数相关说明。</td>
@@ -1379,6 +1456,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code> | <code>object</code> | <code>null</code></td>
 <td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>layout_merge_bboxes_mode</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutShapeMode</code></td>
+<td><code>string</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>layout_shape_mode</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1442,6 +1525,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>vlmExtraArgs</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>predict</code> 方法的 <code>vlm_extra_args</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>prettifyMarkdown</code></td>
 <td><code>boolean</code></td>
 <td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
@@ -1451,6 +1540,24 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>showFormulaNumber</code></td>
 <td><code>boolean</code></td>
 <td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>restructurePages</code></td>
+<td><code>boolean</code></td>
+<td>是否重构多页结果。默认为 <code>false</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mergeTables</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>merge_table</code> 参数相关说明。仅当<code>restructurePages</code>为<code>true</code>时生效。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>relevelTitles</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>relevel_titles</code> 参数相关说明。仅当<code>restructurePages</code>为<code>true</code>时生效。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1548,18 +1655,107 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>object</code></td>
 <td>Markdown图片相对路径和Base64编码图像的键值对。</td>
 </tr>
+</tbody>
+</table>
+<ul>
+<li><b><code>restructurePages</code></b></li>
+</ul>
+<p>重构多页结果。</p>
+<p><code>POST /restructure-pages</code></p>
+<ul>
+<li>请求体的属性如下：</li>
+</ul>
+<table>
+<thead>
 <tr>
-<td><code>isStart</code></td>
-<td><code>boolean</code></td>
-<td>当前页面第一个元素是否为段开始。</td>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pages</code></td>
+<td><code>array</code></td>
+<td>页面数组。
+</td>
+<td>是</td>
 </tr>
 <tr>
-<td><code>isEnd</code></td>
+<td><code>mergeTables</code></td>
 <td><code>boolean</code></td>
-<td>当前页面最后一个元素是否为段结束。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>merge_tables</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>relevelTitles</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>relevel_titles</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>concatenatePages</code></td>
+<td><code>boolean</code></td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>concatenate_pages</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>prettifyMarkdown</code></td>
+<td><code>boolean</code></td>
+<td>是否输出美化后的 Markdown 文本。默认为 <code>true</code>。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>showFormulaNumber</code></td>
+<td><code>boolean</code></td>
+<td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
+<td>否</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<p><code>pages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>对应<code>infer</code>操作返回的<code>prunedResult</code>对象。</td>
+</tr>
+<tr>
+<td><code>markdownImages</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>对应<code>infer</code>操作返回的<code>markdown</code>对象的<code>images</code>属性。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layoutParsingResults</code></td>
+<td><code>array</code></td>
+<td>重构后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+</tr>
+</tbody>
+</table>
+</details>
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
@@ -1569,7 +1765,7 @@ import base64
 import requests
 import pathlib
 
-API_URL = "http://localhost:8080/layout-parsing" # 服务URL
+BASE_URL = "http://localhost:8080"
 
 image_path = "./demo.jpg"
 
@@ -1583,28 +1779,39 @@ payload = {
     "fileType": 1, # 文件类型，1表示图像文件
 }
 
-# 调用API
-response = requests.post(API_URL, json=payload)
+response = requests.post(BASE_URL + "/layout-parsing", json=payload)
+assert response.status_code == 200, (response.status_code, response.text)
 
-# 处理接口返回数据
-assert response.status_code == 200
 result = response.json()["result"]
+pages = []
 for i, res in enumerate(result["layoutParsingResults"]):
-    print(res["prunedResult"])
-    md_dir = pathlib.Path(f"markdown_{i}")
-    md_dir.mkdir(exist_ok=True)
-    (md_dir / "doc.md").write_text(res["markdown"]["text"])
-    for img_path, img in res["markdown"]["images"].items():
-        img_path = md_dir / img_path
-        img_path.parent.mkdir(parents=True, exist_ok=True)
-        img_path.write_bytes(base64.b64decode(img))
-    print(f"Markdown document saved at {md_dir / 'doc.md'}")
+    pages.append({"prunedResult": res["prunedResult"], "markdownImages": res["markdown"].get("images")})
     for img_name, img in res["outputImages"].items():
         img_path = f"{img_name}_{i}.jpg"
         pathlib.Path(img_path).parent.mkdir(exist_ok=True)
         with open(img_path, "wb") as f:
             f.write(base64.b64decode(img))
         print(f"Output image saved at {img_path}")
+
+payload = {
+    "pages": pages,
+    "concatenatePages": True,
+}
+
+response = requests.post(BASE_URL + "/restructure-pages", json=payload)
+assert response.status_code == 200, (response.status_code, response.text)
+
+result = response.json()["result"]
+res = result["layoutParsingResults"][0]
+print(res["prunedResult"])
+md_dir = pathlib.Path("markdown")
+md_dir.mkdir(exist_ok=True)
+(md_dir / "doc.md").write_text(res["markdown"]["text"])
+for img_path, img in res["markdown"]["images"].items():
+    img_path = md_dir / img_path
+    img_path.parent.mkdir(parents=True, exist_ok=True)
+    img_path.write_bytes(base64.b64decode(img))
+print(f"Markdown document saved at {md_dir / 'doc.md'}")
 </code></pre></details>
 
 <details><summary>C++</summary>
