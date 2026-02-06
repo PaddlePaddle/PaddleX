@@ -54,6 +54,7 @@ MOD_TO_DEP = {
     "joblib": "joblib",
     "langchain": "langchain",
     "langchain_community": "langchain-community",
+    "langchain_text_splitters": "langchain-text-splitters",
     "langchain_core": "langchain-core",
     "langchain_openai": "langchain-openai",
     "lxml": "lxml",
