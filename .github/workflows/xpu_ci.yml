@@ -71,5 +71,6 @@ jobs:
            ${docker_image} /bin/bash -c "
           git config --global --add safe.directory /workspace/PaddleX
           cd PaddleX
+          export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=true
           bash tests/run_xpu_ci.sh
           "
