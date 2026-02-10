@@ -28,6 +28,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("pypdfium2"):
     import pypdfium2 as pdfium
+
     from ..pdfium_lock import pdfium_lock
 if is_dep_available("soundfile"):
     import soundfile
@@ -310,7 +311,9 @@ class PDFReaderBackend(_BaseReaderBackend):
                 doc = self.load_file(str(in_path))
             try:
                 for page in doc:
-                    image = page.render(scale=self._scale, rotation=self._rotation).to_numpy()
+                    image = page.render(
+                        scale=self._scale, rotation=self._rotation
+                    ).to_numpy()
                     page.close()
                     yield image
             finally:
