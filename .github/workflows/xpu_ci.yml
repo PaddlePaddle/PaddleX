@@ -27,7 +27,7 @@ jobs:
 
       - name: Code Checkout
         env:
-          docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/fastdeploy-xpu:2.3.0
+          docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleqa:xpu-ubuntu2204-x86_64-gcc123-py310
         run: |
           REPO="https://github.com/${{ github.repository }}.git"
           FULL_REPO="${{ github.repository }}"
@@ -58,7 +58,7 @@ jobs:
 
       - name: Run CI unittest
         env:
-          docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/fastdeploy-xpu:2.3.0
+          docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleqa:xpu-ubuntu2204-x86_64-gcc123-py310
         run: |
           runner_name="${{ runner.name }}"
           PARENT_DIR=$(dirname "$WORKSPACE")
@@ -71,5 +71,6 @@ jobs:
            ${docker_image} /bin/bash -c "
           git config --global --add safe.directory /workspace/PaddleX
           cd PaddleX
+          export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=true
           bash tests/run_xpu_ci.sh
           "
