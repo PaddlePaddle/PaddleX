@@ -15,15 +15,10 @@
 from __future__ import absolute_import, division, print_function
 
 import paddle.nn as nn
-from .rec_ctc_head import CTCHead
 
+from .rec_ctc_head import CTCHead
 from .rec_nrtr_head import Transformer
-from .rnn import (
-    Im2Seq,
-    SequenceEncoder,
-    trunc_normal_,
-    zeros_,
-)
+from .rnn import Im2Seq, SequenceEncoder, trunc_normal_, zeros_
 
 
 class FCTranspose(nn.Layer):

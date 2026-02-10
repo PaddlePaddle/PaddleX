@@ -34,6 +34,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("pypdfium2"):
     import pypdfium2 as pdfium
+
     from ...utils.pdfium_lock import pdfium_lock
 
 
@@ -294,7 +295,13 @@ def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
                     img = img[y : y + h, x : x + w]
                     if is_padding:
                         img = cv2.copyMakeBorder(
-                            img, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=(255, 255, 255)
+                            img,
+                            30,
+                            30,
+                            30,
+                            30,
+                            cv2.BORDER_CONSTANT,
+                            value=(255, 255, 255),
                         )
                     return img
         finally:
