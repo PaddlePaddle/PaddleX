@@ -484,7 +484,6 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-
                 if paddle.is_compiled_with_rocm():
                     config.delete_pass("conv2d_add_act_fuse_pass")
                     config.delete_pass("conv2d_add_fuse_pass")
@@ -496,7 +495,6 @@ class PaddleInfer(StaticInfer):
         # Disable paddle inference logging
         if not DEBUG:
             config.disable_glog_info()
-            
         # ROCm does not support fused_conv2d_add_act kernel, delete the fuse passes
         if paddle.is_compiled_with_rocm():
             config.delete_pass("conv2d_add_act_fuse_pass")
