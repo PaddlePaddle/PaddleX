@@ -455,6 +455,7 @@ class PaddleInfer(StaticInfer):
                 config.disable_mkldnn()
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
+                    
                 # XXX: is_compiled_with_rocm() must be True on dcu platform ?
                 if paddle.is_compiled_with_rocm():
                     # Delete unsupported passes in dcu
