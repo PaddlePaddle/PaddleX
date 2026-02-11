@@ -50,6 +50,7 @@ def postprocess_image(
     *,
     file_storage: Optional[Storage] = None,
     return_url: bool = False,
+    url_expires_in: int = -1,
     max_img_size: Optional[Tuple[int, int]] = None,
 ) -> str:
     if return_url:
@@ -75,7 +76,7 @@ def postprocess_image(
         file_storage.set(key, img_bytes)
         if return_url:
             assert isinstance(file_storage, SupportsGetURL)
-            return file_storage.get_url(key)
+            return file_storage.get_url(key, expires_in=url_expires_in)
     return serving_utils.base64_encode(img_bytes)
 
 
