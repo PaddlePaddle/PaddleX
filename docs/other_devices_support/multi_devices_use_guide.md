@@ -12,7 +12,9 @@ comments: true
 
 昇腾 NPU：[昇腾 NPU 飞桨安装教程](./paddlepaddle_install_NPU.md)
 
-昆仑 XPU：[昆仑 XPU 飞桨安装教程](./paddlepaddle_install_XPU.md)
+昆仑芯 XPU：[昆仑芯 XPU 飞桨安装教程](./paddlepaddle_install_XPU.md)
+
+昆仑芯 P800: [昆仑芯 P800 飞桨安装教程](./paddlepaddle_install_P800.md)
 
 寒武纪 MLU：[寒武纪 MLU 飞桨安装教程](./paddlepaddle_install_MLU.md)
 
