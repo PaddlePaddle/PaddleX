@@ -86,6 +86,7 @@ def postprocess_images(
     filename_template: str = "{key}.jpg",
     file_storage: Optional[Storage] = None,
     return_urls: bool = False,
+    url_expires_in: int = -1,
     max_img_size: Optional[Tuple[int, int]] = None,
 ) -> Dict[str, str]:
     output_images: Dict[str, str] = {}
@@ -100,6 +101,7 @@ def postprocess_images(
             filename=filename_template.format(key=key),
             file_storage=file_storage,
             return_url=return_urls,
+            url_expires_in=url_expires_in,
             max_img_size=max_img_size,
         )
     return output_images
