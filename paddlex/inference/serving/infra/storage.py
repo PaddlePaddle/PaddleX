@@ -65,7 +65,7 @@ FileStorageConfig = Annotated[
 
 @runtime_checkable
 class SupportsGetURL(Protocol):
-    def get_url(self, key: str) -> str: ...
+    def get_url(self, key: str, expires_in: int = -1) -> str: ...
 
 
 class Storage(metaclass=abc.ABCMeta):
@@ -156,10 +156,12 @@ class BOS(Storage):
         key = self._get_full_key(key)
         self._client.delete_object(bucket_name=self._bucket_name, key=key)
 
-    def get_url(self, key: str) -> str:
+    def get_url(self, key: str, expires_in: int = -1) -> str:
         key = self._get_full_key(key)
         return self._client.generate_pre_signed_url(
-            self._bucket_name, key, expiration_in_seconds=-1
+            self._bucket_name,
+            key,
+            expiration_in_seconds=expires_in,
         ).decode("ascii")
 
     def _get_full_key(self, key: str) -> str:

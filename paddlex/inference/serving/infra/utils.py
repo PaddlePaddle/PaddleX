@@ -30,7 +30,8 @@ from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
 from ....utils.deps import function_requires_deps, is_dep_available
-from ...utils.pdfium_lock import PDF_RENDER_SCALE, pdfium_lock
+from ....utils.flags import PDF_RENDER_SCALE
+from ...utils.pdfium_lock import pdfium_lock
 from .models import ImageInfo, PDFInfo, PDFPageInfo
 
 if is_dep_available("aiohttp"):
