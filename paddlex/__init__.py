@@ -23,6 +23,10 @@ for mod in _SPECIAL_MODS:
 
 
 def _initialize():
+    from .utils.langchain_shim import apply_langchain_shim
+
+    apply_langchain_shim()
+
     from . import repo_apis, repo_manager
     from .utils import flags
     from .utils.logging import setup_logging
