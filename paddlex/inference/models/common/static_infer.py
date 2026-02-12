@@ -401,7 +401,9 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-                config.delete_pass("matmul_add_act_fuse_pass")
+                # TODO(changdazhou): use a black list instead
+                if self._model_name == "PP-DocLayoutV3":
+                    config.delete_pass("matmul_add_act_fuse_pass")
                 # ROCm does not support fused_conv2d_add_act kernel, delete the fuse passes
                 if paddle.is_compiled_with_rocm():
                     config.delete_pass("conv2d_add_act_fuse_pass")
