@@ -15,6 +15,10 @@
 import os
 import sys
 
+from .utils.langchain_shim import apply_langchain_shim
+
+apply_langchain_shim()
+
 _SPECIAL_MODS = ["paddle", "paddle_custom_device", "ultra_infer"]
 _loaded_special_mods = []
 for mod in _SPECIAL_MODS:
@@ -23,10 +27,6 @@ for mod in _SPECIAL_MODS:
 
 
 def _initialize():
-    from .utils.langchain_shim import apply_langchain_shim
-
-    apply_langchain_shim()
-
     from . import repo_apis, repo_manager
     from .utils import flags
     from .utils.logging import setup_logging
