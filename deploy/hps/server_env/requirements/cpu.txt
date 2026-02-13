@@ -161,7 +161,9 @@ langchain-core==0.2.43
 langchain-openai==0.1.25
     # via paddlex (../../../setup.py)
 langchain-text-splitters==0.2.4
-    # via langchain
+    # via
+    #   langchain
+    #   paddlex (../../../setup.py)
 langsmith==0.1.147
     # via
     #   langchain
@@ -345,6 +347,7 @@ scikit-learn==1.6.1
     # via paddlex (../../../setup.py)
 scipy==1.15.2
     # via
+    #   paddlex (../../../setup.py)
     #   scikit-image
     #   scikit-learn
 sentencepiece==0.2.1
