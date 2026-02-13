@@ -167,7 +167,7 @@ class DocVLMPredictor(BasePredictor):
         return model, processor
 
     def _determine_batch_size(self):
-        if self._model_name == "PaddleOCR-VL-0.9B":
+        if self._model_name in ("PaddleOCR-VL-0.9B", "PaddleOCR-VL-1.5-0.9B"):
             batch_size = 1
             if not self._use_local_model:
                 batch_size = 4096
