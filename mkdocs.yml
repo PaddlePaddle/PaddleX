@@ -438,7 +438,8 @@ nav:
          - 海光 DCU 飞桨安装教程: other_devices_support/paddlepaddle_install_DCU.md
          - 寒武纪 MLU 飞桨安装教程: other_devices_support/paddlepaddle_install_MLU.md
          - 昇腾 NPU 飞桨安装教程: other_devices_support/paddlepaddle_install_NPU.md
-         - 昆仑 XPU 飞桨安装教程: other_devices_support/paddlepaddle_install_XPU.md
+         - 昆仑芯 Kunlunxin 2 飞桨安装教程: other_devices_support/paddlepaddle_install_XPU.md
+         - 昆仑芯 Kunlunxin P800 飞桨安装教程: other_devices_support/paddlepaddle_install_P800.md
          - 燧原 GCU 飞桨安装教程: other_devices_support/paddlepaddle_install_GCU.md
   - 数据标注教程:
        - 计算机视觉:
