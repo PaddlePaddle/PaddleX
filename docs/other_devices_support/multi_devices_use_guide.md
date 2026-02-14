@@ -12,7 +12,7 @@ comments: true
 
 昇腾 NPU：[昇腾 NPU 飞桨安装教程](./paddlepaddle_install_NPU.md)
 
-昆仑芯 XPU2：[昆仑芯二代芯片飞桨安装教程](./paddlepaddle_install_XPU.md)
+昆仑芯 XPU2：[昆仑芯二代 AI 芯片飞桨安装教程](./paddlepaddle_install_XPU.md)
 
 昆仑芯 P800: [昆仑芯 P800 飞桨安装教程](./paddlepaddle_install_P800.md)
 
