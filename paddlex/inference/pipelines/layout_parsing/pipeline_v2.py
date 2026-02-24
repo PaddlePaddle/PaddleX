@@ -90,7 +90,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         self.img_reader = ReadImage(format="BGR")
 
     def close(self):
-        if getattr(self, "chart_recognition_model"):
+        if getattr(self, "chart_recognition_model", None):
             self.chart_recognition_model.close()
 
     def inintial_predictor(self, config: dict) -> None:
@@ -211,13 +211,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             )
 
         # TODO(gaotingquan): init the model at any time
-        chart_recognition_config = config.get("SubModules", {}).get(
-            "ChartRecognition",
-            {"model_config_error": "config error for block_region_detection_model!"},
-        )
-        self.chart_recognition_model = self.create_model(
-            chart_recognition_config,
-        )
+        if self.use_chart_recognition:
+            chart_recognition_config = config.get("SubModules", {}).get(
+                "ChartRecognition",
+                {"model_config_error": "config error for chart_recognition_model!"},
+            )
+            self.chart_recognition_model = self.create_model(
+                chart_recognition_config,
+            )
         self.markdown_ignore_labels = config.get(
             "markdown_ignore_labels",
             [
