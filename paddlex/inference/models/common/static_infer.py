@@ -401,7 +401,13 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-                config.delete_pass("matmul_add_act_fuse_pass")
+                # TODO(changdazhou): use a black list instead
+                if self._model_name == "PP-DocLayoutV3":
+                    config.delete_pass("matmul_add_act_fuse_pass")
+                # ROCm does not support fused_conv2d_add_act kernel, delete the fuse passes
+                if paddle.is_compiled_with_rocm():
+                    config.delete_pass("conv2d_add_act_fuse_pass")
+                    config.delete_pass("conv2d_add_fuse_pass")
             elif self._option.device_type == "npu":
                 config.enable_custom_device("npu", self._option.device_id)
                 if hasattr(config, "enable_new_ir"):
@@ -480,7 +486,9 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-
+                if paddle.is_compiled_with_rocm():
+                    config.delete_pass("conv2d_add_act_fuse_pass")
+                    config.delete_pass("conv2d_add_fuse_pass")
         config.enable_memory_optim()
         for del_p in self._option.delete_pass:
             config.delete_pass(del_p)
@@ -488,6 +496,10 @@ class PaddleInfer(StaticInfer):
         # Disable paddle inference logging
         if not DEBUG:
             config.disable_glog_info()
+        # ROCm does not support fused_conv2d_add_act kernel, delete the fuse passes
+        if paddle.is_compiled_with_rocm():
+            config.delete_pass("conv2d_add_act_fuse_pass")
+            config.delete_pass("conv2d_add_fuse_pass")
 
         predictor = paddle.inference.create_predictor(config)
 

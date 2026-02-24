@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paddlex-hps-server"
-version = "0.4.0"
+version = "0.5.0"
 # `paddlex` is not included here
 dependencies = [
     "colorlog >= 6.9",
