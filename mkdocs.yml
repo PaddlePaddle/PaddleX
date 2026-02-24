@@ -195,7 +195,8 @@ plugins:
             海光 DCU 飞桨安装教程: HYGON DCU PaddlePaddle Installation Guide
             寒武纪 MLU 飞桨安装教程: Cambricon MLU PaddlePaddle Installation Guide
             昇腾 NPU 飞桨安装教程: Ascend NPU PaddlePaddle Installation Guide
-            昆仑 XPU 飞桨安装教程: Kunlun XPU PaddlePaddle Installation Guide
+            昆仑芯 Kunlunxin 2 飞桨安装教程: Kunlunxin 2 PaddlePaddle Installation Guide
+            昆仑芯 P800 飞桨安装教程: Kunlunxin P800 PaddlePaddle Installation Guide
             燧原 GCU 飞桨安装教程: Enflame GCU PaddlePaddle Installation Guide
             数据标注教程: Data Annotation Tutorials
             计算机视觉: Computer Vision
@@ -437,7 +438,8 @@ nav:
          - 海光 DCU 飞桨安装教程: other_devices_support/paddlepaddle_install_DCU.md
          - 寒武纪 MLU 飞桨安装教程: other_devices_support/paddlepaddle_install_MLU.md
          - 昇腾 NPU 飞桨安装教程: other_devices_support/paddlepaddle_install_NPU.md
-         - 昆仑 XPU 飞桨安装教程: other_devices_support/paddlepaddle_install_XPU.md
+         - 昆仑芯 Kunlunxin 2 飞桨安装教程: other_devices_support/paddlepaddle_install_XPU.md
+         - 昆仑芯 Kunlunxin P800 飞桨安装教程: other_devices_support/paddlepaddle_install_P800.md
          - 燧原 GCU 飞桨安装教程: other_devices_support/paddlepaddle_install_GCU.md
   - 数据标注教程:
        - 计算机视觉:
