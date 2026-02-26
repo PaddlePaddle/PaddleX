@@ -181,52 +181,78 @@ class DETRPostProcess(object):
 class RTDETRConfig(PretrainedConfig):
     def __init__(
         self,
-        backbone,
-        HybridEncoder,
-        RTDETRTransformer,
-        DINOHead,
-        DETRPostProcess,
+        arch,
+        return_idx,
+        freeze_stem_only,
+        freeze_at,
+        freeze_norm,
+        lr_mult_list,
+        hidden_dim,
+        use_encoder_idx,
+        num_encoder_layers,
+        el_d_model,
+        el_nhead,
+        el_dim_feedforward,
+        el_dropout,
+        el_activation,
+        expansion,
+        tf_num_queries,
+        tf_position_embed_type,
+        tf_feat_strides,
+        tf_num_levels,
+        tf_nhead,
+        tf_num_decoder_layers,
+        tf_backbone_feat_channels,
+        tf_dim_feedforward,
+        tf_dropout,
+        tf_activation,
+        tf_num_denoising,
+        tf_label_noise_ratio,
+        tf_box_noise_scale,
+        tf_learnt_init_query,
+        loss_coeff,
+        aux_loss,
+        use_vfl,
+        matcher_coeff,
+        num_top_queries,
+        use_focal_loss,
+        **kwargs,
     ):
-        if backbone["name"] == "PPHGNetV2":
-            self.arch = backbone["arch"]
-            self.return_idx = backbone["return_idx"]
-            self.freeze_stem_only = backbone["freeze_stem_only"]
-            self.freeze_at = backbone["freeze_at"]
-            self.freeze_norm = backbone["freeze_norm"]
-            self.lr_mult_list = backbone["lr_mult_list"]
-        else:
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for backbone {backbone['name']}."
-            )
-        self.hidden_dim = HybridEncoder["hidden_dim"]
-        self.use_encoder_idx = HybridEncoder["use_encoder_idx"]
-        self.num_encoder_layers = HybridEncoder["num_encoder_layers"]
-        self.el_d_model = HybridEncoder["encoder_layer"]["d_model"]
-        self.el_nhead = HybridEncoder["encoder_layer"]["nhead"]
-        self.el_dim_feedforward = HybridEncoder["encoder_layer"]["dim_feedforward"]
-        self.el_dropout = HybridEncoder["encoder_layer"]["dropout"]
-        self.el_activation = HybridEncoder["encoder_layer"]["activation"]
-        self.expansion = HybridEncoder["expansion"]
-        self.tf_num_queries = RTDETRTransformer["num_queries"]
-        self.tf_position_embed_type = RTDETRTransformer["position_embed_type"]
-        self.tf_feat_strides = RTDETRTransformer["feat_strides"]
-        self.tf_num_levels = RTDETRTransformer["num_levels"]
-        self.tf_nhead = RTDETRTransformer["nhead"]
-        self.tf_num_decoder_layers = RTDETRTransformer["num_decoder_layers"]
-        self.tf_backbone_feat_channels = RTDETRTransformer["backbone_feat_channels"]
-        self.tf_dim_feedforward = RTDETRTransformer["dim_feedforward"]
-        self.tf_dropout = RTDETRTransformer["dropout"]
-        self.tf_activation = RTDETRTransformer["activation"]
-        self.tf_num_denoising = RTDETRTransformer["num_denoising"]
-        self.tf_label_noise_ratio = RTDETRTransformer["label_noise_ratio"]
-        self.tf_box_noise_scale = RTDETRTransformer["box_noise_scale"]
-        self.tf_learnt_init_query = RTDETRTransformer["learnt_init_query"]
-        self.loss_coeff = DINOHead["loss"]["loss_coeff"]
-        self.aux_loss = DINOHead["loss"]["aux_loss"]
-        self.use_vfl = DINOHead["loss"]["use_vfl"]
-        self.matcher_coeff = DINOHead["loss"]["matcher"]["matcher_coeff"]
-        self.num_top_queries = DETRPostProcess["num_top_queries"]
-        self.use_focal_loss = DETRPostProcess["use_focal_loss"]
+        self.arch = arch
+        self.return_idx = return_idx
+        self.freeze_stem_only = freeze_stem_only
+        self.freeze_at = freeze_at
+        self.freeze_norm = freeze_norm
+        self.lr_mult_list = lr_mult_list
+        self.hidden_dim = hidden_dim
+        self.use_encoder_idx = use_encoder_idx
+        self.num_encoder_layers = num_encoder_layers
+        self.el_d_model = d_model
+        self.el_nhead = nhead
+        self.el_dim_feedforward = dim_feedforward
+        self.el_dropout = dropout
+        self.el_activation = activation
+        self.expansion = expansion
+        self.tf_num_queries = num_queries
+        self.tf_position_embed_type = position_embed_type
+        self.tf_feat_strides = feat_strides
+        self.tf_num_levels = num_levels
+        self.tf_nhead = nhead
+        self.tf_num_decoder_layers = num_decoder_layers
+        self.tf_backbone_feat_channels = backbone_feat_channels
+        self.tf_dim_feedforward = dim_feedforward
+        self.tf_dropout = dropout
+        self.tf_activation = activation
+        self.tf_num_denoising = num_denoising
+        self.tf_label_noise_ratio = label_noise_ratio
+        self.tf_box_noise_scale = box_noise_scale
+        self.tf_learnt_init_query = learnt_init_query
+        self.loss_coeff = loss_coeff
+        self.aux_loss = aux_loss
+        self.use_vfl = use_vfl
+        self.matcher_coeff = matcher_coeff
+        self.num_top_queries = num_top_queries
+        self.use_focal_loss = use_focal_loss
         self.tensor_parallel_degree = 1
 
 
