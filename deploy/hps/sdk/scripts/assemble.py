@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import argparse
+import ast
 import pathlib
 import shutil
 import subprocess
@@ -30,6 +31,22 @@ PIPELINES_DIR = BASE_DIR / "pipelines"
 COMMON_DIR = BASE_DIR / "common"
 CLIENT_LIB_PATH = BASE_DIR / "paddlex-hps-client"
 OUTPUT_DIR = BASE_DIR / "output"
+NAME_MAPPINGS_PATH = BASE_DIR / "_name_mappings.py"
+PIPELINE_CONFIGS_DIR = BASE_DIR / "_pipeline_configs"
+
+
+def _load_pipeline_app_router():
+    """Parse PIPELINE_APP_ROUTER from the mounted name_mappings.py file."""
+    if not NAME_MAPPINGS_PATH.exists():
+        return {}
+    source = NAME_MAPPINGS_PATH.read_text()
+    tree = ast.parse(source)
+    for node in ast.iter_child_nodes(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == "PIPELINE_APP_ROUTER":
+                    return ast.literal_eval(node.value)
+    return {}
 
 
 if __name__ == "__main__":
@@ -53,8 +70,15 @@ if __name__ == "__main__":
         )
         sys.exit(2)
 
+    pipeline_app_router = _load_pipeline_app_router()
+
     if args.all:
         pipeline_names = [p.name for p in PIPELINES_DIR.iterdir()]
+        pipeline_names.extend(
+            name
+            for name in pipeline_app_router
+            if name not in pipeline_names
+        )
     else:
         pipeline_names = args.pipeline_names
 
@@ -90,8 +114,22 @@ if __name__ == "__main__":
         print("=" * 30)
         print(f"Pipeline: {pipeline_name}")
         pipeline_dir = PIPELINES_DIR / pipeline_name
+
+        mapped_source = None
         if not pipeline_dir.exists():
-            sys.exit(f"{pipeline_dir} not found")
+            if pipeline_name in pipeline_app_router:
+                source_name = pipeline_app_router[pipeline_name]
+                source_dir = PIPELINES_DIR / source_name
+                if not source_dir.exists():
+                    sys.exit(
+                        f"Source pipeline directory {source_dir} not found"
+                        f" for mapped pipeline {pipeline_name}"
+                    )
+                mapped_source = source_name
+                pipeline_dir = source_dir
+                print(f"Using source pipeline: {source_name}")
+            else:
+                sys.exit(f"{pipeline_dir} not found")
 
         tgt_name = TARGET_NAME_PATTERN.format(pipeline_name=pipeline_name)
         tgt_dir = OUTPUT_DIR / tgt_name
@@ -113,6 +151,17 @@ if __name__ == "__main__":
                             shutil.copy(
                                 COMMON_DIR / f"config_{device_type}.pbtxt", config_path
                             )
+            if mapped_source is not None:
+                mapped_config = PIPELINE_CONFIGS_DIR / f"{pipeline_name}.yaml"
+                if not mapped_config.exists():
+                    sys.exit(
+                        f"Pipeline config {mapped_config} not found"
+                        f" for mapped pipeline {pipeline_name}"
+                    )
+                shutil.copy(
+                    mapped_config,
+                    tgt_dir / "server" / "pipeline_config.yaml",
+                )
 
         if with_client:
             shutil.copytree(pipeline_dir / "client", tgt_dir / "client")
