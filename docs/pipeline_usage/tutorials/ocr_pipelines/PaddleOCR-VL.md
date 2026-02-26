@@ -1551,7 +1551,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>mergeTables</code></td>
 <td><code>boolean</code></td>
-<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>merge_table</code> 参数相关说明。仅当<code>restructurePages</code>为<code>true</code>时生效。</td>
+<td>请参阅PaddleOCR-VL对象中 <code>restructure_pages</code> 方法的 <code>merge_tables</code> 参数相关说明。仅当<code>restructurePages</code>为<code>true</code>时生效。</td>
 <td>否</td>
 </tr>
 <tr>

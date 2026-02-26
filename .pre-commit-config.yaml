@@ -72,3 +72,4 @@ repos:
         files: ^paddlex/.*\.py$
         additional_dependencies:
             - stdlib-list==0.10.0
+            - setuptools

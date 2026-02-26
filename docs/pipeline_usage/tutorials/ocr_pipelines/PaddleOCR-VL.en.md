@@ -1364,9 +1364,7 @@ Below are the API references for basic service-based deployment and examples of 
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible to the server, or the Base64-encoded result of the content of the aforementioned file types. By default, for PDF files with more than 10 pages, only the first 10 pages will be processed.<br/>To remove the page limit, add the following configuration to the production line configuration file:<pre> <code>Serving:
-  extra:
-    max_num_input_imgs: null</code></pre>
+<td>The URL of an image file or PDF file accessible to the server, or the Base64-encoded result of the content of the aforementioned file types.
 </td>
 <td>Yes</td>
 </tr>

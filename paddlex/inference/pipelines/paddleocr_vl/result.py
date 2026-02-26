@@ -468,7 +468,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     original_image_width=original_image_width,
                     show_ocr_content=True,
                 ),
-                remove_symbol=use_seal_recognition,
+                remove_symbol=not use_seal_recognition,
             )
 
             if self["model_settings"].get("use_chart_recognition", False):

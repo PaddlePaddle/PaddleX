@@ -45,13 +45,26 @@ def get_config(backend):
             cfg["max-concurrency"] = 2048
         return cfg
     elif backend == "vllm":
-        return {
-            "trust-remote-code": True,
-            "gpu-memory-utilization": 0.5,
-            "max-model-len": 16384,
-            "max-num-batched-tokens": 131072,
-            "api-server-count": 4,
-        }
+        require_deps("torch")
+
+        import torch
+
+        if torch.xpu.is_available():
+            return {
+                "trust-remote-code": True,
+                "max-num-batched-tokens": 16384,
+                "no-enable-prefix-caching": True,
+                "mm-processor-cache-gb": 0,
+                "enforce-eager": True,
+            }
+        else:
+            return {
+                "trust-remote-code": True,
+                "gpu-memory-utilization": 0.5,
+                "max-model-len": 16384,
+                "max-num-batched-tokens": 131072,
+                "api-server-count": 4,
+            }
     elif backend == "sglang":
         return {
             "trust-remote-code": True,

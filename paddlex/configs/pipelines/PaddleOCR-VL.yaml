@@ -83,7 +83,7 @@ SubModules:
     module_name: vl_recognition
     model_name: PaddleOCR-VL-0.9B
     model_dir: null
-    batch_size: 4096
+    batch_size: -1
     genai_config:
       backend: native
 
@@ -103,3 +103,7 @@ SubPipelines:
         module_name: image_unwarping
         model_name: UVDoc
         model_dir: null
+
+Serving:
+  extra:
+    max_num_input_imgs: null
