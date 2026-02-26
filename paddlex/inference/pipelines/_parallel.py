@@ -76,10 +76,19 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
     def __init__(
         self,
         config,
+        device=None,
+        pp_option=None,
+        use_hpip=False,
+        hpi_config=None,
         *args,
         **kwargs,
     ):
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
+
+        self._init_args = args
+        self._init_kwargs = kwargs
 
         self._multi_device_inference = False
         if self.device is not None:
@@ -89,7 +98,8 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
                 self._pipelines = []
                 for device_id in device_ids:
                     pipeline = self._create_internal_pipeline(
-                        config, device_utils.constr_device(device_type, [device_id])
+                        config,
+                        device_utils.constr_device(device_type, [device_id]),
                     )
                     self._pipelines.append(pipeline)
                 batch_size = self._get_batch_size(config)
@@ -161,6 +171,8 @@ class AutoParallelImageSimpleInferencePipeline(AutoParallelSimpleInferencePipeli
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
             hpi_config=self.hpi_config,
+            *self._init_args,
+            **self._init_kwargs,
         )
 
     def _create_batch_sampler(self, batch_size):

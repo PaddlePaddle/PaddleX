@@ -33,6 +33,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         self.context = {}
         self.context["file_storage"] = None
         self.context["return_img_urls"] = False
+        self.context["url_expires_in"] = -1
         self.context["max_num_input_imgs"] = _DEFAULT_MAX_NUM_INPUT_IMGS
         self.context["max_output_img_size"] = _DEFAULT_MAX_OUTPUT_IMG_SIZE
         if self.app_config.extra:
@@ -44,6 +45,8 @@ class TritonPythonModel(BaseTritonPythonModel):
                 self.context["return_img_urls"] = self.app_config.extra[
                     "return_img_urls"
                 ]
+            if "url_expires_in" in self.app_config.extra:
+                self.context["url_expires_in"] = self.app_config.extra["url_expires_in"]
             if "max_num_input_imgs" in self.app_config.extra:
                 self.context["max_num_input_imgs"] = self.app_config.extra[
                     "max_num_input_imgs"
@@ -132,6 +135,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                     filename_template=f"{{key}}_{i}.jpg",
                     file_storage=self.context["file_storage"],
                     return_urls=self.context["return_img_urls"],
+                    url_expires_in=self.context["url_expires_in"],
                     max_img_size=self.context["max_output_img_size"],
                 )
             else:

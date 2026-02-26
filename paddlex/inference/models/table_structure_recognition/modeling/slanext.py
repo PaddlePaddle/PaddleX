@@ -25,23 +25,26 @@ __all__ = ["SLANeXt"]
 class SLANeXtConfig(PretrainedConfig):
     def __init__(
         self,
-        backbone,
-        SLAHead,
+        out_channels,
+        hidden_size,
+        max_text_length,
+        loc_reg_num,
+        image_size,
+        encoder_embed_dim,
+        encoder_depth,
+        encoder_num_heads,
+        encoder_global_attn_indexes,
+        **kwargs,
     ):
-        if backbone["name"] == "Vary_VIT_B":
-            self.image_size = backbone["image_size"]
-            self.encoder_embed_dim = backbone["encoder_embed_dim"]
-            self.encoder_depth = backbone["encoder_depth"]
-            self.encoder_num_heads = backbone["encoder_num_heads"]
-            self.encoder_global_attn_indexes = backbone["encoder_global_attn_indexes"]
-        else:
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for backbone {backbone['name']}."
-            )
-        self.out_channels = SLAHead["out_channels"]
-        self.hidden_size = SLAHead["hidden_size"]
-        self.max_text_length = SLAHead["max_text_length"]
-        self.loc_reg_num = SLAHead["loc_reg_num"]
+        self.out_channels = out_channels
+        self.hidden_size = hidden_size
+        self.max_text_length = max_text_length
+        self.loc_reg_num = loc_reg_num
+        self.image_size = image_size
+        self.encoder_embed_dim = encoder_embed_dim
+        self.encoder_depth = encoder_depth
+        self.encoder_num_heads = encoder_num_heads
+        self.encoder_global_attn_indexes = encoder_global_attn_indexes
         self.tensor_parallel_degree = 1
 
 
@@ -76,11 +79,25 @@ class SLANeXt(PretrainedModel):
         return [x["loc_preds"], x["structure_probs"]]
 
     def get_transpose_weight_keys(self):
-        transpose_keys = ["mlp.lin2", "attn.qkv", "mlp.lin1"]
+        transpose_keys = [
+            "mlp.lin2",
+            "attn.qkv",
+            "mlp.lin1",
+            "structure_attention_cell.score",
+            "attn.proj",
+            "i2h",
+            "h2h",
+            "structure_generator.0",
+            "structure_generator.1",
+            "loc_generator.0",
+            "loc_generator.1",
+        ]
         need_to_transpose = []
         all_weight_keys = []
         for name, param in self.backbone.named_parameters():
             all_weight_keys.append("backbone." + name)
+        for name, param in self.head.named_parameters():
+            all_weight_keys.append("head." + name)
         for i in range(len(all_weight_keys)):
             for j in range(len(transpose_keys)):
                 if (transpose_keys[j] in all_weight_keys[i]) and (

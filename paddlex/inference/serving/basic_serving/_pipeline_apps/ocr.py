@@ -43,7 +43,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     async def _infer(request: InferRequest) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
 
-        log_id = serving_utils.generate_log_id()
+        log_id = request.logId if request.logId else serving_utils.generate_log_id()
         visualize_enabled = (
             request.visualize if request.visualize is not None else ctx.config.visualize
         )
@@ -81,6 +81,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                     filename_template=f"{{key}}_{i}.jpg",
                     file_storage=ctx.extra["file_storage"],
                     return_urls=ctx.extra["return_img_urls"],
+                    url_expires_in=ctx.extra["url_expires_in"],
                     max_img_size=ctx.extra["max_output_img_size"],
                 )
             else:

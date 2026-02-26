@@ -14,7 +14,9 @@ Ascend NPU: [Ascend NPU PaddlePaddle Installation Guide](./paddlepaddle_install_
 
 Cambricon MLU: [Cambricon MLU PaddlePaddle Installation Guide](./paddlepaddle_install_MLU.en.md)
 
-Kunlun XPU: [Kunlun XPU PaddlePaddle Installation Guide](./paddlepaddle_install_XPU.en.md)
+Kunlunxin 2: [Kunlunxin 2 PaddlePaddle Installation Guide](./paddlepaddle_install_XPU.en.md)
+
+Kunlunxin P800: [Kunlunxin P800 PaddlePaddle Installation Guide](./paddlepaddle_install_P800.en.md)
 
 Hygon DCU: [Hygon DCU PaddlePaddle Installation Guide](./paddlepaddle_install_DCU.en.md)
 

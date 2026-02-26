@@ -27,34 +27,49 @@ __all__ = ["PPOCRV5Rec"]
 class PPOCRV5RecConfig(PretrainedConfig):
     def __init__(
         self,
-        backbone,
-        MultiHead,
+        model_type,
+        scale: float = 0.95,
+        conv_kxk_num: int = 4,
+        lr_mult_list: list = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        lab_lr: float = 0.1,
+        net_config: dict | None = None,
+        text_rec: bool = True,
+        stem_channels: list = [3, 32, 48],
+        det: bool = False,
+        use_lab: bool = False,
+        use_last_conv: bool = True,
+        class_expand: int = 2048,
+        dropout_prob: float = 0.0,
+        class_num: int = 1000,
+        lr_mult_list: list = [1.0, 1.0, 1.0, 1.0, 1.0],
+        out_indices: list | None = None,
+        stage_config: dict | None = None,
+        head_list: list | None = None,
+        decode_list: dict | None = None,
+        **kwargs,
     ):
-        self.backbone_name = backbone["name"]
-        if self.backbone_name == "PPLCNetV3":
-            self.net_config = backbone["net_config"]
-            self.scale = backbone["scale"]
-            self.conv_kxk_num = backbone["conv_kxk_num"]
-            self.lr_mult_list = backbone["lr_mult_list"]
-            self.lab_lr = backbone["lab_lr"]
-        elif self.backbone_name == "PPHGNetV2":
-            self.text_rec = backbone["text_rec"]
-            self.stem_channels = backbone["stem_channels"]
-            self.stage_config = backbone["stage_config"]
-            self.det = backbone["det"]
-            self.use_lab = backbone["use_lab"]
-            self.use_last_conv = backbone["use_last_conv"]
-            self.class_expand = backbone["class_expand"]
-            self.dropout_prob = backbone["dropout_prob"]
-            self.class_num = backbone["class_num"]
-            self.lr_mult_list = backbone["lr_mult_list"]
-            self.out_indices = backbone["out_indices"]
-        else:
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for backbone {backbone['name']}."
-            )
-        self.head_list = MultiHead["head_list"]
-        self.decode_list = MultiHead["decode_list"]
+        self.model_type = model_type
+        if self.model_type == "pp_ocrv5_mobile_rec":
+            self.net_config = net_config
+            self.scale = scale
+            self.conv_kxk_num =conv_kxk_num
+            self.lr_mult_list = lr_mult_list
+            self.lab_lr = lab_lr
+        elif self.model_type == "pp_ocrv5_server_rec":
+            self.text_rec = text_rec
+            self.stem_channels = stem_channels
+            self.stage_config = stage_config
+            self.det = det
+            self.use_lab = use_lab
+            self.use_last_conv = use_last_conv
+            self.class_expand = class_expand
+            self.dropout_prob = dropout_prob
+            self.class_num = class_num
+            self.lr_mult_list = lr_mult_list
+            self.out_indices = out_indices
+    
+        self.head_list = head_list
+        self.decode_list = decode_list
         self.tensor_parallel_degree = 1
 
 
@@ -64,7 +79,7 @@ class PPOCRV5Rec(PretrainedModel):
 
     def __init__(self, config: PPOCRV5RecConfig):
         super().__init__(config)
-        if self.config.backbone_name == "PPLCNetV3":
+        if self.config.model_type == "pp_ocrv5_mobile_rec":
             self.backbone = PPLCNetV3(
                 scale=self.config.scale,
                 net_config=self.config.net_config,
@@ -72,7 +87,7 @@ class PPOCRV5Rec(PretrainedModel):
                 lr_mult_list=self.config.lr_mult_list,
                 lab_lr=self.config.lab_lr,
             )
-        elif self.config.backbone_name == "PPHGNetV2":
+        elif self.config.model_type == "pp_ocrv5_server_rec":
             self.backbone = PPHGNetV2(
                 stage_config=self.config.stage_config,
                 stem_channels=self.config.stem_channels,
@@ -102,7 +117,14 @@ class PPOCRV5Rec(PretrainedModel):
         return [x.cpu().numpy()]
 
     def get_transpose_weight_keys(self):
-        transpose_keys = ["fc", "out_proj", "attn.qkv"]
+        transpose_keys = [
+            "fc",
+            "out_proj",
+            "attn.qkv",
+            "mixer.qkv",
+            "cross_attn.kv",
+            "mixer.proj"
+        ]
         need_to_transpose = []
         all_weight_keys = []
         for name, param in self.head.named_parameters():

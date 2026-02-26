@@ -62,6 +62,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        initial_predictor: bool = True,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -74,6 +75,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The default high-performance inference configuration dictionary.
                 Defaults to None.
+            initial_predictor (bool, optional): Whether to initialize predictors.
         """
 
         super().__init__(
@@ -83,13 +85,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             hpi_config=hpi_config,
         )
 
-        self.inintial_predictor(config)
+        if initial_predictor:
+            self.inintial_predictor(config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
     def close(self):
-        if getattr(self, "chart_recognition_model"):
+        if getattr(self, "chart_recognition_model", None):
             self.chart_recognition_model.close()
 
     def inintial_predictor(self, config: dict) -> None:
@@ -210,13 +213,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             )
 
         # TODO(gaotingquan): init the model at any time
-        chart_recognition_config = config.get("SubModules", {}).get(
-            "ChartRecognition",
-            {"model_config_error": "config error for block_region_detection_model!"},
-        )
-        self.chart_recognition_model = self.create_model(
-            chart_recognition_config,
-        )
+        if self.use_chart_recognition:
+            chart_recognition_config = config.get("SubModules", {}).get(
+                "ChartRecognition",
+                {"model_config_error": "config error for chart_recognition_model!"},
+            )
+            self.chart_recognition_model = self.create_model(
+                chart_recognition_config,
+            )
         self.markdown_ignore_labels = config.get(
             "markdown_ignore_labels",
             [
