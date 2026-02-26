@@ -59,6 +59,7 @@ private:
   uint32_t modelId_;
   size_t modelWorkSize_;   // model work memory buffer size
   size_t modelWeightSize_; // model weight memory buffer size
+  size_t outputSize_ = 0;
   void *modelWorkPtr_;     // model work memory buffer
   void *modelWeightPtr_;   // model weight memory buffer
   aclmdlDesc *modelDesc_;
@@ -70,6 +71,7 @@ private:
   bool LoadModel(const char *modelPath);
   bool Execute();
   bool CreateInput();
+  void Unload();
   void DestroyInput();
   bool CreateOutput();
   void DestroyOutput();
@@ -78,5 +80,6 @@ private:
   void FreeInputBuffer();
   void FreeOutputBuffer();
   bool InitResource();
+  size_t GetOutputSizeFromENV();
 };
 } // namespace ultra_infer

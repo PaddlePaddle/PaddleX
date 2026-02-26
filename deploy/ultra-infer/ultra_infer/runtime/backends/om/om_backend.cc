@@ -25,6 +25,7 @@ bool OmBackend::aclInitFlag = false;
 OmBackend::~OmBackend() {
   FreeInputBuffer();
   FreeOutputBuffer();
+  Unload();
   DestroyInput();
   DestroyOutput();
   DestroyResource();
@@ -124,6 +125,15 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
               << ", errorCode is " << static_cast<int32_t>(aclRet);
       return false;
     }
+    aclDataType dtype = aclmdlGetInputDataType(modelDesc_, i);
+    aclTensorDesc *inputDesc =
+      aclCreateTensorDesc(dtype, inputs[i].Shape().size(), inputs[i].Shape(), ACL_FORMAT_NCHW);
+    aclRet = aclmdlSetDatasetTensorDesc(input_, inputDesc, i);
+    if (aclRet != ACL_SUCCESS) {
+      FDERROR << "SetDatasetTensorDesc failed."
+              << ", errorCode is " << static_cast<int32_t>(aclRet);
+      return false;
+    }
   }
 
   bool ret = Execute();
@@ -138,10 +148,15 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
   // cp outputbuffer to outputs
   outputs->resize(outputs_desc_.size());
   std::vector<int64_t> temp_shape(4);
+  aclTensorDesc *outputDesc;
   for (size_t i = 0; i < outputs_desc_.size(); ++i) {
     temp_shape.resize(outputs_desc_[i].shape.size());
+    outputDesc = aclmdlGetDatasetTensorDesc(output_, i);
     for (int j = 0; j < outputs_desc_[i].shape.size(); ++j) {
       temp_shape[j] = outputs_desc_[i].shape[j];
+      if (temp_shape[j] <= 0) {
+        aclGetTensorDescDimV2(outputDesc, j, &temp_shape[j]);
+      }
     }
     (*outputs)[i].Resize(temp_shape, outputs_desc_[i].dtype,
                          outputs_desc_[i].name);
@@ -219,35 +234,8 @@ bool OmBackend::LoadModel(const char *modelPath) {
     FDERROR << "model has already been loaded";
     return false;
   }
-  aclError ret = aclmdlQuerySize(modelPath, &modelWorkSize_, &modelWeightSize_);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "query model false, model file is" << modelPath
-            << ", errorCode is " << static_cast<int32_t>(ret);
-    return false;
-  }
-  // using ACL_MEM_MALLOC_HUGE_FIRST to malloc memory, huge memory is preferred
-  // to use and huge memory can improve performance.
-  ret = aclrtMalloc(&modelWorkPtr_, modelWorkSize_, ACL_MEM_MALLOC_HUGE_FIRST);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "malloc buffer for work failed, require size is "
-            << modelWorkSize_ << ", errorCode is " << static_cast<int32_t>(ret);
-    return false;
-  }
 
-  // using ACL_MEM_MALLOC_HUGE_FIRST to malloc memory, huge memory is preferred
-  // to use and huge memory can improve performance.
-  ret = aclrtMalloc(&modelWeightPtr_, modelWeightSize_,
-                    ACL_MEM_MALLOC_HUGE_FIRST);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "malloc buffer for weight failed, require size is "
-            << modelWeightSize_ << ", errorCode is "
-            << static_cast<int32_t>(ret);
-    return false;
-  }
-
-  ret = aclmdlLoadFromFileWithMem(modelPath, &modelId_, modelWorkPtr_,
-                                  modelWorkSize_, modelWeightPtr_,
-                                  modelWeightSize_);
+  aclError ret = aclmdlLoadFromFile(modelPath, &modelId_);
   if (ret != ACL_SUCCESS) {
     FDERROR << "load model from file failed, model file is " << modelPath
             << ", errorCode is " << static_cast<int32_t>(ret);
@@ -264,6 +252,13 @@ bool OmBackend::Execute() {
   if (ret != ACL_SUCCESS) {
     FDERROR << "execute model failed, modelId is " << modelId_
             << ", errorCode is " << static_cast<int32_t>(ret);
+    if(outputSize_ != 0) {
+      FDERROR << "Infer failed in dynamic shape, Possible reasons:\n"
+              << "1.Insufficient memory allocated for output. Current value:"
+              << outputSize_ << "Please estimate the required output memory size"
+              << "and configure it via the environment variable ASCEND_OM_OUTPUTSIZE\n"
+              << "2.Some other reasons. Please analyze the error logs at ~/ascend/log\n";
+    }
     return false;
   }
   return true;
@@ -390,6 +385,21 @@ bool OmBackend::CreateInput() {
   return true;
 }
 
+size_t OmBackend::GetOutputSizeFromENV() {
+  const char *outputSize = std::getenv("ASCEND_OM_OUTPUTSIZE");
+  size defaultOutputSize = 64; // 64MB
+  try {
+    size_t size = static_cast<size_t>(std::stoul(std::string(outputSize)))
+    if (size <= 0 || size >= 32000) {
+      FDWARNING << "ASCEND_OM_OUTPUTSIZE is invalid, use default outputSize";
+      size = defaultOutputSize
+    }
+  } catch (const std::exception &e) {
+    return defaultOutputSize;
+  }
+  return defaultOutputSize;
+}
+
 bool OmBackend::CreateOutput() {
   if (modelDesc_ == nullptr) {
     FDERROR << "no model description, create output failed";
@@ -407,6 +417,10 @@ bool OmBackend::CreateOutput() {
   outputBuffer.resize(outputSize, nullptr);
   for (size_t i = 0; i < outputSize; ++i) {
     size_t modelOutputSize = aclmdlGetOutputSizeByIndex(modelDesc_, i);
+    if (modelOutputSize == 0) {
+      outputSize_ = GetOutputSizeFromENV();
+      modelOutputSize = outputSize_ * 1024 * 1024;
+    }
     aclError ret = aclrtMalloc(&outputBuffer[i], modelOutputSize,
                                ACL_MEM_MALLOC_HUGE_FIRST);
     if (ret != ACL_SUCCESS) {
@@ -505,6 +519,16 @@ void OmBackend::FreeOutputBuffer() {
   }
 }
 
+void OmBackend::Unload() {
+  aclError ret = aclmdlUnload(modelId_);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "aclmdlUnload failed"
+            << ", errorCode is " << static_cast<int32_t>(ret);
+    return;
+  }
+  loadFlag_ = false;
+}
+
 void OmBackend::DestroyInput() {
   if (input_ == nullptr) {
     return;
@@ -525,8 +549,6 @@ void OmBackend::DestroyOutput() {
 
   for (size_t i = 0; i < aclmdlGetDatasetNumBuffers(output_); ++i) {
     aclDataBuffer *dataBuffer = aclmdlGetDatasetBuffer(output_, i);
-    void *data = aclGetDataBufferAddr(dataBuffer);
-    (void)aclrtFree(data);
     (void)aclDestroyDataBuffer(dataBuffer);
   }
 
