@@ -169,7 +169,7 @@ if __name__ == "__main__":
 
         shutil.copy(pipeline_dir / "version.txt", tgt_dir / "version.txt")
 
-        arch_path = tgt_dir.with_suffix(ARCHIVE_SUFFIX)
+        arch_path = OUTPUT_DIR / (tgt_name + ARCHIVE_SUFFIX)
         print(f"Creating archive: {arch_path}")
         with tarfile.open(arch_path, "w:gz") as tar:
             tar.add(tgt_dir, arcname=tgt_dir.name)
