@@ -10,7 +10,6 @@ docker run \
     -e OGID="$(id -g)" \
     -v "${SDK_DIR}":/workspace \
     -v "${REPO_ROOT}/paddlex/inference/serving/infra/name_mappings.py":/workspace/_name_mappings.py:ro \
-    -v "${REPO_ROOT}/paddlex/configs/pipelines":/workspace/_pipeline_configs:ro \
     -w /workspace \
     --rm \
     python:3.10 \
