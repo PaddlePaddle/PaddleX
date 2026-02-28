@@ -21,11 +21,11 @@
 namespace ultra_infer {
 
 bool OmBackend::aclInitFlag = false;
+uint32_t OmBackend::initCount = 0;
 
 OmBackend::~OmBackend() {
   FreeInputBuffer();
   FreeOutputBuffer();
-  Unload();
   DestroyInput();
   DestroyOutput();
   DestroyResource();
@@ -127,7 +127,7 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
     }
     aclDataType dtype = aclmdlGetInputDataType(modelDesc_, i);
     aclTensorDesc *inputDesc =
-      aclCreateTensorDesc(dtype, inputs[i].Shape().size(), inputs[i].Shape(), ACL_FORMAT_NCHW);
+      aclCreateTensorDesc(dtype, inputs[i].Shape().size(), inputs[i].Shape().data(), ACL_FORMAT_NCHW);
     aclRet = aclmdlSetDatasetTensorDesc(input_, inputDesc, i);
     if (aclRet != ACL_SUCCESS) {
       FDERROR << "SetDatasetTensorDesc failed."
@@ -160,13 +160,6 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
     }
     (*outputs)[i].Resize(temp_shape, outputs_desc_[i].dtype,
                          outputs_desc_[i].name);
-    size_t modelOutputSize = aclmdlGetOutputSizeByIndex(modelDesc_, i);
-    if (modelOutputSize != (*outputs)[i].Nbytes()) {
-      FDERROR << "output size is not match, index: " << i
-              << ", modelOutputSize:" << modelOutputSize
-              << ", (*outputs)[i].Nbytes():" << (*outputs)[i].Nbytes();
-      return false;
-    }
     aclError aclRet = aclrtMemcpy(
         (*outputs)[i].MutableData(), (*outputs)[i].Nbytes(), outputBuffer[i],
         (*outputs)[i].Nbytes(), ACL_MEMCPY_DEVICE_TO_HOST);
@@ -183,6 +176,7 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
 bool OmBackend::InitResource() {
   // ACL init
   aclError ret;
+  initCount += 1;
   if (aclInitFlag == false) {
     ret = aclInit(NULL);
     if (ret != ACL_SUCCESS) {
@@ -387,13 +381,14 @@ bool OmBackend::CreateInput() {
 
 size_t OmBackend::GetOutputSizeFromENV() {
   const char *outputSize = std::getenv("ASCEND_OM_OUTPUTSIZE");
-  size defaultOutputSize = 64; // 64MB
+  size_t defaultOutputSize = 64; // 64MB
   try {
-    size_t size = static_cast<size_t>(std::stoul(std::string(outputSize)))
+    size_t size = static_cast<size_t>(std::stoul(std::string(outputSize)));
     if (size <= 0 || size >= 32000) {
       FDWARNING << "ASCEND_OM_OUTPUTSIZE is invalid, use default outputSize";
-      size = defaultOutputSize
+      size = defaultOutputSize;
     }
+    return size;
   } catch (const std::exception &e) {
     return defaultOutputSize;
   }
@@ -519,16 +514,6 @@ void OmBackend::FreeOutputBuffer() {
   }
 }
 
-void OmBackend::Unload() {
-  aclError ret = aclmdlUnload(modelId_);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "aclmdlUnload failed"
-            << ", errorCode is " << static_cast<int32_t>(ret);
-    return;
-  }
-  loadFlag_ = false;
-}
-
 void OmBackend::DestroyInput() {
   if (input_ == nullptr) {
     return;
@@ -564,6 +549,15 @@ void OmBackend::DestroyResource() {
             << ", errorCode is " << static_cast<int32_t>(ret);
     return;
   }
+
+  ret = aclmdlUnload(modelId_);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "aclmdlUnload failed"
+            << ", errorCode is " << static_cast<int32_t>(ret);
+    return;
+  }
+  loadFlag_ = false;
+
   if (stream_ != nullptr) {
     ret = aclrtDestroyStream(stream_);
     if (ret != ACL_SUCCESS) {
@@ -588,13 +582,15 @@ void OmBackend::DestroyResource() {
             << " failed, errorCode = " << static_cast<int32_t>(ret);
   }
 
-  if (aclInitFlag == true) {
+  if (initCount == 1) {
     ret = aclFinalize();
     if (ret != ACL_SUCCESS) {
       FDERROR << "finalize acl failed, errorCode = "
               << static_cast<int32_t>(ret);
     }
     aclInitFlag = false;
+  } else {
+    initCount -= 1;
   }
 }
 

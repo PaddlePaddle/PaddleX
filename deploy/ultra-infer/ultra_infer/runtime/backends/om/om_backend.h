@@ -67,11 +67,11 @@ private:
   aclmdlDataset *output_;
   aclrtContext context_;
   aclrtStream stream_;
+  static uint32_t initCount;
 
   bool LoadModel(const char *modelPath);
   bool Execute();
   bool CreateInput();
-  void Unload();
   void DestroyInput();
   bool CreateOutput();
   void DestroyOutput();
