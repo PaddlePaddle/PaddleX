@@ -35,16 +35,14 @@ NAME_MAPPINGS_PATH = BASE_DIR / "_name_mappings.py"
 
 
 def _load_pipeline_app_router():
-    """Parse PIPELINE_APP_ROUTER from the mounted name_mappings.py file.
-
-    NOTE: We use `ast` to extract the dict value without importing the module,
-    because name_mappings.py may have dependencies that are not available in
-    the build environment. `ast.parse` + `ast.literal_eval` safely evaluates
-    the dict literal from the source code.
-    """
+    """Parse PIPELINE_APP_ROUTER from the mounted name_mappings.py file."""
     if not NAME_MAPPINGS_PATH.exists():
         return {}
     source = NAME_MAPPINGS_PATH.read_text()
+    # NOTE: We use `ast` to extract the dict value without importing the module,
+    # because name_mappings.py may have dependencies that are not available in
+    # the build environment. `ast.parse` + `ast.literal_eval` safely evaluates
+    # the dict literal from the source code.
     tree = ast.parse(source)
     for node in ast.iter_child_nodes(tree):
         if isinstance(node, ast.Assign):
@@ -115,7 +113,7 @@ if __name__ == "__main__":
         print(f"Pipeline: {pipeline_name}")
         pipeline_dir = PIPELINES_DIR / pipeline_name
 
-        mapped_source = None
+        mapped_pipeline_dir = None
         if pipeline_name in pipeline_app_router:
             source_name = pipeline_app_router[pipeline_name]
             source_dir = PIPELINES_DIR / source_name
@@ -124,7 +122,7 @@ if __name__ == "__main__":
                     f"Source pipeline directory {source_dir} not found"
                     f" for mapped pipeline {pipeline_name}"
                 )
-            mapped_source = source_name
+            mapped_pipeline_dir = pipeline_dir
             pipeline_dir = source_dir
             print(f"Using source pipeline: {source_name}")
         elif not pipeline_dir.exists():
@@ -150,24 +148,15 @@ if __name__ == "__main__":
                             shutil.copy(
                                 COMMON_DIR / f"config_{device_type}.pbtxt", config_path
                             )
-            if mapped_source is not None:
-                mapped_pipeline_dir = PIPELINES_DIR / pipeline_name
-                mapped_config = mapped_pipeline_dir / "pipeline_config.yaml"
-                if not mapped_config.exists():
-                    sys.exit(
-                        f"Pipeline config {mapped_config} not found"
-                        f" for mapped pipeline {pipeline_name}"
-                    )
-                shutil.copy(
-                    mapped_config,
-                    tgt_dir / "server" / "pipeline_config.yaml",
-                )
 
         if with_client:
             shutil.copytree(pipeline_dir / "client", tgt_dir / "client")
             shutil.copy(client_lib_whl_path, tgt_dir / "client")
 
         shutil.copy(pipeline_dir / "version.txt", tgt_dir / "version.txt")
+
+        if mapped_pipeline_dir is not None:
+            shutil.copytree(mapped_pipeline_dir, tgt_dir, dirs_exist_ok=True)
 
         arch_path = OUTPUT_DIR / (tgt_name + ARCHIVE_SUFFIX)
         print(f"Creating archive: {arch_path}")
