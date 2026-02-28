@@ -71,7 +71,7 @@ def create_predictor(
         if model_dir is None:
             model_dir = official_models[model_name]
         else:
-            assert Path(model_dir).exists(), f"{model_dir} is not exists!"
+            assert Path(model_dir).exists(), f"{model_dir} does not exist!"
             model_dir = Path(model_dir)
         config = BasePredictor.load_config(model_dir)
         assert (
