@@ -258,6 +258,10 @@ Find the high-stability serving SDK corresponding to the pipeline in the table b
 <td>PaddleOCR-VL</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.4/paddlex_hps_PaddleOCR-VL_sdk.tar.gz">paddlex_hps_PaddleOCR-VL_sdk.tar.gz</a></td>
 </tr>
+<tr>
+<td>PaddleOCR-VL-1.5</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.4/paddlex_hps_PaddleOCR-VL-1.5_sdk.tar.gz">paddlex_hps_PaddleOCR-VL-1.5_sdk.tar.gz</a></td>
+</tr>
 </tbody>
 </table>
 </details>
