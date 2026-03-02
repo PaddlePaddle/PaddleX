@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Tuple
+
 import numpy as np
 
 from ....modules.text_recognition.model_list import MODELS
 from ....utils.deps import class_requires_deps, is_dep_available
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.fonts import (
     ARABIC_FONT,
     CYRILLIC_FONT,
@@ -33,7 +34,8 @@ from ....utils.fonts import (
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
+from ..common.runner import PaddleDynamicRunner
 from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
 from .result import TextRecResult
 
@@ -42,9 +44,13 @@ if is_dep_available("python-bidi"):
 
 
 @class_requires_deps("python-bidi")
-class TextRecPredictor(BasePredictor):
+class TextRecRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "paddle_dynamic", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -53,7 +59,6 @@ class TextRecPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
         self.input_shape = input_shape
         self.return_word_box = return_word_box
-        self.device = kwargs.get("device", None)
         self.vis_font = self.get_vis_font()
         self.pre_tfs, self.infer, self.post_op = self._build()
 
@@ -75,24 +80,7 @@ class TextRecPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            if self.model_name in ["PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"]:
-                from .modeling import PPOCRV5Rec
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = PPOCRV5Rec.from_pretrained(
-                        self.model_dir,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    )
-                    infer.eval()
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
+        infer = self.create_runner()
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op
@@ -105,11 +93,7 @@ class TextRecPredictor(BasePredictor):
         indices = np.argsort(np.array(width_list))
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.infer(x=x)
         batch_num = self.batch_sampler.batch_size
         img_num = len(batch_raw_imgs)
         rec_image_shape = next(
@@ -145,6 +129,22 @@ class TextRecPredictor(BasePredictor):
             "rec_score": scores,
             "vis_font": [self.vis_font] * len(batch_raw_imgs),
         }
+
+    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
+        if self.model_name not in ["PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"]:
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+            )
+        from .modeling import PPOCRV5Rec
+
+        model = PPOCRV5Rec.from_pretrained(
+            self.model_dir,
+            use_safetensors=True,
+            convert_from_hf=True,
+            dtype="float32",
+        )
+        model.eval()
+        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("DecodeImage")
     def build_readimg(self, channel_first, img_mode):

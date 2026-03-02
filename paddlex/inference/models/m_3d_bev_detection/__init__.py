@@ -12,4 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import BEVDet3DPredictor
+from .predictor import BEVDet3DRunnerPredictor
+
+# Backward compatibility
+BEVDet3DPredictor = BEVDet3DRunnerPredictor

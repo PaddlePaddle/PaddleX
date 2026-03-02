@@ -18,16 +18,20 @@ import numpy as np
 
 from ....modules.instance_segmentation.model_list import MODELS
 from ....utils import logging
-from ..object_detection import DetPredictor
+from ..object_detection import DetRunnerPredictor
 from ..object_detection.processors import ReadImage, ToBatch
 from .processors import InstanceSegPostProcess
 from .result import InstanceSegResult
 
 
-class InstanceSegPredictor(DetPredictor):
-    """InstanceSegPredictor that inherits from DetPredictor."""
+class InstanceSegRunnerPredictor(DetRunnerPredictor):
+    """InstanceSegRunnerPredictor that inherits from DetRunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args, threshold: Optional[float] = None, **kwargs):
         """Initializes InstanceSegPredictor.
@@ -81,7 +85,7 @@ class InstanceSegPredictor(DetPredictor):
         pre_ops.append(self.build_to_batch())
 
         # build infer
-        infer = self.create_static_infer()
+        infer = self.create_runner()
 
         # build postprocess op
         post_op = self.build_postprocess()

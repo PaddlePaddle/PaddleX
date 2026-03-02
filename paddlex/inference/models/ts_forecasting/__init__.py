@@ -12,4 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TSFcPredictor
+from .predictor import TSFcRunnerPredictor
+
+# Backward compatibility
+TSFcPredictor = TSFcRunnerPredictor

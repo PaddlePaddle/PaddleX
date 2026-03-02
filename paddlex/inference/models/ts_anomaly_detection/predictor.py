@@ -20,7 +20,7 @@ import pandas as pd
 from ....modules.ts_anomaly_detection.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import (
     BuildTSDataset,
     TimeFeature,
@@ -33,10 +33,14 @@ from .processors import GetAnomaly
 from .result import TSAdResult
 
 
-class TSAdPredictor(BasePredictor):
-    """TSAdPredictor that inherits from BasePredictor."""
+class TSAdRunnerPredictor(RunnerPredictor):
+    """TSAdRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSAdPredictor.
@@ -93,7 +97,7 @@ class TSAdPredictor(BasePredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = self.create_static_infer()
+        infer = self.create_runner()
         postprocessors = {}
         postprocessors["GetAnomaly"] = GetAnomaly(
             self.config["model_threshold"], self.config["info_params"]

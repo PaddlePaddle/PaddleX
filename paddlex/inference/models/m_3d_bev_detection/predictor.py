@@ -21,8 +21,8 @@ from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
-from ..base import BasePredictor
-from ..base.predictor.base_predictor import PredictionWrap
+from ..base import RunnerPredictor
+from ..base.predictor import PredictionWrap
 from .processors import (
     GetInferInput,
     LoadMultiViewImageFromFiles,
@@ -36,10 +36,14 @@ from .processors import (
 from .result import BEV3DDetResult
 
 
-class BEVDet3DPredictor(BasePredictor):
-    """BEVDet3DPredictor that inherits from BasePredictor."""
+class BEVDet3DRunnerPredictor(RunnerPredictor):
+    """BEVDet3DRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -98,7 +102,7 @@ class BEVDet3DPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["GetInferInput"] = GetInferInput()
 
-        infer = self.create_static_infer()
+        infer = self.create_runner()
 
         return pre_tfs, infer
 

@@ -24,6 +24,7 @@ from .custom_device_list import (
     NPU_BLACKLIST,
     XPU_WHITELIST,
 )
+from .deps import class_requires_deps, function_requires_deps
 from .flags import DISABLE_DEV_MODEL_WL
 
 SUPPORTED_DEVICE_TYPE = [
@@ -49,6 +50,7 @@ def constr_device(device_type, device_ids):
         return f"{device_type}"
 
 
+@function_requires_deps("paddlepaddle")
 def get_default_device():
     import paddle
 
@@ -97,6 +99,7 @@ def set_env_for_device(device):
     return set_env_for_device_type(device_type)
 
 
+@function_requires_deps("paddlepaddle")
 def set_env_for_device_type(device_type):
     import paddle
 
@@ -181,6 +184,7 @@ def check_supported_device(device, model_name):
     return check_supported_device_type(device_type, model_name)
 
 
+@class_requires_deps("paddlepaddle")
 class TemporaryDeviceChanger(ContextDecorator):
     """
     A context manager to temporarily change global device

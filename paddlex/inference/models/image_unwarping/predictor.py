@@ -17,19 +17,23 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 
 from ....modules.image_unwarping.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import Normalize, ToBatch, ToCHWImage
+from ..common.runner import PaddleDynamicRunner
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 
 
-class WarpPredictor(BasePredictor):
-    """WarpPredictor that inherits from BasePredictor."""
+class WarpRunnerPredictor(RunnerPredictor):
+    """WarpRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "paddle_dynamic", "hpi")
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes WarpPredictor.
@@ -39,7 +43,6 @@ class WarpPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.device = kwargs.get("device", None)
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
@@ -68,16 +71,8 @@ class WarpPredictor(BasePredictor):
         preprocessors["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            from .modeling import UVDocNet
 
-            with TemporaryDeviceChanger(self.device):
-                infer = UVDocNet.from_pretrained(
-                    self.model_dir, use_safetensors=True, convert_from_hf=True
-                )
-            infer.eval()
+        infer = self.create_runner()
 
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
         return preprocessors, infer, postprocessors
@@ -96,11 +91,7 @@ class WarpPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_raw_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.infer(x=x)
         batch_warp_preds = self.postprocessors["DocTrPostProcess"](batch_preds)
 
         return {
@@ -109,3 +100,12 @@ class WarpPredictor(BasePredictor):
             "input_img": batch_raw_imgs,
             "doctr_img": batch_warp_preds,
         }
+
+    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
+        from .modeling import UVDocNet
+
+        model = UVDocNet.from_pretrained(
+            self.model_dir, use_safetensors=True, convert_from_hf=True
+        )
+        model.eval()
+        return PaddleDynamicRunner(model, config=self._engine_config)

@@ -14,7 +14,7 @@
 
 from copy import deepcopy
 
-from .inference import PaddlePredictorOption, create_predictor
+from .inference import create_predictor
 from .modules import (
     build_dataset_checker,
     build_evaluator,
@@ -84,16 +84,17 @@ class _ModelBasedConfig(_BaseModel):
         device = self._config.Global.get("device", None)
 
         UNSET = object()
+        engine = predict_kwargs.pop("engine", UNSET)
         kernel_option = predict_kwargs.pop("kernel_option", UNSET)
         use_hpip = predict_kwargs.pop("use_hpip", UNSET)
         hpi_config = predict_kwargs.pop("hpi_config", UNSET)
         genai_config = predict_kwargs.pop("genai_config", UNSET)
 
         create_predictor_kwargs = {}
+        if engine is not UNSET:
+            create_predictor_kwargs["engine"] = engine
         if kernel_option is not UNSET:
-            create_predictor_kwargs["pp_option"] = PaddlePredictorOption(
-                **kernel_option
-            )
+            create_predictor_kwargs["engine_config"] = kernel_option
         if use_hpip is not UNSET:
             create_predictor_kwargs["use_hpip"] = use_hpip
         else:

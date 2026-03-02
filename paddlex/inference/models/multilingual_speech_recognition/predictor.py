@@ -12,19 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Tuple
+
 import numpy as np
 
 from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
 from ...common.batch_sampler import AudioBatchSampler
 from ...utils.io import AudioReader
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from .result import WhisperResult
 
 
-class WhisperPredictor(BasePredictor):
+class WhisperRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args, **kwargs):
         """Initializes WhisperPredictor.

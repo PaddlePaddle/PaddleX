@@ -50,7 +50,7 @@ class CropByBoxes(BaseOperator):
                 information including 'cls_id' (class ID), 'coordinate' (bounding box
                 coordinates as a list or tuple, left, top, right, bottom),
                 and optionally 'label' (label text).
-            use_layout_mask (bool, optional): Whether to use layout mask. Defaults to False.
+            use_layout_mask (bool, optional): Whether to use layout mask. Defaults to `False`.
 
         Returns:
             list[dict]: A list of dictionaries, each containing a cropped image ('img'),

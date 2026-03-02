@@ -17,25 +17,28 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 
 from ....modules.table_recognition.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import Normalize, ResizeByLong, ToBatch, ToCHWImage
+from ..common.runner import PaddleDynamicRunner
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 
 
-class TablePredictor(BasePredictor):
+class TableRunnerPredictor(RunnerPredictor):
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "paddle_dynamic", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         super().__init__(*args, **kwargs)
-        self.device = kwargs.get("device", None)
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
@@ -55,24 +58,7 @@ class TablePredictor(BasePredictor):
                 preprocessors.append(op)
         preprocessors.append(ToBatch())
 
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            if self.model_name in ["SLANeXt_wired", "SLANeXt_wireless"]:
-                from .modeling import SLANeXt
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = SLANeXt.from_pretrained(
-                        self.model_dir,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    )
-                    infer.eval()
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
+        infer = self.create_runner()
 
         postprocessors = TableLabelDecode(
             model_name=self.config["Global"]["model_name"],
@@ -108,11 +94,7 @@ class TablePredictor(BasePredictor):
         batch_imgs = self.preprocessors[4](imgs=pad_imgs)  # ToCHWImage
         x = self.preprocessors[5](imgs=batch_imgs)  # ToBatch
 
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.infer(x=x)
 
         table_result = self.postprocessors(
             pred=batch_preds,
@@ -138,6 +120,22 @@ class TablePredictor(BasePredictor):
         }
 
         return final_result
+
+    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
+        if self.model_name not in ["SLANeXt_wired", "SLANeXt_wireless"]:
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+            )
+        from .modeling import SLANeXt
+
+        model = SLANeXt.from_pretrained(
+            self.model_dir,
+            use_safetensors=True,
+            convert_from_hf=True,
+            dtype="float32",
+        )
+        model.eval()
+        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("DecodeImage")
     def build_readimg(self, channel_first=False, img_mode="BGR"):

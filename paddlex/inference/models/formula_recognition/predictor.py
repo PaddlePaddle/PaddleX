@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Tuple
+
 import numpy as np
 
 from ....modules.formula_recognition.model_list import MODELS
@@ -19,7 +21,7 @@ from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from .processors import (
     LatexImageFormat,
     LaTeXOCRDecode,
@@ -35,10 +37,14 @@ from .processors import (
 from .result import FormulaRecResult
 
 
-class FormulaRecPredictor(BasePredictor):
-    """FormulaRecPredictor that inherits from BasePredictor."""
+class FormulaRecRunnerPredictor(RunnerPredictor):
+    """FormulaRecRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -81,7 +87,7 @@ class FormulaRecPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
+        infer = self.create_runner()
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op

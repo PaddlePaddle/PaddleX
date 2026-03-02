@@ -17,10 +17,10 @@ from typing import Any, List, Optional, Sequence, Tuple, Union
 import numpy as np
 
 from ....modules.object_detection.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
-from ..base import BasePredictor
+from ..base import RunnerPredictor
+from ..common.runner import PaddleDynamicRunner
 from .processors import (
     DetPad,
     DetPostProcess,
@@ -36,9 +36,14 @@ from .result import DetResult
 from .utils import STATIC_SHAPE_MODEL_LIST
 
 
-class DetPredictor(BasePredictor):
+class DetRunnerPredictor(RunnerPredictor):
+    """Object detection predictor using inference runner."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "paddle_dynamic", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -105,7 +110,6 @@ class DetPredictor(BasePredictor):
                     "small",
                 ], f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'] or a dict, but got {layout_merge_bboxes_mode}"
 
-        self.device = kwargs.get("device", None)
         self.img_size = img_size
         self.threshold = threshold
         self.layout_nms = layout_nms
@@ -142,24 +146,7 @@ class DetPredictor(BasePredictor):
             pre_ops.insert(1, self.build_resize(self.img_size, False, 2))
 
         # build infer
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            if self.model_name == "RT-DETR-L":
-                from .modeling import RTDETR
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = RTDETR.from_pretrained(
-                        self.model_dir,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    )
-                    infer.eval()
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
+        infer = self.create_runner()
 
         # build postprocess op
         post_op = self.build_postprocess()
@@ -250,11 +237,7 @@ class DetPredictor(BasePredictor):
         batch_inputs = self.pre_ops[-1](datas)
 
         # do infer
-        if self._use_static_model:
-            batch_preds = self.infer(batch_inputs)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(batch_inputs)
+        batch_preds = self.infer(batch_inputs)
 
         # process a batch of predictions into a list of single image result
         preds_list = self._format_output(batch_preds)
@@ -275,6 +258,22 @@ class DetPredictor(BasePredictor):
             "input_img": [data["ori_img"] for data in datas],
             "boxes": boxes,
         }
+
+    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
+        if self.model_name != "RT-DETR-L":
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+            )
+        from .modeling import RTDETR
+
+        model = RTDETR.from_pretrained(
+            self.model_dir,
+            use_safetensors=True,
+            convert_from_hf=True,
+            dtype="float32",
+        )
+        model.eval()
+        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("Resize")
     def build_resize(self, target_size, keep_ratio=False, interp=2):

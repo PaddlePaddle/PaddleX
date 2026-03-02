@@ -21,7 +21,7 @@ import pandas as pd
 from ....modules.ts_forecast.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import (
     BuildTSDataset,
     TimeFeature,
@@ -34,10 +34,14 @@ from .processors import ArraytoTS, TSDeNormalize
 from .result import TSFcResult
 
 
-class TSFcPredictor(BasePredictor):
-    """TSFcPredictor that inherits from BasePredictor."""
+class TSFcRunnerPredictor(RunnerPredictor):
+    """TSFcRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSFcPredictor.
@@ -94,7 +98,7 @@ class TSFcPredictor(BasePredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = self.create_static_infer()
+        infer = self.create_runner()
         postprocessors = {}
         postprocessors["ArraytoTS"] = ArraytoTS(self.config["info_params"])
         if self.config.get("scale", None):

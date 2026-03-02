@@ -52,3 +52,22 @@ def get_model_paths(
     if (model_dir / "model.safetensors").exists():
         model_paths["safetensors"] = model_dir / "model.safetensors"
     return model_paths
+
+
+def resolve_paddle_engine_from_model_files(
+    model_dir: Union[str, PathLike, Path],
+    model_file_prefix: str = MODEL_FILE_PREFIX,
+) -> str | None:
+    """Resolve paddle_static vs paddle_dynamic from actual model files.
+
+    Returns:
+        "paddle_static", "paddle_dynamic", or None if no paddle model files found.
+    """
+    paths = get_model_paths(Path(model_dir), model_file_prefix)
+    if "paddle" in paths:
+        return "paddle_static"
+    if "safetensors" in paths:
+        return "paddle_dynamic"
+    if "paddle_dyn" in paths:
+        return "paddle_dynamic"
+    return None

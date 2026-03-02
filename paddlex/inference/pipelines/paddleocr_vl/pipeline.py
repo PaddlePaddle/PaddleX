@@ -26,6 +26,7 @@ from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models.common.genai import GenAIConfig
 from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
@@ -58,28 +59,43 @@ class _PaddleOCRVLPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
+        *,
         device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
         initial_predictor: bool = True,
+        **kwargs,
     ) -> None:
-        """
-        Initializes the class with given configurations and options.
+        """Initializes the PaddleOCR-VL pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing various settings.
-            device (str, optional): Device to run the predictions on. Defaults to None.
-            pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
+                HPIP configuration. Defaults to `None`.
+            genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client configuration.
+                Defaults to `None`.
             initial_predictor (bool, optional): Whether to initialize predictors.
+                Defaults to `True`.
         """
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            genai_config=genai_config,
+            **kwargs,
         )
 
         if initial_predictor:
@@ -548,16 +564,16 @@ class _PaddleOCRVLPipeline(BasePipeline):
             use_chart_recognition (Optional[bool]): Whether to use chart recognition. Default is None.
             use_seal_recognition (Optional[bool]): Whether to use seal recognition. Default is None.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
-            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_nms (Optional[bool], optional): Whether to use layout-aware NMS. Defaults to `False`.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
-                Defaults to None.
+                Defaults to `None`.
                 If it's a single number, then both width and height are used.
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
-            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to `None`.
             layout_shape_mode (Optional[str], optional): The mode for layout shape. Defaults to "auto", [ "rect", "quad","poly", "auto"] are supported.
-            use_queues (Optional[bool], optional): Whether to use queues. Defaults to None.
-            prompt_label (Optional[Union[str, None]], optional): The label of the prompt in ['ocr', 'formula', 'table', 'chart']. Defaults to None.
+            use_queues (Optional[bool], optional): Whether to use queues. Defaults to `None`.
+            prompt_label (Optional[Union[str, None]], optional): The label of the prompt in ['ocr', 'formula', 'table', 'chart']. Defaults to `None`.
             format_block_content (Optional[bool]): Whether to format the block content. Default is None.
             repetition_penalty (Optional[float]): The repetition penalty parameter used for VL model sampling. Default is None.
             temperature (Optional[float]): Temperature parameter used for VL model sampling. Default is None.

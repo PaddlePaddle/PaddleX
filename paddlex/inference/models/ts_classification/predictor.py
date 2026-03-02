@@ -21,16 +21,20 @@ import pandas as pd
 from ....modules.ts_classification.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import BuildTSDataset, TSCutOff, TSNormalize, TStoArray, TStoBatch
 from .processors import BuildPadMask, GetCls
 from .result import TSClsResult
 
 
-class TSClsPredictor(BasePredictor):
-    """TSClsPredictor that inherits from BasePredictor."""
+class TSClsRunnerPredictor(RunnerPredictor):
+    """TSClsRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSClsPredictor.
@@ -81,7 +85,7 @@ class TSClsPredictor(BasePredictor):
         preprocessors["BuildPadMask"] = BuildPadMask(self.config["input_data"])
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = self.create_static_infer()
+        infer = self.create_runner()
         postprocessors = {}
         postprocessors["GetCls"] = GetCls()
         return preprocessors, infer, postprocessors

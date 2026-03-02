@@ -12,4 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import OVDetPredictor
+from .predictor import OVDetRunnerPredictor
+
+# Backward compatibility
+OVDetPredictor = OVDetRunnerPredictor

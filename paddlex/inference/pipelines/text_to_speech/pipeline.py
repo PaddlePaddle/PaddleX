@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
+from ...models.common.genai import GenAIConfig
 from ...models.text_to_pinyin.result import TextToPinyinResult
 from ...models.text_to_speech_acoustic.result import Fastspeech2Result
 from ...models.text_to_speech_vocoder.result import PwganResult
@@ -35,26 +36,40 @@ class TextToSpeechPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
+        **kwargs,
     ) -> None:
-        """
-        Initializes the class with given configurations and options.
+        """Initializes the text-to-speech pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing model and other parameters.
-            device (str): The device to run the prediction on. Default is None.
-            pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
+                HPIP configuration. Defaults to `None`.
+            genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client configuration.
+                Defaults to `None`.
         """
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            genai_config=genai_config,
+            **kwargs,
         )
 
         text_to_pinyin_model_config = config["SubModules"]["TextToPinyin"]

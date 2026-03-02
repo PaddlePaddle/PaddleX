@@ -20,16 +20,20 @@ from ....modules.semantic_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import Normalize, ToBatch, ToCHWImage
 from .processors import Resize, SegPostProcess
 from .result import SegResult
 
 
-class SegPredictor(BasePredictor):
-    """SegPredictor that inherits from BasePredictor."""
+class SegRunnerPredictor(RunnerPredictor):
+    """SegRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -90,7 +94,7 @@ class SegPredictor(BasePredictor):
             _, op = self._FUNC_MAP["Resize"](self, target_size=self.target_size)
             preprocessors["Resize"] = op
 
-        infer = self.create_static_infer()
+        infer = self.create_runner()
 
         postprocessers = SegPostProcess()
 

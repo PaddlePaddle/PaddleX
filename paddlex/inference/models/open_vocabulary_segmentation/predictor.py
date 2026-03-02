@@ -13,20 +13,24 @@
 # limitations under the License.
 
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 from ....modules.open_vocabulary_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from .processors import SAMProcessor
 from .results import SAMSegResult
 
 
-class OVSegPredictor(BasePredictor):
+class OVSegRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -59,7 +63,7 @@ class OVSegPredictor(BasePredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = self.create_static_infer()
+        infer = self.create_runner()
 
         # build model specific processor, it's required for a OV model.
         processor_cfg = self.config["Processor"]

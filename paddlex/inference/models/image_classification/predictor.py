@@ -17,20 +17,24 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 
 from ....modules.image_classification.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
+from ..common.runner import PaddleDynamicRunner
 from .processors import Crop, Topk
 from .result import TopkResult
 
 
-class ClasPredictor(BasePredictor):
-    """ClasPredictor that inherits from BasePredictor."""
+class ClasRunnerPredictor(RunnerPredictor):
+    """ClasRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "paddle_dynamic", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -47,7 +51,6 @@ class ClasPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.topk = topk
-        self.device = kwargs.get("device", None)
         self.preprocessors, self.infer, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
@@ -81,26 +84,7 @@ class ClasPredictor(BasePredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            from .modeling import PPLCNet
-
-            if self.model_name in [
-                "PP-LCNet_x1_0_doc_ori",
-                "PP-LCNet_x1_0_table_cls",
-                "PP-LCNet_x0_25_textline_ori",
-            ]:
-                with TemporaryDeviceChanger(self.device):
-                    infer = PPLCNet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
-                    )
-                infer.eval()
-
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
+        infer = self.create_runner()
         postprocessors = {}
         for key in self.config["PostProcess"]:
             func = self._FUNC_MAP.get(key)
@@ -129,11 +113,7 @@ class ClasPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.infer(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors["Topk"](
             batch_preds, topk=topk or self.topk
         )
@@ -145,6 +125,23 @@ class ClasPredictor(BasePredictor):
             "scores": batch_scores,
             "label_names": batch_label_names,
         }
+
+    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
+        from .modeling import PPLCNet
+
+        if self.model_name not in [
+            "PP-LCNet_x1_0_doc_ori",
+            "PP-LCNet_x1_0_table_cls",
+            "PP-LCNet_x0_25_textline_ori",
+        ]:
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+            )
+        model = PPLCNet.from_pretrained(
+            self.model_dir, use_safetensors=True, convert_from_hf=True
+        )
+        model.eval()
+        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("ResizeImage")
     # TODO(gaotingquan): backend & interpolation

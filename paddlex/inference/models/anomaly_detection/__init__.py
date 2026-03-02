@@ -12,4 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import UadPredictor
+from .predictor import UadRunnerPredictor
+
+# Backward compatibility
+UadPredictor = UadRunnerPredictor

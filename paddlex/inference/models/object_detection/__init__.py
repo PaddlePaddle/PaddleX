@@ -12,4 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import DetPredictor
+from .predictor import DetRunnerPredictor
+
+# Backward compatibility
+DetPredictor = DetRunnerPredictor

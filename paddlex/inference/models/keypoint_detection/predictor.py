@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -20,7 +20,7 @@ from ....modules.keypoint_detection.model_list import MODELS
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
 from ..common import ToBatch
-from ..object_detection import DetPredictor
+from ..object_detection import DetRunnerPredictor
 from .processors import KptPostProcess, TopDownAffine
 from .result import KptResult
 
@@ -60,9 +60,14 @@ class KptBatchSampler(ImageBatchSampler):
             yield batch
 
 
-class KptPredictor(DetPredictor):
+class KptRunnerPredictor(DetRunnerPredictor):
+    """Keypoint detection predictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     flip_perm = [  # The left-right joints exchange order list
         [1, 2],
@@ -176,7 +181,7 @@ class KptPredictor(DetPredictor):
             "kpts": keypoints,
         }
 
-    @DetPredictor.register("TopDownEvalAffine")
+    @DetRunnerPredictor.register("TopDownEvalAffine")
     def build_topdown_affine(self, trainsize, use_udp=False):
         return TopDownAffine(
             input_size=trainsize,

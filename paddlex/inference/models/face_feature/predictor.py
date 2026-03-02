@@ -12,18 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 
 from ....modules.face_recognition.model_list import MODELS
-from ..image_feature import ImageFeaturePredictor
+from ..image_feature import ImageFeatureRunnerPredictor
 
 
-class FaceFeaturePredictor(ImageFeaturePredictor):
-    """FaceFeaturePredictor that inherits from ImageFeaturePredictor."""
+class FaceFeaturePredictor(ImageFeatureRunnerPredictor):
+    """FaceFeaturePredictor that inherits from ImageFeatureRunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args: List, flip: bool = False, **kwargs: Dict) -> None:
         """Initializes ClasPredictor.

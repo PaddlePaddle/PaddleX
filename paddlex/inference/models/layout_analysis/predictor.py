@@ -15,16 +15,21 @@
 from typing import Any, List, Optional, Tuple, Union
 
 from ....modules.object_detection.model_list import LAYOUTANALYSIS_MODELS
-from ..object_detection import DetPredictor
+from ..object_detection import DetRunnerPredictor
 from ..object_detection.processors import Resize, ToBatch
 from .processors import LayoutAnalysisProcess
 from .result import LayoutAnalysisResult
 from .utils import STATIC_SHAPE_MODEL_LIST
 
 
-class LayoutAnalysisPredictor(DetPredictor):
+class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
+    """Layout analysis predictor."""
 
     entities = LAYOUTANALYSIS_MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(
         self,
@@ -126,7 +131,7 @@ class LayoutAnalysisPredictor(DetPredictor):
             "boxes": boxes,
         }
 
-    @DetPredictor.register("Resize")
+    @DetRunnerPredictor.register("Resize")
     def build_resize(self, target_size, keep_ratio=False, interp=2):
         assert target_size
         self.target_size = target_size

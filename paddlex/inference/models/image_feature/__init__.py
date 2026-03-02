@@ -12,4 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import ImageFeaturePredictor
+from .predictor import ImageFeatureRunnerPredictor
+
+# Backward compatibility
+ImageFeaturePredictor = ImageFeatureRunnerPredictor

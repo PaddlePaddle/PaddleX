@@ -13,3 +13,6 @@
 # limitations under the License.
 
 from .predictor import TextToPinyinPredictor
+
+# Backward compatibility
+TextToPinyinRunnerPredictor = TextToPinyinPredictor

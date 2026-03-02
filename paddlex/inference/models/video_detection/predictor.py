@@ -12,20 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union
+from typing import Tuple, Union
 
 from ....modules.video_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from .processors import DetVideoPostProcess, Image2Array, NormalizeVideo, ResizeVideo
 from .result import DetVideoResult
 
 
-class VideoDetPredictor(BasePredictor):
+class VideoDetRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -59,7 +63,7 @@ class VideoDetPredictor(BasePredictor):
             if op:
                 pre_tfs[name] = op
 
-        infer = self.create_static_infer()
+        infer = self.create_runner()
         post_op = {}
         for cfg in self.config["PostProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]

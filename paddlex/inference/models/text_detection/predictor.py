@@ -12,24 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Union
+from typing import List, Tuple, Union
 
 import numpy as np
 
 from ....modules.text_detection.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..common import ToBatch, ToCHWImage
+from ..common.runner import PaddleDynamicRunner
 from .processors import DBPostProcess, DetResizeForTest, NormalizeImage
 from .result import TextDetResult
 
 
-class TextDetPredictor(BasePredictor):
+class TextDetRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "paddle_dynamic", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -56,8 +60,6 @@ class TextDetPredictor(BasePredictor):
         self.input_shape = input_shape
         self.max_side_limit = max_side_limit
 
-        self.device = kwargs.get("device", None)
-
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -78,29 +80,7 @@ class TextDetPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            if self.model_name == "PP-OCRv5_mobile_det":
-                from .modeling import PPOCRV5MobileDet
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = PPOCRV5MobileDet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
-                    )
-                infer.eval()
-            elif self.model_name == "PP-OCRv5_server_det":
-                from .modeling import PPOCRV5ServerDet
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = PPOCRV5ServerDet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
-                    )
-                infer.eval()
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
+        infer = self.create_runner()
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op
@@ -129,11 +109,7 @@ class TextDetPredictor(BasePredictor):
         batch_imgs = self.pre_tfs["ToCHW"](imgs=batch_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
 
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.infer(x=x)
         polys, scores = self.post_op(
             batch_preds,
             batch_shapes,
@@ -197,6 +173,26 @@ class TextDetPredictor(BasePredictor):
     @register("ToCHWImage")
     def build_to_chw(self):
         return "ToCHW", ToCHWImage()
+
+    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
+        if self.model_name == "PP-OCRv5_mobile_det":
+            from .modeling import PPOCRV5MobileDet
+
+            model = PPOCRV5MobileDet.from_pretrained(
+                self.model_dir, use_safetensors=True, convert_from_hf=True
+            )
+        elif self.model_name == "PP-OCRv5_server_det":
+            from .modeling import PPOCRV5ServerDet
+
+            model = PPOCRV5ServerDet.from_pretrained(
+                self.model_dir, use_safetensors=True, convert_from_hf=True
+            )
+        else:
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+            )
+        model.eval()
+        return PaddleDynamicRunner(model, config=self._engine_config)
 
     def build_postprocess(self, **kwargs):
         if kwargs.get("name") == "DBPostProcess":

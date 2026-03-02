@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import inspect
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from ....modules.open_vocabulary_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from ..object_detection.result import DetResult
 from .processors import (
     GroundingDINOPostProcessor,
@@ -29,9 +29,13 @@ from .processors import (
 )
 
 
-class OVDetPredictor(BasePredictor):
+class OVDetRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -71,7 +75,7 @@ class OVDetPredictor(BasePredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = self.create_static_infer()
+        infer = self.create_runner()
 
         # build postprocess op
         post_op = self.build_postprocess(pre_ops=pre_ops)

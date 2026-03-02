@@ -22,6 +22,7 @@ import numpy as np
 from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import MarkDownBatchSampler
+from ...models.common.genai import GenAIConfig
 from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
@@ -47,28 +48,43 @@ class PP_DocTranslation_Pipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
         initial_predictor: bool = False,
+        **kwargs,
     ) -> None:
-        """Initializes the PP_Translation_Pipeline.
+        """Initializes the PP-DocTranslation pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing various settings.
-            device (str, optional): Device to run the predictions on. Defaults to None.
-            pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
-            initial_predictor (bool, optional): Whether to initialize the predictor. Defaults to True.
+                HPIP configuration. Defaults to `None`.
+            genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client configuration.
+                Defaults to `None`.
+            initial_predictor (bool, optional): Whether to initialize the predictor.
+                Defaults to `False`.
         """
-
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            genai_config=genai_config,
+            **kwargs,
         )
 
         self.pipeline_name = config["pipeline_name"]
@@ -196,13 +212,13 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             use_formula_recognition (Optional[bool]): Whether to use formula recognition.
             use_region_detection (Optional[bool]): Whether to use region detection.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
-            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_nms (Optional[bool], optional): Whether to use layout-aware NMS. Defaults to `False`.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
-                Defaults to None.
+                Defaults to `None`.
                 If it's a single number, then both width and height are used.
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
-            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to `None`.
             text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
             text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
             text_det_thresh (Optional[float]): Threshold for text detection.
@@ -369,14 +385,14 @@ class PP_DocTranslation_Pipeline(BasePipeline):
             ori_md_info_list (List[Dict]): A list of dictionaries containing information about the original markdown text to be translated.
             target_language (str, optional): The desired target language code. Defaults to "zh".
             chunk_size (int, optional): The maximum number of characters allowed per chunk when splitting long texts. Defaults to 5000.
-            task_description (str, optional): A description of the task being performed by the translation model. Defaults to None.
-            output_format (str, optional): The desired output format of the translation result. Defaults to None.
-            rules_str (str, optional): Rules or guidelines for the translation model to follow. Defaults to None.
-            few_shot_demo_text_content (str, optional): Demo text content for the translation model. Defaults to None.
-            few_shot_demo_key_value_list (str, optional): Demo text key-value list for the translation model. Defaults to None.
-            glossary (Dict, optional): A dictionary containing terms and their corresponding definitions. Defaults to None.
+            task_description (str, optional): A description of the task being performed by the translation model. Defaults to `None`.
+            output_format (str, optional): The desired output format of the translation result. Defaults to `None`.
+            rules_str (str, optional): Rules or guidelines for the translation model to follow. Defaults to `None`.
+            few_shot_demo_text_content (str, optional): Demo text content for the translation model. Defaults to `None`.
+            few_shot_demo_key_value_list (str, optional): Demo text key-value list for the translation model. Defaults to `None`.
+            glossary (Dict, optional): A dictionary containing terms and their corresponding definitions. Defaults to `None`.
             llm_request_interval (float, optional): The interval in seconds between each request to the LLM. Defaults to 0.0.
-            chat_bot_config (Dict, optional): Configuration for the chat bot used in the translation process. Defaults to None.
+            chat_bot_config (Dict, optional): Configuration for the chat bot used in the translation process. Defaults to `None`.
             **kwargs: Additional keyword arguments passed to the translation model.
 
         Yields:
@@ -488,6 +504,7 @@ class PP_DocTranslation_Pipeline(BasePipeline):
                     "markdown_texts": target_language_texts,
                 }
             )
+
     def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
         """
         Concatenate Markdown content from multiple pages into a single document.

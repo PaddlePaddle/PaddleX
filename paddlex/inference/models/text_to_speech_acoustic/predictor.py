@@ -12,15 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Tuple
+
 from ....modules.text_to_speech_acoustic.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-from ..base import BasePredictor
+from ..base import RunnerPredictor
 from .result import Fastspeech2Result
 
 
-class Fastspeech2Predictor(BasePredictor):
+class Fastspeech2RunnerPredictor(RunnerPredictor):
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(self, *args, **kwargs):
         """Initializes FastspeechPredictor.
@@ -30,7 +36,7 @@ class Fastspeech2Predictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.infer = self.create_static_infer()
+        self.infer = self.create_runner()
 
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.

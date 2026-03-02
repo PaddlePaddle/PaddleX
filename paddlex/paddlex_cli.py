@@ -128,6 +128,12 @@ def args_cfg():
         help="Path to save the prediction results.",
     )
     pipeline_group.add_argument(
+        "--engine",
+        type=str,
+        default=None,
+        help="Inference engine.",
+    )
+    pipeline_group.add_argument(
         "--device",
         type=str,
         default=None,
@@ -471,6 +477,7 @@ def install(args):
 def pipeline_predict(
     pipeline,
     input,
+    engine,
     device,
     save_path,
     use_hpip,
@@ -479,7 +486,11 @@ def pipeline_predict(
 ):
     """pipeline predict"""
     pipeline = create_pipeline(
-        pipeline, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+        pipeline=pipeline,
+        engine=engine,
+        device=device,
+        use_hpip=use_hpip,
+        hpi_config=hpi_config,
     )
     result = pipeline.predict(input, **pipeline_args)
     for res in result:
@@ -637,6 +648,7 @@ def main():
                 pipeline_predict(
                     args.pipeline,
                     args.input,
+                    args.engine,
                     args.device,
                     args.save_path,
                     use_hpip=args.use_hpip or None,

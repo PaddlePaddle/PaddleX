@@ -12,20 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 
 from ....modules.multilabel_classification.model_list import MODELS
-from ..image_classification import ClasPredictor
+from ..image_classification import ClasRunnerPredictor
 from .processors import MultiLabelThreshOutput
 from .result import MLClassResult
 
 
-class MLClasPredictor(ClasPredictor):
-    """MLClasPredictor that inherits from BasePredictor."""
+class MLClasPredictor(ClasRunnerPredictor):
+    """MLClasPredictor that inherits from ClasRunnerPredictor."""
 
     entities = MODELS
+
+    @classmethod
+    def get_supported_engines(cls) -> Tuple[str, ...]:
+        return ("paddle_static", "hpi")
 
     def __init__(
         self,
@@ -88,7 +92,7 @@ class MLClasPredictor(ClasPredictor):
             "label_names": batch_label_names,
         }
 
-    @ClasPredictor.register("MultiLabelThreshOutput")
+    @ClasRunnerPredictor.register("MultiLabelThreshOutput")
     def build_threshoutput(self, threshold: Union[float, dict, list], label_list=None):
         if self.threshold is None:
             self.threshold = threshold
