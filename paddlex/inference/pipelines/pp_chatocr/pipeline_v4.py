@@ -459,8 +459,8 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             visual_info (dict): The visual information input, can be a single instance or a list of instances.
             min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
             block_size (int): The size of each chunk to split the text into.
-            flag_save_bytes_vector (bool): Whether to save the vector as bytes, Defaults to `False`.
-            retriever_config (dict): The configuration for the retriever, Defaults to `None`.
+            flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to `False`.
+            retriever_config (dict): The configuration for the retriever, defaults to `None`.
 
         Returns:
             dict: A dictionary containing the vector info and a flag indicating if the text is too short.
