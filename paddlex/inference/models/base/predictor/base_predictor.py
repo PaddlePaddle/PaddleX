@@ -33,14 +33,20 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         model_name: str = "",
         engine: str = "paddle_static",
         engine_config: Optional[Dict[str, Any]] = None,
+        batch_size: int = 1,
         **kwargs: Any,
     ) -> None:
         self._engine = engine
         self.model_name = model_name
         self._engine_config = dict(engine_config or {})
+
         self.batch_sampler = self._build_batch_sampler()
-        if "batch_size" in kwargs:
-            self.batch_sampler.batch_size = kwargs.get("batch_size", 1)
+        self.result_class = self._get_result_class()
+
+        # alias predict() to the __call__()
+        self.predict = self.__call__
+
+        self.batch_sampler.batch_size = batch_size
 
     @property
     def engine(self) -> str:
@@ -62,7 +68,6 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         1. pred["result"] is a list of per-item results
         2. pred is a dict of lists (e.g. input_path, class_ids, scores) - split by index
         """
-        result_class = self._get_result_class()
         for batch_data in self.batch_sampler(input):
             if hasattr(batch_data, "instances"):
                 input_paths = getattr(batch_data, "input_paths", None)
@@ -75,7 +80,7 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
                     item = {"result": single}
                     if input_paths and idx < len(input_paths):
                         item["input_path"] = input_paths[idx]
-                    yield result_class(item)
+                    yield self.result_class(item)
             else:
                 first_val = next(iter(pred.values()), None)
                 n = len(first_val) if isinstance(first_val, list) else 1
@@ -88,7 +93,7 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
                             item[k] = v
                     if input_paths and idx < len(input_paths):
                         item["input_path"] = input_paths[idx]
-                    yield result_class(item)
+                    yield self.result_class(item)
 
     @abstractmethod
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:

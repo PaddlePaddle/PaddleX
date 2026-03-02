@@ -253,6 +253,7 @@ def create_predictor(
     device: Optional[str] = None,
     engine: Optional[str] = None,
     engine_config: Optional[Dict[str, Any]] = None,
+    batch_size: int = 1,
     pp_option=None,
     use_hpip: bool = False,
     hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
@@ -276,6 +277,7 @@ def create_predictor(
             hpi, engine becomes `'hpi'`; else if model is flexible-only, engine
             becomes `'flexible'`; otherwise defaults to `'paddle'`.
         engine_config (Optional[Dict[str, Any]]): Engine-specific config.
+        batch_size (int): Batch size for inference. Defaults to 1.
         pp_option (Optional[PaddlePredictorOption]): Paddle predictor options. Used when
             `engine='paddle_static'` and `engine_config` is not specified. Prefer
             `engine_config` for new code.
@@ -391,7 +393,7 @@ def create_predictor(
         config = None
 
     predictor_cls = _pick_predictor_cls(model_name, engine)
-    create_kwargs = dict(model_name=model_name)
+    create_kwargs = dict(model_name=model_name, batch_size=batch_size)
     if engine:
         create_kwargs["engine"] = engine
     if validated_engine_config:

@@ -17,7 +17,6 @@ from typing import Any, Dict, Optional, Union
 
 from ...utils import logging
 from ...utils.config import parse_config
-from ..models.common.genai import GenAIConfig
 from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import AnomalyDetectionPipeline
@@ -114,7 +113,6 @@ def create_pipeline(
     pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: Optional[bool] = None,
     hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-    genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
     **kwargs: Any,
 ) -> BasePipeline:
     """Create a pipeline instance from a pipeline name or config.
@@ -132,8 +130,6 @@ def create_pipeline(
         pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
         use_hpip (Optional[bool], optional): Whether to use HPIP.
         hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): HPIP configuration.
-        genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client
-            configuration.
 
     Returns:
         BasePipeline: The created pipeline instance.
@@ -162,10 +158,6 @@ def create_pipeline(
         hpi_config = config.pop("hpi_config", None)
     else:
         config.pop("hpi_config", None)
-    if genai_config is None:
-        genai_config = config.pop("genai_config", None)
-    else:
-        config.pop("genai_config", None)
     if engine is None:
         engine = config.get("engine", None)
     else:
@@ -183,7 +175,6 @@ def create_pipeline(
         pp_option=pp_option,
         use_hpip=use_hpip,
         hpi_config=hpi_config,
-        genai_config=genai_config,
         **kwargs,
     )
     return pipeline

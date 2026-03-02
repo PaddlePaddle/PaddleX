@@ -18,7 +18,6 @@ from typing import Any, Dict, Optional, Union
 
 from ...utils import device as device_utils
 from ..common.batch_sampler import ImageBatchSampler
-from ..models.common.genai import GenAIConfig
 from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
 from .base import BasePipeline
@@ -87,7 +86,6 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-        genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
         **kwargs,
     ) -> None:
         """Initializes the auto-parallel simple inference pipeline.
@@ -102,8 +100,6 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
             use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): HPIP configuration.
                 Defaults to `None`.
-            genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client
-                configuration. Defaults to `None`.
         """
         super().__init__(
             device=device,
@@ -112,7 +108,6 @@ class AutoParallelSimpleInferencePipeline(BasePipeline):
             pp_option=pp_option,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
-            genai_config=genai_config,
             **kwargs,
         )
 
@@ -201,7 +196,6 @@ class AutoParallelImageSimpleInferencePipeline(AutoParallelSimpleInferencePipeli
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
             hpi_config=self.hpi_config,
-            genai_config=self.genai_config,
             **self._init_kwargs,
         )
         return pipeline

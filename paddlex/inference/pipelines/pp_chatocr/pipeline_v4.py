@@ -30,7 +30,6 @@ from ....utils.deps import (
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...models.common.genai import GenAIConfig
 from ...utils.benchmark import benchmark
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
@@ -59,7 +58,6 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-        genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
         initial_predictor: bool = True,
         **kwargs,
     ) -> None:
@@ -75,8 +73,6 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 HPIP configuration. Defaults to `None`.
-            genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client configuration.
-                Defaults to `None`.
             initial_predictor (bool, optional): Whether to initialize the predictor.
                 Defaults to `True`.
         """
@@ -87,7 +83,6 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             pp_option=pp_option,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
-            genai_config=genai_config,
             **kwargs,
         )
 

@@ -20,6 +20,7 @@ from typing import Any, Dict, List, Optional
 
 from ....common.batch_sampler import BaseBatchSampler
 from .base_predictor import BasePredictor
+from .utils import resolve_model_args
 
 
 class FlexiblePredictor(BasePredictor):
@@ -35,21 +36,18 @@ class FlexiblePredictor(BasePredictor):
         engine_config: Optional[Dict[str, Any]] = None,
         **kwargs,
     ) -> None:
+        self._model_dir, self.config, resolved_name = resolve_model_args(
+            model_dir, model_config, model_name
+        )
         super().__init__(
-            model_name=model_name or "",
+            model_name=resolved_name,
             engine="flexible",
             engine_config=engine_config,
             **kwargs,
         )
-        self._model_dir = Path(model_dir) if model_dir else None
-        self.config = model_config or {}
-        self.model_name = model_name or self.config.get("Global", {}).get(
-            "model_name", ""
-        )
 
     @property
     def model_dir(self) -> Optional[Path]:
-        """Model directory path."""
         return self._model_dir
 
     @abstractmethod

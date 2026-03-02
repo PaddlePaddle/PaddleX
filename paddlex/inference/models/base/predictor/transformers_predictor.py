@@ -43,14 +43,16 @@ class TransformersPredictor(BasePredictor):
         self,
         model_name: str = "",
         engine_config: Optional[Dict[str, Any]] = None,
+        batch_size: int = 1,
         **kwargs,
     ) -> None:
         super().__init__(
             model_name=model_name,
             engine="transformers",
             engine_config=engine_config,
+            batch_size=batch_size,
+            **kwargs,
         )
-        self._engine_config = dict(engine_config or {})
 
     @abstractmethod
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:

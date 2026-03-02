@@ -18,7 +18,6 @@ from typing import Any, Dict, Optional, Union
 from ...utils import logging
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..models import BasePredictor
-from ..models.common.genai import GenAIConfig
 from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
 
@@ -42,7 +41,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-        genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
         **kwargs,
     ) -> None:
         """
@@ -57,8 +55,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): HPIP configuration.
                 Defaults to `None`.
-            genai_config (Optional[Union[Dict[str, Any], GenAIConfig]], optional): GenAI client
-                configuration. Defaults to `None`.
         """
         super().__init__()
         self.device = device
@@ -67,7 +63,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         self.pp_option = pp_option
         self.use_hpip = use_hpip
         self.hpi_config = hpi_config
-        self.genai_config = genai_config
 
     @abstractmethod
     def predict(self, input, **kwargs):
@@ -106,15 +101,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
                 else (self.hpi_config if isinstance(self.hpi_config, dict) else {})
             )
             hpi_config = {**base, **hpi_config}
-        model_genai_config = config.get("genai_config", None)
-        if self.genai_config is not None:
-            model_genai_config = model_genai_config or {}
-            base = (
-                self.genai_config.model_dump(exclude_none=True)
-                if hasattr(self.genai_config, "model_dump")
-                else (self.genai_config if isinstance(self.genai_config, dict) else {})
-            )
-            model_genai_config = {**base, **model_genai_config}
 
         from ..models import create_predictor
 
@@ -133,7 +119,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             pp_option=pp_option,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
-            genai_config=model_genai_config,
+            genai_config=config.get("genai_config", None),
             batch_size=config.get("batch_size", 1),
             **kwargs,
         )
@@ -157,15 +143,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
                 else (self.hpi_config if isinstance(self.hpi_config, dict) else {})
             )
             hpi_config = {**base, **hpi_config}
-        genai_config = config.get("genai_config", None)
-        if self.genai_config is not None:
-            genai_config = genai_config or {}
-            base = (
-                self.genai_config.model_dump(exclude_none=True)
-                if hasattr(self.genai_config, "model_dump")
-                else (self.genai_config if isinstance(self.genai_config, dict) else {})
-            )
-            genai_config = {**base, **genai_config}
 
         return create_pipeline(
             config=config,
@@ -175,7 +152,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             pp_option=(self.pp_option.copy() if self.pp_option is not None else None),
             use_hpip=use_hpip,
             hpi_config=hpi_config,
-            genai_config=genai_config,
             **kwargs,
         )
 

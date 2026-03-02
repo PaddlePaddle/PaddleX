@@ -21,6 +21,7 @@ from .....utils.device import constr_device
 from ....utils.hpi import HPIConfig
 from ...common.runner import PaddleDynamicRunner, PaddleStaticRunner
 from .base_predictor import BasePredictor
+from .utils import resolve_model_args
 
 
 class PredictionWrap:
@@ -52,18 +53,20 @@ class RunnerPredictor(BasePredictor):
         **kwargs,
     ) -> None:
         self._check_engine_support(engine)
+        self._model_dir, self.config, resolved_name = resolve_model_args(
+            model_dir, model_config, model_name
+        )
         super().__init__(
-            model_name=model_name or "",
+            model_name=resolved_name,
             engine=engine,
             engine_config=engine_config,
             **kwargs,
         )
-        self._model_dir = Path(model_dir) if model_dir else None
-        self.config = model_config or {}
-        self.model_name = model_name or self.config.get("Global", {}).get(
-            "model_name", ""
-        )
         self._engine_config = engine_config or {}
+
+    @property
+    def model_dir(self) -> Optional[Path]:
+        return self._model_dir
 
     @property
     def device(self) -> Optional[str]:
@@ -74,11 +77,6 @@ class RunnerPredictor(BasePredictor):
             device_ids = [device_id] if device_id is not None else None
             return constr_device(device_type, device_ids)
         return None
-
-    @property
-    def model_dir(self) -> Optional[Path]:
-        """Model directory path."""
-        return self._model_dir
 
     def _check_engine_support(self, engine: str) -> None:
         """Validate that the model supports the requested engine."""

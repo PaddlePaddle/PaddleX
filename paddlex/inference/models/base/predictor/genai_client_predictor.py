@@ -33,14 +33,10 @@ class GenAIClientPredictor(BasePredictor):
         self,
         model_name: str,
         engine_config: Optional[Dict[str, Any]] = None,
+        batch_size: int = 1,
+        **kwargs,
     ) -> None:
         require_genai_client_plugin()
-        super().__init__(
-            model_name=model_name,
-            engine="genai_client",
-            engine_config=engine_config,
-        )
-        self.model_name = model_name
         if engine_config is None or not engine_config:
             raise ValueError("GenAIClientPredictor requires `engine_config`.")
         cfg = GenAIConfig.model_validate(engine_config)
@@ -50,6 +46,13 @@ class GenAIClientPredictor(BasePredictor):
                 f"got {cfg.backend!r}."
             )
         self._genai_config = cfg
+        super().__init__(
+            model_name=model_name,
+            engine="genai_client",
+            engine_config=engine_config,
+            batch_size=batch_size,
+            **kwargs,
+        )
         client_kwargs = {"model_name": self.model_name}
         client_kwargs.update(self._genai_config.client_kwargs or {})
         self._genai_client = GenAIClient(
