@@ -285,7 +285,7 @@ def create_predictor(
             Used when `engine='hpi'` and `engine_config` is not specified. Prefer
             `engine_config` for new code.
         genai_config (Optional[Union[Dict[str, Any], GenAIConfig]]): GenAI configuration.
-            Used when `engine='genai_client'` and `engine_config` is not specified.
+            Mainly used when `engine='genai_client'` and `engine_config` is not specified.
             Prefer `engine_config` for new code.
 
     Returns:
@@ -317,6 +317,7 @@ def create_predictor(
             )
 
     if engine is None:
+        engine = "paddle"
         if genai_config is not None:
             validated_genai = GenAIConfig.model_validate(genai_config)
             if not need_local_model(validated_genai):
@@ -325,8 +326,6 @@ def create_predictor(
             engine = "hpi"
         elif _is_flexible_only_model(model_name):
             engine = "flexible"
-        else:
-            engine = "paddle"
 
     need_local = engine != "genai_client"
     model_dir_resolved: Optional[Path] = None
@@ -359,12 +358,6 @@ def create_predictor(
         logging.warning(
             "`hpi_config` only applies to engine='hpi'. "
             "For engine=%r, hpi_config will be ignored.",
-            engine,
-        )
-    if genai_config is not None and engine != "genai_client":
-        logging.warning(
-            "`genai_config` only applies to engine='genai_client'. "
-            "For engine=%r, genai_config will be ignored.",
             engine,
         )
 
