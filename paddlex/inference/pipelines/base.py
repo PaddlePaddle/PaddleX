@@ -116,11 +116,11 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             device=self.device,
             engine=model_engine,
             engine_config=model_engine_config,
+            batch_size=config.get("batch_size", 1),
             pp_option=pp_option,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
             genai_config=config.get("genai_config", None),
-            batch_size=config.get("batch_size", 1),
             **kwargs,
         )
 
