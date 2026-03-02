@@ -377,7 +377,6 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
             raise ValueError("DocVLMGenAIClientPredictor requires `engine_config`.")
         super().__init__(
             model_name=model_name,
-            engine="genai_client",
             engine_config=engine_config,
         )
         self.batch_sampler = self._build_batch_sampler()

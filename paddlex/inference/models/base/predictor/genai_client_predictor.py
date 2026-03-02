@@ -14,7 +14,7 @@
 
 """GenAIClientPredictor: base predictor for remote GenAI inference via GenAIClient."""
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional
 
 from .....utils.deps import require_genai_client_plugin
 from ...common.genai import SERVER_BACKENDS, GenAIClient, GenAIConfig
@@ -28,11 +28,6 @@ class GenAIClientPredictor(BasePredictor):
     """
 
     __is_base = True
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        """GenAIClientPredictor always uses engine='genai_client'."""
-        return ("genai_client",)
 
     def __init__(
         self,
@@ -55,21 +50,21 @@ class GenAIClientPredictor(BasePredictor):
                 f"got {cfg.backend!r}."
             )
         self._genai_config = cfg
-        client_kwargs = cfg.client_kwargs or {}
+        client_kwargs = {"model_name": self.model_name}
+        client_kwargs.update(self._genai_config.client_kwargs or {})
         self._genai_client = GenAIClient(
             backend=cfg.backend,
             base_url=cfg.server_url,
             max_concurrency=cfg.max_concurrency,
-            model_name=None,
             **client_kwargs,
         )
 
     @property
     def genai_client(self):
-        """The underlying GenAIClient instance."""
+        """The underlying `GenAIClient` instance."""
         return self._genai_client
 
     def close(self) -> None:
-        """Close the underlying GenAIClient."""
+        """Close the underlying `GenAIClient` instance."""
         if hasattr(self, "_genai_client") and self._genai_client is not None:
             self._genai_client.close()
