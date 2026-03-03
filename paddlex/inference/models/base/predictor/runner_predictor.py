@@ -17,8 +17,9 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 from ..... import constants
+from .....utils import logging
 from .....utils.device import constr_device
-from ....utils.hpi import HPIConfig
+from ....utils.hpi import HPIConfig, HPIInfo
 from ...common.runner import PaddleDynamicRunner, PaddleStaticRunner
 from .base_predictor import BasePredictor
 from .utils import resolve_model_args
@@ -87,16 +88,63 @@ class RunnerPredictor(BasePredictor):
                 f"Supported engines: {list(supported)!r}."
             )
 
+    def _get_hpi_info(self):
+        """Read HPI info from model config if available."""
+        if not self.config or "Hpi" not in self.config:
+            return None
+        from pydantic import ValidationError
+
+        try:
+            return HPIInfo.model_validate(self.config["Hpi"])
+        except ValidationError as e:
+            raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
+
+    def _inject_trt_info(self, engine_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Inject TRT dynamic shape info from HPI config into engine_config if missing."""
+        hpi_info = self._get_hpi_info()
+        if hpi_info is None:
+            return engine_config
+        paddle_info = None
+        if hpi_info.backend_configs:
+            paddle_info = hpi_info.backend_configs.paddle_infer
+        if paddle_info is None:
+            return engine_config
+        if (
+            engine_config.get("trt_dynamic_shapes") is None
+            and paddle_info.trt_dynamic_shapes is not None
+        ):
+            logging.debug(
+                "TensorRT dynamic shapes set to %s", paddle_info.trt_dynamic_shapes
+            )
+            engine_config = {
+                **engine_config,
+                "trt_dynamic_shapes": paddle_info.trt_dynamic_shapes,
+            }
+        if (
+            engine_config.get("trt_dynamic_shape_input_data") is None
+            and paddle_info.trt_dynamic_shape_input_data is not None
+        ):
+            logging.debug(
+                "TensorRT dynamic shape input data set to %s",
+                paddle_info.trt_dynamic_shape_input_data,
+            )
+            engine_config = {
+                **engine_config,
+                "trt_dynamic_shape_input_data": paddle_info.trt_dynamic_shape_input_data,
+            }
+        return engine_config
+
     def build_paddle_static_runner(self):
         """Build PaddleStaticRunner for engine=paddle_static."""
         model_file_prefix = getattr(
             self.__class__, "MODEL_FILE_PREFIX", constants.MODEL_FILE_PREFIX
         )
+        config = self._inject_trt_info(self._engine_config)
         return PaddleStaticRunner(
             model_name=self.model_name,
             model_dir=self._model_dir,
             model_file_prefix=model_file_prefix,
-            config=self._engine_config,
+            config=config,
         )
 
     def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
@@ -115,6 +163,10 @@ class RunnerPredictor(BasePredictor):
         )
         hpi_cfg = dict(self._engine_config)
         hpi_cfg.setdefault("model_name", self.model_name)
+        if "hpi_info" not in hpi_cfg:
+            hpi_info = self._get_hpi_info()
+            if hpi_info is not None:
+                hpi_cfg["hpi_info"] = hpi_info
         hpi_config = HPIConfig.model_validate(hpi_cfg)
         return HPIRunner(
             model_dir=self._model_dir,
