@@ -77,11 +77,10 @@ def resolve_paddle_static_engine_config(
     """Resolve engine config with defaults. Returns dict for PaddleStaticRunner."""
     # TODO: Do not rely on `PaddlePredictorOption` and remove it eventually
     pp = PaddlePredictorOption()
-    pp._cfg["model_name"] = model_name
-    pp.setdefault_by_model_name(model_name)
     for k, v in (engine_config or {}).items():
         if hasattr(pp, k):
             setattr(pp, k, v)
+    pp.setdefault_by_model_name(model_name)
     return pp._cfg.copy()
 
 
