@@ -1424,8 +1424,8 @@
         "paddle"
       ],
       "PP-OCRv5_server_det": [
-        "paddle_mkldnn",
         "openvino",
+        "paddle_mkldnn",
         "paddle"
       ],
       "PP-OCRv5_mobile_det": [
@@ -2905,8 +2905,8 @@
         "paddle"
       ],
       "PP-OCRv5_server_det": [
-        "paddle_mkldnn",
         "openvino",
+        "paddle_mkldnn",
         "onnxruntime",
         "paddle"
       ],
@@ -4390,8 +4390,8 @@
         "paddle"
       ],
       "PP-OCRv5_server_det": [
-        "paddle_mkldnn",
         "openvino",
+        "paddle_mkldnn",
         "onnxruntime",
         "paddle"
       ],
