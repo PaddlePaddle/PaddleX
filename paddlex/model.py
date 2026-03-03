@@ -85,6 +85,7 @@ class _ModelBasedConfig(_BaseModel):
 
         UNSET = object()
         engine = predict_kwargs.pop("engine", UNSET)
+        engine_config = predict_kwargs.pop("engine_config", UNSET)
         kernel_option = predict_kwargs.pop("kernel_option", UNSET)
         use_hpip = predict_kwargs.pop("use_hpip", UNSET)
         hpi_config = predict_kwargs.pop("hpi_config", UNSET)
@@ -93,7 +94,9 @@ class _ModelBasedConfig(_BaseModel):
         create_predictor_kwargs = {}
         if engine is not UNSET:
             create_predictor_kwargs["engine"] = engine
-        if kernel_option is not UNSET:
+        if engine_config is not UNSET:
+            create_predictor_kwargs["engine_config"] = engine_config
+        elif kernel_option is not UNSET:
             create_predictor_kwargs["engine_config"] = kernel_option
         if use_hpip is not UNSET:
             create_predictor_kwargs["use_hpip"] = use_hpip
