@@ -125,6 +125,7 @@ def set_env_for_device_type(device_type):
             "BKCL_TIMEOUT": "1800",
             "FLAGS_use_stride_kernel": "0",
             "XPU_BLACK_LIST": "pad3d",
+            "XPU_PADDLE_CONV_FLOAT": "1",
         }
         _set(envs)
     if device_type.lower() == "metax_gpu":

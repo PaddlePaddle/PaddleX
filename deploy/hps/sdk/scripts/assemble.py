@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import argparse
-import json
+import ast
 import pathlib
 import shutil
 import subprocess
@@ -30,8 +30,26 @@ BASE_DIR = pathlib.Path.cwd()
 PIPELINES_DIR = BASE_DIR / "pipelines"
 COMMON_DIR = BASE_DIR / "common"
 CLIENT_LIB_PATH = BASE_DIR / "paddlex-hps-client"
-VERSIONS_PATH = BASE_DIR / "versions.json"
 OUTPUT_DIR = BASE_DIR / "output"
+NAME_MAPPINGS_PATH = BASE_DIR / "_name_mappings.py"
+
+
+def _load_pipeline_app_router():
+    """Parse PIPELINE_APP_ROUTER from the mounted name_mappings.py file."""
+    if not NAME_MAPPINGS_PATH.exists():
+        return {}
+    source = NAME_MAPPINGS_PATH.read_text()
+    # NOTE: We use `ast` to extract the dict value without importing the module,
+    # because name_mappings.py may have dependencies that are not available in
+    # the build environment. `ast.parse` + `ast.literal_eval` safely evaluates
+    # the dict literal from the source code.
+    tree = ast.parse(source)
+    for node in ast.iter_child_nodes(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == "PIPELINE_APP_ROUTER":
+                    return ast.literal_eval(node.value)
+    return {}
 
 
 if __name__ == "__main__":
@@ -54,6 +72,8 @@ if __name__ == "__main__":
             file=sys.stderr,
         )
         sys.exit(2)
+
+    pipeline_app_router = _load_pipeline_app_router()
 
     if args.all:
         pipeline_names = [p.name for p in PIPELINES_DIR.iterdir()]
@@ -88,17 +108,25 @@ if __name__ == "__main__":
             )
             client_lib_whl_path = next(OUTPUT_DIR.glob("paddlex_hps_client*.whl"))
 
-    with VERSIONS_PATH.open("r", encoding="utf-8") as f:
-        versions = json.load(f)
-
     for pipeline_name in pipeline_names:
         print("=" * 30)
         print(f"Pipeline: {pipeline_name}")
         pipeline_dir = PIPELINES_DIR / pipeline_name
-        if not pipeline_dir.exists():
+
+        mapped_pipeline_dir = None
+        if pipeline_name in pipeline_app_router:
+            source_name = pipeline_app_router[pipeline_name]
+            source_dir = PIPELINES_DIR / source_name
+            if not source_dir.exists():
+                sys.exit(
+                    f"Source pipeline directory {source_dir} not found"
+                    f" for mapped pipeline {pipeline_name}"
+                )
+            mapped_pipeline_dir = pipeline_dir
+            pipeline_dir = source_dir
+            print(f"Using source pipeline: {source_name}")
+        elif not pipeline_dir.exists():
             sys.exit(f"{pipeline_dir} not found")
-        if pipeline_name not in versions:
-            sys.exit(f"Version is missing for {repr(pipeline_name)}")
 
         tgt_name = TARGET_NAME_PATTERN.format(pipeline_name=pipeline_name)
         tgt_dir = OUTPUT_DIR / tgt_name
@@ -125,10 +153,12 @@ if __name__ == "__main__":
             shutil.copytree(pipeline_dir / "client", tgt_dir / "client")
             shutil.copy(client_lib_whl_path, tgt_dir / "client")
 
-        version = versions[pipeline_name]
-        (tgt_dir / "version.txt").write_text(version + "\n", encoding="utf-8")
+        shutil.copy(pipeline_dir / "version.txt", tgt_dir / "version.txt")
 
-        arch_path = tgt_dir.with_suffix(ARCHIVE_SUFFIX)
+        if mapped_pipeline_dir is not None:
+            shutil.copytree(mapped_pipeline_dir, tgt_dir, dirs_exist_ok=True)
+
+        arch_path = OUTPUT_DIR / (tgt_name + ARCHIVE_SUFFIX)
         print(f"Creating archive: {arch_path}")
         with tarfile.open(arch_path, "w:gz") as tar:
             tar.add(tgt_dir, arcname=tgt_dir.name)

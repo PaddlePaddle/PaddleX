@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ import numpy as np
 
 from ....modules.text_recognition.model_list import MODELS
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.device import TemporaryDeviceChanger
 from ....utils.fonts import (
     ARABIC_FONT,
     CYRILLIC_FONT,
@@ -52,6 +53,7 @@ class TextRecPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
         self.input_shape = input_shape
         self.return_word_box = return_word_box
+        self.device = kwargs.get("device", None)
         self.vis_font = self.get_vis_font()
         self.pre_tfs, self.infer, self.post_op = self._build()
 
@@ -73,7 +75,24 @@ class TextRecPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
+        if self._use_static_model:
+            infer = self.create_static_infer()
+        else:
+            if self.model_name in ["PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"]:
+                from .modeling import PPOCRV5Rec
+
+                with TemporaryDeviceChanger(self.device):
+                    infer = PPOCRV5Rec.from_pretrained(
+                        self.model_dir,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    )
+                    infer.eval()
+            else:
+                raise RuntimeError(
+                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+                )
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op
@@ -86,7 +105,11 @@ class TextRecPredictor(BasePredictor):
         indices = np.argsort(np.array(width_list))
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        if self._use_static_model:
+            batch_preds = self.infer(x=x)
+        else:
+            with TemporaryDeviceChanger(self.device):
+                batch_preds = self.infer(x=x)
         batch_num = self.batch_sampler.batch_size
         img_num = len(batch_raw_imgs)
         rec_image_shape = next(

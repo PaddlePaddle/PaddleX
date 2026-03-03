@@ -13,24 +13,58 @@
 # limitations under the License.
 
 
+from ....utils.deps import require_deps
+
+__all__ = ["get_config"]
+
+# TODO: Allow setting `trust-remote-code` to `False` to use `transformers` processors
+
+
 def get_config(backend):
     if backend == "fastdeploy":
-        return {
+        require_deps("paddlepaddle")
+
+        import paddle.device
+
+        cfg = {
             "gpu-memory-utilization": 0.7,
             "max-model-len": 16384,
             "max-num-batched-tokens": 16384,
             "max-num-seqs": 256,
             "workers": 4,
-            "graph-optimization-config": '{"graph_opt_level":0, "use_cudagraph":true}',
         }
+        if paddle.device.is_compiled_with_cuda():
+            cfg["graph-optimization-config"] = (
+                '{"graph_opt_level":0, "use_cudagraph":true}'
+            )
+        elif paddle.device.is_compiled_with_custom_device("iluvatar_gpu"):
+            cfg["block-size"] = 16
+            cfg["max-num-seqs"] = 32
+            cfg["max-concurrency"] = 2048
+        elif paddle.device.is_compiled_with_xpu():
+            cfg["max-concurrency"] = 2048
+        return cfg
     elif backend == "vllm":
-        return {
-            "trust-remote-code": True,
-            "gpu-memory-utilization": 0.5,
-            "max-model-len": 16384,
-            "max-num-batched-tokens": 131072,
-            "api-server-count": 4,
-        }
+        require_deps("torch")
+
+        import torch
+
+        if torch.xpu.is_available():
+            return {
+                "trust-remote-code": True,
+                "max-num-batched-tokens": 16384,
+                "no-enable-prefix-caching": True,
+                "mm-processor-cache-gb": 0,
+                "enforce-eager": True,
+            }
+        else:
+            return {
+                "trust-remote-code": True,
+                "gpu-memory-utilization": 0.5,
+                "max-model-len": 16384,
+                "max-num-batched-tokens": 131072,
+                "api-server-count": 4,
+            }
     elif backend == "sglang":
         return {
             "trust-remote-code": True,

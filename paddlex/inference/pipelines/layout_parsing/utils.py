@@ -234,8 +234,8 @@ def calculate_overlap_ratio(
     Returns:
         float: The overlap ratio value between the two bounding boxes
     """
-    bbox1 = np.array(bbox1)
-    bbox2 = np.array(bbox2)
+    bbox1 = np.array(bbox1, dtype=np.float64)
+    bbox2 = np.array(bbox2, dtype=np.float64)
 
     x_min_inter = np.maximum(bbox1[0], bbox2[0])
     y_min_inter = np.maximum(bbox1[1], bbox2[1])
@@ -245,7 +245,8 @@ def calculate_overlap_ratio(
     inter_width = np.maximum(0, x_max_inter - x_min_inter)
     inter_height = np.maximum(0, y_max_inter - y_min_inter)
 
-    inter_area = inter_width * inter_height
+    inter_area = np.multiply(inter_width, inter_height, dtype=np.float64)
+
 
     bbox1_area = calculate_bbox_area(bbox1)
     bbox2_area = calculate_bbox_area(bbox2)
@@ -330,18 +331,24 @@ def is_non_breaking_punctuation(char):
     return char in non_breaking_punctuations
 
 
+def construct_img_path(label, box):
+    x_min, y_min, x_max, y_max = list(map(int, box))
+    return f"imgs/img_in_{label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+
+
 def gather_imgs(original_img, layout_det_objs):
     imgs_in_doc = []
     for det_obj in layout_det_objs:
         if det_obj["label"] in BLOCK_LABEL_MAP["image_labels"]:
             label = det_obj["label"]
             x_min, y_min, x_max, y_max = list(map(int, det_obj["coordinate"]))
-            img_path = f"imgs/img_in_{label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+            img_path = construct_img_path(label, det_obj["coordinate"])
             img = Image.fromarray(original_img[y_min:y_max, x_min:x_max, ::-1])
             imgs_in_doc.append(
                 {
                     "path": img_path,
                     "img": img,
+                    "label": label,
                     "coordinate": (x_min, y_min, x_max, y_max),
                     "score": det_obj["score"],
                 }

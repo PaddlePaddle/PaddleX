@@ -83,5 +83,6 @@ MODELS = [
     "PP-DocLayout-S",
     "PP-DocLayout_plus-L",
     "PP-DocBlockLayout",
-    "PP-DocLayoutV2",
 ]
+
+LAYOUTANALYSIS_MODELS = ["PP-DocLayoutV2", "PP-DocLayoutV3"]

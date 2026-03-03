@@ -167,7 +167,7 @@ class DetResizeForTest:
 
         if max(resize_h, resize_w) > max_side_limit:
             logging.warning(
-                f"Resized image size ({resize_h}x{resize_w}) exceeds max_side_limit of {max_side_limit}. "
+                f"Resized image size ({resize_w}x{resize_h}) exceeds max_side_limit of {max_side_limit}. "
                 f"Resizing to fit within limit."
             )
             ratio = float(max_side_limit) / max(resize_h, resize_w)
@@ -253,6 +253,9 @@ class NormalizeImage:
         """apply"""
 
         def _norm(img):
+            # Check if the image is in 4-channel RGBA format. If so, convert it to RGB format.
+            if img.shape[2] == 4:
+                img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
             if self.order == "chw":
                 img = np.transpose(img, (2, 0, 1))
 

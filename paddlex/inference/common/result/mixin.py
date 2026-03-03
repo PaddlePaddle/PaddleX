@@ -614,6 +614,7 @@ class JsonMixin:
             return mime_type is not None and mime_type == "application/json"
 
         json_data = self._to_json()
+
         if not _is_json_file(save_path):
             fn = Path(self._get_input_fn())
             stem = fn.stem
@@ -633,6 +634,7 @@ class JsonMixin:
                 logging.warning(
                     f"The result has multiple json files need to be saved. But the `save_path` has been specified as `{save_path}`!"
                 )
+
             self._json_writer.write(
                 save_path,
                 json_data[list(json_data.keys())[0]],
@@ -1243,9 +1245,10 @@ class MarkdownMixin:
             if isinstance(value, dict):
                 base_save_path = save_path.parent
                 for img_path, img_data in value.items():
-                    save_img_func(
-                        (base_save_path / img_path).as_posix(),
-                        img_data,
-                        *args,
-                        **kwargs,
-                    )
+                    if img_data:
+                        save_img_func(
+                            (base_save_path / img_path).as_posix(),
+                            img_data,
+                            *args,
+                            **kwargs,
+                        )

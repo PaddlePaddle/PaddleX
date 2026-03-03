@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paddlex-hps-client"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
     "numpy >= 1.24",
     # XXX: Not sure about the backward compatibility
-    "tritonclient [grpc] >= 2.15.0",
+    "tritonclient [grpc] >= 2.30.0",
 ]
 
 [tool.isort]

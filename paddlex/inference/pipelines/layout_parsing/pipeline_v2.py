@@ -33,10 +33,8 @@ from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from ..pp_doctranslation.result import MarkdownResult
 from .layout_objects import LayoutBlock, LayoutRegion
-from .merge_table import merge_tables_across_pages
-from .result_v2 import LayoutParsingResultV2, ProcessedLayoutParsingResult
+from .result_v2 import LayoutParsingResultV2
 from .setting import BLOCK_LABEL_MAP, BLOCK_SETTINGS, REGION_SETTINGS
-from .title_level import assign_levels_to_parsing_res
 from .utils import (
     calculate_bbox_area,
     calculate_minimum_enclosing_bbox,
@@ -64,6 +62,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        initial_predictor: bool = True,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -76,6 +75,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
                 The default high-performance inference configuration dictionary.
                 Defaults to None.
+            initial_predictor (bool, optional): Whether to initialize predictors.
         """
 
         super().__init__(
@@ -85,13 +85,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             hpi_config=hpi_config,
         )
 
-        self.inintial_predictor(config)
+        if initial_predictor:
+            self.inintial_predictor(config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
 
     def close(self):
-        if getattr(self, "chart_recognition_model"):
+        if getattr(self, "chart_recognition_model", None):
             self.chart_recognition_model.close()
 
     def inintial_predictor(self, config: dict) -> None:
@@ -212,13 +213,14 @@ class _LayoutParsingPipelineV2(BasePipeline):
             )
 
         # TODO(gaotingquan): init the model at any time
-        chart_recognition_config = config.get("SubModules", {}).get(
-            "ChartRecognition",
-            {"model_config_error": "config error for block_region_detection_model!"},
-        )
-        self.chart_recognition_model = self.create_model(
-            chart_recognition_config,
-        )
+        if self.use_chart_recognition:
+            chart_recognition_config = config.get("SubModules", {}).get(
+                "ChartRecognition",
+                {"model_config_error": "config error for chart_recognition_model!"},
+            )
+            self.chart_recognition_model = self.create_model(
+                chart_recognition_config,
+            )
         self.markdown_ignore_labels = config.get(
             "markdown_ignore_labels",
             [
@@ -1430,80 +1432,6 @@ class _LayoutParsingPipelineV2(BasePipeline):
             merged_blocks_by_page.append(current_page_new_blocks)
 
         return merged_blocks_by_page
-
-    def concatenate_pages(
-        self,
-        res_list: list,
-        merge_table: bool = True,
-        title_level: bool = True,
-    ):
-        """Concatenate layout parsing results from multiple pages.
-
-        Args:
-            res_list: List of page parsing results
-            merge_talble: Whether to merge tables across pages
-            title_level: Whether to assign title levels
-
-        Returns:
-            ProcessedLayoutParsingResult: Combined parsing result after merge_table or title_level policy
-        """
-        # Initialize result data structure
-        layout_parsing_result = {
-            "input_path": [],
-            "page_index": [],
-            "page_count": [],
-            "width": [],
-            "height": [],
-            "parsing_res_list": [],
-            "doc_preprocessor_res": [],
-            "layout_det_res": [],
-            "region_det_res": [],
-            "overall_ocr_res": [],
-            "table_res_list": [],
-            "seal_res_list": [],
-            "chart_res_list": [],
-            "formula_res_list": [],
-            "imgs_in_doc": [],
-            "model_settings": [],
-        }
-
-        blocks_by_page = []
-
-        for idx, single_img_res in enumerate(res_list):
-
-            layout_parsing_result["parsing_res_list"].extend(
-                single_img_res.get("parsing_res_list", [])
-            )
-
-            blocks_by_page.append(single_img_res.get("parsing_res_list", []))
-
-            for key, value in single_img_res.items():
-                if key == "parsing_res_list":
-                    continue
-
-                if key not in layout_parsing_result:
-                    layout_parsing_result[key] = []
-
-                if isinstance(value, (list, tuple, set)):
-                    layout_parsing_result[key].extend(list(value))
-                else:
-                    layout_parsing_result[key].append(value)
-
-            for block in single_img_res["parsing_res_list"]:
-                setattr(block, "page_index", idx)
-
-        if merge_table:
-            blocks_by_page = merge_tables_across_pages(blocks_by_page)
-        if title_level:
-            blocks_by_page = assign_levels_to_parsing_res(
-                blocks_by_page, layout_parsing_result["layout_det_res"]
-            )
-
-        layout_parsing_result["parsing_res_list"] = self.merge_text_across_page(
-            blocks_by_page
-        )
-
-        return ProcessedLayoutParsingResult(layout_parsing_result)
 
 
 @pipeline_requires_extra("ocr")

@@ -91,5 +91,5 @@ BLOCK_LABEL_MAP = {
         "footer_image",
         "aside_text",
     ],
-    "image_labels": ["image", "figure"],
+    "image_labels": ["image", "figure", "seal"],
 }

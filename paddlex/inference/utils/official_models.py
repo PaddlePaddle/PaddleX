@@ -31,7 +31,11 @@ from aistudio_sdk.snapshot_download import snapshot_download as aistudio_downloa
 from ...utils import logging
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
-from ...utils.flags import DISABLE_MODEL_SOURCE_CHECK, MODEL_SOURCE
+from ...utils.flags import (
+    DISABLE_MODEL_SOURCE_CHECK,
+    HUGGING_FACE_ENDPOINT,
+    MODEL_SOURCE,
+)
 
 ALL_MODELS = [
     "ResNet18",
@@ -46,6 +50,7 @@ ALL_MODELS = [
     "ResNet152_vd",
     "ResNet200_vd",
     "PaddleOCR-VL",
+    "PaddleOCR-VL-1.5",
     "PP-LCNet_x0_25",
     "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x0_35",
@@ -296,6 +301,7 @@ ALL_MODELS = [
     "SAM-H_box",
     "SAM-H_point",
     "PP-DocLayoutV2",
+    "PP-DocLayoutV3",
     "PP-DocLayout-L",
     "PP-DocLayout-M",
     "PP-DocLayout-S",
@@ -349,6 +355,7 @@ OCR_MODELS = [
     "th_PP-OCRv5_mobile_rec",
     "el_PP-OCRv5_mobile_rec",
     "PaddleOCR-VL",
+    "PaddleOCR-VL-1.5",
     "PicoDet_layout_1x",
     "PicoDet_layout_1x_table",
     "PicoDet-L_layout_17cls",
@@ -361,11 +368,11 @@ OCR_MODELS = [
     "PP-DocBee-7B",
     "PP-DocBlockLayout",
     "PP-DocLayoutV2",
+    "PP-DocLayoutV3",
     "PP-DocLayout-L",
     "PP-DocLayout-M",
     "PP-DocLayout_plus-L",
     "PP-DocLayout-S",
-    "PP-DocLayoutV2",
     "PP-FormulaNet-L",
     "PP-FormulaNet_plus-L",
     "PP-FormulaNet_plus-M",
@@ -481,12 +488,14 @@ class _BosModelHoster(_BaseModelHoster):
 class _HuggingFaceModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
     alias = "huggingface"
-    healthcheck_url = "https://huggingface.co"
+    healthcheck_url = HUGGING_FACE_ENDPOINT
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
             hf_hub.snapshot_download(
-                repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
+                repo_id=f"PaddlePaddle/{model_name}",
+                local_dir=local_dir,
+                endpoint=HUGGING_FACE_ENDPOINT,
             )
 
         if os.path.exists(save_dir):
@@ -525,7 +534,7 @@ class _AIStudioModelHoster(_BaseModelHoster):
 
     def _download(self, model_name, save_dir):
         def _clone(local_dir):
-            if model_name == "PaddleOCR-VL":
+            if "PaddleOCR-VL" in model_name:
                 aistudio_download(
                     repo_id=f"PaddlePaddle/{model_name}", local_dir=local_dir
                 )
@@ -558,7 +567,7 @@ class _ModelManager:
 
         if DISABLE_MODEL_SOURCE_CHECK:
             logging.warning(
-                f"Connectivity check to the model hoster has been skipped because `DISABLE_MODEL_SOURCE_CHECK` is enabled."
+                f"Connectivity check to the model hoster has been skipped because `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK` is enabled."
             )
             hosters = []
             for hoster_cls in self.hoster_candidates:
@@ -569,7 +578,7 @@ class _ModelManager:
             return hosters
 
         logging.warning(
-            f"Checking connectivity to the model hosters, this may take a while. To bypass this check, set `DISABLE_MODEL_SOURCE_CHECK` to `True`."
+            f"Checking connectivity to the model hosters, this may take a while. To bypass this check, set `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK` to `True`."
         )
         hosters = []
         for hoster_cls in self.hoster_candidates:
@@ -586,8 +595,8 @@ class _ModelManager:
         return hosters
 
     def _get_model_local_path(self, model_name):
-        if model_name == "PaddleOCR-VL-0.9B":
-            model_name = "PaddleOCR-VL"
+        if "PaddleOCR-VL" in model_name:
+            model_name = model_name.replace("-0.9B", "")
 
         model_dir = self._save_dir / f"{model_name}"
         if os.path.exists(model_dir):

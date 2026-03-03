@@ -19,6 +19,7 @@ from typing import Any, Dict, Final, List, Tuple
 from paddlex_hps_server import (
     BaseTritonPythonModel,
     app_common,
+    logging,
     protocol,
     schemas,
     utils,
@@ -46,6 +47,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         self.context = {}
         self.context["file_storage"] = None
         self.context["return_img_urls"] = False
+        self.context["url_expires_in"] = -1
         self.context["max_num_input_imgs"] = _DEFAULT_MAX_NUM_INPUT_IMGS
         self.context["max_output_img_size"] = _DEFAULT_MAX_OUTPUT_IMG_SIZE
         if self.app_config.extra:
@@ -57,6 +59,8 @@ class TritonPythonModel(BaseTritonPythonModel):
                 self.context["return_img_urls"] = self.app_config.extra[
                     "return_img_urls"
                 ]
+            if "url_expires_in" in self.app_config.extra:
+                self.context["url_expires_in"] = self.app_config.extra["url_expires_in"]
             if "max_num_input_imgs" in self.app_config.extra:
                 self.context["max_num_input_imgs"] = self.app_config.extra[
                     "max_num_input_imgs"
@@ -103,12 +107,16 @@ class TritonPythonModel(BaseTritonPythonModel):
 
                 ret = executor.map(self._preprocess, inputs_g, log_ids_g)
                 ind_img_lsts, ind_data_info_lst, ind_visualize_enabled_lst = [], [], []
+                ind_input_id_lst, ind_log_id_lst, ind_input_lst = [], [], []
                 for i, item in enumerate(ret):
                     if isinstance(item, tuple):
                         assert len(item) == 3, len(item)
                         ind_img_lsts.append(item[0])
                         ind_data_info_lst.append(item[1])
                         ind_visualize_enabled_lst.append(item[2])
+                        ind_input_id_lst.append(input_ids_g[i])
+                        ind_log_id_lst.append(log_ids_g[i])
+                        ind_input_lst.append(inputs_g[i])
                     else:
                         input_id = input_ids_g[i]
                         result_or_output_dic[input_id] = item
@@ -124,10 +132,13 @@ class TritonPythonModel(BaseTritonPythonModel):
                             use_doc_unwarping=inputs_g[0].useDocUnwarping,
                             use_layout_detection=inputs_g[0].useLayoutDetection,
                             use_chart_recognition=inputs_g[0].useChartRecognition,
+                            use_seal_recognition=inputs_g[0].useSealRecognition,
+                            use_ocr_for_image_block=inputs_g[0].useOcrForImageBlock,
                             layout_threshold=inputs_g[0].layoutThreshold,
                             layout_nms=inputs_g[0].layoutNms,
                             layout_unclip_ratio=inputs_g[0].layoutUnclipRatio,
                             layout_merge_bboxes_mode=inputs_g[0].layoutMergeBboxesMode,
+                            layout_shape_mode=inputs_g[0].layoutShapeMode,
                             prompt_label=inputs_g[0].promptLabel,
                             format_block_content=inputs_g[0].formatBlockContent,
                             repetition_penalty=inputs_g[0].repetitionPenalty,
@@ -138,6 +149,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                             max_new_tokens=inputs_g[0].maxNewTokens,
                             merge_layout_blocks=inputs_g[0].mergeLayoutBlocks,
                             markdown_ignore_labels=inputs_g[0].markdownIgnoreLabels,
+                            vlm_extra_args=inputs_g[0].vlmExtraArgs,
                         )
                     )
 
@@ -152,19 +164,19 @@ class TritonPythonModel(BaseTritonPythonModel):
                         ind_preds.append(preds[start_idx : start_idx + len(item)])
                         start_idx += len(item)
 
-                    for i, result in zip(
-                        input_ids_g,
+                    for input_id, result in zip(
+                        ind_input_id_lst,
                         executor.map(
                             self._postprocess,
                             ind_img_lsts,
                             ind_data_info_lst,
                             ind_visualize_enabled_lst,
                             ind_preds,
-                            log_ids_g,
-                            inputs_g,
+                            ind_log_id_lst,
+                            ind_input_lst,
                         ),
                     ):
-                        result_or_output_dic[i] = result
+                        result_or_output_dic[input_id] = result
 
             assert len(result_or_output_dic) == len(
                 inputs
@@ -174,10 +186,13 @@ class TritonPythonModel(BaseTritonPythonModel):
 
     def _group_inputs(self, inputs):
         def _to_hashable(obj):
-            if isinstance(obj, list):
-                return tuple(obj)
-            elif isinstance(obj, dict):
-                return tuple(sorted(obj.items()))
+            if isinstance(obj, dict):
+                return tuple(
+                    (_to_hashable(k), _to_hashable(v))
+                    for k, v in sorted(obj.items(), key=lambda x: repr(x[0]))
+                )
+            elif isinstance(obj, list):
+                return tuple(_to_hashable(x) for x in obj)
             else:
                 return obj
 
@@ -192,10 +207,13 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 input.useDocUnwarping,
                                 input.useLayoutDetection,
                                 input.useChartRecognition,
+                                input.useSealRecognition,
+                                input.useOcrForImageBlock,
                                 input.layoutThreshold,
                                 input.layoutNms,
                                 input.layoutUnclipRatio,
                                 input.layoutMergeBboxesMode,
+                                input.layoutShapeMode,
                                 input.promptLabel,
                                 input.formatBlockContent,
                                 input.repetitionPenalty,
@@ -206,6 +224,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                                 input.maxNewTokens,
                                 input.mergeLayoutBlocks,
                                 input.markdownIgnoreLabels,
+                                input.vlmExtraArgs,
                             )
                         ),
                     )
@@ -248,16 +267,32 @@ class TritonPythonModel(BaseTritonPythonModel):
             else self.app_config.visualize
         )
 
-        file_bytes = utils.get_raw_bytes(input.file)
-        images, data_info = utils.file_to_images(
-            file_bytes,
-            file_type,
-            max_num_imgs=self.context["max_num_input_imgs"],
-        )
+        try:
+            file_bytes = utils.get_raw_bytes(input.file)
+            images, data_info = utils.file_to_images(
+                file_bytes,
+                file_type,
+                max_num_imgs=self.context["max_num_input_imgs"],
+            )
+        except Exception as e:
+            logging.error("Failed to get input file bytes: %s", e)
+            return protocol.create_aistudio_output_without_result(
+                422,
+                "Input file is invalid",
+                log_id=log_id,
+            )
 
         return images, data_info, visualize_enabled
 
     def _postprocess(self, images, data_info, visualize_enabled, preds, log_id, input):
+        if input.restructurePages:
+            preds = self.pipeline.restructure_pages(
+                preds,
+                merge_tables=input.mergeTables,
+                relevel_titles=input.relevelTitles,
+                concatenate_pages=False,
+            )
+            preds = list(preds)
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, preds)):
             pruned_res = app_common.prune_result(item.json["res"])
@@ -273,6 +308,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                 filename_template=f"markdown_{i}/{{key}}",
                 file_storage=self.context["file_storage"],
                 return_urls=self.context["return_img_urls"],
+                url_expires_in=self.context["url_expires_in"],
                 max_img_size=self.context["max_output_img_size"],
             )
             if visualize_enabled:
@@ -286,6 +322,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                     filename_template=f"{{key}}_{i}.jpg",
                     file_storage=self.context["file_storage"],
                     return_urls=self.context["return_img_urls"],
+                    url_expires_in=self.context["url_expires_in"],
                     max_img_size=self.context["max_output_img_size"],
                 )
             else:

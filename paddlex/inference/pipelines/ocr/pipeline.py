@@ -386,6 +386,11 @@ class _OCRPipeline(BasePipeline):
                 )
             ]
 
+            if return_word_box:
+                for res in results:
+                    res["text_word"] = []
+                    res["text_word_region"] = []
+
             indices = list(range(len(doc_preprocessor_images)))
             indices = [idx for idx in indices if len(dt_polys_list[idx]) > 0]
 
@@ -445,9 +450,6 @@ class _OCRPipeline(BasePipeline):
                     ):
                         sub_img_id = sorted_subs_info[i]["sub_img_id"]
                         sub_img_info_list[sub_img_id]["rec_res"] = rec_res
-                    if return_word_box:
-                        res["text_word"] = []
-                        res["text_word_region"] = []
                     for sno in range(len(sub_img_info_list)):
                         rec_res = sub_img_info_list[sno]["rec_res"]
                         if rec_res["rec_score"] >= text_rec_score_thresh:
