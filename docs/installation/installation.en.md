@@ -5,7 +5,7 @@ comments: true
 # PaddleX Local Installation Tutorial
 > ❗Before installing PaddleX, please ensure you have a basic <b>Python environment</b> (Note: Currently supports Python 3.8 to Python 3.12, with more Python versions being adapted).
 
-> ❗In most cases, you need to first install the PaddlePaddle framework by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md) before proceeding with PaddleX's installation steps. [4 PaddleX's Dependency on PaddlePaddle Framework](#4-paddlexs-dependency-on-paddlepaddle-framework) lists scenarios where installing the PaddlePaddle framework is not required.
+> ❗In most cases, you need to first install the PaddlePaddle framework by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md) before proceeding with PaddleX's installation steps. [4 PaddleX's Dependency on PaddlePaddle Framework](#4-paddlexs-dependency-on-paddlepaddle-framework) lists scenarios where installing PaddlePaddle is not required, and [5 Additional Dependencies for Non-Paddle Engines](#5-additional-dependencies-for-non-paddle-engines) describes extra packages still needed in those scenarios.
 
 ## 1. Quick Installation
 Welcome to PaddleX, Baidu's low-code development tool for AI. Before we dive into the local installation process, please clarify your development needs and choose the appropriate installation mode.
@@ -297,8 +297,15 @@ Each pipeline belongs to exactly one dependency group. You can refer to the tuto
 
 The vast majority of PaddleX's functionalities rely on the PaddlePaddle framework. Therefore, in most cases, you need to install the PaddlePaddle framework before using PaddleX by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md). However, for the following scenarios, you can use the corresponding features without installing the PaddlePaddle framework:
 
-- Using the capabilities provided by PaddleX's `genai-vllm-server` or `genai-sglang-server` plugins to deploy model inference services.
+- Using capabilities provided by PaddleX `genai-xxx-server` plugins to deploy model inference services (for example, `genai-vllm-server`, `genai-sglang-server`, `genai-fastdeploy-server`, etc.).
 - Using PaddleX's `genai-client` plugin to call generative AI inference services.
 - Using PaddleX inference APIs with `engine="transformers"` (for models that support this engine).
 - Using PaddleX inference APIs with `engine="onnxruntime"` (for models that support this engine).
 - When using `flexible` engine, whether PaddlePaddle is required depends on the model implementation. Please refer to the corresponding model/pipeline documentation.
+
+## 5 Additional Dependencies for Non-Paddle Engines
+
+When using the non-Paddle engine scenarios in Section 4, install the corresponding dependencies as well:
+
+- `engine="onnxruntime"`: install ONNX Runtime dependencies (for example, `onnxruntime` for CPU; install the platform-appropriate GPU package such as `onnxruntime-gpu` for GPU environments).
+- `engine="transformers"`: install the `transformers` library (for example, `pip install transformers`), and follow the [Transformers official documentation](https://huggingface.co/docs/transformers/index) to configure the runtime environment.

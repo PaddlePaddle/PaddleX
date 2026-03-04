@@ -5,7 +5,7 @@ comments: true
 # PaddleX本地安装教程
 > ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.12下运行）。
 
-> ❗在大多数情况下，您需要先参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架，再执行 PaddleX 的安装步骤。[4 PaddleX 对飞桨框架的依赖](#4-paddlex-对飞桨框架的依赖) 中列举了不需要安装飞桨框架的情形。
+> ❗在大多数情况下，您需要先参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架，再执行 PaddleX 的安装步骤。[4 PaddleX 对飞桨框架的依赖](#4-paddlex-对飞桨框架的依赖) 中列举了不需要安装飞桨框架的情形，[5 非 Paddle 引擎的额外依赖](#5-非-paddle-引擎的额外依赖) 说明了这类场景下仍需补充安装的依赖。
 
 ## 1. 快速安装
 欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请首先明确您的开发需求，并根据您的需求选择合适的安装模式。
@@ -296,8 +296,15 @@ PaddleX 目前提供如下依赖组：
 
 PaddleX 的绝大部分功能依赖飞桨框架，因此，在大多数情况下，您需要在使用 PaddleX 前参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架。不过，对于以下几种情形，不必安装飞桨框架也可以使用相应的功能：
 
-- 使用 PaddleX `genai-vllm-server` 或 `genai-sglang-server` 插件提供的能力部署模型推理服务。
+- 使用 PaddleX `genai-xxx-server` 插件提供的能力部署模型推理服务（如 `genai-vllm-server`、`genai-sglang-server`、`genai-fastdeploy-server` 等）。
 - 使用 PaddleX `genai-client` 插件调用生成式 AI 推理服务。
 - 使用 PaddleX 推理接口并将 `engine` 设置为 `transformers`。
 - 使用 PaddleX 推理接口并将 `engine` 设置为 `onnxruntime`。
 - 使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。
+
+## 5 非 Paddle 引擎的额外依赖
+
+当您使用第 4 节中的非 Paddle 引擎场景时，建议同时安装对应依赖：
+
+- `engine="onnxruntime"`：需要安装 ONNX Runtime 依赖（例如 CPU 环境安装 `onnxruntime`；GPU 环境按平台安装对应的 ONNX Runtime GPU 包，如 `onnxruntime-gpu`）。
+- `engine="transformers"`：需要安装 `transformers` 库（例如 `pip install transformers`），并参考 [Transformers 官方文档](https://huggingface.co/docs/transformers/index) 配置运行环境。
