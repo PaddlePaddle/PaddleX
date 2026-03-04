@@ -234,8 +234,8 @@ def calculate_overlap_ratio(
     Returns:
         float: The overlap ratio value between the two bounding boxes
     """
-    bbox1 = np.array(bbox1)
-    bbox2 = np.array(bbox2)
+    bbox1 = np.array(bbox1, dtype=np.float64)
+    bbox2 = np.array(bbox2, dtype=np.float64)
 
     x_min_inter = np.maximum(bbox1[0], bbox2[0])
     y_min_inter = np.maximum(bbox1[1], bbox2[1])
@@ -245,7 +245,8 @@ def calculate_overlap_ratio(
     inter_width = np.maximum(0, x_max_inter - x_min_inter)
     inter_height = np.maximum(0, y_max_inter - y_min_inter)
 
-    inter_area = inter_width * inter_height
+    inter_area = np.multiply(inter_width, inter_height, dtype=np.float64)
+
 
     bbox1_area = calculate_bbox_area(bbox1)
     bbox2_area = calculate_bbox_area(bbox2)
