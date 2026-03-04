@@ -298,3 +298,6 @@ PaddleX 的绝大部分功能依赖飞桨框架，因此，在大多数情况下
 
 - 使用 PaddleX `genai-vllm-server` 或 `genai-sglang-server` 插件提供的能力部署模型推理服务。
 - 使用 PaddleX `genai-client` 插件调用生成式 AI 推理服务。
+- 使用 PaddleX 推理接口并将 `engine` 设置为 `transformers`。
+- 使用 PaddleX 推理接口并将 `engine` 设置为 `onnxruntime`。
+- 使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。

@@ -299,3 +299,6 @@ The vast majority of PaddleX's functionalities rely on the PaddlePaddle framewor
 
 - Using the capabilities provided by PaddleX's `genai-vllm-server` or `genai-sglang-server` plugins to deploy model inference services.
 - Using PaddleX's `genai-client` plugin to call generative AI inference services.
+- Using PaddleX inference APIs with `engine="transformers"` (for models that support this engine).
+- Using PaddleX inference APIs with `engine="onnxruntime"` (for models that support this engine).
+- When using `flexible` engine, whether PaddlePaddle is required depends on the model implementation. Please refer to the corresponding model/pipeline documentation.

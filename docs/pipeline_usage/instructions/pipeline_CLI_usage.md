@@ -24,6 +24,7 @@ paddlex --pipeline image_classification \
 
 * `pipeline`：模型产线名称或是模型产线配置文件的本地路径，如模型产线名 “image_classification”，或模型产线配置文件路径 “path/to/image_classification.yaml”；
 * `input`：待预测数据文件路径，支持本地文件路径、包含待预测数据文件的本地目录、文件URL链接；
+* `engine`：推理引擎，可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`onnxruntime`、`genai_client`；
 * `device`：用于设置模型推理设备，如为GPU则可以指定卡号，如 “cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
 * `save_path`：预测结果的保存路径，默认情况下，不保存预测结果；
 * `use_hpip`：启用高性能推理插件；
@@ -67,3 +68,99 @@ paddlex --pipeline configs/image_classification.yaml \
 
 # {'input_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': array([0.62817, 0.03729, 0.03262, 0.03247, 0.03196]), 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
 ```
+
+## 二、PaddleX CLI 参数说明（产线推理）
+
+### 1. 通用参数
+
+* `--pipeline`：产线名称或产线配置文件路径（`.yaml/.yml`）；
+* `--input`：输入数据路径、目录或 URL；
+* `--save_path`：结果保存目录；
+* `--device`：推理设备（如 `cpu`、`gpu:0`）；
+* `--engine`：统一指定产线推理引擎；
+* `--use_hpip`：启用高性能推理插件（仅在未显式指定 `--engine` 时有意义）；
+* `--hpi_config`：高性能推理插件配置，使用 Python 字面量格式传入（如 `"{'backend': 'trt'}"`）；
+* `--get_pipeline_config`：导出指定产线默认配置文件。
+
+### 2. 引擎配置方式（系统说明）
+
+CLI 当前提供 `--engine` 参数用于快速切换推理引擎；`engine_config` 通过产线配置文件进行设置。
+
+#### 2.1 方式 A：命令行直接指定引擎
+
+```bash
+paddlex --pipeline image_classification \
+        --input ./demo.jpg \
+        --engine onnxruntime \
+        --device cpu
+```
+
+#### 2.2 方式 B：配置文件中指定 `engine` 和 `engine_config`
+
+```yaml
+pipeline_name: image_classification
+engine: onnxruntime
+engine_config:
+  device_type: cpu
+  cpu_threads: 4
+
+SubModules:
+  ImageClassification:
+    module_name: image_classification
+    model_name: PP-LCNet_x1_0
+```
+
+使用方式：
+
+```bash
+paddlex --pipeline ./configs/image_classification.yaml \
+        --input ./demo.jpg
+```
+
+#### 2.3 方式 C：全局配置 + 子模块覆盖
+
+```yaml
+pipeline_name: OCR
+engine: onnxruntime
+engine_config:
+  device_type: cpu
+  cpu_threads: 4
+
+SubModules:
+  TextRecognition:
+    module_name: text_recognition
+    model_name: PP-OCRv5_server_rec
+    engine: transformers
+    engine_config:
+      dtype: float16
+      device_map: cuda:0
+```
+
+#### 2.4 各引擎支持的 `engine_config` 字段
+
+CLI 下 `engine_config` 主要通过配置文件设置，常用字段及含义如下：
+
+* `paddle_static`：`run_mode`（运行模式）、`device_type/device_id`（设备）、`cpu_threads`（CPU 线程数）、`delete_pass`（禁用 pass 列表）、`enable_new_ir`、`enable_cinn`、`trt_cfg_setting`（TRT 底层参数）、`trt_use_dynamic_shapes`、`trt_collect_shape_range_info`、`trt_discard_cached_shape_range_info`、`trt_dynamic_shapes`（`[min,opt,max]` 形状）、`trt_dynamic_shape_input_data`（动态形状填充输入）、`trt_shape_range_info_path`（shape range 文件路径）、`trt_allow_rebuild_at_runtime`（运行时重建 TRT 引擎）、`mkldnn_cache_capacity`（oneDNN 缓存）；
+* `paddle_dynamic`：`device_type/device_id`（动态图执行设备）；
+* `hpi`：`model_name`（一般自动注入）、`device_type/device_id`、`auto_config`（自动选后端）、`backend`（指定后端）、`backend_config`（后端参数）、`hpi_info`（模型先验信息）、`auto_paddle2onnx`（自动 Paddle2ONNX）；
+* `transformers`：`dtype`（精度）、`device_map`（设备映射）、`trust_remote_code`（是否信任远程代码）、`attn_implementation`（注意力实现）、`generation_config`（生成参数）、`model_kwargs`、`tokenizer_kwargs`；
+* `onnxruntime`：`device_type/device_id`、`providers`（EP 顺序）、`provider_options`（EP 参数）、`graph_optimization_level`、`intra_op_num_threads`、`inter_op_num_threads`、`execution_mode`、`log_severity_level`、`enable_mem_pattern`、`enable_cpu_mem_arena`、`session_options`；
+* `genai_client`：`backend`（服务后端）、`server_url`（服务地址）、`max_concurrency`（并发上限）、`client_kwargs`（客户端透传参数）；
+* `flexible`：无固定字段约束。
+
+> 说明：`paddle` 是自动解析引擎，不单独定义 `engine_config` 字段；产线实际生效时由“全局配置 + 子模块覆盖”共同决定。
+
+### 3. 参数优先级
+
+* `--engine` 的优先级高于产线配置文件中的 `engine`；
+* `engine_config` 由配置文件控制：可在全局设置，也可在子模块中覆盖；
+* 各产线专属参数（例如 `--topk`）优先级高于配置文件同名字段。
+
+### 4. 哪些场景可以不安装 PaddlePaddle
+
+以下场景可在未安装 PaddlePaddle 时运行（前提是模型和依赖已满足）：
+
+* 使用 `transformers` 引擎；
+* 使用 `onnxruntime` 引擎。
+
+> 注意：若产线中任一模块最终走 `paddle` / `hpi` 引擎，仍需安装 PaddlePaddle；使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。

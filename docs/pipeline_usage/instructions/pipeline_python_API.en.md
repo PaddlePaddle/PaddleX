@@ -32,8 +32,11 @@ In short, there are only three steps:
 * `create_pipeline`: Instantiates the prediction model pipeline object;
   * Parameters:
     * `pipeline`: `str` type, the pipeline name or the local pipeline configuration file path, such as "image_classification", "/path/to/image_classification.yaml";
+    * `config`: `dict | None` type, pipeline configuration dictionary. If provided, `pipeline` can be omitted;
     * `device`: `str` type, used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, using 0 id GPU if available, otherwise CPU;
-    * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). Please refer to [4-Inference Configuration](#4-inference-configuration) for more details;
+    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`;
+    * `engine_config`: `dict | None` type, engine-specific configuration. It can be merged and overridden per submodule;
+    * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). See "5. Compatibility Configuration (`PaddlePredictorOption`)" for details;
     * `use_hpip`：`bool | None` type, whether to enable the high-performance inference plugin (`None` for using the setting from the configuration file);
     * `hpi_config`：`dict | None` type, high-performance inference configuration;
   * Return Value: `BasePipeline` type.
@@ -93,36 +96,157 @@ The prediction results of the pipeline support to be accessed and saved, which c
   * Returns: None.
 * _`more funcs`_: The prediction result of different pipelines support different saving methods. Please refer to the specific pipeline tutorial documentation for details.
 
-### 4. Inference Configuration
+### 4. Inference Engine and Configuration
 
-PaddleX supports modifying the inference configuration through `PaddlePredictorOption`. Relevant APIs are as follows:
+PaddleX pipelines support unified inference configuration via `engine` + `engine_config`, with layered control at global and submodule levels.
 
-#### Attributes:
+#### 4.1 Engine List
 
-* `device`: Inference device.
-  * Supports setting the device type and card number represented by `str`. Device types include 'gpu', 'cpu', 'npu', 'xpu', 'mlu', 'dcu'. When using an accelerator card, you can specify the card number, e.g., 'gpu:0' for GPU 0. By default, if a GPU is available, GPU 0 will be used; otherwise, the CPU will be used.
-  * Return value: `str` type, the currently set inference device.
-* `run_mode`: Operating mode.
-  * Supports setting the operating mode as a `str` type, options include 'paddle', 'trt_fp32', 'trt_fp16', 'trt_int8', 'mkldnn', 'mkldnn_bf16'. Note that 'trt_fp32' and 'trt_fp16' correspond to using the TensorRT subgraph engine for inference with FP32 and FP16 precision respectively; these options are only available when the inference device is a GPU. Additionally, 'mkldnn' is only available when the inference device is a CPU. The default value is 'paddle'.
-  * Return value: `str` type, the currently set operating mode.
-* `cpu_threads`: Number of CPU threads for the acceleration library, only valid when the inference device is 'cpu'.
-  * Supports setting an `int` type for the number of CPU threads for the acceleration library during CPU inference.
-  * Return value: `int` type, the currently set number of threads for the acceleration library.
-* `trt_dynamic_shapes`: TensorRT dynamic shape configuration, only effective when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
-  * Supports setting a value of type `dict` or `None`. If it is a `dict`, the keys are the input tensor names and the values are two-level nested lists formatted as `[{minimum shape}, {optimal shape}, {maximum shape}]`, for example `[[1, 2], [1, 2], [2, 2]]`.
-  * Return value: `dict` type or `None`, the current TensorRT dynamic shape configuration.
-* `trt_dynamic_shape_input_data`: For TensorRT usage, this parameter provides the fill data for the input tensors used to build the engine, and it is only valid when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
-  * Supports setting a value of type `dict` or `None`. If it is a `dict`, the keys are the input tensor names and the values are two-level nested lists formatted as `[{fill data corresponding to the minimum shape}, {fill data corresponding to the optimal shape}, {fill data corresponding to the maximum shape}]`, for example `[[1.0, 1.0], [1.0, 1.0], [1.0, 1.0, 1.0, 1.0]]`. The data are floating point numbers filled in row-major order.
-  * Return value: `dict` type or `None`, the currently set input tensor fill data.
+* `paddle`: Auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+* `paddle_static`: Paddle Inference static graph engine;
+* `paddle_dynamic`: Paddle dynamic graph engine;
+* `hpi`: High-performance inference plugin;
+* `flexible`: Flexible runtime engine (supported by specific models);
+* `transformers`: Hugging Face Transformers-based engine;
+* `onnxruntime`: ONNX Runtime-based engine;
+* `genai_client`: Client engine for remote generative AI services.
 
-#### Methods:
+#### 4.2 Configuration Methods
 
-* `get_support_run_mode`: Get supported operating modes;
-  * Parameters: None;
-  * Return value: List type, the available operating modes.
-* `get_support_device`: Get supported device types for running;
-  * Parameters: None;
-  * Return value: List type, the available device types.
-* `get_device`: Get the currently set device;
-  * Parameters: None;
-  * Return value: `str` type.
+**Method 1: Configure globally via `create_pipeline` arguments**
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(
+    pipeline="image_classification",
+    device="gpu:0",
+    engine="onnxruntime",
+    engine_config={
+        "device_type": "gpu",
+        "device_id": 0,
+    },
+)
+```
+
+**Method 2: Configure in the pipeline YAML**
+
+```yaml
+pipeline_name: image_classification
+engine: onnxruntime
+engine_config:
+  device_type: gpu
+  device_id: 0
+
+SubModules:
+  ImageClassification:
+    module_name: image_classification
+    model_name: PP-LCNet_x1_0
+```
+
+**Method 3: Global config + per-submodule override**
+
+```yaml
+pipeline_name: OCR
+engine: onnxruntime
+engine_config:
+  device_type: cpu
+  cpu_threads: 4
+
+SubModules:
+  TextRecognition:
+    module_name: text_recognition
+    model_name: PP-OCRv5_server_rec
+    engine: transformers
+    engine_config:
+      dtype: float16
+      device_map: cuda:0
+```
+
+#### 4.3 Effective Rules
+
+* `create_pipeline(..., engine=...)` has higher priority than the same field in YAML config;
+* Global `engine_config` is merged with submodule `engine_config`; submodule fields override global ones;
+* When `engine` is explicitly set, `use_hpip` is ignored;
+* When `engine_config` is explicitly set, `pp_option` and `hpi_config` are usually unnecessary compatibility options.
+
+#### 4.4 Is PaddlePaddle Required?
+
+PaddlePaddle is not required in the following scenarios:
+
+* The relevant module runs with `engine="transformers"`;
+* The relevant module runs with `engine="onnxruntime"`.
+
+> Note: If a module finally runs on `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
+
+#### 4.5 `engine_config` Fields by Engine
+
+The following field sets also apply to submodules in a pipeline:
+
+* `paddle_static`:
+  * `run_mode`: execution mode (`paddle`, `trt_fp32`, `trt_fp16`, `mkldnn`, etc.);
+  * `device_type` / `device_id`: target device type and device index;
+  * `cpu_threads`: number of CPU inference threads;
+  * `delete_pass`: list of graph optimization passes to disable;
+  * `enable_new_ir`: whether to enable the new IR;
+  * `enable_cinn`: whether to enable CINN;
+  * `trt_cfg_setting`: low-level TensorRT options passed through to backend APIs;
+  * `trt_use_dynamic_shapes`: whether to enable TRT dynamic shapes;
+  * `trt_collect_shape_range_info`: whether to auto-collect shape range info;
+  * `trt_discard_cached_shape_range_info`: whether to drop cached shape range info and recollect;
+  * `trt_dynamic_shapes`: dynamic shape map in `[min,opt,max]` format;
+  * `trt_dynamic_shape_input_data`: input fill data used in dynamic-shape collection;
+  * `trt_shape_range_info_path`: shape range info file path;
+  * `trt_allow_rebuild_at_runtime`: whether TRT engine rebuild is allowed at runtime;
+  * `mkldnn_cache_capacity`: oneDNN (MKLDNN) cache capacity.
+* `paddle_dynamic`:
+  * `device_type` / `device_id`: device placement for dynamic graph execution.
+* `hpi`:
+  * `model_name`: model name (usually auto-injected);
+  * `device_type` / `device_id`: target device type and index;
+  * `auto_config`: whether backend and default config are auto-selected;
+  * `backend`: explicitly selected backend;
+  * `backend_config`: backend-specific options;
+  * `hpi_info`: model-level prior metadata (for example, dynamic shape hints);
+  * `auto_paddle2onnx`: whether to auto-convert Paddle model to ONNX when needed.
+* `transformers`:
+  * `dtype`: model/inference dtype;
+  * `device_map`: model-to-device mapping strategy;
+  * `trust_remote_code`: whether to trust remote custom code;
+  * `attn_implementation`: attention implementation;
+  * `generation_config`: generation parameters;
+  * `model_kwargs`: extra kwargs passed to model loading;
+  * `tokenizer_kwargs`: extra kwargs passed to tokenizer loading.
+* `onnxruntime`:
+  * `device_type` / `device_id`: target device type and index;
+  * `providers`: execution provider priority list;
+  * `provider_options`: options corresponding to each provider;
+  * `graph_optimization_level`: ORT graph optimization level;
+  * `intra_op_num_threads` / `inter_op_num_threads`: thread counts within/between operators;
+  * `execution_mode`: ORT execution mode;
+  * `log_severity_level`: ORT log severity;
+  * `enable_mem_pattern`: whether to enable memory pattern optimization;
+  * `enable_cpu_mem_arena`: whether to enable CPU memory arena;
+  * `session_options`: extra ORT session option dictionary.
+* `genai_client`:
+  * `backend`: remote backend type;
+  * `server_url`: service endpoint (`server_url` is required for server backends);
+  * `max_concurrency`: max concurrent requests;
+  * `client_kwargs`: extra kwargs for the client.
+* `flexible`:
+  * No fixed schema; fields are model-specific.
+
+> Notes: `paddle` is an auto-resolved alias and has no dedicated `engine_config` schema. Except for `flexible`, most engines reject unknown fields.
+
+### 5. Compatibility Configuration (`PaddlePredictorOption`)
+
+`PaddlePredictorOption` is retained as a compatibility layer. For new projects, prefer `engine_config`.
+
+* Effective scope: mainly compatibility settings for `paddle_static`;
+* Common fields:
+  * `run_mode`: execution mode (`paddle`, `trt_fp32`, `trt_fp16`, `mkldnn`, etc.);
+  * `device`: inference device (for example, `cpu`, `gpu:0`);
+  * `cpu_threads`: CPU inference thread count;
+  * `trt_dynamic_shapes`: TensorRT dynamic shape configuration;
+  * `trt_dynamic_shape_input_data`: input fill data used during dynamic-shape collection.
+* Migration tip: prefer `engine + engine_config`; if both `engine_config` and `pp_option` are set, `engine_config` takes precedence.
