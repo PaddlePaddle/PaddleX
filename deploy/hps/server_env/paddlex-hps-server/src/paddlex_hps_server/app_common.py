@@ -46,6 +46,7 @@ def postprocess_image(
     *,
     file_storage: Optional[Storage] = None,
     return_url: bool = False,
+    url_expires_in: int = -1,
     max_img_size: Optional[Tuple[int, int]] = None,
 ) -> str:
     if return_url:
@@ -71,7 +72,7 @@ def postprocess_image(
         file_storage.set(key, img_bytes)
         if return_url:
             assert isinstance(file_storage, SupportsGetURL)
-            return file_storage.get_url(key)
+            return file_storage.get_url(key, expires_in=url_expires_in)
     return utils.base64_encode(img_bytes)
 
 
@@ -81,6 +82,7 @@ def postprocess_images(
     filename_template: str = "{key}.jpg",
     file_storage: Optional[Storage] = None,
     return_urls: bool = False,
+    url_expires_in: int = -1,
     max_img_size: Optional[Tuple[int, int]] = None,
 ) -> Dict[str, str]:
     output_images: Dict[str, str] = {}
@@ -95,6 +97,7 @@ def postprocess_images(
             filename=filename_template.format(key=key),
             file_storage=file_storage,
             return_url=return_urls,
+            url_expires_in=url_expires_in,
             max_img_size=max_img_size,
         )
     return output_images

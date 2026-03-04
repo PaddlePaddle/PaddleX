@@ -167,10 +167,10 @@ class DocVLMPredictor(BasePredictor):
         return model, processor
 
     def _determine_batch_size(self):
-        if self._model_name == "PaddleOCR-VL-0.9B":
+        if self._model_name in ("PaddleOCR-VL-0.9B", "PaddleOCR-VL-1.5-0.9B"):
             batch_size = 1
             if not self._use_local_model:
-                batch_size = 4096
+                batch_size = 8192
             logging.debug(
                 f"The batch size of {self._model_name} is determined to be {batch_size}."
             )
@@ -415,6 +415,10 @@ class DocVLMPredictor(BasePredictor):
         max_pixels,
     ):
         futures = []
+        if self._genai_client.backend == "llama-cpp-server":
+            image_format = "PNG"
+        else:
+            image_format = "JPEG"
         try:
             for item in data:
                 image = item["image"]
@@ -427,10 +431,11 @@ class DocVLMPredictor(BasePredictor):
                         with Image.open(image) as img:
                             img = img.convert("RGB")
                             with io.BytesIO() as buf:
-                                img.save(buf, format="JPEG")
-                                image_url = "data:image/jpeg;base64," + base64.b64encode(
-                                    buf.getvalue()
-                                ).decode("ascii")
+                                img.save(buf, format=image_format)
+                                image_url = (
+                                    f"data:image/{image_format.lower()};base64,"
+                                    + base64.b64encode(buf.getvalue()).decode("ascii")
+                                )
                 elif isinstance(image, np.ndarray):
                     import cv2
                     from PIL import Image
@@ -438,10 +443,11 @@ class DocVLMPredictor(BasePredictor):
                     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                     img = Image.fromarray(image)
                     with io.BytesIO() as buf:
-                        img.save(buf, format="JPEG")
-                        image_url = "data:image/jpeg;base64," + base64.b64encode(
-                            buf.getvalue()
-                        ).decode("ascii")
+                        img.save(buf, format=image_format)
+                        image_url = (
+                            f"data:image/{image_format.lower()};base64,"
+                            + base64.b64encode(buf.getvalue()).decode("ascii")
+                        )
                 else:
                     raise TypeError(f"Not supported image type: {type(image)}")
 
@@ -457,7 +463,7 @@ class DocVLMPredictor(BasePredictor):
                     if top_p is not None:
                         kwargs["top_p"] = top_p
 
-                if self._genai_client.backend == "mlx-vlm-server":
+                if self._genai_client.backend in ["mlx-vlm-server", "llama-cpp-server"]:
                     max_tokens_name = "max_tokens"
                 else:
                     max_tokens_name = "max_completion_tokens"
@@ -474,8 +480,11 @@ class DocVLMPredictor(BasePredictor):
                         "vllm-server",
                         "sglang-server",
                         "mlx-vlm-server",
+                        "llama-cpp-server",
                     ):
-                        kwargs["extra_body"]["skip_special_tokens"] = skip_special_tokens
+                        kwargs["extra_body"][
+                            "skip_special_tokens"
+                        ] = skip_special_tokens
                     else:
                         raise ValueError("Not supported")
 
