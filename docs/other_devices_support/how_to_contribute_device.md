@@ -48,7 +48,7 @@ PaddleX创建Predictor时会判断设备是否已支持，相关代码位于 [Pa
 
 ### 2.1.5 更新Predictor Opiton支持的设备列表
 
-PaddleX的推理能力基于飞桨Paddle Inference Predictor提供，创建Predictor时需要根据设备信息选择不同的硬件并创建pass，相关代码位于 [PaddleX Predictor创建](../../paddlex/inference/models/common/static_infer.py) 中的 `_create`
+PaddleX 的 Paddle 推理能力由 `paddle_static` 引擎实现，创建 Predictor 时会根据设备信息选择硬件并配置 pass。相关代码位于 [PaddleX PaddleStaticRunner](../../paddlex/inference/models/common/runner/paddle_static_runner.py) 中的 `_create`。
 
 ### 2.1.6 高性能推理支持
 
