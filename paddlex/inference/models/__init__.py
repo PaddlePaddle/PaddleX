@@ -15,7 +15,7 @@
 
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Dict, Optional, Set, Tuple, Type, Union
+from typing import Any, Dict, Optional, Tuple, Type, Union
 
 from pydantic import BaseModel, ValidationError
 
@@ -333,7 +333,21 @@ def create_predictor(
     model_dir_resolved: Optional[Path] = None
     if need_local:
         if model_dir is None:
-            model_dir_resolved = Path(official_models[model_name])
+            supported_engines = None
+            if engine == "paddle_dynamic":
+                try:
+                    predictor_cls = RunnerPredictor.get(model_name)
+                except errors.ClassNotFoundException:
+                    predictor_cls = None
+                if predictor_cls is not None:
+                    supported_engines = predictor_cls.get_supported_engines()
+            model_dir_resolved = Path(
+                official_models.get_model_path(
+                    model_name,
+                    engine=engine,
+                    supported_engines=supported_engines,
+                )
+            )
         else:
             model_dir_resolved = Path(model_dir)
             if not model_dir_resolved.exists():

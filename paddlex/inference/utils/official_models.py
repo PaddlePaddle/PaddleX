@@ -17,6 +17,7 @@ import shutil
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Optional, Sequence, Set
 
 import huggingface_hub as hf_hub
 
@@ -415,6 +416,79 @@ OCR_MODELS = [
     "cyrillic_PP-OCRv5_mobile_rec",
 ]
 
+SAFETENSORS_SUPPORTED_MODELS: Set[str] = {
+    "PP-LCNet",
+    "PP-DocLayoutV2",
+    "PP-DocLayoutV3",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
+    "UVDoc",
+    "PP-Chart2Table",
+    "PaddleOCR-VL-0.9B",
+    "PaddleOCR-VL-1.5-0.9B",
+}
+
+ONNX_SUPPORTED_MODELS: Set[str] = {
+    "PP-LCNet",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
+}
+
+
+def _canonical_download_support_name(model_name: str) -> str:
+    if model_name.startswith("PP-LCNet"):
+        return "PP-LCNet"
+    if model_name in {"PaddleOCR-VL", "PaddleOCR-VL-0.9B"}:
+        return "PaddleOCR-VL-0.9B"
+    return model_name
+
+
+def _resolve_download_model_name(
+    model_name: str,
+    engine: str,
+    supported_engines: Optional[Sequence[str]] = None,
+) -> str:
+    canonical_name = _canonical_download_support_name(model_name)
+
+    if engine == "paddle_dynamic":
+        supported = {e.lower() for e in (supported_engines or ())}
+        if (
+            canonical_name in SAFETENSORS_SUPPORTED_MODELS
+            and "paddle_dynamic" in supported
+            and "paddle_static" in supported
+        ):
+            return f"{model_name}_safetensors"
+        return model_name
+
+    if engine == "transformers":
+        if canonical_name in SAFETENSORS_SUPPORTED_MODELS:
+            return f"{model_name}_safetensors"
+        return model_name
+
+    if engine == "onnxruntime":
+        if canonical_name in ONNX_SUPPORTED_MODELS:
+            return f"{model_name}_onnx"
+        return model_name
+
+    # paddle_static / flexible / others: keep original behavior.
+    return model_name
+
 
 class _BaseModelHoster(ABC):
     alias = ""
@@ -425,9 +499,21 @@ class _BaseModelHoster(ABC):
     def __init__(self, save_dir):
         self._save_dir = save_dir
 
+    @staticmethod
+    def _strip_repo_suffix(model_name):
+        for suffix in ("_safetensors", "_onnx"):
+            if model_name.endswith(suffix):
+                return model_name[: -len(suffix)]
+        return model_name
+
+    def supports_model(self, model_name):
+        if model_name in self.model_list:
+            return True
+        return self._strip_repo_suffix(model_name) in self.model_list
+
     def get_model(self, model_name):
-        assert (
-            model_name in self.model_list
+        assert self.supports_model(
+            model_name
         ), f"The model {model_name} is not supported on hosting {self.__class__.__name__}!"
 
         model_dir = self._save_dir / f"{model_name}"
@@ -618,9 +704,23 @@ class _ModelManager:
 
         return model_dir
 
+    def get_model_path(
+        self,
+        model_name: str,
+        *,
+        engine: Optional[str] = None,
+        supported_engines: Optional[Sequence[str]] = None,
+    ):
+        download_model_name = model_name
+        if engine is not None:
+            download_model_name = _resolve_download_model_name(
+                model_name, engine, supported_engines
+            )
+        return self._get_model_local_path(download_model_name)
+
     def _download_from_hoster(self, hosters, model_name):
         for idx, hoster in enumerate(hosters):
-            if model_name in hoster.model_list:
+            if hoster.supports_model(model_name):
                 try:
                     model_path = hoster.get_model(model_name)
                     return model_path
@@ -642,7 +742,7 @@ class _ModelManager:
         return model_name in self.model_list
 
     def __getitem__(self, model_name):
-        return self._get_model_local_path(model_name)
+        return self.get_model_path(model_name)
 
 
 official_models = _ModelManager()
