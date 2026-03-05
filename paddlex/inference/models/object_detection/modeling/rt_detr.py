@@ -239,7 +239,12 @@ class RTDETRConfig(PretrainedConfig):
         eos_coefficient=1e-4,
         **kwargs,
     ):
-        self.return_idx = backbone_config["out_indices"]
+        self.arch = backbone_config["arch"]
+        self.freeze_stem_only = backbone_config["freeze_stem_only"]
+        self.freeze_at = backbone_config["freeze_at"]
+        self.freeze_norm = backbone_config["freeze_norm"]
+        self.lr_mult_list = backbone_config["lr_mult_list"]
+        self.return_idx = backbone_config["return_idx"]
         self.hidden_dim = encoder_hidden_dim
         self.use_encoder_idx = encode_proj_layers
         self.num_encoder_layers = encoder_layers
@@ -285,8 +290,12 @@ class RTDETR(BatchNormHFStateDictMixin, PretrainedModel):
         super().__init__(config)
 
         self.backbone = PPHGNetV2(
-            lr_mult_list=[0, 0.05, 0.05, 0.05, 0.05],
+            arch=self.config.arch,
+            lr_mult_list=self.config.lr_mult_list,
             return_idx=self.config.return_idx,
+            freeze_stem_only=self.config.freeze_stem_only,
+            freeze_at=self.config.freeze_at,
+            freeze_norm=self.config.freeze_norm,
         )
         self.neck = HybridEncoder(
             hidden_dim=self.config.hidden_dim,
