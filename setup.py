@@ -237,7 +237,6 @@ EXTRAS = {
         ],
         "genai-vllm-server": [
             "vllm == 0.16.0",
-            "transformers >= 5.0.0",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.1.0",

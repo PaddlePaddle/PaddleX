@@ -12,14 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from packaging.version import Version
-
 from ....utils import logging
-from ....utils.deps import (
-    get_dep_version,
-    is_genai_engine_plugin_available,
-    require_genai_engine_plugin,
-)
+from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
 from ..configs.utils import (
     backend_config_to_args,
     set_config_defaults,
@@ -29,18 +23,16 @@ from ..models import ALL_MODEL_INFO, get_model_components, is_integrated_model_a
 
 
 def register_models():
-    vllm_version = get_dep_version("vllm")
-    if Version(vllm_version) < Version("0.11.1"):
-        from vllm import ModelRegistry
+    from vllm import ModelRegistry
 
-        if is_genai_engine_plugin_available("vllm-server"):
-            for model_name in ALL_MODEL_INFO:
-                if (
-                    not is_integrated_model_available(model_name, "vllm")
-                    and model_name not in ModelRegistry.get_supported_archs()
-                ):
-                    net_cls, _ = get_model_components(model_name, "vllm")
-                    ModelRegistry.register_model(net_cls.__name__, net_cls)
+    if is_genai_engine_plugin_available("vllm-server"):
+        for model_name in ALL_MODEL_INFO:
+            if (
+                not is_integrated_model_available(model_name, "vllm")
+                and model_name not in ModelRegistry.get_supported_archs()
+            ):
+                net_cls, _ = get_model_components(model_name, "vllm")
+                ModelRegistry.register_model(net_cls.__name__, net_cls)
 
 
 def run_vllm_server(host, port, model_name, model_dir, config, chat_template_path):
