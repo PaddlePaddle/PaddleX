@@ -329,7 +329,6 @@ class RTDETR(BatchNormHFStateDictMixin, PretrainedModel):
             loss=DINOLoss(
                 loss_coeff=self.config.loss_coeff,
                 aux_loss=self.config.aux_loss,
-                use_vfl=True,
                 matcher=HungarianMatcher(
                     matcher_coeff=self.config.matcher_coeff,
                 ),
