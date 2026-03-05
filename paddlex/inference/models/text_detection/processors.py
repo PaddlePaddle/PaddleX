@@ -253,6 +253,9 @@ class NormalizeImage:
         """apply"""
 
         def _norm(img):
+            # Check if the image is in 4-channel RGBA format. If so, convert it to RGB format.
+            if img.shape[2] == 4:
+                img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
             if self.order == "chw":
                 img = np.transpose(img, (2, 0, 1))
 

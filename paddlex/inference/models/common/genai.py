@@ -29,12 +29,18 @@ SERVER_BACKENDS = [
     "vllm-server",
     "sglang-server",
     "mlx-vlm-server",
+    "llama-cpp-server",
 ]
 
 
 class GenAIConfig(BaseModel):
     backend: Literal[
-        "native", "fastdeploy-server", "vllm-server", "sglang-server", "mlx-vlm-server"
+        "native",
+        "fastdeploy-server",
+        "vllm-server",
+        "sglang-server",
+        "mlx-vlm-server",
+        "llama-cpp-server",
     ] = "native"
     server_url: Optional[str] = None
     max_concurrency: int = 200
