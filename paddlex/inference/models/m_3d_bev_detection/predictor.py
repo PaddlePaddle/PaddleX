@@ -22,7 +22,6 @@ from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
 from ..base import RunnerPredictor
-from ..base.predictor import PredictionWrap
 from .processors import (
     GetInferInput,
     LoadMultiViewImageFromFiles,
@@ -298,9 +297,10 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
         try:
             for batch_data in self.batch_sampler(input):
                 prediction = self.process(batch_data, **kwargs)
-                prediction = PredictionWrap(prediction, len(batch_data))
                 for idx in range(len(batch_data)):
-                    yield self.result_class(prediction.get_by_idx(idx))
+                    yield self.result_class(
+                        {key: prediction[key][idx] for key in prediction}
+                    )
         except Exception as e:
             raise e
         finally:

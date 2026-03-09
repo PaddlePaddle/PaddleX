@@ -25,14 +25,6 @@ from .base_predictor import BasePredictor
 from .utils import resolve_model_args
 
 
-class PredictionWrap:
-    """Wrapper for prediction results with batch size info."""
-
-    def __init__(self, prediction: Any, batch_size: int):
-        self.prediction = prediction
-        self.batch_size = batch_size
-
-
 class RunnerPredictor(BasePredictor):
     """Base class for predictors that use inference runners (Paddle/HPI)."""
 

@@ -15,5 +15,5 @@
 from .base_predictor import BasePredictor
 from .flexible_predictor import FlexiblePredictor
 from .genai_client_predictor import GenAIClientPredictor
-from .runner_predictor import PredictionWrap, RunnerPredictor
+from .runner_predictor import RunnerPredictor
 from .transformers_predictor import TransformersEngineConfig, TransformersPredictor
