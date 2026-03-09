@@ -272,7 +272,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         id2pixel_key_map = {}
         image_path_to_obj_map = {}
         vis_image_labels = IMAGE_LABELS + ["seal"]
-        image_labels = [] if use_ocr_for_image_block else IMAGE_LABELS
+        image_labels = [] if use_ocr_for_image_block else IMAGE_LABELS.copy()
         if not use_chart_recognition:
             image_labels += ["chart"]
             vis_image_labels += ["chart"]

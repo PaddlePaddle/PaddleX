@@ -595,10 +595,15 @@ def filter_boxes(
                         continue
                 box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
                 box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
-                if (
-                    boxes[i]["label"] == "image" or boxes[j]["label"] == "image"
-                ) and boxes[i]["label"] != boxes[j]["label"]:
-                    continue
+                labels = {boxes[i]["label"], boxes[j]["label"]}
+                if labels & {"image", "table", "seal", "chart"} and len(labels) > 1:
+                    if "table" not in labels or labels <= {
+                        "table",
+                        "image",
+                        "seal",
+                        "chart",
+                    }:
+                        continue
                 if box_area_i >= box_area_j:
                     dropped_indexes.add(j)
                 else:

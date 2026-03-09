@@ -31,6 +31,7 @@ if is_dep_available("fastapi"):
 
 DEFAULT_MAX_NUM_INPUT_IMGS: Final[int] = 10
 DEFAULT_MAX_OUTPUT_IMG_SIZE: Final[Tuple[int, int]] = (2000, 2000)
+DEFAULT_URL_EXPIRES_IN: Final[int] = -1
 
 
 def update_app_context(app_context: AppContext) -> None:
@@ -49,6 +50,9 @@ def update_app_context(app_context: AppContext) -> None:
             raise TypeError(
                 f"`{type(file_storage).__name__}` does not support getting URLs."
             )
+    app_context.extra["url_expires_in"] = extra_cfg.get(
+        "url_expires_in", DEFAULT_URL_EXPIRES_IN
+    )
     app_context.extra["max_num_input_imgs"] = extra_cfg.get(
         "max_num_input_imgs", DEFAULT_MAX_NUM_INPUT_IMGS
     )
