@@ -39,6 +39,10 @@ class TransformersPredictor(BasePredictor):
 
     __is_base = True
 
+    @classmethod
+    def get_supported_engines(cls):
+        return ("transformers",)
+
     def __init__(
         self,
         model_name: str = "",

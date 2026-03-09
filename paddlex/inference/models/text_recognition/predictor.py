@@ -50,7 +50,7 @@ class TextRecRunnerPredictor(RunnerPredictor):
 
     @classmethod
     def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "paddle_dynamic", "hpi")
+        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

@@ -25,7 +25,10 @@ from ....utils.io import YAMLReader
 class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
     """Abstract predictor interface."""
 
-    MODEL_FILE_PREFIX = constants.MODEL_FILE_PREFIX
+    @classmethod
+    @abstractmethod
+    def get_supported_engines(cls):
+        raise NotImplementedError
 
     def __init__(
         self,
@@ -112,7 +115,7 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
 
     @classmethod
     def get_config_path(cls, model_dir: Path) -> Path:
-        return model_dir / f"{cls.MODEL_FILE_PREFIX}.yml"
+        return model_dir / f"{constants.MODEL_FILE_PREFIX}.yml"
 
     @classmethod
     def load_config(cls, model_dir: Path) -> Dict:

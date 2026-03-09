@@ -29,6 +29,10 @@ class GenAIClientPredictor(BasePredictor):
 
     __is_base = True
 
+    @classmethod
+    def get_supported_engines(cls):
+        return ("genai_client",)
+
     def __init__(
         self,
         model_name: str,

@@ -28,6 +28,10 @@ class FlexiblePredictor(BasePredictor):
 
     __is_base = True
 
+    @classmethod
+    def get_supported_engines(cls):
+        return ("flexible",)
+
     def __init__(
         self,
         model_dir: Optional[str] = None,

@@ -16,6 +16,7 @@ from typing import Tuple
 
 import numpy as np
 
+from .... import constants
 from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
 from ...common.batch_sampler import AudioBatchSampler
@@ -70,7 +71,9 @@ class WhisperRunnerPredictor(RunnerPredictor):
         from .processors import ModelDimensions, Whisper
 
         # build model
-        model_file = (self.model_dir / f"{self.MODEL_FILE_PREFIX}.pdparams").as_posix()
+        model_file = (
+            self.model_dir / f"{constants.MODEL_FILE_PREFIX}.pdparams"
+        ).as_posix()
         model_dict = paddle.load(model_file)
         dims = ModelDimensions(**model_dict["dims"])
         self.model = Whisper(dims)

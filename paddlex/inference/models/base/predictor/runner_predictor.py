@@ -20,13 +20,13 @@ from ..... import constants
 from .....utils import logging
 from .....utils.device import constr_device
 from ....utils.hpi import HPIConfig, HPIInfo
-from ...common.runner import PaddleDynamicRunner, PaddleStaticRunner
+from ...common.runner import ONNXRuntimeRunner, PaddleDynamicRunner, PaddleStaticRunner
 from .base_predictor import BasePredictor
 from .utils import resolve_model_args
 
 
 class RunnerPredictor(BasePredictor):
-    """Base class for predictors that use inference runners (Paddle/HPI)."""
+    """Base class for predictors that use inference runners."""
 
     __is_base = True
 
@@ -128,14 +128,11 @@ class RunnerPredictor(BasePredictor):
 
     def build_paddle_static_runner(self):
         """Build PaddleStaticRunner for engine=paddle_static."""
-        model_file_prefix = getattr(
-            self.__class__, "MODEL_FILE_PREFIX", constants.MODEL_FILE_PREFIX
-        )
         config = self._inject_trt_info(self._engine_config)
         return PaddleStaticRunner(
             model_name=self.model_name,
             model_dir=self._model_dir,
-            model_file_prefix=model_file_prefix,
+            model_file_prefix=constants.MODEL_FILE_PREFIX,
             config=config,
         )
 
@@ -150,9 +147,6 @@ class RunnerPredictor(BasePredictor):
         """Build HPIRunner for engine=hpi."""
         from ...common.runner import HPIRunner
 
-        model_file_prefix = getattr(
-            self.__class__, "MODEL_FILE_PREFIX", constants.MODEL_FILE_PREFIX
-        )
         hpi_cfg = dict(self._engine_config)
         hpi_cfg.setdefault("model_name", self.model_name)
         if "hpi_info" not in hpi_cfg:
@@ -162,8 +156,16 @@ class RunnerPredictor(BasePredictor):
         hpi_config = HPIConfig.model_validate(hpi_cfg)
         return HPIRunner(
             model_dir=self._model_dir,
-            model_file_prefix=model_file_prefix,
+            model_file_prefix=constants.MODEL_FILE_PREFIX,
             config=hpi_config,
+        )
+
+    def build_onnxruntime_runner(self) -> ONNXRuntimeRunner:
+        """Build ONNXRuntimeRunner for engine=onnxruntime."""
+        return ONNXRuntimeRunner(
+            model_dir=self._model_dir,
+            model_file_prefix=constants.MODEL_FILE_PREFIX,
+            config=self._engine_config,
         )
 
     def create_runner(self):
@@ -174,6 +176,8 @@ class RunnerPredictor(BasePredictor):
             return self.build_paddle_dynamic_runner()
         if self._engine == "hpi":
             return self.build_hpi_runner()
+        if self._engine == "onnxruntime":
+            return self.build_onnxruntime_runner()
         raise RuntimeError(
             f"create_runner: no suitable runner for engine={self._engine!r}."
         )

@@ -13,35 +13,19 @@
 # limitations under the License.
 
 
-from importlib import import_module
+from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, Type, Union
+from typing import Any, Dict, Optional, Type, Union
 
-from pydantic import BaseModel, ValidationError
-
-from paddlex.utils.deps import require_deps
-
-from ...constants import MODEL_FILE_PREFIX
 from ...utils import errors, logging
-from ...utils.device import get_default_device, parse_device
 from ..utils.hpi import HPIConfig
-from ..utils.model_paths import resolve_paddle_engine_from_model_files
 from ..utils.official_models import official_models
 from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import UadPredictor
-from .base.predictor import (
-    BasePredictor,
-    FlexiblePredictor,
-    GenAIClientPredictor,
-    RunnerPredictor,
-    TransformersPredictor,
-)
-from .base.predictor.transformers_predictor import TransformersEngineConfig
-from .common.genai import SERVER_BACKENDS, GenAIConfig, need_local_model
-from .common.runner.onnxruntime_runner import ONNXRuntimeRunnerConfig
-from .common.runner.paddle_dynamic_runner import PaddleDynamicRunnerConfig
-from .common.runner.paddle_static_runner import PaddleStaticRunnerConfig
+from .base.predictor import BasePredictor, FlexiblePredictor, RunnerPredictor
+from .common.genai import GenAIConfig, need_local_model
 from .doc_vlm import DocVLMPredictor
+from .engine_specs import EngineSpec
 from .face_feature import FaceFeaturePredictor
 from .formula_recognition import FormulaRecPredictor
 from .image_classification import ClasPredictor
@@ -70,26 +54,8 @@ from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
 
 
-def _get_engine_base_predictor(engine: str) -> Type[BasePredictor]:
-    if engine in {"paddle", "paddle_static", "paddle_dynamic", "hpi", "onnxruntime"}:
-        return RunnerPredictor
-    if engine == "flexible":
-        return FlexiblePredictor
-    if engine == "transformers":
-        return TransformersPredictor
-    if engine == "genai_client":
-        return GenAIClientPredictor
-    raise ValueError(f"Unsupported engine: {engine!r}.")
-
-
 def _pick_predictor_cls(model_name: str, engine: str) -> Type[BasePredictor]:
-    base_predictor = _get_engine_base_predictor(engine)
-    try:
-        return base_predictor.get(model_name)
-    except errors.ClassNotFoundException as e:
-        raise NotImplementedError(
-            f"Model {model_name!r} has no predictor registered for engine {engine!r}."
-        ) from e
+    return _get_engine_spec_instance(engine).get_predictor_cls(model_name)
 
 
 def _is_flexible_only_model(model_name: str) -> bool:
@@ -106,144 +72,27 @@ def _is_flexible_only_model(model_name: str) -> bool:
         return False
 
 
-def _pp_option_to_engine_config(pp_option: PaddlePredictorOption) -> Dict[str, Any]:
-    """Convert PaddlePredictorOption to PaddleStaticRunnerConfig dict (backward compat)."""
-    static_fields = set(PaddleStaticRunnerConfig.model_fields)
-    cfg = {}
-    for k in static_fields:
-        if hasattr(pp_option, k):
-            v = getattr(pp_option, k)
-            if v is not None:
-                cfg[k] = v
-    return cfg
-
-
-def _engine_config_to_dict(cfg: Any) -> Dict[str, Any]:
-    """Convert Pydantic model or PaddlePredictorOption to dict."""
-    if cfg is None:
-        return {}
-    if isinstance(cfg, dict):
-        return dict(cfg)
-    if isinstance(cfg, PaddlePredictorOption):
-        return _pp_option_to_engine_config(cfg)
-    if hasattr(cfg, "model_dump"):
-        dump_kw: Dict[str, Any] = {"exclude_none": True, "by_alias": True}
-        return cfg.model_dump(**dump_kw)
-    raise TypeError(
-        f"`engine_config` must be dict, Pydantic model, or PaddlePredictorOption, "
-        f"but got {type(cfg).__name__}."
-    )
+@lru_cache(None)
+def _get_engine_spec_instance(engine: str) -> EngineSpec:
+    try:
+        return EngineSpec.get(engine)()
+    except errors.ClassNotFoundException as e:
+        raise ValueError(f"Unsupported engine: {engine!r}.") from e
 
 
 def normalize_engine_config(
     engine: str,
-    cfg: Optional[Union[Dict[str, Any], BaseModel, PaddlePredictorOption]],
+    cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
     *,
     model_name: Optional[str] = None,
     device: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Parse, validate and normalize engine-specific config to a canonical dict."""
-    cfg = cfg or {}
-
-    raw = _engine_config_to_dict(cfg)
-
-    # paddle_static
-    if engine == "paddle_static":
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
-        try:
-            return PaddleStaticRunnerConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid paddle_static engine_config: {e}") from e
-
-    # paddle_dynamic
-    if engine == "paddle_dynamic":
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
-        try:
-            return PaddleDynamicRunnerConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid paddle_dynamic engine_config: {e}") from e
-
-    # hpi
-    if engine == "hpi":
-        try:
-            raw.setdefault("model_name", model_name or "")
-            if device:
-                device_type, device_ids = parse_device(device)
-                raw["device_type"] = device_type
-                raw["device_id"] = device_ids[0] if device_ids is not None else None
-            elif "device_type" not in raw:
-                raw["device_type"], _ = parse_device(get_default_device())
-            validated = HPIConfig.model_validate(raw).model_dump(
-                exclude_none=True, by_alias=True
-            )
-            return validated
-        except ValidationError as e:
-            raise ValueError(f"Invalid hpi engine_config: {e}") from e
-
-    # flexible
-    if engine == "flexible":
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
-        return raw
-
-    # transformers
-    if engine == "transformers":
-        if device:
-            device_type, device_ids = parse_device(device)
-            if device_type == "gpu":
-                raw["device_map"] = f"cuda:{device_ids[0]}" if device_ids else "cuda"
-            elif device_type == "cpu":
-                raw["device_map"] = "cpu"
-            else:
-                raw["device_map"] = (
-                    f"{device_type}:{device_ids[0]}" if device_ids else device_type
-                )
-        try:
-            return TransformersEngineConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid transformers engine_config: {e}") from e
-
-    # onnxruntime
-    if engine == "onnxruntime":
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
-        try:
-            return ONNXRuntimeRunnerConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid onnxruntime engine_config: {e}") from e
-
-    # genai_client
-    if engine == "genai_client":
-        try:
-            validated = GenAIConfig.model_validate(raw).model_dump(exclude_none=True)
-            if validated.get("backend") not in SERVER_BACKENDS:
-                raise ValueError(
-                    f"engine='genai_client' requires backend in {SERVER_BACKENDS!r}, "
-                    f"got {validated.get('backend')!r}."
-                )
-            return validated
-        except ValidationError as e:
-            raise ValueError(f"Invalid genai_client engine_config: {e}") from e
-
-    return raw
+    return _get_engine_spec_instance(engine).normalize_config(
+        cfg,
+        model_name=model_name,
+        device=device,
+    )
 
 
 def create_predictor(
@@ -329,18 +178,15 @@ def create_predictor(
         elif _is_flexible_only_model(model_name):
             engine = "flexible"
 
-    need_local = engine != "genai_client"
+    requested_spec = _get_engine_spec_instance(engine)
+    if engine != "paddle":
+        requested_spec.ensure_predictor_support(model_name)
+
+    need_local = requested_spec.needs_local_model
     model_dir_resolved: Optional[Path] = None
     if need_local:
         if model_dir is None:
-            supported_engines = None
-            if engine == "paddle_dynamic":
-                try:
-                    predictor_cls = RunnerPredictor.get(model_name)
-                except errors.ClassNotFoundException:
-                    predictor_cls = None
-                if predictor_cls is not None:
-                    supported_engines = predictor_cls.get_supported_engines()
+            supported_engines = requested_spec.get_supported_engines(model_name)
             model_dir_resolved = Path(
                 official_models.get_model_path(
                     model_name,
@@ -354,15 +200,9 @@ def create_predictor(
                 raise FileNotFoundError(f"{model_dir} does not exist!")
 
     if engine == "paddle":
-        resolved_engine = resolve_paddle_engine_from_model_files(
-            model_dir_resolved,
-            MODEL_FILE_PREFIX,
-        )
-        if resolved_engine is None:
-            raise ValueError(
-                f"Model {model_name!r} does not support the paddle engine. "
-            )
-        engine = resolved_engine
+        engine = requested_spec.resolve_engine_from_model_dir(model_dir_resolved)
+        requested_spec = _get_engine_spec_instance(engine)
+        requested_spec.ensure_predictor_support(model_name)
 
     if pp_option is not None and engine != "paddle_static":
         logging.warning(
@@ -395,6 +235,13 @@ def create_predictor(
         config_to_validate,
         model_name=model_name,
         device=device,
+    )
+
+    if need_local:
+        requested_spec.ensure_model_files(model_dir_resolved)
+    requested_spec.ensure_environment(
+        device=device,
+        engine_config=validated_engine_config,
     )
 
     if need_local:

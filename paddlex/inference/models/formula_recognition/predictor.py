@@ -44,7 +44,7 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
 
     @classmethod
     def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
+        return ("paddle_static", "hpi", "onnxruntime")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

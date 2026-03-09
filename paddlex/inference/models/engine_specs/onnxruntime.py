@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+# Copyright (c) 2026 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Engine spec for ONNX Runtime."""
+
+from pathlib import Path
+from typing import Any, Dict, Optional, Type, Union
+
+from pydantic import ValidationError
+
+from ...constants import MODEL_FILE_PREFIX
+from ...utils.deps import is_dep_available
+from ...utils.device import parse_device
+from ..base.predictor import BasePredictor, RunnerPredictor
+from ..common.runner.onnxruntime_runner import ONNXRuntimeRunnerConfig
+from ..utils.model_paths import get_model_paths
+from ..utils.pp_option import PaddlePredictorOption
+from ._base import EngineSpec
+
+
+class ONNXRuntimeEngineSpec(EngineSpec):
+    entities = "onnxruntime"
+
+    @property
+    def name(self) -> str:
+        return "onnxruntime"
+
+    def get_base_predictor_cls(self) -> Type[BasePredictor]:
+        return RunnerPredictor
+
+    def normalize_config(
+        self,
+        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        *,
+        model_name: Optional[str] = None,
+        device: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        del model_name
+        raw = self._engine_config_to_dict(cfg)
+        if device:
+            device_type, device_ids = parse_device(device)
+            raw["device_type"] = device_type
+            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        try:
+            return ONNXRuntimeRunnerConfig.model_validate(raw).model_dump(
+                exclude_none=True
+            )
+        except ValidationError as e:
+            raise ValueError(f"Invalid onnxruntime engine_config: {e}") from e
+
+    def ensure_model_files(self, model_dir: Path) -> None:
+        if "onnx" not in get_model_paths(model_dir, MODEL_FILE_PREFIX):
+            raise ValueError("No valid ONNX model files were found.")
+
+    def ensure_environment(
+        self,
+        *,
+        device: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        if not is_dep_available("onnxruntime"):
+            raise RuntimeError(
+                "Engine 'onnxruntime' is unavailable because dependency "
+                "'onnxruntime' is not installed."
+            )
+        device_type = (engine_config or {}).get("device_type")
+        if device_type is None and device is not None:
+            device_type, _ = parse_device(device)
+        if device_type is None or device_type == "cpu":
+            return
+        if device_type != "gpu":
+            raise ValueError(
+                "`engine='onnxruntime'` currently only supports `cpu` and `gpu`."
+            )
+
+        import onnxruntime as ort
+
+        available_providers = set(ort.get_available_providers())
+        if "CUDAExecutionProvider" not in available_providers:
+            raise RuntimeError(
+                "ONNX Runtime GPU inference is unavailable because "
+                "`CUDAExecutionProvider` is not available. "
+                f"Available providers: {sorted(available_providers)!r}."
+            )
