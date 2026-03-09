@@ -19,10 +19,10 @@ from typing import Any, Dict, Optional, Type, Union
 
 from pydantic import ValidationError
 
-from ...utils.deps import is_genai_client_plugin_available
+from ....utils.deps import is_genai_client_plugin_available
+from ...utils.pp_option import PaddlePredictorOption
 from ..base.predictor import BasePredictor, GenAIClientPredictor
 from ..common.genai import SERVER_BACKENDS, GenAIConfig
-from ..utils.pp_option import PaddlePredictorOption
 from ._base import EngineSpec
 
 

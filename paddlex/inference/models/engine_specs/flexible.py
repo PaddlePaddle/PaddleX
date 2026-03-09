@@ -17,9 +17,9 @@
 
 from typing import Any, Dict, Optional, Type, Union
 
-from ...utils.device import parse_device
+from ....utils.device import parse_device
+from ...utils.pp_option import PaddlePredictorOption
 from ..base.predictor import BasePredictor, FlexiblePredictor
-from ..utils.pp_option import PaddlePredictorOption
 from ._base import EngineSpec
 
 

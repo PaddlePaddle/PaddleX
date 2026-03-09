@@ -20,13 +20,13 @@ from typing import Any, Dict, Optional, Type, Union
 
 from pydantic import ValidationError
 
-from ...constants import MODEL_FILE_PREFIX
-from ...utils.deps import is_dep_available
-from ...utils.device import parse_device
+from ....constants import MODEL_FILE_PREFIX
+from ....utils.deps import is_dep_available
+from ....utils.device import parse_device
+from ...utils.model_paths import get_model_paths
+from ...utils.pp_option import PaddlePredictorOption
 from ..base.predictor import BasePredictor, RunnerPredictor
 from ..common.runner.onnxruntime_runner import ONNXRuntimeRunnerConfig
-from ..utils.model_paths import get_model_paths
-from ..utils.pp_option import PaddlePredictorOption
 from ._base import EngineSpec
 
 
