@@ -136,7 +136,10 @@ class TextRecPredictor(BasePredictor):
             "arabic_PP-OCRv3_mobile_rec",
             "arabic_PP-OCRv5_mobile_rec",
         ):
-            texts = [get_display(s) for s in texts]
+            texts = [
+                (get_display(s[0]), s[1]) if isinstance(s, tuple) else get_display(s)
+                for s in texts
+            ]
         return {
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,
