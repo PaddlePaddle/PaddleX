@@ -48,7 +48,7 @@ When creating a Predictor, the PaddleX checks whether the device is supported. T
 
 ### 2.1.5 Update Predictor Creation Logic
 
-PaddleX's Paddle inference path is implemented by the `paddle_static` engine. When creating a Predictor, PaddleX selects the target device and configures passes according to device information. The relevant logic is in `_create` of [PaddleX PaddleStaticRunner](../../paddlex/inference/models/common/runner/paddle_static_runner.py).
+PaddleX's Paddle inference path is implemented by the `paddle_static` engine. When creating a Predictor, PaddleX selects the target device and configures passes according to device information. The relevant logic is in `_create` of [PaddleX PaddleStaticRunner](../../paddlex/inference/models/runners/paddle_static_runner.py).
 
 ### 2.1.6 High-Performance Inference Support
 
