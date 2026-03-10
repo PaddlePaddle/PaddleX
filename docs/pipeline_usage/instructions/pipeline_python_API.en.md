@@ -160,7 +160,8 @@ SubModules:
     engine: transformers
     engine_config:
       dtype: float16
-      device_map: cuda:0
+      device_type: gpu
+      device_id: 0
 ```
 
 #### 4.3 Effective Rules
@@ -211,12 +212,13 @@ The following field sets also apply to submodules in a pipeline:
   * `auto_paddle2onnx`: whether to auto-convert Paddle model to ONNX when needed.
 * `transformers`:
   * `dtype`: model/inference dtype;
-  * `device_map`: model-to-device mapping strategy;
+  * `device_type` / `device_id`: inference device type and device index;
   * `trust_remote_code`: whether to trust remote custom code;
   * `attn_implementation`: attention implementation;
   * `generation_config`: generation parameters;
   * `model_kwargs`: extra kwargs passed to model loading;
-  * `tokenizer_kwargs`: extra kwargs passed to tokenizer loading.
+  * `processor_kwargs`: extra kwargs passed to processor / image processor loading;
+  * `tokenizer_kwargs`: compatibility kwargs merged with `processor_kwargs`.
 * `onnxruntime`:
   * `device_type` / `device_id`: target device type and index;
   * `providers`: execution provider priority list;

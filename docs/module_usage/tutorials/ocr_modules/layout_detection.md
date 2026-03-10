@@ -383,6 +383,20 @@ for res in output:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str</code> | <code>None</code></td>
+<td>支持 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>transformers</code>、<code>onnxruntime</code> 等，具体以该模型支持情况为准。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>不同引擎支持不同字段，例如 <code>device_type</code>、<code>device_id</code>、<code>dtype</code>、<code>processor_kwargs</code> 等。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>输入图像大小；如果不指定，将默认使用PaddleX官方模型配置</td>
 <td><code>int/list/None</code></td>
@@ -452,14 +466,14 @@ for res in output:
 <td><code>use_hpip</code></td>
 <td>是否启用高性能推理插件</td>
 <td><code>bool</code></td>
-<td>无</td>
+<td>仅在 <code>engine=None</code> 时生效</td>
 <td><code>False</code></td>
 </tr>
 <tr>
 <td><code>hpi_config</code></td>
 <td>高性能推理配置</td>
 <td><code>dict</code> | <code>None</code></td>
-<td>无</td>
+<td>在 <code>engine="hpi"</code> 且未显式传入 <code>engine_config</code> 时生效</td>
 <td><code>None</code></td>
 </tr>
 </table>
@@ -808,9 +822,10 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
+* 如模型支持多引擎推理，也可额外指定 `-o Predict.engine=...` 与 `-o Predict.engine_config='{}'` 切换推理后端和配置；
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-* 也可以用PaddleX 的 whl 包进行推理，方便地将模型集成到您自己的项目中。集成方式只需要将第三步的快速集成方式中的create_model(model_name=model_name, , kernel_option=kernel_option)增加参数model_dir="/output/best_model/inference"。
+* 也可以用 PaddleX 的 whl 包进行推理，方便地将模型集成到您自己的项目中。集成方式是在第三步快速集成示例的基础上，增加 `model_dir="/output/best_model/inference"`，如有需要还可继续追加 `engine=...` 与 `engine_config=...`。
 #### 4.4.2 模型集成
 模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。
 

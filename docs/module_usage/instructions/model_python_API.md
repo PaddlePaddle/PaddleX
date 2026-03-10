@@ -36,7 +36,7 @@ for res in output:
     * `model_dir`：`str | None` 类型，本地 inference 模型文件目录路径，如“/path/to/PP-LCNet_x1_0_infer/”，默认为 `None`，表示使用`model_name`指定的官方推理模型或不使用本地模型；
     * `batch_size`：`int` 类型，默认为 `1`；
     * `device`：`str` 类型，用于设置模型推理设备，如为GPU设置则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
-    * `engine`：`str | None` 类型，推理引擎，可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`onnxruntime`、`genai_client`。默认为 `None`，将根据配置自动解析；
+    * `engine`：`str | None` 类型，推理引擎，可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`onnxruntime`、`genai_client`。默认为 `None`，会根据配置自动解析，常见情况下等价于 `paddle`；
     * `engine_config`：`dict | None` 类型，推理引擎配置。不同引擎支持不同字段，详见下文[4-推理引擎与配置](#4-推理引擎与配置)；
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文“5. 兼容配置（PaddlePredictorOption）”；
     * `use_hpip`：`bool` 类型，是否启用高性能推理插件（仅在 `engine=None` 时生效）；
@@ -141,8 +141,12 @@ model = create_model(
     engine="transformers",
     engine_config={
         "dtype": "float16",
-        "device_map": "cuda:0",
+        "device_type": "gpu",
+        "device_id": 0,
         "attn_implementation": "flash_attention_2",
+        "processor_kwargs": {
+            "use_fast": True,
+        },
     },
 )
 ```
@@ -195,12 +199,13 @@ model = create_model(
   * `auto_paddle2onnx`：缺少 ONNX 模型时是否自动触发 Paddle2ONNX 转换。
 * `transformers`：
   * `dtype`：模型权重/推理使用的数据类型（如 `float16`）；
-  * `device_map`：模型到设备的映射策略（如 `cpu`、`cuda:0`、`auto`）；
+  * `device_type` / `device_id`：推理设备类型和设备编号；
   * `trust_remote_code`：是否信任并执行 Hugging Face 仓库中的自定义代码；
   * `attn_implementation`：注意力实现方式（如 `flash_attention_2`）；
   * `generation_config`：生成参数（如 `max_new_tokens`、`temperature` 等）；
   * `model_kwargs`：传给模型加载接口的额外参数；
-  * `tokenizer_kwargs`：传给 tokenizer 加载接口的额外参数。
+  * `processor_kwargs`：传给 processor / image processor 加载接口的额外参数；
+  * `tokenizer_kwargs`：兼容保留的额外加载参数，会与 `processor_kwargs` 合并使用。
 * `onnxruntime`：
   * `device_type` / `device_id`：目标设备类型和设备编号；
   * `providers`：Execution Provider 列表（决定后端执行优先顺序）；

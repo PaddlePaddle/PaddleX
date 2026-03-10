@@ -161,7 +161,8 @@ SubModules:
     engine: transformers
     engine_config:
       dtype: float16
-      device_map: cuda:0
+      device_type: gpu
+      device_id: 0
 ```
 
 #### 4.3 生效规则
@@ -212,12 +213,13 @@ SubModules:
   * `auto_paddle2onnx`：缺少 ONNX 模型时是否自动转换。
 * `transformers`：
   * `dtype`：推理数据类型；
-  * `device_map`：设备映射策略；
+  * `device_type` / `device_id`：推理设备类型和设备编号；
   * `trust_remote_code`：是否信任远程自定义代码；
   * `attn_implementation`：注意力实现方式；
   * `generation_config`：文本生成参数；
   * `model_kwargs`：模型加载附加参数；
-  * `tokenizer_kwargs`：Tokenizer 加载附加参数。
+  * `processor_kwargs`：processor / image processor 加载附加参数；
+  * `tokenizer_kwargs`：兼容保留的加载附加参数，会与 `processor_kwargs` 合并使用。
 * `onnxruntime`：
   * `device_type` / `device_id`：设备类型和编号；
   * `providers`：执行后端优先级列表；

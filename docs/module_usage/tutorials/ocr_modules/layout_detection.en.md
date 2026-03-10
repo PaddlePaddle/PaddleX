@@ -380,6 +380,20 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str</code> | <code>None</code></td>
+<td>Supports engines such as <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>transformers</code>, and <code>onnxruntime</code>, depending on model support.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Engine-specific configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>Supported fields depend on the engine, such as <code>device_type</code>, <code>device_id</code>, <code>dtype</code>, and <code>processor_kwargs</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>Size of the input image; if not specified, the default PaddleX official model configuration will be used</td>
 <td><code>int/list/None</code></td>
@@ -448,14 +462,14 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>use_hpip</code></td>
 <td>Whether to enable the high-performance inference plugin</td>
 <td><code>bool</code></td>
-<td>None</td>
+<td>Only effective when <code>engine=None</code></td>
 <td><code>False</code></td>
 </tr>
 <tr>
 <td><code>hpi_config</code></td>
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
-<td>None</td>
+<td>Effective when <code>engine="hpi"</code> and <code>engine_config</code> is not explicitly provided</td>
 <td><code>None</code></td>
 </tr>
 </table>
@@ -744,9 +758,10 @@ Similar to model training and evaluation, the following steps are required:
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the input data path: `-o Predict.input="..."`
+* If the model supports multiple inference engines, you can additionally set `-o Predict.engine=...` and `-o Predict.engine_config='{}'` to switch backend and backend-specific settings;
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
-* Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own project. To integrate, simply add the `model_dir="/output/best_model/inference"` parameter to the `create_model(model_name=model_name, kernel_option=kernel_option)` function in the quick integration method from Step 3.
+* Alternatively, you can use the PaddleX wheel package for inference and integrate the model into your own project. Based on the quick integration example in Section III, add `model_dir="/output/best_model/inference"`, and optionally append `engine=...` and `engine_config=...` when needed.
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into PaddleX pipelines or into your own projects.

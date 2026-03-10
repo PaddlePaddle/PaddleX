@@ -35,7 +35,7 @@ In short, just three steps:
     * `model_dir`: `str | None` type, local path to directory of inference model files ，such as "/path/to/PP-LCNet_x1_0_infer/", default to `None`, means that use the official model specified by `model_name`;
     * `batch_size`: `int` type, default to `1`;
     * `device`: `str` type, used to set the inference device, such as "cpu", "gpu:2" for GPU settings. By default, using 0 id GPU if available, otherwise CPU;
-    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`. Default is `None` (auto-resolved);
+    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`. Default is `None`, which is auto-resolved and is typically equivalent to `paddle`;
     * `engine_config`: `dict | None` type, engine-specific configuration. See [4-Inference Engine and Configuration](#4-inference-engine-and-configuration);
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). See "5. Compatibility Configuration (`PaddlePredictorOption`)" for details;
     * `use_hpip`: `bool` type, whether to enable the high-performance inference plugin (effective only when `engine=None`);
@@ -139,8 +139,12 @@ model = create_model(
     engine="transformers",
     engine_config={
         "dtype": "float16",
-        "device_map": "cuda:0",
+        "device_type": "gpu",
+        "device_id": 0,
         "attn_implementation": "flash_attention_2",
+        "processor_kwargs": {
+            "use_fast": True,
+        },
     },
 )
 ```
@@ -193,12 +197,13 @@ The following field sets are based on the current code implementation (with mean
   * `auto_paddle2onnx`: whether to auto-convert Paddle model to ONNX when needed.
 * `transformers`:
   * `dtype`: model/inference precision dtype;
-  * `device_map`: model-to-device mapping strategy;
+  * `device_type` / `device_id`: inference device type and device index;
   * `trust_remote_code`: whether to trust and execute remote custom code from model repos;
   * `attn_implementation`: attention implementation (for example, `flash_attention_2`);
   * `generation_config`: generation parameters (for example, `max_new_tokens`, `temperature`);
   * `model_kwargs`: extra kwargs passed to model loading;
-  * `tokenizer_kwargs`: extra kwargs passed to tokenizer loading.
+  * `processor_kwargs`: extra kwargs passed to processor / image processor loading;
+  * `tokenizer_kwargs`: compatibility kwargs that are merged with `processor_kwargs`.
 * `onnxruntime`:
   * `device_type` / `device_id`: target device type and index;
   * `providers`: execution provider priority list;
