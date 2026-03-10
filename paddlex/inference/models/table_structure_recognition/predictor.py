@@ -20,9 +20,9 @@ from ....modules.table_recognition.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import RunnerPredictor
 from ..common import Normalize, ResizeByLong, ToBatch, ToCHWImage
-from ..common.runner import PaddleDynamicRunner
+from ..predictors import RunnerPredictor
+from ..runners import PaddleDynamicRunner
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 

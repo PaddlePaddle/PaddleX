@@ -14,7 +14,7 @@
 
 from ....modules.text_to_pinyin.model_list import MODELS
 from ...common.batch_sampler import TextBatchSampler
-from ..base.predictor import FlexiblePredictor
+from ..predictors import FlexiblePredictor
 from .result import TextToPinyinResult
 
 

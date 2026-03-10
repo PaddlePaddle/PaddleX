@@ -16,18 +16,15 @@
 """Engine specs for Paddle engines."""
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Type, Union
-
-from pydantic import ValidationError
+from typing import Any, Dict, Optional, Type
 
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
 from ...utils.model_paths import get_model_paths, resolve_paddle_engine_from_model_files
-from ...utils.pp_option import PaddlePredictorOption
-from ..base.predictor import BasePredictor, RunnerPredictor
-from ..common.runner.paddle_dynamic_runner import PaddleDynamicRunnerConfig
-from ..common.runner.paddle_static_runner import PaddleStaticRunnerConfig
+from ..predictors import BasePredictor, RunnerPredictor
+from ..runners.paddle_dynamic_runner import PaddleDynamicRunnerConfig
+from ..runners.paddle_static_runner import PaddleStaticRunnerConfig
 from ._base import EngineSpec
 
 
@@ -58,30 +55,28 @@ class PaddleStaticEngineSpec(EngineSpec):
     def name(self) -> str:
         return "paddle_static"
 
+    @property
+    def engine_config_model(self) -> Type[PaddleStaticRunnerConfig]:
+        return PaddleStaticRunnerConfig
+
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return RunnerPredictor
 
-    def normalize_config(
+    def prepare_config_dict(
         self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        raw: Dict[str, Any],
         *,
         model_name: Optional[str] = None,
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        raw = self._engine_config_to_dict(cfg)
         valid_fields = set(PaddleStaticRunnerConfig.model_fields)
         raw = {key: value for key, value in raw.items() if key in valid_fields}
         if device:
             device_type, device_ids = parse_device(device)
             raw["device_type"] = device_type
             raw["device_id"] = device_ids[0] if device_ids is not None else None
-        try:
-            return PaddleStaticRunnerConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid paddle_static engine_config: {e}") from e
+        return raw
 
     def ensure_model_files(self, model_dir: Path) -> None:
         if "paddle" not in get_model_paths(model_dir, MODEL_FILE_PREFIX):
@@ -108,28 +103,26 @@ class PaddleDynamicEngineSpec(EngineSpec):
     def name(self) -> str:
         return "paddle_dynamic"
 
+    @property
+    def engine_config_model(self) -> Type[PaddleDynamicRunnerConfig]:
+        return PaddleDynamicRunnerConfig
+
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return RunnerPredictor
 
-    def normalize_config(
+    def prepare_config_dict(
         self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        raw: Dict[str, Any],
         *,
         model_name: Optional[str] = None,
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        raw = self._engine_config_to_dict(cfg)
         if device:
             device_type, device_ids = parse_device(device)
             raw["device_type"] = device_type
             raw["device_id"] = device_ids[0] if device_ids is not None else None
-        try:
-            return PaddleDynamicRunnerConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid paddle_dynamic engine_config: {e}") from e
+        return raw
 
     def ensure_model_files(self, model_dir: Path) -> None:
         model_paths = get_model_paths(model_dir, MODEL_FILE_PREFIX)

@@ -21,7 +21,7 @@ from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
 from ...common.batch_sampler import AudioBatchSampler
 from ...utils.io import AudioReader
-from ..base import RunnerPredictor
+from ..predictors import RunnerPredictor
 from .result import WhisperResult
 
 

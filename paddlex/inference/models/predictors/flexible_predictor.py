@@ -1,4 +1,4 @@
-# Copyright (c) 2026 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,58 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""FlexiblePredictor for models with flexible/customizable implementations (no Paddle/HPI runners)."""
+
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, ConfigDict
-
-from .base_predictor import BasePredictor
-
-
-class TransformersEngineConfig(BaseModel):
-    """Engine config for transformers inference."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    dtype: Optional[str] = None
-    device_map: Optional[Union[str, Dict[str, Any]]] = None
-    trust_remote_code: Optional[bool] = None
-    attn_implementation: Optional[str] = None
-    generation_config: Optional[Dict[str, Any]] = None
-    model_kwargs: Optional[Dict[str, Any]] = None
-    tokenizer_kwargs: Optional[Dict[str, Any]] = None
+from ...common.batch_sampler import BaseBatchSampler
+from .local_model_predictor import LocalModelPredictor
 
 
-class TransformersPredictor(BasePredictor):
-    """Base class for transformers-engine predictors."""
+class FlexiblePredictor(LocalModelPredictor):
+    """Base class for predictors with flexible/customizable implementations."""
 
     __is_base = True
 
     @classmethod
     def get_supported_engines(cls):
-        return ("transformers",)
+        return ("flexible",)
 
     def __init__(
         self,
-        model_name: str = "",
+        model_dir: Optional[str] = None,
+        model_config: Optional[Dict] = None,
+        model_name: Optional[str] = None,
         engine_config: Optional[Dict[str, Any]] = None,
-        batch_size: int = 1,
         **kwargs,
     ) -> None:
         super().__init__(
+            model_dir=model_dir,
+            model_config=model_config,
             model_name=model_name,
-            engine="transformers",
+            engine="flexible",
             engine_config=engine_config,
-            batch_size=batch_size,
             **kwargs,
         )
+
+    @abstractmethod
+    def _build(self) -> Any:
+        """Build the model. Subclasses implement their custom logic."""
+        raise NotImplementedError
 
     @abstractmethod
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
         raise NotImplementedError
 
     @abstractmethod
-    def _build_batch_sampler(self):
+    def _build_batch_sampler(self) -> BaseBatchSampler:
         raise NotImplementedError
 
     @abstractmethod

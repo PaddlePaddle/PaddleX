@@ -19,8 +19,8 @@ from ....modules.open_vocabulary_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import RunnerPredictor
 from ..object_detection.result import DetResult
+from ..predictors import RunnerPredictor
 from .processors import (
     GroundingDINOPostProcessor,
     GroundingDINOProcessor,

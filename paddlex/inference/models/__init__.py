@@ -22,10 +22,9 @@ from ..utils.hpi import HPIConfig
 from ..utils.official_models import official_models
 from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import UadPredictor
-from .base.predictor import BasePredictor, FlexiblePredictor, RunnerPredictor
 from .common.genai import GenAIConfig, need_local_model
 from .doc_vlm import DocVLMPredictor
-from .engine_specs import EngineSpec
+from .engines import EngineSpec
 from .face_feature import FaceFeaturePredictor
 from .formula_recognition import FormulaRecPredictor
 from .image_classification import ClasPredictor
@@ -40,6 +39,7 @@ from .multilingual_speech_recognition import WhisperPredictor
 from .object_detection import DetPredictor
 from .open_vocabulary_detection import OVDetPredictor
 from .open_vocabulary_segmentation import OVSegPredictor
+from .predictors import BasePredictor, FlexiblePredictor, RunnerPredictor
 from .semantic_segmentation import SegPredictor
 from .table_structure_recognition import TablePredictor
 from .text_detection import TextDetPredictor
@@ -236,6 +236,9 @@ def create_predictor(
         model_name=model_name,
         device=device,
     )
+    predictor_engine_config = requested_spec.to_predictor_config(
+        validated_engine_config
+    )
 
     if need_local:
         requested_spec.ensure_model_files(model_dir_resolved)
@@ -257,14 +260,15 @@ def create_predictor(
     create_kwargs = dict(model_name=model_name, batch_size=batch_size)
     if engine:
         create_kwargs["engine"] = engine
-    if validated_engine_config:
-        create_kwargs["engine_config"] = validated_engine_config
+    if predictor_engine_config:
+        create_kwargs["engine_config"] = predictor_engine_config
     if need_local and engine in (
         "paddle_static",
         "paddle_dynamic",
         "hpi",
         "flexible",
         "onnxruntime",
+        "transformers",
     ):
         create_kwargs["model_dir"] = model_dir_resolved
         create_kwargs["model_config"] = config

@@ -16,17 +16,14 @@
 """Engine spec for ONNX Runtime."""
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Type, Union
-
-from pydantic import ValidationError
+from typing import Any, Dict, Optional, Type
 
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
 from ...utils.model_paths import get_model_paths
-from ...utils.pp_option import PaddlePredictorOption
-from ..base.predictor import BasePredictor, RunnerPredictor
-from ..common.runner.onnxruntime_runner import ONNXRuntimeRunnerConfig
+from ..predictors import BasePredictor, RunnerPredictor
+from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
 from ._base import EngineSpec
 
 
@@ -37,28 +34,26 @@ class ONNXRuntimeEngineSpec(EngineSpec):
     def name(self) -> str:
         return "onnxruntime"
 
+    @property
+    def engine_config_model(self) -> Type[ONNXRuntimeRunnerConfig]:
+        return ONNXRuntimeRunnerConfig
+
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return RunnerPredictor
 
-    def normalize_config(
+    def prepare_config_dict(
         self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        raw: Dict[str, Any],
         *,
         model_name: Optional[str] = None,
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        raw = self._engine_config_to_dict(cfg)
         if device:
             device_type, device_ids = parse_device(device)
             raw["device_type"] = device_type
             raw["device_id"] = device_ids[0] if device_ids is not None else None
-        try:
-            return ONNXRuntimeRunnerConfig.model_validate(raw).model_dump(
-                exclude_none=True
-            )
-        except ValidationError as e:
-            raise ValueError(f"Invalid onnxruntime engine_config: {e}") from e
+        return raw
 
     def ensure_model_files(self, model_dir: Path) -> None:
         if "onnx" not in get_model_paths(model_dir, MODEL_FILE_PREFIX):

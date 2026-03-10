@@ -19,9 +19,9 @@ import numpy as np
 from ....modules.image_unwarping.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import RunnerPredictor
 from ..common import Normalize, ToBatch, ToCHWImage
-from ..common.runner import PaddleDynamicRunner
+from ..predictors import RunnerPredictor
+from ..runners import PaddleDynamicRunner
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 

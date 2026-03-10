@@ -29,8 +29,7 @@ from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import DocVLMBatchSampler
 from ...utils.misc import is_bfloat16_available
 from ...utils.model_paths import get_model_paths
-from ..base import RunnerPredictor
-from ..base.predictor.genai_client_predictor import GenAIClientPredictor
+from ..predictors import GenAIClientPredictor, RunnerPredictor
 from .constants import PADDLEOCR_VL_LOCAL_BATCH_SIZE, PADDLEOCR_VL_MAX_NEW_TOKENS
 from .result import DocVLMResult
 from .utils import format_doc_vlm_result_dict, is_in_group

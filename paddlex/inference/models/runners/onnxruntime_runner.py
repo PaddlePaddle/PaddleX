@@ -21,8 +21,8 @@ from typing import Any, Dict, List, Optional, Sequence, Union
 import numpy as np
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from .....utils.deps import class_requires_deps
-from ....utils.model_paths import get_model_paths
+from ....utils.deps import class_requires_deps
+from ...utils.model_paths import get_model_paths
 from .utils import sort_inputs
 
 __all__ = ["ONNXRuntimeRunnerConfig", "ONNXRuntimeRunner"]

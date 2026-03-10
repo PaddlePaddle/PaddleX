@@ -16,10 +16,10 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
-from ..... import constants
-from .....utils.subclass_register import AutoRegisterABCMetaClass
-from ....common.batch_sampler import BaseBatchSampler
-from ....utils.io import YAMLReader
+from .... import constants
+from ....utils.subclass_register import AutoRegisterABCMetaClass
+from ...common.batch_sampler import BaseBatchSampler
+from ...utils.io import YAMLReader
 
 
 class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):

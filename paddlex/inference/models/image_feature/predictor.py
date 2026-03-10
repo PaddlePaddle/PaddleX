@@ -20,8 +20,8 @@ from ....modules.general_recognition.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import RunnerPredictor
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
+from ..predictors import RunnerPredictor
 from .processors import NormalizeFeatures
 from .result import IdentityResult
 

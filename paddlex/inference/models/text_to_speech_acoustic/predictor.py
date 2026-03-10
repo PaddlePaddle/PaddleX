@@ -16,7 +16,7 @@ from typing import Tuple
 
 from ....modules.text_to_speech_acoustic.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-from ..base import RunnerPredictor
+from ..predictors import RunnerPredictor
 from .result import Fastspeech2Result
 
 

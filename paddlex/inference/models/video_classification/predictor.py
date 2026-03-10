@@ -18,7 +18,7 @@ from ....modules.video_classification.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..base import RunnerPredictor
+from ..predictors import RunnerPredictor
 from .processors import (
     CenterCrop,
     Image2Array,

@@ -21,21 +21,21 @@ from typing import Any, Dict, List, Optional, Sequence, Union
 import numpy as np
 from pydantic import BaseModel, ConfigDict
 
-from .....utils import logging
-from .....utils.deps import class_requires_deps
-from .....utils.device import check_supported_device_type
-from .....utils.flags import (
+from ....utils import logging
+from ....utils.deps import class_requires_deps
+from ....utils.device import check_supported_device_type
+from ....utils.flags import (
     DEBUG,
     DISABLE_MKLDNN_MODEL_BL,
     DISABLE_TRT_MODEL_BL,
     USE_PIR_TRT,
 )
-from ....utils.benchmark import add_inference_operations, benchmark
-from ....utils.mkldnn_blocklist import MKLDNN_BLOCKLIST
-from ....utils.model_paths import get_model_paths
-from ....utils.pp_option import PaddlePredictorOption
-from ....utils.trt_blocklist import TRT_BLOCKLIST
-from ....utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
+from ...utils.benchmark import add_inference_operations, benchmark
+from ...utils.mkldnn_blocklist import MKLDNN_BLOCKLIST
+from ...utils.model_paths import get_model_paths
+from ...utils.pp_option import PaddlePredictorOption
+from ...utils.trt_blocklist import TRT_BLOCKLIST
+from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 from .utils import sort_inputs
 
 CACHE_DIR = ".cache"

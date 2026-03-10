@@ -21,7 +21,7 @@ from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import RunnerPredictor
+from ..predictors import RunnerPredictor
 from .processors import (
     LatexImageFormat,
     LaTeXOCRDecode,

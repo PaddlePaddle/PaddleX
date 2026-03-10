@@ -15,14 +15,11 @@
 
 """Engine spec for remote genai client inference."""
 
-from typing import Any, Dict, Optional, Type, Union
-
-from pydantic import ValidationError
+from typing import Any, Dict, Optional, Type
 
 from ....utils.deps import is_genai_client_plugin_available
-from ...utils.pp_option import PaddlePredictorOption
-from ..base.predictor import BasePredictor, GenAIClientPredictor
 from ..common.genai import SERVER_BACKENDS, GenAIConfig
+from ..predictors import BasePredictor, GenAIClientPredictor
 from ._base import EngineSpec
 
 
@@ -34,31 +31,23 @@ class GenAIClientEngineSpec(EngineSpec):
         return "genai_client"
 
     @property
+    def engine_config_model(self) -> Type[GenAIConfig]:
+        return GenAIConfig
+
+    @property
     def needs_local_model(self) -> bool:
         return False
 
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return GenAIClientPredictor
 
-    def normalize_config(
-        self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
-        *,
-        model_name: Optional[str] = None,
-        device: Optional[str] = None,
-    ) -> Dict[str, Any]:
-        del model_name, device
-        raw = self._engine_config_to_dict(cfg)
-        try:
-            validated = GenAIConfig.model_validate(raw).model_dump(exclude_none=True)
-            if validated.get("backend") not in SERVER_BACKENDS:
-                raise ValueError(
-                    f"engine='genai_client' requires backend in {SERVER_BACKENDS!r}, "
-                    f"got {validated.get('backend')!r}."
-                )
-            return validated
-        except ValidationError as e:
-            raise ValueError(f"Invalid genai_client engine_config: {e}") from e
+    def post_normalize_config(self, validated: Dict[str, Any]) -> Dict[str, Any]:
+        if validated.get("backend") not in SERVER_BACKENDS:
+            raise ValueError(
+                f"engine='genai_client' requires backend in {SERVER_BACKENDS!r}, "
+                f"got {validated.get('backend')!r}."
+            )
+        return validated
 
     def ensure_environment(
         self,

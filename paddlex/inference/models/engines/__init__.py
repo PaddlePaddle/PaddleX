@@ -1,4 +1,5 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+#!/usr/bin/env python3
+# Copyright (c) 2026 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_predictor import BasePredictor
-from .flexible_predictor import FlexiblePredictor
-from .genai_client_predictor import GenAIClientPredictor
-from .runner_predictor import RunnerPredictor
-from .transformers_predictor import TransformersEngineConfig, TransformersPredictor
+"""Engine specification registry."""
+
+# Import engine modules so subclasses register themselves.
+from . import (  # noqa: F401
+    flexible,
+    genai_client,
+    hpi,
+    onnxruntime,
+    paddle,
+    transformers,
+)
+from ._base import EngineSpec
+from .transformers import TransformersEngineConfig
+
+__all__ = ["EngineSpec", "TransformersEngineConfig"]

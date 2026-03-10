@@ -21,7 +21,6 @@ import pandas as pd
 from ....modules.ts_forecast.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import RunnerPredictor
 from ..common import (
     BuildTSDataset,
     TimeFeature,
@@ -30,6 +29,7 @@ from ..common import (
     TStoArray,
     TStoBatch,
 )
+from ..predictors import RunnerPredictor
 from .processors import ArraytoTS, TSDeNormalize
 from .result import TSFcResult
 

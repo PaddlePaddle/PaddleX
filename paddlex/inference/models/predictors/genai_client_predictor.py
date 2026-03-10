@@ -16,8 +16,8 @@
 
 from typing import Any, Dict, Optional
 
-from .....utils.deps import require_genai_client_plugin
-from ...common.genai import SERVER_BACKENDS, GenAIClient, GenAIConfig
+from ....utils.deps import require_genai_client_plugin
+from ..common.genai import SERVER_BACKENDS, GenAIClient, GenAIConfig
 from .base_predictor import BasePredictor
 
 

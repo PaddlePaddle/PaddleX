@@ -21,7 +21,7 @@ from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
-from ..base import RunnerPredictor
+from ..predictors import RunnerPredictor
 from .processors import (
     GetInferInput,
     LoadMultiViewImageFromFiles,

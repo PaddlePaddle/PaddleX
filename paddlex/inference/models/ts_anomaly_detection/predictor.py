@@ -20,7 +20,6 @@ import pandas as pd
 from ....modules.ts_anomaly_detection.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import RunnerPredictor
 from ..common import (
     BuildTSDataset,
     TimeFeature,
@@ -29,6 +28,7 @@ from ..common import (
     TStoArray,
     TStoBatch,
 )
+from ..predictors import RunnerPredictor
 from .processors import GetAnomaly
 from .result import TSAdResult
 

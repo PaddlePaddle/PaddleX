@@ -20,10 +20,10 @@ from typing import List, Sequence, Union
 
 import numpy as np
 
-from .....utils import logging
-from .....utils.deps import class_requires_deps, require_hpip
-from ....utils.benchmark import add_inference_operations, benchmark
-from ....utils.hpi import (
+from ....utils import logging
+from ....utils.deps import class_requires_deps, require_hpip
+from ...utils.benchmark import add_inference_operations, benchmark
+from ...utils.hpi import (
     HPIConfig,
     OMConfig,
     ONNXRuntimeConfig,
@@ -31,8 +31,8 @@ from ....utils.hpi import (
     TensorRTConfig,
     suggest_inference_backend_and_config,
 )
-from ....utils.model_paths import get_model_paths
-from ....utils.pp_option import get_default_run_mode
+from ...utils.model_paths import get_model_paths
+from ...utils.pp_option import get_default_run_mode
 from .paddle_static_runner import (
     CACHE_DIR,
     PaddleStaticRunner,

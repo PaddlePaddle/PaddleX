@@ -19,16 +19,22 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Type, Union
 
+from pydantic import BaseModel, ValidationError
+
 from ....utils import errors
 from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ...utils.pp_option import PaddlePredictorOption
-from ..base.predictor import BasePredictor
+from ..predictors import BasePredictor
 
 
 class EngineSpec(ABC, metaclass=AutoRegisterABCMetaClass):
     """Describes how an inference engine integrates with predictors and models."""
 
     __is_base = True
+
+    @property
+    def engine_config_model(self) -> Optional[Type[BaseModel]]:
+        return None
 
     @property
     @abstractmethod
@@ -75,8 +81,43 @@ class EngineSpec(ABC, metaclass=AutoRegisterABCMetaClass):
         model_name: Optional[str] = None,
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
+        raw = self._engine_config_to_dict(cfg)
+        prepared = self.prepare_config_dict(
+            raw,
+            model_name=model_name,
+            device=device,
+        )
+        validated = self.validate_config_dict(prepared)
+        return self.post_normalize_config(validated)
+
+    def prepare_config_dict(
+        self,
+        raw: Dict[str, Any],
+        *,
+        model_name: Optional[str] = None,
+        device: Optional[str] = None,
+    ) -> Dict[str, Any]:
         del model_name, device
-        return self._engine_config_to_dict(cfg)
+        return raw
+
+    def validate_config_dict(self, raw: Dict[str, Any]) -> Dict[str, Any]:
+        config_model = self.engine_config_model
+        if config_model is None:
+            return raw
+        try:
+            validated = config_model.model_validate(raw)
+        except ValidationError as e:
+            raise ValueError(f"Invalid {self.name} engine_config: {e}") from e
+        return validated.model_dump(**self.get_config_dump_kwargs())
+
+    def get_config_dump_kwargs(self) -> Dict[str, Any]:
+        return {"exclude_none": True}
+
+    def post_normalize_config(self, validated: Dict[str, Any]) -> Dict[str, Any]:
+        return validated
+
+    def to_predictor_config(self, engine_config: Dict[str, Any]) -> Dict[str, Any]:
+        return dict(engine_config)
 
     def resolve_engine_from_model_dir(self, model_dir: Path) -> str:
         del model_dir

@@ -19,8 +19,8 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Union
 import numpy as np
 from pydantic import BaseModel, ConfigDict
 
-from .....utils.deps import class_requires_deps
-from .....utils.device import TemporaryDeviceChanger, constr_device
+from ....utils.deps import class_requires_deps
+from ....utils.device import TemporaryDeviceChanger, constr_device
 
 
 class PaddleDynamicRunnerConfig(BaseModel):

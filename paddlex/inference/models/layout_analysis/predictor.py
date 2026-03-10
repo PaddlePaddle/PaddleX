@@ -14,8 +14,10 @@
 
 from typing import Any, List, Optional, Tuple, Union
 
+from PIL import Image
+
 from ....modules.object_detection.model_list import LAYOUTANALYSIS_MODELS
-from ..object_detection import DetRunnerPredictor
+from ..object_detection.predictor import DetRunnerPredictor, DetTransformersPredictor
 from ..object_detection.processors import Resize, ToBatch
 from .processors import LayoutAnalysisProcess
 from .result import LayoutAnalysisResult
@@ -177,3 +179,87 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
         return LayoutAnalysisProcess(
             labels=self.config["label_list"], scale_size=scale_size
         )
+
+
+class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
+    """Layout analysis predictor backed by HuggingFace transformers."""
+
+    entities = LAYOUTANALYSIS_MODELS
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.layout_postprocess = LayoutAnalysisProcess(
+            labels=self.labels,
+            scale_size=self._resolve_scale_size(),
+        )
+
+    def _get_result_class(self):
+        return LayoutAnalysisResult
+
+    def _resolve_scale_size(self) -> List[int]:
+        for cfg in self.model_config.get("Preprocess", []):
+            if cfg.get("type") != "Resize":
+                continue
+            target_size = cfg.get("target_size")
+            if isinstance(target_size, int):
+                return [target_size, target_size]
+            if isinstance(target_size, (tuple, list)) and len(target_size) == 2:
+                return list(target_size)
+        return [800, 800]
+
+    def process(
+        self,
+        batch_data: List[Any],
+        threshold: Optional[Union[float, dict]] = None,
+        layout_nms: bool = False,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
+        layout_merge_bboxes_mode: Optional[Union[str, dict]] = None,
+        layout_shape_mode: Optional[str] = "auto",
+        filter_overlap_boxes: Optional[bool] = True,
+        skip_order_labels: Optional[List[str]] = None,
+    ):
+        if not hasattr(self.image_processor, "post_process_object_detection"):
+            raise RuntimeError(
+                f"{type(self.image_processor).__name__} does not support "
+                "`post_process_object_detection`."
+            )
+
+        datas = self.read_op(batch_data.instances)
+        images = [Image.fromarray(data["img"]) for data in datas]
+        model_inputs = self.image_processor(images=images, return_tensors="pt")
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer(**model_inputs)
+
+        effective_threshold, hf_threshold = self._get_hf_threshold(threshold)
+        predictions = self.image_processor.post_process_object_detection(
+            outputs,
+            threshold=hf_threshold,
+            target_sizes=self._get_target_sizes(datas),
+        )
+        batch_outputs = [
+            {"boxes": self._format_transformers_output(prediction)}
+            for prediction in predictions
+        ]
+        boxes = self.layout_postprocess(
+            batch_outputs,
+            datas,
+            threshold=effective_threshold,
+            layout_nms=layout_nms or self.layout_nms,
+            layout_unclip_ratio=layout_unclip_ratio or self.layout_unclip_ratio,
+            layout_merge_bboxes_mode=layout_merge_bboxes_mode
+            or self.layout_merge_bboxes_mode,
+            layout_shape_mode=layout_shape_mode,
+            filter_overlap_boxes=filter_overlap_boxes,
+            skip_order_labels=skip_order_labels,
+        )
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": [data["ori_img"] for data in datas],
+            "boxes": boxes,
+        }

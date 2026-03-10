@@ -13,19 +13,17 @@
 # limitations under the License.
 
 from abc import abstractmethod
-from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
-from ..... import constants
-from .....utils import logging
-from .....utils.device import constr_device
-from ....utils.hpi import HPIConfig, HPIInfo
-from ...common.runner import ONNXRuntimeRunner, PaddleDynamicRunner, PaddleStaticRunner
-from .base_predictor import BasePredictor
-from .utils import resolve_model_args
+from .... import constants
+from ....utils import logging
+from ....utils.device import constr_device
+from ...utils.hpi import HPIConfig, HPIInfo
+from ..runners import ONNXRuntimeRunner, PaddleDynamicRunner, PaddleStaticRunner
+from .local_model_predictor import LocalModelPredictor
 
 
-class RunnerPredictor(BasePredictor):
+class RunnerPredictor(LocalModelPredictor):
     """Base class for predictors that use inference runners."""
 
     __is_base = True
@@ -46,20 +44,15 @@ class RunnerPredictor(BasePredictor):
         **kwargs,
     ) -> None:
         self._check_engine_support(engine)
-        self._model_dir, self.config, resolved_name = resolve_model_args(
-            model_dir, model_config, model_name
-        )
         super().__init__(
-            model_name=resolved_name,
+            model_dir=model_dir,
+            model_config=model_config,
+            model_name=model_name,
             engine=engine,
             engine_config=engine_config,
             **kwargs,
         )
         self._engine_config = engine_config or {}
-
-    @property
-    def model_dir(self) -> Optional[Path]:
-        return self._model_dir
 
     @property
     def device(self) -> Optional[str]:
@@ -82,12 +75,12 @@ class RunnerPredictor(BasePredictor):
 
     def _get_hpi_info(self):
         """Read HPI info from model config if available."""
-        if not self.config or "Hpi" not in self.config:
+        if not self.model_config or "Hpi" not in self.model_config:
             return None
         from pydantic import ValidationError
 
         try:
-            return HPIInfo.model_validate(self.config["Hpi"])
+            return HPIInfo.model_validate(self.model_config["Hpi"])
         except ValidationError as e:
             raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
 
@@ -145,7 +138,7 @@ class RunnerPredictor(BasePredictor):
 
     def build_hpi_runner(self):
         """Build HPIRunner for engine=hpi."""
-        from ...common.runner import HPIRunner
+        from ..runners import HPIRunner
 
         hpi_cfg = dict(self._engine_config)
         hpi_cfg.setdefault("model_name", self.model_name)

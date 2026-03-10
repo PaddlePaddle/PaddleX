@@ -15,11 +15,10 @@
 
 """Engine spec for flexible predictors."""
 
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Type
 
 from ....utils.device import parse_device
-from ...utils.pp_option import PaddlePredictorOption
-from ..base.predictor import BasePredictor, FlexiblePredictor
+from ..predictors import BasePredictor, FlexiblePredictor
 from ._base import EngineSpec
 
 
@@ -33,15 +32,14 @@ class FlexibleEngineSpec(EngineSpec):
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return FlexiblePredictor
 
-    def normalize_config(
+    def prepare_config_dict(
         self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        raw: Dict[str, Any],
         *,
         model_name: Optional[str] = None,
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        raw = self._engine_config_to_dict(cfg)
         if device:
             device_type, device_ids = parse_device(device)
             raw["device_type"] = device_type

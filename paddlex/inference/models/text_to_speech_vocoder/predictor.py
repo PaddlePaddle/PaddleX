@@ -18,7 +18,7 @@ import numpy as np
 
 from ....modules.text_to_speech_vocoder.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-from ..base import RunnerPredictor
+from ..predictors import RunnerPredictor
 from .result import PwganResult
 
 

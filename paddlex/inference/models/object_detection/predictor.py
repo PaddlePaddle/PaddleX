@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
+from PIL import Image
 
 from ....modules.object_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
-from ..base import RunnerPredictor
-from ..common.runner import PaddleDynamicRunner
+from ..predictors import RunnerPredictor, TransformersPredictor
+from ..runners import PaddleDynamicRunner
 from .processors import (
     DetPad,
     DetPostProcess,
@@ -365,3 +366,232 @@ class DetRunnerPredictor(RunnerPredictor):
                 "layout_merge_bboxes_mode", None
             )
         return DetPostProcess(labels=self.config["label_list"])
+
+
+class DetTransformersPredictor(TransformersPredictor):
+    """Object detection predictor backed by HuggingFace transformers."""
+
+    entities = MODELS
+
+    def __init__(
+        self,
+        *args,
+        threshold: Optional[Union[float, dict]] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
+        layout_merge_bboxes_mode: Optional[Union[str, dict]] = None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self.threshold = threshold
+        self.layout_nms = layout_nms
+        self.layout_unclip_ratio = layout_unclip_ratio
+        self.layout_merge_bboxes_mode = layout_merge_bboxes_mode
+        self.read_op = ReadImage(format="RGB")
+        self.image_processor, self.infer, self.labels = self._build()
+        self.layout_postprocess = DetPostProcess(labels=self.labels)
+
+    def _build_batch_sampler(self):
+        return ImageBatchSampler()
+
+    def _get_result_class(self):
+        return DetResult
+
+    def _build(self):
+        from transformers import AutoImageProcessor, AutoModelForObjectDetection
+
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(AutoModelForObjectDetection)
+        self._label_source_model = model
+        return image_processor, model, self._resolve_labels()
+
+    def _format_transformers_output(self, prediction: Dict[str, Any]) -> np.ndarray:
+        boxes = prediction["boxes"].detach().cpu().numpy()
+        scores = prediction["scores"].detach().cpu().numpy()
+        labels = prediction["labels"].detach().cpu().numpy()
+        if len(boxes) == 0:
+            return np.empty((0, 6), dtype=np.float32)
+        return np.concatenate(
+            [
+                labels[:, None].astype(np.float32, copy=False),
+                scores[:, None].astype(np.float32, copy=False),
+                boxes.astype(np.float32, copy=False),
+            ],
+            axis=1,
+        )
+
+    def _get_target_sizes(self, datas: List[dict]):
+        import torch
+
+        return torch.tensor(
+            [data["ori_img_size"][::-1] for data in datas], dtype=torch.int64
+        )
+
+    def _apply_category_threshold(
+        self, boxes: np.ndarray, threshold: Optional[Union[float, dict]]
+    ) -> np.ndarray:
+        if boxes.size == 0 or not isinstance(threshold, dict):
+            return boxes
+        selected = []
+        for box in boxes:
+            cat_id = int(box[0])
+            if box[1] > threshold.get(cat_id, 0.5):
+                selected.append(box)
+        if not selected:
+            return np.empty((0, 6), dtype=np.float32)
+        return np.asarray(selected, dtype=np.float32)
+
+    def _to_paddlex_boxes(
+        self, boxes: np.ndarray, img_size: Tuple[int, int]
+    ) -> List[dict]:
+        if boxes.size == 0:
+            return []
+        width, height = img_size
+        results = []
+        for box in boxes:
+            cls_id = int(box[0])
+            xmin, ymin, xmax, ymax = box[2:]
+            xmin = max(0.0, min(float(xmin), float(width)))
+            ymin = max(0.0, min(float(ymin), float(height)))
+            xmax = max(0.0, min(float(xmax), float(width)))
+            ymax = max(0.0, min(float(ymax), float(height)))
+            if xmax <= xmin or ymax <= ymin:
+                continue
+            label = (
+                self.labels[cls_id] if 0 <= cls_id < len(self.labels) else str(cls_id)
+            )
+            results.append(
+                {
+                    "cls_id": cls_id,
+                    "label": label,
+                    "score": float(box[1]),
+                    "coordinate": [xmin, ymin, xmax, ymax],
+                }
+            )
+        return results
+
+    def _get_hf_threshold(
+        self, threshold: Optional[Union[float, dict]]
+    ) -> Tuple[Union[float, dict], float]:
+        effective_threshold = threshold if threshold is not None else self.threshold
+        if effective_threshold is None:
+            effective_threshold = 0.5
+        if isinstance(effective_threshold, dict):
+            return effective_threshold, 0.0
+        return effective_threshold, float(effective_threshold)
+
+    def _get_layout_postprocess_kwargs(
+        self,
+        layout_nms: bool,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]],
+        layout_merge_bboxes_mode: Optional[Union[str, dict]],
+    ) -> Dict[str, Any]:
+        return {
+            "layout_nms": layout_nms or self.layout_nms,
+            "layout_unclip_ratio": layout_unclip_ratio or self.layout_unclip_ratio,
+            "layout_merge_bboxes_mode": layout_merge_bboxes_mode
+            or self.layout_merge_bboxes_mode,
+        }
+
+    def _requires_layout_postprocess(
+        self, layout_postprocess_kwargs: Dict[str, Any]
+    ) -> bool:
+        return any(layout_postprocess_kwargs.values())
+
+    def _postprocess_prediction(
+        self,
+        prediction: Dict[str, Any],
+        data: Dict[str, Any],
+        effective_threshold: Union[float, dict],
+        layout_postprocess_kwargs: Dict[str, Any],
+    ) -> List[dict]:
+        formatted = self._format_transformers_output(prediction)
+        formatted = self._apply_category_threshold(formatted, effective_threshold)
+        if self._requires_layout_postprocess(layout_postprocess_kwargs):
+            return self.layout_postprocess.apply(
+                formatted,
+                data["ori_img_size"],
+                0.0,
+                **layout_postprocess_kwargs,
+            )
+        return self._to_paddlex_boxes(formatted, data["ori_img_size"])
+
+    def process(
+        self,
+        batch_data: List[Any],
+        threshold: Optional[Union[float, dict]] = None,
+        layout_nms: bool = False,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
+        layout_merge_bboxes_mode: Optional[Union[str, dict]] = None,
+    ):
+        if not hasattr(self.image_processor, "post_process_object_detection"):
+            raise RuntimeError(
+                f"{type(self.image_processor).__name__} does not support "
+                "`post_process_object_detection`."
+            )
+
+        datas = self.read_op(batch_data.instances)
+        images = [Image.fromarray(data["img"]) for data in datas]
+        model_inputs = self.image_processor(images=images, return_tensors="pt")
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer(**model_inputs)
+
+        effective_threshold, hf_threshold = self._get_hf_threshold(threshold)
+        predictions = self.image_processor.post_process_object_detection(
+            outputs,
+            threshold=hf_threshold,
+            target_sizes=self._get_target_sizes(datas),
+        )
+        layout_postprocess_kwargs = self._get_layout_postprocess_kwargs(
+            layout_nms=layout_nms,
+            layout_unclip_ratio=layout_unclip_ratio,
+            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+        )
+        boxes = [
+            self._postprocess_prediction(
+                prediction=prediction,
+                data=data,
+                effective_threshold=effective_threshold,
+                layout_postprocess_kwargs=layout_postprocess_kwargs,
+            )
+            for data, prediction in zip(datas, predictions)
+        ]
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": [data["ori_img"] for data in datas],
+            "boxes": boxes,
+        }
+
+    def _resolve_labels(self):
+        if self.threshold is None:
+            self.threshold = self.model_config.get("draw_threshold", 0.5)
+        if self.layout_nms is None:
+            self.layout_nms = self.model_config.get("layout_nms", None)
+        if self.layout_unclip_ratio is None:
+            self.layout_unclip_ratio = self.model_config.get(
+                "layout_unclip_ratio", None
+            )
+        if self.layout_merge_bboxes_mode is None:
+            self.layout_merge_bboxes_mode = self.model_config.get(
+                "layout_merge_bboxes_mode", None
+            )
+
+        labels = self.model_config.get("label_list")
+        if not labels:
+            label_source = getattr(self, "infer", None) or getattr(
+                self, "_label_source_model", None
+            )
+            id2label = getattr(getattr(label_source, "config", None), "id2label", None)
+            if id2label:
+                labels = [id2label[idx] for idx in sorted(id2label)]
+        if not labels:
+            raise ValueError(
+                "Unable to resolve label names for object detection model."
+            )
+        return labels
