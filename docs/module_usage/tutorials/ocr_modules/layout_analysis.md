@@ -6,9 +6,9 @@ comments: true
 
 ## 一、概述
 
-版面分析任务在版面区域检测的基础上，进一步引入了**实例分割**与**阅读顺序预测**能力。通过对输入的文档图像进行内容解析与区域划分，模型不仅能识别各类版面元素（如文字、图表、图像、公式、段落标题、摘要、参考文献等）并输出其边界框，还能同时输出每个区域的**精确轮廓掩码**和**阅读顺序编号**，为文档理解与信息抽取流程提供更完整的结构化信息。
+版面分析任务在版面区域检测的基础上，进一步引入了**实例分割**与**阅读顺序预测**能力。通过对输入的文档图像进行分析，不仅能识别各类版面元素（如文字、图表、图像、公式、段落标题、摘要、参考文献等）并输出其边界框，还能同时输出每个区域的**精确轮廓掩码**和**阅读顺序编号**，为文档理解与信息抽取流程提供更完整的结构化信息。
 
-版面分析模块目前支持的模型 PP-DocLayoutV3，基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了 `order_loss` 分支，可同步学习文档元素的阅读顺序关系。
+版面分析模块目前支持模型 PP-DocLayoutV3，基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。
 
 ## 二、支持模型列表
 
@@ -35,7 +35,7 @@ comments: true
 <td>- / -</td>
 <td>- / -</td>
 <td>-</td>
-<td>基于DETR（PPHGNetV2-L骨干）在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报等场景的自建数据集上训练的版面分析模型，支持25类版面元素的实例分割及阅读顺序预测</td>
+<td>基于DETR在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报等场景的自建数据集上训练的版面分析模型，支持25类版面元素的实例分割及阅读顺序预测</td>
 </tr>
 </tbody>
 </table>
@@ -355,7 +355,7 @@ tar -xf ./dataset/doclayoutv3_examples.tar -C ./dataset/
 
 #### 4.1.2 数据集格式说明
 
-版面分析模块使用 **COCOInstSegDataset** 格式，数据集目录结构如下：
+版面分析模块使用 **COCOInstSegDataset** 格式，并补充了阅读顺序标注，数据集目录结构如下：
 
 ```
 doclayoutv3_examples/
@@ -437,36 +437,50 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
   "done_flag": true,
   "check_pass": true,
   "attributes": {
-    "num_classes": 25,
-    "train_samples": 980,
+    "num_classes": 11,
+    "train_samples": 6351,
     "train_sample_paths": [
-      "check_dataset/demo_img/train_0001.jpg",
-      "check_dataset/demo_img/train_0002.jpg",
-      "check_dataset/demo_img/train_0003.jpg"
+      "check_dataset\/demo_img\/train_4141.jpg",
+      "check_dataset\/demo_img\/train_3699.jpg",
+      "check_dataset\/demo_img\/train_3764.jpg",
+      "check_dataset\/demo_img\/train_2279.jpg",
+      "check_dataset\/demo_img\/train_4647.jpg",
+      "check_dataset\/demo_img\/train_4442.jpg",
+      "check_dataset\/demo_img\/train_2006.jpg",
+      "check_dataset\/demo_img\/train_1463.jpg",
+      "check_dataset\/demo_img\/train_3275.jpg",
+      "check_dataset\/demo_img\/train_4509.jpg"
     ],
-    "val_samples": 200,
+    "val_samples": 945,
     "val_sample_paths": [
-      "check_dataset/demo_img/val_0001.jpg",
-      "check_dataset/demo_img/val_0002.jpg",
-      "check_dataset/demo_img/val_0003.jpg"
+      "check_dataset\/demo_img\/val_0105.jpg",
+      "check_dataset\/demo_img\/val_0031.jpg",
+      "check_dataset\/demo_img\/val_0755.jpg",
+      "check_dataset\/demo_img\/val_0876.jpg",
+      "check_dataset\/demo_img\/val_0374.jpg",
+      "check_dataset\/demo_img\/val_0566.jpg",
+      "check_dataset\/demo_img\/val_0748.jpg",
+      "check_dataset\/demo_img\/val_0167.jpg",
+      "check_dataset\/demo_img\/val_0345.jpg",
+      "check_dataset\/demo_img\/val_0471.jpg"
     ],
     "read_order_validation": {
       "instance_train": {
-        "total_images": 980,
-        "valid_images": 980,
+        "total_images": 500,
+        "valid_images": 500,
         "invalid_images": [],
         "pass_rate": 1.0
       },
       "instance_val": {
-        "total_images": 200,
-        "valid_images": 200,
+        "total_images": 100,
+        "valid_images": 100,
         "invalid_images": [],
         "pass_rate": 1.0
       }
     }
   },
   "analysis": {
-    "histogram": "check_dataset/histogram.png"
+    "histogram": "check_dataset\/histogram.png"
   },
   "dataset_path": "doclayoutv3_examples",
   "show_type": "image",
@@ -475,7 +489,7 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 </code></pre>
 <p>上述校验结果中，<code>check_pass</code> 为 <code>True</code> 表示数据集格式符合要求，其他部分指标的说明如下：</p>
 <ul>
-<li><code>attributes.num_classes</code>：该数据集类别数为25；</li>
+<li><code>attributes.num_classes</code>：该数据集类别数为11；</li>
 <li><code>attributes.train_samples</code>：该数据集训练集样本数量；</li>
 <li><code>attributes.val_samples</code>：该数据集验证集样本数量；</li>
 <li><code>attributes.train_sample_paths</code>：该数据集训练集样本可视化图片相对路径列表；</li>
@@ -529,7 +543,8 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 ```bash
 python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
     -o Global.mode=train \
-    -o Global.dataset_dir=./dataset/doclayoutv3_examples
+    -o Global.dataset_dir=./dataset/doclayoutv3_examples \
+    -o Train.num_classes=11
 ```
 
 需要如下几步：
@@ -575,7 +590,7 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>。</p>
-<p>在完成模型评估后，会产出 <code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 mask AP 等。</p></details>
+<p>在完成模型评估后，会产出 <code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标。</p></details>
 
 ### 4.4 模型推理
 
