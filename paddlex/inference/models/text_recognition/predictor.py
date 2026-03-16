@@ -76,7 +76,14 @@ class TextRecPredictor(BasePredictor):
         pre_tfs["ToBatch"] = ToBatch()
 
         if self._use_static_model:
-            infer = self.create_static_infer()
+            if self._use_hpip and self.hpi_config.device_type == "npu":
+                from ais_bench.infer.interface import InferSession
+                MODEL_PATH_REC = self.model_dir / \
+                    f"{self.MODEL_FILE_PREFIX}.{self.hpi_config.backend}"
+                infer = InferSession(
+                    device_id=0, model_path=str(MODEL_PATH_REC))
+            else:
+                infer = self.create_static_infer()
         else:
             if self.model_name in ["PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"]:
                 from .modeling import PPOCRV5Rec
@@ -106,7 +113,10 @@ class TextRecPredictor(BasePredictor):
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
         if self._use_static_model:
-            batch_preds = self.infer(x=x)
+            if self._use_hpip and self.hpi_config.device_type == "npu":
+                batch_preds = self.infer.infer(x, mode='dymshape', custom_sizes=100000000)
+            else:
+                batch_preds = self.infer(x)
         else:
             with TemporaryDeviceChanger(self.device):
                 batch_preds = self.infer(x=x)
