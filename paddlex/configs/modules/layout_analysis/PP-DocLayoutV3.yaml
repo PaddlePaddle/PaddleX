@@ -15,7 +15,7 @@ CheckDataset:
     val_percent: null
 
 Train:
-  num_classes: 25
+  num_classes: 11
   epochs_iters: 100
   batch_size: 4
   learning_rate: 0.0001

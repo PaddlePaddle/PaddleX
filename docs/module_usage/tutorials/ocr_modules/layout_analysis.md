@@ -543,8 +543,7 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 ```bash
 python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
     -o Global.mode=train \
-    -o Global.dataset_dir=./dataset/doclayoutv3_examples \
-    -o Train.num_classes=11
+    -o Global.dataset_dir=./dataset/doclayoutv3_examples
 ```
 
 需要如下几步：
