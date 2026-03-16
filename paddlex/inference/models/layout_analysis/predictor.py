@@ -32,7 +32,7 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
 
     @classmethod
     def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi", "onnxruntime")
+        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
 
     def __init__(
         self,

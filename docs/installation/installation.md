@@ -305,4 +305,4 @@ PaddleX 的绝大部分功能依赖飞桨框架，因此，在大多数情况下
 
 当您使用第 4 节中的非 Paddle 引擎场景时，建议同时安装对应依赖：
 
-- `engine="transformers"`：需要安装 `transformers` 库（例如 `pip install transformers`），并参考 [Transformers 官方文档](https://huggingface.co/docs/transformers/index) 配置运行环境。
+- `engine="transformers"`：需要安装 `transformers` 库（例如 `pip install transformers`），并参考 [Transformers 官方文档](https://huggingface.co/docs/transformers/installation) 配置运行环境。

@@ -306,4 +306,4 @@ The vast majority of PaddleX's functionalities rely on the PaddlePaddle framewor
 
 When using the non-Paddle engine scenarios in Section 4, install the corresponding dependencies as well:
 
-- `engine="transformers"`: install the `transformers` library (for example, `pip install transformers`), and follow the [Transformers official documentation](https://huggingface.co/docs/transformers/index) to configure the runtime environment.
+- `engine="transformers"`: install the `transformers` library (for example, `pip install transformers`), and follow the [Transformers official documentation](https://huggingface.co/docs/transformers/installation) to configure the runtime environment.

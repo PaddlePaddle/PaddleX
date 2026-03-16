@@ -18,6 +18,7 @@ from typing import Any, Dict, Optional, Union
 from ...utils import logging
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..models import BasePredictor
+from ..models.common.genai import uses_server_backend
 from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
 
@@ -75,6 +76,33 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         raise NotImplementedError("The method `predict` has not been implemented yet.")
 
+    @staticmethod
+    def _resolve_child_engine(
+        config: Dict[str, Any], inherited_engine: Optional[str], *, allow_genai: bool
+    ) -> tuple[Optional[str], bool]:
+        """Resolve the effective child engine.
+
+        Returns a tuple of `(engine, suppress_inherited_engine_defaults)`.
+
+        Same-level `engine` has the highest priority. If a child omits `engine`
+        but specifies another engine selector such as `use_hpip`, or a
+        `genai_config` that targets a remote server backend, that selector
+        should beat the inherited parent `engine` and fall back to local
+        auto-resolution instead of reusing the parent engine defaults.
+        """
+        if "engine" in config:
+            child_engine = config.get("engine", None)
+            return child_engine, child_engine is None
+
+        has_local_engine_selector = "use_hpip" in config
+        if allow_genai and uses_server_backend(config.get("genai_config", None)):
+            has_local_engine_selector = True
+
+        if has_local_engine_selector:
+            return None, True
+
+        return inherited_engine, False
+
     def create_model(self, config: Dict, **kwargs) -> BasePredictor:
         """
         Create a model instance based on the given configuration.
@@ -83,9 +111,11 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             raise ValueError(config["model_config_error"])
 
         model_dir = config.get("model_dir", None)
-        model_engine = config.get("engine", self.engine)
+        model_engine, suppress_inherited_engine_defaults = self._resolve_child_engine(
+            config, self.engine, allow_genai=True
+        )
         model_engine_config = config.get("engine_config", None)
-        if self.engine_config is not None:
+        if self.engine_config is not None and not suppress_inherited_engine_defaults:
             merged = dict(self.engine_config)
             if model_engine_config:
                 merged.update(model_engine_config)
@@ -133,6 +163,10 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
 
         from . import create_pipeline
 
+        pipeline_engine, suppress_inherited_engine_defaults = (
+            self._resolve_child_engine(config, self.engine, allow_genai=False)
+        )
+
         use_hpip = config.get("use_hpip", self.use_hpip)
         hpi_config = config.get("hpi_config", None)
         if self.hpi_config is not None:
@@ -147,8 +181,10 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         return create_pipeline(
             config=config,
             device=self.device,
-            engine=self.engine,
-            engine_config=self.engine_config,
+            engine=pipeline_engine,
+            engine_config=(
+                None if suppress_inherited_engine_defaults else self.engine_config
+            ),
             pp_option=(self.pp_option.copy() if self.pp_option is not None else None),
             use_hpip=use_hpip,
             hpi_config=hpi_config,

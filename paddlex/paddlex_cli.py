@@ -174,7 +174,7 @@ def args_cfg():
         default=8080,
         help="Port number to serve on (default: 8080).",
     )
-    # Serving also uses `--pipeline`, `--device`, `--use_hpip`, and `--hpi_config`
+    # Serving also uses `--pipeline`, `--engine`, `--device`, `--use_hpip`, and `--hpi_config`
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
@@ -499,7 +499,7 @@ def pipeline_predict(
             res.save_all(save_path=save_path)
 
 
-def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
+def serve(pipeline, *, engine, device, use_hpip, hpi_config, host, port):
     try:
         from .inference.serving.basic_serving import create_pipeline_app, run_server
     except RuntimeError:
@@ -510,6 +510,7 @@ def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
     try:
         pipeline = create_pipeline(
             config=pipeline_config,
+            engine=engine,
             device=device,
             use_hpip=use_hpip,
             hpi_config=hpi_config,
@@ -620,6 +621,7 @@ def main():
     elif args.serve:
         serve(
             args.pipeline,
+            engine=args.engine,
             device=args.device,
             use_hpip=args.use_hpip or None,
             hpi_config=args.hpi_config,

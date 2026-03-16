@@ -107,12 +107,17 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
 * `paddle_static`: Paddle Inference static graph engine;
 * `paddle_dynamic`: Paddle dynamic graph engine;
 * `hpi`: High-performance inference plugin;
-* `flexible`: Flexible runtime engine (supported by specific models);
+* `flexible`: Flexible runtime engine;
 * `transformers`: Hugging Face Transformers-based engine;
 * `genai_client`: Client engine for remote generative AI services.
 
 #### 4.2 Priority Rules
 
+* When `engine=None`, PaddleX resolves the final engine in the following order:
+  * If `genai_config.backend` is a server backend (such as `fastdeploy-server`, `vllm-server`, `sglang-server`, `mlx-vlm-server`, or `llama-cpp-server`), it resolves to `genai_client`;
+  * Otherwise, if `use_hpip=True`, it resolves to `hpi`;
+  * Otherwise, if the model only supports `flexible`, it resolves to `flexible`;
+  * Otherwise, it falls back to `paddle`, which is then auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
 * If `engine` is explicitly provided, `use_hpip` is ignored;
 * If `engine_config` is explicitly provided, `pp_option`, `hpi_config`, and `genai_config` are compatibility options and will be ignored;
 * Prefer using only `engine` + `engine_config` to avoid ambiguity.

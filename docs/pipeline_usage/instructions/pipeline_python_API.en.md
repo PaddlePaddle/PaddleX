@@ -106,7 +106,7 @@ PaddleX pipelines support unified inference configuration via `engine` + `engine
 * `paddle_static`: Paddle Inference static graph engine;
 * `paddle_dynamic`: Paddle dynamic graph engine;
 * `hpi`: High-performance inference plugin;
-* `flexible`: Flexible runtime engine (supported by specific models);
+* `flexible`: Flexible runtime engine;
 * `transformers`: Hugging Face Transformers-based engine;
 * `genai_client`: Client engine for remote generative AI services.
 
@@ -166,7 +166,15 @@ SubModules:
 #### 4.3 Effective Rules
 
 * `create_pipeline(..., engine=...)` has higher priority than the same field in YAML config;
-* Global `engine_config` is merged with submodule `engine_config`; submodule fields override global ones;
+* Global `engine_config` is merged with `engine_config` from submodules or sub-pipelines; fields at the lower level override global ones;
+* At any level, when `engine=None`, PaddleX resolves the final engine based on the engine-selection options supported at that level; in particular, if that level supports `genai_config` and `genai_config.backend` is a server backend (such as `fastdeploy-server`, `vllm-server`, `sglang-server`, `mlx-vlm-server`, or `llama-cpp-server`), it resolves to `genai_client`;
+  * Otherwise, if `use_hpip=True`, it resolves to `hpi`;
+  * Otherwise, if the target model only supports `flexible`, it resolves to `flexible`;
+  * Otherwise, it falls back to `paddle`, which is then auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+* Within the same level, `engine` has higher priority than `use_hpip` / `genai_config`;
+* If a submodule or sub-pipeline does not explicitly set `engine`, but does explicitly set `use_hpip`, PaddleX re-resolves the engine from that level instead of continuing to inherit the parent `engine`;
+* If a submodule does not explicitly set `engine`, but does explicitly set `genai_config.backend` to a server backend, PaddleX also re-resolves the engine from the submodule level instead of continuing to inherit the parent `engine`;
+* In those cases, when that level falls back to local engine auto-resolution, it no longer inherits the parent `engine_config`; add the matching configuration at that level based on the final engine.
 * When `engine` is explicitly set, `use_hpip` is ignored;
 * When `engine_config` is explicitly set, `pp_option` and `hpi_config` are usually unnecessary compatibility options.
 

@@ -117,7 +117,7 @@ paddlex --pipeline ./configs/image_classification.yaml \
         --input ./demo.jpg
 ```
 
-#### 2.3 方式 C：全局配置 + 子模块覆盖
+#### 2.3 方式 C：全局配置 + 子模块/子产线覆盖
 
 ```yaml
 pipeline_name: OCR
@@ -147,12 +147,15 @@ CLI 下 `engine_config` 主要通过配置文件设置，常用字段及含义�
 * `genai_client`：`backend`（服务后端）、`server_url`（服务地址）、`max_concurrency`（并发上限）、`client_kwargs`（客户端透传参数）；
 * `flexible`：无固定字段约束。
 
-> 说明：`paddle` 是自动解析引擎，不单独定义 `engine_config` 字段；产线实际生效时由“全局配置 + 子模块覆盖”共同决定。
+> 说明：`paddle` 是自动解析引擎，不单独定义 `engine_config` 字段；产线实际生效时由“全局配置 + 子模块/子产线覆盖”共同决定。
 
 ### 3. 参数优先级
 
 * `--engine` 的优先级高于产线配置文件中的 `engine`；
-* `engine_config` 由配置文件控制：可在全局设置，也可在子模块中覆盖；
+* `engine_config` 由配置文件控制：可在全局设置，也可在子模块或子产线中覆盖；
+* 在任一层级中，当该层未显式设置 `engine` 时，会按该层支持的引擎选择参数自动解析最终引擎；其中若该层支持 `genai_config` 且 `genai_config.backend` 指向服务器后端，则解析为 `genai_client`；否则，若 `use_hpip=True`，则优先解析为 `hpi`；否则，若对应模型仅支持 `flexible`，则解析为 `flexible`；否则，回退为 `paddle`，再根据模型文件自动解析为 `paddle_static` 或 `paddle_dynamic`；
+* 同一层级内，`engine` 的优先级高于 `use_hpip` / `genai_config`；但如果子模块或子产线未显式设置 `engine`，而显式设置了 `use_hpip`，则会优先按这一层重新解析引擎，而不是继续继承上一级的 `engine`；如果子模块未显式设置 `engine`，但显式设置了指向服务器后端的 `genai_config.backend`，也会优先按子模块这一层重新解析引擎；
+* 当子模块或子产线因本层 `use_hpip` 改为本层自动解析引擎时，或当子模块因指向服务器后端的 `genai_config` 改为本层自动解析引擎时，不再继续继承上一级的 `engine_config`，需要在该层按最终引擎补充配置；
 * 各产线专属参数（例如 `--topk`）优先级高于配置文件同名字段。
 
 ### 4. 哪些场景可以不安装 PaddlePaddle

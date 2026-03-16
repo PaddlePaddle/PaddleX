@@ -116,7 +116,7 @@ paddlex --pipeline ./configs/image_classification.yaml \
         --input ./demo.jpg
 ```
 
-#### 2.3 Method C: Global config + submodule override
+#### 2.3 Method C: Global config + submodule/sub-pipeline override
 
 ```yaml
 pipeline_name: OCR
@@ -146,12 +146,15 @@ For CLI usage, `engine_config` is mainly set in YAML. Common fields and meanings
 * `genai_client`: `backend` (service backend type), `server_url` (service endpoint), `max_concurrency` (concurrency limit), `client_kwargs` (client passthrough options);
 * `flexible`: no fixed schema.
 
-> Note: `paddle` is an auto-resolved alias and has no dedicated `engine_config` schema. Effective values are determined by global config + submodule overrides.
+> Note: `paddle` is an auto-resolved alias and has no dedicated `engine_config` schema. Effective values are determined by global config + submodule/sub-pipeline overrides.
 
 ### 3. Priority Rules
 
 * `--engine` has higher priority than `engine` in YAML;
-* `engine_config` is controlled by YAML (global values can be overridden in submodules);
+* `engine_config` is controlled by YAML (global values can be overridden in submodules or sub-pipelines);
+* At any level, if `engine` is not explicitly set at that level, PaddleX resolves the final engine based on the engine-selection options supported at that level; in particular, if that level supports `genai_config` and `genai_config.backend` is a server backend, it resolves to `genai_client`; otherwise, if `use_hpip=True`, it resolves to `hpi`; otherwise, if the target model only supports `flexible`, it resolves to `flexible`; otherwise, it falls back to `paddle`, which is then auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+* Within the same level, `engine` has higher priority than `use_hpip` / `genai_config`; however, if a submodule or sub-pipeline does not explicitly set `engine` but does explicitly set `use_hpip`, PaddleX re-resolves the engine from that level instead of continuing to inherit the parent `engine`; if a submodule does not explicitly set `engine` but does explicitly set `genai_config.backend` to a server backend, PaddleX also re-resolves the engine from the submodule level;
+* When a submodule or sub-pipeline falls back to local engine auto-resolution because of its own `use_hpip`, or when a submodule does so because of a server-backed `genai_config`, it no longer inherits the parent `engine_config`; add the matching config at that level based on the final engine;
 * Pipeline-specific CLI args (for example, `--topk`) have higher priority than same-name fields in YAML.
 
 ### 4. Scenarios Where PaddlePaddle Is Not Required

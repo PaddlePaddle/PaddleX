@@ -109,12 +109,17 @@ PaddleX 已支持统一的 `engine` + `engine_config` 推理配置方式，推�
 * `paddle_static`：Paddle Inference 静态图推理；
 * `paddle_dynamic`：Paddle 动态图推理；
 * `hpi`：高性能推理插件；
-* `flexible`：灵活运行时引擎（仅部分模型支持）；
+* `flexible`：灵活运行时引擎；
 * `transformers`：基于 Hugging Face Transformers 的推理引擎；
 * `genai_client`：调用外部生成式 AI 服务的客户端引擎。
 
 #### 4.2 配置优先级
 
+* 当 `engine=None` 时，会按以下顺序自动解析最终引擎：
+  * 若 `genai_config.backend` 指向服务器后端（如 `fastdeploy-server`、`vllm-server`、`sglang-server`、`mlx-vlm-server`、`llama-cpp-server`），则解析为 `genai_client`；
+  * 否则，若 `use_hpip=True`，则优先解析为 `hpi`；
+  * 否则，若该模型仅支持 `flexible`，则解析为 `flexible`；
+  * 否则，回退为 `paddle`，再根据模型文件自动解析为 `paddle_static` 或 `paddle_dynamic`；
 * 当显式传入 `engine` 时，`use_hpip` 不再生效；
 * 当显式传入 `engine_config` 时，`pp_option`、`hpi_config`、`genai_config` 将作为兼容参数被忽略；
 * 推荐仅使用 `engine` + `engine_config` 组合，避免混用旧参数。

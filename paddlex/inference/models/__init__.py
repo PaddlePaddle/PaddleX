@@ -22,7 +22,7 @@ from ..utils.hpi import HPIConfig
 from ..utils.official_models import official_models
 from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import UadPredictor
-from .common.genai import GenAIConfig, need_local_model
+from .common.genai import GenAIConfig, need_local_model, uses_server_backend
 from .doc_vlm import DocVLMPredictor
 from .engines import EngineSpec
 from .face_feature import FaceFeaturePredictor
@@ -169,10 +169,8 @@ def create_predictor(
 
     if engine is None:
         engine = "paddle"
-        if genai_config is not None:
-            validated_genai = GenAIConfig.model_validate(genai_config)
-            if not need_local_model(validated_genai):
-                engine = "genai_client"
+        if uses_server_backend(genai_config):
+            engine = "genai_client"
         elif use_hpip:
             engine = "hpi"
         elif _is_flexible_only_model(model_name):

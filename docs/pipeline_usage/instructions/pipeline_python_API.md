@@ -107,7 +107,7 @@ PaddleX 产线支持统一的 `engine` + `engine_config` 配置，并支持“�
 * `paddle_static`：Paddle Inference 静态图推理；
 * `paddle_dynamic`：Paddle 动态图推理；
 * `hpi`：高性能推理插件；
-* `flexible`：灵活运行时引擎（仅部分模型支持）；
+* `flexible`：灵活运行时引擎；
 * `transformers`：基于 Hugging Face Transformers 的推理引擎；
 * `genai_client`：调用外部生成式 AI 服务的客户端引擎。
 
@@ -167,7 +167,15 @@ SubModules:
 #### 4.3 生效规则
 
 * `create_pipeline(..., engine=...)` 传参优先级高于配置文件中的同名字段；
-* 全局 `engine_config` 会与子模块 `engine_config` 合并，子模块同名字段优先；
+* 全局 `engine_config` 会与子模块或子产线的 `engine_config` 合并，同名字段以后者优先；
+* 在任一层级中，当 `engine=None` 时，会按该层支持的引擎选择参数自动解析最终引擎；其中若该层支持 `genai_config` 且 `genai_config.backend` 指向服务器后端（如 `fastdeploy-server`、`vllm-server`、`sglang-server`、`mlx-vlm-server`、`llama-cpp-server`），则解析为 `genai_client`；
+  * 否则，若 `use_hpip=True`，则优先解析为 `hpi`；
+  * 否则，若对应模型仅支持 `flexible`，则解析为 `flexible`；
+  * 否则，回退为 `paddle`，再根据模型文件自动解析为 `paddle_static` 或 `paddle_dynamic`；
+* 同一层级内，`engine` 的优先级高于 `use_hpip` / `genai_config`；
+* 当子模块或子产线未显式设置 `engine`，但显式设置了 `use_hpip` 时，会优先按这一层重新解析引擎，而不是继续继承上一级的 `engine`；
+* 当子模块未显式设置 `engine`，但显式设置了指向服务器后端的 `genai_config.backend` 时，也会优先按子模块这一层重新解析引擎，而不是继续继承上一级的 `engine`；
+* 上述情况下，如果该层改为本层自动解析引擎，则不会继续继承上一级的 `engine_config`，应在该层按最终引擎补充对应配置。
 * 显式设置 `engine` 时，`use_hpip` 不再生效；
 * 显式设置 `engine_config` 时，`pp_option` 与 `hpi_config` 作为兼容参数通常不再需要。
 
