@@ -383,7 +383,7 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>engine</code></td>
 <td>Inference engine</td>
 <td><code>str</code> | <code>None</code></td>
-<td>Supports engines such as <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>transformers</code>, and <code>onnxruntime</code>, depending on model support.</td>
+<td>Supports engines such as <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, and <code>transformers</code>, depending on model support.</td>
 <td><code>None</code></td>
 </tr>
 <tr>

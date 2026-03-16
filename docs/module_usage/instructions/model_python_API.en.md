@@ -35,7 +35,7 @@ In short, just three steps:
     * `model_dir`: `str | None` type, local path to directory of inference model files ，such as "/path/to/PP-LCNet_x1_0_infer/", default to `None`, means that use the official model specified by `model_name`;
     * `batch_size`: `int` type, default to `1`;
     * `device`: `str` type, used to set the inference device, such as "cpu", "gpu:2" for GPU settings. By default, using 0 id GPU if available, otherwise CPU;
-    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`. Default is `None`, which is auto-resolved and is typically equivalent to `paddle`;
+    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `genai_client`. Default is `None`, which is auto-resolved and is typically equivalent to `paddle`;
     * `engine_config`: `dict | None` type, engine-specific configuration. See [4-Inference Engine and Configuration](#4-inference-engine-and-configuration);
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). See "5. Compatibility Configuration (`PaddlePredictorOption`)" for details;
     * `use_hpip`: `bool` type, whether to enable the high-performance inference plugin (effective only when `engine=None`);
@@ -109,7 +109,6 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
 * `hpi`: High-performance inference plugin;
 * `flexible`: Flexible runtime engine (supported by specific models);
 * `transformers`: Hugging Face Transformers-based engine;
-* `onnxruntime`: ONNX Runtime-based engine;
 * `genai_client`: Client engine for remote generative AI services.
 
 #### 4.2 Priority Rules
@@ -123,7 +122,6 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
 By default, most PaddleX capabilities depend on PaddlePaddle. However, PaddlePaddle is not required in these cases:
 
 * Using `engine="transformers"` (for models that support this engine);
-* Using `engine="onnxruntime"` (for models that support this engine).
 
 > Note: If your actual runtime path uses `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
 
@@ -145,22 +143,6 @@ model = create_model(
         "processor_kwargs": {
             "use_fast": True,
         },
-    },
-)
-```
-
-Using the ONNX Runtime engine:
-
-```python
-from paddlex import create_model
-
-model = create_model(
-    model_name="PP-LCNet_x1_0",
-    model_dir="/path/to/model_onnx",
-    engine="onnxruntime",
-    engine_config={
-        "device_type": "cpu",
-        "cpu_threads": 4,
     },
 )
 ```
@@ -204,17 +186,6 @@ The following field sets are based on the current code implementation (with mean
   * `model_kwargs`: extra kwargs passed to model loading;
   * `processor_kwargs`: extra kwargs passed to processor / image processor loading;
   * `tokenizer_kwargs`: compatibility kwargs that are merged with `processor_kwargs`.
-* `onnxruntime`:
-  * `device_type` / `device_id`: target device type and index;
-  * `providers`: execution provider priority list;
-  * `provider_options`: provider-specific options aligned with `providers`;
-  * `graph_optimization_level`: ORT graph optimization level;
-  * `intra_op_num_threads` / `inter_op_num_threads`: threads within/between operators;
-  * `execution_mode`: ORT execution mode;
-  * `log_severity_level`: ORT log severity;
-  * `enable_mem_pattern`: whether to enable memory pattern optimization;
-  * `enable_cpu_mem_arena`: whether to enable CPU memory arena;
-  * `session_options`: extra ORT session options.
 * `genai_client`:
   * `backend`: remote service backend type;
   * `server_url`: service endpoint (required for server backends);

@@ -34,7 +34,7 @@ In short, there are only three steps:
     * `pipeline`: `str` type, the pipeline name or the local pipeline configuration file path, such as "image_classification", "/path/to/image_classification.yaml";
     * `config`: `dict | None` type, pipeline configuration dictionary. If provided, `pipeline` can be omitted;
     * `device`: `str` type, used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, using 0 id GPU if available, otherwise CPU;
-    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`;
+    * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `genai_client`;
     * `engine_config`: `dict | None` type, engine-specific configuration. It can be merged and overridden per submodule;
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). See "5. Compatibility Configuration (`PaddlePredictorOption`)" for details;
     * `use_hpip`：`bool | None` type, whether to enable the high-performance inference plugin (`None` for using the setting from the configuration file);
@@ -108,7 +108,6 @@ PaddleX pipelines support unified inference configuration via `engine` + `engine
 * `hpi`: High-performance inference plugin;
 * `flexible`: Flexible runtime engine (supported by specific models);
 * `transformers`: Hugging Face Transformers-based engine;
-* `onnxruntime`: ONNX Runtime-based engine;
 * `genai_client`: Client engine for remote generative AI services.
 
 #### 4.2 Configuration Methods
@@ -121,7 +120,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="image_classification",
     device="gpu:0",
-    engine="onnxruntime",
+    engine="paddle_static",
     engine_config={
         "device_type": "gpu",
         "device_id": 0,
@@ -133,7 +132,7 @@ pipeline = create_pipeline(
 
 ```yaml
 pipeline_name: image_classification
-engine: onnxruntime
+engine: paddle_static
 engine_config:
   device_type: gpu
   device_id: 0
@@ -148,7 +147,7 @@ SubModules:
 
 ```yaml
 pipeline_name: OCR
-engine: onnxruntime
+engine: paddle_static
 engine_config:
   device_type: cpu
   cpu_threads: 4
@@ -176,7 +175,6 @@ SubModules:
 PaddlePaddle is not required in the following scenarios:
 
 * The relevant module runs with `engine="transformers"`;
-* The relevant module runs with `engine="onnxruntime"`.
 
 > Note: If a module finally runs on `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
 
@@ -219,17 +217,6 @@ The following field sets also apply to submodules in a pipeline:
   * `model_kwargs`: extra kwargs passed to model loading;
   * `processor_kwargs`: extra kwargs passed to processor / image processor loading;
   * `tokenizer_kwargs`: compatibility kwargs merged with `processor_kwargs`.
-* `onnxruntime`:
-  * `device_type` / `device_id`: target device type and index;
-  * `providers`: execution provider priority list;
-  * `provider_options`: options corresponding to each provider;
-  * `graph_optimization_level`: ORT graph optimization level;
-  * `intra_op_num_threads` / `inter_op_num_threads`: thread counts within/between operators;
-  * `execution_mode`: ORT execution mode;
-  * `log_severity_level`: ORT log severity;
-  * `enable_mem_pattern`: whether to enable memory pattern optimization;
-  * `enable_cpu_mem_arena`: whether to enable CPU memory arena;
-  * `session_options`: extra ORT session option dictionary.
 * `genai_client`:
   * `backend`: remote backend type;
   * `server_url`: service endpoint (`server_url` is required for server backends);

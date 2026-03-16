@@ -35,7 +35,7 @@ for res in output:
     * `pipeline`：`str` 类型，产线名或是本地产线配置文件路径，如“image_classification”、“/path/to/image_classification.yaml”；
     * `config`：`dict | None` 类型，直接传入产线配置字典。若传入该参数，可不传 `pipeline`；
     * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
-    * `engine`：`str | None` 类型，推理引擎。可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`onnxruntime`、`genai_client`；
+    * `engine`：`str | None` 类型，推理引擎。可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`genai_client`；
     * `engine_config`：`dict | None` 类型，推理引擎配置。若设置，将传递并合并到各子模块；
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文“5. 兼容配置（PaddlePredictorOption）”；
     * `use_hpip`：`bool | None` 类型，是否启用高性能推理插件（`None` 表示使用配置文件中的配置）；
@@ -109,7 +109,6 @@ PaddleX 产线支持统一的 `engine` + `engine_config` 配置，并支持“�
 * `hpi`：高性能推理插件；
 * `flexible`：灵活运行时引擎（仅部分模型支持）；
 * `transformers`：基于 Hugging Face Transformers 的推理引擎；
-* `onnxruntime`：基于 ONNX Runtime 的推理引擎；
 * `genai_client`：调用外部生成式 AI 服务的客户端引擎。
 
 #### 4.2 配置方式
@@ -122,7 +121,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="image_classification",
     device="gpu:0",
-    engine="onnxruntime",
+    engine="paddle_static",
     engine_config={
         "device_type": "gpu",
         "device_id": 0,
@@ -134,7 +133,7 @@ pipeline = create_pipeline(
 
 ```yaml
 pipeline_name: image_classification
-engine: onnxruntime
+engine: paddle_static
 engine_config:
   device_type: gpu
   device_id: 0
@@ -149,7 +148,7 @@ SubModules:
 
 ```yaml
 pipeline_name: OCR
-engine: onnxruntime
+engine: paddle_static
 engine_config:
   device_type: cpu
   cpu_threads: 4
@@ -177,7 +176,6 @@ SubModules:
 在以下场景中可以不安装 PaddlePaddle：
 
 * 产线中相关模型使用 `engine="transformers"`；
-* 产线中相关模型使用 `engine="onnxruntime"`。
 
 > 注意：若产线中模块最终使用 `paddle` / `hpi` 引擎，仍需安装 PaddlePaddle；使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。
 
@@ -220,17 +218,6 @@ SubModules:
   * `model_kwargs`：模型加载附加参数；
   * `processor_kwargs`：processor / image processor 加载附加参数；
   * `tokenizer_kwargs`：兼容保留的加载附加参数，会与 `processor_kwargs` 合并使用。
-* `onnxruntime`：
-  * `device_type` / `device_id`：设备类型和编号；
-  * `providers`：执行后端优先级列表；
-  * `provider_options`：与 `providers` 对应的后端参数；
-  * `graph_optimization_level`：图优化级别；
-  * `intra_op_num_threads` / `inter_op_num_threads`：算子内/算子间并行线程数；
-  * `execution_mode`：执行模式；
-  * `log_severity_level`：日志级别；
-  * `enable_mem_pattern`：是否启用内存模式优化；
-  * `enable_cpu_mem_arena`：是否启用 CPU 内存 arena；
-  * `session_options`：其他 ORT 会话扩展参数。
 * `genai_client`：
   * `backend`：远端服务后端类型；
   * `server_url`：服务地址（服务器后端必填）；

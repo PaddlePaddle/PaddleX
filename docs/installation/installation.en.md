@@ -300,12 +300,10 @@ The vast majority of PaddleX's functionalities rely on the PaddlePaddle framewor
 - Using capabilities provided by PaddleX `genai-xxx-server` plugins to deploy model inference services (for example, `genai-vllm-server`, `genai-sglang-server`, `genai-fastdeploy-server`, etc.).
 - Using PaddleX's `genai-client` plugin to call generative AI inference services.
 - Using PaddleX inference APIs with `engine="transformers"` (for models that support this engine).
-- Using PaddleX inference APIs with `engine="onnxruntime"` (for models that support this engine).
 - When using `flexible` engine, whether PaddlePaddle is required depends on the model implementation. Please refer to the corresponding model/pipeline documentation.
 
 ## 5 Additional Dependencies for Non-Paddle Engines
 
 When using the non-Paddle engine scenarios in Section 4, install the corresponding dependencies as well:
 
-- `engine="onnxruntime"`: install ONNX Runtime dependencies (for example, `onnxruntime` for CPU; install the platform-appropriate GPU package such as `onnxruntime-gpu` for GPU environments).
 - `engine="transformers"`: install the `transformers` library (for example, `pip install transformers`), and follow the [Transformers official documentation](https://huggingface.co/docs/transformers/index) to configure the runtime environment.
