@@ -183,6 +183,24 @@ def suggest_inference_backend_and_config(
         arch = uname.machine.lower()
         if arch == "x86_64":
             key = "cpu_x64"
+        elif arch in ("aarch64", "arm64"):
+            # aarch64/arm64: no model-specific prior knowledge yet.
+            # Prefer ONNX Runtime via ultra-infer (ENABLE_ORT_BACKEND=ON).
+            # See: https://github.com/PaddlePaddle/PaddleOCR/issues/17590
+            aarch64_backends = [
+                b for b in ("onnxruntime", "paddle") if b in available_backends
+            ]
+            if not aarch64_backends:
+                return None, "No suitable inference backend for aarch64."
+            if hpi_config.backend is not None:
+                if hpi_config.backend in aarch64_backends:
+                    return hpi_config.backend, {}
+                return (
+                    None,
+                    f"Inference backend {repr(hpi_config.backend)}"
+                    " is not available on aarch64.",
+                )
+            return aarch64_backends[0], {}
         else:
             return None, f"{repr(arch)} is not a supported architecture."
     elif hpi_config.device_type == "gpu":
