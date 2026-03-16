@@ -48,7 +48,7 @@ BASE_DEP_SPECS = {
     "lxml": "",
     "matplotlib": "",
     "modelscope": ">=1.28.0",
-    "numpy": ">= 1.24",
+    "numpy": ">= 1.24, < 2.4",
     "openai": ">= 1.63",
     "OpenCC": "",
     "opencv-contrib-python": "== 4.10.0.84",

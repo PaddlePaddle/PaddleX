@@ -1595,7 +1595,7 @@ for item in markdown_images:
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>是否将<code>block_content</code>中的内容格式化为Markdown格式。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
+<td>是否将<code>block_content</code>中的内容格式化为Markdown格式。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。当设置为<code>True</code>时，图片类型的 block 的 <code>block_content</code> 将包含图片路径信息（如 <code>&lt;img src="..." /&gt;</code>）；当设置为<code>False</code>（默认）时，图片类型的 block 的 <code>block_content</code> 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为<code>True</code>。</td>
 <td><code>bool|None</code></td>
 <td></td>
 </tr>
@@ -1974,7 +1974,7 @@ for item in markdown_images:
         - `use_seal_recognition`: `(bool)` 控制是否启用印章识别子产线
         - `use_table_recognition`: `(bool)` 控制是否启用表格识别子产线
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
-        - `format_block_content`: `(bool)` 控制是否将 `block_content` 中的内容格式化为Markdown格式
+        - `format_block_content`: `(bool)` 控制是否将 `block_content` 中的内容格式化为Markdown格式。当设置为`True`时，图片类型的 block 的 `block_content` 将包含图片路径信息（如 `<img src="..." />`）；当设置为`False`（默认）时，图片类型的 block 的 `block_content` 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为`True`。
         - `markdown_ignore_labels`: `(List[str])` 需要在Markdown中忽略的版面标签，默认为`['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果字典，仅当`use_doc_preprocessor=True`时存在
