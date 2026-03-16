@@ -684,6 +684,7 @@ class LayoutAnalysisProcess:
         layout_merge_bboxes_mode: Optional[Union[str, dict]],
         masks: Optional[ndarray] = None,
         layout_shape_mode: Optional[str] = "auto",
+        polygon_points: Optional[List[ndarray]] = None,
     ) -> Boxes:
         """Apply post-processing to the detection boxes.
 
@@ -696,20 +697,31 @@ class LayoutAnalysisProcess:
         """
         if layout_shape_mode == "rect":
             masks = None
+            polygon_points = None
         boxes[:, 2:6] = np.round(boxes[:, 2:6]).astype(int)
         if isinstance(threshold, float):
             expect_boxes = (boxes[:, 1] > threshold) & (boxes[:, 0] > -1)
             boxes = boxes[expect_boxes, :]
             if masks is not None:
                 masks = masks[expect_boxes, ...]
+            if polygon_points is not None:
+                polygon_points = [
+                    polygon_points[i] for i, keep in enumerate(expect_boxes) if keep
+                ]
         elif isinstance(threshold, dict):
             category_filtered_boxes = []
             if masks is not None:
                 category_filtered_masks = []
+            if polygon_points is not None:
+                category_filtered_polygon_points = []
             for cat_id in np.unique(boxes[:, 0]):
                 category_boxes = boxes[boxes[:, 0] == cat_id]
                 if masks is not None:
                     category_masks = masks[boxes[:, 0] == cat_id]
+                if polygon_points is not None:
+                    category_polygon_points = [
+                        polygon_points[i] for i in np.where(boxes[:, 0] == cat_id)[0]
+                    ]
                 category_threshold = threshold.get(int(cat_id), 0.5)
                 selected_indices = (category_boxes[:, 1] > category_threshold) & (
                     category_boxes[:, 0] > -1
@@ -717,6 +729,16 @@ class LayoutAnalysisProcess:
                 if masks is not None:
                     category_masks = category_masks[selected_indices]
                     category_filtered_masks.append(category_masks)
+                if polygon_points is not None:
+                    category_filtered_polygon_points.extend(
+                        [
+                            poly
+                            for poly, keep in zip(
+                                category_polygon_points, selected_indices
+                            )
+                            if keep
+                        ]
+                    )
                 category_filtered_boxes.append(category_boxes[selected_indices])
             boxes = (
                 np.vstack(category_filtered_boxes)
@@ -729,12 +751,16 @@ class LayoutAnalysisProcess:
                     if category_filtered_masks
                     else np.array([])
                 )
+            if polygon_points is not None:
+                polygon_points = category_filtered_polygon_points
 
         if layout_nms:
             selected_indices = nms(boxes[:, :6], iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
             if masks is not None:
                 masks = [masks[i] for i in selected_indices]
+            if polygon_points is not None:
+                polygon_points = [polygon_points[i] for i in selected_indices]
 
         filter_large_image = True
         # boxes.shape[1] == 6 is object detection, 7 is new ordered object detection, 8 is ordered object detection
@@ -747,6 +773,7 @@ class LayoutAnalysisProcess:
             img_area = img_size[0] * img_size[1]
             filtered_boxes = []
             filtered_masks = []
+            filtered_polygon_points = []
             for idx, box in enumerate(boxes):
                 (
                     label_index,
@@ -766,17 +793,25 @@ class LayoutAnalysisProcess:
                         filtered_boxes.append(box)
                         if masks is not None:
                             filtered_masks.append(masks[idx])
+                        if polygon_points is not None:
+                            filtered_polygon_points.append(polygon_points[idx])
                 else:
                     filtered_boxes.append(box)
                     if masks is not None:
                         filtered_masks.append(masks[idx])
+                    if polygon_points is not None:
+                        filtered_polygon_points.append(polygon_points[idx])
             if len(filtered_boxes) == 0:
                 filtered_boxes = boxes
                 if masks is not None:
                     filtered_masks = masks
+                if polygon_points is not None:
+                    filtered_polygon_points = polygon_points
             boxes = np.array(filtered_boxes)
             if masks is not None:
                 masks = filtered_masks
+            if polygon_points is not None:
+                polygon_points = filtered_polygon_points
 
         if layout_merge_bboxes_mode:
             formula_index = (
@@ -846,6 +881,10 @@ class LayoutAnalysisProcess:
                 boxes = boxes[keep_mask]
                 if masks is not None:
                     masks = [mask for i, mask in enumerate(masks) if keep_mask[i]]
+                if polygon_points is not None:
+                    polygon_points = [
+                        poly for i, poly in enumerate(polygon_points) if keep_mask[i]
+                    ]
 
         if boxes.size == 0:
             return np.array([])
@@ -858,6 +897,8 @@ class LayoutAnalysisProcess:
             if masks is not None:
                 sorted_masks = [masks[i] for i in sorted_idx]
                 masks = sorted_masks
+            if polygon_points is not None:
+                polygon_points = [polygon_points[i] for i in sorted_idx]
 
         if boxes.shape[1] == 7:
             # Sort boxes by their order
@@ -867,9 +908,10 @@ class LayoutAnalysisProcess:
             if masks is not None:
                 sorted_masks = [masks[i] for i in sorted_idx]
                 masks = sorted_masks
+            if polygon_points is not None:
+                polygon_points = [polygon_points[i] for i in sorted_idx]
 
-        polygon_points = None
-        if masks is not None:
+        if polygon_points is None and masks is not None:
             scale_ratio = [h / s for h, s in zip(self.scale_size, img_size)]
             polygon_points = extract_polygon_points_by_masks(
                 boxes, np.array(masks), scale_ratio, layout_shape_mode
@@ -923,15 +965,21 @@ class LayoutAnalysisProcess:
         """
         outputs = []
         for idx, (data, output) in enumerate(zip(datas, batch_outputs)):
+            current_layout_shape_mode = layout_shape_mode
             if "masks" in output:
                 masks = output["masks"]
+                polygon_points = None
+            elif "polygon_points" in output:
+                masks = None
+                polygon_points = output["polygon_points"]
             else:
-                layout_shape_mode = "rect"
+                current_layout_shape_mode = "rect"
                 if idx == 0 and layout_shape_mode not in ["rect", "auto"]:
                     logging.warning(
                         f"The model you are using does not support polygon output, but the layout_shape_mode is specified as {layout_shape_mode}, which will be set to 'rect'"
                     )
                 masks = None
+                polygon_points = None
             boxes = self.apply(
                 output["boxes"],
                 data["ori_img_size"],
@@ -940,10 +988,11 @@ class LayoutAnalysisProcess:
                 layout_unclip_ratio,
                 layout_merge_bboxes_mode,
                 masks,
-                layout_shape_mode,
+                current_layout_shape_mode,
+                polygon_points=polygon_points,
             )
             if filter_overlap_boxes:
-                boxes = filter_boxes(boxes, layout_shape_mode)
+                boxes = filter_boxes(boxes, current_layout_shape_mode)
             skip_order_labels = (
                 skip_order_labels
                 if skip_order_labels is not None

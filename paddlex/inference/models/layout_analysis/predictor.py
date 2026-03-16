@@ -14,6 +14,7 @@
 
 from typing import Any, List, Optional, Tuple, Union
 
+import numpy as np
 from PIL import Image
 
 from ....modules.object_detection.model_list import LAYOUTANALYSIS_MODELS
@@ -207,6 +208,26 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
                 return list(target_size)
         return [800, 800]
 
+    def _format_layout_transformers_output(self, prediction):
+        formatted = self._format_transformers_output(prediction)
+        if "order_seq" in prediction:
+            order_seq = (
+                prediction["order_seq"]
+                .detach()
+                .cpu()
+                .numpy()
+                .astype(np.float32, copy=False)
+            )
+            if len(formatted) == len(order_seq):
+                formatted = np.concatenate([formatted, order_seq[:, None]], axis=1)
+
+        output = {"boxes": formatted}
+        if "polygon_points" in prediction:
+            output["polygon_points"] = [
+                np.asarray(points) for points in prediction["polygon_points"]
+            ]
+        return output
+
     def process(
         self,
         batch_data: List[Any],
@@ -241,7 +262,7 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
             target_sizes=self._get_target_sizes(datas),
         )
         batch_outputs = [
-            {"boxes": self._format_transformers_output(prediction)}
+            self._format_layout_transformers_output(prediction)
             for prediction in predictions
         ]
         boxes = self.layout_postprocess(
