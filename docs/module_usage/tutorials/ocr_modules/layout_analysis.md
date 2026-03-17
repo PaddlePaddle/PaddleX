@@ -10,6 +10,8 @@ comments: true
 
 版面分析模块目前支持模型 PP-DocLayoutV3，基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。
 
+![版面分析效果](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
+
 ## 二、支持模型列表
 
 > 推理耗时仅包含模型推理耗时，不包含前后处理耗时。
@@ -20,9 +22,7 @@ comments: true
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>GPU推理耗时（ms）<br/>A100 GPU</th>
 <th>模型存储大小（MB）</th>
 <th>介绍</th>
 </tr>
@@ -31,10 +31,8 @@ comments: true
 <tr>
 <td>PP-DocLayoutV3</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayoutV3_pretrained.pdparams">训练模型</a></td>
-<td>-</td>
-<td>- / -</td>
-<td>- / -</td>
-<td>-</td>
+<td>23.77</td>
+<td>126</td>
 <td>基于DETR在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报等场景的自建数据集上训练的版面分析模型，支持25类版面元素的实例分割及阅读顺序预测</td>
 </tr>
 </tbody>
@@ -46,14 +44,14 @@ comments: true
 
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 whl 包的安装后，几行代码即可完成版面分析模块的推理，可以任意切换该模块下的模型，您也可以将版面分析模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg)到本地。
+完成 whl 包的安装后，几行代码即可完成版面分析模块的推理，可以任意切换该模块下的模型，您也可以将版面分析模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_analysis_demo.jpg)到本地。
 
 ```python
 from paddlex import create_model
 
 model_name = "PP-DocLayoutV3"
 model = create_model(model_name=model_name)
-output = model.predict("layout.jpg", batch_size=1)
+output = model.predict("layout_analysis_demo.jpg", batch_size=1)
 
 for res in output:
     res.print()
@@ -80,6 +78,10 @@ for res in output:
   - `polygon_points`：实例分割轮廓点列表，格式为<code>[[x1, y1], [x2, y2], ...]</code>
   - `order`：阅读顺序编号，一个整数，表示该区域在文档中的阅读顺序（从0开始）
 </details>
+
+运行后，`save_to_img()` 保存的可视化结果如下，图中标注了各区域的类别、置信度、实例分割掩码及阅读顺序编号：
+
+![版面分析可视化结果](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg)
 
 相关方法、参数等说明如下：
 
@@ -182,20 +184,6 @@ for res in output:
 </ul>
 </td>
 <td>None</td>
-</tr>
-<tr>
-<td><code>use_hpip</code></td>
-<td>是否启用高性能推理插件</td>
-<td><code>bool</code></td>
-<td>无</td>
-<td><code>False</code></td>
-</tr>
-<tr>
-<td><code>hpi_config</code></td>
-<td>高性能推理配置</td>
-<td><code>dict</code> | <code>None</code></td>
-<td>无</td>
-<td><code>None</code></td>
 </tr>
 </table>
 
@@ -621,10 +609,8 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 
 1. <b>产线集成</b>
 
-版面分析模块可以集成到PaddleX的[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+版面分析模块可以集成到PaddleX的[文档解析产线（PaddleOCR-VL）](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md)等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。
 
 2. <b>模块集成</b>
 
 您产出的权重可以直接集成到版面分析模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
-
-您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

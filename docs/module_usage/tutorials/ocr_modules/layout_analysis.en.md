@@ -9,6 +9,8 @@ The layout analysis task builds upon layout area detection by further introducin
 
 The layout analysis module currently supports the PP-DocLayoutV3 model, which is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
 
+![layout analysis](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
+
 ## II. Supported Model List
 
 > The inference time only includes the model inference time and does not include the time for pre- or post-processing.
@@ -19,9 +21,7 @@ The layout analysis module currently supports the PP-DocLayoutV3 model, which is
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
-<th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>A100 GPU</th>
 <th>Model Storage Size (MB)</th>
 <th>Introduction</th>
 </tr>
@@ -30,10 +30,8 @@ The layout analysis module currently supports the PP-DocLayoutV3 model, which is
 <tr>
 <td>PP-DocLayoutV3</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV3_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayoutV3_pretrained.pdparams">Training Model</a></td>
-<td>-</td>
-<td>- / -</td>
-<td>- / -</td>
-<td>-</td>
+<td>23.77</td>
+<td>126</td>
 <td>A layout analysis model trained on a self-built dataset containing Chinese and English papers, multi-column magazines, newspapers, PPT, contracts, books, exams, and research reports using DETR. It supports instance segmentation and reading order prediction for 25 layout element categories.</td>
 </tr>
 </tbody>
@@ -78,6 +76,10 @@ The meanings of the parameters are as follows:
   - `polygon_points`: List of instance segmentation contour points, in the format <code>[[x1, y1], [x2, y2], ...]</code>.
   - `order`: Reading order index, an integer indicating the reading order of the region in the document (starting from 0).
 </details>
+
+After running, the visualization result saved by `save_to_img()` is shown below, with each region annotated with its category, confidence score, instance segmentation mask, and reading order index:
+
+![Layout Analysis Visualization Result](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg)
 
 Relevant methods, parameters, and explanations are as follows:
 
@@ -179,20 +181,6 @@ Relevant methods, parameters, and explanations are as follows:
 </ul>
 </td>
 <td>None</td>
-</tr>
-<tr>
-<td><code>use_hpip</code></td>
-<td>Whether to enable the high-performance inference plugin</td>
-<td><code>bool</code></td>
-<td>None</td>
-<td><code>False</code></td>
-</tr>
-<tr>
-<td><code>hpi_config</code></td>
-<td>High-performance inference configuration</td>
-<td><code>dict</code> | <code>None</code></td>
-<td>None</td>
-<td><code>None</code></td>
 </tr>
 </table>
 
@@ -605,10 +593,8 @@ The model can be directly integrated into PaddleX pipelines or into your own pro
 
 1. <b>Pipeline Integration</b>
 
-The layout analysis module can be integrated into PaddleX pipelines such as the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3-doc)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the layout analysis module. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
+The layout analysis module can be integrated into PaddleX pipelines such as the [Document Parsing Pipeline (PaddleOCR-VL)](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.en.md). Simply replace the model path to update the layout analysis module.
 
 2. <b>Module Integration</b>
 
 The weights you produce can be directly integrated into the layout analysis module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
-
-You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
