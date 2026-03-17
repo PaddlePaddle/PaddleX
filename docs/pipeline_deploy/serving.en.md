@@ -374,7 +374,7 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 
-The Python client currently supports Python versions 3.8 to 3.12.
+The Python client currently supports Python versions 3.8 to 3.13.
 
 The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.
 

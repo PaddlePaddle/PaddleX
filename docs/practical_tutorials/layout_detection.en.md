@@ -614,7 +614,7 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 #### 6.2.4 To call the service
 
-Currently, only the Python client is supported for calling the service. The supported Python versions are 3.8 to 3.12.
+Currently, only the Python client is supported for calling the service. The supported Python versions are 3.8 to 3.13.
 
 Switch to the `client` directory of the high-stability service deployment SDK and run the following command to install the dependencies:
 

@@ -660,7 +660,7 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 #### 5.2.4 调用服务
 
-目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8 至 3.12。
+目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8 至 3.13。
 
 切换到高稳定性服务化部署 SDK 的 `client` 目录，执行如下命令安装依赖：
 
