@@ -94,9 +94,15 @@ class _ModelBasedConfig(_BaseModel):
         create_predictor_kwargs = {}
         if engine is not UNSET:
             create_predictor_kwargs["engine"] = engine
+        prefer_new_engine_configs = (
+            (engine is not UNSET and engine not in ("paddle", "paddle_static"))
+            or use_hpip is True
+            or hpi_config is not UNSET
+            or genai_config is not UNSET
+        )
         if engine_config is not UNSET:
             create_predictor_kwargs["engine_config"] = engine_config
-        elif kernel_option is not UNSET:
+        elif kernel_option is not UNSET and not prefer_new_engine_configs:
             create_predictor_kwargs["engine_config"] = kernel_option
         if use_hpip is not UNSET:
             create_predictor_kwargs["use_hpip"] = use_hpip

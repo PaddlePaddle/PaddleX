@@ -372,7 +372,7 @@ pipeline = create_pipeline(
 
 **For the image classification module, use the `onnxruntime` backend:**
 
-<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+<details><summary>👉 Modify via Module Configuration File (click to expand)</summary>
 
 ```yaml
 Predict:
@@ -466,9 +466,9 @@ Predict:
 
 </details>
 
-### 2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files
+### 2.4 Enabling/Disabling the High‑Performance Inference Plugin in Pipeline Configuration Files
 
-In the configuration file, you can use `use_hpip` to control whether the high-performance inference plugin is enabled or disabled. Unlike configuring via the CLI or API, this approach allows you to specify `use_hpip` at the sub-pipeline or sub-module level, enabling **high-performance inference only for a specific sub-pipeline or sub-module within the entire pipeline**. For example:
+In the pipeline configuration file, you can use `use_hpip` to control whether the high-performance inference plugin is enabled or disabled. Unlike configuring via the CLI or API, this approach allows you to specify `use_hpip` at the sub-pipeline or sub-module level, enabling **high-performance inference only for a specific sub-pipeline or sub-module within the entire pipeline**. For example:
 
 **In the general OCR pipeline, enable high-performance inference for the `text_detection` module, but not for the `text_recognition` module:**
 
