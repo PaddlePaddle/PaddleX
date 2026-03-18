@@ -43,15 +43,15 @@ comments: true
   </tr>
   <tr>
     <td>CPU</td>
-    <td>3.8–3.13</td>
+    <td>3.8–3.12</td>
   </tr>
   <tr>
     <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.9）</td>
-    <td>3.8–3.13</td>
+    <td>3.8–3.12</td>
   </tr>
   <tr>
     <td>GPU&nbsp;（CUDA&nbsp;12.6&nbsp;+&nbsp;cuDNN&nbsp;9.5）</td>
-    <td>3.8–3.13</td>
+    <td>3.8–3.12</td>
   </tr>
   <tr>
     <td>NPU</td>
