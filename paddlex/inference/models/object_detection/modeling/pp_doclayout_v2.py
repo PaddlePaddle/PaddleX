@@ -163,7 +163,9 @@ class PPDocLayoutPostProcess(DETRPostProcess):
 
 
 class PPDocLayoutV2Config(RTDETRConfig):
-    pass
+    def __init__(self, *args, reading_order_config=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.reading_order_config = reading_order_config
 
 
 class PPDocLayoutV2(RTDETR):
@@ -175,7 +177,6 @@ class PPDocLayoutV2(RTDETR):
 
         self.transformer = PPDocLayoutTransformer(
             num_queries=self.config.tf_num_queries,
-            position_embed_type=self.config.tf_position_embed_type,
             feat_strides=self.config.tf_feat_strides,
             backbone_feat_channels=self.config.tf_backbone_feat_channels,
             num_levels=self.config.tf_num_levels,
@@ -188,10 +189,11 @@ class PPDocLayoutV2(RTDETR):
             label_noise_ratio=self.config.tf_label_noise_ratio,
             box_noise_scale=self.config.tf_box_noise_scale,
             learnt_init_query=self.config.tf_learnt_init_query,
+            reading_order_config=config.reading_order_config,
         )
 
         self.post_process = PPDocLayoutPostProcess(
-            num_top_queries=self.config.num_top_queries,
+            num_top_queries=self.config.tf_num_queries,
             use_focal_loss=self.config.use_focal_loss,
         )
 
@@ -248,6 +250,7 @@ class PPDocLayoutV2(RTDETR):
                 if (
                     t_layer in key
                     and key.endswith("weight")
+                    and "norm" not in key
                     and "LayerNorm" not in key
                     and "layer_norm" not in key
                     and "enc_output.1" not in key
@@ -298,6 +301,10 @@ class PPDocLayoutV2(RTDETR):
             r"model.encoder.pan_blocks.(\d+).conv(\d+).norm": r"neck.pan_blocks.\1.conv\2.bn",
             r"model.encoder.lateral_convs.(\d+).norm": r"neck.lateral_convs.\1.bn",
             r"model.encoder.downsample_convs.(\d+).norm": r"neck.downsample_convs.\1.bn",
+            # --- reading_order ---
+            r"reading_order.encoder.layer\.(\d+)\.output.norm": r"transformer.reading_order_predictor.encoder.layer.\1.output.LayerNorm",
+            r"reading_order.encoder.layer\.(\d+)\.attention.output.norm": r"transformer.reading_order_predictor.encoder.layer.\1.attention.output.LayerNorm",
+            "reading_order.embeddings.norm": "transformer.reading_order_predictor.embeddings.LayerNorm",
             # --- General ---
             "model.backbone.model.encoder.stages": "backbone.stages",
             "model.decoder.layers": "transformer.decoder.layers",
@@ -391,6 +398,10 @@ class PPDocLayoutV2(RTDETR):
             r"neck\.pan_blocks\.(\d+)\.conv(\d+)\.bn": r"model.encoder.pan_blocks.\1.conv\2.norm",
             r"neck\.lateral_convs\.(\d+)\.bn": r"model.encoder.lateral_convs.\1.norm",
             r"neck\.downsample_convs\.(\d+)\.bn": r"model.encoder.downsample_convs.\1.norm",
+            # --- reading_order ---
+            r"transformer.reading_order_predictor\.encoder\.layer\.(\d+)\.output.LayerNorm": r"reading_order.encoder.layer.\1.output.norm",
+            r"transformer.reading_order_predictor\.encoder\.layer\.(\d+)\.attention.output.LayerNorm": r"reading_order.encoder.layer.\1.attention.output.norm",
+            "transformer.reading_order_predictor.embeddings.LayerNorm": "reading_order.embeddings.norm",
             # --- General ---
             "backbone.stages": "model.backbone.model.encoder.stages",
             "transformer.decoder.layers": "model.decoder.layers",

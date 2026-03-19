@@ -399,6 +399,7 @@ class PPDocLayoutTransformer(RTDETRTransformer):
         activation="relu",
         num_decoder_points=4,
         eval_idx=-1,
+        reading_order_config=None,
         **kwargs
     ):
         kwargs.setdefault("num_classes", 25)
@@ -416,7 +417,7 @@ class PPDocLayoutTransformer(RTDETRTransformer):
         self.decoder = TransformerDecoder(
             self.hidden_dim, decoder_layer, self.num_decoder_layers, eval_idx
         )
-        self.reading_order_predictor = ReadingOrderPredictor()
+        self.reading_order_predictor = ReadingOrderPredictor(reading_order_config)
 
     def forward(self, feats, pad_mask=None, gt_meta=None, is_teacher=False):
         # input projection and embedding

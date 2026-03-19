@@ -328,7 +328,6 @@ class LayoutLMv3Layer(nn.Layer):
 class LayoutLMv3Encoder(nn.Layer):
     def __init__(self, config):
         super().__init__()
-        self.config = config
         self.layer = nn.LayerList(
             [LayoutLMv3Layer(config) for _ in range(config["num_hidden_layers"])]
         )
@@ -632,48 +631,49 @@ class BoxGlobalAggregator(nn.Layer):
 
 
 class ReadingOrderPredictor(nn.Layer):
-    def __init__(self):
+    def __init__(self, config=None):
         super(ReadingOrderPredictor, self).__init__()
 
-        self.config = {
-            "hidden_size": 512,
-            "num_attention_heads": 8,
-            "attention_probs_dropout_prob": 0.1,
-            "has_relative_attention_bias": False,
-            "has_spatial_attention_bias": True,
-            "layer_norm_eps": 1e-5,
-            "hidden_dropout_prob": 0.1,
-            "intermediate_size": 2048,
-            "hidden_act": "gelu",
-            "num_hidden_layers": 6,
-            "rel_pos_bins": 32,
-            "max_rel_pos": 128,
-            "rel_2d_pos_bins": 64,
-            "max_rel_2d_pos": 256,
-            "num_labels": 510,
-            "max_position_embeddings": 514,
-            "max_2d_position_embeddings": 1024,
-            "type_vocab_size": 1,
-            "vocab_size": 4,
-            "pad_token_id": 1,
-            "coordinate_size": 171,
-            "shape_size": 170,
-            "num_classes": 20,
-        }
+        if config is None:
+            config = {
+                "hidden_size": 512,
+                "num_attention_heads": 8,
+                "attention_probs_dropout_prob": 0.1,
+                "has_relative_attention_bias": False,
+                "has_spatial_attention_bias": True,
+                "layer_norm_eps": 1e-5,
+                "hidden_dropout_prob": 0.1,
+                "intermediate_size": 2048,
+                "hidden_act": "gelu",
+                "num_hidden_layers": 6,
+                "rel_pos_bins": 32,
+                "max_rel_pos": 128,
+                "rel_2d_pos_bins": 64,
+                "max_rel_2d_pos": 256,
+                "num_labels": 510,
+                "max_position_embeddings": 514,
+                "max_2d_position_embeddings": 1024,
+                "type_vocab_size": 1,
+                "vocab_size": 4,
+                "pad_token_id": 1,
+                "coordinate_size": 171,
+                "shape_size": 170,
+                "num_classes": 20,
+            }
 
-        self.embeddings = LayoutLMv3TextEmbeddings(self.config)
+        self.embeddings = LayoutLMv3TextEmbeddings(config)
         self.label_embeddings = nn.Embedding(
-            self.config["num_classes"], self.config["hidden_size"]
+            config["num_classes"], config["hidden_size"]
         )
         self.label_features_projection = nn.Linear(
-            self.config["hidden_size"], self.config["hidden_size"]
+            config["hidden_size"], config["hidden_size"]
         )
 
-        self.encoder = LayoutLMv3Encoder(self.config)
-        self.dropout = nn.Dropout(self.config["hidden_dropout_prob"])
+        self.encoder = LayoutLMv3Encoder(config)
+        self.dropout = nn.Dropout(config["hidden_dropout_prob"])
 
         self.relative_head = GlobalPointerPD(
-            hidden_size=self.config["hidden_size"],
+            hidden_size=config["hidden_size"],
             heads=1,
             head_size=64,
             use_rope=False,
