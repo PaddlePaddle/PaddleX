@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional, Tuple
 
 from .... import constants
 from ....utils import logging
-from ....utils.device import constr_device
+from ....utils.device import TemporaryDeviceChanger, constr_device
 from ...utils.hpi import HPIConfig, HPIInfo
 from ..runners import ONNXRuntimeRunner, PaddleDynamicRunner, PaddleStaticRunner
 from .local_model_predictor import LocalModelPredictor
@@ -128,6 +128,20 @@ class RunnerPredictor(LocalModelPredictor):
             model_file_prefix=constants.MODEL_FILE_PREFIX,
             config=config,
         )
+
+    def _load_paddle_pretrained_model(self, model_cls, **kwargs):
+        """Load a Paddle dynamic model on the configured device."""
+        with TemporaryDeviceChanger(self.device):
+            model = model_cls.from_pretrained(self.model_dir, **kwargs)
+        model.eval()
+        return model
+
+    def _build_paddle_dynamic_pretrained_runner(
+        self, model_cls, **kwargs
+    ) -> PaddleDynamicRunner:
+        """Build a PaddleDynamicRunner from a pretrained Paddle model."""
+        model = self._load_paddle_pretrained_model(model_cls, **kwargs)
+        return PaddleDynamicRunner(model, config=self._engine_config)
 
     def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
         """Build PaddleDynamicRunner for PaddlePaddle dynamic graph inference. Override in subclasses."""

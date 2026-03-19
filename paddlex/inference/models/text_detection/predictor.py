@@ -202,21 +202,19 @@ class TextDetRunnerPredictor(RunnerPredictor):
         if self.model_name == "PP-OCRv5_mobile_det":
             from .modeling import PPOCRV5MobileDet
 
-            model = PPOCRV5MobileDet.from_pretrained(
-                self.model_dir, use_safetensors=True, convert_from_hf=True
+            return self._build_paddle_dynamic_pretrained_runner(
+                PPOCRV5MobileDet, use_safetensors=True, convert_from_hf=True
             )
         elif self.model_name == "PP-OCRv5_server_det":
             from .modeling import PPOCRV5ServerDet
 
-            model = PPOCRV5ServerDet.from_pretrained(
-                self.model_dir, use_safetensors=True, convert_from_hf=True
+            return self._build_paddle_dynamic_pretrained_runner(
+                PPOCRV5ServerDet, use_safetensors=True, convert_from_hf=True
             )
         else:
             raise RuntimeError(
                 f"There is no dynamic graph implementation for model {repr(self.model_name)}."
             )
-        model.eval()
-        return PaddleDynamicRunner(model, config=self._engine_config)
 
     def build_postprocess(self, **kwargs):
         if kwargs.get("name") == "DBPostProcess":

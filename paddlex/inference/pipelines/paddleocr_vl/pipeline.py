@@ -1042,6 +1042,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         concatenate_res = []
         if concatenate_pages:
+            all_imgs_in_doc = []
+            for res in res_list:
+                all_imgs_in_doc.extend(res.get("imgs_in_doc", []))
+            res_list[0]["imgs_in_doc"] = all_imgs_in_doc
             all_page_res = res_list[0]
             all_page_res["parsing_res_list"] = [
                 blk for blks in blocks_by_page for blk in blks

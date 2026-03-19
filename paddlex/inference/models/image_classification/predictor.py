@@ -137,11 +137,9 @@ class ClasRunnerPredictor(RunnerPredictor):
             raise RuntimeError(
                 f"There is no dynamic graph implementation for model {repr(self.model_name)}."
             )
-        model = PPLCNet.from_pretrained(
-            self.model_dir, use_safetensors=True, convert_from_hf=True
+        return self._build_paddle_dynamic_pretrained_runner(
+            PPLCNet, use_safetensors=True, convert_from_hf=True
         )
-        model.eval()
-        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("ResizeImage")
     # TODO(gaotingquan): backend & interpolation

@@ -104,8 +104,6 @@ class WarpRunnerPredictor(RunnerPredictor):
     def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
         from .modeling import UVDocNet
 
-        model = UVDocNet.from_pretrained(
-            self.model_dir, use_safetensors=True, convert_from_hf=True
+        return self._build_paddle_dynamic_pretrained_runner(
+            UVDocNet, use_safetensors=True, convert_from_hf=True
         )
-        model.eval()
-        return PaddleDynamicRunner(model, config=self._engine_config)

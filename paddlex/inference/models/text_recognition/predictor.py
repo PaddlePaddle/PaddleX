@@ -140,14 +140,12 @@ class TextRecRunnerPredictor(RunnerPredictor):
             )
         from .modeling import PPOCRV5Rec
 
-        model = PPOCRV5Rec.from_pretrained(
-            self.model_dir,
+        return self._build_paddle_dynamic_pretrained_runner(
+            PPOCRV5Rec,
             use_safetensors=True,
             convert_from_hf=True,
             dtype="float32",
         )
-        model.eval()
-        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("DecodeImage")
     def build_readimg(self, channel_first, img_mode):

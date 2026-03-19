@@ -118,26 +118,37 @@ class BaseTritonPythonModel(object):
                 log_ids.append(log_id)
 
             if inputs:
+                valid_request_indices = list(inputs.keys())
                 try:
                     result_or_output_lst = self.run_batch(
-                        inputs.values(), [log_ids[i] for i in inputs.keys()], batch_id
+                        [inputs[i] for i in valid_request_indices],
+                        [log_ids[i] for i in valid_request_indices],
+                        batch_id,
                     )
                 except Exception as e:
                     logging.error("Unhandled exception", exc_info=e)
-                    for i in inputs.keys():
+                    for i in valid_request_indices:
                         outputs[i] = protocol.create_aistudio_output_without_result(
                             500, "Internal server error", log_id=log_ids[i]
                         )
                 else:
                     result_model_type = self.get_result_model_type()
-                    for i, item in enumerate(result_or_output_lst):
+                    assert len(result_or_output_lst) == len(valid_request_indices), (
+                        f"The number of run_batch outputs ({len(result_or_output_lst)}) "
+                        f"does not match the number of valid requests ({len(valid_request_indices)})"
+                    )
+                    for request_idx, item in zip(
+                        valid_request_indices, result_or_output_lst
+                    ):
                         if isinstance(item, result_model_type):
-                            outputs[i] = protocol.create_aistudio_output_with_result(
-                                item,
-                                log_id=log_ids[i],
+                            outputs[request_idx] = (
+                                protocol.create_aistudio_output_with_result(
+                                    item,
+                                    log_id=log_ids[request_idx],
+                                )
                             )
                         else:
-                            outputs[i] = item
+                            outputs[request_idx] = item
 
             assert len(outputs) == len(
                 requests

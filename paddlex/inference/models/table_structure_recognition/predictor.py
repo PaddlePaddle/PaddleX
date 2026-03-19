@@ -128,14 +128,12 @@ class TableRunnerPredictor(RunnerPredictor):
             )
         from .modeling import SLANeXt
 
-        model = SLANeXt.from_pretrained(
-            self.model_dir,
+        return self._build_paddle_dynamic_pretrained_runner(
+            SLANeXt,
             use_safetensors=True,
             convert_from_hf=True,
             dtype="float32",
         )
-        model.eval()
-        return PaddleDynamicRunner(model, config=self._engine_config)
 
     @register("DecodeImage")
     def build_readimg(self, channel_first=False, img_mode="BGR"):
