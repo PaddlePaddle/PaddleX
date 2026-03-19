@@ -114,52 +114,26 @@ def font_colormap(color_index):
         return dark.astype("int32")
 
 
-def draw_read_order(draw, bbox, read_order, font, color=(0, 51, 153)):
-    """在 bbox 右上角绘制 read_order 编号
-
-    Args:
-        draw: ImageDraw.Draw 对象
-        bbox: [xmin, ymin, w, h] 格式的边界框
-        read_order: 阅读顺序编号
-        font: ImageFont 对象
-        color: RGB 背景颜色
-    """
+def draw_read_order(draw, bbox, read_order, font, color, font_color):
+    """Draw read_order label at the top-right corner of a bbox."""
     xmin, ymin, w, h = bbox
     xmax = xmin + w
-
-    # 计算圆形半径(基于字体大小)
-    circle_radius = max(15, int(font.size * 1.3))
-
-    # 计算显示位置(右上角,留 5px 边距)
-    center_x = xmax - circle_radius - 5
-    center_y = ymin + circle_radius + 5
-
-    # 确保不超出图像左边界
-    if center_x - circle_radius < xmin:
-        center_x = xmin + circle_radius + 5
-
-    # 绘制圆形背景
-    draw.ellipse(
-        [
-            (center_x - circle_radius, center_y - circle_radius),
-            (center_x + circle_radius, center_y + circle_radius),
-        ],
-        fill=color,
-        outline=(255, 255, 255),
-        width=2,
-    )
-
-    # 绘制文字
     text = str(read_order)
+
+    # measure text size (PIL version compat)
     if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
         tw, th = draw.textsize(text, font=font)
     else:
         left, top, right, bottom = draw.textbbox((0, 0), text, font)
         tw, th = right - left, bottom - top
 
-    text_x = center_x - tw // 2
-    text_y = center_y - th // 2 - 1
-    draw.text((text_x, text_y), text, fill=(255, 255, 255), font=font)
+    # draw at top-right corner, mirroring the category label at top-left
+    if ymin < th:
+        draw.rectangle([(xmax - tw - 4, ymin), (xmax, ymin + th + 1)], fill=color)
+        draw.text((xmax - tw - 2, ymin - 2), text, fill=font_color, font=font)
+    else:
+        draw.rectangle([(xmax - tw - 4, ymin - th), (xmax, ymin + 1)], fill=color)
+        draw.text((xmax - tw - 2, ymin - th - 2), text, fill=font_color, font=font)
 
 
 @function_requires_deps("pycocotools")
@@ -173,9 +147,6 @@ def draw_bbox(image, coco_info: "COCO", img_id):
     except:
         font_size = 12
     font = ImageFont.truetype(PINGFANG_FONT.path, font_size, encoding="utf-8")
-    read_order_font = ImageFont.truetype(
-        PINGFANG_FONT.path, int(font_size * 1.2), encoding="utf-8"
-    )
 
     image = image.convert("RGB")
     draw = ImageDraw.Draw(image)
@@ -202,7 +173,7 @@ def draw_bbox(image, coco_info: "COCO", img_id):
         catid, bbox = ann["category_id"], ann["bbox"]
         color = tuple(catid2color[catid])
         font_color = tuple(catid2fontcolor[catid])
-        read_order = ann.get("read_order", -1)  # 获取 read_order
+        read_order = ann.get("read_order", -1)  # get read_order
 
         if len(bbox) == 4:
             # draw bbox
@@ -227,7 +198,7 @@ def draw_bbox(image, coco_info: "COCO", img_id):
             logging.info("Error: The shape of bbox must be [M, 4] or [M, 8]!")
             continue
 
-        # draw label (左上角)
+        # draw label (top-left corner)
         label = coco_info.loadCats(catid)[0]["name"]
         text = "{}".format(label)
         if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
@@ -242,9 +213,9 @@ def draw_bbox(image, coco_info: "COCO", img_id):
             draw.rectangle([(xmin, ymin - th), (xmin + tw + 4, ymin + 1)], fill=color)
             draw.text((xmin + 2, ymin - th - 2), text, fill=font_color, font=font)
 
-        # 新增: 绘制 read_order 编号(右上角)
+        # draw read_order index (top-right corner)
         if read_order >= 0:
-            draw_read_order(draw, bbox, read_order, read_order_font)
+            draw_read_order(draw, bbox, read_order, font, color, font_color)
 
     return image
 

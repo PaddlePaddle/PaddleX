@@ -27,19 +27,19 @@ from .utils.visualizer import draw_bbox, draw_mask
 
 
 def validate_read_order(annotations, image_id):
-    """验证单张图片的 read_order 有效性
+    """Validate the read_order field for all annotations of a single image.
 
     Args:
-        annotations: 该图片的所有标注列表
-        image_id: 图片ID
+        annotations: list of all annotations for the image
+        image_id: image ID
 
     Returns:
-        bool: 是否通过验证
+        bool: whether validation passed
 
     Raises:
-        ValueError: 缺失或非法的 read_order
+        ValueError: missing or invalid read_order
     """
-    # 1. 检查完整性和类型
+    # 1. Check completeness and type
     for ann in annotations:
         if "read_order" not in ann:
             raise ValueError(
@@ -52,7 +52,7 @@ def validate_read_order(annotations, image_id):
                 f"Expected non-negative integer."
             )
 
-    # 2. 检查连续性和唯一性
+    # 2. Check continuity and uniqueness
     read_orders = sorted([ann["read_order"] for ann in annotations])
     expected = list(range(len(read_orders)))
 
@@ -78,7 +78,7 @@ def check(dataset_dir, output, sample_num=10):
 
     sample_cnts = dict()
     sample_paths = defaultdict(list)
-    read_order_stats = {}  # 新增: read_order 验证统计
+    read_order_stats = {}  # read_order validation statistics
     tags = ["instance_train", "instance_val"]
 
     for tag in tags:
@@ -101,7 +101,7 @@ def check(dataset_dir, output, sample_num=10):
         coco = COCO(file_list)
         num_class = len(coco.getCatIds())
 
-        # 新增: 验证 read_order
+        # validate read_order
         img_anns = defaultdict(list)
         for ann in datanno:
             img_anns[ann["image_id"]].append(ann)
@@ -130,7 +130,7 @@ def check(dataset_dir, output, sample_num=10):
             f"{tag}: read_order validation pass rate = {read_order_stats[tag]['pass_rate']:.2%}"
         )
 
-        # 可视化
+        # visualization
         vis_save_dir = osp.join(output, "demo_img")
         image_info = jsondata["images"]
         sample_num = min(sample_num, len(image_info))
@@ -146,7 +146,9 @@ def check(dataset_dir, output, sample_num=10):
 
             img = Image.open(img_path)
             img = ImageOps.exif_transpose(img)
-            vis_im = draw_bbox(img, coco, img_id)  # 自动显示 read_order
+            vis_im = draw_bbox(
+                img, coco, img_id
+            )  # draw_bbox renders read_order automatically
             vis_im = draw_mask(vis_im, coco, img_id)
             vis_path = osp.join(vis_save_dir, file_name)
             Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
@@ -160,6 +162,6 @@ def check(dataset_dir, output, sample_num=10):
     attrs["train_sample_paths"] = sample_paths["instance_train"]
     attrs["val_samples"] = sample_cnts["instance_val"]
     attrs["val_sample_paths"] = sample_paths["instance_val"]
-    attrs["read_order_validation"] = read_order_stats  # 新增
+    attrs["read_order_validation"] = read_order_stats
 
     return attrs
