@@ -45,6 +45,12 @@ from .keypoint_detection import (
     KeypointExportor,
     KeypointTrainer,
 )
+from .layout_analysis import (
+    LayoutAnalysisDatasetChecker,
+    LayoutAnalysisEvaluator,
+    LayoutAnalysisExportor,
+    LayoutAnalysisTrainer,
+)
 from .m_3d_bev_detection import (
     BEVFusionDatasetChecker,
     BEVFusionEvaluator,
