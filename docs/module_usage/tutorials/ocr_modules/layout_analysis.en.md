@@ -593,7 +593,7 @@ The model can be directly integrated into PaddleX pipelines or into your own pro
 
 1. <b>Pipeline Integration</b>
 
-The layout analysis module can be integrated into PaddleX pipelines such as the [Document Parsing Pipeline (PaddleOCR-VL)](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.en.md). Simply replace the model path to update the layout analysis module.
+The layout analysis module can be integrated into PaddleX pipelines such as the [Document Parsing Pipeline (PaddleOCR-VL and PaddleOCR-VL-1.5)](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.en.md). Simply replace the model path to update the layout analysis module.
 
 2. <b>Module Integration</b>
 
