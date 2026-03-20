@@ -609,7 +609,7 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 
 1. <b>产线集成</b>
 
-版面分析模块可以集成到PaddleX的[文档解析产线（PaddleOCR-VL）](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md)等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。
+版面分析模块可以集成到PaddleX的[文档解析产线（PaddleOCR-VL 和 PaddleOCR-VL-1.5）](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md)等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。
 
 2. <b>模块集成</b>
 
