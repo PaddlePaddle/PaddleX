@@ -1468,6 +1468,12 @@
       ],
       "PP-DocLayoutV2": [
         "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
+        "paddle"
       ]
     },
     "paddle31": {
@@ -2951,6 +2957,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     },
@@ -4436,6 +4448,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     }
@@ -5290,18 +5308,18 @@
       ],
       "PP-TSM-R50_8frames_uniform": [
         "tensorrt",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_16frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_8frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "DETR-R50": [
         "paddle_tensorrt_fp16",
@@ -5858,6 +5876,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     },
@@ -6714,18 +6738,18 @@
       ],
       "PP-TSM-R50_8frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_16frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_8frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "DETR-R50": [
         "paddle_tensorrt_fp16",
@@ -7298,6 +7322,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     },
@@ -8154,18 +8184,18 @@
       ],
       "PP-TSM-R50_8frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_16frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_8frames_uniform": [
         "tensorrt_fp16",
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "DETR-R50": [
         "paddle_tensorrt",
@@ -8737,6 +8767,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     }
@@ -9313,16 +9349,16 @@
         "paddle"
       ],
       "PP-TSM-R50_8frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_16frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_8frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "DETR-R50": [
         "paddle",
@@ -9788,6 +9824,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     },
@@ -10367,16 +10409,16 @@
         "paddle"
       ],
       "PP-TSM-R50_8frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_16frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_8frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "DETR-R50": [
         "paddle",
@@ -10852,6 +10894,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     },
@@ -11431,16 +11479,16 @@
         "paddle"
       ],
       "PP-TSM-R50_8frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_16frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "PP-TSMv2-LCNetV2_8frames_uniform": [
-        "paddle",
-        "onnxruntime"
+        "onnxruntime",
+        "paddle"
       ],
       "DETR-R50": [
         "paddle",
@@ -11904,6 +11952,12 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "paddle"
+      ],
+      "fastspeech2_csmsc": [
+        "paddle"
+      ],
+      "pwgan_csmsc": [
         "paddle"
       ]
     }

@@ -14,12 +14,17 @@
 
 """DocVLM inference model group and constants."""
 
+PP_DOCBEE_MODELS = ("PP-DocBee-2B", "PP-DocBee-7B")
+PP_DOCBEE2_MODELS = ("PP-DocBee2-3B",)
+PP_CHART2TABLE_MODELS = ("PP-Chart2Table",)
+PADDLEOCR_VL_MODELS = ("PaddleOCR-VL-0.9B", "PaddleOCR-VL-1.5-0.9B")
+
 # Model group: maps family name to set of model names.
 MODEL_GROUP = {
-    "PP-DocBee": {"PP-DocBee-2B", "PP-DocBee-7B"},
-    "PP-DocBee2": {"PP-DocBee2-3B"},
-    "PP-Chart2Table": {"PP-Chart2Table"},
-    "PaddleOCR-VL": {"PaddleOCR-VL-0.9B", "PaddleOCR-VL-1.5-0.9B"},
+    "PP-DocBee": set(PP_DOCBEE_MODELS),
+    "PP-DocBee2": set(PP_DOCBEE2_MODELS),
+    "PP-Chart2Table": set(PP_CHART2TABLE_MODELS),
+    "PaddleOCR-VL": set(PADDLEOCR_VL_MODELS),
 }
 
 # PaddleOCR-VL specific constants

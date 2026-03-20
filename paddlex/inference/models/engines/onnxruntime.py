@@ -15,13 +15,11 @@
 
 """Engine spec for ONNX Runtime."""
 
-from pathlib import Path
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional, Tuple, Type
 
-from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
-from ...utils.model_paths import get_model_paths
+from ...utils.model_paths import LocalModelFormat
 from ..predictors import BasePredictor, RunnerPredictor
 from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
 from ._base import EngineSpec
@@ -41,6 +39,11 @@ class ONNXRuntimeEngineSpec(EngineSpec):
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return RunnerPredictor
 
+    def get_supported_model_formats(
+        self,
+    ) -> Optional[Tuple[LocalModelFormat, ...]]:
+        return ("onnx",)
+
     def prepare_config_dict(
         self,
         raw: Dict[str, Any],
@@ -54,10 +57,6 @@ class ONNXRuntimeEngineSpec(EngineSpec):
             raw["device_type"] = device_type
             raw["device_id"] = device_ids[0] if device_ids is not None else None
         return raw
-
-    def ensure_model_files(self, model_dir: Path) -> None:
-        if "onnx" not in get_model_paths(model_dir, MODEL_FILE_PREFIX):
-            raise ValueError("No valid ONNX model files were found.")
 
     def ensure_environment(
         self,

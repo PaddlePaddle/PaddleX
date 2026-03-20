@@ -14,12 +14,26 @@
 
 from os import PathLike
 from pathlib import Path
-from typing import Tuple, TypedDict, Union
+from typing import Literal, Tuple, TypeAlias, TypedDict, Union, cast, get_args
 
 from ...constants import MODEL_FILE_PREFIX
 
+LocalModelFormat: TypeAlias = Literal[
+    "paddle",
+    "onnx",
+    "om",
+    "paddle_dyn",
+    "safetensors",
+]
+
+LOCAL_MODEL_FORMATS: Tuple[LocalModelFormat, ...] = cast(
+    Tuple[LocalModelFormat, ...], get_args(LocalModelFormat)
+)
+
 
 class ModelPaths(TypedDict, total=False):
+    """Resolved local model files keyed by `LocalModelFormat`."""
+
     paddle: Tuple[Path, Path]
     onnx: Path
     om: Path
@@ -49,6 +63,8 @@ def get_model_paths(
         model_paths["om"] = model_dir / f"{model_file_prefix}.om"
     if (model_dir / "model_state.pdparams").exists():
         model_paths["paddle_dyn"] = model_dir / "model_state.pdparams"
+    if (model_dir / "inference.pdparams").exists():
+        model_paths["paddle_dyn"] = model_dir / "inference.pdparams"
     if (model_dir / "model.safetensors").exists():
         model_paths["safetensors"] = model_dir / "model.safetensors"
     return model_paths

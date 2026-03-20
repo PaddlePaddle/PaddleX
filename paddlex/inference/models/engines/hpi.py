@@ -15,14 +15,12 @@
 
 """Engine spec for HPI."""
 
-from pathlib import Path
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional, Tuple, Type
 
-from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import get_default_device, parse_device
 from ...utils.hpi import HPIConfig
-from ...utils.model_paths import get_model_paths
+from ...utils.model_paths import LocalModelFormat
 from ..predictors import BasePredictor, RunnerPredictor
 from ._base import EngineSpec
 
@@ -40,6 +38,11 @@ class HPIEngineSpec(EngineSpec):
 
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return RunnerPredictor
+
+    def get_supported_model_formats(
+        self,
+    ) -> Optional[Tuple[LocalModelFormat, ...]]:
+        return ("paddle", "onnx", "om")
 
     def prepare_config_dict(
         self,
@@ -59,11 +62,6 @@ class HPIEngineSpec(EngineSpec):
 
     def get_config_dump_kwargs(self) -> Dict[str, Any]:
         return {"exclude_none": True, "by_alias": True}
-
-    def ensure_model_files(self, model_dir: Path) -> None:
-        model_paths = get_model_paths(model_dir, MODEL_FILE_PREFIX)
-        if not any(name in model_paths for name in ("paddle", "onnx", "om")):
-            raise ValueError("No valid model files were found for engine 'hpi'.")
 
     def ensure_environment(
         self,

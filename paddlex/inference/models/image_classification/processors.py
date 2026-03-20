@@ -85,5 +85,11 @@ class Topk:
         scores = [
             np.around(pred[index], decimals=5) for pred, index in zip(preds[0], indexes)
         ]
-        label_names = [[self.class_id_map[i] for i in index] for index in indexes]
+        if self.class_id_map is None:
+            label_names = [[str(int(i)) for i in index] for index in indexes]
+        else:
+            label_names = [
+                [self.class_id_map.get(int(i), str(int(i))) for i in index]
+                for index in indexes
+            ]
         return indexes, scores, label_names

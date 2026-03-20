@@ -21,8 +21,10 @@ from typing import Any, Dict, Optional, Tuple, Type, Union
 
 from pydantic import BaseModel, ValidationError
 
+from ....constants import MODEL_FILE_PREFIX
 from ....utils import errors
 from ....utils.subclass_register import AutoRegisterABCMetaClass
+from ...utils.model_paths import LocalModelFormat, get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
 from ..predictors import BasePredictor
 
@@ -74,6 +76,11 @@ class EngineSpec(ABC, metaclass=AutoRegisterABCMetaClass):
                 f"{self.name!r}. Supported engines: {list(supported)!r}."
             )
 
+    def get_supported_model_formats(
+        self,
+    ) -> Optional[Tuple[LocalModelFormat, ...]]:
+        return None
+
     def normalize_config(
         self,
         cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
@@ -124,7 +131,14 @@ class EngineSpec(ABC, metaclass=AutoRegisterABCMetaClass):
         return self.name
 
     def ensure_model_files(self, model_dir: Path) -> None:
-        del model_dir
+        model_formats = self.get_supported_model_formats()
+        if model_formats is None:
+            return
+        model_paths = get_model_paths(model_dir, MODEL_FILE_PREFIX)
+        if not any(model_format in model_paths for model_format in model_formats):
+            raise ValueError(
+                f"No valid model files were found for engine {self.name!r}."
+            )
 
     def ensure_environment(
         self,

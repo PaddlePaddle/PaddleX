@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import DocVLMGenAIClientPredictor, DocVLMRunnerPredictor
+from .predictor import (
+    DocVLMGenAIClientPredictor,
+    DocVLMRunnerPredictor,
+    DocVLMTransformersPredictor,
+)
 
 # Backward compatibility
 DocVLMPredictor = DocVLMRunnerPredictor

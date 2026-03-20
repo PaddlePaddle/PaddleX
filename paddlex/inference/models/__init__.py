@@ -15,10 +15,11 @@
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Tuple, Type, Union
 
 from ...utils import errors, logging
 from ..utils.hpi import HPIConfig
+from ..utils.model_paths import resolve_paddle_engine_from_model_files
 from ..utils.official_models import official_models
 from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import UadPredictor
@@ -39,7 +40,7 @@ from .multilingual_speech_recognition import WhisperPredictor
 from .object_detection import DetPredictor
 from .open_vocabulary_detection import OVDetPredictor
 from .open_vocabulary_segmentation import OVSegPredictor
-from .predictors import BasePredictor, FlexiblePredictor, RunnerPredictor
+from .predictors import BasePredictor
 from .semantic_segmentation import SegPredictor
 from .table_structure_recognition import TablePredictor
 from .text_detection import TextDetPredictor
@@ -58,17 +59,74 @@ def _pick_predictor_cls(model_name: str, engine: str) -> Type[BasePredictor]:
     return _get_engine_spec_instance(engine).get_predictor_cls(model_name)
 
 
+@lru_cache(None)
+def _get_supported_engines(model_name: str) -> Tuple[str, ...]:
+    supported = []
+    for engine_name in EngineSpec.all():
+        try:
+            engine_spec = _get_engine_spec_instance(engine_name)
+            for engine in engine_spec.get_supported_engines(model_name):
+                if engine not in supported:
+                    supported.append(engine)
+        except NotImplementedError:
+            continue
+    if not supported:
+        raise ValueError(f"No predictor registered for model {model_name!r}.")
+    return tuple(supported)
+
+
+def _resolve_model_dir(
+    model_name: str,
+    model_dir: Optional[str],
+    *,
+    model_formats=None,
+) -> Path:
+    if model_dir is None:
+        return Path(
+            official_models.get_model_path(
+                model_name,
+                model_formats=model_formats,
+            )
+        )
+    resolved = Path(model_dir)
+    if not resolved.exists():
+        raise FileNotFoundError(f"{model_dir} does not exist!")
+    return resolved
+
+
+def _resolve_default_paddle_engine(model_name: str) -> str:
+    supported = _get_supported_engines(model_name)
+    for engine in ("paddle_static", "paddle_dynamic"):
+        if engine in supported:
+            return engine
+    raise ValueError(
+        f"Model {model_name!r} does not support engine 'paddle'. "
+        f"Supported engines: {list(supported)!r}."
+    )
+
+
+def _resolve_requested_engine(
+    model_name: str,
+    engine: str,
+    model_dir: Optional[str],
+) -> tuple[str, Optional[Path]]:
+    if engine != "paddle":
+        return engine, None
+
+    if model_dir is None:
+        return _resolve_default_paddle_engine(model_name), None
+
+    model_dir_resolved = _resolve_model_dir(model_name, model_dir)
+    resolved_engine = resolve_paddle_engine_from_model_files(model_dir_resolved)
+    if resolved_engine is None:
+        raise ValueError(f"No Paddle model files were found in {model_dir!r}.")
+    return resolved_engine, model_dir_resolved
+
+
 def _is_flexible_only_model(model_name: str) -> bool:
-    """True if model is registered with FlexiblePredictor but not RunnerPredictor."""
     try:
-        RunnerPredictor.get(model_name)
-        return False
-    except errors.ClassNotFoundException:
-        pass
-    try:
-        FlexiblePredictor.get(model_name)
-        return True
-    except errors.ClassNotFoundException:
+        return _get_supported_engines(model_name) == ("flexible",)
+    except ValueError:
         return False
 
 
@@ -118,7 +176,9 @@ def create_predictor(
         device (Optional[str]): Device to run on (e.g. `'gpu'`, `'cpu'`). Used by local
             engines.
         engine (Optional[str]): Inference engine. One of `'paddle'` (resolved to
-            `paddle_static` or `paddle_dynamic` per model), `'paddle_static'`,
+            `paddle_static` or `paddle_dynamic` from local model files when
+            `model_dir` is provided; otherwise resolved from predictor support,
+            preferring `paddle_static`), `'paddle_static'`,
             `'paddle_dynamic'`, `'hpi'`, `'flexible'`, `'transformers'`,
             `'onnxruntime'`, `'genai_client'`, or `None`.
             When `None`: if `genai_config.backend` is a server backend, engine
@@ -176,31 +236,21 @@ def create_predictor(
         elif _is_flexible_only_model(model_name):
             engine = "flexible"
 
+    engine, model_dir_resolved = _resolve_requested_engine(
+        model_name, engine, model_dir
+    )
+
     requested_spec = _get_engine_spec_instance(engine)
-    if engine != "paddle":
-        requested_spec.ensure_predictor_support(model_name)
 
     need_local = requested_spec.needs_local_model
-    model_dir_resolved: Optional[Path] = None
-    if need_local:
-        if model_dir is None:
-            supported_engines = requested_spec.get_supported_engines(model_name)
-            model_dir_resolved = Path(
-                official_models.get_model_path(
-                    model_name,
-                    engine=engine,
-                    supported_engines=supported_engines,
-                )
-            )
-        else:
-            model_dir_resolved = Path(model_dir)
-            if not model_dir_resolved.exists():
-                raise FileNotFoundError(f"{model_dir} does not exist!")
+    if model_dir_resolved is None and need_local:
+        model_dir_resolved = _resolve_model_dir(
+            model_name,
+            model_dir,
+            model_formats=requested_spec.get_supported_model_formats(),
+        )
 
-    if engine == "paddle":
-        engine = requested_spec.resolve_engine_from_model_dir(model_dir_resolved)
-        requested_spec = _get_engine_spec_instance(engine)
-        requested_spec.ensure_predictor_support(model_name)
+    requested_spec.ensure_predictor_support(model_name)
 
     if pp_option is not None and engine != "paddle_static":
         logging.warning(

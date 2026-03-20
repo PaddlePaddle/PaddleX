@@ -15,12 +15,13 @@
 
 """Engine spec for transformers predictors."""
 
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional, Tuple, Type
 
 from pydantic import BaseModel, ConfigDict
 
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
+from ...utils.model_paths import LocalModelFormat
 from ..predictors import BasePredictor, TransformersPredictor
 from ._base import EngineSpec
 
@@ -54,6 +55,11 @@ class TransformersEngineSpec(EngineSpec):
 
     def get_base_predictor_cls(self) -> Type[BasePredictor]:
         return TransformersPredictor
+
+    def get_supported_model_formats(
+        self,
+    ) -> Optional[Tuple[LocalModelFormat, ...]]:
+        return ("safetensors",)
 
     def prepare_config_dict(
         self,

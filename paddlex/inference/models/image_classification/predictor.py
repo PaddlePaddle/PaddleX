@@ -12,19 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+from PIL import Image
 
 from ....modules.image_classification.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
-from ..predictors import RunnerPredictor
+from ..predictors import RunnerPredictor, TransformersPredictor
 from ..runners import PaddleDynamicRunner
 from .processors import Crop, Topk
 from .result import TopkResult
+
+PPLCNET_MODELS = [name for name in MODELS if name.startswith("PP-LCNet_")]
+CLAS_TRANSFORMERS_MODELS = PPLCNET_MODELS
 
 
 class ClasRunnerPredictor(RunnerPredictor):
@@ -129,11 +133,7 @@ class ClasRunnerPredictor(RunnerPredictor):
     def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
         from .modeling import PPLCNet
 
-        if self.model_name not in [
-            "PP-LCNet_x1_0_doc_ori",
-            "PP-LCNet_x1_0_table_cls",
-            "PP-LCNet_x0_25_textline_ori",
-        ]:
+        if self.model_name not in PPLCNET_MODELS:
             raise RuntimeError(
                 f"There is no dynamic graph implementation for model {repr(self.model_name)}."
             )
@@ -189,3 +189,104 @@ class ClasRunnerPredictor(RunnerPredictor):
         if not self.topk:
             self.topk = int(topk)
         return "Topk", Topk(class_ids=label_list)
+
+
+class ClasTransformersPredictor(TransformersPredictor):
+    """Image classification predictor backed by Hugging Face transformers."""
+
+    entities = CLAS_TRANSFORMERS_MODELS
+
+    def __init__(self, topk: Optional[int] = None, *args: List, **kwargs: Dict) -> None:
+        super().__init__(*args, **kwargs)
+        self.topk = topk
+        self._load_default_topk()
+        self.read_op = ReadImage(format="RGB")
+        self.image_processor, self.infer = self._build()
+
+    def _load_default_topk(self) -> None:
+        if self.topk is not None:
+            return
+        post = self.model_config.get("PostProcess", {})
+        topk_cfg = post.get("Topk", {})
+        if isinstance(topk_cfg, dict) and topk_cfg.get("topk") is not None:
+            self.topk = int(topk_cfg["topk"])
+        else:
+            self.topk = 5
+
+    def _build_batch_sampler(self) -> ImageBatchSampler:
+        return ImageBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return TopkResult
+
+    def _build(self):
+        from transformers import AutoImageProcessor, AutoModelForImageClassification
+
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(AutoModelForImageClassification)
+        return image_processor, model
+
+    def _resolve_id2label(self) -> Dict[int, str]:
+        raw = dict(self.infer.config.id2label or {})
+        return {int(k): str(v) for k, v in raw.items()}
+
+    def _resolve_logits(self, outputs):
+        logits = getattr(outputs, "logits", None)
+        if logits is not None:
+            return logits
+
+        # Some Paddle-converted HF classification models expose class scores as
+        # `last_hidden_state` instead of `logits`.
+        last_hidden_state = getattr(outputs, "last_hidden_state", None)
+        if (
+            last_hidden_state is not None
+            and getattr(last_hidden_state, "ndim", None) == 2
+        ):
+            return last_hidden_state
+
+        pooler_output = getattr(outputs, "pooler_output", None)
+        if pooler_output is not None and getattr(pooler_output, "ndim", None) == 2:
+            return pooler_output
+
+        if hasattr(outputs, "to_tuple"):
+            for item in outputs.to_tuple():
+                if getattr(item, "ndim", None) == 2:
+                    return item
+
+        raise AttributeError(
+            f"{type(outputs).__name__!r} does not provide a usable classification logits tensor."
+        )
+
+    def process(
+        self, batch_data: List[Union[str, np.ndarray]], topk: Optional[int] = None
+    ) -> Dict[str, Any]:
+        id2label = self._resolve_id2label()
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        images = [Image.fromarray(img) for img in batch_raw_imgs]
+        model_inputs = self.image_processor(images=images, return_tensors="pt")
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
+
+        logits = self._resolve_logits(outputs)
+        probs = torch.softmax(logits, dim=-1).detach().cpu().numpy()
+        k = int(topk if topk is not None else self.topk)
+        indexes = probs.argsort(axis=1)[:, -k:][:, ::-1].astype("int32")
+        batch_scores = [
+            np.around(probs[i][idx], decimals=5) for i, idx in enumerate(indexes)
+        ]
+        batch_label_names = [
+            [id2label.get(int(i), str(i)) for i in row] for row in indexes
+        ]
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "class_ids": indexes,
+            "scores": batch_scores,
+            "label_names": batch_label_names,
+        }

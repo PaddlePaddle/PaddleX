@@ -29,8 +29,12 @@ from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import DocVLMBatchSampler
 from ...utils.misc import is_bfloat16_available
 from ...utils.model_paths import get_model_paths
-from ..predictors import GenAIClientPredictor, RunnerPredictor
-from .constants import PADDLEOCR_VL_LOCAL_BATCH_SIZE, PADDLEOCR_VL_MAX_NEW_TOKENS
+from ..predictors import GenAIClientPredictor, RunnerPredictor, TransformersPredictor
+from .constants import (
+    PADDLEOCR_VL_LOCAL_BATCH_SIZE,
+    PADDLEOCR_VL_MAX_NEW_TOKENS,
+    PADDLEOCR_VL_MODELS,
+)
 from .result import DocVLMResult
 from .utils import format_doc_vlm_result_dict, is_in_group
 
@@ -367,7 +371,7 @@ class DocVLMRunnerPredictor(RunnerPredictor):
 class DocVLMGenAIClientPredictor(GenAIClientPredictor):
     """DocVLM predictor for remote GenAI inference via GenAIClient."""
 
-    entities = MODELS
+    entities = PADDLEOCR_VL_MODELS
 
     def __init__(self, *args, **kwargs):
         engine_config = kwargs.pop("engine_config", None)
@@ -581,3 +585,108 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
                 if not future.done():
                     future.cancel()
             raise
+
+
+class DocVLMTransformersPredictor(TransformersPredictor):
+    """DocVLM predictor backed by Hugging Face transformers."""
+
+    entities = PADDLEOCR_VL_MODELS
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.batch_sampler.batch_size == -1:
+            self.batch_sampler.batch_size = PADDLEOCR_VL_LOCAL_BATCH_SIZE
+        self.processor, self.infer = self._build()
+
+    def _build_batch_sampler(self):
+        return DocVLMBatchSampler(self.model_name)
+
+    def _get_result_class(self):
+        return DocVLMResult
+
+    def _build(self):
+        from transformers import AutoModelForImageTextToText, AutoProcessor
+
+        processor = self._load_pretrained_processor(AutoProcessor)
+        model = self._load_pretrained_model(AutoModelForImageTextToText)
+        return processor, model
+
+    def process(
+        self,
+        data: List[dict],
+        max_new_tokens: Optional[int] = None,
+        skip_special_tokens: Optional[bool] = None,
+        repetition_penalty: Optional[float] = None,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+        min_pixels: Optional[int] = None,
+        max_pixels: Optional[int] = None,
+        use_cache: Optional[bool] = None,
+        **kwargs,
+    ):
+        from .processors.common import fetch_image
+
+        assert all(isinstance(i, dict) for i in data)
+        src_data = copy.copy(data)
+
+        images = []
+        texts = []
+        for item in data:
+            image = fetch_image(item["image"])
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": image},
+                        {"type": "text", "text": item["query"]},
+                    ],
+                }
+            ]
+            prompt = self.processor.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
+            )
+            images.append(image)
+            texts.append(prompt)
+
+        processor_kwargs = {"images": images, "text": texts, "return_tensors": "pt"}
+        if min_pixels is not None:
+            processor_kwargs["min_pixels"] = min_pixels
+        if max_pixels is not None:
+            processor_kwargs["max_pixels"] = max_pixels
+        model_inputs = self.processor(**processor_kwargs)
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        generate_kwargs = {
+            "max_new_tokens": (
+                max_new_tokens
+                if max_new_tokens is not None
+                else PADDLEOCR_VL_MAX_NEW_TOKENS
+            )
+        }
+        if repetition_penalty is not None:
+            generate_kwargs["repetition_penalty"] = repetition_penalty
+        if temperature is not None:
+            generate_kwargs["temperature"] = temperature
+        if top_p is not None:
+            generate_kwargs["top_p"] = top_p
+        if use_cache is not None:
+            generate_kwargs["use_cache"] = use_cache
+
+        import torch
+
+        with torch.inference_mode():
+            generated_ids = self.infer.generate(**model_inputs, **generate_kwargs)
+
+        prompt_ids = model_inputs["input_ids"]
+        generated_ids_trimmed = [
+            output_ids[len(input_ids) :]
+            for input_ids, output_ids in zip(prompt_ids, generated_ids)
+        ]
+        preds = self.processor.batch_decode(
+            generated_ids_trimmed,
+            skip_special_tokens=(
+                True if skip_special_tokens is None else skip_special_tokens
+            ),
+            clean_up_tokenization_spaces=False,
+        )
+        return format_doc_vlm_result_dict(preds, src_data, add_input_path=True)

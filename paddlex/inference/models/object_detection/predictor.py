@@ -36,6 +36,15 @@ from .processors import (
 from .result import DetResult
 from .utils import STATIC_SHAPE_MODEL_LIST
 
+RTDETR_L_MODELS = [
+    "RT-DETR-L",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+]
+DET_TRANSFORMERS_MODELS = RTDETR_L_MODELS
+
 
 class DetRunnerPredictor(RunnerPredictor):
     """Object detection predictor using inference runner."""
@@ -261,18 +270,14 @@ class DetRunnerPredictor(RunnerPredictor):
         }
 
     def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
-        if self.model_name not in {"RT-DETR-L", "PP-DocLayoutV2"}:
+        from .modeling import RTDETR
+
+        if self.model_name not in RTDETR_L_MODELS:
             raise RuntimeError(
                 f"There is no dynamic graph implementation for model {repr(self.model_name)}."
             )
-        if self.model_name == "RT-DETR-L":
-            from .modeling import RTDETR
 
-            model_cls = RTDETR
-        else:
-            from .modeling import PPDocLayoutV2
-
-            model_cls = PPDocLayoutV2
+        model_cls = RTDETR
 
         return self._build_paddle_dynamic_pretrained_runner(
             model_cls,
@@ -376,7 +381,7 @@ class DetRunnerPredictor(RunnerPredictor):
 class DetTransformersPredictor(TransformersPredictor):
     """Object detection predictor backed by HuggingFace transformers."""
 
-    entities = MODELS
+    entities = DET_TRANSFORMERS_MODELS
 
     def __init__(
         self,

@@ -212,19 +212,13 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
     scale_w, scale_h = scale_ratio[0] / 4, scale_ratio[1] / 4
     h_m, w_m = masks.shape[1:]
     polygon_points = []
-    iou_threshold = 0.95
 
     max_box_w = max(boxes[:, 4] - boxes[:, 3])
 
     for i in range(len(boxes)):
         x_min, y_min, x_max, y_max = boxes[i, 2:6].astype(np.int32)
         box_w, box_h = x_max - x_min, y_max - y_min
-
-        # default rect
-        rect = np.array(
-            [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
-            dtype=np.float32,
-        )
+        rect = _rect_from_box(boxes[i, 2:6])
 
         if box_w <= 0 or box_h <= 0:
             polygon_points.append(rect)
@@ -243,10 +237,6 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
             polygon_points.append(rect)
             continue
 
-        if layout_shape_mode == "rect":
-            polygon_points.append(rect)
-            continue
-
         # resize mask to match box size
         resized_mask = cv2.resize(
             cropped.astype(np.uint8), (box_w, box_h), interpolation=cv2.INTER_NEAREST
@@ -258,64 +248,107 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
             max_allowed_dist = max_box_w
 
         polygon = mask2polygon(resized_mask, max_allowed_dist)
-        if polygon is not None and len(polygon) < 4:
-            polygon_points.append(rect)
-            continue
         if polygon is not None and len(polygon) > 0:
             polygon = polygon + np.array([x_min, y_min])
-        if layout_shape_mode == "poly":
-            polygon_points.append(polygon)
-        elif layout_shape_mode == "quad":
-            # convert polygon to quadrilateral
-            quad = convert_polygon_to_quad(polygon)
-            polygon_points.append(quad if quad is not None else rect)
-        elif layout_shape_mode == "auto":
-            iou_threshold = 0.8
-
-            rect_list = rect.tolist()
-            quad = convert_polygon_to_quad(polygon)
-            if quad is not None:
-                quad_list = quad.tolist()
-
-                iou_quad = calculate_polygon_overlap_ratio(
-                    rect_list,
-                    quad_list,
-                    mode="union",
-                )
-                if iou_quad >= 0.95:
-                    # if quad is very similar to rect, use rect instead
-                    quad = rect
-
-                poly_list = (
-                    polygon.tolist() if isinstance(polygon, np.ndarray) else polygon
-                )
-
-                iou_quad = calculate_polygon_overlap_ratio(
-                    poly_list, quad_list, mode="union"
-                )
-
-                pre_poly = polygon_points[-1] if len(polygon_points) > 0 else None
-                iou_pre = 0
-                if pre_poly is not None:
-                    iou_pre = calculate_polygon_overlap_ratio(
-                        pre_poly.tolist(),
-                        rect_list,
-                        mode="small",
-                    )
-
-                if iou_quad >= iou_threshold and iou_pre < 0.01:
-                    # if quad is similar to polygon, use quad
-                    polygon_points.append(quad)
-                    continue
-
-            # if all ious are less than threshold, use polygon
-            polygon_points.append(polygon)
-        else:
-            raise ValueError(
-                "layout_shape_mode must be one of ['rect', 'poly', 'quad', 'auto']"
+        polygon_points.append(
+            _normalize_layout_polygon(
+                box=boxes[i, 2:6],
+                polygon=polygon,
+                layout_shape_mode=layout_shape_mode,
+                previous_polygon=(
+                    polygon_points[-1] if len(polygon_points) > 0 else None
+                ),
             )
+        )
 
     return polygon_points
+
+
+def normalize_polygon_points_by_boxes(boxes, polygon_points, layout_shape_mode):
+    normalized_points = []
+
+    for polygon, box in zip(polygon_points, boxes):
+        normalized_points.append(
+            _normalize_layout_polygon(
+                box=box[2:6],
+                polygon=polygon,
+                layout_shape_mode=layout_shape_mode,
+                previous_polygon=(
+                    normalized_points[-1] if len(normalized_points) > 0 else None
+                ),
+            )
+        )
+
+    return normalized_points
+
+
+def _rect_from_box(box):
+    x_min, y_min, x_max, y_max = np.asarray(box).astype(np.int32)
+    return np.array(
+        [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
+        dtype=np.float32,
+    )
+
+
+def _normalize_layout_polygon(
+    box,
+    polygon,
+    layout_shape_mode,
+    previous_polygon=None,
+):
+    rect = _rect_from_box(box)
+
+    if polygon is None:
+        return rect
+
+    polygon = np.asarray(polygon, dtype=np.float32)
+    if polygon.ndim == 1:
+        polygon = polygon.reshape(-1, 2)
+
+    if len(polygon) < 4:
+        return rect
+
+    if layout_shape_mode == "rect":
+        return rect
+
+    if layout_shape_mode == "poly":
+        return polygon
+
+    quad = convert_polygon_to_quad(polygon)
+    if layout_shape_mode == "quad":
+        return quad if quad is not None else rect
+
+    if layout_shape_mode == "auto":
+        rect_list = rect.tolist()
+        if quad is not None:
+            quad_list = quad.tolist()
+            iou_rect_quad = calculate_polygon_overlap_ratio(
+                rect_list, quad_list, mode="union"
+            )
+            if iou_rect_quad >= 0.95:
+                return rect
+
+            poly_list = polygon.tolist()
+            iou_poly_quad = calculate_polygon_overlap_ratio(
+                poly_list, quad_list, mode="union"
+            )
+
+            iou_pre = 0
+            if previous_polygon is not None:
+                iou_pre = calculate_polygon_overlap_ratio(
+                    previous_polygon.tolist(),
+                    rect_list,
+                    mode="small",
+                )
+
+            if iou_poly_quad >= 0.8 and iou_pre < 0.01:
+                return quad
+
+        return polygon
+
+    raise ValueError(
+        "layout_shape_mode must be one of ['rect', 'poly', 'quad', 'auto']"
+    )
 
 
 def convert_polygon_to_quad(polygon):
@@ -915,6 +948,10 @@ class LayoutAnalysisProcess:
             scale_ratio = [h / s for h, s in zip(self.scale_size, img_size)]
             polygon_points = extract_polygon_points_by_masks(
                 boxes, np.array(masks), scale_ratio, layout_shape_mode
+            )
+        elif polygon_points is not None:
+            polygon_points = normalize_polygon_points_by_boxes(
+                boxes, polygon_points, layout_shape_mode
             )
 
         if layout_unclip_ratio:

@@ -24,6 +24,8 @@ from .processors import LayoutAnalysisProcess
 from .result import LayoutAnalysisResult
 from .utils import STATIC_SHAPE_MODEL_LIST
 
+LAYOUT_ANALYSIS_TRANSFORMERS_MODELS = ["PP-DocLayoutV2", "PP-DocLayoutV3"]
+
 
 class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
     """Layout analysis predictor."""
@@ -71,6 +73,20 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
 
     def _get_result_class(self):
         return LayoutAnalysisResult
+
+    def build_paddle_dynamic_runner(self):
+        if self.model_name != "PP-DocLayoutV2":
+            raise RuntimeError(
+                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
+            )
+        from ..object_detection.modeling import PPDocLayoutV2
+
+        return self._build_paddle_dynamic_pretrained_runner(
+            PPDocLayoutV2,
+            use_safetensors=True,
+            convert_from_hf=True,
+            dtype="float32",
+        )
 
     def process(
         self,
@@ -185,7 +201,7 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
 class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
     """Layout analysis predictor backed by HuggingFace transformers."""
 
-    entities = LAYOUTANALYSIS_MODELS
+    entities = LAYOUT_ANALYSIS_TRANSFORMERS_MODELS
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 import numpy as np
+from PIL import Image
 
 from ....modules.text_recognition.model_list import MODELS
 from ....utils.deps import class_requires_deps, is_dep_available
@@ -34,13 +35,67 @@ from ....utils.fonts import (
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..predictors import RunnerPredictor
+from ..predictors import RunnerPredictor, TransformersPredictor
 from ..runners import PaddleDynamicRunner
 from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
 from .result import TextRecResult
 
 if is_dep_available("python-bidi"):
     from bidi.algorithm import get_display
+
+
+TEXT_REC_TRANSFORMERS_MODELS = ["PP-OCRv5_server_rec", "PP-OCRv5_mobile_rec"]
+
+
+def get_text_rec_vis_font(model_name):
+    if model_name.startswith(("PP-OCR", "en_PP-OCR")):
+        return SIMFANG_FONT
+
+    if model_name in (
+        "latin_PP-OCRv3_mobile_rec",
+        "latin_PP-OCRv5_mobile_rec",
+    ):
+        return LATIN_FONT
+
+    if model_name in (
+        "cyrillic_PP-OCRv3_mobile_rec",
+        "cyrillic_PP-OCRv5_mobile_rec",
+        "eslav_PP-OCRv5_mobile_rec",
+    ):
+        return CYRILLIC_FONT
+
+    if model_name in (
+        "korean_PP-OCRv3_mobile_rec",
+        "korean_PP-OCRv5_mobile_rec",
+    ):
+        return KOREAN_FONT
+
+    if model_name == "th_PP-OCRv5_mobile_rec":
+        return TH_FONT
+
+    if model_name == "el_PP-OCRv5_mobile_rec":
+        return EL_FONT
+
+    if model_name in (
+        "arabic_PP-OCRv3_mobile_rec",
+        "arabic_PP-OCRv5_mobile_rec",
+    ):
+        return ARABIC_FONT
+
+    if model_name == "ka_PP-OCRv3_mobile_rec":
+        return KANNADA_FONT
+
+    if model_name in ("te_PP-OCRv3_mobile_rec", "te_PP-OCRv5_mobile_rec"):
+        return TELUGU_FONT
+
+    if model_name in ("ta_PP-OCRv3_mobile_rec", "ta_PP-OCRv5_mobile_rec"):
+        return TAMIL_FONT
+
+    if model_name in (
+        "devanagari_PP-OCRv3_mobile_rec",
+        "devanagari_PP-OCRv5_mobile_rec",
+    ):
+        return DEVANAGARI_FONT
 
 
 @class_requires_deps("python-bidi")
@@ -175,51 +230,94 @@ class TextRecRunnerPredictor(RunnerPredictor):
         return None, None
 
     def get_vis_font(self):
-        if self.model_name.startswith(("PP-OCR", "en_PP-OCR")):
-            return SIMFANG_FONT
+        return get_text_rec_vis_font(self.model_name)
 
-        if self.model_name in (
-            "latin_PP-OCRv3_mobile_rec",
-            "latin_PP-OCRv5_mobile_rec",
-        ):
-            return LATIN_FONT
 
-        if self.model_name in (
-            "cyrillic_PP-OCRv3_mobile_rec",
-            "cyrillic_PP-OCRv5_mobile_rec",
-            "eslav_PP-OCRv5_mobile_rec",
-        ):
-            return CYRILLIC_FONT
+class TextRecTransformersPredictor(TransformersPredictor):
+    """Text recognition predictor backed by Hugging Face transformers."""
 
-        if self.model_name in (
-            "korean_PP-OCRv3_mobile_rec",
-            "korean_PP-OCRv5_mobile_rec",
-        ):
-            return KOREAN_FONT
+    entities = TEXT_REC_TRANSFORMERS_MODELS
 
-        if self.model_name == "th_PP-OCRv5_mobile_rec":
-            return TH_FONT
+    def __init__(self, *args, return_word_box: bool = False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.return_word_box = return_word_box
+        self.vis_font = get_text_rec_vis_font(self.model_name)
+        self.read_op = ReadImage(format="RGB")
+        self.image_processor, self.infer = self._build()
+        self.post_op = self._build_postprocess()
 
-        if self.model_name == "el_PP-OCRv5_mobile_rec":
-            return EL_FONT
+    def _build_batch_sampler(self):
+        return ImageBatchSampler()
 
-        if self.model_name in (
-            "arabic_PP-OCRv3_mobile_rec",
-            "arabic_PP-OCRv5_mobile_rec",
-        ):
-            return ARABIC_FONT
+    def _get_result_class(self):
+        return TextRecResult
 
-        if self.model_name == "ka_PP-OCRv3_mobile_rec":
-            return KANNADA_FONT
+    def _build(self):
+        from transformers import AutoImageProcessor, AutoModelForTextRecognition
 
-        if self.model_name in ("te_PP-OCRv3_mobile_rec", "te_PP-OCRv5_mobile_rec"):
-            return TELUGU_FONT
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(AutoModelForTextRecognition)
+        return image_processor, model
 
-        if self.model_name in ("ta_PP-OCRv3_mobile_rec", "ta_PP-OCRv5_mobile_rec"):
-            return TAMIL_FONT
+    def _build_postprocess(self):
+        character_list = getattr(self.image_processor, "character_list", None)
+        if not character_list:
+            character_list = self.model_config.get("PostProcess", {}).get(
+                "character_dict"
+            )
+        if not character_list:
+            raise RuntimeError(
+                f"{type(self.image_processor).__name__} does not provide "
+                "the character dictionary required for text recognition decoding."
+            )
+        if character_list[0] == "blank":
+            character_list = character_list[1:]
+        return CTCLabelDecode(character_list=character_list)
 
-        if self.model_name in (
-            "devanagari_PP-OCRv3_mobile_rec",
-            "devanagari_PP-OCRv5_mobile_rec",
-        ):
-            return DEVANAGARI_FONT
+    def _get_rec_image_shape(self):
+        size = getattr(self.image_processor, "size", {}) or {}
+        pad_size = getattr(self.image_processor, "pad_size", {}) or size
+        img_h = int(pad_size.get("height", size.get("height", 48)))
+        img_w = int(pad_size.get("width", size.get("width", 320)))
+        return 3, img_h, img_w
+
+    def process(self, batch_data, return_word_box: Optional[bool] = None):
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        width_list = [img.shape[1] / float(img.shape[0]) for img in batch_raw_imgs]
+        indices = np.argsort(np.array(width_list))
+        images = [Image.fromarray(img) for img in batch_raw_imgs]
+        model_inputs = self.image_processor(images=images, return_tensors="pt")
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
+
+        batch_preds = [outputs.last_hidden_state.detach().float().cpu().numpy()]
+        batch_num = self.batch_sampler.batch_size
+        img_num = len(batch_raw_imgs)
+        _, img_h, img_w = self._get_rec_image_shape()
+        max_wh_ratio = img_w / img_h
+        end_img_no = min(img_num, batch_num)
+        wh_ratio_list = []
+        for ino in range(0, end_img_no):
+            h, w = batch_raw_imgs[indices[ino]].shape[0:2]
+            wh_ratio = w * 1.0 / h
+            max_wh_ratio = max(max_wh_ratio, wh_ratio)
+            wh_ratio_list.append(wh_ratio)
+        texts, scores = self.post_op(
+            batch_preds,
+            return_word_box=return_word_box or self.return_word_box,
+            wh_ratio_list=wh_ratio_list,
+            max_wh_ratio=max_wh_ratio,
+        )
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "rec_text": texts,
+            "rec_score": scores,
+            "vis_font": [self.vis_font] * len(batch_raw_imgs),
+        }

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import ClasRunnerPredictor
+from .predictor import ClasRunnerPredictor, ClasTransformersPredictor
 
 # Backward compatibility
 ClasPredictor = ClasRunnerPredictor
