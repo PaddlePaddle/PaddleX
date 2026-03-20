@@ -79,7 +79,7 @@ The meanings of the parameters are as follows:
 
 After running, the visualization result saved by `save_to_img()` is shown below, with each region annotated with its category, confidence score, instance segmentation mask, and reading order index:
 
-![Layout Analysis Visualization Result](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg)
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg" alt="版面分析可视化结果" width="30%" />
 
 Relevant methods, parameters, and explanations are as follows:
 
