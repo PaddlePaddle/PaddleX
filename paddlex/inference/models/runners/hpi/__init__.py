@@ -12,17 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .backend import (
+from .backend import suggest_inference_backend_and_config
+from .config import (
+    HPIConfig,
+    InferenceBackend,
     OMConfig,
     ONNXRuntimeConfig,
     OpenVINOConfig,
     TensorRTConfig,
-    suggest_inference_backend_and_config,
 )
 from .runner import HPIRunner
 
 __all__ = [
+    "HPIConfig",
     "HPIRunner",
+    "InferenceBackend",
     "OMConfig",
     "ONNXRuntimeConfig",
     "OpenVINOConfig",

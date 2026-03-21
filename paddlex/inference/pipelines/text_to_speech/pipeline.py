@@ -17,8 +17,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
-from ...models import PaddlePredictorOption
-from ...models.hpi import HPIConfig
+from ...models import HPIConfig, PaddlePredictorOption
 from ...models.text_to_pinyin.result import TextToPinyinResult
 from ...models.text_to_speech_acoustic.result import Fastspeech2Result
 from ...models.text_to_speech_vocoder.result import PwganResult

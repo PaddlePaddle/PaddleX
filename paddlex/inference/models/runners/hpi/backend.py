@@ -21,40 +21,15 @@ import json
 import platform
 from collections import defaultdict
 from functools import lru_cache
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
-
-from pydantic import BaseModel
-from typing_extensions import TypeAlias
+from typing import Any, Dict, Tuple, Union
 
 from .....utils import logging
 from .....utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
 from .....utils.env import get_paddle_cuda_version, get_paddle_version
 from .....utils.flags import USE_PIR_TRT
 from ....utils.misc import is_mkldnn_available
-from ...hpi import HPIConfig
 from ...utils.model_paths import ModelPaths
-
-InferenceBackend: TypeAlias = Literal[
-    "paddle", "openvino", "onnxruntime", "tensorrt", "om"
-]
-
-
-class OpenVINOConfig(BaseModel):
-    cpu_num_threads: int = 10
-
-
-class ONNXRuntimeConfig(BaseModel):
-    cpu_num_threads: int = 10
-
-
-class TensorRTConfig(BaseModel):
-    precision: Literal["fp32", "fp16"] = "fp32"
-    use_dynamic_shapes: bool = True
-    dynamic_shapes: Optional[Dict[str, List[List[int]]]] = None
-
-
-class OMConfig(BaseModel):
-    pass
+from .config import HPIConfig, InferenceBackend
 
 
 @lru_cache(1)

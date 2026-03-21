@@ -23,8 +23,8 @@ from pydantic import ValidationError
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import get_default_device, parse_device
-from ..hpi import HPIConfig, HPIInfo
-from ..runners.hpi import HPIRunner
+from ..hpi import HPIInfo
+from ..runners.hpi import HPIConfig, HPIRunner
 from ..runners.inference_runner import InferenceRunner
 from ..utils.model_paths import LocalModelFormat
 from ._base import InferenceEngine

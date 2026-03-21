@@ -20,7 +20,6 @@ from typing import List, Sequence, Union
 
 import numpy as np
 
-from paddlex.inference.models.hpi import HPIConfig
 from paddlex.inference.models.runners.paddle_static import (
     CACHE_DIR,
     PaddleStaticRunner,
@@ -33,12 +32,13 @@ from paddlex.inference.utils.benchmark import add_inference_operations, benchmar
 from paddlex.utils import logging
 from paddlex.utils.deps import class_requires_deps, require_hpip
 
-from .backend import (
+from .backend import suggest_inference_backend_and_config
+from .config import (
+    HPIConfig,
     OMConfig,
     ONNXRuntimeConfig,
     OpenVINOConfig,
     TensorRTConfig,
-    suggest_inference_backend_and_config,
 )
 
 add_inference_operations("MultiBackendInfer")

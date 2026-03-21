@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""HPI config and HPI info schema."""
+"""HPI info and model metadata schema (shared by engines and registry)."""
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated, TypeAlias
+from pydantic import BaseModel
+from typing_extensions import Literal, TypeAlias
 
 
 class PaddleInferenceInfo(BaseModel):
@@ -36,22 +36,6 @@ class InferenceBackendInfoCollection(BaseModel):
 
 class HPIInfo(BaseModel):
     backend_configs: Optional[InferenceBackendInfoCollection] = None
-
-
-InferenceBackend: TypeAlias = Literal[
-    "paddle", "openvino", "onnxruntime", "tensorrt", "om"
-]
-
-
-class HPIConfig(BaseModel):
-    pdx_model_name: Annotated[str, Field(alias="model_name")]
-    device_type: str
-    device_id: Optional[int] = None
-    auto_config: bool = True
-    backend: Optional[InferenceBackend] = None
-    backend_config: Optional[Dict[str, Any]] = None
-    hpi_info: Optional[HPIInfo] = None
-    auto_paddle2onnx: bool = True
 
 
 class ModelInfo(BaseModel):

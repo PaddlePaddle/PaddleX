@@ -13,6 +13,5 @@
 # limitations under the License.
 
 from ..utils import logging
-from .models import PaddlePredictorOption, create_predictor
-from .models.hpi import HPIConfig
+from .models import HPIConfig, PaddlePredictorOption, create_predictor
 from .pipelines import create_pipeline, load_pipeline_config

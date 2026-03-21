@@ -19,8 +19,7 @@ import numpy as np
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...models import PaddlePredictorOption
-from ...models.hpi import HPIConfig
+from ...models import HPIConfig, PaddlePredictorOption
 from ...utils.benchmark import benchmark
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline

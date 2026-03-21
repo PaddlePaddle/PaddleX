@@ -17,8 +17,7 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
-from ...models import PaddlePredictorOption
-from ...models.hpi import HPIConfig
+from ...models import HPIConfig, PaddlePredictorOption
 from ...models.m_3d_bev_detection.result import BEV3DDetResult
 from ...utils.benchmark import benchmark
 from ..base import BasePipeline

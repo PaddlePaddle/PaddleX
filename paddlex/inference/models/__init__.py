@@ -26,7 +26,6 @@ from .doc_vlm import DocVLMPredictor
 from .engines import InferenceEngine
 from .face_feature import FaceFeaturePredictor
 from .formula_recognition import FormulaRecPredictor
-from .hpi import HPIConfig
 from .image_classification import ClasPredictor
 from .image_feature import ImageFeaturePredictor
 from .image_multilabel_classification import MLClasPredictor
@@ -40,6 +39,7 @@ from .object_detection import DetPredictor
 from .open_vocabulary_detection import OVDetPredictor
 from .open_vocabulary_segmentation import OVSegPredictor
 from .predictors import BasePredictor, LocalModelPredictor, RunnerPredictor
+from .runners.hpi import HPIConfig
 from .runners.paddle_static.config import PaddlePredictorOption
 from .semantic_segmentation import SegPredictor
 from .table_structure_recognition import TablePredictor

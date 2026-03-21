@@ -17,8 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
-from ...models import PaddlePredictorOption
-from ...models.hpi import HPIConfig
+from ...models import HPIConfig, PaddlePredictorOption
 from ...models.keypoint_detection.result import KptResult
 from ...utils.benchmark import benchmark
 from .._parallel import AutoParallelImageSimpleInferencePipeline

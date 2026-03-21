@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""HPI config and model info schema. Shared by engines and runners."""
 
-from .config import (
-    HPIConfig,
+from .hpi_info import (
     HPIInfo,
-    InferenceBackend,
     InferenceBackendInfoCollection,
     ModelFormat,
     ModelInfo,
@@ -26,9 +23,7 @@ from .config import (
 )
 
 __all__ = [
-    "HPIConfig",
     "HPIInfo",
-    "InferenceBackend",
     "InferenceBackendInfoCollection",
     "ModelFormat",
     "ModelInfo",

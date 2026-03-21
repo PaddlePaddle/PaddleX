@@ -30,8 +30,7 @@ from ....utils.deps import (
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...models import PaddlePredictorOption
-from ...models.hpi import HPIConfig
+from ...models import HPIConfig, PaddlePredictorOption
 from ...utils.benchmark import benchmark
 from ..components.chat_server import BaseChat
 from ..layout_parsing.result import LayoutParsingResult
