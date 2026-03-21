@@ -32,10 +32,6 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
 
     entities = LAYOUTANALYSIS_MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
-
     def __init__(
         self,
         *args,
@@ -74,20 +70,6 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
     def _get_result_class(self):
         return LayoutAnalysisResult
 
-    def build_paddle_dynamic_runner(self):
-        if self.model_name != "PP-DocLayoutV2":
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-            )
-        from ..object_detection.modeling import PPDocLayoutV2
-
-        return self._build_paddle_dynamic_pretrained_runner(
-            PPDocLayoutV2,
-            use_safetensors=True,
-            convert_from_hf=True,
-            dtype="float32",
-        )
-
     def process(
         self,
         batch_data: List[Any],
@@ -125,7 +107,7 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
         batch_inputs = self.pre_ops[-1](datas)
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        batch_preds = self.runner(batch_inputs)
 
         # process a batch of predictions into a list of single image result
         preds_list = self._format_output(batch_preds)

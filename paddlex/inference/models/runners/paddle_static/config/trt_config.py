@@ -14,7 +14,7 @@
 
 from collections import defaultdict
 
-from ...utils.flags import USE_PIR_TRT
+from ......utils.flags import USE_PIR_TRT
 
 
 class LazyLoadDict(dict):
@@ -61,7 +61,6 @@ class PIR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
         }
 
 
-############ old ir trt ############
 OLD_IR_TRT_PRECISION_MAP = OLD_IR_TRT_PRECISION_MAP_CLASS()
 
 OLD_IR_TRT_CFG_DEFAULT_SETTING = {
@@ -111,8 +110,6 @@ OLD_IR_TRT_CFG_SETTING = {
     },
     "SLANeXt_wired": {
         "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
-        # the exp_disable_tensorrt_ops() func don't support to be pass argument by keyword
-        # therefore, using list instead of dict
         "exp_disable_tensorrt_ops": [
             [
                 "linear_0.tmp_0",
@@ -276,7 +273,6 @@ DISABLE_TRT_HALF_OPS_CONFIG = {
     "PP-OCRv4_server_det": {"fused_conv2d_add_act", "conv2d"},
 }
 
-############ pir trt ############
 PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
 PIR_TRT_CFG_SETTING = {

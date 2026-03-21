@@ -12,16 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-NEWIR_BLOCKLIST = [
-    "PP-YOLOE_seg-S",
-    "PatchTST_ad",
-    "Nonstationary_ad",
-    "DLinear_ad",
-    "Co-Deformable-DETR-R50",
-    "Co-Deformable-DETR-Swin-T",
-    "Co-DINO-R50",
-    "Co-DINO-Swin-L",
-    "LaTeX_OCR_rec",
-    "BEVFusion",
-    "GroundingDINO-T",
+"""HPI config and model info schema. Shared by engines and runners."""
+
+from .config import (
+    HPIConfig,
+    HPIInfo,
+    InferenceBackend,
+    InferenceBackendInfoCollection,
+    ModelFormat,
+    ModelInfo,
+    PaddleInferenceInfo,
+    TensorRTInfo,
+)
+
+__all__ = [
+    "HPIConfig",
+    "HPIInfo",
+    "InferenceBackend",
+    "InferenceBackendInfoCollection",
+    "ModelFormat",
+    "ModelInfo",
+    "PaddleInferenceInfo",
+    "TensorRTInfo",
 ]

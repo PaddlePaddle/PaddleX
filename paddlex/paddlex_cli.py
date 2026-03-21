@@ -23,8 +23,8 @@ from pathlib import Path
 
 from . import create_pipeline
 from .constants import MODEL_FILE_PREFIX
+from .inference.models.utils.model_paths import get_model_paths
 from .inference.pipelines import load_pipeline_config
-from .inference.utils.model_paths import get_model_paths
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.deps import (

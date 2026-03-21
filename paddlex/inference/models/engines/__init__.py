@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Engine specification registry."""
+"""Inference engine registry."""
 
 # Import engine modules so subclasses register themselves.
 from . import (  # noqa: F401
@@ -24,7 +24,10 @@ from . import (  # noqa: F401
     paddle,
     transformers,
 )
-from ._base import EngineSpec
+from ._base import InferenceEngine
 from .transformers import TransformersEngineConfig
 
-__all__ = ["EngineSpec", "TransformersEngineConfig"]
+__all__ = [
+    "InferenceEngine",
+    "TransformersEngineConfig",
+]

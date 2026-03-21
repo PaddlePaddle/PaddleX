@@ -13,19 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Engine spec for ONNX Runtime."""
+"""ONNX Runtime engine."""
 
+from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Type
 
+from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
-from ...utils.model_paths import LocalModelFormat
-from ..predictors import BasePredictor, RunnerPredictor
+from ..runners import ONNXRuntimeRunner
+from ..runners.inference_runner import InferenceRunner
 from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
-from ._base import EngineSpec
+from ..utils.model_paths import LocalModelFormat
+from ._base import InferenceEngine
 
 
-class ONNXRuntimeEngineSpec(EngineSpec):
+class ONNXRuntimeEngineSpec(InferenceEngine):
+    """Engine for ONNX Runtime inference."""
+
     entities = "onnxruntime"
 
     @property
@@ -35,9 +40,6 @@ class ONNXRuntimeEngineSpec(EngineSpec):
     @property
     def engine_config_model(self) -> Type[ONNXRuntimeRunnerConfig]:
         return ONNXRuntimeRunnerConfig
-
-    def get_base_predictor_cls(self) -> Type[BasePredictor]:
-        return RunnerPredictor
 
     def get_supported_model_formats(
         self,
@@ -88,3 +90,21 @@ class ONNXRuntimeEngineSpec(EngineSpec):
                 "`CUDAExecutionProvider` is not available. "
                 f"Available providers: {sorted(available_providers)!r}."
             )
+
+    def build_runner(
+        self,
+        *,
+        model_name: str,
+        model_dir: Optional[Path],
+        model_config: Optional[Dict[str, Any]],
+        engine_config: Dict[str, Any],
+        binding: Any = None,
+    ) -> InferenceRunner:
+        del model_name, model_config, binding
+        if model_dir is None:
+            raise ValueError("`model_dir` is required for engine='onnxruntime'.")
+        return ONNXRuntimeRunner(
+            model_dir=model_dir,
+            model_file_prefix=MODEL_FILE_PREFIX,
+            config=engine_config,
+        )

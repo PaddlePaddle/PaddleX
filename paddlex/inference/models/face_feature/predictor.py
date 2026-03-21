@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Union
 
 import numpy as np
 
@@ -24,10 +24,6 @@ class FaceFeaturePredictor(ImageFeatureRunnerPredictor):
     """FaceFeaturePredictor that inherits from ImageFeatureRunnerPredictor."""
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
 
     def __init__(self, *args: List, flip: bool = False, **kwargs: Dict) -> None:
         """Initializes ClasPredictor.
@@ -55,9 +51,9 @@ class FaceFeaturePredictor(ImageFeatureRunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         if self.flip:
-            batch_preds_flipped = self.infer(x=[np.flip(data, axis=3) for data in x])
+            batch_preds_flipped = self.runner(x=[np.flip(data, axis=3) for data in x])
             for i in range(len(batch_preds)):
                 batch_preds[i] = batch_preds[i] + batch_preds_flipped[i]
         features = self.postprocessors["NormalizeFeatures"](batch_preds)

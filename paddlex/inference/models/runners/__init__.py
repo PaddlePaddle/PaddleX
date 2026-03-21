@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .hpi_runner import HPIRunner
+from .hpi import HPIRunner
 from .inference_runner import InferenceRunner
 from .onnxruntime_runner import ONNXRuntimeRunner, ONNXRuntimeRunnerConfig
-from .paddle_dynamic_runner import PaddleDynamicRunner, PaddleDynamicRunnerConfig
-from .paddle_static_runner import (
-    CACHE_DIR,
-    PaddleStaticRunner,
-    PaddleStaticRunnerConfig,
+from .paddle_dynamic_runner import (
+    PaddleDynamicRunner,
+    PaddleDynamicRunnerBuilder,
+    PaddleDynamicRunnerConfig,
+    build_paddle_dynamic_pretrained_runner,
+    create_pretrained_dynamic_runner_builder,
+    resolve_paddle_runner_device,
 )
+from .paddle_static import CACHE_DIR, PaddleStaticRunner, PaddleStaticRunnerConfig
 
 __all__ = [
     "InferenceRunner",
@@ -29,7 +32,11 @@ __all__ = [
     "ONNXRuntimeRunner",
     "ONNXRuntimeRunnerConfig",
     "PaddleDynamicRunner",
+    "PaddleDynamicRunnerBuilder",
     "PaddleDynamicRunnerConfig",
+    "build_paddle_dynamic_pretrained_runner",
+    "create_pretrained_dynamic_runner_builder",
+    "resolve_paddle_runner_device",
     "PaddleStaticRunner",
     "PaddleStaticRunnerConfig",
 ]

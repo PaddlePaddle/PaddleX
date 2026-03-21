@@ -26,10 +26,6 @@ class FlexiblePredictor(LocalModelPredictor):
 
     __is_base = True
 
-    @classmethod
-    def get_supported_engines(cls):
-        return ("flexible",)
-
     def __init__(
         self,
         model_dir: Optional[str] = None,
@@ -42,7 +38,6 @@ class FlexiblePredictor(LocalModelPredictor):
             model_dir=model_dir,
             model_config=model_config,
             model_name=model_name,
-            engine="flexible",
             engine_config=engine_config,
             **kwargs,
         )

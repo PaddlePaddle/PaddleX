@@ -15,10 +15,10 @@
 from typing import Any, Dict, Optional, Union
 
 from ....utils.deps import pipeline_requires_extra
+from ...models import PaddlePredictorOption
 from ...models.doc_vlm.result import DocVLMResult
+from ...models.hpi import HPIConfig
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 

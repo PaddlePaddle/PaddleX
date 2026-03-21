@@ -12,7 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import ImageFeatureRunnerPredictor
+from ..bindings import register_predictor_binding_map
+from .predictor import MODELS, ImageFeatureRunnerPredictor
+
+register_predictor_binding_map(
+    ImageFeatureRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
 
 # Backward compatibility
 ImageFeaturePredictor = ImageFeatureRunnerPredictor

@@ -14,15 +14,17 @@
 
 """Interface for inference runners."""
 
-from typing import List, Protocol, Sequence, runtime_checkable
-
-import numpy as np
+from typing import Any, Optional, Protocol, runtime_checkable
 
 
 @runtime_checkable
 class InferenceRunner(Protocol):
-    """Protocol for inference runners."""
+    """Loosely typed protocol for executable inference runners."""
 
-    def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
-        """Run inference on batch input x, return list of output arrays."""
+    def __call__(self, x: Optional[Any] = None, **kwargs: Any) -> Any:
+        """Run inference with positional or keyword inputs."""
+        ...
+
+    def close(self) -> None:
+        """Release any runner resources if necessary."""
         ...

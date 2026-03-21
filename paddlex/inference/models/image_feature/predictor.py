@@ -31,10 +31,6 @@ class ImageFeatureRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -46,7 +42,7 @@ class ImageFeatureRunnerPredictor(RunnerPredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -65,10 +61,10 @@ class ImageFeatureRunnerPredictor(RunnerPredictor):
         return IdentityResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         for cfg in self.config["PreProcess"]["transform_ops"]:
@@ -80,16 +76,13 @@ class ImageFeatureRunnerPredictor(RunnerPredictor):
             name, op = func(self, **args) if args else func(self)
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
-
-        infer = self.create_runner()
-
         postprocessors = {}
         for key in self.config["PostProcess"]:
             func = self._FUNC_MAP.get(key)
             args = self.config["PostProcess"].get(key, {})
             name, op = func(self, **args) if args else func(self)
             postprocessors[name] = op
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
         """
@@ -106,7 +99,7 @@ class ImageFeatureRunnerPredictor(RunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         features = self.postprocessors["NormalizeFeatures"](batch_preds)
         return {
             "input_path": batch_data.input_paths,

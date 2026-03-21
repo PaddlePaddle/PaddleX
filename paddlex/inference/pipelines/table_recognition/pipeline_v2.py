@@ -26,10 +26,10 @@ from ....utils.deps import (
 )
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import PaddlePredictorOption
+from ...models.hpi import HPIConfig
 from ...models.object_detection.result import DetResult
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes

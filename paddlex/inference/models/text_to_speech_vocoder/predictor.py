@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
-
 import numpy as np
 
 from ....modules.text_to_speech_vocoder.model_list import MODELS
@@ -26,10 +24,6 @@ class PwganRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     def __init__(self, *args, **kwargs):
         """Initializes FastspeechPredictor.
 
@@ -38,7 +32,6 @@ class PwganRunnerPredictor(RunnerPredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.infer = self.create_runner()
 
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
@@ -71,7 +64,7 @@ class PwganRunnerPredictor(RunnerPredictor):
             mel = np.load(input_data)
         else:
             mel = input_data
-        wav = self.infer([mel])
+        wav = self.runner([mel])
         result = np.array(wav).reshape(1, -1)
         return {
             "result": result,

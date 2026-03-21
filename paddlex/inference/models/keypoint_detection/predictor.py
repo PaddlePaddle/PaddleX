@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import Any, List, Optional, Sequence
 
 import numpy as np
 
@@ -64,10 +64,6 @@ class KptRunnerPredictor(DetRunnerPredictor):
     """Keypoint detection predictor."""
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
 
     flip_perm = [  # The left-right joints exchange order list
         [1, 2],
@@ -157,12 +153,12 @@ class KptRunnerPredictor(DetRunnerPredictor):
         batch_inputs = self.pre_ops[-1]([data["img"] for data in datas])
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        batch_preds = self.runner(batch_inputs)
 
         if self.flip:
             # flip w
             batch_inputs[0] = np.flip(batch_inputs[0], axis=3)
-            preds_flipped = self.infer(batch_inputs)
+            preds_flipped = self.runner(batch_inputs)
 
             output_flipped = self.flip_back(preds_flipped[0], self.flip_perm)
             if self.shift_heatmap:

@@ -29,10 +29,6 @@ class GenAIClientPredictor(BasePredictor):
 
     __is_base = True
 
-    @classmethod
-    def get_supported_engines(cls):
-        return ("genai_client",)
-
     def __init__(
         self,
         model_name: str,
@@ -52,7 +48,6 @@ class GenAIClientPredictor(BasePredictor):
         self._genai_config = cfg
         super().__init__(
             model_name=model_name,
-            engine="genai_client",
             engine_config=engine_config,
             batch_size=batch_size,
             **kwargs,

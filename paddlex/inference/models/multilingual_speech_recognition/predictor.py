@@ -12,28 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 
 import numpy as np
 
-from .... import constants
 from ....modules.multilingual_speech_recognition.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.download import download_and_extract
 from ...common.batch_sampler import AudioBatchSampler
 from ...utils.io import AudioReader
 from ..predictors import RunnerPredictor
-from ..runners import PaddleDynamicRunner
 from .result import WhisperResult
 
 
 class WhisperRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_dynamic",)
 
     def __init__(self, *args, **kwargs):
         """Initializes WhisperPredictor.
@@ -45,7 +38,6 @@ class WhisperRunnerPredictor(RunnerPredictor):
         super().__init__(*args, **kwargs)
         download_and_extract(self.config["resource_path"], self.model_dir, "assets")
         self.audio_reader = AudioReader(backend="wav")
-        self.infer = self.create_runner()
 
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
@@ -62,37 +54,6 @@ class WhisperRunnerPredictor(RunnerPredictor):
             type: The WhisperResult class.
         """
         return WhisperResult
-
-    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
-        import paddle
-
-        from .processors import ModelDimensions, Whisper
-
-        with TemporaryDeviceChanger(self.device):
-            model_file = (
-                self.model_dir / f"{constants.MODEL_FILE_PREFIX}.pdparams"
-            ).as_posix()
-            model_dict = paddle.load(model_file)
-            dims = ModelDimensions(**model_dict["dims"])
-            model = Whisper(dims)
-            model.load_dict(model_dict)
-            model.eval()
-
-        resource_path = self.model_dir.as_posix()
-
-        def infer_fn(model: Any, inputs: Dict[str, Any]) -> np.ndarray:
-            result = model.transcribe(
-                inputs["mel"],
-                resource_path=resource_path,
-                **inputs["decode_kwargs"],
-            )
-            return np.array([result], dtype=object)
-
-        return PaddleDynamicRunner(
-            model,
-            config=self._engine_config,
-            infer_fn=infer_fn,
-        )
 
     def _build_temperature(self):
         temperature_increment_on_fallback = self.config[
@@ -150,7 +111,7 @@ class WhisperRunnerPredictor(RunnerPredictor):
         """
         input_data = batch_data[0]
         mel = self._build_mel(input_data)
-        result = self.infer(
+        result = self.runner(
             x={
                 "mel": mel,
                 "decode_kwargs": self._build_decode_kwargs(),

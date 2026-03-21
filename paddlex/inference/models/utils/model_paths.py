@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Model file paths and format resolution for inference model directory convention."""
+
 from os import PathLike
 from pathlib import Path
 from typing import Literal, Tuple, TypeAlias, TypedDict, Union, cast, get_args
 
-from ...constants import MODEL_FILE_PREFIX
+from ....constants import MODEL_FILE_PREFIX
 
 LocalModelFormat: TypeAlias = Literal[
     "paddle",

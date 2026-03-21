@@ -40,10 +40,6 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -59,7 +55,7 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
             f"infer data will be stored in temporary directory {self.temp_dir}"
         )
         super().__init__(*args, **kwargs)
-        self.pre_tfs, self.infer = self._build()
+        self.pre_tfs = self._build()
 
     def _build_batch_sampler(self) -> Det3DBatchSampler:
         """Builds and returns an Det3DBatchSampler instance.
@@ -78,10 +74,10 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
         return BEV3DDetResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors and inference engine based on the configuration.
+        """Build the preprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors and inference engine.
+            tuple: A tuple containing the preprocessors.
         """
         import paddle
 
@@ -100,10 +96,7 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
             if op:
                 pre_tfs[name] = op
         pre_tfs["GetInferInput"] = GetInferInput()
-
-        infer = self.create_runner()
-
-        return pre_tfs, infer
+        return pre_tfs
 
     def _format_output(
         self, infer_input: List[Any], outs: List[Any], img_metas: Dict[str, Any]
@@ -167,7 +160,7 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
         sample = self.pre_tfs["PadImage"](results=sample)
         sample = self.pre_tfs["SampleFilterByKey"](sample=sample)
         infer_input, img_metas = self.pre_tfs["GetInferInput"](sample=sample)
-        infer_output = self.infer(x=infer_input)
+        infer_output = self.runner(x=infer_input)
         results = self._format_output(infer_input, infer_output, img_metas)
         return results
 

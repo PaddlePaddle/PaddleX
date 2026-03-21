@@ -17,10 +17,9 @@ from typing import Any, Dict, Optional, Union
 
 from ...utils import logging
 from ...utils.subclass_register import AutoRegisterABCMetaClass
-from ..models import BasePredictor
+from ..models import BasePredictor, PaddlePredictorOption
 from ..models.common.genai import uses_server_backend
-from ..utils.hpi import HPIConfig
-from ..utils.pp_option import PaddlePredictorOption
+from ..models.hpi import HPIConfig
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):

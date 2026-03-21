@@ -18,7 +18,7 @@ import io
 import os
 import warnings
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import numpy as np
 
@@ -28,8 +28,12 @@ from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import DocVLMBatchSampler
 from ...utils.misc import is_bfloat16_available
-from ...utils.model_paths import get_model_paths
-from ..predictors import GenAIClientPredictor, RunnerPredictor, TransformersPredictor
+from ..predictors import (
+    GenAIClientPredictor,
+    LocalModelPredictor,
+    TransformersPredictor,
+)
+from ..utils.model_paths import get_model_paths
 from .constants import (
     PADDLEOCR_VL_LOCAL_BATCH_SIZE,
     PADDLEOCR_VL_MAX_NEW_TOKENS,
@@ -39,14 +43,10 @@ from .result import DocVLMResult
 from .utils import format_doc_vlm_result_dict, is_in_group
 
 
-class DocVLMRunnerPredictor(RunnerPredictor):
+class DocVLMLocalPredictor(LocalModelPredictor):
     """DocVLM predictor for local model inference (Paddle dynamic graph)."""
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_dynamic",)
 
     def __init__(self, *args, **kwargs):
         """Initializes DocVLMPredictor.
@@ -589,8 +589,6 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
 
 class DocVLMTransformersPredictor(TransformersPredictor):
     """DocVLM predictor backed by Hugging Face transformers."""
-
-    entities = PADDLEOCR_VL_MODELS
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

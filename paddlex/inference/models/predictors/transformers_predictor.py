@@ -24,10 +24,6 @@ class TransformersPredictor(LocalModelPredictor):
 
     __is_base = True
 
-    @classmethod
-    def get_supported_engines(cls):
-        return ("transformers",)
-
     def __init__(
         self,
         model_dir: Optional[str] = None,
@@ -37,12 +33,10 @@ class TransformersPredictor(LocalModelPredictor):
         batch_size: int = 1,
         **kwargs,
     ) -> None:
-        kwargs.pop("engine", None)
         super().__init__(
             model_dir=model_dir,
             model_config=model_config,
             model_name=model_name,
-            engine="transformers",
             engine_config=engine_config,
             batch_size=batch_size,
             **kwargs,

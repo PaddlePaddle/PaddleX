@@ -15,8 +15,8 @@
 from typing import Any, Dict, Optional, Union
 
 from ....utils import logging
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
+from ...models import PaddlePredictorOption
+from ...models.hpi import HPIConfig
 from ..base import BasePipeline
 
 

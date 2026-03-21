@@ -21,7 +21,6 @@ from ....modules.object_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ..predictors import RunnerPredictor, TransformersPredictor
-from ..runners import PaddleDynamicRunner
 from .processors import (
     DetPad,
     DetPostProcess,
@@ -50,10 +49,6 @@ class DetRunnerPredictor(RunnerPredictor):
     """Object detection predictor using inference runner."""
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -125,7 +120,7 @@ class DetRunnerPredictor(RunnerPredictor):
         self.layout_nms = layout_nms
         self.layout_unclip_ratio = layout_unclip_ratio
         self.layout_merge_bboxes_mode = layout_merge_bboxes_mode
-        self.pre_ops, self.infer, self.post_op = self._build()
+        self.pre_ops, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -134,10 +129,10 @@ class DetRunnerPredictor(RunnerPredictor):
         return DetResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         # build preprocess ops
         pre_ops = [ReadImage(format="RGB")]
@@ -155,13 +150,10 @@ class DetRunnerPredictor(RunnerPredictor):
                 pre_ops.pop(1)
             pre_ops.insert(1, self.build_resize(self.img_size, False, 2))
 
-        # build infer
-        infer = self.create_runner()
-
         # build postprocess op
         post_op = self.build_postprocess()
 
-        return pre_ops, infer, post_op
+        return pre_ops, post_op
 
     def _format_output(self, pred: Sequence[Any]) -> List[dict]:
         """
@@ -247,7 +239,7 @@ class DetRunnerPredictor(RunnerPredictor):
         batch_inputs = self.pre_ops[-1](datas)
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        batch_preds = self.runner(batch_inputs)
 
         # process a batch of predictions into a list of single image result
         preds_list = self._format_output(batch_preds)
@@ -268,23 +260,6 @@ class DetRunnerPredictor(RunnerPredictor):
             "input_img": [data["ori_img"] for data in datas],
             "boxes": boxes,
         }
-
-    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
-        from .modeling import RTDETR
-
-        if self.model_name not in RTDETR_L_MODELS:
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-            )
-
-        model_cls = RTDETR
-
-        return self._build_paddle_dynamic_pretrained_runner(
-            model_cls,
-            use_safetensors=True,
-            convert_from_hf=True,
-            dtype="float32",
-        )
 
     @register("Resize")
     def build_resize(self, target_size, keep_ratio=False, interp=2):

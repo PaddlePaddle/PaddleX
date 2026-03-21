@@ -12,7 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import InstanceSegRunnerPredictor
+from ..bindings import register_predictor_binding_map
+from .predictor import MODELS, InstanceSegRunnerPredictor
+
+register_predictor_binding_map(
+    InstanceSegRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
 
 # Backward compatibility
 InstanceSegPredictor = InstanceSegRunnerPredictor

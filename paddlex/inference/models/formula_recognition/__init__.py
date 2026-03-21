@@ -12,7 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import FormulaRecRunnerPredictor
+from ..bindings import register_predictor_binding_map
+from .predictor import MODELS, FormulaRecRunnerPredictor
+
+register_predictor_binding_map(
+    FormulaRecRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+        "onnxruntime": MODELS,
+    },
+)
 
 # Backward compatibility
 FormulaRecPredictor = FormulaRecRunnerPredictor

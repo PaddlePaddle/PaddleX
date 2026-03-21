@@ -13,24 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Engine spec for flexible predictors."""
+"""Flexible engine."""
 
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional
 
 from ....utils.device import parse_device
-from ..predictors import BasePredictor, FlexiblePredictor
-from ._base import EngineSpec
+from ._base import InferenceEngine
 
 
-class FlexibleEngineSpec(EngineSpec):
+class FlexibleEngineSpec(InferenceEngine):
+    """Engine for predictors with custom local execution logic."""
+
     entities = "flexible"
 
     @property
     def name(self) -> str:
         return "flexible"
-
-    def get_base_predictor_cls(self) -> Type[BasePredictor]:
-        return FlexiblePredictor
 
     def prepare_config_dict(
         self,

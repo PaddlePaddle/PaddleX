@@ -12,6 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Model blocklists for TRT, MKLDNN, New IR."""
+
+TRT_BLOCKLIST = [
+    "TimesNet_cls",
+    "TimesNet",
+    "TimesNet_ad",
+    "MaskRCNN-ResNet50-FPN",
+    "FasterRCNN-ResNeXt101-vd-FPN",
+    "Cascade-FasterRCNN-ResNet50-FPN",
+    "MaskRCNN-ResNet101-vd-FPN",
+    "FasterRCNN-ResNet50",
+    "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN",
+    "FasterRCNN-ResNet50-FPN",
+    "FasterRCNN-ResNet101",
+    "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN",
+    "MaskRCNN-ResNeXt101-vd-FPN",
+    "MaskRCNN-ResNet50",
+    "FasterRCNN-ResNet50-vd-FPN",
+    "FasterRCNN-Swin-Tiny-FPN",
+    "FasterRCNN-ResNet34-FPN",
+    "MaskRCNN-ResNet101-FPN",
+    "FasterRCNN-ResNet50-vd-SSLDv2-FPN",
+    "MaskRCNN-ResNet50-vd-FPN",
+    "Cascade-MaskRCNN-ResNet50-FPN",
+    "MaskRCNN-ResNet50-vd-FPN",
+    "Cascade-MaskRCNN-ResNet50-FPN",
+    "SOLOv2",
+    "CenterNet-DLA-34",
+    "CenterNet-ResNet50",
+]
+
 MKLDNN_BLOCKLIST = [
     "LaTeX_OCR_rec",
     "PP-FormulaNet-L",
@@ -58,4 +89,18 @@ MKLDNN_BLOCKLIST = [
     "PP-FormulaNet_plus-S",
     "PP-DocLayoutV2",
     "PP-DocLayoutV3",
+]
+
+NEWIR_BLOCKLIST = [
+    "PP-YOLOE_seg-S",
+    "PatchTST_ad",
+    "Nonstationary_ad",
+    "DLinear_ad",
+    "Co-Deformable-DETR-R50",
+    "Co-Deformable-DETR-Swin-T",
+    "Co-DINO-R50",
+    "Co-DINO-Swin-L",
+    "LaTeX_OCR_rec",
+    "BEVFusion",
+    "GroundingDINO-T",
 ]

@@ -13,17 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Engine spec for remote genai client inference."""
+"""Remote GenAI client engine."""
 
 from typing import Any, Dict, Optional, Type
 
 from ....utils.deps import is_genai_client_plugin_available
 from ..common.genai import SERVER_BACKENDS, GenAIConfig
-from ..predictors import BasePredictor, GenAIClientPredictor
-from ._base import EngineSpec
+from ._base import InferenceEngine
 
 
-class GenAIClientEngineSpec(EngineSpec):
+class GenAIClientEngineSpec(InferenceEngine):
+    """Engine for remote GenAI client inference."""
+
     entities = "genai_client"
 
     @property
@@ -37,9 +38,6 @@ class GenAIClientEngineSpec(EngineSpec):
     @property
     def needs_local_model(self) -> bool:
         return False
-
-    def get_base_predictor_cls(self) -> Type[BasePredictor]:
-        return GenAIClientPredictor
 
     def post_normalize_config(self, validated: Dict[str, Any]) -> Dict[str, Any]:
         if validated.get("backend") not in SERVER_BACKENDS:

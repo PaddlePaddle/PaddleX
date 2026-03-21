@@ -23,7 +23,6 @@ from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
 from ..predictors import RunnerPredictor, TransformersPredictor
-from ..runners import PaddleDynamicRunner
 from .processors import Crop, Topk
 from .result import TopkResult
 
@@ -35,10 +34,6 @@ class ClasRunnerPredictor(RunnerPredictor):
     """ClasRunnerPredictor that inherits from RunnerPredictor."""
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -55,7 +50,7 @@ class ClasRunnerPredictor(RunnerPredictor):
         """
         super().__init__(*args, **kwargs)
         self.topk = topk
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -74,10 +69,10 @@ class ClasRunnerPredictor(RunnerPredictor):
         return TopkResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         for cfg in self.config["PreProcess"]["transform_ops"]:
@@ -88,14 +83,13 @@ class ClasRunnerPredictor(RunnerPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = self.create_runner()
         postprocessors = {}
         for key in self.config["PostProcess"]:
             func = self._FUNC_MAP.get(key)
             args = self.config["PostProcess"].get(key, {})
             name, op = func(self, **args) if args else func(self)
             postprocessors[name] = op
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(
         self, batch_data: List[Union[str, np.ndarray]], topk: Union[int, None] = None
@@ -117,7 +111,7 @@ class ClasRunnerPredictor(RunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors["Topk"](
             batch_preds, topk=topk or self.topk
         )
@@ -129,17 +123,6 @@ class ClasRunnerPredictor(RunnerPredictor):
             "scores": batch_scores,
             "label_names": batch_label_names,
         }
-
-    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
-        from .modeling import PPLCNet
-
-        if self.model_name not in PPLCNET_MODELS:
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-            )
-        return self._build_paddle_dynamic_pretrained_runner(
-            PPLCNet, use_safetensors=True, convert_from_hf=True
-        )
 
     @register("ResizeImage")
     # TODO(gaotingquan): backend & interpolation

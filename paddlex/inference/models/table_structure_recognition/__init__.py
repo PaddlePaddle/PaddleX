@@ -12,7 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TableRunnerPredictor
+from ..bindings import create_binding_registration, register_predictor_binding_map
+from ..engines.paddle import PaddleDynamicEngineSpec
+from ..runners import create_pretrained_dynamic_runner_builder
+from .predictor import MODELS, TableRunnerPredictor
+
+
+def _load_slanext():
+    from .modeling import SLANeXt
+
+    return SLANeXt
+
+
+register_predictor_binding_map(
+    TableRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "paddle_dynamic": create_binding_registration(
+            ("SLANeXt_wired", "SLANeXt_wireless"),
+            **{
+                PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                    _load_slanext,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            },
+        ),
+        "hpi": MODELS,
+        "onnxruntime": MODELS,
+    },
+)
 
 # Backward compatibility
 TablePredictor = TableRunnerPredictor

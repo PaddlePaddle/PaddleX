@@ -20,25 +20,26 @@ from typing import List, Sequence, Union
 
 import numpy as np
 
-from ....utils import logging
-from ....utils.deps import class_requires_deps, require_hpip
-from ...utils.benchmark import add_inference_operations, benchmark
-from ...utils.hpi import (
-    HPIConfig,
+from paddlex.inference.models.hpi import HPIConfig
+from paddlex.inference.models.runners.paddle_static import (
+    CACHE_DIR,
+    PaddleStaticRunner,
+    PaddleStaticRunnerConfig,
+)
+from paddlex.inference.models.runners.paddle_static.config import get_default_run_mode
+from paddlex.inference.models.runners.utils import sort_inputs
+from paddlex.inference.models.utils.model_paths import get_model_paths
+from paddlex.inference.utils.benchmark import add_inference_operations, benchmark
+from paddlex.utils import logging
+from paddlex.utils.deps import class_requires_deps, require_hpip
+
+from .backend import (
     OMConfig,
     ONNXRuntimeConfig,
     OpenVINOConfig,
     TensorRTConfig,
     suggest_inference_backend_and_config,
 )
-from ...utils.model_paths import get_model_paths
-from ...utils.pp_option import get_default_run_mode
-from .paddle_static_runner import (
-    CACHE_DIR,
-    PaddleStaticRunner,
-    PaddleStaticRunnerConfig,
-)
-from .utils import sort_inputs
 
 add_inference_operations("MultiBackendInfer")
 
@@ -106,6 +107,9 @@ class HPIRunner:
             for name, input_ in zip(self._input_names, x)
         }
         return self._multi_backend_infer(inputs)
+
+    def close(self) -> None:
+        pass
 
     def _determine_backend_and_config(self):
         if self._config.auto_config:

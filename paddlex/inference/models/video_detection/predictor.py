@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple, Union
+from typing import Union
 
 from ....modules.video_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
@@ -27,10 +27,6 @@ class VideoDetRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -44,7 +40,7 @@ class VideoDetRunnerPredictor(RunnerPredictor):
         super().__init__(*args, **kwargs)
         self.nms_thresh = nms_thresh
         self.score_thresh = score_thresh
-        self.pre_tfs, self.infer, self.post_op = self._build()
+        self.pre_tfs, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return VideoBatchSampler()
@@ -62,8 +58,6 @@ class VideoDetRunnerPredictor(RunnerPredictor):
             name, op = func(self, **args) if args else func(self)
             if op:
                 pre_tfs[name] = op
-
-        infer = self.create_runner()
         post_op = {}
         for cfg in self.config["PostProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
@@ -76,7 +70,7 @@ class VideoDetRunnerPredictor(RunnerPredictor):
             if op:
                 post_op[name] = op
 
-        return pre_tfs, infer, post_op
+        return pre_tfs, post_op
 
     def process(
         self,
@@ -91,7 +85,7 @@ class VideoDetRunnerPredictor(RunnerPredictor):
         num_seg = len(x[0])
         pred_seg = []
         for i in range(num_seg):
-            batch_preds = self.infer(x=[x[0][i]])
+            batch_preds = self.runner(x=[x[0][i]])
             pred_seg.append(batch_preds)
         batch_bboxes = self.post_op["DetVideoPostProcess"](
             preds=[pred_seg],

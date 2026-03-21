@@ -18,8 +18,8 @@ from typing import Any, Dict, Optional, Union
 
 from ...utils import device as device_utils
 from ..common.batch_sampler import ImageBatchSampler
-from ..utils.hpi import HPIConfig
-from ..utils.pp_option import PaddlePredictorOption
+from ..models import PaddlePredictorOption
+from ..models.hpi import HPIConfig
 from .base import BasePipeline
 
 

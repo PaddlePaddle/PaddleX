@@ -31,10 +31,6 @@ class UadRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -46,7 +42,7 @@ class UadRunnerPredictor(RunnerPredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -65,10 +61,10 @@ class UadRunnerPredictor(RunnerPredictor):
         return UadResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         preprocessors["ToCHW"] = ToCHWImage()
@@ -80,9 +76,8 @@ class UadRunnerPredictor(RunnerPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = self.create_runner()
         postprocessors = {"Map_to_mask": MapToMask()}
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
         """
@@ -99,7 +94,7 @@ class UadRunnerPredictor(RunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_preds = self.postprocessors["Map_to_mask"](preds=batch_preds)
         if len(batch_data) > 1:
             batch_preds = np.split(batch_preds[0], len(batch_data), axis=0)

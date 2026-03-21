@@ -22,7 +22,7 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, model_validator
 
 from ....utils.deps import class_requires_deps
-from ...utils.model_paths import get_model_paths
+from ..utils.model_paths import get_model_paths
 from .utils import sort_inputs
 
 __all__ = ["ONNXRuntimeRunnerConfig", "ONNXRuntimeRunner"]
@@ -114,6 +114,9 @@ class ONNXRuntimeRunner:
             for name, input_ in zip(self._input_names, x)
         }
         return self.session.run(self._output_names, feeds)
+
+    def close(self) -> None:
+        pass
 
     def _create_session(self):
         model_path = self._get_model_path()

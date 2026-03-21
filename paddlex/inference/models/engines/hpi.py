@@ -13,19 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Engine spec for HPI."""
+"""HPI engine."""
 
+from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Type
 
+from pydantic import ValidationError
+
+from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import get_default_device, parse_device
-from ...utils.hpi import HPIConfig
-from ...utils.model_paths import LocalModelFormat
-from ..predictors import BasePredictor, RunnerPredictor
-from ._base import EngineSpec
+from ..hpi import HPIConfig, HPIInfo
+from ..runners.hpi import HPIRunner
+from ..runners.inference_runner import InferenceRunner
+from ..utils.model_paths import LocalModelFormat
+from ._base import InferenceEngine
 
 
-class HPIEngineSpec(EngineSpec):
+def _get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
+    if not model_config or "Hpi" not in model_config:
+        return None
+    try:
+        return HPIInfo.model_validate(model_config["Hpi"])
+    except ValidationError as e:
+        raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
+
+
+class HPIEngineSpec(InferenceEngine):
+    """Engine for HPI / UltraInfer inference."""
+
     entities = "hpi"
 
     @property
@@ -35,9 +51,6 @@ class HPIEngineSpec(EngineSpec):
     @property
     def engine_config_model(self) -> Type[HPIConfig]:
         return HPIConfig
-
-    def get_base_predictor_cls(self) -> Type[BasePredictor]:
-        return RunnerPredictor
 
     def get_supported_model_formats(
         self,
@@ -75,3 +88,28 @@ class HPIEngineSpec(EngineSpec):
                 "Engine 'hpi' is unavailable because dependency "
                 "'ultra-infer' is not installed."
             )
+
+    def build_runner(
+        self,
+        *,
+        model_name: str,
+        model_dir: Optional[Path],
+        model_config: Optional[Dict[str, Any]],
+        engine_config: Dict[str, Any],
+        binding: Any = None,
+    ) -> InferenceRunner:
+        del binding
+        if model_dir is None:
+            raise ValueError("`model_dir` is required for engine='hpi'.")
+        hpi_cfg = dict(engine_config)
+        hpi_cfg.setdefault("model_name", model_name)
+        if "hpi_info" not in hpi_cfg:
+            hpi_info = _get_hpi_info(model_config)
+            if hpi_info is not None:
+                hpi_cfg["hpi_info"] = hpi_info
+        hpi_config = HPIConfig.model_validate(hpi_cfg)
+        return HPIRunner(
+            model_dir=model_dir,
+            model_file_prefix=MODEL_FILE_PREFIX,
+            config=hpi_config,
+        )

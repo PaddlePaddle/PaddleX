@@ -12,7 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TextRecRunnerPredictor, TextRecTransformersPredictor
+from ..bindings import create_binding_registration, register_predictor_binding_map
+from ..engines.paddle import PaddleDynamicEngineSpec
+from ..runners import create_pretrained_dynamic_runner_builder
+from .predictor import (
+    MODELS,
+    TEXT_REC_TRANSFORMERS_MODELS,
+    TextRecRunnerPredictor,
+    TextRecTransformersPredictor,
+)
+
+
+def _load_ppocrv5_rec():
+    from .modeling import PPOCRV5Rec
+
+    return PPOCRV5Rec
+
+
+register_predictor_binding_map(
+    TextRecRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "paddle_dynamic": create_binding_registration(
+            ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"),
+            **{
+                PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv5_rec,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            },
+        ),
+        "hpi": MODELS,
+        "onnxruntime": MODELS,
+    },
+)
+register_predictor_binding_map(
+    TextRecTransformersPredictor,
+    {"transformers": TEXT_REC_TRANSFORMERS_MODELS},
+)
 
 # Backward compatibility
 TextRecPredictor = TextRecRunnerPredictor

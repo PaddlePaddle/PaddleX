@@ -16,30 +16,22 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
-from .... import constants
 from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ...common.batch_sampler import BaseBatchSampler
-from ...utils.io import YAMLReader
 
 
 class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
     """Abstract predictor interface."""
 
-    @classmethod
-    @abstractmethod
-    def get_supported_engines(cls):
-        raise NotImplementedError
-
     def __init__(
         self,
         *,
         model_name: str = "",
-        engine: str = "paddle_static",
         engine_config: Optional[Dict[str, Any]] = None,
         batch_size: int = 1,
         **kwargs: Any,
     ) -> None:
-        self._engine = engine
+        del kwargs
         self.model_name = model_name
         self._engine_config = dict(engine_config or {})
 
@@ -52,8 +44,8 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         self.batch_sampler.batch_size = batch_size
 
     @property
-    def engine(self) -> str:
-        return self._engine
+    def engine_config(self) -> Dict[str, Any]:
+        return dict(self._engine_config)
 
     def __call__(
         self,
@@ -115,9 +107,12 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
 
     @classmethod
     def get_config_path(cls, model_dir: Path) -> Path:
-        return model_dir / f"{constants.MODEL_FILE_PREFIX}.yml"
+        from ..utils.model_config import get_model_config_path
+
+        return get_model_config_path(model_dir)
 
     @classmethod
     def load_config(cls, model_dir: Path) -> Dict:
-        yaml_reader = YAMLReader()
-        return yaml_reader.read(cls.get_config_path(model_dir))
+        from ..utils.model_config import load_model_config
+
+        return load_model_config(model_dir)

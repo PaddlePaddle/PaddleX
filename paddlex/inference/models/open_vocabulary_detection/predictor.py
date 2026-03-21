@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import inspect
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from ....modules.open_vocabulary_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
@@ -33,10 +33,6 @@ class OVDetRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -54,7 +50,7 @@ class OVDetRunnerPredictor(RunnerPredictor):
         if isinstance(thresholds, float):
             thresholds = {"threshold": thresholds}
         self.thresholds = thresholds
-        self.pre_ops, self.infer, self.post_op = self._build()
+        self.pre_ops, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -74,13 +70,10 @@ class OVDetRunnerPredictor(RunnerPredictor):
             if op:
                 pre_ops.append(op)
 
-        # build infer
-        infer = self.create_runner()
-
         # build postprocess op
         post_op = self.build_postprocess(pre_ops=pre_ops)
 
-        return pre_ops, infer, post_op
+        return pre_ops, post_op
 
     def process(
         self, batch_data: List[Any], prompt: str, thresholds: Optional[dict] = None
@@ -108,7 +101,7 @@ class OVDetRunnerPredictor(RunnerPredictor):
         batch_inputs = self.pre_ops[-1](datas, prompt)
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        batch_preds = self.runner(batch_inputs)
 
         # postprocess
         current_thresholds = self._parse_current_thresholds(

@@ -31,10 +31,6 @@ class SegRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -53,7 +49,7 @@ class SegRunnerPredictor(RunnerPredictor):
         """
         super().__init__(*args, **kwargs)
         self.target_size = target_size
-        self.preprocessors, self.infer, self.postprocessers = self._build()
+        self.preprocessors, self.postprocessers = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -72,10 +68,10 @@ class SegRunnerPredictor(RunnerPredictor):
         return SegResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         preprocessors["ToCHW"] = ToCHWImage()
@@ -93,12 +89,9 @@ class SegRunnerPredictor(RunnerPredictor):
         if self.target_size is not None:
             _, op = self._FUNC_MAP["Resize"](self, target_size=self.target_size)
             preprocessors["Resize"] = op
-
-        infer = self.create_runner()
-
         postprocessers = SegPostProcess()
 
-        return preprocessors, infer, postprocessers
+        return preprocessors, postprocessers
 
     def process(
         self,
@@ -122,7 +115,7 @@ class SegRunnerPredictor(RunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         if len(batch_data) > 1:
             batch_preds = np.split(batch_preds[0], len(batch_data), axis=0)
 

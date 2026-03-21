@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 from PIL import Image
@@ -36,7 +36,6 @@ from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..predictors import RunnerPredictor, TransformersPredictor
-from ..runners import PaddleDynamicRunner
 from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
 from .result import TextRecResult
 
@@ -103,10 +102,6 @@ class TextRecRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -115,7 +110,7 @@ class TextRecRunnerPredictor(RunnerPredictor):
         self.input_shape = input_shape
         self.return_word_box = return_word_box
         self.vis_font = self.get_vis_font()
-        self.pre_tfs, self.infer, self.post_op = self._build()
+        self.pre_tfs, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -135,10 +130,8 @@ class TextRecRunnerPredictor(RunnerPredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_runner()
-
         post_op = self.build_postprocess(**self.config["PostProcess"])
-        return pre_tfs, infer, post_op
+        return pre_tfs, post_op
 
     def process(self, batch_data, return_word_box=False):
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
@@ -148,7 +141,7 @@ class TextRecRunnerPredictor(RunnerPredictor):
         indices = np.argsort(np.array(width_list))
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_num = self.batch_sampler.batch_size
         img_num = len(batch_raw_imgs)
         rec_image_shape = next(
@@ -187,20 +180,6 @@ class TextRecRunnerPredictor(RunnerPredictor):
             "rec_score": scores,
             "vis_font": [self.vis_font] * len(batch_raw_imgs),
         }
-
-    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
-        if self.model_name not in ["PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"]:
-            raise RuntimeError(
-                f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-            )
-        from .modeling import PPOCRV5Rec
-
-        return self._build_paddle_dynamic_pretrained_runner(
-            PPOCRV5Rec,
-            use_safetensors=True,
-            convert_from_hf=True,
-            dtype="float32",
-        )
 
     @register("DecodeImage")
     def build_readimg(self, channel_first, img_mode):

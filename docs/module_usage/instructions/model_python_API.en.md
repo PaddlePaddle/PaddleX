@@ -103,7 +103,7 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
 
 #### 4.1 Engine List
 
-* `paddle`: Auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+* `paddle`: Auto-resolved engine. If `model_dir` is provided, it is resolved to `paddle_static` or `paddle_dynamic` based on local model files; otherwise it is resolved from model support, preferring `paddle_static`;
 * `paddle_static`: Paddle Inference static graph engine;
 * `paddle_dynamic`: Paddle dynamic graph engine;
 * `hpi`: High-performance inference plugin;
@@ -117,7 +117,7 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
   * If `genai_config.backend` is a server backend (such as `fastdeploy-server`, `vllm-server`, `sglang-server`, `mlx-vlm-server`, or `llama-cpp-server`), it resolves to `genai_client`;
   * Otherwise, if `use_hpip=True`, it resolves to `hpi`;
   * Otherwise, if the model only supports `flexible`, it resolves to `flexible`;
-  * Otherwise, it falls back to `paddle`, which is then auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+  * Otherwise, it is equivalent to `paddle`; if `model_dir` is provided, it is resolved to `paddle_static` or `paddle_dynamic` based on local model files; otherwise it is resolved from model support, preferring `paddle_static`;
 * If `engine` is explicitly provided, `use_hpip` is ignored;
 * If `engine_config` is explicitly provided, `pp_option`, `hpi_config`, and `genai_config` are compatibility options and will be ignored;
 * Prefer using only `engine` + `engine_config` to avoid ambiguity.

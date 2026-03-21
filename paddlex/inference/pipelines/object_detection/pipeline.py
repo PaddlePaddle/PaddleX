@@ -17,10 +17,10 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
+from ...models import PaddlePredictorOption
+from ...models.hpi import HPIConfig
 from ...models.object_detection.result import DetResult
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 

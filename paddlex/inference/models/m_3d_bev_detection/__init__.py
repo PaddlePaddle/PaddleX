@@ -12,7 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import BEVDet3DRunnerPredictor
+from ..bindings import register_predictor_binding_map
+from .predictor import MODELS, BEVDet3DRunnerPredictor
+
+register_predictor_binding_map(
+    BEVDet3DRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
 
 # Backward compatibility
 BEVDet3DPredictor = BEVDet3DRunnerPredictor

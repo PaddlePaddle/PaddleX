@@ -12,7 +12,63 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TextDetRunnerPredictor, TextDetTransformersPredictor
+from ..bindings import create_binding_registration, register_predictor_binding_map
+from ..engines.paddle import PaddleDynamicEngineSpec
+from ..runners import create_pretrained_dynamic_runner_builder
+from .predictor import (
+    MODELS,
+    TEXT_DET_TRANSFORMERS_MODELS,
+    TextDetRunnerPredictor,
+    TextDetTransformersPredictor,
+)
+
+
+def _load_ppocrv5_mobile_det():
+    from .modeling import PPOCRV5MobileDet
+
+    return PPOCRV5MobileDet
+
+
+def _load_ppocrv5_server_det():
+    from .modeling import PPOCRV5ServerDet
+
+    return PPOCRV5ServerDet
+
+
+register_predictor_binding_map(
+    TextDetRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "paddle_dynamic": (
+            create_binding_registration(
+                ("PP-OCRv5_mobile_det",),
+                **{
+                    PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppocrv5_mobile_det,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                    ),
+                },
+            ),
+            create_binding_registration(
+                ("PP-OCRv5_server_det",),
+                **{
+                    PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppocrv5_server_det,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                    ),
+                },
+            ),
+        ),
+        "hpi": MODELS,
+        "onnxruntime": MODELS,
+    },
+)
+register_predictor_binding_map(
+    TextDetTransformersPredictor,
+    {"transformers": TEXT_DET_TRANSFORMERS_MODELS},
+)
 
 # Backward compatibility
 TextDetPredictor = TextDetRunnerPredictor

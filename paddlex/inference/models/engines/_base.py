@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Base classes for engine specifications."""
+"""Base classes for inference engines."""
 
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -22,15 +22,13 @@ from typing import Any, Dict, Optional, Tuple, Type, Union
 from pydantic import BaseModel, ValidationError
 
 from ....constants import MODEL_FILE_PREFIX
-from ....utils import errors
 from ....utils.subclass_register import AutoRegisterABCMetaClass
-from ...utils.model_paths import LocalModelFormat, get_model_paths
-from ...utils.pp_option import PaddlePredictorOption
-from ..predictors import BasePredictor
+from ..runners.paddle_static.config import PaddlePredictorOption
+from ..utils.model_paths import LocalModelFormat, get_model_paths
 
 
-class EngineSpec(ABC, metaclass=AutoRegisterABCMetaClass):
-    """Describes how an inference engine integrates with predictors and models."""
+class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
+    """Base class for inference engines."""
 
     __is_base = True
 
@@ -46,35 +44,6 @@ class EngineSpec(ABC, metaclass=AutoRegisterABCMetaClass):
     @property
     def needs_local_model(self) -> bool:
         return True
-
-    @abstractmethod
-    def get_base_predictor_cls(self) -> Type[BasePredictor]:
-        raise NotImplementedError
-
-    def get_predictor_cls(self, model_name: str) -> Type[BasePredictor]:
-        base_predictor = self.get_base_predictor_cls()
-        try:
-            return base_predictor.get(model_name)
-        except errors.ClassNotFoundException as e:
-            raise NotImplementedError(
-                f"Model {model_name!r} has no predictor registered for engine "
-                f"{self.name!r}."
-            ) from e
-
-    def get_supported_engines(self, model_name: str) -> Tuple[str, ...]:
-        return tuple(
-            engine.lower()
-            for engine in self.get_predictor_cls(model_name).get_supported_engines()
-        )
-
-    def ensure_predictor_support(self, model_name: str) -> None:
-        supported = self.get_supported_engines(model_name)
-        if self.name.lower() not in supported:
-            predictor_cls = self.get_predictor_cls(model_name)
-            raise ValueError(
-                f"Model {predictor_cls.__name__!r} does not support engine "
-                f"{self.name!r}. Supported engines: {list(supported)!r}."
-            )
 
     def get_supported_model_formats(
         self,

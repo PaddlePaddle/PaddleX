@@ -12,7 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TextToPinyinPredictor
+from ..bindings import register_predictor_binding_map
+from .predictor import MODELS, TextToPinyinPredictor
+
+register_predictor_binding_map(
+    TextToPinyinPredictor,
+    {"flexible": MODELS},
+)
 
 # Backward compatibility
 TextToPinyinRunnerPredictor = TextToPinyinPredictor

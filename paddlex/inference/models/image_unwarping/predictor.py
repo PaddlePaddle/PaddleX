@@ -21,7 +21,6 @@ from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..common import Normalize, ToBatch, ToCHWImage
 from ..predictors import RunnerPredictor
-from ..runners import PaddleDynamicRunner
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 
@@ -31,10 +30,6 @@ class WarpRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "paddle_dynamic", "hpi", "onnxruntime")
-
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes WarpPredictor.
 
@@ -43,7 +38,7 @@ class WarpRunnerPredictor(RunnerPredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -62,20 +57,17 @@ class WarpRunnerPredictor(RunnerPredictor):
         return DocTrResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="BGR")}
         preprocessors["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
-
-        infer = self.create_runner()
-
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
         """
@@ -91,7 +83,7 @@ class WarpRunnerPredictor(RunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_raw_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_warp_preds = self.postprocessors["DocTrPostProcess"](batch_preds)
 
         return {
@@ -100,10 +92,3 @@ class WarpRunnerPredictor(RunnerPredictor):
             "input_img": batch_raw_imgs,
             "doctr_img": batch_warp_preds,
         }
-
-    def build_paddle_dynamic_runner(self) -> PaddleDynamicRunner:
-        from .modeling import UVDocNet
-
-        return self._build_paddle_dynamic_pretrained_runner(
-            UVDocNet, use_safetensors=True, convert_from_hf=True
-        )

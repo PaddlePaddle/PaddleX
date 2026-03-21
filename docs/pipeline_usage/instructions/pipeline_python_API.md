@@ -103,7 +103,7 @@ PaddleX 产线支持统一的 `engine` + `engine_config` 配置，并支持“�
 
 #### 4.1 引擎列表
 
-* `paddle`：自动根据模型文件解析为 `paddle_static` 或 `paddle_dynamic`；
+* `paddle`：自动解析引擎；当模块使用本地模型目录时，根据本地模型文件解析为 `paddle_static` 或 `paddle_dynamic`；否则根据模块支持情况自动选择，优先 `paddle_static`；
 * `paddle_static`：Paddle Inference 静态图推理；
 * `paddle_dynamic`：Paddle 动态图推理；
 * `hpi`：高性能推理插件；
@@ -171,7 +171,7 @@ SubModules:
 * 在任一层级中，当 `engine=None` 时，会按该层支持的引擎选择参数自动解析最终引擎；其中若该层支持 `genai_config` 且 `genai_config.backend` 指向服务器后端（如 `fastdeploy-server`、`vllm-server`、`sglang-server`、`mlx-vlm-server`、`llama-cpp-server`），则解析为 `genai_client`；
   * 否则，若 `use_hpip=True`，则优先解析为 `hpi`；
   * 否则，若对应模型仅支持 `flexible`，则解析为 `flexible`；
-  * 否则，回退为 `paddle`，再根据模型文件自动解析为 `paddle_static` 或 `paddle_dynamic`；
+  * 否则，等价于 `paddle`；当模块使用本地模型目录时，根据本地模型文件解析为 `paddle_static` 或 `paddle_dynamic`；否则根据模块支持情况自动选择，优先 `paddle_static`；
 * 同一层级内，`engine` 的优先级高于 `use_hpip` / `genai_config`；
 * 当子模块或子产线未显式设置 `engine`，但显式设置了 `use_hpip` 时，会优先按这一层重新解析引擎，而不是继续继承上一级的 `engine`；
 * 当子模块未显式设置 `engine`，但显式设置了指向服务器后端的 `genai_config.backend` 时，也会优先按子模块这一层重新解析引擎，而不是继续继承上一级的 `engine`；

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Union
 
 import numpy as np
 
@@ -26,10 +26,6 @@ class MLClasPredictor(ClasRunnerPredictor):
     """MLClasPredictor that inherits from ClasRunnerPredictor."""
 
     entities = MODELS
-
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi")
 
     def __init__(
         self,
@@ -76,7 +72,7 @@ class MLClasPredictor(ClasRunnerPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors[
             "MultiLabelThreshOutput"
         ](

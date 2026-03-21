@@ -102,7 +102,7 @@ PaddleX pipelines support unified inference configuration via `engine` + `engine
 
 #### 4.1 Engine List
 
-* `paddle`: Auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+* `paddle`: Auto-resolved engine. When a module uses a local model directory, it is resolved to `paddle_static` or `paddle_dynamic` based on local model files; otherwise it is resolved from module support, preferring `paddle_static`;
 * `paddle_static`: Paddle Inference static graph engine;
 * `paddle_dynamic`: Paddle dynamic graph engine;
 * `hpi`: High-performance inference plugin;
@@ -170,7 +170,7 @@ SubModules:
 * At any level, when `engine=None`, PaddleX resolves the final engine based on the engine-selection options supported at that level; in particular, if that level supports `genai_config` and `genai_config.backend` is a server backend (such as `fastdeploy-server`, `vllm-server`, `sglang-server`, `mlx-vlm-server`, or `llama-cpp-server`), it resolves to `genai_client`;
   * Otherwise, if `use_hpip=True`, it resolves to `hpi`;
   * Otherwise, if the target model only supports `flexible`, it resolves to `flexible`;
-  * Otherwise, it falls back to `paddle`, which is then auto-resolved to `paddle_static` or `paddle_dynamic` based on model files;
+  * Otherwise, it is equivalent to `paddle`; when a module uses a local model directory, it is resolved to `paddle_static` or `paddle_dynamic` based on local model files; otherwise it is resolved from module support, preferring `paddle_static`;
 * Within the same level, `engine` has higher priority than `use_hpip` / `genai_config`;
 * If a submodule or sub-pipeline does not explicitly set `engine`, but does explicitly set `use_hpip`, PaddleX re-resolves the engine from that level instead of continuing to inherit the parent `engine`;
 * If a submodule does not explicitly set `engine`, but does explicitly set `genai_config.backend` to a server backend, PaddleX also re-resolves the engine from the submodule level instead of continuing to inherit the parent `engine`;

@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Paddle dynamic graph runner."""
+"""Paddle dynamic graph runner and builder helpers."""
 
+from __future__ import annotations
+
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Union
 
 import numpy as np
@@ -21,6 +24,7 @@ from pydantic import BaseModel, ConfigDict
 
 from ....utils.deps import class_requires_deps
 from ....utils.device import TemporaryDeviceChanger, constr_device
+from .inference_runner import InferenceRunner
 
 
 class PaddleDynamicRunnerConfig(BaseModel):
@@ -30,6 +34,60 @@ class PaddleDynamicRunnerConfig(BaseModel):
 
     device_type: Optional[str] = None
     device_id: Optional[int] = None
+
+
+PaddleDynamicRunnerBuilder = Callable[
+    [str, Path, Optional[Dict[str, Any]], Dict[str, Any]], InferenceRunner
+]
+ModelClassLoader = Callable[[], Any]
+
+
+def resolve_paddle_runner_device(engine_config: Dict[str, Any]) -> Optional[str]:
+    """Resolve the device string for Paddle dynamic runner construction."""
+    device_type = engine_config.get("device_type")
+    if not device_type:
+        return None
+    device_id = engine_config.get("device_id")
+    device_ids = [device_id] if device_id is not None else None
+    return constr_device(device_type, device_ids)
+
+
+def build_paddle_dynamic_pretrained_runner(
+    *,
+    model_dir: Path,
+    engine_config: Dict[str, Any],
+    model_cls: Any,
+    **kwargs: Any,
+) -> "PaddleDynamicRunner":
+    """Build a PaddleDynamicRunner from a pretrained Paddle model."""
+    with TemporaryDeviceChanger(resolve_paddle_runner_device(engine_config)):
+        model = model_cls.from_pretrained(model_dir, **kwargs)
+    model.eval()
+    return PaddleDynamicRunner(model, config=engine_config)
+
+
+def create_pretrained_dynamic_runner_builder(
+    model_cls_loader: ModelClassLoader,
+    **kwargs: Any,
+) -> PaddleDynamicRunnerBuilder:
+    """Create a runner_builder callable for pretrained Paddle models."""
+
+    def runner_builder(
+        model_name: str,
+        model_dir: Path,
+        model_config: Optional[Dict[str, Any]],
+        engine_config: Dict[str, Any],
+    ) -> InferenceRunner:
+        del model_name, model_config
+        model_cls = model_cls_loader()
+        return build_paddle_dynamic_pretrained_runner(
+            model_dir=model_dir,
+            engine_config=engine_config,
+            model_cls=model_cls,
+            **kwargs,
+        )
+
+    return runner_builder
 
 
 def _normalize_input(
@@ -108,3 +166,6 @@ class PaddleDynamicRunner:
             else:
                 out = self._model(inputs)
         return _output_to_list(out)
+
+    def close(self) -> None:
+        pass

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Engine spec for transformers predictors."""
+"""Transformers engine."""
 
 from typing import Any, Dict, Optional, Tuple, Type
 
@@ -21,9 +21,8 @@ from pydantic import BaseModel, ConfigDict
 
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
-from ...utils.model_paths import LocalModelFormat
-from ..predictors import BasePredictor, TransformersPredictor
-from ._base import EngineSpec
+from ..utils.model_paths import LocalModelFormat
+from ._base import InferenceEngine
 
 
 class TransformersEngineConfig(BaseModel):
@@ -42,7 +41,9 @@ class TransformersEngineConfig(BaseModel):
     tokenizer_kwargs: Optional[Dict[str, Any]] = None
 
 
-class TransformersEngineSpec(EngineSpec):
+class TransformersEngineSpec(InferenceEngine):
+    """Engine for Hugging Face Transformers inference."""
+
     entities = "transformers"
 
     @property
@@ -52,9 +53,6 @@ class TransformersEngineSpec(EngineSpec):
     @property
     def engine_config_model(self) -> Type[TransformersEngineConfig]:
         return TransformersEngineConfig
-
-    def get_base_predictor_cls(self) -> Type[BasePredictor]:
-        return TransformersPredictor
 
     def get_supported_model_formats(
         self,

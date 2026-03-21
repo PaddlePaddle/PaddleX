@@ -17,10 +17,10 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np
 
 from ....utils.deps import pipeline_requires_extra
+from ...models import PaddlePredictorOption
+from ...models.hpi import HPIConfig
 from ...models.multilingual_speech_recognition.result import WhisperResult
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 

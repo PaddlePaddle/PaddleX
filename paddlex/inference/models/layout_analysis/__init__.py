@@ -12,9 +12,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ..bindings import create_binding_registration, register_predictor_binding_map
+from ..engines.paddle import PaddleDynamicEngineSpec
+from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
+    LAYOUT_ANALYSIS_TRANSFORMERS_MODELS,
+    LAYOUTANALYSIS_MODELS,
     LayoutAnalysisRunnerPredictor,
     LayoutAnalysisTransformersPredictor,
+)
+
+
+def _load_ppdoclayoutv2():
+    from ..object_detection.modeling import PPDocLayoutV2
+
+    return PPDocLayoutV2
+
+
+register_predictor_binding_map(
+    LayoutAnalysisRunnerPredictor,
+    {
+        "paddle_static": LAYOUTANALYSIS_MODELS,
+        "paddle_dynamic": create_binding_registration(
+            ("PP-DocLayoutV2",),
+            **{
+                PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                    _load_ppdoclayoutv2,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            },
+        ),
+        "hpi": LAYOUTANALYSIS_MODELS,
+        "onnxruntime": LAYOUTANALYSIS_MODELS,
+    },
+)
+register_predictor_binding_map(
+    LayoutAnalysisTransformersPredictor,
+    {"transformers": LAYOUT_ANALYSIS_TRANSFORMERS_MODELS},
 )
 
 # Backward compatibility

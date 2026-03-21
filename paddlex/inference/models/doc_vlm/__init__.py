@@ -12,11 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ..bindings import register_predictor_binding_map
 from .predictor import (
+    MODELS,
+    PADDLEOCR_VL_MODELS,
     DocVLMGenAIClientPredictor,
-    DocVLMRunnerPredictor,
+    DocVLMLocalPredictor,
     DocVLMTransformersPredictor,
 )
 
+register_predictor_binding_map(
+    DocVLMLocalPredictor,
+    {"paddle_dynamic": MODELS},
+)
+register_predictor_binding_map(
+    DocVLMTransformersPredictor,
+    {"transformers": PADDLEOCR_VL_MODELS},
+)
+register_predictor_binding_map(
+    DocVLMGenAIClientPredictor,
+    {"genai_client": PADDLEOCR_VL_MODELS},
+)
+
 # Backward compatibility
-DocVLMPredictor = DocVLMRunnerPredictor
+DocVLMPredictor = DocVLMLocalPredictor

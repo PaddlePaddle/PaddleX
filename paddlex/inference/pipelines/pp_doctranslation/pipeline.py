@@ -22,9 +22,9 @@ import numpy as np
 from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import MarkDownBatchSampler
+from ...models import PaddlePredictorOption
+from ...models.hpi import HPIConfig
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from .result import DocumentResult, LatexResult, MarkdownResult
 from .utils import (

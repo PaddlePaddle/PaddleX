@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
-
 import numpy as np
 
 from ....modules.formula_recognition.model_list import MODELS
@@ -42,10 +40,6 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
 
     entities = MODELS
 
-    @classmethod
-    def get_supported_engines(cls) -> Tuple[str, ...]:
-        return ("paddle_static", "hpi", "onnxruntime")
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -67,7 +61,7 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
                 f"which will lead to a slower inference speed. You are now using {self.config['Global']['model_name']}."
             )
 
-        self.pre_tfs, self.infer, self.post_op = self._build()
+        self.pre_tfs, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -87,10 +81,8 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_runner()
-
         post_op = self.build_postprocess(**self.config["PostProcess"])
-        return pre_tfs, infer, post_op
+        return pre_tfs, post_op
 
     def process(self, batch_data):
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
@@ -118,7 +110,7 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
             batch_preds = []
             max_length = 0
             for batch_img in batch_imgs:
-                batch_pred_ = self.infer([batch_img])[0].reshape([-1])
+                batch_pred_ = self.runner([batch_img])[0].reshape([-1])
                 max_length = max(max_length, batch_pred_.shape[0])
                 batch_preds.append(batch_pred_)
             for i in range(len(batch_preds)):
@@ -130,7 +122,7 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
                 )
         else:
             x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-            batch_preds = self.infer(x=x)
+            batch_preds = self.runner(x=x)
             batch_preds = [p.reshape([-1]) for p in batch_preds[0]]
 
         rec_formula = self.post_op(batch_preds)

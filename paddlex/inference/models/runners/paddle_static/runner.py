@@ -21,22 +21,25 @@ from typing import Any, Dict, List, Optional, Sequence, Union
 import numpy as np
 from pydantic import BaseModel, ConfigDict
 
-from ....utils import logging
-from ....utils.deps import class_requires_deps
-from ....utils.device import check_supported_device_type
-from ....utils.flags import (
+from paddlex.inference.models.runners.utils import sort_inputs
+from paddlex.inference.models.utils.model_paths import get_model_paths
+from paddlex.inference.utils.benchmark import add_inference_operations, benchmark
+from paddlex.utils import logging
+from paddlex.utils.deps import class_requires_deps
+from paddlex.utils.device import check_supported_device_type
+from paddlex.utils.flags import (
     DEBUG,
     DISABLE_MKLDNN_MODEL_BL,
     DISABLE_TRT_MODEL_BL,
     USE_PIR_TRT,
 )
-from ...utils.benchmark import add_inference_operations, benchmark
-from ...utils.mkldnn_blocklist import MKLDNN_BLOCKLIST
-from ...utils.model_paths import get_model_paths
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.trt_blocklist import TRT_BLOCKLIST
-from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
-from .utils import sort_inputs
+
+from .config import (
+    DISABLE_TRT_HALF_OPS_CONFIG,
+    MKLDNN_BLOCKLIST,
+    TRT_BLOCKLIST,
+    PaddlePredictorOption,
+)
 
 CACHE_DIR = ".cache"
 
@@ -75,7 +78,6 @@ def resolve_paddle_static_engine_config(
     engine_config: Dict,
 ) -> Dict:
     """Resolve engine config with defaults. Returns dict for PaddleStaticRunner."""
-    # TODO: Do not rely on `PaddlePredictorOption` and remove it eventually
     pp = PaddlePredictorOption()
     for k, v in (engine_config or {}).items():
         if hasattr(pp, k):
@@ -84,7 +86,6 @@ def resolve_paddle_static_engine_config(
     return pp._cfg.copy()
 
 
-# XXX: Better use Paddle Inference API to do this
 def _pd_dtype_to_np_dtype(pd_dtype):
     import paddle
 
@@ -104,7 +105,6 @@ def _pd_dtype_to_np_dtype(pd_dtype):
         raise TypeError(f"Unsupported data type: {pd_dtype}")
 
 
-# old trt
 def _collect_trt_shape_range_info(
     model_file,
     model_params,
@@ -120,7 +120,6 @@ def _collect_trt_shape_range_info(
     config = paddle.inference.Config(model_file, model_params)
     config.enable_use_gpu(100, gpu_id)
     config.collect_shape_range_info(shape_range_info_path)
-    # TODO: Add other needed options
     config.disable_glog_info()
     config.delete_pass("matmul_add_act_fuse_pass")
     predictor = paddle.inference.create_predictor(config)
@@ -139,12 +138,9 @@ def _collect_trt_shape_range_info(
             raise ValueError(
                 f"Invalid input name {repr(name)} found in `dynamic_shape_input_data`"
             )
-    # It would be better to check if the shapes are valid.
 
     min_arrs, opt_arrs, max_arrs = {}, {}, {}
     for name, candidate_shapes in dynamic_shapes.items():
-        # XXX: Currently we have no way to get the data type of the tensor
-        # without creating an input handle.
         handle = predictor.get_input_handle(name)
         dtype = _pd_dtype_to_np_dtype(handle.type())
         min_shape, opt_shape, max_shape = candidate_shapes
@@ -163,7 +159,6 @@ def _collect_trt_shape_range_info(
             opt_arrs[name] = np.ones(opt_shape, dtype=dtype)
             max_arrs[name] = np.ones(max_shape, dtype=dtype)
 
-    # `opt_arrs` is used twice to ensure it is the most frequently used.
     for arrs in [min_arrs, opt_arrs, opt_arrs, max_arrs]:
         for name, arr in arrs.items():
             handle = predictor.get_input_handle(name)
@@ -171,17 +166,9 @@ def _collect_trt_shape_range_info(
             handle.copy_from_cpu(arr)
         predictor.run()
 
-    # HACK: The shape range info will be written to the file only when
-    # `predictor` is garbage collected. It works in CPython, but it is
-    # definitely a bad idea to count on the implementation-dependent behavior of
-    # a garbage collector. Is there a more explicit and deterministic way to
-    # handle this?
-
-    # HACK: Manually delete the predictor to trigger its destructor, ensuring that the shape_range_info file would be saved.
     del predictor
 
 
-# pir trt
 def _convert_trt(
     trt_cfg_setting,
     pp_model_file,
@@ -202,10 +189,8 @@ def _convert_trt(
             setattr(trt_config, attr_name, trt_cfg_setting[attr_name])
 
     def _get_predictor(model_file, params_file):
-        # HACK
         config = paddle.inference.Config(str(model_file), str(params_file))
         config.enable_use_gpu(100, device_id)
-        # NOTE: Disable oneDNN to circumvent a bug in Paddle Inference
         config.disable_mkldnn()
         config.disable_glog_info()
         return paddle.inference.create_predictor(config)
@@ -230,8 +215,6 @@ def _convert_trt(
 
     trt_inputs = []
     for name, candidate_shapes in dynamic_shapes.items():
-        # XXX: Currently we have no way to get the data type of the tensor
-        # without creating an input handle.
         handle = predictor.get_input_handle(name)
         dtype = _pd_dtype_to_np_dtype(handle.type())
         min_shape, opt_shape, max_shape = candidate_shapes
@@ -250,11 +233,9 @@ def _convert_trt(
             opt_arr = np.ones(opt_shape, dtype=dtype)
             max_arr = np.ones(max_shape, dtype=dtype)
 
-        # refer to: https://github.com/PolaKuma/Paddle/blob/3347f225bc09f2ec09802a2090432dd5cb5b6739/test/tensorrt/test_converter_model_resnet50.py
         trt_input = Input((min_arr, opt_arr, max_arr))
         trt_inputs.append(trt_input)
 
-    # Create TensorRTConfig
     trt_config = TensorRTConfig(inputs=trt_inputs)
     _set_trt_config()
     trt_config.save_model_dir = str(trt_save_path)
@@ -313,16 +294,15 @@ class PaddleStaticRunner:
             raise ValueError(
                 f"The number of inputs does not match the model: {len(names)} vs {len(x)}"
             )
-        # TODO:
-        # Ensure that input tensors follow the model's input sequence without sorting.
         x = sort_inputs(x, names)
         x = list(map(np.ascontiguousarray, x))
         pred = self.infer(x)
         return pred
 
+    def close(self) -> None:
+        pass
+
     def _check_run_mode(self):
-        # TODO: Check if trt is available
-        # check avaliable for trt
         run_mode = self._config.get("run_mode", "paddle")
         device_type = self._config.get("device_type", "cpu")
         if (
@@ -336,7 +316,6 @@ class PaddleStaticRunner:
             )
             self._config["run_mode"] = "paddle"
 
-        # check avaliable for mkldnn
         elif (
             not DISABLE_MKLDNN_MODEL_BL
             and run_mode.startswith("mkldnn")
@@ -349,7 +328,6 @@ class PaddleStaticRunner:
             self._config["run_mode"] = "paddle"
             return "paddle"
 
-        # check avaliable for model
         if self._model_name == "LaTeX_OCR_rec" and device_type == "cpu":
             import cpuinfo
 
@@ -362,10 +340,7 @@ class PaddleStaticRunner:
                 )
             self._config["run_mode"] = "mkldnn"
 
-    def _create(
-        self,
-    ):
-        """_create"""
+    def _create(self):
         import paddle
         import paddle.inference
 
@@ -393,7 +368,6 @@ class PaddleStaticRunner:
             self._config["device_id"] = 0
             logging.debug("`device_id` has been set to 0")
 
-        # for TRT
         if self._config.get("run_mode", "paddle").startswith("trt"):
             assert self._config["device_type"].lower() == "gpu", (
                 f"`{self._config.get('run_mode')}` is only available on GPU devices, "
@@ -407,7 +381,6 @@ class PaddleStaticRunner:
             )
             config.exp_disable_mixed_precision_ops({"feed", "fetch"})
             config.enable_use_gpu(100, self._config.get("device_id", 0))
-        # for Native Paddle and MKLDNN
         else:
             config = paddle.inference.Config(str(model_file), str(params_file))
             if self._config["device_type"] == "gpu":
@@ -430,10 +403,8 @@ class PaddleStaticRunner:
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-                # TODO(changdazhou): use a black list instead
                 if self._model_name == "PP-DocLayoutV3":
                     config.delete_pass("matmul_add_act_fuse_pass")
-                # ROCm does not support fused_conv2d_add_act kernel, delete the fuse passes
                 if paddle.is_compiled_with_rocm():
                     config.delete_pass("conv2d_add_act_fuse_pass")
                     config.delete_pass("conv2d_add_fuse_pass")
@@ -490,9 +461,7 @@ class PaddleStaticRunner:
                 config.disable_mkldnn()
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
-                # XXX: is_compiled_with_rocm() must be True on dcu platform ?
                 if paddle.is_compiled_with_rocm():
-                    # Delete unsupported passes in dcu
                     config.delete_pass("conv2d_add_act_fuse_pass")
                     config.delete_pass("conv2d_add_fuse_pass")
             elif self._config["device_type"] == "iluvatar_gpu":
@@ -533,10 +502,8 @@ class PaddleStaticRunner:
         for del_p in self._config.get("delete_pass", []):
             config.delete_pass(del_p)
 
-        # Disable paddle inference logging
         if not DEBUG:
             config.disable_glog_info()
-        # ROCm does not support fused_conv2d_add_act kernel, delete the fuse passes
         if paddle.is_compiled_with_rocm():
             config.delete_pass("conv2d_add_act_fuse_pass")
             config.delete_pass("conv2d_add_fuse_pass")
@@ -546,7 +513,6 @@ class PaddleStaticRunner:
         return predictor
 
     def _configure_trt(self, model_file, params_file, cache_dir):
-        # TODO: Support calibration
         import paddle.inference
 
         if USE_PIR_TRT:
@@ -573,7 +539,6 @@ class PaddleStaticRunner:
         else:
             config = paddle.inference.Config(str(model_file), str(params_file))
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
-            # call enable_use_gpu() first to use TensorRT engine
             config.enable_use_gpu(100, self._config.get("device_id", 0))
             for func_name in self._config.get("trt_cfg_setting", {}):
                 assert hasattr(
@@ -589,7 +554,6 @@ class PaddleStaticRunner:
                 if self._config.get("trt_dynamic_shapes") is None:
                     raise RuntimeError("No dynamic shape information provided")
                 if self._config.get("trt_collect_shape_range_info", True):
-                    # NOTE: We always use a shape range info file.
                     if self._config.get("trt_shape_range_info_path") is not None:
                         trt_shape_range_info_path = Path(
                             self._config["trt_shape_range_info_path"]

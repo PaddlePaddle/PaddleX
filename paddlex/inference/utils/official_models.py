@@ -41,7 +41,7 @@ from ...utils.flags import (
     HUGGING_FACE_ENDPOINT,
     MODEL_SOURCE,
 )
-from .model_paths import LocalModelFormat
+from ..models.utils.model_paths import LocalModelFormat
 
 ALL_MODELS = [
     "ResNet18",
@@ -511,20 +511,26 @@ def _resolve_download_model_names(
 ) -> Tuple[str, ...]:
     if model_formats is None:
         return (model_name,)
-    else:
-        formats = tuple(model_formats)
+    formats = tuple(model_formats)
     model_names = []
-    for idx, model_format in enumerate(formats):
+    unsupported_formats = []
+    for model_format in formats:
         if not _is_supported_official_model_format(model_name, model_format):
-            if idx + 1 < len(formats):
-                continue
-            raise ValueError(
-                f"Official model source does not provide a {model_format!r} package "
-                f"for model {model_name!r}."
-            )
+            unsupported_formats.append(model_format)
+            continue
         download_model_name = _format_download_model_name(model_name, model_format)
         if download_model_name not in model_names:
             model_names.append(download_model_name)
+    if not model_names:
+        if len(formats) == 1:
+            raise ValueError(
+                f"Official model source does not provide a {formats[0]!r} package "
+                f"for model {model_name!r}."
+            )
+        raise ValueError(
+            f"Official model source does not provide any of the requested packages "
+            f"{list(unsupported_formats)!r} for model {model_name!r}."
+        )
     return tuple(model_names)
 
 

@@ -17,8 +17,8 @@ from typing import Any, Dict, Optional, Union
 
 from ...utils import logging
 from ...utils.config import parse_config
-from ..utils.hpi import HPIConfig
-from ..utils.pp_option import PaddlePredictorOption
+from ..models import PaddlePredictorOption
+from ..models.hpi import HPIConfig
 from .anomaly_detection import AnomalyDetectionPipeline
 from .attribute_recognition import (
     PedestrianAttributeRecPipeline,
