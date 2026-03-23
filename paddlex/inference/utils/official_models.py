@@ -421,7 +421,7 @@ OCR_MODELS = [
     "cyrillic_PP-OCRv5_mobile_rec",
 ]
 
-SAFETENSORS_SUPPORTED_MODELS: Set[str] = {
+SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX: Set[str] = {
     "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x1_0_doc_ori",
     "PP-LCNet_x1_0_textline_ori",
@@ -440,9 +440,17 @@ SAFETENSORS_SUPPORTED_MODELS: Set[str] = {
     "PP-OCRv5_mobile_rec",
     "UVDoc",
     "PP-Chart2Table",
+}
+
+SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX: Set[str] = {
     "PaddleOCR-VL-0.9B",
     "PaddleOCR-VL-1.5-0.9B",
 }
+
+SAFETENSORS_SUPPORTED_MODELS: Set[str] = (
+    SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX
+    | SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX
+)
 
 PADDLE_DYN_SUPPORTED_MODELS: Set[str] = {
     "PP-DocBee-2B",
@@ -484,7 +492,11 @@ def _format_download_model_name(model_name: str, model_format: LocalModelFormat)
     if model_format in {"paddle", "paddle_dyn"}:
         return model_name
     if model_format == "safetensors":
-        return f"{model_name}_safetensors"
+        if model_name in SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX:
+            return f"{model_name}_safetensors"
+        elif model_name in SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX:
+            return model_name
+        raise ValueError(f"Unknown safetensors model name: {model_name}")
     if model_format == "onnx":
         return f"{model_name}_onnx"
     raise ValueError(f"Unknown official model format: {model_format!r}.")
@@ -502,6 +514,8 @@ def _is_supported_official_model_format(
         return canonical_name in SAFETENSORS_SUPPORTED_MODELS
     if model_format == "onnx":
         return canonical_name in ONNX_SUPPORTED_MODELS
+    if model_format == "om":
+        return False
     raise ValueError(f"Unknown official model format: {model_format!r}.")
 
 

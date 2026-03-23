@@ -405,13 +405,13 @@ def create_predictor(
         model_dir_resolved=model_dir_resolved,
     )
 
-    if pp_option is not None and engine != "paddle_static":
+    if engine_config is None and pp_option is not None and engine != "paddle_static":
         logging.warning(
             "`pp_option` only applies to engine='paddle_static'. "
             "For engine=%r, pp_option will be ignored.",
             engine,
         )
-    if hpi_config is not None and engine != "hpi":
+    if engine_config is None and hpi_config is not None and engine != "hpi":
         logging.warning(
             "`hpi_config` only applies to engine='hpi'. "
             "For engine=%r, hpi_config will be ignored.",
