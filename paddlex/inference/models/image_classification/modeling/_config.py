@@ -14,50 +14,47 @@
 
 from ...common.transformers.transformers import PretrainedConfig
 
-DEFAULT_CONFIG = {
-    "model_name": "PP-LCNet_x1_0_doc_ori",
-    "scale": 1.0,
-    "class_num": 4,
-    "stride_list": [2, 2, 2, 2, 2],
-    "dropout_prob": 0.2,
-    "class_expand": 1280,
-    "use_last_conv": True,
-    "act": "hardswish",
-    "reduction": 4,
-    "lr_mult_list": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-    "net_config": {
-        "blocks2": [[3, 16, 32, 1, False]],
-        "blocks3": [[3, 32, 64, 2, False], [3, 64, 64, 1, False]],
-        "blocks4": [[3, 64, 128, 2, False], [3, 128, 128, 1, False]],
-        "blocks5": [
-            [3, 128, 256, 2, False],
-            [5, 256, 256, 1, False],
-            [5, 256, 256, 1, False],
-            [5, 256, 256, 1, False],
-            [5, 256, 256, 1, False],
-            [5, 256, 256, 1, False],
-        ],
-        "blocks6": [[5, 256, 512, 2, True], [5, 512, 512, 1, True]],
-    },
-}
-
 
 class PPLCNetConfig(PretrainedConfig):
-    model_type = "cls"
+    model_type = "pp_lcnet"
+    scale: float | int = 1.0
+    block_configs: list | None = None
+    stem_channels: int = 16
+    stem_stride: int = 2
+    reduction: int = 4
+    class_expand: int = 1280
+    divisor: int = 8
+    hidden_act: str = "hardswish"
+    hidden_dropout_prob: float = 0.2
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.model_name = kwargs.get("model_name", DEFAULT_CONFIG["model_name"])
-        self.scale = kwargs.get("scale", DEFAULT_CONFIG["scale"])
-        self.class_num = kwargs.get("class_num", DEFAULT_CONFIG["class_num"])
-        self.stride_list = kwargs.get("stride_list", DEFAULT_CONFIG["stride_list"])
-        self.reduction = kwargs.get("reduction", DEFAULT_CONFIG["reduction"])
-        self.dropout_prob = kwargs.get("dropout_prob", DEFAULT_CONFIG["dropout_prob"])
-        self.class_expand = kwargs.get("class_expand", DEFAULT_CONFIG["class_expand"])
-        self.use_last_conv = kwargs.get(
-            "use_last_conv", DEFAULT_CONFIG["use_last_conv"]
+        self.block_configs = (
+            [
+                # Stage 1 (blocks2)
+                [[3, 16, 32, 1, False]],
+                # Stage 2 (blocks3)
+                [[3, 32, 64, 2, False], [3, 64, 64, 1, False]],
+                # Stage 3 (blocks4)
+                [[3, 64, 128, 2, False], [3, 128, 128, 1, False]],
+                # Stage 4 (blocks5)
+                [
+                    [3, 128, 256, 2, False],
+                    [5, 256, 256, 1, False],
+                    [5, 256, 256, 1, False],
+                    [5, 256, 256, 1, False],
+                    [5, 256, 256, 1, False],
+                    [5, 256, 256, 1, False],
+                ],
+                # Stage 5 (blocks6)
+                [[5, 256, 512, 2, True], [5, 512, 512, 1, True]],
+            ]
+            if self.block_configs is None
+            else self.block_configs
         )
-        self.act = kwargs.get("act", DEFAULT_CONFIG["act"])
-        self.lr_mult_list = kwargs.get("lr_mult_list", DEFAULT_CONFIG["lr_mult_list"])
-        self.net_config = kwargs.get("net_config", DEFAULT_CONFIG["net_config"])
+
+        self.depths = [len(blocks) for blocks in self.block_configs]
+        self.stage_names = ["stem"] + [
+            f"stage{idx}" for idx in range(1, len(self.block_configs) + 1)
+        ]
