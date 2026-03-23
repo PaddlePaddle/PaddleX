@@ -17,6 +17,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
 
+from pydantic import BaseModel
+
 from ...utils import errors, logging
 from ..utils.official_models import official_models
 from .anomaly_detection import UadPredictor
@@ -150,7 +152,7 @@ def _get_inference_engine(engine: str) -> InferenceEngine:
 
 def normalize_engine_config(
     engine: str,
-    cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+    cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, BaseModel]],
     *,
     model_name: Optional[str] = None,
     device: Optional[str] = None,
@@ -213,7 +215,7 @@ def _select_engine_config_source(
     pp_option,
     hpi_config,
     genai_config,
-) -> Optional[Union[Dict[str, Any], HPIConfig, GenAIConfig]]:
+) -> Optional[Union[Dict[str, Any], PaddlePredictorOption, HPIConfig, GenAIConfig]]:
     if engine_config is not None:
         return engine_config
     if engine == "paddle_static":
@@ -325,7 +327,7 @@ def create_predictor(
     engine: Optional[str] = None,
     engine_config: Optional[Dict[str, Any]] = None,
     batch_size: int = 1,
-    pp_option=None,
+    pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: bool = False,
     hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,

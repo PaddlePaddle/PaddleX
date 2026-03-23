@@ -53,7 +53,7 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
 
     def normalize_config(
         self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, BaseModel]],
         *,
         model_name: Optional[str] = None,
         device: Optional[str] = None,
@@ -129,7 +129,7 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
     @classmethod
     def _engine_config_to_dict(
         cls,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, BaseModel]],
     ) -> Dict[str, Any]:
         if cfg is None:
             return {}
@@ -137,7 +137,7 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
             return dict(cfg)
         if isinstance(cfg, PaddlePredictorOption):
             return cls._pp_option_to_engine_config(cfg)
-        if hasattr(cfg, "model_dump"):
+        if isinstance(cfg, BaseModel):
             return cfg.model_dump(exclude_none=True, by_alias=True)
         raise TypeError(
             f"`engine_config` must be dict, Pydantic model, or PaddlePredictorOption, "
