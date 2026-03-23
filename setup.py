@@ -47,7 +47,7 @@ BASE_DEP_SPECS = {
     "langchain-text-splitters": ">= 0.2, < 1.0",
     "lxml": "",
     "matplotlib": "",
-    "modelscope": ">=1.28.0",
+    "modelscope": "==1.29.0",
     "numpy": ">= 1.24",
     "openai": ">= 1.63",
     "OpenCC": "",
