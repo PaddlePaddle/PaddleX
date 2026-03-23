@@ -14,35 +14,34 @@
 
 from ...utils.device import get_default_device, parse_device
 from ...utils.env import get_device_type
+from ...utils.import_guard import import_paddle_module
 
 
 def is_mkldnn_available():
     # XXX: Not sure if this is the best way to check if MKL-DNN is available
-    from paddle.inference import Config
+    Config = import_paddle_module("paddle.inference").Config
 
     return hasattr(Config, "set_mkldnn_cache_capacity")
 
 
 def is_bfloat16_available(device):
-    import paddle.amp
+    paddle_amp = import_paddle_module("paddle.amp")
 
     if device is None:
         device = get_default_device()
     device_type, _ = parse_device(device)
-    return (
-        "npu" in get_device_type() or paddle.amp.is_bfloat16_supported()
-    ) and device_type in ("gpu", "npu", "xpu", "mlu", "metax_gpu", "iluvatar_gpu")
+    return ("npu" in get_device_type() or paddle_amp.is_bfloat16_supported()) and (
+        device_type in ("gpu", "npu", "xpu", "mlu", "metax_gpu", "iluvatar_gpu")
+    )
 
 
 def is_float16_available(device):
-    import paddle.amp
+    paddle_amp = import_paddle_module("paddle.amp")
 
     if device is None:
         device = get_default_device()
     device_type, _ = parse_device(device)
-    return (
-        "npu" in get_device_type() or paddle.amp.is_float16_supported()
-    ) and device_type in (
+    return ("npu" in get_device_type() or paddle_amp.is_float16_supported()) and (
         "gpu",
         "npu",
         "xpu",

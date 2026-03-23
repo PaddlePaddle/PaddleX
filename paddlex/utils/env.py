@@ -13,17 +13,18 @@
 # limitations under the License.
 
 from .deps import is_dep_available, require_deps
+from .import_guard import import_paddle, import_paddle_module
 
 
 def get_device_type():
-    import paddle
+    paddle = import_paddle()
 
     device_str = paddle.get_device()
     return device_str.split(":")[0]
 
 
 def get_paddle_version():
-    import paddle
+    paddle = import_paddle()
 
     version = paddle.__version__
     if "-" in version:
@@ -40,18 +41,18 @@ def get_paddle_version():
 
 
 def get_paddle_cuda_version():
-    import paddle.version
+    paddle_version = import_paddle_module("paddle.version")
 
-    cuda_version = paddle.version.cuda()
+    cuda_version = paddle_version.cuda()
     if cuda_version == "False":
         return None
     return tuple(map(int, cuda_version.split(".")))
 
 
 def get_paddle_cudnn_version():
-    import paddle.version
+    paddle_version = import_paddle_module("paddle.version")
 
-    cudnn_version = paddle.version.cudnn()
+    cudnn_version = paddle_version.cudnn()
     if cudnn_version == "False":
         return None
     return tuple(map(int, cudnn_version.split(".")))
@@ -62,7 +63,7 @@ def get_paddle_cudnn_version():
 
 def is_cuda_available():
     if is_dep_available("paddlepaddle"):
-        import paddle.device
+        paddle = import_paddle()
 
         # TODO: Check runtime availability
         return (
@@ -84,7 +85,7 @@ def get_gpu_compute_capability():
 
     if is_cuda_available():
         if is_dep_available("paddlepaddle"):
-            import paddle.device
+            paddle = import_paddle()
 
             cap = paddle.device.cuda.get_device_capability()
         else:

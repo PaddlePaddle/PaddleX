@@ -18,6 +18,7 @@ import numpy as np
 
 from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
+from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import AudioBatchSampler
 from ...utils.io import AudioReader
 from ..predictors import RunnerPredictor
@@ -90,7 +91,7 @@ class WhisperRunnerPredictor(RunnerPredictor):
         }
 
     def _build_mel(self, input_data):
-        import paddle
+        paddle = import_paddle()
 
         from .processors import log_mel_spectrogram
 

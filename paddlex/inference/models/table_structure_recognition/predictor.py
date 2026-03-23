@@ -20,6 +20,7 @@ from PIL import Image
 
 from ....modules.table_recognition.model_list import MODELS
 from ....utils.func_register import FuncRegister
+from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.official_models import official_models
@@ -230,7 +231,7 @@ class TableTransformersPredictor(TransformersPredictor):
         head.loc_generator = head.loc_generator.to(device=infer_device)
 
     def _load_slanext_loc_generator_weights(self, loc_generator, config) -> None:
-        import paddle
+        paddle = import_paddle()
         import torch
 
         state_items = list(

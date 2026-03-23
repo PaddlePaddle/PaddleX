@@ -20,7 +20,13 @@ from typing import Any, Dict, Optional, Tuple, Union
 from ...utils import errors, logging
 from ..utils.official_models import official_models
 from .anomaly_detection import UadPredictor
-from .bindings import Binding, UnknownModelError, get_binding, get_supported_engines
+from .bindings import (
+    Binding,
+    UnknownModelError,
+    UnsupportedEngineError,
+    get_binding,
+    get_supported_engines,
+)
 from .common.genai import GenAIConfig, need_local_model, uses_server_backend
 from .doc_vlm import DocVLMPredictor
 from .engines import InferenceEngine
@@ -63,6 +69,17 @@ def _get_supported_engines(model_name: str) -> Tuple[str, ...]:
         raise ValueError(
             f"No engine bindings registered for model {model_name!r}."
         ) from e
+
+
+def _get_predictor_binding(model_name: str, engine: str) -> Binding:
+    try:
+        return get_binding(model_name, engine)
+    except UnknownModelError as e:
+        raise ValueError(
+            f"No engine bindings registered for model {model_name!r}."
+        ) from e
+    except UnsupportedEngineError as e:
+        raise ValueError(str(e)) from e
 
 
 from .utils.model_resolver import resolve_model_name
@@ -376,6 +393,7 @@ def create_predictor(
     )
 
     requested_engine = _get_inference_engine(engine)
+    predictor_binding = _get_predictor_binding(model_name, engine)
 
     need_local = requested_engine.needs_local_model
     model_dir_resolved = _resolve_local_model_dir(
@@ -426,7 +444,6 @@ def create_predictor(
             model_dir=model_dir_resolved,
         )
 
-    predictor_binding = get_binding(model_name, engine)
     predictor_engine_config = requested_engine.to_predictor_config(
         normalized_engine_config
     )

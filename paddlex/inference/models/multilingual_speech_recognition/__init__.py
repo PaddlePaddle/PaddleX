@@ -15,6 +15,7 @@
 import numpy as np
 
 from .... import constants
+from ....utils.import_guard import import_paddle
 from ..bindings import create_binding_registration, register_predictor_binding_map
 from ..engines.paddle import PaddleDynamicEngine
 from ..runners import PaddleDynamicRunner
@@ -24,7 +25,7 @@ from .predictor import WhisperRunnerPredictor
 
 def _build_whisper_runner(model_name, model_dir, model_config, engine_config):
     del model_name, model_config
-    import paddle
+    paddle = import_paddle()
 
     from ....utils.device import TemporaryDeviceChanger
     from .processors import ModelDimensions, Whisper

@@ -23,6 +23,7 @@ from ......utils.flags import (
     ENABLE_MKLDNN_BYDEFAULT,
     USE_PIR_TRT,
 )
+from ......utils.import_guard import import_paddle
 from .....utils.misc import is_mkldnn_available
 from .blocklists import MKLDNN_BLOCKLIST, NEWIR_BLOCKLIST
 from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
@@ -94,7 +95,7 @@ class PaddlePredictorOption(object):
             self._cfg.setdefault(k, v)
 
         if self.device_type == "gpu":
-            import paddle
+            paddle = import_paddle()
 
             if not (
                 paddle.device.is_compiled_with_cuda()

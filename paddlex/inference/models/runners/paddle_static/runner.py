@@ -33,6 +33,7 @@ from paddlex.utils.flags import (
     DISABLE_TRT_MODEL_BL,
     USE_PIR_TRT,
 )
+from paddlex.utils.import_guard import import_paddle, import_paddle_module
 
 from .config import (
     DISABLE_TRT_HALF_OPS_CONFIG,
@@ -87,7 +88,7 @@ def resolve_paddle_static_engine_config(
 
 
 def _pd_dtype_to_np_dtype(pd_dtype):
-    import paddle
+    paddle = import_paddle()
 
     if pd_dtype == paddle.inference.DataType.FLOAT64:
         return np.float64
@@ -113,16 +114,16 @@ def _collect_trt_shape_range_info(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
-    import paddle.inference
+    paddle_inference = import_paddle_module("paddle.inference")
 
     dynamic_shape_input_data = dynamic_shape_input_data or {}
 
-    config = paddle.inference.Config(model_file, model_params)
+    config = paddle_inference.Config(model_file, model_params)
     config.enable_use_gpu(100, gpu_id)
     config.collect_shape_range_info(shape_range_info_path)
     config.disable_glog_info()
     config.delete_pass("matmul_add_act_fuse_pass")
-    predictor = paddle.inference.create_predictor(config)
+    predictor = paddle_inference.create_predictor(config)
 
     input_names = predictor.get_input_names()
     for name in dynamic_shapes:
@@ -178,8 +179,11 @@ def _convert_trt(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
-    import paddle.inference
-    from paddle.tensorrt.export import Input, TensorRTConfig, convert
+    paddle_inference = import_paddle_module("paddle.inference")
+    paddle_tensorrt_export = import_paddle_module("paddle.tensorrt.export")
+    Input = paddle_tensorrt_export.Input
+    TensorRTConfig = paddle_tensorrt_export.TensorRTConfig
+    convert = paddle_tensorrt_export.convert
 
     def _set_trt_config():
         for attr_name in trt_cfg_setting:
@@ -189,11 +193,11 @@ def _convert_trt(
             setattr(trt_config, attr_name, trt_cfg_setting[attr_name])
 
     def _get_predictor(model_file, params_file):
-        config = paddle.inference.Config(str(model_file), str(params_file))
+        config = paddle_inference.Config(str(model_file), str(params_file))
         config.enable_use_gpu(100, device_id)
         config.disable_mkldnn()
         config.disable_glog_info()
-        return paddle.inference.create_predictor(config)
+        return paddle_inference.create_predictor(config)
 
     dynamic_shape_input_data = dynamic_shape_input_data or {}
 
@@ -341,8 +345,8 @@ class PaddleStaticRunner:
             self._config["run_mode"] = "mkldnn"
 
     def _create(self):
-        import paddle
-        import paddle.inference
+        paddle = import_paddle()
+        paddle_inference = import_paddle_module("paddle.inference")
 
         model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
         if "paddle" not in model_paths:
@@ -382,10 +386,10 @@ class PaddleStaticRunner:
             config.exp_disable_mixed_precision_ops({"feed", "fetch"})
             config.enable_use_gpu(100, self._config.get("device_id", 0))
         else:
-            config = paddle.inference.Config(str(model_file), str(params_file))
+            config = paddle_inference.Config(str(model_file), str(params_file))
             if self._config["device_type"] == "gpu":
                 config.exp_disable_mixed_precision_ops({"feed", "fetch"})
-                from paddle.inference import PrecisionType
+                PrecisionType = paddle_inference.PrecisionType
 
                 precision = (
                     PrecisionType.Half
@@ -508,12 +512,12 @@ class PaddleStaticRunner:
             config.delete_pass("conv2d_add_act_fuse_pass")
             config.delete_pass("conv2d_add_fuse_pass")
 
-        predictor = paddle.inference.create_predictor(config)
+        predictor = paddle_inference.create_predictor(config)
 
         return predictor
 
     def _configure_trt(self, model_file, params_file, cache_dir):
-        import paddle.inference
+        paddle_inference = import_paddle_module("paddle.inference")
 
         if USE_PIR_TRT:
             if self._config.get("trt_dynamic_shapes") is None:
@@ -535,9 +539,9 @@ class PaddleStaticRunner:
                 logging.debug(
                     f"Use TRT cache files(`{trt_model_file}` and `{trt_params_file}`)."
                 )
-            config = paddle.inference.Config(str(trt_model_file), str(trt_params_file))
+            config = paddle_inference.Config(str(trt_model_file), str(trt_params_file))
         else:
-            config = paddle.inference.Config(str(model_file), str(params_file))
+            config = paddle_inference.Config(str(model_file), str(params_file))
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
             config.enable_use_gpu(100, self._config.get("device_id", 0))
             for func_name in self._config.get("trt_cfg_setting", {}):
@@ -592,7 +596,7 @@ class PaddleStaticRunner:
                         model_name in DISABLE_TRT_HALF_OPS_CONFIG
                         and self._config.get("run_mode") == "trt_fp16"
                     ):
-                        paddle.inference.InternalUtils.disable_tensorrt_half_ops(
+                        paddle_inference.InternalUtils.disable_tensorrt_half_ops(
                             config, DISABLE_TRT_HALF_OPS_CONFIG[model_name]
                         )
                     config.enable_tuned_tensorrt_dynamic_shape(

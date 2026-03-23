@@ -19,6 +19,7 @@ from typing import Any, Dict, Iterator, List, Tuple
 from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
+from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
 from ..predictors import RunnerPredictor
@@ -79,7 +80,7 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
         Returns:
             tuple: A tuple containing the preprocessors.
         """
-        import paddle
+        paddle = import_paddle()
 
         if paddle.is_compiled_with_cuda() and not paddle.is_compiled_with_rocm():
             from ....ops.iou3d_nms import nms_gpu  # noqa: F401

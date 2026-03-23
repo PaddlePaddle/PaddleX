@@ -26,6 +26,7 @@ from ....modules.doc_vlm.model_list import MODELS
 from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
+from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import DocVLMBatchSampler
 from ...utils.misc import is_bfloat16_available
 from ..predictors import (
@@ -353,7 +354,7 @@ class DocVLMLocalPredictor(LocalModelPredictor):
 
     def _switch_inputs_to_device(self, input_dict):
         """Switch the input to the specified device"""
-        import paddle
+        paddle = import_paddle()
 
         if self.device is None:
             return input_dict
