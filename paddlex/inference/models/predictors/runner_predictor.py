@@ -26,7 +26,7 @@ class RunnerPredictor(LocalModelPredictor):
     def __init__(
         self,
         *,
-        runner: Optional[InferenceRunner] = None,
+        runner: InferenceRunner,
         model_dir: Optional[str] = None,
         model_config: Optional[Dict] = None,
         model_name: Optional[str] = None,
@@ -43,8 +43,6 @@ class RunnerPredictor(LocalModelPredictor):
         self.runner = runner
 
     def close(self) -> None:
-        if self.runner is None:
-            return
         close = getattr(self.runner, "close", None)
         if callable(close):
             close()

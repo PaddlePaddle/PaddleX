@@ -29,7 +29,7 @@ from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_dynamic_runner import PaddleDynamicRunnerConfig
 from ..runners.paddle_static import PaddleStaticRunnerConfig
 from ..utils.model_paths import LocalModelFormat
-from ._base import InferenceEngine
+from ._base import RunnerEngine
 
 
 def _get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
@@ -79,7 +79,7 @@ def _inject_trt_info(
     return engine_config
 
 
-class PaddleStaticEngineSpec(InferenceEngine):
+class PaddleStaticEngine(RunnerEngine):
     """Engine for Paddle static-graph inference."""
 
     entities = "paddle_static"
@@ -142,7 +142,7 @@ class PaddleStaticEngineSpec(InferenceEngine):
         )
 
 
-class PaddleDynamicEngineSpec(InferenceEngine):
+class PaddleDynamicEngine(RunnerEngine):
     """Engine for Paddle dynamic-graph inference."""
 
     entities = "paddle_dynamic"

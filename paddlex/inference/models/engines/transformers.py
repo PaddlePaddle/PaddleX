@@ -41,7 +41,7 @@ class TransformersEngineConfig(BaseModel):
     tokenizer_kwargs: Optional[Dict[str, Any]] = None
 
 
-class TransformersEngineSpec(InferenceEngine):
+class TransformersEngine(InferenceEngine):
     """Engine for Hugging Face Transformers inference."""
 
     entities = "transformers"

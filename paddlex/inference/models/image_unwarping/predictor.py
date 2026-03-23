@@ -15,14 +15,17 @@
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
+from PIL import Image
 
 from ....modules.image_unwarping.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..common import Normalize, ToBatch, ToCHWImage
-from ..predictors import RunnerPredictor
+from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import DocTrPostProcess
 from .result import DocTrResult
+
+WARP_TRANSFORMERS_MODELS = ["UVDoc"]
 
 
 class WarpRunnerPredictor(RunnerPredictor):
@@ -85,6 +88,60 @@ class WarpRunnerPredictor(RunnerPredictor):
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
         batch_preds = self.runner(x=x)
         batch_warp_preds = self.postprocessors["DocTrPostProcess"](batch_preds)
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "doctr_img": batch_warp_preds,
+        }
+
+
+class WarpTransformersPredictor(TransformersPredictor):
+
+    entities = WARP_TRANSFORMERS_MODELS
+
+    def __init__(self, *args: List, **kwargs: Dict) -> None:
+        super().__init__(*args, **kwargs)
+        self.read_op = ReadImage(format="BGR")
+        self.image_processor, self.infer = self._build()
+
+    def _build_batch_sampler(self) -> ImageBatchSampler:
+        return ImageBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return DocTrResult
+
+    def _build(self) -> Tuple:
+        from transformers import AutoImageProcessor, AutoModel
+
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(AutoModel)
+        return image_processor, model
+
+    def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
+        import torch
+
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        images = [Image.fromarray(img[..., ::-1]) for img in batch_raw_imgs]
+
+        model_inputs = self.image_processor(images=images, return_tensors="pt")
+        original_images = model_inputs.pop("original_images")
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        with torch.inference_mode():
+            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
+
+        results = self.image_processor.post_process_document_rectification(
+            outputs.last_hidden_state, original_images=original_images
+        )
+
+        batch_warp_preds = []
+        for res in results:
+            warped = res["images"]
+            if isinstance(warped, torch.Tensor):
+                warped = warped.detach().cpu().numpy()
+            batch_warp_preds.append(warped)
 
         return {
             "input_path": batch_data.input_paths,

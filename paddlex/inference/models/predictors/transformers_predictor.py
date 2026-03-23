@@ -116,7 +116,43 @@ class TransformersPredictor(LocalModelPredictor):
             return torch.device("cpu")
 
     def _move_to_infer_device(self, model_inputs, model=None):
-        return model_inputs.to(self._get_infer_device(model=model))
+        import torch
+
+        infer_model = model or getattr(self, "infer", None)
+        device = self._get_infer_device(model=infer_model)
+
+        if hasattr(model_inputs, "to") and callable(getattr(model_inputs, "to")):
+            model_inputs = model_inputs.to(device)
+        elif isinstance(model_inputs, dict):
+            model_inputs = {
+                k: v.to(device) if torch.is_tensor(v) else v
+                for k, v in model_inputs.items()
+            }
+        else:
+            raise TypeError(
+                f"Unsupported model_inputs type: {type(model_inputs)!r}; "
+                "expected a Hugging Face BatchFeature/BatchEncoding or a dict of tensors."
+            )
+
+        target_dtype = None
+        if infer_model is not None:
+            try:
+                target_dtype = next(infer_model.parameters()).dtype
+            except StopIteration:
+                pass
+
+        if target_dtype is not None and target_dtype in (
+            torch.float16,
+            torch.bfloat16,
+            torch.float32,
+        ):
+            for key in list(model_inputs.keys()):
+                value = model_inputs[key]
+                if torch.is_tensor(value) and value.is_floating_point():
+                    if value.dtype != target_dtype:
+                        model_inputs[key] = value.to(dtype=target_dtype)
+
+        return model_inputs
 
     @abstractmethod
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from ..bindings import create_binding_registration, register_predictor_binding_map
-from ..engines.paddle import PaddleDynamicEngineSpec
+from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
     MODELS,
@@ -43,7 +43,7 @@ register_predictor_binding_map(
             create_binding_registration(
                 ("PP-OCRv5_mobile_det",),
                 **{
-                    PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
                         _load_ppocrv5_mobile_det,
                         use_safetensors=True,
                         convert_from_hf=True,
@@ -53,7 +53,7 @@ register_predictor_binding_map(
             create_binding_registration(
                 ("PP-OCRv5_server_det",),
                 **{
-                    PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
                         _load_ppocrv5_server_det,
                         use_safetensors=True,
                         convert_from_hf=True,

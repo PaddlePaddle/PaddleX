@@ -16,7 +16,7 @@ import numpy as np
 
 from .... import constants
 from ..bindings import create_binding_registration, register_predictor_binding_map
-from ..engines.paddle import PaddleDynamicEngineSpec
+from ..engines.paddle import PaddleDynamicEngine
 from ..runners import PaddleDynamicRunner
 from ..runners.paddle_dynamic_runner import resolve_paddle_runner_device
 from .predictor import WhisperRunnerPredictor
@@ -60,7 +60,7 @@ register_predictor_binding_map(
         "paddle_dynamic": create_binding_registration(
             WhisperRunnerPredictor.entities,
             **{
-                PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: _build_whisper_runner,
+                PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: _build_whisper_runner,
             },
         ),
     },

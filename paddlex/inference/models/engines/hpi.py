@@ -27,7 +27,7 @@ from ..hpi import HPIInfo
 from ..runners.hpi import HPIConfig, HPIRunner
 from ..runners.inference_runner import InferenceRunner
 from ..utils.model_paths import LocalModelFormat
-from ._base import InferenceEngine
+from ._base import RunnerEngine
 
 
 def _get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
@@ -39,7 +39,7 @@ def _get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
         raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
 
 
-class HPIEngineSpec(InferenceEngine):
+class HPIEngine(RunnerEngine):
     """Engine for HPI / UltraInfer inference."""
 
     entities = "hpi"

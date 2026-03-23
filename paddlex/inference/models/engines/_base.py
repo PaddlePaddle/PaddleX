@@ -23,6 +23,7 @@ from pydantic import BaseModel, ValidationError
 
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.subclass_register import AutoRegisterABCMetaClass
+from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_static.config import PaddlePredictorOption
 from ..utils.model_paths import LocalModelFormat, get_model_paths
 
@@ -142,3 +143,21 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
             f"`engine_config` must be dict, Pydantic model, or PaddlePredictorOption, "
             f"but got {type(cfg).__name__}."
         )
+
+
+class RunnerEngine(InferenceEngine):
+    """Inference engines that can build an InferenceRunner."""
+
+    __is_base = True
+
+    @abstractmethod
+    def build_runner(
+        self,
+        *,
+        model_name: str,
+        model_dir: Optional[Path],
+        model_config: Optional[Dict[str, Any]],
+        engine_config: Dict[str, Any],
+        binding: Any = None,
+    ) -> InferenceRunner:
+        raise NotImplementedError

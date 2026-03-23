@@ -13,9 +13,14 @@
 # limitations under the License.
 
 from ..bindings import create_binding_registration, register_predictor_binding_map
-from ..engines.paddle import PaddleDynamicEngineSpec
+from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
-from .predictor import MODELS, TableRunnerPredictor
+from .predictor import (
+    MODELS,
+    TABLE_REC_TRANSFORMERS_MODELS,
+    TableRunnerPredictor,
+    TableTransformersPredictor,
+)
 
 
 def _load_slanext():
@@ -31,7 +36,7 @@ register_predictor_binding_map(
         "paddle_dynamic": create_binding_registration(
             ("SLANeXt_wired", "SLANeXt_wireless"),
             **{
-                PaddleDynamicEngineSpec.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
                     _load_slanext,
                     use_safetensors=True,
                     convert_from_hf=True,
@@ -42,6 +47,10 @@ register_predictor_binding_map(
         "hpi": MODELS,
         "onnxruntime": MODELS,
     },
+)
+register_predictor_binding_map(
+    TableTransformersPredictor,
+    {"transformers": TABLE_REC_TRANSFORMERS_MODELS},
 )
 
 # Backward compatibility

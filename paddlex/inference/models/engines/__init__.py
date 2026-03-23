@@ -24,10 +24,11 @@ from . import (  # noqa: F401
     paddle,
     transformers,
 )
-from ._base import InferenceEngine
+from ._base import InferenceEngine, RunnerEngine
 from .transformers import TransformersEngineConfig
 
 __all__ = [
     "InferenceEngine",
+    "RunnerEngine",
     "TransformersEngineConfig",
 ]

@@ -21,7 +21,7 @@ from ....utils.device import parse_device
 from ._base import InferenceEngine
 
 
-class FlexibleEngineSpec(InferenceEngine):
+class FlexibleEngine(InferenceEngine):
     """Engine for predictors with custom local execution logic."""
 
     entities = "flexible"

@@ -250,12 +250,13 @@ def _build_predictor_runner(
 ):
     if not issubclass(predictor_cls, RunnerPredictor):
         return None
-    build_runner = getattr(inference_engine, "build_runner", None)
-    if not callable(build_runner):
+    from .engines import RunnerEngine
+
+    if not isinstance(inference_engine, RunnerEngine):
         raise RuntimeError(
             f"InferenceEngine {type(inference_engine).__name__!r} does not support runner construction."
         )
-    return build_runner(
+    return inference_engine.build_runner(
         model_name=model_name,
         model_dir=model_dir,
         model_config=model_config,

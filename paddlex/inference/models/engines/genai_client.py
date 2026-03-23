@@ -22,7 +22,7 @@ from ..common.genai import SERVER_BACKENDS, GenAIConfig
 from ._base import InferenceEngine
 
 
-class GenAIClientEngineSpec(InferenceEngine):
+class GenAIClientEngine(InferenceEngine):
     """Engine for remote GenAI client inference."""
 
     entities = "genai_client"

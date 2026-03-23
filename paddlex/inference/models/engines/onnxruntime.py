@@ -25,10 +25,10 @@ from ..runners import ONNXRuntimeRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
 from ..utils.model_paths import LocalModelFormat
-from ._base import InferenceEngine
+from ._base import RunnerEngine
 
 
-class ONNXRuntimeEngineSpec(InferenceEngine):
+class ONNXRuntimeEngine(RunnerEngine):
     """Engine for ONNX Runtime inference."""
 
     entities = "onnxruntime"
