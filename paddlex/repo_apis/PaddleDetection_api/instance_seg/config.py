@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from typing import List, Optional
 
 from ....utils.misc import abspath
 from ..object_det.config import DetConfig
@@ -49,13 +49,14 @@ class InstanceSegConfig(DetConfig):
     def update_dataset(
         self,
         dataset_path: str,
-        dataset_type: str = None,
+        dataset_type: Optional[str] = None,
         *,
-        data_fields: List[str] = None,
+        data_fields: Optional[List[str]] = None,
         image_dir: str = "images",
         train_anno_path: str = "annotations/instance_train.json",
         val_anno_path: str = "annotations/instance_val.json",
         test_anno_path: str = "annotations/instance_val.json",
+        metric: Optional[str] = None,
     ):
         """update dataset settings
 
@@ -70,6 +71,7 @@ class InstanceSegConfig(DetConfig):
                 Defaults to "annotations/instance_val.json".
             test_anno_path (str, optional): the test annotations file that relative to `dataset_path`.
                 Defaults to "annotations/instance_val.json".
+            metric (str, optional): the metric type. Defaults to None, which will keep existing metric or use "COCO".
 
         Raises:
             ValueError: the `dataset_type` error.
@@ -87,7 +89,10 @@ class InstanceSegConfig(DetConfig):
                 val_anno_path,
                 test_anno_path,
             )
-            self.set_val("metric", "COCO")
+            if metric is not None:
+                self.set_val("metric", metric)
+            elif "metric" not in self:
+                self.set_val("metric", "COCO")
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
         self.update(ds_cfg)

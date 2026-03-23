@@ -260,3 +260,18 @@ register_model_info(
         },
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayoutV3",
+        "suite": "InstanceSeg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayoutV3.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "supported_dataset_types": ["COCOInstSegDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
