@@ -1,4 +1,4 @@
-# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,5 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .pp_doclayout_v2 import PPDocLayoutV2
-from .rt_detr import RTDETR
+
+from .dataset_checker import LayoutAnalysisDatasetChecker
+from .evaluator import LayoutAnalysisEvaluator
+from .exportor import LayoutAnalysisExportor
+from .trainer import LayoutAnalysisTrainer
+
+__all__ = [
+    "LayoutAnalysisDatasetChecker",
+    "LayoutAnalysisTrainer",
+    "LayoutAnalysisEvaluator",
+    "LayoutAnalysisExportor",
+]
