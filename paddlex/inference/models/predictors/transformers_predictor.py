@@ -57,7 +57,7 @@ class TransformersPredictor(LocalModelPredictor):
             kwargs.setdefault("trust_remote_code", trust_remote_code)
         return kwargs
 
-    def _resolve_torch_dtype(self, dtype: str):
+    def _resolve_dtype(self, dtype: str):
         import torch
 
         if not hasattr(torch, dtype):
@@ -74,7 +74,7 @@ class TransformersPredictor(LocalModelPredictor):
             kwargs.setdefault("attn_implementation", attn_implementation)
         dtype = self._engine_config.get("dtype")
         if dtype is not None:
-            kwargs.setdefault("torch_dtype", self._resolve_torch_dtype(dtype))
+            kwargs.setdefault("dtype", self._resolve_dtype(dtype))
         return kwargs
 
     def _load_pretrained_processor(self, processor_cls: Type[Any]):
