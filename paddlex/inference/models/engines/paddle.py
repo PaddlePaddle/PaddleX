@@ -23,6 +23,7 @@ from ....constants import MODEL_FILE_PREFIX
 from ....utils import logging
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
+from ..bindings import Binding
 from ..hpi import HPIInfo
 from ..runners import PaddleStaticRunner
 from ..runners.inference_runner import InferenceRunner
@@ -128,7 +129,7 @@ class PaddleStaticEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         del binding
         if model_dir is None:
@@ -196,7 +197,7 @@ class PaddleDynamicEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         runner_builder = None
         if binding is not None:

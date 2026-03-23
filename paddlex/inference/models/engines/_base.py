@@ -23,6 +23,7 @@ from pydantic import BaseModel, ValidationError
 
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.subclass_register import AutoRegisterABCMetaClass
+from ..bindings import Binding
 from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_static.config import PaddlePredictorOption
 from ..utils.model_paths import LocalModelFormat, get_model_paths
@@ -158,6 +159,6 @@ class RunnerEngine(InferenceEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         raise NotImplementedError

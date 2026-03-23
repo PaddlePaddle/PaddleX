@@ -21,6 +21,7 @@ from typing import Any, Dict, Optional, Tuple, Type
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import parse_device
+from ..bindings import Binding
 from ..runners import ONNXRuntimeRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
@@ -98,7 +99,7 @@ class ONNXRuntimeEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         del model_name, model_config, binding
         if model_dir is None:

@@ -23,6 +23,7 @@ from pydantic import ValidationError
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import get_default_device, parse_device
+from ..bindings import Binding
 from ..hpi import HPIInfo
 from ..runners.hpi import HPIConfig, HPIRunner
 from ..runners.inference_runner import InferenceRunner
@@ -96,7 +97,7 @@ class HPIEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         del binding
         if model_dir is None:
