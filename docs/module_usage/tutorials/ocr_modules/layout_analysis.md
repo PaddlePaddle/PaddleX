@@ -81,7 +81,7 @@ for res in output:
 
 运行后，`save_to_img()` 保存的可视化结果如下，图中标注了各区域的类别、置信度、实例分割掩码及阅读顺序编号：
 
-![版面分析可视化结果](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg)
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg" alt="版面分析可视化结果" width="30%" />
 
 相关方法、参数等说明如下：
 
@@ -609,7 +609,7 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 
 1. <b>产线集成</b>
 
-版面分析模块可以集成到PaddleX的[文档解析产线（PaddleOCR-VL）](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md)等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。
+版面分析模块可以集成到PaddleX的[文档解析产线（PaddleOCR-VL 和 PaddleOCR-VL-1.5）](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md)等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。
 
 2. <b>模块集成</b>
 
