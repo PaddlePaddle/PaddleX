@@ -63,6 +63,8 @@ sys_platform = platform.platform().lower()
 
 
 def get_paddle_version():
+    # NOTE: This function only checks paddlepaddle-gpu and paddlepaddle packages,
+    # and does not support other hardware-specific distributions (e.g., XPU, NPU).
     from importlib.metadata import version as get_version
 
     paddle_version = ""

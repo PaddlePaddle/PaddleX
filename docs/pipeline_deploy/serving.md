@@ -376,7 +376,7 @@ python -m pip install -r requirements.txt
 python -m pip install paddlex_hps_client-*.whl
 ```
 
-Python 客户端目前支持的 Python 版本为 3.8 至 3.13。
+Python 客户端目前支持的 Python 版本为 3.8 至 3.12。
 
 `client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
