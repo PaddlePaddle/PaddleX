@@ -1467,6 +1467,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -2957,6 +2962,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -4448,6 +4458,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -5876,6 +5891,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -7322,6 +7342,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -8767,6 +8792,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -9824,6 +9854,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -10894,6 +10929,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
@@ -11952,6 +11992,11 @@
         "paddle"
       ],
       "PP-DocLayoutV2": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-DocLayoutV3": [
+        "onnxruntime",
         "paddle"
       ],
       "fastspeech2_csmsc": [
