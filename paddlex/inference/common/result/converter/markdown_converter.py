@@ -16,6 +16,8 @@
 
 from __future__ import annotations
 
+import copy
+
 from .format_funcs import merge_formula_and_number
 
 
@@ -94,6 +96,7 @@ class MarkdownConverter:
             ):
                 next_block = blocks_list[idx + 1]
                 if next_block.label == "formula_number":
+                    block = copy.copy(block)
                     block.content = merge_formula_and_number(
                         block.content, next_block.content
                     )

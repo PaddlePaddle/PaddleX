@@ -171,8 +171,8 @@ def simplify_table_func(table_code):
     ).replace("</body>", "")
 
 
-def format_first_line_func(block, templates, format_func, spliter):
-    lines = block.content.split(spliter)
+def format_first_line_func(block, templates, format_func, splitter):
+    lines = block.content.split(splitter)
     for idx in range(len(lines)):
         line = lines[idx]
         if line.strip() == "":
@@ -180,22 +180,22 @@ def format_first_line_func(block, templates, format_func, spliter):
         if line.lower() in templates:
             lines[idx] = format_func(line)
         break
-    return spliter.join(lines)
+    return splitter.join(lines)
 
 
 def format_table_center_func(block):
     """Add center styling to table HTML (used by PaddleOCR-VL)."""
-    tabel_content = block.content
-    tabel_content = tabel_content.replace(
+    table_content = block.content
+    table_content = table_content.replace(
         "<table>", "<table border=1 style='margin: auto; word-wrap: break-word;'>"
     )
-    tabel_content = tabel_content.replace(
+    table_content = table_content.replace(
         "<th>", "<th style='text-align: center; word-wrap: break-word;'>"
     )
-    tabel_content = tabel_content.replace(
+    table_content = table_content.replace(
         "<td>", "<td style='text-align: center; word-wrap: break-word;'>"
     )
-    return tabel_content
+    return table_content
 
 
 def merge_formula_and_number(formula, formula_number):
@@ -264,7 +264,7 @@ def build_handle_funcs_dict(
             format_first_line_func,
             templates=["摘要", "abstract"],
             format_func=lambda l: f"## {l}\n",
-            spliter=" ",
+            splitter=" ",
         ),
         "content": lambda block: block.content.replace("-\n", "  \n").replace(
             "\n", "  \n"
@@ -279,7 +279,7 @@ def build_handle_funcs_dict(
             format_first_line_func,
             templates=["参考文献", "references"],
             format_func=lambda l: f"## {l}",
-            spliter="\n",
+            splitter="\n",
         ),
         "algorithm": lambda block: block.content.strip("\n"),
         "seal": seal_func,
