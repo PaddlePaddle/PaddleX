@@ -34,6 +34,7 @@ register_predictor_binding_map(
     {
         "paddle_static": MODELS,
         "paddle_dynamic": create_binding_registration(
+            MODELS,
             **{
                 PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
                     _load_uvdocnet,

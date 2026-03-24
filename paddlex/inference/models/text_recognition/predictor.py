@@ -35,7 +35,12 @@ from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..predictors import RunnerPredictor, TransformersPredictor
-from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
+from .processors import (
+    CTCLabelDecode,
+    OCRReisizeNormImg,
+    ToBatch,
+    validate_text_rec_image_array,
+)
 from .result import TextRecResult
 
 if is_dep_available("python-bidi"):
@@ -132,6 +137,8 @@ class TextRecRunnerPredictor(RunnerPredictor):
 
     def process(self, batch_data, return_word_box=False):
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
+        for i, img in enumerate(batch_raw_imgs):
+            validate_text_rec_image_array(img, index=i)
         width_list = []
         for img in batch_raw_imgs:
             width_list.append(img.shape[1] / float(img.shape[0]))
@@ -257,6 +264,8 @@ class TextRecTransformersPredictor(TransformersPredictor):
 
     def process(self, batch_data, return_word_box: Optional[bool] = None):
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        for i, img in enumerate(batch_raw_imgs):
+            validate_text_rec_image_array(img, index=i)
         width_list = [img.shape[1] / float(img.shape[0]) for img in batch_raw_imgs]
         indices = np.argsort(np.array(width_list))
         images = [Image.fromarray(img) for img in batch_raw_imgs]

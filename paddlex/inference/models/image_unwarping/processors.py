@@ -84,7 +84,7 @@ class DocTrPostProcess:
         assert isinstance(
             im, np.ndarray
         ), "Invalid input 'im' in DocTrPostProcess. Expected a numpy array."
-        im = im.squeeze()
+        im = im.squeeze(0)
         im = im.transpose(1, 2, 0)
         im *= self.scale
         im = im[:, :, ::-1]
