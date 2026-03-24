@@ -159,12 +159,12 @@ def try_get_supported_engines(model_name: str) -> Tuple[str, ...] | None:
 
 def get_binding(model_name: str, engine: str) -> Binding:
     """Get binding for (model_name, engine). Raises on unknown model or unsupported engine."""
-    supported = try_get_supported_engines(model_name)
-    if supported is None:
+    engine_map = _registry.get(model_name)
+    if not engine_map:
         raise UnknownModelError(model_name, tuple(_registry))
-    binding = _registry.get(model_name, {}).get(engine.lower())
+    binding = engine_map.get(engine.lower())
     if binding is None:
-        raise UnsupportedEngineError(model_name, engine, supported)
+        raise UnsupportedEngineError(model_name, engine, tuple(engine_map))
     return binding
 
 

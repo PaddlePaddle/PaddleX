@@ -17,13 +17,11 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Type
 
-from pydantic import ValidationError
-
 from ....constants import MODEL_FILE_PREFIX
 from ....utils import logging
 from ....utils.deps import is_dep_available
 from ..bindings import Binding
-from ..hpi import HPIInfo
+from ..hpi import get_hpi_info
 from ..runners import PaddleStaticRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_dynamic_runner import PaddleDynamicRunnerConfig
@@ -32,20 +30,11 @@ from ..utils.model_paths import LocalModelFormat
 from ._base import RunnerEngine
 
 
-def _get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
-    if not model_config or "Hpi" not in model_config:
-        return None
-    try:
-        return HPIInfo.model_validate(model_config["Hpi"])
-    except ValidationError as e:
-        raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
-
-
 def _inject_trt_info(
     model_config: Optional[Dict[str, Any]],
     engine_config: Dict[str, Any],
 ) -> Dict[str, Any]:
-    hpi_info = _get_hpi_info(model_config)
+    hpi_info = get_hpi_info(model_config)
     if hpi_info is None:
         return engine_config
     paddle_info = None
