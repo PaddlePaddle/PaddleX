@@ -21,6 +21,7 @@ from typing import Dict, List
 
 def _set_paragraph_style(para, config):
     """Apply font/alignment config to a Word paragraph."""
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.oxml.ns import qn
     from docx.shared import Inches, Pt
 
@@ -30,7 +31,7 @@ def _set_paragraph_style(para, config):
     run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
     run.font.size = Pt(config.get("size", 12))
     run.bold = config.get("bold", False)
-    para.alignment = config.get("align")
+    para.alignment = config.get("align", WD_ALIGN_PARAGRAPH.LEFT)
     if config.get("indent", False):
         para.paragraph_format.first_line_indent = Inches(0.3)
 

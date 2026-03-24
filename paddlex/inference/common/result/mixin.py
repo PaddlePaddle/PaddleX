@@ -122,7 +122,6 @@ class LatexMixin:
             abs_image_paths=abs_image_paths,
         )
 
-        os.makedirs(save_path, exist_ok=True)
         with open(save_file.as_posix(), "w", encoding="utf-8") as f:
             f.write(latex)
 
