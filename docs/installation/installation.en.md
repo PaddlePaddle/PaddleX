@@ -3,7 +3,7 @@ comments: true
 ---
 
 # PaddleX Local Installation Tutorial
-> ❗Before installing PaddleX, please ensure you have a basic <b>Python environment</b> (Note: Currently supports Python 3.8 to Python 3.12, with more Python versions being adapted).
+> ❗Before installing PaddleX, please ensure you have a basic <b>Python environment</b> (Note: Currently supports Python 3.8 to Python 3.13, with more Python versions being adapted).
 
 > ❗In most cases, you need to first install the PaddlePaddle framework by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install.en.md) before proceeding with PaddleX's installation steps. [4 PaddleX's Dependency on PaddlePaddle Framework](#4-paddlexs-dependency-on-paddlepaddle-framework) lists scenarios where installing the PaddlePaddle framework is not required.
 

@@ -3,7 +3,7 @@ comments: true
 ---
 
 # PaddleX本地安装教程
-> ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.12下运行）。
+> ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.13下运行）。
 
 > ❗在大多数情况下，您需要先参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架，再执行 PaddleX 的安装步骤。[4 PaddleX 对飞桨框架的依赖](#4-paddlex-对飞桨框架的依赖) 中列举了不需要安装飞桨框架的情形。
 
