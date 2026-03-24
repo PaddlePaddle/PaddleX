@@ -12,14 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
-
 import queue
 import re
 import threading
 import time
 from itertools import chain
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from PIL import Image
@@ -178,7 +176,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         use_ocr_for_image_block: Union[bool, None],
         format_block_content: Union[bool, None],
         merge_layout_blocks: Union[bool, None],
-        markdown_ignore_labels: Optional[list[str]] = None,
+        markdown_ignore_labels: Optional[List[str]] = None,
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -512,7 +510,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
     def predict(
         self,
-        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Union[bool, None] = False,
         use_doc_unwarping: Union[bool, None] = False,
         use_layout_detection: Union[bool, None] = None,
@@ -534,7 +532,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         max_pixels: Optional[int] = None,
         max_new_tokens: Optional[int] = None,
         merge_layout_blocks: Optional[bool] = None,
-        markdown_ignore_labels: Optional[list[str]] = None,
+        markdown_ignore_labels: Optional[List[str]] = None,
         vlm_extra_args: Optional[dict] = None,
         **kwargs,
     ) -> PaddleOCRVLResult:
