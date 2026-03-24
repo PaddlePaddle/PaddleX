@@ -48,7 +48,7 @@ BASE_DEP_SPECS = {
     "lxml": "",
     "matplotlib": "",
     "modelscope": [
-        '== 1.29.0; python_version == "3.8"',
+        '>= 1.28.0, < 1.30; python_version == "3.8"',
         '>= 1.28.0; python_version >= "3.9"',
     ],
     "numpy": ">= 1.24",
