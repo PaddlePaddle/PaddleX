@@ -22,6 +22,7 @@ from typing import Any, Dict, Optional, Tuple, Type, Union
 from pydantic import BaseModel, ValidationError
 
 from ....constants import MODEL_FILE_PREFIX
+from ....utils.device import parse_device
 from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ..bindings import Binding
 from ..runners.inference_runner import InferenceRunner
@@ -118,6 +119,14 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
         engine_config: Optional[Dict[str, Any]] = None,
     ) -> None:
         del device, engine_config
+
+    @staticmethod
+    def _apply_device(raw: Dict[str, Any], device: Optional[str]) -> None:
+        """Apply device_type and device_id from a device string into raw config."""
+        if device:
+            device_type, device_ids = parse_device(device)
+            raw["device_type"] = device_type
+            raw["device_id"] = device_ids[0] if device_ids is not None else None
 
     @staticmethod
     def _pp_option_to_engine_config(pp_option: PaddlePredictorOption) -> Dict[str, Any]:

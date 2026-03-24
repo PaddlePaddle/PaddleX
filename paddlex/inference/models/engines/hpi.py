@@ -66,11 +66,8 @@ class HPIEngine(RunnerEngine):
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         raw.setdefault("model_name", model_name or "")
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
-        elif "device_type" not in raw:
+        self._apply_device(raw, device)
+        if not device and "device_type" not in raw:
             raw["device_type"], _ = parse_device(get_default_device())
         return raw
 

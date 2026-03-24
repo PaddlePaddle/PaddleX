@@ -55,10 +55,7 @@ class ONNXRuntimeEngine(RunnerEngine):
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw
 
     def ensure_environment(

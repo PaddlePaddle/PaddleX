@@ -17,7 +17,6 @@
 
 from typing import Any, Dict, Optional
 
-from ....utils.device import parse_device
 from ._base import InferenceEngine
 
 
@@ -38,8 +37,5 @@ class FlexibleEngine(InferenceEngine):
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw

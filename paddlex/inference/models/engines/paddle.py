@@ -22,7 +22,6 @@ from pydantic import ValidationError
 from ....constants import MODEL_FILE_PREFIX
 from ....utils import logging
 from ....utils.deps import is_dep_available
-from ....utils.device import parse_device
 from ..bindings import Binding
 from ..hpi import HPIInfo
 from ..runners import PaddleStaticRunner
@@ -103,10 +102,7 @@ class PaddleStaticEngine(RunnerEngine):
         del model_name
         valid_fields = set(PaddleStaticRunnerConfig.model_fields)
         raw = {key: value for key, value in raw.items() if key in valid_fields}
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw
 
     def ensure_environment(
@@ -171,10 +167,7 @@ class PaddleDynamicEngine(RunnerEngine):
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw
 
     def ensure_environment(

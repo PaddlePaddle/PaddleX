@@ -36,6 +36,7 @@ from ..predictors import (
 )
 from ..utils.model_paths import get_model_paths
 from .constants import (
+    PADDLEOCR_VL_GENAI_CLIENT_BATCH_SIZE,
     PADDLEOCR_VL_LOCAL_BATCH_SIZE,
     PADDLEOCR_VL_MAX_NEW_TOKENS,
     PADDLEOCR_VL_MODELS,
@@ -56,12 +57,11 @@ class DocVLMLocalPredictor(LocalModelPredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.batch_sampler = self._build_batch_sampler()
         bs = kwargs.get("batch_size", -1)
-        self.batch_sampler.batch_size = bs
-
-        if self.batch_sampler.batch_size == -1:
+        if bs == -1:
             self.batch_sampler.batch_size = self._determine_batch_size()
+        else:
+            self.batch_sampler.batch_size = bs
 
         if is_bfloat16_available(self.device):
             self.dtype = "bfloat16"
@@ -383,10 +383,9 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
             model_name=model_name,
             engine_config=engine_config,
         )
-        self.batch_sampler = self._build_batch_sampler()
         bs = kwargs.get("batch_size", 1)
         if bs == -1 and is_in_group(self.model_name, "PaddleOCR-VL"):
-            bs = PADDLEOCR_VL_MAX_NEW_TOKENS
+            bs = PADDLEOCR_VL_GENAI_CLIENT_BATCH_SIZE
         elif bs == -1:
             bs = 1
         self.batch_sampler.batch_size = bs
