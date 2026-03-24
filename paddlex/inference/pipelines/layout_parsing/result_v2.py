@@ -179,6 +179,65 @@ class LayoutParsingResultV2(
 
         return JsonMixin._to_str(data, *args, **kwargs)
 
+    def _build_handle_funcs_dict(self, pretty=True):
+        """Build label-to-handler mapping for content formatting."""
+        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+        if pretty:
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain_func(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html_func(
+                    block,
+                    original_image_width=original_image_width,
+                )
+            )
+        else:
+            format_text_func = lambda block: block.content
+            format_image_func = format_image_plain_func
+
+        if self["model_settings"].get("use_chart_recognition", False):
+            format_chart_func = format_chart2markdown_table_func
+        else:
+            format_chart_func = format_image_func
+
+        if self["model_settings"].get("use_seal_recognition", False):
+            format_seal_func = lambda block: "\n".join(
+                [format_image_func(block), format_text_func(block)]
+            )
+        else:
+            format_seal_func = format_image_func
+
+        if self["model_settings"].get("use_table_recognition", False):
+            if pretty:
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
+            else:
+                format_table_func = lambda block: simplify_table_func(
+                    "\n" + block.content
+                )
+        else:
+            format_table_func = format_image_func
+
+        if self["model_settings"].get("use_formula_recognition", False):
+            format_formula_func = lambda block: f"$${block.content}$$"
+        else:
+            format_formula_func = format_image_func
+
+        handle_funcs_dict = build_handle_funcs_dict(
+            text_func=format_text_func,
+            image_func=format_image_func,
+            chart_func=format_chart_func,
+            table_func=format_table_func,
+            formula_func=format_formula_func,
+            seal_func=format_seal_func,
+            use_plain_header_footer_image=True,
+        )
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
+        return handle_funcs_dict
+
     def _to_json(self, *args, **kwargs) -> dict[str, str]:
         """
         Converts the object's data to a JSON dictionary.
@@ -191,52 +250,7 @@ class LayoutParsingResultV2(
             Dict[str, str]: A dictionary containing the object's data in JSON format.
         """
         if self["model_settings"].get("format_block_content", False):
-            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                )
-            )
-
-            if self["model_settings"].get("use_chart_recognition", False):
-                format_chart_func = format_chart2markdown_table_func
-            else:
-                format_chart_func = format_image_func
-
-            if self["model_settings"].get("use_seal_recognition", False):
-                format_seal_func = lambda block: "\n".join(
-                    [format_image_func(block), format_text_func(block)]
-                )
-            else:
-                format_seal_func = format_image_func
-
-            if self["model_settings"].get("use_table_recognition", False):
-                format_table_func = lambda block: "\n" + format_text_func(
-                    block
-                ).replace("<table>", '<table border="1">')
-            else:
-                format_table_func = format_image_func
-
-            if self["model_settings"].get("use_formula_recognition", False):
-                format_formula_func = lambda block: f"$${block.content}$$"
-            else:
-                format_formula_func = format_image_func
-
-            handle_funcs_dict = build_handle_funcs_dict(
-                text_func=format_text_func,
-                image_func=format_image_func,
-                chart_func=format_chart_func,
-                table_func=format_table_func,
-                formula_func=format_formula_func,
-                seal_func=format_seal_func,
-                use_plain_header_footer_image=True,
-            )
-            for label in self["model_settings"].get("markdown_ignore_labels", []):
-                handle_funcs_dict.pop(label, None)
+            handle_funcs_dict = self._build_handle_funcs_dict(pretty=True)
 
         data = {}
         data["input_path"] = self["input_path"]
@@ -332,62 +346,7 @@ class LayoutParsingResultV2(
         Returns:
             Dict
         """
-        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
-
-        if pretty:
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                )
-            )
-        else:
-            format_text_func = lambda block: block.content
-            format_image_func = format_image_plain_func
-
-        if self["model_settings"].get("use_chart_recognition", False):
-            format_chart_func = format_chart2markdown_table_func
-        else:
-            format_chart_func = format_image_func
-
-        if self["model_settings"].get("use_seal_recognition", False):
-            format_seal_func = lambda block: "\n".join(
-                [format_image_func(block), format_text_func(block)]
-            )
-        else:
-            format_seal_func = format_image_func
-
-        if self["model_settings"].get("use_table_recognition", False):
-            if pretty:
-                format_table_func = lambda block: "\n" + format_text_func(
-                    block
-                ).replace("<table>", '<table border="1">')
-            else:
-                format_table_func = lambda block: simplify_table_func(
-                    "\n" + block.content
-                )
-        else:
-            format_table_func = format_image_func
-
-        if self["model_settings"].get("use_formula_recognition", False):
-            format_formula_func = lambda block: f"$${block.content}$$"
-        else:
-            format_formula_func = format_image_func
-
-        handle_funcs_dict = build_handle_funcs_dict(
-            text_func=format_text_func,
-            image_func=format_image_func,
-            chart_func=format_chart_func,
-            table_func=format_table_func,
-            formula_func=format_formula_func,
-            seal_func=format_seal_func,
-            use_plain_header_footer_image=True,
-        )
-        for label in self["model_settings"].get("markdown_ignore_labels", []):
-            handle_funcs_dict.pop(label, None)
+        handle_funcs_dict = self._build_handle_funcs_dict(pretty=pretty)
 
         return MarkdownConverter.convert(
             self["parsing_res_list"],

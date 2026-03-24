@@ -210,6 +210,11 @@ def merge_formula_and_number(formula, formula_number):
 # ---------------------------------------------------------------------------
 
 
+def _format_normalize_newlines_func(block):
+    """Normalize double newlines to single, then single to double for markdown spacing."""
+    return block.content.replace("\n\n", "\n").replace("\n", "\n\n")
+
+
 def build_handle_funcs_dict(
     *,
     text_func,
@@ -249,17 +254,11 @@ def build_handle_funcs_dict(
         "table_title": text_func,
         "figure_title": text_func,
         "chart_title": text_func,
-        "vision_footnote": lambda block: block.content.replace("\n\n", "\n").replace(
-            "\n", "\n\n"
-        ),
-        "text": lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
-        "ocr": lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
-        "vertical_text": lambda block: block.content.replace("\n\n", "\n").replace(
-            "\n", "\n\n"
-        ),
-        "reference_content": lambda block: block.content.replace("\n\n", "\n").replace(
-            "\n", "\n\n"
-        ),
+        "vision_footnote": _format_normalize_newlines_func,
+        "text": _format_normalize_newlines_func,
+        "ocr": _format_normalize_newlines_func,
+        "vertical_text": _format_normalize_newlines_func,
+        "reference_content": _format_normalize_newlines_func,
         "abstract": partial(
             format_first_line_func,
             templates=["摘要", "abstract"],
@@ -283,7 +282,7 @@ def build_handle_funcs_dict(
         ),
         "algorithm": lambda block: block.content.strip("\n"),
         "seal": seal_func,
-        "spotting": lambda block: block.content,
+        "spotting": format_text_plain_func,
         "number": format_text_plain_func,
         "footnote": format_text_plain_func,
         "header": format_text_plain_func,
