@@ -4,7 +4,7 @@
 
 <p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.13-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
@@ -592,19 +592,19 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 ### 🛠️ Installation
 
-> ❗Before installing PaddleX, please ensure that you have a basic **Python runtime environment** (Note: Currently supports Python 3.8 to Python 3.12). The PaddleX 3.0.x version depends on PaddlePaddle version 3.0.0 and above. Please make sure the version compatibility is maintained before use.
+> ❗Before installing PaddleX, please ensure that you have a basic **Python runtime environment** (Note: Currently supports Python 3.8 to Python 3.13). The PaddleX 3.0.x version depends on PaddlePaddle version 3.0.0 and above. Please make sure the version compatibility is maintained before use.
 
 * **Installing PaddlePaddle**
 
 ```bash
 # CPU
-python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+python -m pip install paddlepaddle==3.3.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
- python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+ python -m pip install paddlepaddle-gpu==3.3.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
 # gpu，requires GPU driver version ≥550.54.14 (Linux) or ≥550.54.14 (Windows)
- python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+ python -m pip install paddlepaddle-gpu==3.3.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 ```
 > ❗No need to focus on the CUDA version on the physical machine, only the GPU driver version needs attention. For more information on PaddlePaddle Wheel versions, please refer to the [PaddlePaddle Official Website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/en/install/pip/linux-pip.html).
 
