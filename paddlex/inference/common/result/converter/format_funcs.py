@@ -47,7 +47,7 @@ TITLE_RE_PATTERN = compile_title_pattern()
 # ---------------------------------------------------------------------------
 
 
-def format_title_func(block):
+def format_title(block):
     """Normalize chapter title with '#' level indicator."""
     title = block.content
     match = TITLE_RE_PATTERN.match(title)
@@ -71,10 +71,10 @@ def format_title_func(block):
     )
 
 
-def format_para_title_func(block):
+def format_para_title(block):
     """Normalize paragraph title, using title_level if available."""
     if not hasattr(block, "title_level"):
-        return format_title_func(block)
+        return format_title(block)
     level = block.title_level
     title = block.content
     return f"#{'#' * level} {title}".replace("-\n", "").replace(
@@ -83,19 +83,56 @@ def format_para_title_func(block):
     )
 
 
-def format_centered_by_html(string, remove_symbol=True):
-    if remove_symbol:
-        string = string.replace("-\n", "").replace("\n", " ")
-    return f'<div style="text-align: center;">{string}</div>' + "\n"
+def format_centered_by_html(content, collapse_newlines=True):
+    """Wrap *content* in an HTML center-aligned div.
+
+    Args:
+        content: Pre-formatted string (e.g., an ``<img>`` tag or plain text).
+            Unlike the other format helpers this function takes a string, not
+            a block object.
+        collapse_newlines: If *True* (default), collapse soft-hyphen line
+            breaks (``"-\\n"`` → ``""``) and hard line breaks (``"\\n"`` →
+            ``" "``) before wrapping.  Set to *False* to preserve the string
+            as-is (useful for multi-line HTML content).
+
+    Returns:
+        str: HTML ``<div style="text-align: center;">…</div>`` followed by a
+        newline.
+    """
+    if collapse_newlines:
+        content = content.replace("-\n", "").replace("\n", " ")
+    return f'<div style="text-align: center;">{content}</div>' + "\n"
 
 
-def format_text_plain_func(block):
+def format_text_plain(block):
+    """Return the block's raw text content without any transformation."""
     return block.content
 
 
-def format_image_scaled_by_html_func(
-    block, original_image_width, show_ocr_content=False
-):
+def format_image_scaled_by_html(block, original_image_width, show_ocr_content=False):
+    """Render an image block as a width-scaled HTML ``<img>`` tag.
+
+    Unlike the standard ``(block) -> str`` formatters, this function requires
+    ``original_image_width`` — a page-level context value — and therefore
+    **cannot be used directly as a handler**.  Callers must curry it via a
+    ``lambda`` or :func:`functools.partial`::
+
+        format_image_func = lambda block: format_centered_by_html(
+            format_image_scaled_by_html(block, original_image_width=width)
+        )
+
+    Args:
+        block: Document block with ``image``, ``bbox``, and optionally
+            ``content`` attributes.
+        original_image_width: Full pixel width of the source page image, used
+            to compute the block's relative width as a percentage.
+        show_ocr_content: If *True*, append ``block.content`` (OCR text) below
+            the image tag.
+
+    Returns:
+        str: HTML ``<img>`` tag (optionally followed by OCR text), or ``""``
+        when ``block.image`` is *None*.
+    """
     img_tags = []
     if block.image is None:
         return ""
@@ -114,7 +151,18 @@ def format_image_scaled_by_html_func(
     return image_info
 
 
-def format_image_plain_func(block, show_ocr_content=False):
+def format_image_plain(block, show_ocr_content=False):
+    """Render an image block as a Markdown image reference ``![](path)``.
+
+    Args:
+        block: Document block with an ``image`` dict (``{"path": str, "img":
+            PIL.Image}``) or *None*.
+        show_ocr_content: If *True*, append ``block.content`` (OCR text) below
+            the Markdown image tag.
+
+    Returns:
+        str: Markdown image reference, or ``""`` when ``block.image`` is *None*.
+    """
     img_tags = []
     if block.image:
         image_path = block.image["path"]
@@ -129,7 +177,7 @@ def format_image_plain_func(block, show_ocr_content=False):
     return ""
 
 
-def format_chart2markdown_table_func(block):
+def format_chart2markdown_table(block):
     """Chart → Markdown table (used by PP-StructureV3 / result_v2)."""
     lines_list = block.content.split("\n")
     column_num = len(lines_list[0].split("|"))
@@ -138,7 +186,7 @@ def format_chart2markdown_table_func(block):
     return "\n".join(lines_list)
 
 
-def format_chart2html_table_func(block):
+def format_chart2html_table(block):
     """Chart → HTML table (used by PaddleOCR-VL)."""
     lines_list = block.content.split("\n")
     header = lines_list[0].split("|")
@@ -165,13 +213,50 @@ def format_chart2html_table_func(block):
     return html
 
 
-def simplify_table_func(table_code):
+def simplify_table(table_code):
+    """Strip ``<html>`` and ``<body>`` wrapper tags from a table HTML string.
+
+    Note: Unlike other format helpers, this function accepts a raw HTML string
+    (not a block object) and is typically called inside a lambda::
+
+        format_table_func = lambda block: simplify_table("\\n" + block.content)
+
+    Args:
+        table_code: Raw HTML string, typically containing ``<table>`` wrapped
+            in ``<html><body>…</body></html>``.
+
+    Returns:
+        str: HTML with outer ``<html>`` and ``<body>`` tags removed, preceded
+        by a newline.
+    """
     return "\n" + table_code.replace("<html>", "").replace("</html>", "").replace(
         "<body>", ""
     ).replace("</body>", "")
 
 
-def format_first_line_func(block, templates, format_func, splitter):
+def format_first_line(block, templates, format_func, splitter):
+    """Format the first non-empty line of a block if it matches a template.
+
+    Intended for use with :func:`functools.partial` to create fixed handlers
+    for labels such as ``"abstract"`` or ``"reference"``::
+
+        partial(format_first_line,
+                templates=["摘要", "abstract"],
+                format_func=lambda l: f"## {l}\\n",
+                splitter=" ")
+
+    Args:
+        block: Document block whose ``content`` is split by *splitter*.
+        templates: List of lowercase strings to match against the first
+            non-empty line (case-insensitive).
+        format_func: Called with the matching line; its return value replaces
+            that line in the output.
+        splitter: String delimiter used to split and re-join ``block.content``.
+
+    Returns:
+        str: Content with the first matching line reformatted, or the original
+        content if no line matches.
+    """
     lines = block.content.split(splitter)
     for idx in range(len(lines)):
         line = lines[idx]
@@ -183,7 +268,7 @@ def format_first_line_func(block, templates, format_func, splitter):
     return splitter.join(lines)
 
 
-def format_table_center_func(block):
+def format_table_center(block):
     """Add center styling to table HTML (used by PaddleOCR-VL)."""
     table_content = block.content
     table_content = table_content.replace(
@@ -210,7 +295,7 @@ def merge_formula_and_number(formula, formula_number):
 # ---------------------------------------------------------------------------
 
 
-def _format_normalize_newlines_func(block):
+def _format_normalize_newlines(block):
     """Normalize double newlines to single, then single to double for markdown spacing."""
     return block.content.replace("\n\n", "\n").replace("\n", "\n\n")
 
@@ -235,32 +320,32 @@ def build_handle_funcs_dict(
         formula_func: Function to format formula blocks.
         seal_func: Function to format seal blocks.
         use_plain_header_footer_image: If True, header_image/footer_image use
-            format_image_plain_func instead of image_func (result_v2 behavior).
+            format_image_plain instead of image_func (result_v2 behavior).
 
     Returns:
         dict: A mapping from block label to handler function.
     """
     header_footer_image_func = (
-        format_image_plain_func if use_plain_header_footer_image else image_func
+        format_image_plain if use_plain_header_footer_image else image_func
     )
     return {
-        "paragraph_title": format_para_title_func,
-        "abstract_title": format_title_func,
-        "reference_title": format_title_func,
-        "content_title": format_title_func,
+        "paragraph_title": format_para_title,
+        "abstract_title": format_title,
+        "reference_title": format_title,
+        "content_title": format_title,
         "doc_title": lambda block: f"# {block.content}".replace("-\n", "").replace(
             "\n", " "
         ),
         "table_title": text_func,
         "figure_title": text_func,
         "chart_title": text_func,
-        "vision_footnote": _format_normalize_newlines_func,
-        "text": _format_normalize_newlines_func,
-        "ocr": _format_normalize_newlines_func,
-        "vertical_text": _format_normalize_newlines_func,
-        "reference_content": _format_normalize_newlines_func,
+        "vision_footnote": _format_normalize_newlines,
+        "text": _format_normalize_newlines,
+        "ocr": _format_normalize_newlines,
+        "vertical_text": _format_normalize_newlines,
+        "reference_content": _format_normalize_newlines,
         "abstract": partial(
-            format_first_line_func,
+            format_first_line,
             templates=["摘要", "abstract"],
             format_func=lambda l: f"## {l}\n",
             splitter=" ",
@@ -275,19 +360,19 @@ def build_handle_funcs_dict(
         "inline_formula": formula_func,
         "table": table_func,
         "reference": partial(
-            format_first_line_func,
+            format_first_line,
             templates=["参考文献", "references"],
             format_func=lambda l: f"## {l}",
             splitter="\n",
         ),
         "algorithm": lambda block: block.content.strip("\n"),
         "seal": seal_func,
-        "spotting": format_text_plain_func,
-        "number": format_text_plain_func,
-        "footnote": format_text_plain_func,
-        "header": format_text_plain_func,
+        "spotting": format_text_plain,
+        "number": format_text_plain,
+        "footnote": format_text_plain,
+        "header": format_text_plain,
         "header_image": header_footer_image_func,
-        "footer": format_text_plain_func,
+        "footer": format_text_plain,
         "footer_image": header_footer_image_func,
-        "aside_text": format_text_plain_func,
+        "aside_text": format_text_plain,
     }

@@ -34,12 +34,12 @@ from ...common.result.converter import MarkdownConverter
 from ...common.result.converter.format_funcs import (
     build_handle_funcs_dict,
     format_centered_by_html,
-    format_chart2html_table_func,
-    format_image_plain_func,
-    format_image_scaled_by_html_func,
-    format_table_center_func,
-    format_text_plain_func,
-    simplify_table_func,
+    format_chart2html_table,
+    format_image_plain,
+    format_image_scaled_by_html,
+    format_table_center,
+    format_text_plain,
+    simplify_table,
 )
 from ..ocr.result import draw_box_txt_fine, get_minarea_rect
 
@@ -296,35 +296,35 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         if pretty:
             format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
+                format_text_plain(block)
             )
             format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
+                format_image_scaled_by_html(
                     block,
                     original_image_width=original_image_width,
                     show_ocr_content=use_ocr_for_image_block,
                 ),
-                remove_symbol=not use_ocr_for_image_block,
+                collapse_newlines=not use_ocr_for_image_block,
             )
             format_seal_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
+                format_image_scaled_by_html(
                     block,
                     original_image_width=original_image_width,
                     show_ocr_content=use_seal_recognition,
                 ),
-                remove_symbol=not use_seal_recognition,
+                collapse_newlines=not use_seal_recognition,
             )
         else:
             format_text_func = lambda block: block.content
-            format_image_func = lambda block: format_image_plain_func(
+            format_image_func = lambda block: format_image_plain(
                 block, use_ocr_for_image_block
             )
-            format_seal_func = lambda block: format_image_plain_func(
+            format_seal_func = lambda block: format_image_plain(
                 block, use_seal_recognition
             )
 
         format_chart_func = (
-            format_chart2html_table_func
+            format_chart2html_table
             if self["model_settings"].get("use_chart_recognition", False)
             else format_image_func
         )
@@ -333,9 +333,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             format_seal_func = format_text_func
 
         if pretty:
-            format_table_func = lambda block: "\n" + format_table_center_func(block)
+            format_table_func = lambda block: "\n" + format_table_center(block)
         else:
-            format_table_func = lambda block: simplify_table_func("\n" + block.content)
+            format_table_func = lambda block: simplify_table("\n" + block.content)
 
         format_formula_func = lambda block: block.content
 

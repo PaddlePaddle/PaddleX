@@ -35,11 +35,11 @@ from ...common.result.converter import MarkdownConverter
 from ...common.result.converter.format_funcs import (
     build_handle_funcs_dict,
     format_centered_by_html,
-    format_chart2markdown_table_func,
-    format_image_plain_func,
-    format_image_scaled_by_html_func,
-    format_text_plain_func,
-    simplify_table_func,
+    format_chart2markdown_table,
+    format_image_plain,
+    format_image_scaled_by_html,
+    format_text_plain,
+    simplify_table,
 )
 from .layout_objects import LayoutBlock
 from .utils import get_seg_flag
@@ -184,20 +184,20 @@ class LayoutParsingResultV2(
         original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
         if pretty:
             format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
+                format_text_plain(block)
             )
             format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
+                format_image_scaled_by_html(
                     block,
                     original_image_width=original_image_width,
                 )
             )
         else:
             format_text_func = lambda block: block.content
-            format_image_func = format_image_plain_func
+            format_image_func = format_image_plain
 
         if self["model_settings"].get("use_chart_recognition", False):
-            format_chart_func = format_chart2markdown_table_func
+            format_chart_func = format_chart2markdown_table
         else:
             format_chart_func = format_image_func
 
@@ -214,9 +214,7 @@ class LayoutParsingResultV2(
                     block
                 ).replace("<table>", '<table border="1">')
             else:
-                format_table_func = lambda block: simplify_table_func(
-                    "\n" + block.content
-                )
+                format_table_func = lambda block: simplify_table("\n" + block.content)
         else:
             format_table_func = format_image_func
 
