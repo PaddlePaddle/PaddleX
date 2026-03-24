@@ -33,8 +33,6 @@ CLAS_TRANSFORMERS_MODELS = PPLCNET_MODELS
 class ClasRunnerPredictor(RunnerPredictor):
     """ClasRunnerPredictor that inherits from RunnerPredictor."""
 
-    entities = MODELS
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -176,8 +174,6 @@ class ClasRunnerPredictor(RunnerPredictor):
 
 class ClasTransformersPredictor(TransformersPredictor):
     """Image classification predictor backed by Hugging Face transformers."""
-
-    entities = CLAS_TRANSFORMERS_MODELS
 
     def __init__(self, topk: Optional[int] = None, *args: List, **kwargs: Dict) -> None:
         super().__init__(*args, **kwargs)

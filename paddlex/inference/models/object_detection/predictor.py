@@ -17,7 +17,6 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import numpy as np
 from PIL import Image
 
-from ....modules.object_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ..predictors import RunnerPredictor, TransformersPredictor
@@ -47,8 +46,6 @@ DET_TRANSFORMERS_MODELS = RTDETR_L_MODELS
 
 class DetRunnerPredictor(RunnerPredictor):
     """Object detection predictor using inference runner."""
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -355,8 +352,6 @@ class DetRunnerPredictor(RunnerPredictor):
 
 class DetTransformersPredictor(TransformersPredictor):
     """Object detection predictor backed by HuggingFace transformers."""
-
-    entities = DET_TRANSFORMERS_MODELS
 
     def __init__(
         self,

@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.m_3d_bev_detection.model_list import MODELS
 from ..bindings import register_predictor_binding_map
-from .predictor import MODELS, BEVDet3DRunnerPredictor
+from .predictor import BEVDet3DRunnerPredictor
 
 register_predictor_binding_map(
     BEVDet3DRunnerPredictor,

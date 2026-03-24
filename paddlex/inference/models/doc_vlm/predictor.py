@@ -22,7 +22,6 @@ from typing import List, Optional
 
 import numpy as np
 
-from ....modules.doc_vlm.model_list import MODELS
 from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
@@ -39,7 +38,6 @@ from .constants import (
     PADDLEOCR_VL_GENAI_CLIENT_BATCH_SIZE,
     PADDLEOCR_VL_LOCAL_BATCH_SIZE,
     PADDLEOCR_VL_MAX_NEW_TOKENS,
-    PADDLEOCR_VL_MODELS,
 )
 from .result import DocVLMResult
 from .utils import format_doc_vlm_result_dict, is_in_group
@@ -47,8 +45,6 @@ from .utils import format_doc_vlm_result_dict, is_in_group
 
 class DocVLMLocalPredictor(LocalModelPredictor):
     """DocVLM predictor for local model inference (Paddle dynamic graph)."""
-
-    entities = MODELS
 
     def __init__(self, *args, **kwargs):
         """Initializes DocVLMPredictor.
@@ -371,8 +367,6 @@ class DocVLMLocalPredictor(LocalModelPredictor):
 
 class DocVLMGenAIClientPredictor(GenAIClientPredictor):
     """DocVLM predictor for remote GenAI inference via GenAIClient."""
-
-    entities = PADDLEOCR_VL_MODELS
 
     def __init__(self, *args, **kwargs):
         engine_config = kwargs.pop("engine_config", None)

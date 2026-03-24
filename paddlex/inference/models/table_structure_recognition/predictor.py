@@ -18,7 +18,6 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 from PIL import Image
 
-from ....modules.table_recognition.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import ImageBatchSampler
@@ -33,7 +32,6 @@ TABLE_REC_TRANSFORMERS_MODELS = ["SLANeXt_wired", "SLANeXt_wireless"]
 
 
 class TableRunnerPredictor(RunnerPredictor):
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -165,8 +163,6 @@ class TableRunnerPredictor(RunnerPredictor):
 
 
 class TableTransformersPredictor(TransformersPredictor):
-
-    entities = TABLE_REC_TRANSFORMERS_MODELS
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         super().__init__(*args, **kwargs)

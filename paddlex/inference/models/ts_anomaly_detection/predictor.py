@@ -17,7 +17,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
 
-from ....modules.ts_anomaly_detection.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
 from ..common import (
@@ -35,8 +34,6 @@ from .result import TSAdResult
 
 class TSAdRunnerPredictor(RunnerPredictor):
     """TSAdRunnerPredictor that inherits from RunnerPredictor."""
-
-    entities = MODELS
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSAdPredictor.

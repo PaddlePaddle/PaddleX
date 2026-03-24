@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.text_to_pinyin.model_list import MODELS
 from ..bindings import register_predictor_binding_map
-from .predictor import MODELS, TextToPinyinPredictor
+from .predictor import TextToPinyinPredictor
 
 register_predictor_binding_map(
     TextToPinyinPredictor,

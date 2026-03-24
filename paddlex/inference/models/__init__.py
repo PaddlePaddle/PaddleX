@@ -433,10 +433,7 @@ def create_predictor(
     )
     if need_local:
         requested_engine.ensure_model_files(model_dir_resolved)
-    requested_engine.ensure_environment(
-        device=device,
-        engine_config=normalized_engine_config,
-    )
+    requested_engine.ensure_environment()
     if resolved_config and need_local:
         config = resolved_config
     else:

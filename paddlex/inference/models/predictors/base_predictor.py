@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
-from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ...common.batch_sampler import BaseBatchSampler
 
 
-class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
+class BasePredictor(ABC, metaclass=ABCMeta):
     """Abstract predictor interface."""
 
     def __init__(

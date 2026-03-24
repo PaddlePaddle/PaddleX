@@ -18,7 +18,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
 
-from ....modules.ts_classification.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
 from ..common import BuildTSDataset, TSCutOff, TSNormalize, TStoArray, TStoBatch
@@ -29,8 +28,6 @@ from .result import TSClsResult
 
 class TSClsRunnerPredictor(RunnerPredictor):
     """TSClsRunnerPredictor that inherits from RunnerPredictor."""
-
-    entities = MODELS
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSClsPredictor.

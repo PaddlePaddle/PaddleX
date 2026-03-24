@@ -17,7 +17,6 @@ from typing import Any, List, Optional, Tuple, Union
 import numpy as np
 from PIL import Image
 
-from ....modules.object_detection.model_list import LAYOUTANALYSIS_MODELS
 from ..object_detection.predictor import DetRunnerPredictor, DetTransformersPredictor
 from ..object_detection.processors import Resize, ToBatch
 from .processors import LayoutAnalysisProcess
@@ -29,8 +28,6 @@ LAYOUT_ANALYSIS_TRANSFORMERS_MODELS = ["PP-DocLayoutV2", "PP-DocLayoutV3"]
 
 class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
     """Layout analysis predictor."""
-
-    entities = LAYOUTANALYSIS_MODELS
 
     def __init__(
         self,
@@ -182,8 +179,6 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
 
 class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
     """Layout analysis predictor backed by HuggingFace transformers."""
-
-    entities = LAYOUT_ANALYSIS_TRANSFORMERS_MODELS
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

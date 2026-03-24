@@ -15,7 +15,6 @@
 
 from typing import Any, Dict, List
 
-from ....modules.open_vocabulary_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -25,8 +24,6 @@ from .results import SAMSegResult
 
 
 class OVSegRunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

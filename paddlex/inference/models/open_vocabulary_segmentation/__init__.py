@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.open_vocabulary_segmentation.model_list import MODELS
 from ..bindings import register_predictor_binding_map
-from .predictor import MODELS, OVSegRunnerPredictor
+from .predictor import OVSegRunnerPredictor
 
 register_predictor_binding_map(
     OVSegRunnerPredictor,

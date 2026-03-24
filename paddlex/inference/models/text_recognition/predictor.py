@@ -17,7 +17,6 @@ from typing import Optional
 import numpy as np
 from PIL import Image
 
-from ....modules.text_recognition.model_list import MODELS
 from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import (
     ARABIC_FONT,
@@ -99,8 +98,6 @@ def get_text_rec_vis_font(model_name):
 
 @class_requires_deps("python-bidi")
 class TextRecRunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -214,8 +211,6 @@ class TextRecRunnerPredictor(RunnerPredictor):
 
 class TextRecTransformersPredictor(TransformersPredictor):
     """Text recognition predictor backed by Hugging Face transformers."""
-
-    entities = TEXT_REC_TRANSFORMERS_MODELS
 
     def __init__(self, *args, return_word_box: bool = False, **kwargs):
         super().__init__(*args, **kwargs)

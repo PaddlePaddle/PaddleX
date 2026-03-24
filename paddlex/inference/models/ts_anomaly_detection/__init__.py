@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.ts_anomaly_detection.model_list import MODELS
 from ..bindings import register_predictor_binding_map
-from .predictor import MODELS, TSAdRunnerPredictor
+from .predictor import TSAdRunnerPredictor
 
 register_predictor_binding_map(
     TSAdRunnerPredictor,

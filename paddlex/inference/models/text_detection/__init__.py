@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.text_detection.model_list import MODELS
 from ..bindings import create_binding_registration, register_predictor_binding_map
 from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
-    MODELS,
     TEXT_DET_TRANSFORMERS_MODELS,
     TextDetRunnerPredictor,
     TextDetTransformersPredictor,

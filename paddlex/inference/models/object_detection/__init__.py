@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.object_detection.model_list import MODELS
 from ..bindings import create_binding_registration, register_predictor_binding_map
 from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (  # noqa: F401
     DET_TRANSFORMERS_MODELS,
-    MODELS,
     RTDETR_L_MODELS,
     DetRunnerPredictor,
     DetTransformersPredictor,

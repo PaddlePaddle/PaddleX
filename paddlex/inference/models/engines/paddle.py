@@ -94,13 +94,7 @@ class PaddleStaticEngine(RunnerEngine):
         self._apply_device(raw, device)
         return raw
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_dep_available("paddlepaddle"):
             raise RuntimeError(
                 "Engine 'paddle_static' is unavailable because dependency "
@@ -159,13 +153,7 @@ class PaddleDynamicEngine(RunnerEngine):
         self._apply_device(raw, device)
         return raw
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_dep_available("paddlepaddle"):
             raise RuntimeError(
                 "Engine 'paddle_dynamic' is unavailable because dependency "

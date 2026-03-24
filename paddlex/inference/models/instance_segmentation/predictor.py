@@ -16,7 +16,6 @@ from typing import Any, List, Optional, Sequence, Tuple
 
 import numpy as np
 
-from ....modules.instance_segmentation.model_list import MODELS
 from ....utils import logging
 from ..object_detection import DetRunnerPredictor
 from ..object_detection.processors import ReadImage, ToBatch
@@ -26,8 +25,6 @@ from .result import InstanceSegResult
 
 class InstanceSegRunnerPredictor(DetRunnerPredictor):
     """InstanceSegRunnerPredictor that inherits from DetRunnerPredictor."""
-
-    entities = MODELS
 
     def __init__(self, *args, threshold: Optional[float] = None, **kwargs):
         """Initializes InstanceSegPredictor.

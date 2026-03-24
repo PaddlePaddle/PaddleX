@@ -17,7 +17,6 @@ from typing import Any, Dict, List, Tuple, Union
 import numpy as np
 from PIL import Image
 
-from ....modules.image_unwarping.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..common import Normalize, ToBatch, ToCHWImage
@@ -30,8 +29,6 @@ WARP_TRANSFORMERS_MODELS = ["UVDoc"]
 
 class WarpRunnerPredictor(RunnerPredictor):
     """WarpRunnerPredictor that inherits from RunnerPredictor."""
-
-    entities = MODELS
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes WarpPredictor.
@@ -98,8 +95,6 @@ class WarpRunnerPredictor(RunnerPredictor):
 
 
 class WarpTransformersPredictor(TransformersPredictor):
-
-    entities = WARP_TRANSFORMERS_MODELS
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         super().__init__(*args, **kwargs)

@@ -63,13 +63,7 @@ class HPIEngine(RunnerEngine):
     def get_config_dump_kwargs(self) -> Dict[str, Any]:
         return {"exclude_none": True, "by_alias": True}
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_dep_available("ultra-infer"):
             raise RuntimeError(
                 "Engine 'hpi' is unavailable because dependency "

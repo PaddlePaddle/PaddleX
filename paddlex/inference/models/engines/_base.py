@@ -112,13 +112,8 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
                 f"No valid model files were found for engine {self.name!r}."
             )
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
+        """Check that required dependencies are installed."""
 
     @staticmethod
     def _apply_device(raw: Dict[str, Any], device: Optional[str]) -> None:

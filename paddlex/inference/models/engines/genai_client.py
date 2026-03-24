@@ -15,7 +15,7 @@
 
 """Remote GenAI client engine."""
 
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Type
 
 from ....utils.deps import is_genai_client_plugin_available
 from ..common.genai import SERVER_BACKENDS, GenAIConfig
@@ -47,12 +47,6 @@ class GenAIClientEngine(InferenceEngine):
             )
         return validated
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_genai_client_plugin_available():
             raise RuntimeError("The genai client plugin is not available.")

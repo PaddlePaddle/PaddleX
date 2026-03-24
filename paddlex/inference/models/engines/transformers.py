@@ -69,13 +69,7 @@ class TransformersEngine(InferenceEngine):
         self._apply_device(raw, device)
         return raw
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_dep_available("transformers"):
             raise RuntimeError(
                 "Engine 'transformers' is unavailable because dependency "

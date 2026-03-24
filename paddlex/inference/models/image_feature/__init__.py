@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.general_recognition.model_list import MODELS
 from ..bindings import register_predictor_binding_map
-from .predictor import MODELS, ImageFeatureRunnerPredictor
+from .predictor import ImageFeatureRunnerPredictor
 
 register_predictor_binding_map(
     ImageFeatureRunnerPredictor,
