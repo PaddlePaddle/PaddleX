@@ -275,6 +275,9 @@ class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
         last_hidden_state = self.flatten(last_hidden_state)
         last_hidden_state = self.head(last_hidden_state)
 
+        # align postprocessing in ClasTransformersPredictor.process
+        last_hidden_state = last_hidden_state.softmax()
+
         return [last_hidden_state.cpu().numpy()]
 
     def get_transpose_weight_keys(self):
