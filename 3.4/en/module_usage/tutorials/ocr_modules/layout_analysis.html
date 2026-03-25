@@ -8,35 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/en/practical_tutorials/image_classification_garbage_tutorial.html">
+        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/en/module_usage/tutorials/ocr_modules/layout_analysis.html">
       
       
-        <link rel="prev" href="face_recognition_tutorial.html">
-      
-      
-        <link rel="next" href="instance_segmentation_remote_sensing_tutorial.html">
       
       
         
-          <link rel="alternate" href="../../practical_tutorials/image_classification_garbage_tutorial.html" hreflang="zh">
+          <link rel="alternate" href="../../../../module_usage/tutorials/ocr_modules/layout_analysis.html" hreflang="zh">
         
-          <link rel="alternate" href="image_classification_garbage_tutorial.html" hreflang="en">
+          <link rel="alternate" href="layout_analysis.html" hreflang="en">
         
       
       
-      <link rel="icon" href="../../assets/favicon.png">
+      <link rel="icon" href="../../../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>垃圾分类实践教程 - PaddleX Documentation</title>
+        <title>Layout Analysis Module Tutorial - PaddleX Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -59,7 +55,7 @@
     
       <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -94,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#paddlex-30-general-image-classification-pipeline-garbage-classification-tutorial" class="md-skip">
+        <a href="#layout-analysis-module-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -109,12 +105,12 @@
             <div class="md-banner__inner md-grid md-typeset">
               
 You're not viewing the latest version.
-<a href="../../..">
+<a href="../../../../..">
     <strong>Click here to go to latest.</strong>
 </a>
 
             </div>
-            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../../../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
           </aside>
         
       </div>
@@ -126,7 +122,7 @@ You're not viewing the latest version.
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../index.html" title="PaddleX Documentation" class="md-header__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
+    <a href="../../../index.html" title="PaddleX Documentation" class="md-header__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
@@ -151,7 +147,7 @@ You're not viewing the latest version.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              垃圾分类实践教程
+              Layout Analysis Module Tutorial
             
           </span>
         </div>
@@ -198,13 +194,13 @@ You're not viewing the latest version.
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../practical_tutorials/image_classification_garbage_tutorial.html" hreflang="zh" class="md-select__link">
+            <a href="../../../../module_usage/tutorials/ocr_modules/layout_analysis.html" hreflang="zh" class="md-select__link">
               简体中文
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="image_classification_garbage_tutorial.html" hreflang="en" class="md-select__link">
+            <a href="layout_analysis.html" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -289,7 +285,7 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../index.html" class="md-tabs__link">
+      <a href="../../../index.html" class="md-tabs__link">
         
   
   
@@ -310,7 +306,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../installation/paddlepaddle_install.html" class="md-tabs__link">
+        <a href="../../../installation/paddlepaddle_install.html" class="md-tabs__link">
           
   
   
@@ -332,7 +328,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../pipeline_usage/pipeline_develop_guide.html" class="md-tabs__link">
+        <a href="../../../pipeline_usage/pipeline_develop_guide.html" class="md-tabs__link">
           
   
   
@@ -361,7 +357,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../module_usage/tutorials/ocr_modules/text_detection.html" class="md-tabs__link">
+        <a href="text_detection.html" class="md-tabs__link">
           
   
   
@@ -386,7 +382,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../pipeline_deploy/high_performance_inference.html" class="md-tabs__link">
+        <a href="../../../pipeline_deploy/high_performance_inference.html" class="md-tabs__link">
           
   
   
@@ -408,7 +404,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../other_devices_support/multi_devices_use_guide.html" class="md-tabs__link">
+        <a href="../../../other_devices_support/multi_devices_use_guide.html" class="md-tabs__link">
           
   
   
@@ -437,7 +433,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../data_annotations/cv_modules/image_classification.html" class="md-tabs__link">
+        <a href="../../../data_annotations/cv_modules/image_classification.html" class="md-tabs__link">
           
   
   
@@ -462,7 +458,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../support_list/pipelines_list.html" class="md-tabs__link">
+        <a href="../../../support_list/pipelines_list.html" class="md-tabs__link">
           
   
   
@@ -484,7 +480,7 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../support_list/models_list.html" class="md-tabs__link">
+        <a href="../../../support_list/models_list.html" class="md-tabs__link">
           
   
   
@@ -502,13 +498,11 @@ You're not viewing the latest version.
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-tabs__link">
           
   
   
@@ -528,7 +522,7 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../VisualDL.html" class="md-tabs__link">
+      <a href="../../../VisualDL.html" class="md-tabs__link">
         
   
   
@@ -547,7 +541,7 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../FAQ.html" class="md-tabs__link">
+      <a href="../../../FAQ.html" class="md-tabs__link">
         
   
   
@@ -566,7 +560,7 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../CHANGELOG.html" class="md-tabs__link">
+      <a href="../../../CHANGELOG.html" class="md-tabs__link">
         
   
   
@@ -607,7 +601,7 @@ You're not viewing the latest version.
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../index.html" title="PaddleX Documentation" class="md-nav__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
+    <a href="../../../index.html" title="PaddleX Documentation" class="md-nav__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
@@ -642,7 +636,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../index.html" class="md-nav__link">
+      <a href="../../../index.html" class="md-nav__link">
         
   
   
@@ -729,7 +723,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../installation/paddlepaddle_install.html" class="md-nav__link">
+      <a href="../../../installation/paddlepaddle_install.html" class="md-nav__link">
         
   
   
@@ -757,7 +751,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../installation/installation.html" class="md-nav__link">
+      <a href="../../../installation/installation.html" class="md-nav__link">
         
   
   
@@ -866,7 +860,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/pipeline_develop_guide.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/pipeline_develop_guide.html" class="md-nav__link">
         
   
   
@@ -954,7 +948,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html" class="md-nav__link">
         
   
   
@@ -982,7 +976,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html" class="md-nav__link">
         
   
   
@@ -1092,7 +1086,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/OCR.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/OCR.html" class="md-nav__link">
         
   
   
@@ -1120,7 +1114,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/table_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.html" class="md-nav__link">
         
   
   
@@ -1148,7 +1142,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html" class="md-nav__link">
         
   
   
@@ -1176,7 +1170,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html" class="md-nav__link">
         
   
   
@@ -1204,7 +1198,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html" class="md-nav__link">
         
   
   
@@ -1232,7 +1226,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html" class="md-nav__link">
         
   
   
@@ -1260,7 +1254,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html" class="md-nav__link">
         
   
   
@@ -1288,7 +1282,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html" class="md-nav__link">
         
   
   
@@ -1316,7 +1310,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.html" class="md-nav__link">
         
   
   
@@ -1440,7 +1434,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/image_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/image_classification.html" class="md-nav__link">
         
   
   
@@ -1468,7 +1462,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/object_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/object_detection.html" class="md-nav__link">
         
   
   
@@ -1496,7 +1490,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html" class="md-nav__link">
         
   
   
@@ -1524,7 +1518,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html" class="md-nav__link">
         
   
   
@@ -1552,7 +1546,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html" class="md-nav__link">
         
   
   
@@ -1580,7 +1574,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/small_object_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection.html" class="md-nav__link">
         
   
   
@@ -1608,7 +1602,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -1636,7 +1630,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html" class="md-nav__link">
         
   
   
@@ -1664,7 +1658,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html" class="md-nav__link">
         
   
   
@@ -1692,7 +1686,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html" class="md-nav__link">
         
   
   
@@ -1720,7 +1714,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html" class="md-nav__link">
         
   
   
@@ -1748,7 +1742,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html" class="md-nav__link">
         
   
   
@@ -1776,7 +1770,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html" class="md-nav__link">
         
   
   
@@ -1804,7 +1798,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html" class="md-nav__link">
         
   
   
@@ -1832,7 +1826,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html" class="md-nav__link">
         
   
   
@@ -1860,7 +1854,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/face_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/face_recognition.html" class="md-nav__link">
         
   
   
@@ -1958,7 +1952,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html" class="md-nav__link">
         
   
   
@@ -1986,7 +1980,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -2014,7 +2008,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html" class="md-nav__link">
         
   
   
@@ -2108,7 +2102,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html" class="md-nav__link">
         
   
   
@@ -2204,7 +2198,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/video_pipelines/video_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/video_pipelines/video_classification.html" class="md-nav__link">
         
   
   
@@ -2232,7 +2226,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/video_pipelines/video_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/video_pipelines/video_detection.html" class="md-nav__link">
         
   
   
@@ -2326,7 +2320,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html" class="md-nav__link">
         
   
   
@@ -2426,7 +2420,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/pipeline_CLI_usage.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/pipeline_CLI_usage.html" class="md-nav__link">
         
   
   
@@ -2454,7 +2448,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/pipeline_python_API.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/pipeline_python_API.html" class="md-nav__link">
         
   
   
@@ -2482,7 +2476,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/parallel_inference.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/parallel_inference.html" class="md-nav__link">
         
   
   
@@ -2510,7 +2504,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/benchmark.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/benchmark.html" class="md-nav__link">
         
   
   
@@ -2707,7 +2701,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/text_detection.html" class="md-nav__link">
+      <a href="text_detection.html" class="md-nav__link">
         
   
   
@@ -2735,7 +2729,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/seal_text_detection.html" class="md-nav__link">
+      <a href="seal_text_detection.html" class="md-nav__link">
         
   
   
@@ -2763,7 +2757,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/text_recognition.html" class="md-nav__link">
+      <a href="text_recognition.html" class="md-nav__link">
         
   
   
@@ -2791,7 +2785,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/layout_detection.html" class="md-nav__link">
+      <a href="layout_detection.html" class="md-nav__link">
         
   
   
@@ -2819,7 +2813,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/table_structure_recognition.html" class="md-nav__link">
+      <a href="table_structure_recognition.html" class="md-nav__link">
         
   
   
@@ -2847,7 +2841,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/table_cells_detection.html" class="md-nav__link">
+      <a href="table_cells_detection.html" class="md-nav__link">
         
   
   
@@ -2875,7 +2869,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/table_classification.html" class="md-nav__link">
+      <a href="table_classification.html" class="md-nav__link">
         
   
   
@@ -2903,7 +2897,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html" class="md-nav__link">
+      <a href="doc_img_orientation_classification.html" class="md-nav__link">
         
   
   
@@ -2931,7 +2925,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/text_image_unwarping.html" class="md-nav__link">
+      <a href="text_image_unwarping.html" class="md-nav__link">
         
   
   
@@ -2959,7 +2953,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/textline_orientation_classification.html" class="md-nav__link">
+      <a href="textline_orientation_classification.html" class="md-nav__link">
         
   
   
@@ -2987,7 +2981,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/formula_recognition.html" class="md-nav__link">
+      <a href="formula_recognition.html" class="md-nav__link">
         
   
   
@@ -3087,7 +3081,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/image_classification.html" class="md-nav__link">
+      <a href="../cv_modules/image_classification.html" class="md-nav__link">
         
   
   
@@ -3115,7 +3109,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/image_multilabel_classification.html" class="md-nav__link">
+      <a href="../cv_modules/image_multilabel_classification.html" class="md-nav__link">
         
   
   
@@ -3143,7 +3137,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html" class="md-nav__link">
+      <a href="../cv_modules/pedestrian_attribute_recognition.html" class="md-nav__link">
         
   
   
@@ -3171,7 +3165,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html" class="md-nav__link">
+      <a href="../cv_modules/vehicle_attribute_recognition.html" class="md-nav__link">
         
   
   
@@ -3267,7 +3261,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/image_feature.html" class="md-nav__link">
+      <a href="../cv_modules/image_feature.html" class="md-nav__link">
         
   
   
@@ -3295,7 +3289,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/face_feature.html" class="md-nav__link">
+      <a href="../cv_modules/face_feature.html" class="md-nav__link">
         
   
   
@@ -3403,7 +3397,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/object_detection.html" class="md-nav__link">
+      <a href="../cv_modules/object_detection.html" class="md-nav__link">
         
   
   
@@ -3431,7 +3425,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/small_object_detection.html" class="md-nav__link">
+      <a href="../cv_modules/small_object_detection.html" class="md-nav__link">
         
   
   
@@ -3459,7 +3453,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/face_detection.html" class="md-nav__link">
+      <a href="../cv_modules/face_detection.html" class="md-nav__link">
         
   
   
@@ -3487,7 +3481,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/mainbody_detection.html" class="md-nav__link">
+      <a href="../cv_modules/mainbody_detection.html" class="md-nav__link">
         
   
   
@@ -3515,7 +3509,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/human_detection.html" class="md-nav__link">
+      <a href="../cv_modules/human_detection.html" class="md-nav__link">
         
   
   
@@ -3543,7 +3537,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/vehicle_detection.html" class="md-nav__link">
+      <a href="../cv_modules/vehicle_detection.html" class="md-nav__link">
         
   
   
@@ -3571,7 +3565,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/human_keypoint_detection.html" class="md-nav__link">
+      <a href="../cv_modules/human_keypoint_detection.html" class="md-nav__link">
         
   
   
@@ -3599,7 +3593,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/open_vocabulary_detection.html" class="md-nav__link">
+      <a href="../cv_modules/open_vocabulary_detection.html" class="md-nav__link">
         
   
   
@@ -3699,7 +3693,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/semantic_segmentation.html" class="md-nav__link">
+      <a href="../cv_modules/semantic_segmentation.html" class="md-nav__link">
         
   
   
@@ -3727,7 +3721,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/instance_segmentation.html" class="md-nav__link">
+      <a href="../cv_modules/instance_segmentation.html" class="md-nav__link">
         
   
   
@@ -3755,7 +3749,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/anomaly_detection.html" class="md-nav__link">
+      <a href="../cv_modules/anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -3783,7 +3777,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/open_vocabulary_segmentation.html" class="md-nav__link">
+      <a href="../cv_modules/open_vocabulary_segmentation.html" class="md-nav__link">
         
   
   
@@ -3881,7 +3875,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/time_series_modules/time_series_forecasting.html" class="md-nav__link">
+      <a href="../time_series_modules/time_series_forecasting.html" class="md-nav__link">
         
   
   
@@ -3909,7 +3903,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
+      <a href="../time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -3937,7 +3931,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/time_series_modules/time_series_classification.html" class="md-nav__link">
+      <a href="../time_series_modules/time_series_classification.html" class="md-nav__link">
         
   
   
@@ -4031,7 +4025,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/speech_modules/multilingual_speech_recognition.html" class="md-nav__link">
+      <a href="../speech_modules/multilingual_speech_recognition.html" class="md-nav__link">
         
   
   
@@ -4125,7 +4119,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/3d_bev_detection.html" class="md-nav__link">
+      <a href="../cv_modules/3d_bev_detection.html" class="md-nav__link">
         
   
   
@@ -4221,7 +4215,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/vlm_modules/doc_vlm.html" class="md-nav__link">
+      <a href="../vlm_modules/doc_vlm.html" class="md-nav__link">
         
   
   
@@ -4249,7 +4243,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/vlm_modules/chart_parsing.html" class="md-nav__link">
+      <a href="../vlm_modules/chart_parsing.html" class="md-nav__link">
         
   
   
@@ -4349,7 +4343,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/model_python_API.html" class="md-nav__link">
+      <a href="../../instructions/model_python_API.html" class="md-nav__link">
         
   
   
@@ -4377,7 +4371,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/config_parameters_common.html" class="md-nav__link">
+      <a href="../../instructions/config_parameters_common.html" class="md-nav__link">
         
   
   
@@ -4405,7 +4399,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/config_parameters_time_series.html" class="md-nav__link">
+      <a href="../../instructions/config_parameters_time_series.html" class="md-nav__link">
         
   
   
@@ -4433,7 +4427,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/benchmark.html" class="md-nav__link">
+      <a href="../../instructions/benchmark.html" class="md-nav__link">
         
   
   
@@ -4542,7 +4536,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/high_performance_inference.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/high_performance_inference.html" class="md-nav__link">
         
   
   
@@ -4570,7 +4564,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/serving.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/serving.html" class="md-nav__link">
         
   
   
@@ -4598,7 +4592,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/on_device_deployment.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/on_device_deployment.html" class="md-nav__link">
         
   
   
@@ -4626,7 +4620,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/paddle2onnx.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/paddle2onnx.html" class="md-nav__link">
         
   
   
@@ -4654,7 +4648,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/packaging.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/packaging.html" class="md-nav__link">
         
   
   
@@ -4749,7 +4743,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/multi_devices_use_guide.html" class="md-nav__link">
+      <a href="../../../other_devices_support/multi_devices_use_guide.html" class="md-nav__link">
         
   
   
@@ -4843,7 +4837,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_DCU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_DCU.html" class="md-nav__link">
         
   
   
@@ -4871,7 +4865,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_MLU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_MLU.html" class="md-nav__link">
         
   
   
@@ -4899,7 +4893,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_NPU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_NPU.html" class="md-nav__link">
         
   
   
@@ -4927,7 +4921,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_XPU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_XPU.html" class="md-nav__link">
         
   
   
@@ -4955,7 +4949,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_GCU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_GCU.html" class="md-nav__link">
         
   
   
@@ -5128,7 +5122,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/image_classification.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/image_classification.html" class="md-nav__link">
         
   
   
@@ -5156,7 +5150,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/image_feature.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/image_feature.html" class="md-nav__link">
         
   
   
@@ -5184,7 +5178,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/instance_segmentation.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/instance_segmentation.html" class="md-nav__link">
         
   
   
@@ -5212,7 +5206,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/ml_classification.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/ml_classification.html" class="md-nav__link">
         
   
   
@@ -5240,7 +5234,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/object_detection.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/object_detection.html" class="md-nav__link">
         
   
   
@@ -5268,7 +5262,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/semantic_segmentation.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/semantic_segmentation.html" class="md-nav__link">
         
   
   
@@ -5364,7 +5358,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/ocr_modules/table_recognition.html" class="md-nav__link">
+      <a href="../../../data_annotations/ocr_modules/table_recognition.html" class="md-nav__link">
         
   
   
@@ -5392,7 +5386,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/ocr_modules/text_detection_recognition.html" class="md-nav__link">
+      <a href="../../../data_annotations/ocr_modules/text_detection_recognition.html" class="md-nav__link">
         
   
   
@@ -5490,7 +5484,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../data_annotations/time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -5518,7 +5512,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/time_series_modules/time_series_classification.html" class="md-nav__link">
+      <a href="../../../data_annotations/time_series_modules/time_series_classification.html" class="md-nav__link">
         
   
   
@@ -5546,7 +5540,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/time_series_modules/time_series_forecasting.html" class="md-nav__link">
+      <a href="../../../data_annotations/time_series_modules/time_series_forecasting.html" class="md-nav__link">
         
   
   
@@ -5655,7 +5649,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list.html" class="md-nav__link">
         
   
   
@@ -5683,7 +5677,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_dcu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_dcu.html" class="md-nav__link">
         
   
   
@@ -5711,7 +5705,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_mlu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_mlu.html" class="md-nav__link">
         
   
   
@@ -5739,7 +5733,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_npu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_npu.html" class="md-nav__link">
         
   
   
@@ -5767,7 +5761,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_xpu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_xpu.html" class="md-nav__link">
         
   
   
@@ -5870,7 +5864,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/models_list.html" class="md-nav__link">
+      <a href="../../../support_list/models_list.html" class="md-nav__link">
         
   
   
@@ -5898,7 +5892,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_dcu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_dcu.html" class="md-nav__link">
         
   
   
@@ -5926,7 +5920,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_mlu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_mlu.html" class="md-nav__link">
         
   
   
@@ -5954,7 +5948,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_npu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_npu.html" class="md-nav__link">
         
   
   
@@ -5982,7 +5976,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_xpu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_xpu.html" class="md-nav__link">
         
   
   
@@ -6010,7 +6004,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_gcu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_gcu.html" class="md-nav__link">
         
   
   
@@ -6042,10 +6036,8 @@ You're not viewing the latest version.
       
   
   
-    
   
   
-  
     
     
       
@@ -6089,22 +6081,21 @@ You're not viewing the latest version.
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -6122,7 +6113,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
@@ -6140,7 +6131,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-nav__link">
         
   
   
@@ -6168,7 +6159,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="document_scene_information_extraction%28seal_recognition%29_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html" class="md-nav__link">
         
   
   
@@ -6196,7 +6187,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="document_scene_information_extraction%28deepseek%29_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/document_scene_information_extraction%28deepseek%29_tutorial.html" class="md-nav__link">
         
   
   
@@ -6224,7 +6215,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ocr_det_license_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ocr_det_license_tutorial.html" class="md-nav__link">
         
   
   
@@ -6252,7 +6243,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ocr_rec_chinese_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ocr_rec_chinese_tutorial.html" class="md-nav__link">
         
   
   
@@ -6280,7 +6271,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="formula_recognition_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/formula_recognition_tutorial.html" class="md-nav__link">
         
   
   
@@ -6308,7 +6299,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="layout_detection.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/layout_detection.html" class="md-nav__link">
         
   
   
@@ -6336,7 +6327,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="face_recognition_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/face_recognition_tutorial.html" class="md-nav__link">
         
   
   
@@ -6361,37 +6352,10 @@ You're not viewing the latest version.
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    垃圾分类实践教程
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="image_classification_garbage_tutorial.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../practical_tutorials/image_classification_garbage_tutorial.html" class="md-nav__link">
         
   
   
@@ -6407,192 +6371,6 @@ You're not viewing the latest version.
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-select-a-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Select a Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-choosing-a-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Choosing a Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-data-preparation-and-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Data Preparation and Verification
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Data Preparation and Verification">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#41-data-preparation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.1 Data Preparation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#42-dataset-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.2 Dataset Verification
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#43-dataset-splitting-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.3 Dataset Splitting (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-splitting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Splitting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-model-training-and-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Model Training and Evaluation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Model Training and Evaluation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-model-training" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.1 Model Training
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-model-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.2 Model Evaluation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-model-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Model Optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-pipeline-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. pipeline Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-development-integrationdeployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Development Integration/Deployment
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -6605,7 +6383,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="instance_segmentation_remote_sensing_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/instance_segmentation_remote_sensing_tutorial.html" class="md-nav__link">
         
   
   
@@ -6633,7 +6411,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="object_detection_fall_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/object_detection_fall_tutorial.html" class="md-nav__link">
         
   
   
@@ -6661,7 +6439,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="object_detection_fashion_pedia_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/object_detection_fashion_pedia_tutorial.html" class="md-nav__link">
         
   
   
@@ -6689,7 +6467,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ocr_det_license_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ocr_det_license_tutorial.html" class="md-nav__link">
         
   
   
@@ -6717,7 +6495,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="semantic_segmentation_road_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/semantic_segmentation_road_tutorial.html" class="md-nav__link">
         
   
   
@@ -6745,7 +6523,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ts_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ts_anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -6773,7 +6551,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ts_classification.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ts_classification.html" class="md-nav__link">
         
   
   
@@ -6801,7 +6579,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ts_forecast.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ts_forecast.html" class="md-nav__link">
         
   
   
@@ -6829,7 +6607,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="deployment_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/deployment_tutorial.html" class="md-nav__link">
         
   
   
@@ -6864,7 +6642,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../VisualDL.html" class="md-nav__link">
+      <a href="../../../VisualDL.html" class="md-nav__link">
         
   
   
@@ -6891,7 +6669,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../FAQ.html" class="md-nav__link">
+      <a href="../../../FAQ.html" class="md-nav__link">
         
   
   
@@ -6918,7 +6696,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../CHANGELOG.html" class="md-nav__link">
+      <a href="../../../CHANGELOG.html" class="md-nav__link">
         
   
   
@@ -6965,10 +6743,10 @@ You're not viewing the latest version.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-select-a-pipeline" class="md-nav__link">
+  <a href="#i-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Select a Pipeline
+        I. Overview
       
     </span>
   </a>
@@ -6976,10 +6754,10 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-quick-start" class="md-nav__link">
+  <a href="#ii-supported-model-list" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Quick Start
+        II. Supported Model List
       
     </span>
   </a>
@@ -6987,10 +6765,10 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-choosing-a-model" class="md-nav__link">
+  <a href="#iii-quick-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Choosing a Model
+        III. Quick Integration
       
     </span>
   </a>
@@ -6998,15 +6776,15 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-data-preparation-and-verification" class="md-nav__link">
+  <a href="#iv-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Data Preparation and Verification
+        IV. Custom Development
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Data Preparation and Verification">
+    <nav class="md-nav" aria-label="IV. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -7018,63 +6796,14 @@ You're not viewing the latest version.
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#42-dataset-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.2 Dataset Verification
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#43-dataset-splitting-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.3 Dataset Splitting (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-splitting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Splitting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-model-training-and-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Model Training and Evaluation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Model Training and Evaluation">
+    <nav class="md-nav" aria-label="4.1 Data Preparation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-model-training" class="md-nav__link">
+  <a href="#411-demo-data-download" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1 Model Training
+        4.1.1 Demo Data Download
       
     </span>
   </a>
@@ -7082,10 +6811,10 @@ You're not viewing the latest version.
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-model-evaluation" class="md-nav__link">
+  <a href="#412-dataset-format-description" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Model Evaluation
+        4.1.2 Dataset Format Description
       
     </span>
   </a>
@@ -7093,10 +6822,21 @@ You're not viewing the latest version.
 </li>
         
           <li class="md-nav__item">
-  <a href="#53-model-optimization" class="md-nav__link">
+  <a href="#413-data-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3 Model Optimization
+        4.1.3 Data Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-dataset-format-conversiondataset-splitting-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.4 Dataset Format Conversion/Dataset Splitting (Optional)
       
     </span>
   </a>
@@ -7107,26 +6847,70 @@ You're not viewing the latest version.
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#6-pipeline-testing" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#42-model-training" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. pipeline Testing
+        4.2 Model Training
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#7-development-integrationdeployment" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#43-model-evaluation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Development Integration/Deployment
+        4.3 Model Evaluation
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-model-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Model Inference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Model Inference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#441-model-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4.1 Model Inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#442-model-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4.2 Model Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -7148,46 +6932,6 @@ You're not viewing the latest version.
   
 
 
-  <nav class="md-path" aria-label="Navigation" >
-    <ol class="md-path__list">
-      
-        
-  
-  
-    <li class="md-path__item">
-      <a href="../index.html" class="md-path__link">
-        
-  <span class="md-ellipsis">
-    Home
-  </span>
-
-      </a>
-    </li>
-  
-
-      
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Practical Tutorials & Examples
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ol>
-  </nav>
-
               
               <article class="md-content__inner md-typeset">
                 
@@ -7195,7 +6939,7 @@ You're not viewing the latest version.
 
 
   
-    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/practical_tutorials/image_classification_garbage_tutorial.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/module_usage/tutorials/ocr_modules/layout_analysis.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -7204,395 +6948,668 @@ You're not viewing the latest version.
     
       
     
-    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/practical_tutorials/image_classification_garbage_tutorial.en.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/module_usage/tutorials/ocr_modules/layout_analysis.en.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="paddlex-30-general-image-classification-pipeline-garbage-classification-tutorial">PaddleX 3.0 General Image Classification Pipeline — Garbage Classification Tutorial<a class="headerlink" href="#paddlex-30-general-image-classification-pipeline-garbage-classification-tutorial" title="Permanent link">&para;</a></h1>
-<p>PaddleX offers a rich set of pipelines, each consisting of one or more models that can tackle specific scenario tasks. All PaddleX pipelines support quick trials, and if the results are not satisfactory, you can fine-tune the models with your private data. PaddleX also provides Python APIs for easy integration into personal projects. Before use, you need to install PaddleX. For installation instructions, please refer to <a href="../installation/installation.html">PaddleX Installation</a>. This tutorial introduces the usage of the pipeline tool with a garbage classification task as an example.</p>
-<h2 id="1-select-a-pipeline">1. Select a Pipeline<a class="headerlink" href="#1-select-a-pipeline" title="Permanent link">&para;</a></h2>
-<p>First, choose the corresponding PaddleX pipeline based on your task scenario. For garbage classification, it falls under the general image classification task, corresponding to PaddleX's universal image classification pipeline. If you're unsure about the task-pipeline correspondence, you can check the capabilities of relevant pipelines in the <a href="../support_list/pipelines_list.html">PaddleX Supported Pipelines List</a>.</p>
-<h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
-<p>PaddleX offers two ways to experience the pipelines: one is through the PaddleX wheel package locally, and the other is on the <b>Baidu AIStudio Community</b>.</p>
+<h1 id="layout-analysis-module-tutorial">Layout Analysis Module Tutorial<a class="headerlink" href="#layout-analysis-module-tutorial" title="Permanent link">&para;</a></h1>
+<h2 id="i-overview">I. Overview<a class="headerlink" href="#i-overview" title="Permanent link">&para;</a></h2>
+<p>The layout analysis task builds upon layout area detection by further introducing <strong>instance segmentation</strong> and <strong>reading order prediction</strong> capabilities. By analyzing input document images, it not only identifies various layout elements (such as text, charts, images, formulas, paragraph titles, abstracts, references, etc.) and outputs their bounding boxes, but also simultaneously outputs the <strong>precise contour mask</strong> and <strong>reading order index</strong> for each region, providing more complete structural information for document understanding and information extraction workflows.</p>
+<p>The layout analysis module currently supports the PP-DocLayoutV3 model, which is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a <strong>reading order prediction</strong> branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.</p>
+<p><img alt="layout analysis" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png" /></p>
+<h2 id="ii-supported-model-list">II. Supported Model List<a class="headerlink" href="#ii-supported-model-list" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>The inference time only includes the model inference time and does not include the time for pre- or post-processing.</p>
+</blockquote>
 <ul>
-<li>
-<p>Local Experience:
-    <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>image_classification<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--input<span class="w"> </span>https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--device<span class="w"> </span>gpu:0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--save_path<span class="w"> </span>./output/
-</span></code></pre></div></p>
-</li>
-<li>
-<p>AIStudio Community Experience: Go to <a href="https://aistudio.baidu.com/pipeline/mine">Baidu AIStudio Community</a>, click "Create Pipeline", and create a <b>General Image Classification</b> pipeline for a quick trial.</p>
-</li>
+<li><b>The layout analysis model includes 25 common categories: abstract, algorithm, aside text, chart, content, display formula, document title, figure title, footer, footer image, footnote, formula number, header, header image, image, inline formula, number, paragraph title, reference, reference content, seal, table, text, vertical text, and vision footnote</b></li>
 </ul>
-<p>Quick Trial Output Example:</p>
-<center>
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/image_classification/01.png" width=600>
-
-</center>
-
-<p>After trying the pipeline, determine if it meets your expectations (including accuracy, speed, etc.). If the model's speed or accuracy is not satisfactory, you can test alternative models and decide if further fine-tuning is needed. Since this tutorial aims to classify specific garbage types, the default weights (trained on the ImageNet-1k dataset) are insufficient. You need to collect and annotate data for training and fine-tuning.</p>
-<h2 id="3-choosing-a-model">3. Choosing a Model<a class="headerlink" href="#3-choosing-a-model" title="Permanent link">&para;</a></h2>
-<p>PaddleX provides 80 end-to-end image classification models, which can be referenced in the <a href="../support_list/models_list.html">Model List</a>. Some of the benchmarks for these models are as follows:</p>
 <table>
 <thead>
 <tr>
-<th>Model List</th>
-<th>Top-1 Accuracy (%)</th>
-<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model</th><th>Model Download Link</th>
+<th>GPU Inference Time (ms)<br/>A100 GPU</th>
 <th>Model Storage Size (MB)</th>
+<th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-HGNetV2_B6</td>
-<td>86.30</td>
-<td>10.46</td>
-<td>240.18</td>
-<td>288</td>
-</tr>
-<tr>
-<td>CLIP_vit_base_patch16_224</td>
-<td>85.36</td>
-<td>12.03 / 2.49</td>
-<td>60.86 / 42.69</td>
-<td>331</td>
-</tr>
-<tr>
-<td>PP-HGNetV2_B4</td>
-<td>83.57</td>
-<td>2.45</td>
-<td>38.10</td>
-<td>76</td>
-</tr>
-<tr>
-<td>SwinTransformer_base_patch4_window7_224</td>
-<td>83.37</td>
-<td>13.04 / 10.77</td>
-<td>133.79 / 118.45</td>
-<td>340</td>
-</tr>
-<tr>
-<td>PP-HGNet_small</td>
-<td>81.51</td>
-<td>5.87 / 1.68</td>
-<td>25.58 / 18.50</td>
-<td>94</td>
-</tr>
-<tr>
-<td>PP-HGNetV2_B0</td>
-<td>77.77</td>
-<td>0.68</td>
-<td>6.41</td>
-<td>23</td>
-</tr>
-<tr>
-<td>ResNet50</td>
-<td>76.50</td>
-<td>6.25 / 1.17</td>
-<td>15.93 / 9.72</td>
-<td>98</td>
-</tr>
-<tr>
-<td>PP-LCNet_x1_0</td>
-<td>71.32</td>
-<td>2.59 / 0.68</td>
-<td>3.18 / 1.19</td>
-<td>7</td>
-</tr>
-<tr>
-<td>MobileNetV3_small_x1_0</td>
-<td>68.24</td>
-<td>4.23 / 0.78</td>
-<td>5.24 / 1.48</td>
-<td>12</td>
+<td>PP-DocLayoutV3</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV3_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayoutV3_pretrained.pdparams">Training Model</a></td>
+<td>23.77</td>
+<td>126</td>
+<td>A layout analysis model trained on a self-built dataset containing Chinese and English papers, multi-column magazines, newspapers, PPT, contracts, books, exams, and research reports using DETR. It supports instance segmentation and reading order prediction for 25 layout element categories.</td>
 </tr>
 </tbody>
 </table>
+
+<p><b>Note: The evaluation set for the above accuracy metrics is a self-built layout analysis dataset containing images from various Chinese and English document scenarios.</b></p>
+<h2 id="iii-quick-integration">III. Quick Integration  <a id="quick"> </a><a class="headerlink" href="#iii-quick-integration" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><b>Note: The above accuracy metrics are Top-1 Accuracy on the ImageNet-1k validation set. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p>❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to <a href="../../../installation/installation.html">PaddleX Local Installation Tutorial</a></p>
 </blockquote>
-<p>In short, the models listed from top to bottom have faster inference speeds, while those from bottom to top have higher accuracy. This tutorial will use the <code>PP-LCNet_x1_0</code> model as an example to complete the full model development process. You can select an appropriate model for training based on your actual usage scenarios. After training, you can evaluate the suitable model weights within your pipeline and ultimately use them in real-world scenarios.</p>
-<h2 id="4-data-preparation-and-verification">4. Data Preparation and Verification<a class="headerlink" href="#4-data-preparation-and-verification" title="Permanent link">&para;</a></h2>
+<p>After installing the wheel package, a few lines of code can complete the inference of the layout analysis module. You can switch models under this module freely, and you can also integrate the model inference of the layout analysis module into your project. Before running the following code, please download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">demo image</a> to your local machine.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;PP-DocLayoutV3&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;layout.jpg&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/res.json&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><b>Note: </b>The official models would be downloaded from HuggingFace by default. PaddleX also supports specifying the preferred source by setting the environment variable <code>PADDLE_PDX_MODEL_SOURCE</code>. The supported values are <code>huggingface</code>, <code>aistudio</code>, <code>bos</code>, and <code>modelscope</code>. For example, to prioritize using <code>bos</code>, set: <code>PADDLE_PDX_MODEL_SOURCE="bos"</code>.</p>
+<details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
+
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;layout.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cls_id&#39;</span>:<span class="w"> </span><span class="m">22</span>,<span class="w"> </span><span class="s1">&#39;label&#39;</span>:<span class="w"> </span><span class="s1">&#39;text&#39;</span>,<span class="w"> </span><span class="s1">&#39;score&#39;</span>:<span class="w"> </span><span class="m">0</span>.98,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">34</span>.1,<span class="w"> </span><span class="m">349</span>.8,<span class="w"> </span><span class="m">358</span>.5,<span class="w"> </span><span class="m">611</span>.0<span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;polygon_points&#39;</span>:<span class="w"> </span><span class="o">[[</span><span class="m">34</span>.1,<span class="w"> </span><span class="m">349</span>.8<span class="o">]</span>,<span class="w"> </span><span class="o">[</span><span class="m">358</span>.5,<span class="w"> </span><span class="m">349</span>.8<span class="o">]</span>,<span class="w"> </span><span class="o">[</span><span class="m">358</span>.5,<span class="w"> </span><span class="m">611</span>.0<span class="o">]</span>,<span class="w"> </span><span class="o">[</span><span class="m">34</span>.1,<span class="w"> </span><span class="m">611</span>.0<span class="o">]]</span>,<span class="w"> </span><span class="s1">&#39;order&#39;</span>:<span class="w"> </span><span class="m">3</span><span class="o">}</span>,<span class="w"> </span>...<span class="o">]}}</span>
+</span></code></pre></div>
+
+The meanings of the parameters are as follows:
+- `input_path`: The path to the input image for prediction.
+- `page_index`: If the input is a PDF file, it indicates which page of the PDF it is; otherwise, it is `None`.
+- `boxes`: Information about the predicted bounding boxes, a list of dictionaries. Each dictionary represents a detected object and contains the following information:
+  - `cls_id`: Class ID, an integer.
+  - `label`: Class label, a string.
+  - `score`: Confidence score of the bounding box, a float.
+  - `coordinate`: Coordinates of the bounding box, a list of floats in the format <code>[xmin, ymin, xmax, ymax]</code>.
+  - `polygon_points`: List of instance segmentation contour points, in the format <code>[[x1, y1], [x2, y2], ...]</code>.
+  - `order`: Reading order index, an integer indicating the reading order of the region in the document (starting from 0).
+</details>
+
+<p>After running, the visualization result saved by <code>save_to_img()</code> is shown below, with each region annotated with its category, confidence score, instance segmentation mask, and reading order index:</p>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg" alt="版面分析可视化结果" width="30%" /></p>
+<p>Relevant methods, parameters, and explanations are as follows:</p>
+<ul>
+<li><code>create_model</code> instantiates a layout analysis model (here, <code>PP-DocLayoutV3</code> is used as an example). The detailed explanation is as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>img_size</code></td>
+<td>Size of the input image; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>int/list/None</code></td>
+<td>
+<ul>
+<li><b>int</b>, e.g., 800, means resizing the input image to 800x800</li>
+<li><b>List</b>, e.g., [800, 800], means resizing the input image to a width of 800 and a height of 800</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold for filtering low-confidence prediction results; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, e.g., 0.5, means filtering out all bounding boxes with a confidence score less than 0.5</li>
+<li><b>Dictionary</b>, with keys as <b>int</b> representing <code>cls_id</code> and values as <b>float</b> thresholds, e.g., <code>{0: 0.45, 2: 0.48}</code></li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use NMS post-processing to filter overlapping boxes; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, indicates whether to use NMS for post-processing to filter overlapping boxes</li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Scaling factor for the side length of the detection box; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>float/list/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, a positive float number, e.g., 1.1, means expanding the width and height of the detection box by 1.1 times while keeping the center unchanged</li>
+<li><b>List</b>, e.g., [1.2, 1.5], means expanding the width by 1.2 times and the height by 1.5 times while keeping the center unchanged</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as <b>tuple</b>, e.g., <code>{0: (1.1, 2.0)}</code></li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Merging mode for the detection boxes output by the model; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>string/dict/None</code></td>
+<td>
+<ul>
+<li><b>large</b>, when set to large, only the largest external box will be retained for overlapping detection boxes, and the internal overlapping boxes will be deleted</li>
+<li><b>small</b>, when set to small, only the smallest internal box will be retained for overlapping detection boxes, and the external overlapping boxes will be deleted</li>
+<li><b>union</b>, no filtering of boxes will be performed, and both internal and external boxes will be retained</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes, e.g., <code>{0: "large", 2: "small"}</code></li>
+<li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+</table>
+
+<ul>
+<li>
+<p>Note that <code>model_name</code> must be specified. After specifying <code>model_name</code>, the default PaddleX built-in model parameters will be used. If <code>model_dir</code> is specified, the user-defined model will be used.</p>
+</li>
+<li>
+<p>The <code>predict()</code> method of the layout analysis model is called for inference prediction. The parameters of the <code>predict()</code> method are explained as follows:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data for prediction, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+<li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file</li>
+<li><b>Local Directory</b>, the directory should contain the data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold for filtering low-confidence prediction results</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>, e.g., 0.5, means filtering out all bounding boxes with a confidence score less than 0.5</li>
+<li><b>Dictionary</b>, with keys as <b>int</b> representing <code>cls_id</code> and values as <b>float</b> thresholds</li>
+<li><b>None</b>, not specified, will use the <code>threshold</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+</table>
+
+<ul>
+<li>The prediction results for each sample can be printed, saved as images, or saved as <code>json</code> files:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specifies the indentation level for prettifying the output <code>JSON</code> data, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Controls whether non-<code>ASCII</code> characters are escaped to Unicode, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save results as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is specified, the saved file is named consistently with the input file type</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specifies the indentation level for prettifying the output <code>JSON</code> data, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Controls whether non-<code>ASCII</code> characters are escaped to Unicode, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save results as an image file (the visualized image includes instance segmentation masks and reading order indices)</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is specified, the saved file is named consistently with the input file type</td>
+<td>None</td>
+</tr>
+</table>
+
+<ul>
+<li>Additionally, it also supports obtaining the visualized image with results and the prediction results via attributes, as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualized image in <code>dict</code> format, with each region's category, confidence score, instance segmentation mask, and reading order index annotated</td>
+</tr>
+</table>
+
+<p>For more information on using PaddleX's single-model inference API, refer to <a href="../../instructions/model_python_API.html">PaddleX Single Model Python Script Usage Instructions</a>.</p>
+<h2 id="iv-custom-development">IV. Custom Development<a class="headerlink" href="#iv-custom-development" title="Permanent link">&para;</a></h2>
+<p>If you seek higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better layout analysis models. Before developing a layout analysis model with PaddleX, ensure you have installed PaddleX's Detection-related model training capabilities. The installation process can be found in <a href="../../../installation/installation.html">PaddleX Local Installation Tutorial</a>.</p>
 <h3 id="41-data-preparation">4.1 Data Preparation<a class="headerlink" href="#41-data-preparation" title="Permanent link">&para;</a></h3>
-<p>This tutorial uses the <code>Garbage Classification Dataset</code> as an example dataset. You can obtain the example dataset using the following commands. If you are using your own annotated dataset, you need to adjust it according to PaddleX's format requirements to meet PaddleX's data format specifications. For an introduction to data formats, you can refer to the <a href="../data_annotations/cv_modules/image_classification.html">PaddleX Image Classification Task Module Data Annotation Tutorial</a>.</p>
-<p>Dataset acquisition commands:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/paddlex
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>wget<span class="w"> </span>https://paddle-model-ecology.bj.bcebos.com/paddlex/data/trash40.tar<span class="w"> </span>-P<span class="w"> </span>./dataset
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tar<span class="w"> </span>-xf<span class="w"> </span>./dataset/trash40.tar<span class="w"> </span>-C<span class="w"> </span>./dataset/
+<p>Before model training, you need to prepare the corresponding dataset for the task module. PaddleX provides a data validation function for each module, and <b>only data that passes the validation can be used for model training</b>. Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development based on the official demos. If you wish to use private datasets for subsequent model training, refer to the <a href="../../../data_annotations/cv_modules/object_detection.html">PaddleX Object Detection Task Module Data Annotation Tutorial</a>.</p>
+<h4 id="411-demo-data-download">4.1.1 Demo Data Download<a class="headerlink" href="#411-demo-data-download" title="Permanent link">&para;</a></h4>
+<p>You can use the following commands to download the demo dataset to a specified folder:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/paddlex
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>wget<span class="w"> </span>https://paddle-model-ecology.bj.bcebos.com/paddlex/data/doclayoutv3_examples.tar<span class="w"> </span>-P<span class="w"> </span>./dataset
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tar<span class="w"> </span>-xf<span class="w"> </span>./dataset/doclayoutv3_examples.tar<span class="w"> </span>-C<span class="w"> </span>./dataset/
 </span></code></pre></div>
-<h3 id="42-dataset-verification">4.2 Dataset Verification<a class="headerlink" href="#42-dataset-verification" title="Permanent link">&para;</a></h3>
-<p>To verify the dataset, simply run the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>check_dataset<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/trash40/
+<h4 id="412-dataset-format-description">4.1.2 Dataset Format Description<a class="headerlink" href="#412-dataset-format-description" title="Permanent link">&para;</a></h4>
+<p>The layout analysis module uses the <strong>COCOInstSegDataset</strong> format, supplemented with reading order annotations. The dataset directory structure is as follows:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>doclayoutv3_examples/
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── images/               # Original image directory
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ├── train_0001.jpg
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── val_0001.jpg
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   └── ...
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>├── images_mask/          # Image directory for training (same content as images)
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   └── ...
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>└── annotations/
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    ├── instance_train.json   # Training set annotations (COCO instance segmentation format + read_order field)
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    └── instance_val.json     # Validation set annotations (COCO instance segmentation format + read_order field)
 </span></code></pre></div>
-<p>After executing the above command, PaddleX will verify the dataset and count the basic information of the dataset. If the command runs successfully, it will print <code>Check dataset passed !</code> in the log, and the relevant outputs will be saved in the current directory's <code>./output/check_dataset</code> directory. The output directory includes visualized example images and a histogram of sample distribution. The verification result file is saved in <code>./output/check_dataset_result.json</code>, and the specific content of the verification result file is as follows:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;done_flag&quot;: true,
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;check_pass&quot;: true,
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;attributes&quot;: {
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;label_file&quot;: ../../dataset/trash40/label.txt&quot;,
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;num_classes&quot;: 40,
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    &quot;train_samples&quot;: 1605,
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    &quot;train_sample_paths&quot;: [
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;check_dataset/demo_img/img_14950.jpg&quot;,
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;check_dataset/demo_img/img_12045.jpg&quot;,
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    ],
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    &quot;val_samples&quot;: 3558,
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    &quot;val_sample_paths&quot;: [
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;check_dataset/demo_img/img_198.jpg&quot;,
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;check_dataset/demo_img/img_19627.jpg&quot;,
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    ]
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  },
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;analysis&quot;: {
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  },
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;dataset_path&quot;: &quot;trash40&quot;,
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;show_type&quot;: &quot;image&quot;,
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  &quot;dataset_type&quot;: &quot;ClsDataset&quot;
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>}
+<p>The annotation files follow the COCO instance segmentation format, with an added <code>read_order</code> field in each annotation to record the reading order of the region in the document (a non-negative integer starting from 0; the <code>read_order</code> values of all annotations within the same image should form a consecutive sequence). An example annotation is as follows:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;annotations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">&quot;bbox&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">34.1</span><span class="p">,</span><span class="w"> </span><span class="mf">349.8</span><span class="p">,</span><span class="w"> </span><span class="mf">324.4</span><span class="p">,</span><span class="w"> </span><span class="mf">261.2</span><span class="p">],</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">&quot;segmentation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mf">34.1</span><span class="p">,</span><span class="w"> </span><span class="mf">349.8</span><span class="p">,</span><span class="w"> </span><span class="mf">358.5</span><span class="p">,</span><span class="w"> </span><span class="mf">349.8</span><span class="p">,</span><span class="w"> </span><span class="mf">358.5</span><span class="p">,</span><span class="w"> </span><span class="mf">611.0</span><span class="p">,</span><span class="w"> </span><span class="mf">34.1</span><span class="p">,</span><span class="w"> </span><span class="mf">611.0</span><span class="p">]],</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">&quot;area&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">84740.0</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">&quot;iscrowd&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">&quot;read_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>In the above verification results, <code>check_pass</code> being <code>True</code> indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
-<ul>
-<li><code>attributes.num_classes</code>: The number of classes in this dataset is 40, which is the number of classes that need to be passed in for subsequent training;</li>
-<li><code>attributes.train_samples</code>: The number of training set samples in this dataset is 1605;</li>
-<li><code>attributes.val_samples</code>: The number of validation set samples in this dataset is 3558;</li>
-<li><code>attributes.train_sample_paths</code>: A list of relative paths to the visualized images of the training set samples in this dataset;</li>
-<li><code>attributes.val_sample_paths</code>: A list of relative paths to the visualized images of the validation set samples in this dataset;</li>
-</ul>
-<p>In addition, the dataset verification also analyzes the sample number distribution of all categories in the dataset and draws a distribution histogram (<code>histogram.png</code>):</p>
-<center>
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/image_classification/02.png" width=600>
-
-</center>
-
-<p><b>Note</b>: Only data that passes the verification can be used for training and evaluation.</p>
-<h3 id="43-dataset-splitting-optional">4.3 Dataset Splitting (Optional)<a class="headerlink" href="#43-dataset-splitting-optional" title="Permanent link">&para;</a></h3>
-<p>If you need to convert the dataset format or re-split the dataset, you can set it by modifying the configuration file or appending hyperparameters.</p>
-<p>The parameters related to dataset verification can be set by modifying the fields under <code>CheckDataset</code> in the configuration file. Some example explanations of the parameters in the configuration file are as follows:</p>
-<ul>
-<li><code>CheckDataset</code>:<ul>
-<li><code>split</code>:<ul>
-<li><code>enable</code>: Whether to re-split the dataset. When set to <code>True</code>, the dataset format will be converted. The default is <code>False</code>;</li>
-<li><code>train_percent</code>: If the dataset is to be re-split, you need to set the percentage of the training set. The type is any integer between 0-100, and it needs to ensure that the sum with <code>val_percent</code> is 100;</li>
-<li><code>val_percent</code>: If the dataset is to be re-split, you need to set the percentage of the validation set. The type is any integer between 0-100, and it needs to ensure that the sum with <code>train_percent</code> is 100;</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="data-splitting">Data Splitting<a class="headerlink" href="#data-splitting" title="Permanent link">&para;</a></h2>
-<p>When splitting data, the original annotation files will be renamed as <code>xxx.bak</code> in the original path. The above parameters can also be set by appending command line arguments, for example, to re-split the dataset and set the ratio of training set to validation set: <code>-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20</code>.</p>
-<h2 id="5-model-training-and-evaluation">5. Model Training and Evaluation<a class="headerlink" href="#5-model-training-and-evaluation" title="Permanent link">&para;</a></h2>
-<h3 id="51-model-training">5.1 Model Training<a class="headerlink" href="#51-model-training" title="Permanent link">&para;</a></h3>
-<p>Before training, please ensure that you have validated the dataset. To complete PaddleX model training, simply use the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>train<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/trash40<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-o<span class="w"> </span>Train.num_classes<span class="o">=</span><span class="m">40</span>
-</span></code></pre></div>
-<p>PaddleX supports modifying training hyperparameters, single/multi-GPU training, etc., by modifying the configuration file or appending command line arguments.</p>
-<p>Each model in PaddleX provides a configuration file for model development to set relevant parameters. Model training-related parameters can be set by modifying the <code>Train</code> fields in the configuration file. Some example explanations of parameters in the configuration file are as follows:</p>
-<ul>
-<li><code>Global</code>:<ul>
-<li><code>mode</code>: Mode, supporting dataset validation (<code>check_dataset</code>), model training (<code>train</code>), and model evaluation (<code>evaluate</code>);</li>
-<li><code>device</code>: Training device, options include <code>cpu</code>, <code>gpu</code>, <code>xpu</code>, <code>npu</code>, <code>mlu</code>. For multi-GPU training, specify the card numbers, e.g., <code>gpu:0,1,2,3</code>;</li>
-</ul>
-</li>
-<li><code>Train</code>: Training hyperparameter settings;<ul>
-<li><code>epochs_iters</code>: Number of training epochs;</li>
-<li><code>learning_rate</code>: Training learning rate;</li>
-</ul>
-</li>
-</ul>
-<p>For more hyperparameter introductions, please refer to <a href="../module_usage/instructions/config_parameters_common.html">PaddleX General Model Configuration File Parameter Explanation</a>.</p>
-<p><b>Note</b>:
-- The above parameters can be set by appending command line arguments, e.g., specifying the mode as model training: <code>-o Global.mode=train</code>; specifying the first two GPUs for training: <code>-o Global.device=gpu:0,1</code>; setting the number of training epochs to 10: <code>-o Train.epochs_iters=10</code>.
-- During model training, PaddleX automatically saves model weight files, with the default being <code>output</code>. If you need to specify a save path, you can use the <code>-o Global.output</code> field in the configuration file.
-- PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</p>
-<p><b>Explanation of Training Outputs</b>:</p>
-<p>After completing model training, all outputs are saved in the specified output directory (default is <code>./output/</code>), typically including the following:</p>
-<ul>
-<li>train_result.json: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics and related file paths;</li>
-<li>train.log: Training log file, recording changes in model metrics and loss during training;</li>
-<li>config.yaml: Training configuration file, recording the hyperparameter configuration for this training session;</li>
-<li>.pdparams, .pdopt, .pdstates, .pdiparams, .pdmodel: Model weight-related files, including network parameters, optimizer, static graph network parameters, static graph network structure, etc.;</li>
-</ul>
-<h3 id="52-model-evaluation">5.2 Model Evaluation<a class="headerlink" href="#52-model-evaluation" title="Permanent link">&para;</a></h3>
-<p>After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. To evaluate a model using PaddleX, simply use the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>evaluate<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/trash40
-</span></code></pre></div>
-<p>Similar to model training, model evaluation supports setting by modifying the configuration file or appending command line arguments.</p>
-<p><b>Note</b>: When evaluating the model, you need to specify the model weight file path. Each configuration file has a default weight save path. If you need to change it, simply set it by appending a command line argument, e.g., <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
-<h3 id="53-model-optimization">5.3 Model Optimization<a class="headerlink" href="#53-model-optimization" title="Permanent link">&para;</a></h3>
-<p>After learning about model training and evaluation, we can enhance model accuracy by adjusting hyperparameters. By carefully tuning the number of training epochs, you can control the depth of model training to avoid overfitting or underfitting. Meanwhile, the setting of the learning rate is crucial to the speed and stability of model convergence. Therefore, when optimizing model performance, it is essential to consider the values of these two parameters prudently and adjust them flexibly based on actual conditions to achieve the best training results.</p>
-<p>It is recommended to follow the controlled variable method when debugging parameters:</p>
-<ol>
-<li>First, fix the number of training epochs at 20, and set the batch size to 64 due to the small size of the training dataset.</li>
-<li>Initiate three experiments based on the <code>PP-LCNet_x1_0</code> model, with learning rates of: 0.01, 0.001, 0.1.</li>
-<li>It can be observed that the configuration with the highest accuracy in Experiment 1 is a learning rate of 0.01. Based on this training hyperparameter, change the number of epochs and observe the accuracy results at different epochs, finding that the best accuracy is generally achieved at 100 epochs.</li>
-</ol>
-<p>Learning Rate Exploration Results:</p>
-<center>
-
+<p>The 25 categories supported by the model and their descriptions are as follows:</p>
 <table>
 <thead>
 <tr>
-<th>Experiment</th>
-<th>Epochs</th>
-<th>Learning Rate</th>
-<th>batch_size</th>
-<th>Training Environment</th>
-<th>Top-1 Acc</th>
+<th>Category Name (English)</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Experiment 1</td>
-<td>20</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td><strong>73.83%</strong></td>
+<td><code>abstract</code></td>
+<td>Abstract</td>
 </tr>
 <tr>
-<td>Experiment 2</td>
-<td>20</td>
-<td>0.001</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>30.64%</td>
+<td><code>algorithm</code></td>
+<td>Algorithm</td>
 </tr>
 <tr>
-<td>Experiment 3</td>
-<td>20</td>
-<td>0.1</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>71.53%</td>
+<td><code>aside_text</code></td>
+<td>Sidebar text</td>
+</tr>
+<tr>
+<td><code>chart</code></td>
+<td>Chart</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>Table of contents</td>
+</tr>
+<tr>
+<td><code>display_formula</code></td>
+<td>Display formula</td>
+</tr>
+<tr>
+<td><code>doc_title</code></td>
+<td>Document title</td>
+</tr>
+<tr>
+<td><code>figure_title</code></td>
+<td>Figure title</td>
+</tr>
+<tr>
+<td><code>footer</code></td>
+<td>Footer</td>
+</tr>
+<tr>
+<td><code>footer_image</code></td>
+<td>Footer image</td>
+</tr>
+<tr>
+<td><code>footnote</code></td>
+<td>Footnote</td>
+</tr>
+<tr>
+<td><code>formula_number</code></td>
+<td>Formula number</td>
+</tr>
+<tr>
+<td><code>header</code></td>
+<td>Header</td>
+</tr>
+<tr>
+<td><code>header_image</code></td>
+<td>Header image</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>Image</td>
+</tr>
+<tr>
+<td><code>inline_formula</code></td>
+<td>Inline formula</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>Page number</td>
+</tr>
+<tr>
+<td><code>paragraph_title</code></td>
+<td>Paragraph title</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>Reference</td>
+</tr>
+<tr>
+<td><code>reference_content</code></td>
+<td>Reference content</td>
+</tr>
+<tr>
+<td><code>seal</code></td>
+<td>Seal</td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td>Table</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>Text</td>
+</tr>
+<tr>
+<td><code>vertical_text</code></td>
+<td>Vertical text</td>
+</tr>
+<tr>
+<td><code>vision_footnote</code></td>
+<td>Figure caption</td>
 </tr>
 </tbody>
 </table>
-</center>
-
-<p>Changing Epochs Experiment Results:</p>
-<center>
-
-<table>
-<thead>
-<tr>
-<th>Experiment</th>
-<th>Epochs</th>
-<th>Learning Rate</th>
-<th>batch_size</th>
-<th>Training Environment</th>
-<th>Top-1 Acc</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Experiment 1</td>
-<td>20</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>73.83%</td>
-</tr>
-<tr>
-<td>Experiment 1 (Increased Epochs)</td>
-<td>50</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>77.32%</td>
-</tr>
-<tr>
-<td>Experiment 1 (Increased Epochs)</td>
-<td>80</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>77.60%</td>
-</tr>
-<tr>
-<td>Experiment 1 (Increased Epochs)</td>
-<td>100</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td><strong>77.80%</strong></td>
-</tr>
-</tbody>
-</table>
-</center>
-
-<blockquote>
-<p><b>Note: The above accuracy metrics are Top-1 Accuracy on the <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set. GPU inference time is based on an NVIDIA Tesla T4 machine, with FP32 precision. CPU inference speed is based on an Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision.</b></p>
-</blockquote>
-<h2 id="6-pipeline-testing">6. pipeline Testing<a class="headerlink" href="#6-pipeline-testing" title="Permanent link">&para;</a></h2>
-<p>Replace the model in the pipeline with the fine-tuned model for testing. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png">test file</a> to perform predictions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;output/best_model/inference&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png&quot;</span>
+<h4 id="413-data-validation">4.1.3 Data Validation<a class="headerlink" href="#413-data-validation" title="Permanent link">&para;</a></h4>
+<p>A single command can complete data validation:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>check_dataset<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/doclayoutv3_examples
 </span></code></pre></div>
-<p>The prediction results will be generated under <code>./output</code>, and the prediction result for <code>garbage_demo.png</code> is shown below:</p>
-<center>
+<p>After executing the above command, PaddleX will validate the dataset and collect its basic information. Upon successful execution, the log will print the message <code>Check dataset passed !</code>. The validation result file will be saved in <code>./output/check_dataset_result.json</code>, and related outputs will be saved in the <code>./output/check_dataset</code> directory of the current directory. The output directory includes visualized example images (with instance segmentation masks and reading order indices annotated) and histograms of sample distributions.</p>
+<details><summary>👉 <b>Validation Result Details (Click to Expand)</b></summary>
+<p>The specific content of the validation result file is:</p>
+<pre><code class="language-bash">{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 11,
+    "train_samples": 6351,
+    "train_sample_paths": [
+      "check_dataset\/demo_img\/train_4141.jpg",
+      "check_dataset\/demo_img\/train_3699.jpg",
+      "check_dataset\/demo_img\/train_3764.jpg",
+      "check_dataset\/demo_img\/train_2279.jpg",
+      "check_dataset\/demo_img\/train_4647.jpg",
+      "check_dataset\/demo_img\/train_4442.jpg",
+      "check_dataset\/demo_img\/train_2006.jpg",
+      "check_dataset\/demo_img\/train_1463.jpg",
+      "check_dataset\/demo_img\/train_3275.jpg",
+      "check_dataset\/demo_img\/train_4509.jpg"
+    ],
+    "val_samples": 945,
+    "val_sample_paths": [
+      "check_dataset\/demo_img\/val_0105.jpg",
+      "check_dataset\/demo_img\/val_0031.jpg",
+      "check_dataset\/demo_img\/val_0755.jpg",
+      "check_dataset\/demo_img\/val_0876.jpg",
+      "check_dataset\/demo_img\/val_0374.jpg",
+      "check_dataset\/demo_img\/val_0566.jpg",
+      "check_dataset\/demo_img\/val_0748.jpg",
+      "check_dataset\/demo_img\/val_0167.jpg",
+      "check_dataset\/demo_img\/val_0345.jpg",
+      "check_dataset\/demo_img\/val_0471.jpg"
+    ],
+    "read_order_validation": {
+      "instance_train": {
+        "total_images": 500,
+        "valid_images": 500,
+        "invalid_images": [],
+        "pass_rate": 1.0
+      },
+      "instance_val": {
+        "total_images": 100,
+        "valid_images": 100,
+        "invalid_images": [],
+        "pass_rate": 1.0
+      }
+    }
+  },
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
+  },
+  "dataset_path": "doclayoutv3_examples",
+  "show_type": "image",
+  "dataset_type": "COCOInstSegDataset"
+}
+</code></pre>
+<p>The verification results mentioned above indicate that <code>check_pass</code> being <code>True</code> means the dataset format meets the requirements. Details of other indicators are as follows:</p>
+<ul>
+<li><code>attributes.num_classes</code>: The number of classes in this dataset is 11;</li>
+<li><code>attributes.train_samples</code>: The number of training samples in this dataset;</li>
+<li><code>attributes.val_samples</code>: The number of validation samples in this dataset;</li>
+<li><code>attributes.train_sample_paths</code>: The list of relative paths to the visualization images of training samples in this dataset;</li>
+<li><code>attributes.val_sample_paths</code>: The list of relative paths to the visualization images of validation samples in this dataset;</li>
+<li><code>attributes.read_order_validation</code>: Validation statistics for the <code>read_order</code> field, including the total number of images, number of valid images, and pass rate for both training and validation sets.</li>
+</ul>
+<p>The dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (histogram.png).</p>
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/image_classification/03.png" width="600"/>
+<b>Note:</b> Layout analysis data validation additionally validates the <code>read_order</code> field in each image annotation:
+<ul>
+<li>Completeness: Each annotation must contain a <code>read_order</code> field;</li>
+<li>Type validity: <code>read_order</code> must be a non-negative integer;</li>
+<li>Consecutiveness: The <code>read_order</code> values of all annotations within the same image should form a consecutive integer sequence starting from 0 (a warning will be issued if non-consecutive).</li>
+</ul>
+</details>
 
-</center>
+<h4 id="414-dataset-format-conversiondataset-splitting-optional">4.1.4 Dataset Format Conversion/Dataset Splitting (Optional)<a class="headerlink" href="#414-dataset-format-conversiondataset-splitting-optional" title="Permanent link">&para;</a></h4>
+<p>After completing dataset verification, you can re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.</p>
+<details><summary>👉 <b>Details on Dataset Splitting (Click to Expand)</b></summary>
+<p><b>(1) Dataset Format Conversion</b></p>
+<p>Layout analysis does not support data format conversion. Please use the COCO instance segmentation format directly (with the <code>read_order</code> field).</p>
+<p><b>(2) Dataset Splitting</b></p>
+<p>Parameters for dataset splitting can be set by modifying the <code>CheckDataset</code> section in the configuration file:</p>
+<pre><code class="language-bash">CheckDataset:
+  split:
+    enable: True
+    train_percent: 90
+    val_percent: 10
+</code></pre>
+<p>Then execute the command:</p>
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/doclayoutv3_examples
+</code></pre>
+<p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
+<p>The above parameters can also be set by appending command-line arguments:</p>
+<pre><code>python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/doclayoutv3_examples \
+    -o CheckDataset.split.enable=True \
+    -o CheckDataset.split.train_percent=90 \
+    -o CheckDataset.split.val_percent=10
+</code></pre></details>
 
-<h2 id="7-development-integrationdeployment">7. Development Integration/Deployment<a class="headerlink" href="#7-development-integrationdeployment" title="Permanent link">&para;</a></h2>
-<p>If the General Image Classification Pipeline meets your requirements for inference speed and accuracy in the pipeline, you can proceed directly with development integration/deployment.</p>
-<ol>
-<li>If you need to use the fine-tuned model weights, you can obtain the configuration file for the image_classification pipeline and load it for prediction. You can execute the following command to save the results in my_path:</li>
-</ol>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>paddlex --get_pipeline_config image_classification --save_path ./my_path
+<h3 id="42-model-training">4.2 Model Training<a class="headerlink" href="#42-model-training" title="Permanent link">&para;</a></h3>
+<p>A single command is sufficient to complete model training, taking the training of <code>PP-DocLayoutV3</code> as an example:</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>train<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/doclayoutv3_examples
 </span></code></pre></div>
-<p>Fill in the local path of the fine-tuned model weights into the <code>model_dir</code> field in the configuration file. If you need to directly apply the general image classification pipeline to your Python project, you can refer to the following example:</p>
-<p><div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">pipeline_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image_classification</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">SubModules</span><span class="p">:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">ImageClassification</span><span class="p">:</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image_classification</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PP-LCNet_x0_5</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w"> </span><span class="c1"># Replace this with the local path to your trained model weights</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nt">topk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-</span></code></pre></div>
-Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;my_path/image_classification.yaml&quot;</span><span class="p">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;./dataset/trash40/images/test/0/img_154.jpg&quot;</span><span class="p">)</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span> <span class="c1"># Print the structured output of the prediction</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1"># Save the visualized image of the result</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1"># Save the structured output of the prediction</span>
-</span></code></pre></div>
-<p>For more parameters, please refer to the <a href="../pipeline_usage/tutorials/cv_pipelines/image_classification.html">General Image Classification Pipeline Usage Tutorial</a>.</p>
-<ol>
+The steps required are:</p>
+<ul>
+<li>Specify the path to the <code>.yaml</code> configuration file of the model (here it is <code>PP-DocLayoutV3.yaml</code>)</li>
+<li>Specify the mode as model training: <code>-o Global.mode=train</code></li>
+<li>Specify the path to the training dataset: <code>-o Global.dataset_dir</code></li>
+<li>Other related parameters can be set by modifying the <code>Global</code> and <code>Train</code> fields in the <code>.yaml</code> configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: <code>-o Global.device=gpu:0,1</code>; to set the number of training epochs to 10: <code>-o Train.epochs_iters=10</code>. For more modifiable parameters and their detailed explanations, refer to the <a href="../../instructions/config_parameters_common.html">PaddleX Common Configuration Parameters for Model Tasks</a>.</li>
+</ul>
+<details><summary>👉 <b>More Details (Click to Expand)</b></summary>
+<ul>
+<li>During model training, PaddleX automatically saves model weight files, defaulting to <code>output</code>. To specify a save path, use the <code>-o Global.output</code> field in the configuration file.</li>
+<li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
 <li>
-<p>Additionally, PaddleX offers three other deployment methods, detailed as follows:</p>
+<p>After completing the model training, all outputs are saved in the specified output directory (default is <code>./output/</code>), typically including:</p>
 </li>
 <li>
-<p>high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the <a href="../pipeline_deploy/high_performance_inference.html">PaddleX High-Performance Inference Guide</a>.</p>
+<p><code>train_result.json</code>: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;</p>
 </li>
-<li>Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the <a href="../pipeline_deploy/serving.html">PaddleX Serving Deployment Guide</a>.</li>
-<li>On-Device Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the <a href="../pipeline_deploy/on_device_deployment.html">PaddleX On-Device Deployment Guide</a>.</li>
+<li><code>train.log</code>: Training log file, recording changes in model metrics and loss during training;</li>
+<li><code>config.yaml</code>: Training configuration file, recording the hyperparameter configuration for this training session;</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
+<li>Note: The layout analysis model uses an <code>order_loss</code> branch during training (with a weight coefficient of 50). This loss term supervises the reading order prediction, and changes in <code>order_loss</code> can be observed in the training log.</li>
+</ul></details>
+
+<h3 id="43-model-evaluation"><b>4.3 Model Evaluation</b><a class="headerlink" href="#43-model-evaluation" title="Permanent link">&para;</a></h3>
+<p>After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>evaluate<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/doclayoutv3_examples
+</span></code></pre></div>
+Similar to model training, the process involves the following steps:</p>
+<ul>
+<li>Specify the path to the <code>.yaml</code> configuration file for the model (here it's <code>PP-DocLayoutV3.yaml</code>)</li>
+<li>Set the mode to model evaluation: <code>-o Global.mode=evaluate</code></li>
+<li>Specify the path to the validation dataset: <code>-o Global.dataset_dir</code>
+Other related parameters can be configured by modifying the fields under <code>Global</code> and <code>Evaluate</code> in the <code>.yaml</code> configuration file. For detailed information, please refer to <a href="../../instructions/config_parameters_common.html">PaddleX Common Configuration Parameters for Models</a>.</li>
+</ul>
+<details><summary>👉 <b>More Details (Click to Expand)</b></summary>
+<p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>.</p>
+<p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be generated, which records the evaluation results, specifically whether the evaluation task was completed successfully, and the model's evaluation metrics, including AP.</p></details>
+
+<h3 id="44-model-inference"><b>4.4 Model Inference</b><a class="headerlink" href="#44-model-inference" title="Permanent link">&para;</a></h3>
+<p>After completing model training and evaluation, you can use the trained model weights for inference predictions. In PaddleX, model inference predictions can be achieved through two methods: command line and wheel package.</p>
+<h4 id="441-model-inference">4.4.1 Model Inference<a class="headerlink" href="#441-model-inference" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">demo image</a> to your local machine.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;./output/best_model/inference&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;layout.jpg&quot;</span>
+</span></code></pre></div>
+Similar to model training and evaluation, the following steps are required:</p>
+</li>
+<li>
+<p>Specify the <code>.yaml</code> configuration file path of the model (here it is <code>PP-DocLayoutV3.yaml</code>)</p>
+</li>
+<li>Set the mode to model inference prediction: <code>-o Global.mode=predict</code></li>
+<li>Specify the model weights path: <code>-o Predict.model_dir="./output/best_model/inference"</code></li>
+<li>
+<p>Specify the input data path: <code>-o Predict.input="..."</code>
+Other related parameters can be set by modifying the fields under <code>Global</code> and <code>Predict</code> in the <code>.yaml</code> configuration file. For details, please refer to <a href="../../instructions/config_parameters_common.html">PaddleX Common Model Configuration File Parameter Description</a>.</p>
+</li>
+<li>
+<p>Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own project. To integrate, simply add the <code>model_dir="/output/best_model/inference"</code> parameter to the <code>create_model</code> function in the quick integration method from Step 3.</p>
+</li>
+</ul>
+<h4 id="442-model-integration">4.4.2 Model Integration<a class="headerlink" href="#442-model-integration" title="Permanent link">&para;</a></h4>
+<p>The model can be directly integrated into PaddleX pipelines or into your own projects.</p>
+<ol>
+<li><b>Pipeline Integration</b></li>
 </ol>
-<p>You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.</p>
+<p>The layout analysis module can be integrated into PaddleX pipelines such as the <a href="../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.html">Document Parsing Pipeline (PaddleOCR-VL and PaddleOCR-VL-1.5)</a>. Simply replace the model path to update the layout analysis module.</p>
+<ol>
+<li><b>Module Integration</b></li>
+</ol>
+<p>The weights you produce can be directly integrated into the layout analysis module. You can refer to the Python example code in the <a href="#quick">Quick Integration</a> section, simply replacing the model with the path to your trained model.</p>
 
 
 
@@ -7727,44 +7744,6 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
         <footer class="md-footer">
   
     
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="face_recognition_tutorial.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: 人脸识别之卡通人脸识别实践教程">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                人脸识别之卡通人脸识别实践教程
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="instance_segmentation_remote_sensing_tutorial.html" class="md-footer__link md-footer__link--next" aria-label="Next: 遥感图像实例分割实践教程">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                遥感图像实例分割实践教程
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -7807,12 +7786,12 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../javascripts/katex.min.js"></script>
+        <script src="../../../../javascripts/katex.min.js"></script>
       
         <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
       

@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="zh" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,35 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/en/practical_tutorials/image_classification_garbage_tutorial.html">
+        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/module_usage/tutorials/ocr_modules/layout_analysis.html">
       
       
-        <link rel="prev" href="face_recognition_tutorial.html">
-      
-      
-        <link rel="next" href="instance_segmentation_remote_sensing_tutorial.html">
       
       
         
-          <link rel="alternate" href="../../practical_tutorials/image_classification_garbage_tutorial.html" hreflang="zh">
+          <link rel="alternate" href="layout_analysis.html" hreflang="zh">
         
-          <link rel="alternate" href="image_classification_garbage_tutorial.html" hreflang="en">
+          <link rel="alternate" href="../../../en/module_usage/tutorials/ocr_modules/layout_analysis.html" hreflang="en">
         
       
       
-      <link rel="icon" href="../../assets/favicon.png">
+      <link rel="icon" href="../../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>垃圾分类实践教程 - PaddleX Documentation</title>
+        <title>版面分析模块使用教程 - PaddleX 文档</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -59,7 +55,7 @@
     
       <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -94,8 +90,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#paddlex-30-general-image-classification-pipeline-garbage-classification-tutorial" class="md-skip">
-          Skip to content
+        <a href="#_1" class="md-skip">
+          跳转至
         </a>
       
     </div>
@@ -109,12 +105,12 @@
             <div class="md-banner__inner md-grid md-typeset">
               
 You're not viewing the latest version.
-<a href="../../..">
+<a href="../../../..">
     <strong>Click here to go to latest.</strong>
 </a>
 
             </div>
-            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
           </aside>
         
       </div>
@@ -125,8 +121,8 @@ You're not viewing the latest version.
   
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../index.html" title="PaddleX Documentation" class="md-header__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../index.html" title="PaddleX 文档" class="md-header__button md-logo" aria-label="PaddleX 文档" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
@@ -145,13 +141,13 @@ You're not viewing the latest version.
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            PaddleX Documentation
+            PaddleX 文档
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              垃圾分类实践教程
+              版面分析模块使用教程
             
           </span>
         </div>
@@ -191,20 +187,20 @@ You're not viewing the latest version.
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="Select language">
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../practical_tutorials/image_classification_garbage_tutorial.html" hreflang="zh" class="md-select__link">
+            <a href="layout_analysis.html" hreflang="zh" class="md-select__link">
               简体中文
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="image_classification_garbage_tutorial.html" hreflang="en" class="md-select__link">
+            <a href="../../../en/module_usage/tutorials/ocr_modules/layout_analysis.html" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -225,21 +221,21 @@ You're not viewing the latest version.
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="查找">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -252,7 +248,7 @@ You're not viewing the latest version.
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            正在初始化搜索引擎
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -264,7 +260,7 @@ You're not viewing the latest version.
     
     
       <div class="md-header__source">
-        <a href="https://github.com/PaddlePaddle/PaddleX" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/PaddlePaddle/PaddleX" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
@@ -279,7 +275,7 @@ You're not viewing the latest version.
   
     
       
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -289,7 +285,7 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../index.html" class="md-tabs__link">
+      <a href="../../../index.html" class="md-tabs__link">
         
   
   
@@ -310,13 +306,13 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../installation/paddlepaddle_install.html" class="md-tabs__link">
+        <a href="../../../installation/paddlepaddle_install.html" class="md-tabs__link">
           
   
   
     
   
-  Installation
+  安装
 
         </a>
       </li>
@@ -332,89 +328,13 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../pipeline_usage/pipeline_develop_guide.html" class="md-tabs__link">
+        <a href="../../../pipeline_usage/pipeline_develop_guide.html" class="md-tabs__link">
           
   
   
     
   
-  Pipeline Tutorials
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../module_usage/tutorials/ocr_modules/text_detection.html" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Module Tutorials
-
-        </a>
-      </li>
-    
-  
-
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../pipeline_deploy/high_performance_inference.html" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Pipeline Deploy
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../other_devices_support/multi_devices_use_guide.html" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Multi-Device Usage
+  产线使用教程
 
         </a>
       </li>
@@ -437,13 +357,13 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../data_annotations/cv_modules/image_classification.html" class="md-tabs__link">
+        <a href="text_detection.html" class="md-tabs__link">
           
   
   
     
   
-  Data Annotation Tutorials
+  单功能模块使用教程
 
         </a>
       </li>
@@ -462,13 +382,13 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../support_list/pipelines_list.html" class="md-tabs__link">
+        <a href="../../../pipeline_deploy/high_performance_inference.html" class="md-tabs__link">
           
   
   
     
   
-  Pipeline List
+  模型产线部署
 
         </a>
       </li>
@@ -484,13 +404,13 @@ You're not viewing the latest version.
     
     
       <li class="md-tabs__item">
-        <a href="../support_list/models_list.html" class="md-tabs__link">
+        <a href="../../../other_devices_support/multi_devices_use_guide.html" class="md-tabs__link">
           
   
   
     
   
-  Model List
+  多硬件使用
 
         </a>
       </li>
@@ -502,19 +422,93 @@ You're not viewing the latest version.
   
   
   
+  
     
+    
+      
+  
+  
   
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../data_annotations/cv_modules/image_classification.html" class="md-tabs__link">
           
   
   
     
   
-  Practical Tutorials & Examples
+  数据标注教程
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../support_list/pipelines_list.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  产线列表
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../support_list/models_list.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  模型列表
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  产业实践教程&范例
 
         </a>
       </li>
@@ -528,13 +522,13 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../VisualDL.html" class="md-tabs__link">
+      <a href="../../../VisualDL.html" class="md-tabs__link">
         
   
   
     
   
-  VisualDL
+  可视化工具
 
       </a>
     </li>
@@ -547,7 +541,7 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../FAQ.html" class="md-tabs__link">
+      <a href="../../../FAQ.html" class="md-tabs__link">
         
   
   
@@ -566,13 +560,13 @@ You're not viewing the latest version.
   
   
     <li class="md-tabs__item">
-      <a href="../CHANGELOG.html" class="md-tabs__link">
+      <a href="../../../CHANGELOG.html" class="md-tabs__link">
         
   
   
     
   
-  Recently Update
+  近期更新
 
       </a>
     </li>
@@ -605,9 +599,9 @@ You're not viewing the latest version.
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../index.html" title="PaddleX Documentation" class="md-nav__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
+    <a href="../../../index.html" title="PaddleX 文档" class="md-nav__button md-logo" aria-label="PaddleX 文档" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
@@ -618,11 +612,11 @@ You're not viewing the latest version.
 </svg>
 
     </a>
-    PaddleX Documentation
+    PaddleX 文档
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/PaddlePaddle/PaddleX" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/PaddlePaddle/PaddleX" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
@@ -642,7 +636,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../index.html" class="md-nav__link">
+      <a href="../../../index.html" class="md-nav__link">
         
   
   
@@ -700,7 +694,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Installation
+    安装
   
 
     
@@ -716,7 +710,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Installation
+    安装
   
 
           </label>
@@ -729,14 +723,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../installation/paddlepaddle_install.html" class="md-nav__link">
+      <a href="../../../installation/paddlepaddle_install.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddlePaddle Install
+    安装PaddlePaddle
   
 
     
@@ -757,14 +751,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../installation/installation.html" class="md-nav__link">
+      <a href="../../../installation/installation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Install
+    安装PaddleX
   
 
     
@@ -837,7 +831,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Pipeline Tutorials
+    产线使用教程
   
 
     
@@ -853,7 +847,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Pipeline Tutorials
+    产线使用教程
   
 
           </label>
@@ -866,14 +860,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/pipeline_develop_guide.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/pipeline_develop_guide.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Overview
+    概述
   
 
     
@@ -925,7 +919,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Information Extraction
+    文本图像智能分析
   
 
     
@@ -941,7 +935,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Information Extraction
+    文本图像智能分析
   
 
           </label>
@@ -954,14 +948,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PP-ChatOCRv3-doc
+    文档场景信息抽取v3产线
   
 
     
@@ -982,14 +976,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PP-ChatOCRv4-doc
+    文档场景信息抽取v4产线
   
 
     
@@ -1092,14 +1086,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/OCR.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/OCR.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    OCR
+    通用OCR产线
   
 
     
@@ -1120,14 +1114,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/table_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Table Recognition
+    通用表格识别产线
   
 
     
@@ -1148,14 +1142,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Table Recognition V2
+    通用表格识别v2产线
   
 
     
@@ -1176,14 +1170,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Layout Parsing
+    通用版面解析产线
   
 
     
@@ -1204,14 +1198,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PP-StructureV3
+    通用版面解析v3产线
   
 
     
@@ -1232,14 +1226,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Formula Recognition
+    公式识别产线
   
 
     
@@ -1260,14 +1254,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Seal Recognition
+    印章文本识别产线
   
 
     
@@ -1288,14 +1282,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Document Image Preprocessing
+    文档图像预处理产线
   
 
     
@@ -1316,14 +1310,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleOCR-VL
+    PaddleOCR-VL产线
   
 
     
@@ -1411,7 +1405,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Computer Vision
+    计算机视觉
   
 
     
@@ -1427,7 +1421,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Computer Vision
+    计算机视觉
   
 
           </label>
@@ -1440,14 +1434,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/image_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/image_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Image Classification
+    通用图像分类
   
 
     
@@ -1468,14 +1462,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/object_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/object_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Object Detection
+    通用目标检测
   
 
     
@@ -1496,14 +1490,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Instance Segmentation
+    通用实例分割
   
 
     
@@ -1524,14 +1518,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Semantic Segmentation
+    通用语义分割
   
 
     
@@ -1552,14 +1546,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Multi-label Classification
+    图像多标签分类
   
 
     
@@ -1580,14 +1574,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/small_object_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Small Object Detection
+    小目标检测
   
 
     
@@ -1608,14 +1602,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Anomaly Detection
+    图像异常检测
   
 
     
@@ -1636,14 +1630,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    3D Multi-modal Fusion Detection
+    3D多模态融合检测
   
 
     
@@ -1664,14 +1658,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Human Keypoint Detection
+    人体关键点检测
   
 
     
@@ -1692,14 +1686,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Open Vocabulary Detection
+    开放词汇检测
   
 
     
@@ -1720,14 +1714,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Open Vocabulary Segmentation
+    开放词汇分割
   
 
     
@@ -1748,14 +1742,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Rotated Object Detection
+    旋转目标检测
   
 
     
@@ -1776,14 +1770,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Feature
+    通用图像识别
   
 
     
@@ -1804,14 +1798,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pedestrian Attribute Recognition
+    行人属性识别
   
 
     
@@ -1832,14 +1826,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vehicle Attribute Recognition
+    车辆属性识别
   
 
     
@@ -1860,14 +1854,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/cv_pipelines/face_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/cv_pipelines/face_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Face Feature
+    人脸识别
   
 
     
@@ -1929,7 +1923,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Time Series Analysis
+    时序分析
   
 
     
@@ -1945,7 +1939,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Time Series Analysis
+    时序分析
   
 
           </label>
@@ -1958,14 +1952,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Forecasting
+    时序预测产线
   
 
     
@@ -1986,14 +1980,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Anomaly Detection
+    时序异常检测产线
   
 
     
@@ -2014,14 +2008,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Classification
+    时序分类产线
   
 
     
@@ -2079,7 +2073,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Speech
+    语音处理
   
 
     
@@ -2095,7 +2089,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Speech
+    语音处理
   
 
           </label>
@@ -2108,14 +2102,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Multilingual Speech Recognition
+    多语种语音识别
   
 
     
@@ -2175,7 +2169,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Video
+    视频分析
   
 
     
@@ -2191,7 +2185,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Video
+    视频分析
   
 
           </label>
@@ -2204,14 +2198,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/video_pipelines/video_classification.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/video_pipelines/video_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Video Classification
+    通用视频分类
   
 
     
@@ -2232,14 +2226,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/video_pipelines/video_detection.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/video_pipelines/video_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    General Video Detection
+    通用视频检测
   
 
     
@@ -2326,7 +2320,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html" class="md-nav__link">
         
   
   
@@ -2397,7 +2391,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Instructions
+    说明文件
   
 
     
@@ -2413,7 +2407,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Instructions
+    说明文件
   
 
           </label>
@@ -2426,14 +2420,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/pipeline_CLI_usage.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/pipeline_CLI_usage.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline CLI Usage
+    PaddleX产线命令行使用说明
   
 
     
@@ -2454,14 +2448,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/pipeline_python_API.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/pipeline_python_API.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline Python API Usage
+    PaddleX产线Python脚本使用说明
   
 
     
@@ -2482,7 +2476,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/parallel_inference.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/parallel_inference.html" class="md-nav__link">
         
   
   
@@ -2510,7 +2504,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/instructions/benchmark.html" class="md-nav__link">
+      <a href="../../../pipeline_usage/instructions/benchmark.html" class="md-nav__link">
         
   
   
@@ -2600,7 +2594,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Module Tutorials
+    单功能模块使用教程
   
 
     
@@ -2616,7 +2610,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Module Tutorials
+    单功能模块使用教程
   
 
           </label>
@@ -2707,14 +2701,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/text_detection.html" class="md-nav__link">
+      <a href="text_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Text Detection
+    文本检测模块
   
 
     
@@ -2735,14 +2729,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/seal_text_detection.html" class="md-nav__link">
+      <a href="seal_text_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Seal Detection
+    印章文本检测模块
   
 
     
@@ -2763,14 +2757,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/text_recognition.html" class="md-nav__link">
+      <a href="text_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Text Recognition
+    文本识别模块
   
 
     
@@ -2791,14 +2785,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/layout_detection.html" class="md-nav__link">
+      <a href="layout_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Layout Detection
+    版面区域检测模块
   
 
     
@@ -2819,14 +2813,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/table_structure_recognition.html" class="md-nav__link">
+      <a href="table_structure_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Table Structure Recognition
+    表格结构识别模块
   
 
     
@@ -2847,14 +2841,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/table_cells_detection.html" class="md-nav__link">
+      <a href="table_cells_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Table Cell Detection
+    表格单元格检测模块
   
 
     
@@ -2875,14 +2869,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/table_classification.html" class="md-nav__link">
+      <a href="table_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Table Classification
+    表格分类模块
   
 
     
@@ -2903,14 +2897,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html" class="md-nav__link">
+      <a href="doc_img_orientation_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Document Image Orientation Classification
+    文档图像方向分类
   
 
     
@@ -2931,14 +2925,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/text_image_unwarping.html" class="md-nav__link">
+      <a href="text_image_unwarping.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Text Image Unwarping
+    文本图像矫正模块
   
 
     
@@ -2959,14 +2953,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/textline_orientation_classification.html" class="md-nav__link">
+      <a href="textline_orientation_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Text Line Orientation Classification
+    文本行方向分类
   
 
     
@@ -2987,14 +2981,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/ocr_modules/formula_recognition.html" class="md-nav__link">
+      <a href="formula_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Formula Recognition
+    公式识别模块
   
 
     
@@ -3058,7 +3052,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Image Classification
+    图像分类
   
 
     
@@ -3074,7 +3068,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Image Classification
+    图像分类
   
 
           </label>
@@ -3087,14 +3081,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/image_classification.html" class="md-nav__link">
+      <a href="../cv_modules/image_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Classification
+    图像分类模块
   
 
     
@@ -3115,14 +3109,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/image_multilabel_classification.html" class="md-nav__link">
+      <a href="../cv_modules/image_multilabel_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Multi-label Classification
+    图像多标签分类模块
   
 
     
@@ -3143,14 +3137,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html" class="md-nav__link">
+      <a href="../cv_modules/pedestrian_attribute_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pedestrian Attribute Recognition
+    行人属性识别模块
   
 
     
@@ -3171,14 +3165,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html" class="md-nav__link">
+      <a href="../cv_modules/vehicle_attribute_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vehicle Attribute Recognition
+    车辆属性识别模块
   
 
     
@@ -3238,7 +3232,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Image Features
+    图像特征
   
 
     
@@ -3254,7 +3248,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Image Features
+    图像特征
   
 
           </label>
@@ -3267,14 +3261,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/image_feature.html" class="md-nav__link">
+      <a href="../cv_modules/image_feature.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Feature
+    图像特征模块
   
 
     
@@ -3295,14 +3289,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/face_feature.html" class="md-nav__link">
+      <a href="../cv_modules/face_feature.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Face Feature
+    人脸特征模块
   
 
     
@@ -3374,7 +3368,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Object Detection
+    目标检测
   
 
     
@@ -3390,7 +3384,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Object Detection
+    目标检测
   
 
           </label>
@@ -3403,14 +3397,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/object_detection.html" class="md-nav__link">
+      <a href="../cv_modules/object_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Object Detection
+    目标检测模块
   
 
     
@@ -3431,14 +3425,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/small_object_detection.html" class="md-nav__link">
+      <a href="../cv_modules/small_object_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Small Object Detection
+    小目标检测模块
   
 
     
@@ -3459,14 +3453,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/face_detection.html" class="md-nav__link">
+      <a href="../cv_modules/face_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Face Detection
+    人脸检测模块
   
 
     
@@ -3487,14 +3481,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/mainbody_detection.html" class="md-nav__link">
+      <a href="../cv_modules/mainbody_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Main Body Detection
+    主体检测模块
   
 
     
@@ -3515,14 +3509,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/human_detection.html" class="md-nav__link">
+      <a href="../cv_modules/human_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Human Detection
+    行人检测模块
   
 
     
@@ -3543,14 +3537,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/vehicle_detection.html" class="md-nav__link">
+      <a href="../cv_modules/vehicle_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vehicle Detection
+    车辆检测模块
   
 
     
@@ -3571,14 +3565,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/human_keypoint_detection.html" class="md-nav__link">
+      <a href="../cv_modules/human_keypoint_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Human Keypoint Detection
+    人体关键点检测模块
   
 
     
@@ -3599,14 +3593,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/open_vocabulary_detection.html" class="md-nav__link">
+      <a href="../cv_modules/open_vocabulary_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Open-Vocabulary Object Detection
+    开放词汇目标检测模块
   
 
     
@@ -3670,7 +3664,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Image Segmentation
+    图像分割
   
 
     
@@ -3686,7 +3680,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Image Segmentation
+    图像分割
   
 
           </label>
@@ -3699,14 +3693,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/semantic_segmentation.html" class="md-nav__link">
+      <a href="../cv_modules/semantic_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Semantic Segmentation
+    语义分割模块
   
 
     
@@ -3727,14 +3721,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/instance_segmentation.html" class="md-nav__link">
+      <a href="../cv_modules/instance_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Instance Segmentation
+    实例分割模块
   
 
     
@@ -3755,14 +3749,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/anomaly_detection.html" class="md-nav__link">
+      <a href="../cv_modules/anomaly_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Anomaly Detection
+    图像异常检测模块
   
 
     
@@ -3783,14 +3777,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/open_vocabulary_segmentation.html" class="md-nav__link">
+      <a href="../cv_modules/open_vocabulary_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Open-Vocabulary Segmentation
+    开放词汇目标分割模块
   
 
     
@@ -3852,7 +3846,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Time Series Analysis
+    时序分析
   
 
     
@@ -3868,7 +3862,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Time Series Analysis
+    时序分析
   
 
           </label>
@@ -3881,14 +3875,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/time_series_modules/time_series_forecasting.html" class="md-nav__link">
+      <a href="../time_series_modules/time_series_forecasting.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Forecasting
+    时序预测模块
   
 
     
@@ -3909,14 +3903,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
+      <a href="../time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Anomaly Detection
+    时序异常检测模块
   
 
     
@@ -3937,14 +3931,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/time_series_modules/time_series_classification.html" class="md-nav__link">
+      <a href="../time_series_modules/time_series_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Classification
+    时序分类模块
   
 
     
@@ -4002,7 +3996,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Speech
+    语音识别
   
 
     
@@ -4018,7 +4012,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Speech
+    语音识别
   
 
           </label>
@@ -4031,14 +4025,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/speech_modules/multilingual_speech_recognition.html" class="md-nav__link">
+      <a href="../speech_modules/multilingual_speech_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Multilingual Speech Recognition Task
+    多语种语音识别模块
   
 
     
@@ -4096,7 +4090,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    3D
+    3D检测
   
 
     
@@ -4112,7 +4106,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    3D
+    3D检测
   
 
           </label>
@@ -4125,14 +4119,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/cv_modules/3d_bev_detection.html" class="md-nav__link">
+      <a href="../cv_modules/3d_bev_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    3D Multimodal Fusion Detection
+    BEV融合3D检测模块
   
 
     
@@ -4221,14 +4215,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/vlm_modules/doc_vlm.html" class="md-nav__link">
+      <a href="../vlm_modules/doc_vlm.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Document Vision-Language Model
+    文档类视觉语言模型模块
   
 
     
@@ -4249,7 +4243,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/tutorials/vlm_modules/chart_parsing.html" class="md-nav__link">
+      <a href="../vlm_modules/chart_parsing.html" class="md-nav__link">
         
   
   
@@ -4320,7 +4314,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Instructions
+    说明文件
   
 
     
@@ -4336,7 +4330,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Instructions
+    说明文件
   
 
           </label>
@@ -4349,14 +4343,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/model_python_API.html" class="md-nav__link">
+      <a href="../../instructions/model_python_API.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Module Python API Usage
+    PaddleX单模型Python脚本使用说明
   
 
     
@@ -4377,14 +4371,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/config_parameters_common.html" class="md-nav__link">
+      <a href="../../instructions/config_parameters_common.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Common Module Config Parameters
+    PaddleX通用模型配置文件参数说明
   
 
     
@@ -4405,14 +4399,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/config_parameters_time_series.html" class="md-nav__link">
+      <a href="../../instructions/config_parameters_time_series.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Time Series Module Config Parameters
+    PaddleX时序任务模型配置文件参数说明
   
 
     
@@ -4433,7 +4427,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../module_usage/instructions/benchmark.html" class="md-nav__link">
+      <a href="../../instructions/benchmark.html" class="md-nav__link">
         
   
   
@@ -4513,7 +4507,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Pipeline Deploy
+    模型产线部署
   
 
     
@@ -4529,7 +4523,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Pipeline Deploy
+    模型产线部署
   
 
           </label>
@@ -4542,14 +4536,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/high_performance_inference.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/high_performance_inference.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    High Performance Inference
+    高性能推理
   
 
     
@@ -4570,14 +4564,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/serving.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/serving.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Serving
+    服务化部署
   
 
     
@@ -4598,14 +4592,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/on_device_deployment.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/on_device_deployment.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    On-Device Deployment
+    端侧部署
   
 
     
@@ -4626,14 +4620,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/paddle2onnx.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/paddle2onnx.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Obtaining ONNX Models
+    获取 ONNX 模型
   
 
     
@@ -4654,14 +4648,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_deploy/packaging.html" class="md-nav__link">
+      <a href="../../../pipeline_deploy/packaging.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Package PaddleX Projects
+    打包PaddleX项目
   
 
     
@@ -4720,7 +4714,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Multi-Device Usage
+    多硬件使用
   
 
     
@@ -4736,7 +4730,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Multi-Device Usage
+    多硬件使用
   
 
           </label>
@@ -4749,14 +4743,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/multi_devices_use_guide.html" class="md-nav__link">
+      <a href="../../../other_devices_support/multi_devices_use_guide.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Multi-Device Usage Guide
+    多硬件使用指南
   
 
     
@@ -4814,7 +4808,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddlePaddle Installation on Multiple Devices
+    飞桨多硬件安装
   
 
     
@@ -4830,7 +4824,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    PaddlePaddle Installation on Multiple Devices
+    飞桨多硬件安装
   
 
           </label>
@@ -4843,14 +4837,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_DCU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_DCU.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    HYGON DCU PaddlePaddle Installation Guide
+    海光 DCU 飞桨安装教程
   
 
     
@@ -4871,14 +4865,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_MLU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_MLU.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Cambricon MLU PaddlePaddle Installation Guide
+    寒武纪 MLU 飞桨安装教程
   
 
     
@@ -4899,14 +4893,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_NPU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_NPU.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Ascend NPU PaddlePaddle Installation Guide
+    昇腾 NPU 飞桨安装教程
   
 
     
@@ -4927,14 +4921,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_XPU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_XPU.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Kunlun XPU PaddlePaddle Installation Guide
+    昆仑 XPU 飞桨安装教程
   
 
     
@@ -4955,14 +4949,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../other_devices_support/paddlepaddle_install_GCU.html" class="md-nav__link">
+      <a href="../../../other_devices_support/paddlepaddle_install_GCU.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Enflame GCU PaddlePaddle Installation Guide
+    燧原 GCU 飞桨安装教程
   
 
     
@@ -5031,7 +5025,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Data Annotation Tutorials
+    数据标注教程
   
 
     
@@ -5047,7 +5041,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Data Annotation Tutorials
+    数据标注教程
   
 
           </label>
@@ -5099,7 +5093,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Computer Vision
+    计算机视觉
   
 
     
@@ -5115,7 +5109,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Computer Vision
+    计算机视觉
   
 
           </label>
@@ -5128,14 +5122,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/image_classification.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/image_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Classification Task
+    图像分类任务模块
   
 
     
@@ -5156,14 +5150,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/image_feature.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/image_feature.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Feature Task
+    图像特征任务模块
   
 
     
@@ -5184,14 +5178,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/instance_segmentation.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/instance_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Instance Segmentation Task
+    实例分割任务模块
   
 
     
@@ -5212,14 +5206,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/ml_classification.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/ml_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Image Multi-label Classification
+    图像多标签分类
   
 
     
@@ -5240,14 +5234,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/object_detection.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/object_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Object Detection Task
+    目标检测任务模块
   
 
     
@@ -5268,14 +5262,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/cv_modules/semantic_segmentation.html" class="md-nav__link">
+      <a href="../../../data_annotations/cv_modules/semantic_segmentation.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Semantic Segmentation Task
+    语义分割任务模块
   
 
     
@@ -5364,14 +5358,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/ocr_modules/table_recognition.html" class="md-nav__link">
+      <a href="../../../data_annotations/ocr_modules/table_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Table Recognition Task
+    表格识别任务模块
   
 
     
@@ -5392,14 +5386,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/ocr_modules/text_detection_recognition.html" class="md-nav__link">
+      <a href="../../../data_annotations/ocr_modules/text_detection_recognition.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Text Detection/Recognition Task
+    文本检测/识别任务模块
   
 
     
@@ -5461,7 +5455,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Time Series Analysis
+    时序分析
   
 
     
@@ -5477,7 +5471,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Time Series Analysis
+    时序分析
   
 
           </label>
@@ -5490,14 +5484,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../data_annotations/time_series_modules/time_series_anomaly_detection.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Anomaly Detection Task
+    时序异常检测任务模块
   
 
     
@@ -5518,14 +5512,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/time_series_modules/time_series_classification.html" class="md-nav__link">
+      <a href="../../../data_annotations/time_series_modules/time_series_classification.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Classification Task
+    时序分类任务模块
   
 
     
@@ -5546,14 +5540,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../data_annotations/time_series_modules/time_series_forecasting.html" class="md-nav__link">
+      <a href="../../../data_annotations/time_series_modules/time_series_forecasting.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Time Series Forecasting Task
+    时序预测任务模块
   
 
     
@@ -5626,7 +5620,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Pipeline List
+    产线列表
   
 
     
@@ -5642,7 +5636,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Pipeline List
+    产线列表
   
 
           </label>
@@ -5655,14 +5649,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline List (CPU/GPU)
+    PaddleX产线列表(CPU/GPU)
   
 
     
@@ -5683,14 +5677,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_dcu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_dcu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline List (DCU)
+    PaddleX产线列表(DCU)
   
 
     
@@ -5711,14 +5705,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_mlu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_mlu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline List (MLU)
+    PaddleX产线列表(MLU)
   
 
     
@@ -5739,14 +5733,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_npu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_npu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline List (NPU)
+    PaddleX产线列表(NPU)
   
 
     
@@ -5767,14 +5761,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/pipelines_list_xpu.html" class="md-nav__link">
+      <a href="../../../support_list/pipelines_list_xpu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Pipeline List (XPU)
+    PaddleX产线列表(XPU)
   
 
     
@@ -5841,7 +5835,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    Model List
+    模型列表
   
 
     
@@ -5857,7 +5851,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Model List
+    模型列表
   
 
           </label>
@@ -5870,14 +5864,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/models_list.html" class="md-nav__link">
+      <a href="../../../support_list/models_list.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Model List (CPU/GPU)
+    PaddleX模型列表(CPU/GPU)
   
 
     
@@ -5898,14 +5892,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_dcu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_dcu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Model List (DCU)
+    PaddleX模型列表(DCU)
   
 
     
@@ -5926,14 +5920,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_mlu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_mlu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Model List (MLU)
+    PaddleX模型列表(MLU)
   
 
     
@@ -5954,14 +5948,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_npu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_npu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Model List (NPU)
+    PaddleX模型列表(NPU)
   
 
     
@@ -5982,14 +5976,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_xpu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_xpu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Model List (XPU)
+    PaddleX模型列表(XPU)
   
 
     
@@ -6010,14 +6004,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../support_list/model_list_gcu.html" class="md-nav__link">
+      <a href="../../../support_list/model_list_gcu.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PaddleX Model List (GCU)
+    PaddleX模型列表(GCU)
   
 
     
@@ -6042,10 +6036,8 @@ You're not viewing the latest version.
       
   
   
-    
   
   
-  
     
     
       
@@ -6089,29 +6081,28 @@ You're not viewing the latest version.
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Practical Tutorials & Examples
+    产业实践教程&范例
   
 
     
@@ -6122,12 +6113,12 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Practical Tutorials & Examples
+    产业实践教程&范例
   
 
           </label>
@@ -6140,7 +6131,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-nav__link">
         
   
   
@@ -6168,7 +6159,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="document_scene_information_extraction%28seal_recognition%29_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html" class="md-nav__link">
         
   
   
@@ -6196,7 +6187,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="document_scene_information_extraction%28deepseek%29_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/document_scene_information_extraction%28deepseek%29_tutorial.html" class="md-nav__link">
         
   
   
@@ -6224,7 +6215,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ocr_det_license_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ocr_det_license_tutorial.html" class="md-nav__link">
         
   
   
@@ -6252,7 +6243,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ocr_rec_chinese_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ocr_rec_chinese_tutorial.html" class="md-nav__link">
         
   
   
@@ -6280,7 +6271,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="formula_recognition_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/formula_recognition_tutorial.html" class="md-nav__link">
         
   
   
@@ -6308,7 +6299,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="layout_detection.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/layout_detection.html" class="md-nav__link">
         
   
   
@@ -6336,7 +6327,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="face_recognition_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/face_recognition_tutorial.html" class="md-nav__link">
         
   
   
@@ -6361,37 +6352,10 @@ You're not viewing the latest version.
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    垃圾分类实践教程
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="image_classification_garbage_tutorial.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../practical_tutorials/image_classification_garbage_tutorial.html" class="md-nav__link">
         
   
   
@@ -6407,192 +6371,6 @@ You're not viewing the latest version.
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-select-a-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Select a Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-choosing-a-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Choosing a Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-data-preparation-and-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Data Preparation and Verification
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Data Preparation and Verification">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#41-data-preparation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.1 Data Preparation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#42-dataset-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.2 Dataset Verification
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#43-dataset-splitting-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.3 Dataset Splitting (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-splitting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Splitting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-model-training-and-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Model Training and Evaluation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Model Training and Evaluation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-model-training" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.1 Model Training
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-model-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.2 Model Evaluation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-model-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Model Optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-pipeline-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. pipeline Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-development-integrationdeployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Development Integration/Deployment
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -6605,7 +6383,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="instance_segmentation_remote_sensing_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/instance_segmentation_remote_sensing_tutorial.html" class="md-nav__link">
         
   
   
@@ -6633,7 +6411,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="object_detection_fall_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/object_detection_fall_tutorial.html" class="md-nav__link">
         
   
   
@@ -6661,7 +6439,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="object_detection_fashion_pedia_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/object_detection_fashion_pedia_tutorial.html" class="md-nav__link">
         
   
   
@@ -6689,7 +6467,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ocr_det_license_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ocr_det_license_tutorial.html" class="md-nav__link">
         
   
   
@@ -6717,7 +6495,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="semantic_segmentation_road_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/semantic_segmentation_road_tutorial.html" class="md-nav__link">
         
   
   
@@ -6745,7 +6523,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ts_anomaly_detection.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ts_anomaly_detection.html" class="md-nav__link">
         
   
   
@@ -6773,7 +6551,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ts_classification.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ts_classification.html" class="md-nav__link">
         
   
   
@@ -6801,7 +6579,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="ts_forecast.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/ts_forecast.html" class="md-nav__link">
         
   
   
@@ -6829,7 +6607,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="deployment_tutorial.html" class="md-nav__link">
+      <a href="../../../practical_tutorials/deployment_tutorial.html" class="md-nav__link">
         
   
   
@@ -6864,14 +6642,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../VisualDL.html" class="md-nav__link">
+      <a href="../../../VisualDL.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    VisualDL
+    可视化工具
   
 
     
@@ -6891,7 +6669,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../FAQ.html" class="md-nav__link">
+      <a href="../../../FAQ.html" class="md-nav__link">
         
   
   
@@ -6918,14 +6696,14 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../CHANGELOG.html" class="md-nav__link">
+      <a href="../../../CHANGELOG.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Recently Update
+    近期更新
   
 
     
@@ -6951,7 +6729,7 @@ You're not viewing the latest version.
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
   
@@ -6960,15 +6738,15 @@ You're not viewing the latest version.
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      目录
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-select-a-pipeline" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Select a Pipeline
+        一、概述
       
     </span>
   </a>
@@ -6976,10 +6754,10 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-quick-start" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Quick Start
+        二、支持模型列表
       
     </span>
   </a>
@@ -6987,10 +6765,10 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-choosing-a-model" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Choosing a Model
+        三、快速集成
       
     </span>
   </a>
@@ -6998,22 +6776,34 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-data-preparation-and-verification" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Data Preparation and Verification
+        四、二次开发
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Data Preparation and Verification">
+    <nav class="md-nav" aria-label="四、二次开发">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#41-data-preparation" class="md-nav__link">
+  <a href="#41" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.1 Data Preparation
+        4.1 数据准备
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 数据准备">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.1 Demo 数据下载
       
     </span>
   </a>
@@ -7021,10 +6811,10 @@ You're not viewing the latest version.
 </li>
         
           <li class="md-nav__item">
-  <a href="#42-dataset-verification" class="md-nav__link">
+  <a href="#412" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.2 Dataset Verification
+        4.1.2 数据集格式说明
       
     </span>
   </a>
@@ -7032,10 +6822,21 @@ You're not viewing the latest version.
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-dataset-splitting-optional" class="md-nav__link">
+  <a href="#413" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.3 Dataset Splitting (Optional)
+        4.1.3 数据校验
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.4 数据集格式转换/数据集划分（可选）
       
     </span>
   </a>
@@ -7046,35 +6847,46 @@ You're not viewing the latest version.
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#data-splitting" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Splitting
+        4.2 模型训练
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#5-model-training-and-evaluation" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Model Training and Evaluation
+        4.3 模型评估
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Model Training and Evaluation">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 模型推理
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 模型推理">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-model-training" class="md-nav__link">
+  <a href="#441" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1 Model Training
+        4.4.1 模型推理
       
     </span>
   </a>
@@ -7082,21 +6894,10 @@ You're not viewing the latest version.
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-model-evaluation" class="md-nav__link">
+  <a href="#442" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Model Evaluation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-model-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Model Optimization
+        4.4.2 模型集成
       
     </span>
   </a>
@@ -7107,26 +6908,9 @@ You're not viewing the latest version.
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#6-pipeline-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. pipeline Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-development-integrationdeployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Development Integration/Deployment
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -7148,46 +6932,6 @@ You're not viewing the latest version.
   
 
 
-  <nav class="md-path" aria-label="Navigation" >
-    <ol class="md-path__list">
-      
-        
-  
-  
-    <li class="md-path__item">
-      <a href="../index.html" class="md-path__link">
-        
-  <span class="md-ellipsis">
-    Home
-  </span>
-
-      </a>
-    </li>
-  
-
-      
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Practical Tutorials & Examples
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ol>
-  </nav>
-
               
               <article class="md-content__inner md-typeset">
                 
@@ -7195,7 +6939,7 @@ You're not viewing the latest version.
 
 
   
-    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/practical_tutorials/image_classification_garbage_tutorial.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/module_usage/tutorials/ocr_modules/layout_analysis.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -7204,395 +6948,661 @@ You're not viewing the latest version.
     
       
     
-    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/practical_tutorials/image_classification_garbage_tutorial.en.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/module_usage/tutorials/ocr_modules/layout_analysis.md" title="查看本页的源代码" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="paddlex-30-general-image-classification-pipeline-garbage-classification-tutorial">PaddleX 3.0 General Image Classification Pipeline — Garbage Classification Tutorial<a class="headerlink" href="#paddlex-30-general-image-classification-pipeline-garbage-classification-tutorial" title="Permanent link">&para;</a></h1>
-<p>PaddleX offers a rich set of pipelines, each consisting of one or more models that can tackle specific scenario tasks. All PaddleX pipelines support quick trials, and if the results are not satisfactory, you can fine-tune the models with your private data. PaddleX also provides Python APIs for easy integration into personal projects. Before use, you need to install PaddleX. For installation instructions, please refer to <a href="../installation/installation.html">PaddleX Installation</a>. This tutorial introduces the usage of the pipeline tool with a garbage classification task as an example.</p>
-<h2 id="1-select-a-pipeline">1. Select a Pipeline<a class="headerlink" href="#1-select-a-pipeline" title="Permanent link">&para;</a></h2>
-<p>First, choose the corresponding PaddleX pipeline based on your task scenario. For garbage classification, it falls under the general image classification task, corresponding to PaddleX's universal image classification pipeline. If you're unsure about the task-pipeline correspondence, you can check the capabilities of relevant pipelines in the <a href="../support_list/pipelines_list.html">PaddleX Supported Pipelines List</a>.</p>
-<h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
-<p>PaddleX offers two ways to experience the pipelines: one is through the PaddleX wheel package locally, and the other is on the <b>Baidu AIStudio Community</b>.</p>
-<ul>
-<li>
-<p>Local Experience:
-    <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>image_classification<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--input<span class="w"> </span>https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--device<span class="w"> </span>gpu:0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--save_path<span class="w"> </span>./output/
-</span></code></pre></div></p>
-</li>
-<li>
-<p>AIStudio Community Experience: Go to <a href="https://aistudio.baidu.com/pipeline/mine">Baidu AIStudio Community</a>, click "Create Pipeline", and create a <b>General Image Classification</b> pipeline for a quick trial.</p>
-</li>
-</ul>
-<p>Quick Trial Output Example:</p>
-<center>
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/image_classification/01.png" width=600>
-
-</center>
-
-<p>After trying the pipeline, determine if it meets your expectations (including accuracy, speed, etc.). If the model's speed or accuracy is not satisfactory, you can test alternative models and decide if further fine-tuning is needed. Since this tutorial aims to classify specific garbage types, the default weights (trained on the ImageNet-1k dataset) are insufficient. You need to collect and annotate data for training and fine-tuning.</p>
-<h2 id="3-choosing-a-model">3. Choosing a Model<a class="headerlink" href="#3-choosing-a-model" title="Permanent link">&para;</a></h2>
-<p>PaddleX provides 80 end-to-end image classification models, which can be referenced in the <a href="../support_list/models_list.html">Model List</a>. Some of the benchmarks for these models are as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Model List</th>
-<th>Top-1 Accuracy (%)</th>
-<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (MB)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-HGNetV2_B6</td>
-<td>86.30</td>
-<td>10.46</td>
-<td>240.18</td>
-<td>288</td>
-</tr>
-<tr>
-<td>CLIP_vit_base_patch16_224</td>
-<td>85.36</td>
-<td>12.03 / 2.49</td>
-<td>60.86 / 42.69</td>
-<td>331</td>
-</tr>
-<tr>
-<td>PP-HGNetV2_B4</td>
-<td>83.57</td>
-<td>2.45</td>
-<td>38.10</td>
-<td>76</td>
-</tr>
-<tr>
-<td>SwinTransformer_base_patch4_window7_224</td>
-<td>83.37</td>
-<td>13.04 / 10.77</td>
-<td>133.79 / 118.45</td>
-<td>340</td>
-</tr>
-<tr>
-<td>PP-HGNet_small</td>
-<td>81.51</td>
-<td>5.87 / 1.68</td>
-<td>25.58 / 18.50</td>
-<td>94</td>
-</tr>
-<tr>
-<td>PP-HGNetV2_B0</td>
-<td>77.77</td>
-<td>0.68</td>
-<td>6.41</td>
-<td>23</td>
-</tr>
-<tr>
-<td>ResNet50</td>
-<td>76.50</td>
-<td>6.25 / 1.17</td>
-<td>15.93 / 9.72</td>
-<td>98</td>
-</tr>
-<tr>
-<td>PP-LCNet_x1_0</td>
-<td>71.32</td>
-<td>2.59 / 0.68</td>
-<td>3.18 / 1.19</td>
-<td>7</td>
-</tr>
-<tr>
-<td>MobileNetV3_small_x1_0</td>
-<td>68.24</td>
-<td>4.23 / 0.78</td>
-<td>5.24 / 1.48</td>
-<td>12</td>
-</tr>
-</tbody>
-</table>
+<h1 id="_1">版面分析模块使用教程<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="_2">一、概述<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>版面分析任务在版面区域检测的基础上，进一步引入了**实例分割**与**阅读顺序预测**能力。通过对输入的文档图像进行分析，不仅能识别各类版面元素（如文字、图表、图像、公式、段落标题、摘要、参考文献等）并输出其边界框，还能同时输出每个区域的**精确轮廓掩码**和**阅读顺序编号**，为文档理解与信息抽取流程提供更完整的结构化信息。</p>
+<p>版面分析模块目前支持模型 PP-DocLayoutV3，基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。</p>
+<p><img alt="版面分析效果" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png" /></p>
+<h2 id="_3">二、支持模型列表<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><b>Note: The above accuracy metrics are Top-1 Accuracy on the ImageNet-1k validation set. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p>推理耗时仅包含模型推理耗时，不包含前后处理耗时。</p>
 </blockquote>
-<p>In short, the models listed from top to bottom have faster inference speeds, while those from bottom to top have higher accuracy. This tutorial will use the <code>PP-LCNet_x1_0</code> model as an example to complete the full model development process. You can select an appropriate model for training based on your actual usage scenarios. After training, you can evaluate the suitable model weights within your pipeline and ultimately use them in real-world scenarios.</p>
-<h2 id="4-data-preparation-and-verification">4. Data Preparation and Verification<a class="headerlink" href="#4-data-preparation-and-verification" title="Permanent link">&para;</a></h2>
-<h3 id="41-data-preparation">4.1 Data Preparation<a class="headerlink" href="#41-data-preparation" title="Permanent link">&para;</a></h3>
-<p>This tutorial uses the <code>Garbage Classification Dataset</code> as an example dataset. You can obtain the example dataset using the following commands. If you are using your own annotated dataset, you need to adjust it according to PaddleX's format requirements to meet PaddleX's data format specifications. For an introduction to data formats, you can refer to the <a href="../data_annotations/cv_modules/image_classification.html">PaddleX Image Classification Task Module Data Annotation Tutorial</a>.</p>
-<p>Dataset acquisition commands:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/paddlex
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>wget<span class="w"> </span>https://paddle-model-ecology.bj.bcebos.com/paddlex/data/trash40.tar<span class="w"> </span>-P<span class="w"> </span>./dataset
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tar<span class="w"> </span>-xf<span class="w"> </span>./dataset/trash40.tar<span class="w"> </span>-C<span class="w"> </span>./dataset/
-</span></code></pre></div>
-<h3 id="42-dataset-verification">4.2 Dataset Verification<a class="headerlink" href="#42-dataset-verification" title="Permanent link">&para;</a></h3>
-<p>To verify the dataset, simply run the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>check_dataset<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/trash40/
-</span></code></pre></div>
-<p>After executing the above command, PaddleX will verify the dataset and count the basic information of the dataset. If the command runs successfully, it will print <code>Check dataset passed !</code> in the log, and the relevant outputs will be saved in the current directory's <code>./output/check_dataset</code> directory. The output directory includes visualized example images and a histogram of sample distribution. The verification result file is saved in <code>./output/check_dataset_result.json</code>, and the specific content of the verification result file is as follows:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;done_flag&quot;: true,
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;check_pass&quot;: true,
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;attributes&quot;: {
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;label_file&quot;: ../../dataset/trash40/label.txt&quot;,
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;num_classes&quot;: 40,
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    &quot;train_samples&quot;: 1605,
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    &quot;train_sample_paths&quot;: [
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;check_dataset/demo_img/img_14950.jpg&quot;,
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;check_dataset/demo_img/img_12045.jpg&quot;,
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    ],
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    &quot;val_samples&quot;: 3558,
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    &quot;val_sample_paths&quot;: [
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;check_dataset/demo_img/img_198.jpg&quot;,
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;check_dataset/demo_img/img_19627.jpg&quot;,
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    ]
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  },
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  &quot;analysis&quot;: {
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  },
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  &quot;dataset_path&quot;: &quot;trash40&quot;,
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  &quot;show_type&quot;: &quot;image&quot;,
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  &quot;dataset_type&quot;: &quot;ClsDataset&quot;
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>}
-</span></code></pre></div>
-<p>In the above verification results, <code>check_pass</code> being <code>True</code> indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
 <ul>
-<li><code>attributes.num_classes</code>: The number of classes in this dataset is 40, which is the number of classes that need to be passed in for subsequent training;</li>
-<li><code>attributes.train_samples</code>: The number of training set samples in this dataset is 1605;</li>
-<li><code>attributes.val_samples</code>: The number of validation set samples in this dataset is 3558;</li>
-<li><code>attributes.train_sample_paths</code>: A list of relative paths to the visualized images of the training set samples in this dataset;</li>
-<li><code>attributes.val_sample_paths</code>: A list of relative paths to the visualized images of the validation set samples in this dataset;</li>
+<li><b>版面分析模型，包含25个常见类别：摘要、算法、侧栏文本、图表、目录、行间公式、文档标题、图表标题、页脚、页脚图像、脚注、公式编号、页眉、页眉图像、图像、行内公式、页码、段落标题、参考文献、参考文献内容、印章、表格、文本、竖版文字、图注</b></li>
 </ul>
-<p>In addition, the dataset verification also analyzes the sample number distribution of all categories in the dataset and draws a distribution histogram (<code>histogram.png</code>):</p>
-<center>
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/image_classification/02.png" width=600>
-
-</center>
-
-<p><b>Note</b>: Only data that passes the verification can be used for training and evaluation.</p>
-<h3 id="43-dataset-splitting-optional">4.3 Dataset Splitting (Optional)<a class="headerlink" href="#43-dataset-splitting-optional" title="Permanent link">&para;</a></h3>
-<p>If you need to convert the dataset format or re-split the dataset, you can set it by modifying the configuration file or appending hyperparameters.</p>
-<p>The parameters related to dataset verification can be set by modifying the fields under <code>CheckDataset</code> in the configuration file. Some example explanations of the parameters in the configuration file are as follows:</p>
-<ul>
-<li><code>CheckDataset</code>:<ul>
-<li><code>split</code>:<ul>
-<li><code>enable</code>: Whether to re-split the dataset. When set to <code>True</code>, the dataset format will be converted. The default is <code>False</code>;</li>
-<li><code>train_percent</code>: If the dataset is to be re-split, you need to set the percentage of the training set. The type is any integer between 0-100, and it needs to ensure that the sum with <code>val_percent</code> is 100;</li>
-<li><code>val_percent</code>: If the dataset is to be re-split, you need to set the percentage of the validation set. The type is any integer between 0-100, and it needs to ensure that the sum with <code>train_percent</code> is 100;</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="data-splitting">Data Splitting<a class="headerlink" href="#data-splitting" title="Permanent link">&para;</a></h2>
-<p>When splitting data, the original annotation files will be renamed as <code>xxx.bak</code> in the original path. The above parameters can also be set by appending command line arguments, for example, to re-split the dataset and set the ratio of training set to validation set: <code>-o CheckDataset.split.enable=True -o CheckDataset.split.train_percent=80 -o CheckDataset.split.val_percent=20</code>.</p>
-<h2 id="5-model-training-and-evaluation">5. Model Training and Evaluation<a class="headerlink" href="#5-model-training-and-evaluation" title="Permanent link">&para;</a></h2>
-<h3 id="51-model-training">5.1 Model Training<a class="headerlink" href="#51-model-training" title="Permanent link">&para;</a></h3>
-<p>Before training, please ensure that you have validated the dataset. To complete PaddleX model training, simply use the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>train<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/trash40<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-o<span class="w"> </span>Train.num_classes<span class="o">=</span><span class="m">40</span>
-</span></code></pre></div>
-<p>PaddleX supports modifying training hyperparameters, single/multi-GPU training, etc., by modifying the configuration file or appending command line arguments.</p>
-<p>Each model in PaddleX provides a configuration file for model development to set relevant parameters. Model training-related parameters can be set by modifying the <code>Train</code> fields in the configuration file. Some example explanations of parameters in the configuration file are as follows:</p>
-<ul>
-<li><code>Global</code>:<ul>
-<li><code>mode</code>: Mode, supporting dataset validation (<code>check_dataset</code>), model training (<code>train</code>), and model evaluation (<code>evaluate</code>);</li>
-<li><code>device</code>: Training device, options include <code>cpu</code>, <code>gpu</code>, <code>xpu</code>, <code>npu</code>, <code>mlu</code>. For multi-GPU training, specify the card numbers, e.g., <code>gpu:0,1,2,3</code>;</li>
-</ul>
-</li>
-<li><code>Train</code>: Training hyperparameter settings;<ul>
-<li><code>epochs_iters</code>: Number of training epochs;</li>
-<li><code>learning_rate</code>: Training learning rate;</li>
-</ul>
-</li>
-</ul>
-<p>For more hyperparameter introductions, please refer to <a href="../module_usage/instructions/config_parameters_common.html">PaddleX General Model Configuration File Parameter Explanation</a>.</p>
-<p><b>Note</b>:
-- The above parameters can be set by appending command line arguments, e.g., specifying the mode as model training: <code>-o Global.mode=train</code>; specifying the first two GPUs for training: <code>-o Global.device=gpu:0,1</code>; setting the number of training epochs to 10: <code>-o Train.epochs_iters=10</code>.
-- During model training, PaddleX automatically saves model weight files, with the default being <code>output</code>. If you need to specify a save path, you can use the <code>-o Global.output</code> field in the configuration file.
-- PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</p>
-<p><b>Explanation of Training Outputs</b>:</p>
-<p>After completing model training, all outputs are saved in the specified output directory (default is <code>./output/</code>), typically including the following:</p>
-<ul>
-<li>train_result.json: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics and related file paths;</li>
-<li>train.log: Training log file, recording changes in model metrics and loss during training;</li>
-<li>config.yaml: Training configuration file, recording the hyperparameter configuration for this training session;</li>
-<li>.pdparams, .pdopt, .pdstates, .pdiparams, .pdmodel: Model weight-related files, including network parameters, optimizer, static graph network parameters, static graph network structure, etc.;</li>
-</ul>
-<h3 id="52-model-evaluation">5.2 Model Evaluation<a class="headerlink" href="#52-model-evaluation" title="Permanent link">&para;</a></h3>
-<p>After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. To evaluate a model using PaddleX, simply use the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>evaluate<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/trash40
-</span></code></pre></div>
-<p>Similar to model training, model evaluation supports setting by modifying the configuration file or appending command line arguments.</p>
-<p><b>Note</b>: When evaluating the model, you need to specify the model weight file path. Each configuration file has a default weight save path. If you need to change it, simply set it by appending a command line argument, e.g., <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
-<h3 id="53-model-optimization">5.3 Model Optimization<a class="headerlink" href="#53-model-optimization" title="Permanent link">&para;</a></h3>
-<p>After learning about model training and evaluation, we can enhance model accuracy by adjusting hyperparameters. By carefully tuning the number of training epochs, you can control the depth of model training to avoid overfitting or underfitting. Meanwhile, the setting of the learning rate is crucial to the speed and stability of model convergence. Therefore, when optimizing model performance, it is essential to consider the values of these two parameters prudently and adjust them flexibly based on actual conditions to achieve the best training results.</p>
-<p>It is recommended to follow the controlled variable method when debugging parameters:</p>
-<ol>
-<li>First, fix the number of training epochs at 20, and set the batch size to 64 due to the small size of the training dataset.</li>
-<li>Initiate three experiments based on the <code>PP-LCNet_x1_0</code> model, with learning rates of: 0.01, 0.001, 0.1.</li>
-<li>It can be observed that the configuration with the highest accuracy in Experiment 1 is a learning rate of 0.01. Based on this training hyperparameter, change the number of epochs and observe the accuracy results at different epochs, finding that the best accuracy is generally achieved at 100 epochs.</li>
-</ol>
-<p>Learning Rate Exploration Results:</p>
-<center>
-
 <table>
 <thead>
 <tr>
-<th>Experiment</th>
-<th>Epochs</th>
-<th>Learning Rate</th>
-<th>batch_size</th>
-<th>Training Environment</th>
-<th>Top-1 Acc</th>
+<th>模型</th><th>模型下载链接</th>
+<th>GPU推理耗时（ms）<br/>A100 GPU</th>
+<th>模型存储大小（MB）</th>
+<th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Experiment 1</td>
-<td>20</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td><strong>73.83%</strong></td>
-</tr>
-<tr>
-<td>Experiment 2</td>
-<td>20</td>
-<td>0.001</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>30.64%</td>
-</tr>
-<tr>
-<td>Experiment 3</td>
-<td>20</td>
-<td>0.1</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>71.53%</td>
+<td>PP-DocLayoutV3</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayoutV3_pretrained.pdparams">训练模型</a></td>
+<td>23.77</td>
+<td>126</td>
+<td>基于DETR在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报等场景的自建数据集上训练的版面分析模型，支持25类版面元素的实例分割及阅读顺序预测</td>
 </tr>
 </tbody>
 </table>
-</center>
 
-<p>Changing Epochs Experiment Results:</p>
-<center>
-
-<table>
-<thead>
-<tr>
-<th>Experiment</th>
-<th>Epochs</th>
-<th>Learning Rate</th>
-<th>batch_size</th>
-<th>Training Environment</th>
-<th>Top-1 Acc</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Experiment 1</td>
-<td>20</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>73.83%</td>
-</tr>
-<tr>
-<td>Experiment 1 (Increased Epochs)</td>
-<td>50</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>77.32%</td>
-</tr>
-<tr>
-<td>Experiment 1 (Increased Epochs)</td>
-<td>80</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td>77.60%</td>
-</tr>
-<tr>
-<td>Experiment 1 (Increased Epochs)</td>
-<td>100</td>
-<td>0.01</td>
-<td>64</td>
-<td>4 GPUs</td>
-<td><strong>77.80%</strong></td>
-</tr>
-</tbody>
-</table>
-</center>
-
+<p><b>注：以上精度指标的评估集为自建的版面分析数据集，包含中英文多种文档场景图片。</b></p>
+<h2 id="_4">三、快速集成<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><b>Note: The above accuracy metrics are Top-1 Accuracy on the <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set. GPU inference time is based on an NVIDIA Tesla T4 machine, with FP32 precision. CPU inference speed is based on an Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision.</b></p>
+<p>❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 <a href="../../../installation/installation.html">PaddleX本地安装教程</a></p>
 </blockquote>
-<h2 id="6-pipeline-testing">6. pipeline Testing<a class="headerlink" href="#6-pipeline-testing" title="Permanent link">&para;</a></h2>
-<p>Replace the model in the pipeline with the fine-tuned model for testing. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png">test file</a> to perform predictions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;output/best_model/inference&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png&quot;</span>
+<p>完成 whl 包的安装后，几行代码即可完成版面分析模块的推理，可以任意切换该模块下的模型，您也可以将版面分析模块中的模型推理集成到您的项目中。运行以下代码前，请您下载<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_analysis_demo.jpg">示例图片</a>到本地。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;PP-DocLayoutV3&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;layout_analysis_demo.jpg&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/res.json&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>The prediction results will be generated under <code>./output</code>, and the prediction result for <code>garbage_demo.png</code> is shown below:</p>
-<center>
+<p><b>注：</b>PaddleX 支持多个模型托管平台，官方模型默认优先从 HuggingFace 下载。PaddleX 也支持通过环境变量 <code>PADDLE_PDX_MODEL_SOURCE</code> 设置优先使用的托管平台，目前支持 <code>huggingface</code>、<code>aistudio</code>、<code>bos</code>、<code>modelscope</code>，如优先使用 <code>bos</code>：<code>PADDLE_PDX_MODEL_SOURCE="bos"</code>；</p>
+<details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/image_classification/03.png" width="600"/>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;layout.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cls_id&#39;</span>:<span class="w"> </span><span class="m">22</span>,<span class="w"> </span><span class="s1">&#39;label&#39;</span>:<span class="w"> </span><span class="s1">&#39;text&#39;</span>,<span class="w"> </span><span class="s1">&#39;score&#39;</span>:<span class="w"> </span><span class="m">0</span>.98,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">34</span>.1,<span class="w"> </span><span class="m">349</span>.8,<span class="w"> </span><span class="m">358</span>.5,<span class="w"> </span><span class="m">611</span>.0<span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;polygon_points&#39;</span>:<span class="w"> </span><span class="o">[[</span><span class="m">34</span>.1,<span class="w"> </span><span class="m">349</span>.8<span class="o">]</span>,<span class="w"> </span><span class="o">[</span><span class="m">358</span>.5,<span class="w"> </span><span class="m">349</span>.8<span class="o">]</span>,<span class="w"> </span><span class="o">[</span><span class="m">358</span>.5,<span class="w"> </span><span class="m">611</span>.0<span class="o">]</span>,<span class="w"> </span><span class="o">[</span><span class="m">34</span>.1,<span class="w"> </span><span class="m">611</span>.0<span class="o">]]</span>,<span class="w"> </span><span class="s1">&#39;order&#39;</span>:<span class="w"> </span><span class="m">3</span><span class="o">}</span>,<span class="w"> </span>...<span class="o">]}}</span>
+</span></code></pre></div>
 
-</center>
+参数含义如下：
+- `input_path`：输入的待预测图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+- `boxes`：预测的目标框信息，一个字典列表。每个字典代表一个检出的目标，包含以下信息：
+  - `cls_id`：类别ID，一个整数
+  - `label`：类别标签，一个字符串
+  - `score`：目标框置信度，一个浮点数
+  - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
+  - `polygon_points`：实例分割轮廓点列表，格式为<code>[[x1, y1], [x2, y2], ...]</code>
+  - `order`：阅读顺序编号，一个整数，表示该区域在文档中的阅读顺序（从0开始）
+</details>
 
-<h2 id="7-development-integrationdeployment">7. Development Integration/Deployment<a class="headerlink" href="#7-development-integrationdeployment" title="Permanent link">&para;</a></h2>
-<p>If the General Image Classification Pipeline meets your requirements for inference speed and accuracy in the pipeline, you can proceed directly with development integration/deployment.</p>
-<ol>
-<li>If you need to use the fine-tuned model weights, you can obtain the configuration file for the image_classification pipeline and load it for prediction. You can execute the following command to save the results in my_path:</li>
-</ol>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>paddlex --get_pipeline_config image_classification --save_path ./my_path
-</span></code></pre></div>
-<p>Fill in the local path of the fine-tuned model weights into the <code>model_dir</code> field in the configuration file. If you need to directly apply the general image classification pipeline to your Python project, you can refer to the following example:</p>
-<p><div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">pipeline_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image_classification</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">SubModules</span><span class="p">:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">ImageClassification</span><span class="p">:</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image_classification</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PP-LCNet_x0_5</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w"> </span><span class="c1"># Replace this with the local path to your trained model weights</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nt">topk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-</span></code></pre></div>
-Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;my_path/image_classification.yaml&quot;</span><span class="p">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;./dataset/trash40/images/test/0/img_154.jpg&quot;</span><span class="p">)</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span> <span class="c1"># Print the structured output of the prediction</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1"># Save the visualized image of the result</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1"># Save the structured output of the prediction</span>
-</span></code></pre></div>
-<p>For more parameters, please refer to the <a href="../pipeline_usage/tutorials/cv_pipelines/image_classification.html">General Image Classification Pipeline Usage Tutorial</a>.</p>
-<ol>
+<p>运行后，<code>save_to_img()</code> 保存的可视化结果如下，图中标注了各区域的类别、置信度、实例分割掩码及阅读顺序编号：</p>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis_demo_res.jpg" alt="版面分析可视化结果" width="30%" /></p>
+<p>相关方法、参数等说明如下：</p>
+<ul>
+<li><code>create_model</code> 实例化版面分析模型（此处以 <code>PP-DocLayoutV3</code> 为例），具体说明如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如"gpu:0"，其他硬件具体卡号，如"npu:0"，CPU如"cpu"。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>img_size</code></td>
+<td>输入图像大小；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>int/list/None</code></td>
+<td>
+<ul>
+<li><b>int</b>, 如 800，表示将输入图像resize到800x800大小</li>
+<li><b>列表</b>, 如 [800, 800]，表示将输入图像resize到宽为800、高为800大小</li>
+<li><b>None</b>，不指定，将默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>用于过滤掉低置信度预测结果的阈值；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>，如 0.5，表示过滤掉所有置信度小于0.5的目标框</li>
+<li><b>字典</b>，字典的key为<b>int</b>类型，代表<code>cls_id</code>，val为<b>float</b>类型阈值，如 <code>{0: 0.45, 2: 0.48}</code></li>
+<li><b>None</b>，不指定，将默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>是否使用NMS后处理，过滤重叠框；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>，True/False，表示使用/不使用NMS进行检测框的后处理过滤</li>
+<li><b>None</b>，不指定，将默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>检测框的边长缩放倍数；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>float/list/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>，大于0的浮点数，如 1.1，表示将检测框中心不变、宽和高都扩张1.1倍</li>
+<li><b>列表</b>，如 [1.2, 1.5]，表示宽度扩张1.2倍、高度扩张1.5倍</li>
+<li><b>字典</b>，key为<b>int</b>类型的<code>cls_id</code>，value为<b>tuple</b>，如 <code>{0: (1.1, 2.0)}</code></li>
+<li><b>None</b>，不指定，将默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>模型输出的检测框的合并处理模式；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>string/dict/None</code></td>
+<td>
+<ul>
+<li><b>large</b>，对互相重叠包含的检测框，只保留外部最大的框</li>
+<li><b>small</b>，对互相重叠包含的检测框，只保留内部被包含的小框</li>
+<li><b>union</b>，不进行框的过滤处理，内外框都保留</li>
+<li><b>dict</b>，key为<b>int</b>类型的<code>cls_id</code>，value为<b>str</b>，如 <code>{0: "large", 2: "small"}</code></li>
+<li><b>None</b>，不指定，将默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+</table>
+
+<ul>
 <li>
-<p>Additionally, PaddleX offers three other deployment methods, detailed as follows:</p>
+<p>其中，<code>model_name</code> 必须指定，指定 <code>model_name</code> 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 <code>model_dir</code> 时，使用用户自定义的模型。</p>
 </li>
 <li>
-<p>high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the <a href="../pipeline_deploy/high_performance_inference.html">PaddleX High-Performance Inference Guide</a>.</p>
+<p>调用版面分析模型的 <code>predict()</code> 方法进行推理预测，<code>predict()</code> 方法参数有 <code>input</code>、<code>batch_size</code> 和 <code>threshold</code>，具体说明如下：</p>
 </li>
-<li>Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the <a href="../pipeline_deploy/serving.html">PaddleX Serving Deployment Guide</a>.</li>
-<li>On-Device Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the <a href="../pipeline_deploy/on_device_deployment.html">PaddleX On-Device Deployment Guide</a>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+  <li><b>URL链接</b>，如图像文件的网络URL</li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>大于0的任意整数</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>用于过滤掉低置信度预测结果的阈值</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+<li><b>float</b>，如 0.5，表示过滤掉所有置信度小于0.5的目标框</li>
+<li><b>字典</b>，字典的key为<b>int</b>类型，代表<code>cls_id</code>，val为<b>float</b>类型阈值</li>
+<li><b>None</b>，不指定，将默认使用 <code>create_model</code> 指定的 <code>threshold</code> 参数，如果 <code>create_model</code> 也没有指定，则默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+</table>
+
+<ul>
+<li>对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为 <code>json</code> 文件的操作：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将结果保存为图像格式的文件（可视化图像含实例分割掩码与阅读顺序编号）</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+<ul>
+<li>此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">获取格式为<code>dict</code>的可视化图像，图像中标注了各区域的类别、置信度、实例分割掩码及阅读顺序编号</td>
+</tr>
+</table>
+
+<p>关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考<a href="../../instructions/model_python_API.html">PaddleX单模型Python脚本使用说明</a>。</p>
+<h2 id="_5">四、二次开发<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的版面分析模型。在使用PaddleX开发版面分析模型之前，请务必安装PaddleX的Detection相关的模型训练能力，安装过程可以参考<a href="../../../installation/installation.html">PaddleX本地安装教程</a>。</p>
+<h3 id="41">4.1 数据准备<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<p>在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，<strong>只有通过数据校验的数据才可以进行模型训练</strong>。此外，PaddleX为每一个模块都提供了Demo数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考<a href="../../../data_annotations/cv_modules/object_detection.html">PaddleX目标检测任务模块数据标注教程</a>。</p>
+<h4 id="411-demo">4.1.1 Demo 数据下载<a class="headerlink" href="#411-demo" title="Permanent link">&para;</a></h4>
+<p>您可以参考下面的命令将 Demo 数据集下载到指定文件夹：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/paddlex
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>wget<span class="w"> </span>https://paddle-model-ecology.bj.bcebos.com/paddlex/data/doclayoutv3_examples.tar<span class="w"> </span>-P<span class="w"> </span>./dataset
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tar<span class="w"> </span>-xf<span class="w"> </span>./dataset/doclayoutv3_examples.tar<span class="w"> </span>-C<span class="w"> </span>./dataset/
+</span></code></pre></div>
+<h4 id="412">4.1.2 数据集格式说明<a class="headerlink" href="#412" title="Permanent link">&para;</a></h4>
+<p>版面分析模块使用 <strong>COCOInstSegDataset</strong> 格式，并补充了阅读顺序标注，数据集目录结构如下：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>doclayoutv3_examples/
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── images/               # 原始图像目录
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ├── train_0001.jpg
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── val_0001.jpg
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   └── ...
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>├── images_mask/          # 用于训练的图像目录（与 images 内容相同）
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   └── ...
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>└── annotations/
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    ├── instance_train.json   # 训练集标注（COCO实例分割格式 + read_order字段）
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    └── instance_val.json     # 验证集标注（COCO实例分割格式 + read_order字段）
+</span></code></pre></div>
+<p>标注文件遵循 COCO 实例分割格式，并在每条标注中增加了 <code>read_order</code> 字段，用于记录该区域在文档中的阅读顺序（从0开始的非负整数，同一图像内各标注的 <code>read_order</code> 值应构成连续序列）。示例标注如下：</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;annotations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">&quot;bbox&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">34.1</span><span class="p">,</span><span class="w"> </span><span class="mf">349.8</span><span class="p">,</span><span class="w"> </span><span class="mf">324.4</span><span class="p">,</span><span class="w"> </span><span class="mf">261.2</span><span class="p">],</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">&quot;segmentation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mf">34.1</span><span class="p">,</span><span class="w"> </span><span class="mf">349.8</span><span class="p">,</span><span class="w"> </span><span class="mf">358.5</span><span class="p">,</span><span class="w"> </span><span class="mf">349.8</span><span class="p">,</span><span class="w"> </span><span class="mf">358.5</span><span class="p">,</span><span class="w"> </span><span class="mf">611.0</span><span class="p">,</span><span class="w"> </span><span class="mf">34.1</span><span class="p">,</span><span class="w"> </span><span class="mf">611.0</span><span class="p">]],</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">&quot;area&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">84740.0</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">&quot;iscrowd&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">&quot;read_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>模型支持的25个类别及其ID（与 <code>categories</code> 中的 <code>id</code> 对应）如下：</p>
+<table>
+<thead>
+<tr>
+<th>类别名（英文）</th>
+<th>类别含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>abstract</code></td>
+<td>摘要</td>
+</tr>
+<tr>
+<td><code>algorithm</code></td>
+<td>算法</td>
+</tr>
+<tr>
+<td><code>aside_text</code></td>
+<td>侧栏文本</td>
+</tr>
+<tr>
+<td><code>chart</code></td>
+<td>图表</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>目录</td>
+</tr>
+<tr>
+<td><code>display_formula</code></td>
+<td>行间公式</td>
+</tr>
+<tr>
+<td><code>doc_title</code></td>
+<td>文档标题</td>
+</tr>
+<tr>
+<td><code>figure_title</code></td>
+<td>图表标题</td>
+</tr>
+<tr>
+<td><code>footer</code></td>
+<td>页脚</td>
+</tr>
+<tr>
+<td><code>footer_image</code></td>
+<td>页脚图像</td>
+</tr>
+<tr>
+<td><code>footnote</code></td>
+<td>脚注</td>
+</tr>
+<tr>
+<td><code>formula_number</code></td>
+<td>公式编号</td>
+</tr>
+<tr>
+<td><code>header</code></td>
+<td>页眉</td>
+</tr>
+<tr>
+<td><code>header_image</code></td>
+<td>页眉图像</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>图像</td>
+</tr>
+<tr>
+<td><code>inline_formula</code></td>
+<td>行内公式</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>页码</td>
+</tr>
+<tr>
+<td><code>paragraph_title</code></td>
+<td>段落标题</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>参考文献</td>
+</tr>
+<tr>
+<td><code>reference_content</code></td>
+<td>参考文献内容</td>
+</tr>
+<tr>
+<td><code>seal</code></td>
+<td>印章</td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td>表格</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>文本</td>
+</tr>
+<tr>
+<td><code>vertical_text</code></td>
+<td>竖版文字</td>
+</tr>
+<tr>
+<td><code>vision_footnote</code></td>
+<td>图注</td>
+</tr>
+</tbody>
+</table>
+<h4 id="413">4.1.3 数据校验<a class="headerlink" href="#413" title="Permanent link">&para;</a></h4>
+<p>一行命令即可完成数据校验：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>check_dataset<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/doclayoutv3_examples
+</span></code></pre></div>
+<p>执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出 <code>Check dataset passed !</code> 信息。校验结果文件保存在 <code>./output/check_dataset_result.json</code>，同时相关产出会保存在当前目录的 <code>./output/check_dataset</code> 目录下，产出目录中包括可视化的示例样本图片（标注了实例分割掩码与阅读顺序编号）和样本分布直方图。</p>
+<details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
+<p>校验结果文件具体内容为：</p>
+<pre><code class="language-bash">{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 11,
+    "train_samples": 6351,
+    "train_sample_paths": [
+      "check_dataset\/demo_img\/train_4141.jpg",
+      "check_dataset\/demo_img\/train_3699.jpg",
+      "check_dataset\/demo_img\/train_3764.jpg",
+      "check_dataset\/demo_img\/train_2279.jpg",
+      "check_dataset\/demo_img\/train_4647.jpg",
+      "check_dataset\/demo_img\/train_4442.jpg",
+      "check_dataset\/demo_img\/train_2006.jpg",
+      "check_dataset\/demo_img\/train_1463.jpg",
+      "check_dataset\/demo_img\/train_3275.jpg",
+      "check_dataset\/demo_img\/train_4509.jpg"
+    ],
+    "val_samples": 945,
+    "val_sample_paths": [
+      "check_dataset\/demo_img\/val_0105.jpg",
+      "check_dataset\/demo_img\/val_0031.jpg",
+      "check_dataset\/demo_img\/val_0755.jpg",
+      "check_dataset\/demo_img\/val_0876.jpg",
+      "check_dataset\/demo_img\/val_0374.jpg",
+      "check_dataset\/demo_img\/val_0566.jpg",
+      "check_dataset\/demo_img\/val_0748.jpg",
+      "check_dataset\/demo_img\/val_0167.jpg",
+      "check_dataset\/demo_img\/val_0345.jpg",
+      "check_dataset\/demo_img\/val_0471.jpg"
+    ],
+    "read_order_validation": {
+      "instance_train": {
+        "total_images": 500,
+        "valid_images": 500,
+        "invalid_images": [],
+        "pass_rate": 1.0
+      },
+      "instance_val": {
+        "total_images": 100,
+        "valid_images": 100,
+        "invalid_images": [],
+        "pass_rate": 1.0
+      }
+    }
+  },
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
+  },
+  "dataset_path": "doclayoutv3_examples",
+  "show_type": "image",
+  "dataset_type": "COCOInstSegDataset"
+}
+</code></pre>
+<p>上述校验结果中，<code>check_pass</code> 为 <code>True</code> 表示数据集格式符合要求，其他部分指标的说明如下：</p>
+<ul>
+<li><code>attributes.num_classes</code>：该数据集类别数为11；</li>
+<li><code>attributes.train_samples</code>：该数据集训练集样本数量；</li>
+<li><code>attributes.val_samples</code>：该数据集验证集样本数量；</li>
+<li><code>attributes.train_sample_paths</code>：该数据集训练集样本可视化图片相对路径列表；</li>
+<li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
+<li><code>attributes.read_order_validation</code>：<code>read_order</code> 字段验证统计，包含训练集和验证集各自的总图像数、通过验证的图像数及通过率。</li>
+</ul>
+<p>数据校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）。</p>
+
+<b>注意：</b>版面分析数据校验会额外验证每张图像标注中的 <code>read_order</code> 字段：
+<ul>
+<li>完整性：每条标注必须含有 <code>read_order</code> 字段；</li>
+<li>类型合法性：<code>read_order</code> 必须为非负整数；</li>
+<li>连续性：同一图像内各标注的 <code>read_order</code> 应构成从0开始的连续整数序列（如不连续会给出警告）。</li>
+</ul>
+</details>
+
+<h4 id="414">4.1.4 数据集格式转换/数据集划分（可选）<a class="headerlink" href="#414" title="Permanent link">&para;</a></h4>
+<p>在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的训练/验证比例进行重新划分。</p>
+<details><summary>👉 <b>数据集划分详情（点击展开）</b></summary>
+<p><b>（1）数据集格式转换</b></p>
+<p>版面分析暂不支持数据格式转换，请直接使用 COCO 实例分割格式（含 <code>read_order</code> 字段）。</p>
+<p><b>（2）数据集划分</b></p>
+<p>数据集划分的参数可以通过修改配置文件中 <code>CheckDataset</code> 下的字段进行设置：</p>
+<pre><code class="language-bash">CheckDataset:
+  split:
+    enable: True
+    train_percent: 90
+    val_percent: 10
+</code></pre>
+<p>随后执行命令：</p>
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/doclayoutv3_examples
+</code></pre>
+<p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
+<p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
+<pre><code>python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./dataset/doclayoutv3_examples \
+    -o CheckDataset.split.enable=True \
+    -o CheckDataset.split.train_percent=90 \
+    -o CheckDataset.split.val_percent=10
+</code></pre></details>
+
+<h3 id="42">4.2 模型训练<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
+<p>一条命令即可完成模型的训练，以训练 <code>PP-DocLayoutV3</code> 为例：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>train<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/doclayoutv3_examples
+</span></code></pre></div>
+<p>需要如下几步：</p>
+<ul>
+<li>指定模型的 <code>.yaml</code> 配置文件路径（此处为 <code>PP-DocLayoutV3.yaml</code>）</li>
+<li>指定模式为模型训练：<code>-o Global.mode=train</code></li>
+<li>指定训练数据集路径：<code>-o Global.dataset_dir</code></li>
+<li>其他相关参数均可通过修改 <code>.yaml</code> 配置文件中的 <code>Global</code> 和 <code>Train</code> 下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前2卡gpu训练：<code>-o Global.device=gpu:0,1</code>；设置训练轮次数为10：<code>-o Train.epochs_iters=10</code>。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明<a href="../../instructions/config_parameters_common.html">PaddleX通用模型配置文件参数说明</a>。</li>
+</ul>
+<details><summary>👉 <b>更多说明（点击展开）</b></summary>
+<ul>
+<li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
+<li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
+<li>
+<p>在完成模型训练后，所有产出保存在指定的输出目录（默认为<code>./output/</code>）下，通常有以下产出：</p>
+</li>
+<li>
+<p><code>train_result.json</code>：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；</p>
+</li>
+<li><code>train.log</code>：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；</li>
+<li><code>config.yaml</code>：训练配置文件，记录了本次训练的超参数的配置；</li>
+<li><code>.pdparams</code>、<code>.pdema</code>、<code>.pdopt.pdstate</code>、<code>.pdiparams</code>、<code>.json</code>：模型权重相关文件，包括网络参数、优化器、EMA、静态图网络参数、静态图网络结构等；</li>
+<li>【注意】：版面分析模型在训练时使用了 <code>order_loss</code> 分支（权重系数为50），该损失项用于监督阅读顺序预测，训练日志中可以看到 <code>order_loss</code> 的变化情况。</li>
+</ul></details>
+
+<h3 id="43">4.3 模型评估<a class="headerlink" href="#43" title="Permanent link">&para;</a></h3>
+<p>在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>evaluate<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/doclayoutv3_examples
+</span></code></pre></div>
+<p>与模型训练类似，需要如下几步：</p>
+<ul>
+<li>指定模型的 <code>.yaml</code> 配置文件路径（此处为 <code>PP-DocLayoutV3.yaml</code>）</li>
+<li>指定模式为模型评估：<code>-o Global.mode=evaluate</code></li>
+<li>指定验证数据集路径：<code>-o Global.dataset_dir</code></li>
+</ul>
+<p>其他相关参数均可通过修改 <code>.yaml</code> 配置文件中的 <code>Global</code> 和 <code>Evaluate</code> 下的字段来进行设置，详细请参考<a href="../../instructions/config_parameters_common.html">PaddleX通用模型配置文件参数说明</a>。</p>
+<details><summary>👉 <b>更多说明（点击展开）</b></summary>
+<p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>。</p>
+<p>在完成模型评估后，会产出 <code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标。</p></details>
+
+<h3 id="44">4.4 模型推理<a class="headerlink" href="#44" title="Permanent link">&para;</a></h3>
+<p>在完成模型的训练和评估后，即可使用训练好的模型权重进行推理预测。在PaddleX中实现模型推理预测可以通过两种方式：命令行和wheel包。</p>
+<h4 id="441">4.4.1 模型推理<a class="headerlink" href="#441" title="Permanent link">&para;</a></h4>
+<ul>
+<li>通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">示例图片</a>到本地。</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;./output/best_model/inference&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;layout.jpg&quot;</span>
+</span></code></pre></div>
+<p>与模型训练和评估类似，需要如下几步：</p>
+<ul>
+<li>指定模型的 <code>.yaml</code> 配置文件路径（此处为 <code>PP-DocLayoutV3.yaml</code>）</li>
+<li>指定模式为模型推理预测：<code>-o Global.mode=predict</code></li>
+<li>指定模型权重路径：<code>-o Predict.model_dir="./output/best_model/inference"</code></li>
+<li>指定输入数据路径：<code>-o Predict.input="..."</code></li>
+</ul>
+<p>其他相关参数均可通过修改 <code>.yaml</code> 配置文件中的 <code>Global</code> 和 <code>Predict</code> 下的字段来进行设置，详细请参考<a href="../../instructions/config_parameters_common.html">PaddleX通用模型配置文件参数说明</a>。</p>
+<h4 id="442">4.4.2 模型集成<a class="headerlink" href="#442" title="Permanent link">&para;</a></h4>
+<p>模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。</p>
+<ol>
+<li><b>产线集成</b></li>
 </ol>
-<p>You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.</p>
+<p>版面分析模块可以集成到PaddleX的<a href="../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.html">文档解析产线（PaddleOCR-VL 和 PaddleOCR-VL-1.5）</a>等产线中，只需要替换模型路径即可完成版面分析模块的模型更新。</p>
+<ol>
+<li><b>模块集成</b></li>
+</ol>
+<p>您产出的权重可以直接集成到版面分析模块中，可以参考<a href="#三快速集成">快速集成</a>的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。</p>
 
 
 
@@ -7612,20 +7622,20 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="Last update">
+    <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 20, 2026 09:36:35 UTC">March 20, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年3月20日 09:36:35 UTC">2026年3月20日</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="Created">
+    <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 20, 2026 09:36:35 UTC">March 20, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年3月20日 09:36:35 UTC">2026年3月20日</span>
   </span>
 
     
@@ -7633,7 +7643,7 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
       
   
   <span class="md-source-file__fact">
-    <span class="md-icon" title="Contributors">
+    <span class="md-icon" title="贡献者">
       
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
       
@@ -7654,7 +7664,7 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
 
 
 
-<h2 id="__comments">Comments</h2>
+<h2 id="__comments">评论</h2>
 <!-- Insert generated snippet here -->
 
 <script src="https://giscus.app/client.js"
@@ -7719,51 +7729,13 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
+  回到页面顶部
 </button>
         
       </main>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="face_recognition_tutorial.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: 人脸识别之卡通人脸识别实践教程">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                人脸识别之卡通人脸识别实践教程
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="instance_segmentation_remote_sensing_tutorial.html" class="md-footer__link md-footer__link--next" aria-label="Next: 遥感图像实例分割实践教程">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                遥感图像实例分割实践教程
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -7807,12 +7779,12 @@ Subsequently, in your Python code, you can utilize the pipeline as follows:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../javascripts/katex.min.js"></script>
+        <script src="../../../javascripts/katex.min.js"></script>
       
         <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
       
