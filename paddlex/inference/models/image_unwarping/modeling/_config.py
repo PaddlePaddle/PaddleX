@@ -16,43 +16,65 @@ from ...common.transformers.transformers import PretrainedConfig
 
 DEFAULT_CONFIG = {
     "model_name": "UVDoc",
-    "num_filter": 32,
-    "in_channels": 3,
+    "resnet_head": [[3, 32], [32, 32]],
+    "resnet_configs": [
+        [[32, 32, 1, False], [32, 32, 3, False], [32, 32, 3, False]],
+        [
+            [32, 64, 1, True],
+            [64, 64, 3, False],
+            [64, 64, 3, False],
+            [64, 64, 3, False],
+        ],
+        [
+            [64, 128, 1, True],
+            [128, 128, 3, False],
+            [128, 128, 3, False],
+            [128, 128, 3, False],
+            [128, 128, 3, False],
+            [128, 128, 3, False],
+        ],
+    ],
+    "stage_configs": [
+        [[128, 1]],
+        [[128, 2]],
+        [[128, 5]],
+        [[128, 8], [128, 3], [128, 2]],
+        [[128, 12], [128, 7], [128, 4]],
+        [[128, 18], [128, 12], [128, 6]],
+    ],
     "kernel_size": 5,
-    "stride": [1, 2, 2, 2],
-    "map_num": [1, 2, 4, 8, 16],
-    "block_nums": [3, 4, 6, 3],
-    "dilation_values": {
-        "bridge_1": 1,
-        "bridge_2": 2,
-        "bridge_3": 5,
-        "bridge_4": [8, 3, 2],
-        "bridge_5": [12, 7, 4],
-        "bridge_6": [18, 12, 6],
-    },
+    "hidden_act": "prelu",
     "padding_mode": "reflect",
+    "bridge_connector": [128, 128],
+    "out_point_positions2D": [[128, 32], [32, 2]],
     "upsample_size": [712, 488],
     "upsample_mode": "bilinear",
 }
 
 
-class UVDocNetConfig(PretrainedConfig):
+class UVDocConfig(PretrainedConfig):
     model_type = "uvdoc"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.model_name = kwargs.get("model_name", DEFAULT_CONFIG["model_name"])
-        self.num_filter = kwargs.get("num_filter", DEFAULT_CONFIG["num_filter"])
-        self.in_channels = kwargs.get("in_channels", DEFAULT_CONFIG["in_channels"])
-        self.kernel_size = kwargs.get("kernel_size", DEFAULT_CONFIG["kernel_size"])
-        self.stride = kwargs.get("stride", DEFAULT_CONFIG["stride"])
-        self.map_num = kwargs.get("map_num", DEFAULT_CONFIG["map_num"])
-        self.block_nums = kwargs.get("block_nums", DEFAULT_CONFIG["block_nums"])
-        self.dilation_values = kwargs.get(
-            "dilation_values", DEFAULT_CONFIG["dilation_values"]
+        self.resnet_head = kwargs.get("resnet_head", DEFAULT_CONFIG["resnet_head"])
+        self.resnet_configs = kwargs.get(
+            "resnet_configs", DEFAULT_CONFIG["resnet_configs"]
         )
+        self.stage_configs = kwargs.get(
+            "stage_configs", DEFAULT_CONFIG["stage_configs"]
+        )
+        self.kernel_size = kwargs.get("kernel_size", DEFAULT_CONFIG["kernel_size"])
+        self.hidden_act = kwargs.get("hidden_act", DEFAULT_CONFIG["hidden_act"])
         self.padding_mode = kwargs.get("padding_mode", DEFAULT_CONFIG["padding_mode"])
+        self.bridge_connector = kwargs.get(
+            "bridge_connector", DEFAULT_CONFIG["bridge_connector"]
+        )
+        self.out_point_positions2D = kwargs.get(
+            "out_point_positions2D", DEFAULT_CONFIG["out_point_positions2D"]
+        )
         self.upsample_size = kwargs.get(
             "upsample_size", DEFAULT_CONFIG["upsample_size"]
         )
