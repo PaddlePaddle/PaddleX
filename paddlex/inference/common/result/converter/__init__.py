@@ -17,7 +17,7 @@ from typing import Any, Dict, List
 
 from .latex_converter import LatexConverter
 from .markdown_converter import MarkdownConverter
-from .word_converter import WordConverter
+from .word_converter import WordConverter, build_word_blocks
 
 
 def save_images(image_list: List[Dict[str, Any]], base_save_path) -> Dict[str, str]:

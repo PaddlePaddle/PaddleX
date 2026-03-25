@@ -16,7 +16,8 @@
 
 from __future__ import annotations
 
-from typing import Dict, List
+from copy import deepcopy
+from typing import Any, Dict, List, Optional
 
 
 def _set_paragraph_style(para, config):
@@ -45,6 +46,114 @@ def _parse_html_table(html: str) -> List[List[str]]:
         [cell.get_text(strip=True) for cell in tr.find_all(["td", "th"])]
         for tr in soup.find_all("tr")
     ]
+
+
+def build_word_blocks(
+    parsing_res_list: List[Any],
+    extra_style_map: Optional[Dict[str, Dict]] = None,
+) -> tuple:
+    """Build word_blocks and images list from a parsing_res_list.
+
+    Extracts the shared logic for converting DocumentBlock / PaddleOCRVLBlock
+    objects into the word_blocks format expected by WordConverter.convert().
+
+    Args:
+        parsing_res_list: List of block objects with .label, .content, .image attrs.
+        extra_style_map: Optional dict of label->style overrides merged on top of
+            BASE_STYLE_MAP via dict.update(). Use for pipeline-specific labels.
+
+    Returns:
+        Tuple of (word_blocks, images) where:
+            word_blocks: List[Dict] with keys "type", "content", "config".
+            images: List[Dict] with keys "path" and "img".
+    """
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+    BASE_STYLE_MAP = {
+        "doc_title": {
+            "level": 0,
+            "size": 20,
+            "bold": True,
+            "align": WD_ALIGN_PARAGRAPH.CENTER,
+        },
+        "header": {
+            "size": 16,
+            "bold": True,
+            "align": WD_ALIGN_PARAGRAPH.CENTER,
+        },
+        "abstract_title": {
+            "level": 1,
+            "size": 14,
+            "bold": True,
+            "align": WD_ALIGN_PARAGRAPH.CENTER,
+        },
+        "content_title": {
+            "level": 1,
+            "size": 14,
+            "bold": True,
+            "align": WD_ALIGN_PARAGRAPH.LEFT,
+        },
+        "reference_title": {
+            "level": 1,
+            "size": 14,
+            "bold": True,
+            "align": WD_ALIGN_PARAGRAPH.LEFT,
+        },
+        "paragraph_title": {
+            "level": 2,
+            "size": 14,
+            "bold": True,
+            "align": WD_ALIGN_PARAGRAPH.LEFT,
+        },
+        "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
+        "text": {
+            "size": 12,
+            "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+            "indent": True,
+        },
+        "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+        "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+        "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+        "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
+        "algorithm": {
+            "font": "Courier New",
+            "size": 11,
+            "align": WD_ALIGN_PARAGRAPH.LEFT,
+        },
+        "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
+        "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
+        "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
+        "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
+    }
+
+    style_map = {**BASE_STYLE_MAP}
+    if extra_style_map:
+        style_map.update(extra_style_map)
+
+    default_config = {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True}
+
+    word_blocks = []
+    images = []
+
+    for block in parsing_res_list:
+        label = block.label
+        content = getattr(block, "content", "")
+        if label in ["image", "chart", "seal"]:
+            if block.image is None:
+                continue
+            content = block.image["path"]
+        config = style_map.get(label, default_config)
+        word_blocks.append(
+            {
+                "type": label,
+                "content": deepcopy(content),
+                "config": config,
+            }
+        )
+        if block.image is not None:
+            images.append({"path": block.image["path"], "img": block.image["img"]})
+
+    return word_blocks, images
 
 
 class WordConverter:

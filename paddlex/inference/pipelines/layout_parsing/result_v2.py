@@ -358,10 +358,7 @@ class LayoutParsingResultV2(
         return result
 
     def _to_word(self) -> dict:
-        from docx.enum.text import WD_ALIGN_PARAGRAPH
-
-        """
-        Convert the object's parsing result into a Word-compatible dict.
+        """Convert the object's parsing result into a Word-compatible dict.
 
         Returns:
             dict: {
@@ -371,91 +368,15 @@ class LayoutParsingResultV2(
                 "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
             }
         """
+        from ...common.result.converter import build_word_blocks
 
-        word_blocks = []
-        image = []
-
-        STYLE_MAP = {
-            "doc_title": {
-                "level": 0,
-                "size": 20,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "header": {
-                "size": 16,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "abstract_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "content_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "reference_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "paragraph_title": {
-                "level": 2,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-            "text": {
-                "size": 12,
-                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
-                "indent": True,
-            },
-            "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-            "algorithm": {
-                "font": "Courier New",
-                "size": 11,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
-            "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-        }
-
-        for block in self["parsing_res_list"]:
-
-            label = block.label
-            content = getattr(block, "content", "")
-            if label in ["image", "chart", "seal"]:
-                content = block.image["path"]
-            config = STYLE_MAP.get(
-                label,
-                {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True},
-            )
-            block_dict = {
-                "type": label,
-                "content": deepcopy(content),
-                "config": config,
-            }
-            word_blocks.append(block_dict)
-            if block.image is not None:
-                image.append({"path": block.image["path"], "img": block.image["img"]})
+        word_blocks, images = build_word_blocks(self["parsing_res_list"])
 
         return {
             "word_blocks": word_blocks,
             "original_image_width": self["doc_preprocessor_res"]["output_img"].shape[1],
             "input_path": self["input_path"],
-            "images": image,
+            "images": images,
         }
 
     def _to_latex(self) -> dict:

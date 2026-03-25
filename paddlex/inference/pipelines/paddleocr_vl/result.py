@@ -492,66 +492,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
                 "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
             }
         """
-        from copy import deepcopy
-
         from docx.enum.text import WD_ALIGN_PARAGRAPH
 
-        STYLE_MAP = {
-            "doc_title": {
-                "level": 0,
-                "size": 20,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "header": {
-                "size": 16,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "abstract_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "content_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "reference_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "paragraph_title": {
-                "level": 2,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-            "text": {
-                "size": 12,
-                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
-                "indent": True,
-            },
-            "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-            "algorithm": {
-                "font": "Courier New",
-                "size": 11,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
-            "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            # PaddleOCR-VL specific labels
+        from ...common.result.converter import build_word_blocks
+
+        # PaddleOCR-VL specific labels not in BASE_STYLE_MAP
+        extra_style_map = {
             "ocr": {
                 "size": 12,
                 "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
@@ -579,29 +525,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
         else:
             original_image_width = self["width"]
 
-        word_blocks = []
-        images = []
-
-        for block in self["parsing_res_list"]:
-            label = block.label
-            content = getattr(block, "content", "")
-            if label in ["image", "chart", "seal"]:
-                if block.image is not None:
-                    content = block.image["path"]
-                else:
-                    continue
-            config = STYLE_MAP.get(
-                label,
-                {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True},
-            )
-            block_dict = {
-                "type": label,
-                "content": deepcopy(content),
-                "config": config,
-            }
-            word_blocks.append(block_dict)
-            if block.image is not None:
-                images.append({"path": block.image["path"], "img": block.image["img"]})
+        word_blocks, images = build_word_blocks(
+            self["parsing_res_list"], extra_style_map=extra_style_map
+        )
 
         return {
             "word_blocks": word_blocks,
