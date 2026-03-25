@@ -34,8 +34,9 @@ import subprocess
 import sys
 from collections import namedtuple
 from contextlib import contextmanager
-from distutils import log, sysconfig
-from distutils.spawn import find_executable
+import logging
+import sysconfig
+
 from textwrap import dedent
 
 import setuptools
@@ -145,8 +146,8 @@ CMAKE_BUILD_DIR = os.path.join(TOP_DIR, "python", ".setuptools-cmake-build")
 
 WINDOWS = os.name == "nt"
 
-CMAKE = find_executable("cmake3") or find_executable("cmake")
-MAKE = find_executable("make")
+CMAKE = shutil.which("cmake3") or shutil.which("cmake")
+MAKE = shutil.which("make")
 
 setup_requires = []
 extras_require = {}
@@ -304,7 +305,7 @@ class cmake_build(setuptools.Command):
             # configure
             cmake_args = [
                 CMAKE,
-                "-DPYTHON_INCLUDE_DIR={}".format(sysconfig.get_python_inc()),
+                "-DPYTHON_INCLUDE_DIR={}".format(sysconfig.get_path('include')),
                 "-DPYTHON_EXECUTABLE={}".format(sys.executable),
                 "-DBUILD_ULTRAINFER_PYTHON=ON",
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
@@ -336,7 +337,7 @@ class cmake_build(setuptools.Command):
                 extra_cmake_args = shlex.split(os.environ["CMAKE_ARGS"])
                 # prevent crossfire with downstream scripts
                 del os.environ["CMAKE_ARGS"]
-                log.info("Extra cmake args: {}".format(extra_cmake_args))
+                logging.getLogger(__name__).info("Extra cmake args: {}".format(extra_cmake_args))
                 cmake_args.extend(extra_cmake_args)
             cmake_args.append(TOP_DIR)
             subprocess.check_call(cmake_args)
