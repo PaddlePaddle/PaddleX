@@ -16,8 +16,15 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
+from ....utils.flags import (
+    INFER_BENCHMARK,
+    INFER_BENCHMARK_ITERS,
+    INFER_BENCHMARK_WARMUP,
+    PIPELINE_BENCHMARK,
+)
 from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ...common.batch_sampler import BaseBatchSampler
+from ...utils.benchmark import ENTRY_POINT_NAME, benchmark
 
 
 class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
@@ -54,7 +61,44 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         **kwargs: Any,
     ) -> Iterator[Any]:
         """Default: delegate to apply."""
-        yield from self.apply(input, **kwargs)
+        if INFER_BENCHMARK:
+            # TODO(zhang-prog): Get metadata of input data
+            @benchmark.timeit_with_options(name=ENTRY_POINT_NAME)
+            def _apply(input, **kwargs):
+                return list(self.apply(input, **kwargs))
+
+            if isinstance(input, list):
+                raise TypeError("`input` cannot be a list in benchmark mode")
+            input = [input] * batch_size
+
+            if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITERS > 0):
+                raise RuntimeError(
+                    "At least one of `INFER_BENCHMARK_WARMUP` and `INFER_BENCHMARK_ITERS` must be greater than zero"
+                )
+
+            benchmark.reset()
+            if INFER_BENCHMARK_WARMUP > 0:
+                benchmark.start_warmup()
+                for _ in range(INFER_BENCHMARK_WARMUP):
+                    output = _apply(input, **kwargs)
+                benchmark.collect(batch_size)
+                benchmark.stop_warmup()
+
+            if INFER_BENCHMARK_ITERS > 0:
+                for _ in range(INFER_BENCHMARK_ITERS):
+                    output = _apply(input, **kwargs)
+                benchmark.collect(batch_size)
+
+            yield output[0]
+        elif PIPELINE_BENCHMARK:
+
+            @benchmark.timeit_with_options(name=type(self).__name__ + ".apply")
+            def _apply(input, **kwargs):
+                return list(self.apply(input, **kwargs))
+
+            yield from _apply(input, **kwargs)
+        else:
+            yield from self.apply(input, **kwargs)
 
     def apply(self, input: Any, **kwargs: Any) -> Iterator[Any]:
         """Default implementation: batch_sampler -> process -> wrap with result_class.
@@ -63,7 +107,16 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         1. pred["result"] is a list of per-item results
         2. pred is a dict of lists (e.g. input_path, class_ids, scores) - split by index
         """
-        for batch_data in self.batch_sampler(input):
+        if INFER_BENCHMARK:
+            if not isinstance(input, list):
+                raise TypeError("In benchmark mode, `input` must be a list")
+            batches = list(self.batch_sampler(input))
+            if len(batches) != 1 or len(batches[0]) != len(input):
+                raise ValueError("Unexpected number of instances")
+        else:
+            batches = self.batch_sampler(input)
+
+        for batch_data in batches:
             if hasattr(batch_data, "instances"):
                 input_paths = getattr(batch_data, "input_paths", None)
             else:
