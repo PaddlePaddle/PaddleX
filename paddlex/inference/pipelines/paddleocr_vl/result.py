@@ -28,6 +28,7 @@ from ...common.result import (
     HtmlMixin,
     JsonMixin,
     MarkdownMixin,
+    WordMixin,
     XlsxMixin,
 )
 from ...common.result.converter import MarkdownConverter
@@ -107,7 +108,7 @@ class PaddleOCRVLBlock(object):
 
 
 @class_requires_deps("opencv-contrib-python")
-class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
+class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordMixin):
     """
     PaddleOCRVLResult class for holding and formatting OCR/VL parsing results.
     """
@@ -124,6 +125,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
+        WordMixin.__init__(self)
         markdown_ignore_labels = self["model_settings"].get(
             "markdown_ignore_labels", []
         )
@@ -479,6 +481,135 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         result["input_path"] = self["input_path"]
         return result
 
+    def _to_word(self) -> dict:
+        """Convert the parsing result to a Word-compatible dict.
+
+        Returns:
+            dict: {
+                "word_blocks": List[Dict],       # Simplified list of content blocks
+                "original_image_width": int,   # Pixel width of the source page
+                "input_path": str,             # Original input file path
+                "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
+            }
+        """
+        from copy import deepcopy
+
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+        STYLE_MAP = {
+            "doc_title": {
+                "level": 0,
+                "size": 20,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.CENTER,
+            },
+            "header": {
+                "size": 16,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.CENTER,
+            },
+            "abstract_title": {
+                "level": 1,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.CENTER,
+            },
+            "content_title": {
+                "level": 1,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "reference_title": {
+                "level": 1,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "paragraph_title": {
+                "level": 2,
+                "size": 14,
+                "bold": True,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
+            "text": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+                "indent": True,
+            },
+            "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
+            "algorithm": {
+                "font": "Courier New",
+                "size": 11,
+                "align": WD_ALIGN_PARAGRAPH.LEFT,
+            },
+            "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            # PaddleOCR-VL specific labels
+            "ocr": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+                "indent": True,
+            },
+            "vertical_text": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+                "indent": True,
+            },
+            "aside_text": {"size": 10, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "spotting": {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "inline_formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "display_formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "reference_content": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+            },
+            "content": {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
+        }
+
+        if isinstance(self["width"], list):
+            original_image_width = self["width"][0]
+        else:
+            original_image_width = self["width"]
+
+        word_blocks = []
+        images = []
+
+        for block in self["parsing_res_list"]:
+            label = block.label
+            content = getattr(block, "content", "")
+            if label in ["image", "chart", "seal"]:
+                if block.image is not None:
+                    content = block.image["path"]
+                else:
+                    continue
+            config = STYLE_MAP.get(
+                label,
+                {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True},
+            )
+            block_dict = {
+                "type": label,
+                "content": deepcopy(content),
+                "config": config,
+            }
+            word_blocks.append(block_dict)
+            if block.image is not None:
+                images.append({"path": block.image["path"], "img": block.image["img"]})
+
+        return {
+            "word_blocks": word_blocks,
+            "original_image_width": original_image_width,
+            "input_path": self["input_path"],
+            "images": images,
+        }
+
 
 class PaddleOCRVLPagesResult(PaddleOCRVLResult):
     def save_to_img(self, *args, **kwargs):
@@ -496,5 +627,11 @@ class PaddleOCRVLPagesResult(PaddleOCRVLResult):
     def save_to_xlsx(self, *args, **kwargs):
         logging.warning(
             f"The result of multi-pages don't support to save as xlsx format!"
+        )
+        return None
+
+    def save_to_word(self, *args, **kwargs):
+        logging.warning(
+            f"The result of multi-pages don't support to save as word format!"
         )
         return None
