@@ -39,8 +39,6 @@ class MarkdownConverter:
         use_seg_flag=False,
         get_seg_flag_func=None,
         imgs_in_doc=None,
-        page_index=None,
-        input_path=None,
     ) -> dict:
         """Convert *blocks* to Markdown.
 
@@ -57,13 +55,10 @@ class MarkdownConverter:
             get_seg_flag_func: ``(block, prev_block) -> (start, end)`` called
                 when *use_seg_flag* is *True*.
             imgs_in_doc: Extra images to include (list of ``{"path", "img"}``).
-            page_index: Passed through to the return dict.
-            input_path: Passed through to the return dict.
 
         Returns:
-            dict with keys ``markdown_texts``, ``markdown_images``,
-            ``page_index``, ``input_path``, and optionally
-            ``page_continuation_flags``.
+            dict with keys ``markdown_texts``, ``markdown_images``, and
+            optionally ``page_continuation_flags``.
         """
         blocks_list = list(blocks)  # ensure indexable for lookahead
 
@@ -124,8 +119,6 @@ class MarkdownConverter:
         result = {
             "markdown_texts": markdown_content,
             "markdown_images": markdown_images,
-            "page_index": page_index,
-            "input_path": input_path,
         }
 
         if use_seg_flag:

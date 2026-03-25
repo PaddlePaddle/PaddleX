@@ -469,14 +469,15 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         handle_funcs_dict = self._build_handle_funcs_dict(pretty=pretty)
 
-        return MarkdownConverter.convert(
+        result = MarkdownConverter.convert(
             self["parsing_res_list"],
             handle_funcs_dict=handle_funcs_dict,
             show_formula_number=show_formula_number,
             imgs_in_doc=self["imgs_in_doc"],
-            page_index=self["page_index"],
-            input_path=self["input_path"],
         )
+        result["page_index"] = self["page_index"]
+        result["input_path"] = self["input_path"]
+        return result
 
 
 class PaddleOCRVLPagesResult(PaddleOCRVLResult):

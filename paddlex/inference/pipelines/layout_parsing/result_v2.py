@@ -346,15 +346,16 @@ class LayoutParsingResultV2(
         """
         handle_funcs_dict = self._build_handle_funcs_dict(pretty=pretty)
 
-        return MarkdownConverter.convert(
+        result = MarkdownConverter.convert(
             self["parsing_res_list"],
             handle_funcs_dict=handle_funcs_dict,
             use_seg_flag=True,
             get_seg_flag_func=get_seg_flag,
             imgs_in_doc=self["imgs_in_doc"],
-            page_index=self["page_index"],
-            input_path=self["input_path"],
         )
+        result["page_index"] = self["page_index"]
+        result["input_path"] = self["input_path"]
+        return result
 
     def _to_word(self) -> dict:
         from docx.enum.text import WD_ALIGN_PARAGRAPH
