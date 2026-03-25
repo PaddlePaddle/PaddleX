@@ -162,6 +162,8 @@ ACT2CLS = {
     "linear": LinearActivation,
     "mish": MishActivation,
     "quick_gelu": QuickGELUActivation,
+    "hardswish": nn.Hardswish,
+    "prelu": nn.PReLU,
     "relu": nn.ReLU,
     "relu6": nn.ReLU6,
     "sigmoid": nn.Sigmoid,

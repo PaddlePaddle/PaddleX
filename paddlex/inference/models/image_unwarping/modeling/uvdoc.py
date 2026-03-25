@@ -19,22 +19,12 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 
 from ....utils.benchmark import add_inference_operations, benchmark
+from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
 )
 from ._config import UVDocConfig
-
-
-def _create_act(act):
-    if act == "relu":
-        return nn.ReLU()
-    elif act == "prelu":
-        return nn.PReLU()
-    elif act is None:
-        return nn.Identity()
-    else:
-        raise ValueError(f"Unsupported activation: {act}")
 
 
 class UVDocConvLayer(nn.Layer):
@@ -64,7 +54,7 @@ class UVDocConvLayer(nn.Layer):
             bias_attr=False if not bias else None,
         )
         self.normalization = nn.BatchNorm2D(out_channels)
-        self.activation = _create_act(activation)
+        self.activation = ACT2FN[activation] if activation is not None else nn.Identity()
 
     def forward(self, hidden_state):
         hidden_state = self.convolution(hidden_state)
@@ -120,7 +110,7 @@ class UVDocResidualBlock(nn.Layer):
             dilation=dilation,
             activation=None,
         )
-        self.act_fn = _create_act(activation)
+        self.act_fn = ACT2FN[activation] if activation is not None else nn.Identity()
 
     def forward(self, hidden_states):
         residual = self.conv_down(hidden_states)
