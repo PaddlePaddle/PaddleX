@@ -25,15 +25,27 @@ import huggingface_hub.utils as hf_hub_utils
 
 hf_hub.logging.set_verbosity_error()
 
-import modelscope
-import modelscope.hub.errors as ms_hub_errors
 import requests
 
 os.environ["AISTUDIO_LOG"] = "critical"
+import modelscope
 from aistudio_sdk.errors import NotExistError
 from aistudio_sdk.snapshot_download import snapshot_download as aistudio_download
 
 from ...utils import logging
+
+ms_hub_errors = None
+try:
+    import modelscope.hub.errors as _ms_hub_errors
+
+    ms_hub_errors = _ms_hub_errors
+except Exception as e:
+    logging.debug(
+        "Failed to import `modelscope.hub.errors` (%r). ModelScope downloads can still "
+        "be used; not-found detection will use generic fallbacks.",
+        e,
+    )
+
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
 from ...utils.flags import (
@@ -559,6 +571,46 @@ def _iter_exception_chain(exc: Exception):
         )
 
 
+def _exception_http_status_code(exc_obj: BaseException) -> Optional[int]:
+    # NOTE: Normally `requests.HTTPError` sets `.response`;
+    # ModelScope `hub/api.py` sometimes does `raise HTTPError(r)` without `response=`,
+    # so the `requests.Response` only appears in `args[0]`.
+    response = getattr(exc_obj, "response", None)
+    code = getattr(response, "status_code", None)
+    if isinstance(code, int):
+        return code
+    for arg in getattr(exc_obj, "args", ()) or ():
+        sc = getattr(arg, "status_code", None)
+        if isinstance(sc, int):
+            return sc
+    return None
+
+
+def _modelscope_is_model_package_not_found_error(exc: Exception) -> bool:
+    """Detect ModelScope 'model not found' errors with or without `ms_hub_errors`."""
+    if ms_hub_errors is not None:
+        for current in _iter_exception_chain(exc):
+            if isinstance(current, ms_hub_errors.NotExistError):
+                return True
+            if isinstance(current, ms_hub_errors.HTTPError):
+                if _exception_http_status_code(current) == 404:
+                    return True
+        return False
+    for current in _iter_exception_chain(exc):
+        if isinstance(current, requests.HTTPError):
+            if _exception_http_status_code(current) == 404:
+                return True
+        if current.__class__.__name__ == "NotExistError":
+            return True
+        # ModelScope hub HTTPError may not be a requests.HTTPError subclass.
+        if (
+            current.__class__.__name__ == "HTTPError"
+            and _exception_http_status_code(current) == 404
+        ):
+            return True
+    return False
+
+
 class _BaseModelHoster(ABC):
     alias = ""
     model_list = []
@@ -721,14 +773,7 @@ class _ModelScopeModelHoster(_BaseModelHoster):
                 shutil.move(temp_dir, save_dir)
 
     def is_model_package_not_found_error(self, exc: Exception) -> bool:
-        for current in _iter_exception_chain(exc):
-            if isinstance(current, ms_hub_errors.NotExistError):
-                return True
-            if isinstance(current, ms_hub_errors.HTTPError):
-                response = current.response
-                if response is not None and response.status_code == 404:
-                    return True
-        return False
+        return _modelscope_is_model_package_not_found_error(exc)
 
 
 class _AIStudioModelHoster(_BaseModelHoster):
