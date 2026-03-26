@@ -14,16 +14,15 @@
 
 """Interface for inference runners."""
 
-from abc import abstractmethod
-from typing import Any, Optional, Protocol, runtime_checkable
+from abc import ABC, abstractmethod
+from typing import Any, Optional
 
 from ...utils.benchmark import add_inference_operations, benchmark
 
 add_inference_operations("RunnerInfer")
 
 
-@runtime_checkable
-class InferenceRunner(Protocol):
+class InferenceRunner(ABC):
     """Loosely typed protocol for executable inference runners."""
 
     @abstractmethod
@@ -38,4 +37,7 @@ class InferenceRunner(Protocol):
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        cls.__call__ = benchmark.timeit_with_options(name="RunnerInfer")(cls.__call__)
+        if "__call__" in cls.__dict__:
+            cls.__call__ = benchmark.timeit_with_options(name="RunnerInfer")(
+                cls.__call__
+            )
