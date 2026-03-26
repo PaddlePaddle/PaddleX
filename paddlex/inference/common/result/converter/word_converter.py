@@ -37,6 +37,92 @@ def _set_paragraph_style(para, config):
         para.paragraph_format.first_line_indent = Inches(0.3)
 
 
+def _write_aside_text(doc, content, config, bbox, page_width):
+    """Write aside_text (marginal note) as a framed paragraph in the document.
+
+    Uses w:framePr to position the paragraph in the left or right margin,
+    determined automatically by the block's horizontal center vs page_width/2.
+
+    Args:
+        doc: docx.Document object.
+        content: Text content of the aside note.
+        config: Style config dict (uses 'size' key; defaults to 10pt).
+        bbox: Optional [x1, y1, x2, y2] list in pixel coordinates.
+        page_width: Page width in pixels, used to determine left/right side.
+    """
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    from docx.shared import Pt, Twips
+
+    para = doc.add_paragraph(content)
+    # Apply font size
+    size_pt = config.get("size", 10) if config else 10
+    for run in para.runs:
+        run.font.size = Pt(size_pt)
+
+    # Build w:framePr element to position in margin
+    pPr = para._element.get_or_add_pPr()
+    framePr = OxmlElement("w:framePr")
+
+    # Determine left vs right based on bbox x_center
+    is_left = True
+    if bbox and page_width and page_width > 0:
+        x_center = (bbox[0] + bbox[2]) / 2.0
+        is_left = x_center < page_width / 2.0
+
+    # Convert positions: use twips (1 inch = 1440 twips, 1 pt = 20 twips)
+    # Place frame near left or right margin
+    frame_w = Twips(1440)  # ~1 inch wide frame
+    if is_left:
+        frame_x = Twips(0)  # left margin
+    else:
+        frame_x = Twips(11520)  # right margin area (8 inches * 1440)
+
+    framePr.set(qn("w:w"), str(int(frame_w)))
+    framePr.set(qn("w:hSpace"), "180")
+    framePr.set(qn("w:wrap"), "around")
+    framePr.set(qn("w:hAnchor"), "page")
+    framePr.set(qn("w:vAnchor"), "text")
+    framePr.set(qn("w:x"), str(int(frame_x)))
+    framePr.set(qn("w:xAlign"), "left" if is_left else "right")
+
+    pPr.insert(0, framePr)
+
+
+def _classify_number_position(bbox, page_width, page_height):
+    """Classify a 'number' block's semantic role based on its bbox position.
+
+    Args:
+        bbox: [x1, y1, x2, y2] bounding box in pixel coordinates.
+        page_width: Page width in pixels.
+        page_height: Page height in pixels.
+
+    Returns:
+        One of: 'header', 'footer', 'aside_text'.
+    """
+    if not bbox or page_width <= 0 or page_height <= 0:
+        return "footer"
+
+    x1, y1, x2, y2 = bbox
+    y_center = (y1 + y2) / 2.0
+    x_center = (x1 + x2) / 2.0
+
+    # Top 10% → header region
+    if y_center < page_height * 0.10:
+        return "header"
+
+    # Bottom 10% → footer region
+    if y_center > page_height * 0.90:
+        return "footer"
+
+    # Left 15% or right 15% (not in header/footer zone) → aside_text
+    if x_center < page_width * 0.15 or x_center > page_width * 0.85:
+        return "aside_text"
+
+    # Default fallback
+    return "footer"
+
+
 def _parse_html_table(html: str) -> List[List[str]]:
     """Parse an HTML table into a list of rows (each row is a list of cell texts)."""
     from bs4 import BeautifulSoup
@@ -52,6 +138,8 @@ def build_word_blocks(
     parsing_res_list: List[Any],
     extra_style_map: Optional[Dict[str, Dict]] = None,
     include_bbox: bool = False,
+    page_width: int = 0,
+    page_height: int = 0,
 ) -> tuple:
     """Build word_blocks and images list from a parsing_res_list.
 
@@ -64,6 +152,10 @@ def build_word_blocks(
             BASE_STYLE_MAP via dict.update(). Use for pipeline-specific labels.
         include_bbox: If True, include "bbox" field in each word_block dict.
             Defaults to False for backwards compatibility.
+        page_width: Page width in pixels, used to classify 'number' blocks.
+            0 means unknown (defaults to footer classification).
+        page_height: Page height in pixels, used to classify 'number' blocks.
+            0 means unknown (defaults to footer classification).
 
     Returns:
         Tuple of (word_blocks, images) where:
@@ -155,6 +247,16 @@ def build_word_blocks(
                 label = "table"
             else:
                 continue
+        elif label == "number":
+            # Classify 'number' blocks by position to reuse header/footer/aside_text paths
+            bbox = (
+                list(block.bbox)
+                if hasattr(block, "bbox") and block.bbox is not None
+                else None
+            )
+            label = _classify_number_position(
+                bbox, page_width=page_width, page_height=page_height
+            )
         config = style_map.get(label, default_config)
         word_block = {
             "type": label,
@@ -232,6 +334,7 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
             "chart",
             "image",
             "seal",
+            "aside_text",
             "vision_footnote",
         ]
         and content
@@ -334,6 +437,10 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
     gaps, then within each strip detects column count via X-axis projection
     gaps. Adjacent strips of the same type are merged.
 
+    Blocks with labels in LAYOUT_EXCLUDE_LABELS are excluded from the column
+    detection pass. Among those, 'seal' and 'formula_number' are re-inserted
+    into the correct segment after layout is determined.
+
     Args:
         blocks: List of block dicts with "bbox" key (header/footer already
             excluded by the caller).
@@ -347,14 +454,35 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
             {"type": "dual",   "columns": [[left_blocks], [right_blocks]]}
             {"type": "triple", "columns": [[col1], [col2], [col3]]}
     """
-    HEADER_FOOTER_LABELS = {"header", "footer", "header_image", "footer_image"}
+    # Labels excluded from column detection projection
+    LAYOUT_EXCLUDE_LABELS = {
+        "header",
+        "footer",
+        "header_image",
+        "footer_image",
+        "aside_text",
+        "seal",
+        "number",
+        "formula_number",
+    }
+    # Among excluded labels, these need to be re-inserted into segments
+    # (they are body content, just shouldn't interfere with column detection)
+    REINSERT_LABELS = {"seal", "formula_number"}
 
     def _y_center(b):
         bbox = b.get("bbox")
         return (bbox[1] + bbox[3]) / 2.0 if bbox else 0.0
 
-    # Filter header/footer blocks
-    body_blocks = [b for b in blocks if b.get("type", "") not in HEADER_FOOTER_LABELS]
+    def _x_center(b):
+        bbox = b.get("bbox")
+        return (bbox[0] + bbox[2]) / 2.0 if bbox else 0.0
+
+    # Separate excluded blocks; among them, identify which need re-insertion
+    excluded = [b for b in blocks if b.get("type", "") in LAYOUT_EXCLUDE_LABELS]
+    reinsert_blocks = [b for b in excluded if b.get("type", "") in REINSERT_LABELS]
+
+    # Filter header/footer/aside_text/number blocks — use only body blocks for detection
+    body_blocks = [b for b in blocks if b.get("type", "") not in LAYOUT_EXCLUDE_LABELS]
     if not body_blocks:
         return []
 
@@ -396,11 +524,25 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
         if not narrow:
             # Only full-span blocks → single segment
             seg_blocks = sorted(strip_blocks, key=_y_center)
-            segments.append({"type": "single", "blocks": seg_blocks})
+            segments.append(
+                {"type": "single", "blocks": seg_blocks, "_y": (y_start, y_end)}
+            )
             continue
 
         # Detect columns from narrow blocks via X-axis gaps
         x_gaps = _find_projection_gaps(narrow, axis=0, length=page_width)
+
+        # Filter out edge gaps (page margins), which are not column dividers.
+        # A gap that starts at or very near x=0 (left margin) or ends at or
+        # very near x=page_width (right margin) is a margin, not a column gap.
+        margin_thresh = max(1, int(page_width * 0.08))
+        interior_gaps = [
+            g
+            for g in x_gaps
+            if g[0] > margin_thresh and g[1] < page_width - margin_thresh
+        ]
+        if interior_gaps:
+            x_gaps = interior_gaps
 
         if not x_gaps or len(x_gaps) + 1 > max_cols:
             # Use the widest gaps as dividers when too many gaps
@@ -412,7 +554,9 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
             else:
                 # No valid gaps → single column
                 seg_blocks = sorted(strip_blocks, key=_y_center)
-                segments.append({"type": "single", "blocks": seg_blocks})
+                segments.append(
+                    {"type": "single", "blocks": seg_blocks, "_y": (y_start, y_end)}
+                )
                 continue
 
         num_cols = len(x_gaps) + 1
@@ -442,13 +586,19 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
         non_empty_cols = [col for col in col_blocks if col]
         if len(non_empty_cols) <= 1:
             seg_blocks = sorted(strip_blocks, key=_y_center)
-            segments.append({"type": "single", "blocks": seg_blocks})
+            segments.append(
+                {"type": "single", "blocks": seg_blocks, "_y": (y_start, y_end)}
+            )
             continue
 
         # Prepend full-span blocks as a separate single segment before this strip
         if full_span:
             segments.append(
-                {"type": "single", "blocks": sorted(full_span, key=_y_center)}
+                {
+                    "type": "single",
+                    "blocks": sorted(full_span, key=_y_center),
+                    "_y": (y_start, y_end),
+                }
             )
 
         if num_cols == 2:
@@ -459,7 +609,69 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
             seg_type = "triple"  # capped at max_cols
             col_blocks = col_blocks[:3]
 
-        segments.append({"type": seg_type, "columns": col_blocks})
+        segments.append(
+            {
+                "type": seg_type,
+                "columns": col_blocks,
+                "_y": (y_start, y_end),
+                "_dividers": dividers,
+            }
+        )
+
+    # ---- Step 2b: Re-insert seal/formula_number blocks into correct segments ----
+    for rb in reinsert_blocks:
+        rb_y = _y_center(rb)
+        rb_x = _x_center(rb)
+        # Find the best matching segment (closest y range)
+        best_seg = None
+        best_dist = float("inf")
+        for seg in segments:
+            seg_y_start, seg_y_end = seg.get("_y", (0, page_height))
+            if seg_y_start <= rb_y <= seg_y_end:
+                best_seg = seg
+                best_dist = 0
+                break
+            dist = min(abs(rb_y - seg_y_start), abs(rb_y - seg_y_end))
+            if dist < best_dist:
+                best_dist = dist
+                best_seg = seg
+
+        if best_seg is None:
+            # Fallback: append to last segment
+            if segments:
+                best_seg = segments[-1]
+            else:
+                segments.append(
+                    {"type": "single", "blocks": [rb], "_y": (0, page_height)}
+                )
+                continue
+
+        if best_seg["type"] == "single":
+            # Insert in y-sorted position
+            lst = best_seg["blocks"]
+            insert_pos = len(lst)
+            for i, b in enumerate(lst):
+                if _y_center(b) > rb_y:
+                    insert_pos = i
+                    break
+            lst.insert(insert_pos, rb)
+        else:
+            # Multi-column: assign to column based on x_center
+            dividers = best_seg.get("_dividers", [])
+            col_idx = 0
+            for div in dividers:
+                if rb_x > div:
+                    col_idx += 1
+                else:
+                    break
+            col_idx = min(col_idx, len(best_seg["columns"]) - 1)
+            lst = best_seg["columns"][col_idx]
+            insert_pos = len(lst)
+            for i, b in enumerate(lst):
+                if _y_center(b) > rb_y:
+                    insert_pos = i
+                    break
+            lst.insert(insert_pos, rb)
 
     # ---- Step 3: Merge adjacent segments of the same type ----
     merged = []
@@ -613,7 +825,13 @@ class WordConverter:
         doc = Document()
         first_page = True
 
-        HEADER_FOOTER_LABELS = {"header", "footer", "header_image", "footer_image"}
+        HEADER_FOOTER_LABELS = {
+            "header",
+            "footer",
+            "header_image",
+            "footer_image",
+            "aside_text",
+        }
 
         for page_idx in sorted(pages.keys()):
             page_blocks = pages[page_idx]
@@ -626,7 +844,7 @@ class WordConverter:
                 _set_section_columns(new_section, num_cols=1)
             first_page = False
 
-            # Write header/footer for this page into current section
+            # Write header/footer/aside_text for this page into current section
             for block in page_blocks:
                 label = block.get("type", "")
                 content = block.get("content", "")
@@ -642,6 +860,10 @@ class WordConverter:
                     section.footer.is_linked_to_previous = False
                     para = section.footer.add_paragraph(content)
                     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                elif label == "aside_text" and content:
+                    config = block.get("config") or {}
+                    bbox = block.get("bbox")
+                    _write_aside_text(doc, content, config, bbox, page_width)
 
             # Segment the page using XY-Cut projection
             body_blocks = [
