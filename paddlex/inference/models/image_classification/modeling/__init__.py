@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .hgnetv2 import HGNetV2Backbone, HGNetV2ForImageClassification
 from .pplcnet import PPLCNet

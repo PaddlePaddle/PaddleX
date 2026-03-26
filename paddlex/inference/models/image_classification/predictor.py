@@ -27,7 +27,8 @@ from .processors import Crop, Topk
 from .result import TopkResult
 
 PPLCNET_MODELS = [name for name in MODELS if name.startswith("PP-LCNet_")]
-CLAS_TRANSFORMERS_MODELS = PPLCNET_MODELS
+HGNETV2_MODELS = [name for name in MODELS if name.startswith("PP-HGNetV2")]
+CLAS_TRANSFORMERS_MODELS = PPLCNET_MODELS + HGNETV2_MODELS
 
 
 class ClasRunnerPredictor(RunnerPredictor):
