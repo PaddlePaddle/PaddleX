@@ -17,7 +17,6 @@ from typing import List, Optional, Tuple, Union
 import numpy as np
 from PIL import Image
 
-from ....modules.text_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -61,8 +60,6 @@ def _get_text_det_postprocess_defaults(config) -> Tuple[float, float, float]:
 
 
 class TextDetRunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -220,8 +217,6 @@ class TextDetRunnerPredictor(RunnerPredictor):
 
 
 class TextDetTransformersPredictor(TransformersPredictor):
-
-    entities = TEXT_DET_TRANSFORMERS_MODELS
 
     def __init__(
         self,

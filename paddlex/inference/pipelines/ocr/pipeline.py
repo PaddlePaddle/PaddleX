@@ -412,13 +412,29 @@ class _OCRPipeline(BasePipeline):
                             doc_preprocessor_images[idx], dt_polys_list[idx]
                         )
                     )
-                    all_subs_of_imgs.extend(all_subs_of_img)
-                    chunk_indices.append(chunk_indices[-1] + len(all_subs_of_img))
+                    filtered_subs = []
+                    filtered_polys = []
+                    for sub_img, poly in zip(all_subs_of_img, dt_polys_list[idx]):
+                        if (
+                            sub_img.size > 0
+                            and sub_img.shape[0] > 0
+                            and sub_img.shape[1] > 0
+                        ):
+                            filtered_subs.append(sub_img)
+                            filtered_polys.append(poly)
+                    dt_polys_list[idx] = filtered_polys
+                    results[idx]["dt_polys"] = filtered_polys
+                    all_subs_of_imgs.extend(filtered_subs)
+                    chunk_indices.append(chunk_indices[-1] + len(filtered_subs))
 
                 # use textline orientation model
                 if model_settings["use_textline_orientation"]:
                     angles = [
-                        int(textline_angle_info["class_ids"][0])
+                        int(
+                            np.asarray(
+                                textline_angle_info["class_ids"], dtype=np.int64
+                            ).ravel()[0]
+                        )
                         for textline_angle_info in self.textline_orientation_model(
                             all_subs_of_imgs
                         )

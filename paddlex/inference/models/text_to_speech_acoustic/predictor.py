@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....modules.text_to_speech_acoustic.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
 from ..predictors import RunnerPredictor
 from .result import Fastspeech2Result
 
 
 class Fastspeech2RunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     def __init__(self, *args, **kwargs):
         """Initializes FastspeechPredictor.

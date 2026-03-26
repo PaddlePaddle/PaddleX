@@ -15,7 +15,6 @@
 import inspect
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ....modules.open_vocabulary_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -30,8 +29,6 @@ from .processors import (
 
 
 class OVDetRunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

@@ -16,7 +16,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 
-from ....modules.semantic_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -28,8 +27,6 @@ from .result import SegResult
 
 class SegRunnerPredictor(RunnerPredictor):
     """SegRunnerPredictor that inherits from RunnerPredictor."""
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

@@ -14,7 +14,6 @@
 
 from typing import Union
 
-from ....modules.video_classification.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
@@ -31,8 +30,6 @@ from .result import TopkVideoResult
 
 
 class VideoClasRunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

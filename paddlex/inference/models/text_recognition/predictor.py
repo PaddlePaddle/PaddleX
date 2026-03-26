@@ -17,7 +17,6 @@ from typing import Optional
 import numpy as np
 from PIL import Image
 
-from ....modules.text_recognition.model_list import MODELS
 from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import (
     ARABIC_FONT,
@@ -36,7 +35,12 @@ from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..predictors import RunnerPredictor, TransformersPredictor
-from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
+from .processors import (
+    CTCLabelDecode,
+    OCRReisizeNormImg,
+    ToBatch,
+    validate_text_rec_image_array,
+)
 from .result import TextRecResult
 
 if is_dep_available("python-bidi"):
@@ -100,8 +104,6 @@ def get_text_rec_vis_font(model_name):
 @class_requires_deps("python-bidi")
 class TextRecRunnerPredictor(RunnerPredictor):
 
-    entities = MODELS
-
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
@@ -135,6 +137,8 @@ class TextRecRunnerPredictor(RunnerPredictor):
 
     def process(self, batch_data, return_word_box=False):
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
+        for i, img in enumerate(batch_raw_imgs):
+            validate_text_rec_image_array(img, index=i)
         width_list = []
         for img in batch_raw_imgs:
             width_list.append(img.shape[1] / float(img.shape[0]))
@@ -215,8 +219,6 @@ class TextRecRunnerPredictor(RunnerPredictor):
 class TextRecTransformersPredictor(TransformersPredictor):
     """Text recognition predictor backed by Hugging Face transformers."""
 
-    entities = TEXT_REC_TRANSFORMERS_MODELS
-
     def __init__(self, *args, return_word_box: bool = False, **kwargs):
         super().__init__(*args, **kwargs)
         self.return_word_box = return_word_box
@@ -262,6 +264,8 @@ class TextRecTransformersPredictor(TransformersPredictor):
 
     def process(self, batch_data, return_word_box: Optional[bool] = None):
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        for i, img in enumerate(batch_raw_imgs):
+            validate_text_rec_image_array(img, index=i)
         width_list = [img.shape[1] / float(img.shape[0]) for img in batch_raw_imgs]
         indices = np.argsort(np.array(width_list))
         images = [Image.fromarray(img) for img in batch_raw_imgs]

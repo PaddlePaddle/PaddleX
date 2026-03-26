@@ -22,7 +22,6 @@ from typing import List, Optional
 
 import numpy as np
 
-from ....modules.doc_vlm.model_list import MODELS
 from ....utils import logging
 from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
@@ -36,9 +35,9 @@ from ..predictors import (
 )
 from ..utils.model_paths import get_model_paths
 from .constants import (
+    PADDLEOCR_VL_GENAI_CLIENT_BATCH_SIZE,
     PADDLEOCR_VL_LOCAL_BATCH_SIZE,
     PADDLEOCR_VL_MAX_NEW_TOKENS,
-    PADDLEOCR_VL_MODELS,
 )
 from .result import DocVLMResult
 from .utils import format_doc_vlm_result_dict, is_in_group
@@ -47,8 +46,6 @@ from .utils import format_doc_vlm_result_dict, is_in_group
 class DocVLMLocalPredictor(LocalModelPredictor):
     """DocVLM predictor for local model inference (Paddle dynamic graph)."""
 
-    entities = MODELS
-
     def __init__(self, *args, **kwargs):
         """Initializes DocVLMPredictor.
         Args:
@@ -56,12 +53,11 @@ class DocVLMLocalPredictor(LocalModelPredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.batch_sampler = self._build_batch_sampler()
         bs = kwargs.get("batch_size", -1)
-        self.batch_sampler.batch_size = bs
-
-        if self.batch_sampler.batch_size == -1:
+        if bs == -1:
             self.batch_sampler.batch_size = self._determine_batch_size()
+        else:
+            self.batch_sampler.batch_size = bs
 
         if is_bfloat16_available(self.device):
             self.dtype = "bfloat16"
@@ -204,7 +200,6 @@ class DocVLMLocalPredictor(LocalModelPredictor):
         Returns:
             dict: A dictionary containing the raw sample information and prediction results for every instance of the batch.
         """
-        # TODO: Sampling settings
         # FIXME: When `skip_special_tokens` is `True`, the results from different backends may differ.
 
         assert all(isinstance(i, dict) for i in data)
@@ -372,8 +367,6 @@ class DocVLMLocalPredictor(LocalModelPredictor):
 class DocVLMGenAIClientPredictor(GenAIClientPredictor):
     """DocVLM predictor for remote GenAI inference via GenAIClient."""
 
-    entities = PADDLEOCR_VL_MODELS
-
     def __init__(self, *args, **kwargs):
         engine_config = kwargs.pop("engine_config", None)
         model_name = kwargs.pop("model_name", "")
@@ -383,10 +376,9 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
             model_name=model_name,
             engine_config=engine_config,
         )
-        self.batch_sampler = self._build_batch_sampler()
         bs = kwargs.get("batch_size", 1)
         if bs == -1 and is_in_group(self.model_name, "PaddleOCR-VL"):
-            bs = PADDLEOCR_VL_MAX_NEW_TOKENS
+            bs = PADDLEOCR_VL_GENAI_CLIENT_BATCH_SIZE
         elif bs == -1:
             bs = 1
         self.batch_sampler.batch_size = bs

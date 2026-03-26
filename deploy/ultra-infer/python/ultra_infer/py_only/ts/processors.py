@@ -172,10 +172,10 @@ def _load_from_one_dataframe(
     else:
         time_col_vals = data.index
 
-    if np.issubdtype(time_col_vals.dtype, np.integer) and isinstance(freq, str):
+    if pd.api.types.is_integer_dtype(time_col_vals.dtype) and isinstance(freq, str):
         time_col_vals = time_col_vals.astype(str)
 
-    if np.issubdtype(time_col_vals.dtype, np.integer):
+    if pd.api.types.is_integer_dtype(time_col_vals.dtype):
         if freq:
             if not isinstance(freq, int) or freq < 1:
                 raise ValueError(
@@ -187,10 +187,11 @@ def _load_from_one_dataframe(
         if (stop_idx - start_idx) / freq != len(data):
             raise ValueError("The number of rows doesn't match with the RangeIndex!")
         time_index = pd.RangeIndex(start=start_idx, stop=stop_idx, step=freq)
-    elif np.issubdtype(time_col_vals.dtype, np.object_) or np.issubdtype(
-        time_col_vals.dtype, np.datetime64
+    elif (
+        pd.api.types.is_string_dtype(time_col_vals.dtype)
+        or pd.api.types.is_datetime64_any_dtype(time_col_vals.dtype)
     ):
-        time_col_vals = pd.to_datetime(time_col_vals, infer_datetime_format=True)
+        time_col_vals = pd.to_datetime(time_col_vals)
         time_index = pd.DatetimeIndex(time_col_vals)
         if freq:
             if not isinstance(freq, str):
@@ -336,7 +337,7 @@ def _to_time_features(
     else:
         tf_kcov = kcov.index.to_frame()
     time_col = tf_kcov.columns[0]
-    if np.issubdtype(tf_kcov[time_col].dtype, np.integer):
+    if pd.api.types.is_integer_dtype(tf_kcov[time_col].dtype):
         raise ValueError(
             "The time_col can't be the type of numpy.integer, and it must be the type of numpy.datetime64"
         )

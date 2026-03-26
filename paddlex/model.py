@@ -15,6 +15,7 @@
 from copy import deepcopy
 
 from .inference import create_predictor
+from .inference.models.runners.paddle_static.config import PaddlePredictorOption
 from .modules import (
     build_dataset_checker,
     build_evaluator,
@@ -94,20 +95,16 @@ class _ModelBasedConfig(_BaseModel):
         create_predictor_kwargs = {}
         if engine is not UNSET:
             create_predictor_kwargs["engine"] = engine
-        prefer_new_engine_configs = (
-            (engine is not UNSET and engine not in ("paddle", "paddle_static"))
-            or use_hpip is True
-            or hpi_config is not UNSET
-            or genai_config is not UNSET
-        )
         if engine_config is not UNSET:
             create_predictor_kwargs["engine_config"] = engine_config
-        elif kernel_option is not UNSET and not prefer_new_engine_configs:
-            create_predictor_kwargs["engine_config"] = kernel_option
+        if kernel_option is not UNSET:
+            create_predictor_kwargs["pp_option"] = (
+                PaddlePredictorOption(**kernel_option)
+                if isinstance(kernel_option, dict)
+                else kernel_option
+            )
         if use_hpip is not UNSET:
             create_predictor_kwargs["use_hpip"] = use_hpip
-        else:
-            create_predictor_kwargs["use_hpip"] = False
         if hpi_config is not UNSET:
             create_predictor_kwargs["hpi_config"] = hpi_config
         if genai_config is not UNSET:

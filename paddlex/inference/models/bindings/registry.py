@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Mapping, Sequence, Tuple, Type
+from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Type
 
 from ....utils import errors
 from ..predictors import BasePredictor
@@ -109,7 +109,78 @@ def _normalize_registrations(
     return (BindingRegistration(model_names=tuple(items)),)
 
 
-_registry: Dict[str, Dict[str, Binding]] = {}
+class BindingRegistry:
+    """Registry mapping (model_name, engine) pairs to predictor bindings."""
+
+    def __init__(self) -> None:
+        self._registry: Dict[str, Dict[str, Binding]] = {}
+
+    def register(
+        self,
+        predictor_cls: Type[BasePredictor],
+        bindings: Mapping[
+            str,
+            Sequence[str] | BindingRegistration | Sequence[BindingRegistration],
+        ],
+    ) -> None:
+        """Register predictor class for (model_name, engine) pairs."""
+        for engine, registration in bindings.items():
+            engine = engine.lower()
+            for reg in _normalize_registrations(registration):
+                for model_name in reg.model_names:
+                    engine_map = self._registry.setdefault(model_name, {})
+                    binding = Binding(
+                        predictor=predictor_cls,
+                        extra_info=dict(reg.extra_info),
+                    )
+                    existing = engine_map.get(engine)
+                    if existing is not None and (
+                        existing.predictor is not predictor_cls
+                        or existing.extra_info != binding.extra_info
+                    ):
+                        raise errors.DuplicateRegistrationError(
+                            f"Conflicting registration for model {model_name!r} "
+                            f"and engine {engine!r}."
+                        )
+                    engine_map[engine] = binding
+
+    def get_supported_engines(self, model_name: str) -> Tuple[str, ...]:
+        """Get supported engines for a model. Raises UnknownModelError if not registered."""
+        engine_map = self._registry.get(model_name)
+        if not engine_map:
+            raise UnknownModelError(model_name, tuple(self._registry))
+        return tuple(engine_map)
+
+    def try_get_supported_engines(self, model_name: str) -> Optional[Tuple[str, ...]]:
+        """Get supported engines for a model, or None if not registered."""
+        engine_map = self._registry.get(model_name)
+        if not engine_map:
+            return None
+        return tuple(engine_map)
+
+    def get_binding(self, model_name: str, engine: str) -> Binding:
+        """Get binding for (model_name, engine). Raises on unknown model or unsupported engine."""
+        engine_map = self._registry.get(model_name)
+        if not engine_map:
+            raise UnknownModelError(model_name, tuple(self._registry))
+        binding = engine_map.get(engine.lower())
+        if binding is None:
+            raise UnsupportedEngineError(model_name, engine, tuple(engine_map))
+        return binding
+
+    def try_get_binding(self, model_name: str, engine: str) -> Optional[Binding]:
+        """Get binding for (model_name, engine), or None if not found."""
+        engine_map = self._registry.get(model_name)
+        if not engine_map:
+            return None
+        return engine_map.get(engine.lower())
+
+    def get_predictor_cls(self, model_name: str, engine: str) -> Type[BasePredictor]:
+        """Get predictor class for (model_name, engine)."""
+        return self.get_binding(model_name, engine).predictor
+
+
+default_registry = BindingRegistry()
 
 
 def register_predictor_binding_map(
@@ -120,59 +191,29 @@ def register_predictor_binding_map(
     ],
 ) -> None:
     """Register predictor class for (model_name, engine) pairs."""
-    for engine, registration in bindings.items():
-        engine = engine.lower()
-        for reg in _normalize_registrations(registration):
-            for model_name in reg.model_names:
-                engine_map = _registry.setdefault(model_name, {})
-                binding = Binding(
-                    predictor=predictor_cls,
-                    extra_info=dict(reg.extra_info),
-                )
-                existing = engine_map.get(engine)
-                if existing is not None and (
-                    existing.predictor is not predictor_cls
-                    or existing.extra_info != binding.extra_info
-                ):
-                    raise errors.DuplicateRegistrationError(
-                        f"Conflicting registration for model {model_name!r} "
-                        f"and engine {engine!r}."
-                    )
-                engine_map[engine] = binding
+    default_registry.register(predictor_cls, bindings)
 
 
 def get_supported_engines(model_name: str) -> Tuple[str, ...]:
     """Get supported engines for a model. Raises UnknownModelError if not registered."""
-    engine_map = _registry.get(model_name)
-    if not engine_map:
-        raise UnknownModelError(model_name, tuple(_registry))
-    return tuple(engine_map)
+    return default_registry.get_supported_engines(model_name)
 
 
-def try_get_supported_engines(model_name: str) -> Tuple[str, ...] | None:
+def try_get_supported_engines(model_name: str) -> Optional[Tuple[str, ...]]:
     """Get supported engines for a model, or None if not registered."""
-    engine_map = _registry.get(model_name)
-    if not engine_map:
-        return None
-    return tuple(engine_map)
+    return default_registry.try_get_supported_engines(model_name)
 
 
 def get_binding(model_name: str, engine: str) -> Binding:
     """Get binding for (model_name, engine). Raises on unknown model or unsupported engine."""
-    supported = try_get_supported_engines(model_name)
-    if supported is None:
-        raise UnknownModelError(model_name, tuple(_registry))
-    binding = _registry.get(model_name, {}).get(engine.lower())
-    if binding is None:
-        raise UnsupportedEngineError(model_name, engine, supported)
-    return binding
+    return default_registry.get_binding(model_name, engine)
 
 
-def try_get_binding(model_name: str, engine: str) -> Binding | None:
+def try_get_binding(model_name: str, engine: str) -> Optional[Binding]:
     """Get binding for (model_name, engine), or None if not found."""
-    return _registry.get(model_name, {}).get(engine.lower())
+    return default_registry.try_get_binding(model_name, engine)
 
 
 def get_predictor_cls(model_name: str, engine: str) -> Type[BasePredictor]:
     """Get predictor class for (model_name, engine)."""
-    return get_binding(model_name, engine).predictor
+    return default_registry.get_predictor_cls(model_name, engine)

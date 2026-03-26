@@ -14,9 +14,9 @@
 
 """HPI info and model metadata schema (shared by engines and registry)."""
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from typing_extensions import Literal, TypeAlias
 
 
@@ -44,3 +44,13 @@ class ModelInfo(BaseModel):
 
 
 ModelFormat: TypeAlias = Literal["paddle", "onnx", "om"]
+
+
+def get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
+    """Extract and validate HPIInfo from a model config dict."""
+    if not model_config or "Hpi" not in model_config:
+        return None
+    try:
+        return HPIInfo.model_validate(model_config["Hpi"])
+    except ValidationError as e:
+        raise RuntimeError(f"Invalid HPI info: {str(e)}") from e

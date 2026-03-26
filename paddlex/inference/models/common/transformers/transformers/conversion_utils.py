@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar
 
 import numpy as np
 import paddle
@@ -42,7 +43,7 @@ class StateDictNameMapping:
     action: Optional[str] = None  # the value can be: transpose, merge_last_two_dim
     index: Optional[int] = None
 
-    slots: list[str] = None
+    slots: List[str] = None
 
     def __post_init__(self):
         self.target_name = self.target_name or self.source_name
@@ -54,7 +55,7 @@ class StateDictNameMapping:
         """check that whether merge last two dim"""
         return self.action == "merge_last_two_dim"
 
-    def run(self, state_dict: dict[str, ndarray], name: str) -> ndarray:
+    def run(self, state_dict: Dict[str, ndarray], name: str) -> ndarray:
         """run some custom operation on ndarray, eg: transpose, merge_last_two_dim
 
         Args:
@@ -103,7 +104,7 @@ class StateDictNameMapping:
 
 class ConversionMixin:
     @classmethod
-    def support_conversion(cls, config: PretrainedConfig) -> bool:
+    def support_conversion(cls, config: "PretrainedConfig") -> bool:
         """check whether the model support conversion"""
         try:
             # try to get the name-mapping info
@@ -114,7 +115,9 @@ class ConversionMixin:
             return True
 
     @classmethod
-    def _get_name_mappings(cls, config: PretrainedConfig) -> List[StateDictNameMapping]:
+    def _get_name_mappings(
+        cls, config: "PretrainedConfig"
+    ) -> List[StateDictNameMapping]:
         """get name mapping of PretrainedModel
 
         Args:
@@ -131,7 +134,7 @@ class ConversionMixin:
     @classmethod
     def get_tensor_parallel_convert_actions(
         cls,
-        config: PretrainedConfig,
+        config: "PretrainedConfig",
         loaded_state_dict_keys,
         is_split=True,
         ignore_error=False,
@@ -150,7 +153,7 @@ class ConversionMixin:
     def convert_tensor_parallel(
         cls,
         weight_file: str,
-        config: PretrainedConfig,
+        config: "PretrainedConfig",
         state_dict=None,
         ignore_error=False,
     ) -> None:
@@ -239,7 +242,7 @@ class ConversionMixin:
 
     @classmethod
     def _get_tensor_parallel_mappings(
-        cls, config: PretrainedConfig, is_split=True
+        cls, config: "PretrainedConfig", is_split=True
     ) -> List[StateDictNameMapping]:
         """get name mapping of PretrainedModel
 
@@ -280,7 +283,7 @@ class ConversionMixin:
 
     @classmethod
     def convert_fuse_and_split(
-        cls, config: PretrainedConfig, state_dict, tp_actions=None
+        cls, config: "PretrainedConfig", state_dict, tp_actions=None
     ):
         loaded_keys = state_dict.keys()
         # collect and convert fuse/split action
@@ -331,7 +334,7 @@ class ConversionMixin:
     @classmethod
     def get_fuse_or_split_param_convert_actions(
         cls,
-        config: PretrainedConfig,
+        config: "PretrainedConfig",
         loaded_state_dict_keys,
         is_fuse=True,
         ignore_error=False,
@@ -363,7 +366,7 @@ class ConversionMixin:
 
     @classmethod
     def _get_fuse_or_split_param_mappings(
-        cls, config: PretrainedConfig, is_fuse=True
+        cls, config: "PretrainedConfig", is_fuse=True
     ) -> List[StateDictNameMapping]:
         """get fused parameter mapping of PretrainedModel
 

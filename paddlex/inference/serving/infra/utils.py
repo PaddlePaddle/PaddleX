@@ -15,6 +15,7 @@
 import asyncio
 import base64
 import io
+import math
 import mimetypes
 import re
 import tempfile
@@ -47,6 +48,8 @@ if is_dep_available("yarl"):
 
 __all__ = [
     "FileType",
+    "MAX_IMAGE_PIXELS",
+    "ImageTooLargeError",
     "generate_log_id",
     "is_url",
     "infer_file_type",
@@ -68,6 +71,77 @@ __all__ = [
 ]
 
 FileType: TypeAlias = Literal["IMAGE", "PDF", "VIDEO", "AUDIO"]
+
+MAX_IMAGE_PIXELS: int = 178_956_970
+
+
+class ImageTooLargeError(Exception):
+    """Raised when decoded image height * width exceeds `MAX_IMAGE_PIXELS`."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        pixel_count: Optional[int] = None,
+        max_pixels: int = MAX_IMAGE_PIXELS,
+        page_index: Optional[int] = None,
+    ) -> None:
+        super().__init__(message)
+        self.width = width
+        self.height = height
+        self.pixel_count = pixel_count
+        self.max_pixels = max_pixels
+        self.page_index = page_index
+
+
+def ensure_image_pixel_limit(
+    image: np.ndarray, *, page_index: Optional[int] = None
+) -> None:
+    if image.ndim < 2:
+        return
+    h, w = int(image.shape[0]), int(image.shape[1])
+    pixels = h * w
+    if pixels > MAX_IMAGE_PIXELS:
+        msg = (
+            f"Image pixel count {pixels} (width={w}, height={h}) exceeds "
+            f"maximum allowed {MAX_IMAGE_PIXELS}."
+        )
+        if page_index is not None:
+            msg = f"PDF page {page_index}: {msg}"
+        raise ImageTooLargeError(
+            msg,
+            width=w,
+            height=h,
+            pixel_count=pixels,
+            max_pixels=MAX_IMAGE_PIXELS,
+            page_index=page_index,
+        )
+
+
+def _ensure_pdf_page_pixel_limit_before_render(
+    page_size: Tuple[float, float], *, page_index: int
+) -> None:
+    w_pdf, h_pdf = float(page_size[0]), float(page_size[1])
+    pixels = w_pdf * PDF_RENDER_SCALE * h_pdf * PDF_RENDER_SCALE
+    if pixels > MAX_IMAGE_PIXELS:
+        w_px = int(math.ceil(w_pdf * PDF_RENDER_SCALE))
+        h_px = int(math.ceil(h_pdf * PDF_RENDER_SCALE))
+        est = w_px * h_px
+        msg = (
+            f"PDF page {page_index}: Estimated render size width={w_px}, height={h_px} "
+            f"(pixel count {est}) would exceed maximum allowed {MAX_IMAGE_PIXELS}."
+        )
+        raise ImageTooLargeError(
+            msg,
+            width=w_px,
+            height=h_px,
+            pixel_count=est,
+            max_pixels=MAX_IMAGE_PIXELS,
+            page_index=page_index,
+        )
+
 
 P = ParamSpec("P")
 R = TypeVar("R")
@@ -144,7 +218,11 @@ def infer_file_ext(file: str) -> Optional[str]:
 
 @function_requires_deps("opencv-contrib-python")
 def image_bytes_to_array(data: bytes) -> np.ndarray:
-    return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+    arr = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+    if arr is None:
+        raise ValueError("Failed to decode image bytes")
+    ensure_image_pixel_limit(arr)
+    return arr
 
 
 def image_bytes_to_image(data: bytes) -> Image.Image:
@@ -188,20 +266,28 @@ def read_pdf(
         doc = pdfium.PdfDocument(bytes_)
         doc.init_forms()
         try:
+            page_number = 0
             for page in doc:
-                if max_num_imgs is not None and len(images) >= max_num_imgs:
+                try:
+                    if max_num_imgs is not None and len(images) >= max_num_imgs:
+                        break
+                    page_number += 1
+                    page_size = page.get_size()
+                    _ensure_pdf_page_pixel_limit_before_render(
+                        page_size, page_index=page_number
+                    )
+                    zoom = PDF_RENDER_SCALE
+                    deg = 0
+                    image = page.render(scale=zoom, rotation=deg).to_numpy()
+                    ensure_image_pixel_limit(image, page_index=page_number)
+                    images.append(image)
+                    page_info = PDFPageInfo(
+                        width=image.shape[1],
+                        height=image.shape[0],
+                    )
+                    page_info_list.append(page_info)
+                finally:
                     page.close()
-                    break
-                zoom = PDF_RENDER_SCALE
-                deg = 0
-                image = page.render(scale=zoom, rotation=deg).to_numpy()
-                images.append(image)
-                page_info = PDFPageInfo(
-                    width=image.shape[1],
-                    height=image.shape[0],
-                )
-                page_info_list.append(page_info)
-                page.close()
         finally:
             doc.close()
     pdf_info = PDFInfo(
@@ -266,7 +352,7 @@ def write_to_temp_file(file_bytes: bytes, suffix: str) -> str:
 
 def get_raw_bytes(file: str) -> bytes:
     if is_url(file):
-        resp = requests.get(file, timeout=5)
+        resp = requests.get(file, timeout=30)
         resp.raise_for_status()
         return resp.content
     else:

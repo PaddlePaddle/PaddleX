@@ -73,6 +73,7 @@ def resolve_paddle_static_engine_config(
     engine_config: Dict,
 ) -> Dict:
     """Resolve engine config with defaults. Returns dict for PaddleStaticRunner."""
+    # TODO: In the future, we should remove the use of `PaddlePredictorOption` entirely.
     pp = PaddlePredictorOption()
     for k, v in (engine_config or {}).items():
         if hasattr(pp, k):

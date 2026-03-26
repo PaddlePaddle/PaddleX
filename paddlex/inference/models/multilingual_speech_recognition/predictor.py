@@ -16,7 +16,6 @@ from typing import Any, Dict
 
 import numpy as np
 
-from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
 from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import AudioBatchSampler
@@ -26,8 +25,6 @@ from .result import WhisperResult
 
 
 class WhisperRunnerPredictor(RunnerPredictor):
-
-    entities = MODELS
 
     def __init__(self, *args, **kwargs):
         """Initializes WhisperPredictor.

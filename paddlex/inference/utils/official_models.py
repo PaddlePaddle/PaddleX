@@ -25,15 +25,27 @@ import huggingface_hub.utils as hf_hub_utils
 
 hf_hub.logging.set_verbosity_error()
 
-import modelscope
-import modelscope.hub.errors as ms_hub_errors
 import requests
 
 os.environ["AISTUDIO_LOG"] = "critical"
+import modelscope
 from aistudio_sdk.errors import NotExistError
 from aistudio_sdk.snapshot_download import snapshot_download as aistudio_download
 
 from ...utils import logging
+
+ms_hub_errors = None
+try:
+    import modelscope.hub.errors as _ms_hub_errors
+
+    ms_hub_errors = _ms_hub_errors
+except Exception as e:
+    logging.debug(
+        "Failed to import `modelscope.hub.errors` (%r). ModelScope downloads can still "
+        "be used; not-found detection will use generic fallbacks.",
+        e,
+    )
+
 from ...utils.cache import CACHE_DIR
 from ...utils.download import download_and_extract
 from ...utils.flags import (
@@ -421,7 +433,7 @@ OCR_MODELS = [
     "cyrillic_PP-OCRv5_mobile_rec",
 ]
 
-SAFETENSORS_SUPPORTED_MODELS: Set[str] = {
+SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX: Set[str] = {
     "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x1_0_doc_ori",
     "PP-LCNet_x1_0_textline_ori",
@@ -440,9 +452,17 @@ SAFETENSORS_SUPPORTED_MODELS: Set[str] = {
     "PP-OCRv5_mobile_rec",
     "UVDoc",
     "PP-Chart2Table",
+}
+
+SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX: Set[str] = {
     "PaddleOCR-VL-0.9B",
     "PaddleOCR-VL-1.5-0.9B",
 }
+
+SAFETENSORS_SUPPORTED_MODELS: Set[str] = (
+    SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX
+    | SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX
+)
 
 PADDLE_DYN_SUPPORTED_MODELS: Set[str] = {
     "PP-DocBee-2B",
@@ -484,7 +504,11 @@ def _format_download_model_name(model_name: str, model_format: LocalModelFormat)
     if model_format in {"paddle", "paddle_dyn"}:
         return model_name
     if model_format == "safetensors":
-        return f"{model_name}_safetensors"
+        if model_name in SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX:
+            return f"{model_name}_safetensors"
+        elif model_name in SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX:
+            return model_name
+        raise ValueError(f"Unknown safetensors model name: {model_name}")
     if model_format == "onnx":
         return f"{model_name}_onnx"
     raise ValueError(f"Unknown official model format: {model_format!r}.")
@@ -502,6 +526,8 @@ def _is_supported_official_model_format(
         return canonical_name in SAFETENSORS_SUPPORTED_MODELS
     if model_format == "onnx":
         return canonical_name in ONNX_SUPPORTED_MODELS
+    if model_format == "om":
+        return False
     raise ValueError(f"Unknown official model format: {model_format!r}.")
 
 
@@ -543,6 +569,46 @@ def _iter_exception_chain(exc: Exception):
         current = getattr(current, "__cause__", None) or getattr(
             current, "__context__", None
         )
+
+
+def _exception_http_status_code(exc_obj: BaseException) -> Optional[int]:
+    # NOTE: Normally `requests.HTTPError` sets `.response`;
+    # ModelScope `hub/api.py` sometimes does `raise HTTPError(r)` without `response=`,
+    # so the `requests.Response` only appears in `args[0]`.
+    response = getattr(exc_obj, "response", None)
+    code = getattr(response, "status_code", None)
+    if isinstance(code, int):
+        return code
+    for arg in getattr(exc_obj, "args", ()) or ():
+        sc = getattr(arg, "status_code", None)
+        if isinstance(sc, int):
+            return sc
+    return None
+
+
+def _modelscope_is_model_package_not_found_error(exc: Exception) -> bool:
+    """Detect ModelScope 'model not found' errors with or without `ms_hub_errors`."""
+    if ms_hub_errors is not None:
+        for current in _iter_exception_chain(exc):
+            if isinstance(current, ms_hub_errors.NotExistError):
+                return True
+            if isinstance(current, ms_hub_errors.HTTPError):
+                if _exception_http_status_code(current) == 404:
+                    return True
+        return False
+    for current in _iter_exception_chain(exc):
+        if isinstance(current, requests.HTTPError):
+            if _exception_http_status_code(current) == 404:
+                return True
+        if current.__class__.__name__ == "NotExistError":
+            return True
+        # ModelScope hub HTTPError may not be a requests.HTTPError subclass.
+        if (
+            current.__class__.__name__ == "HTTPError"
+            and _exception_http_status_code(current) == 404
+        ):
+            return True
+    return False
 
 
 class _BaseModelHoster(ABC):
@@ -707,14 +773,7 @@ class _ModelScopeModelHoster(_BaseModelHoster):
                 shutil.move(temp_dir, save_dir)
 
     def is_model_package_not_found_error(self, exc: Exception) -> bool:
-        for current in _iter_exception_chain(exc):
-            if isinstance(current, ms_hub_errors.NotExistError):
-                return True
-            if isinstance(current, ms_hub_errors.HTTPError):
-                response = current.response
-                if response is not None and response.status_code == 404:
-                    return True
-        return False
+        return _modelscope_is_model_package_not_found_error(exc)
 
 
 class _AIStudioModelHoster(_BaseModelHoster):

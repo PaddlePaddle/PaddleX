@@ -39,13 +39,16 @@ class LocalModelPredictor(BasePredictor):
             model_config=model_config,
             model_name=model_name,
         )
-        # Keep `self.config` for backward compatibility with existing predictors.
-        self.config = self._model_config
         super().__init__(
             model_name=resolved_name,
             engine_config=engine_config,
             **kwargs,
         )
+
+    @property
+    def config(self) -> Dict[str, Any]:
+        """Alias for model_config; kept for backward compatibility."""
+        return self._model_config
 
     @property
     def model_dir(self) -> Optional[Path]:

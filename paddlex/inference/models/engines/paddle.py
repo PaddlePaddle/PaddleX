@@ -17,13 +17,11 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Type
 
-from pydantic import ValidationError
-
 from ....constants import MODEL_FILE_PREFIX
 from ....utils import logging
 from ....utils.deps import is_dep_available
-from ....utils.device import parse_device
-from ..hpi import HPIInfo
+from ..bindings import Binding
+from ..hpi import get_hpi_info
 from ..runners import PaddleStaticRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_dynamic_runner import PaddleDynamicRunnerConfig
@@ -32,20 +30,11 @@ from ..utils.model_paths import LocalModelFormat
 from ._base import RunnerEngine
 
 
-def _get_hpi_info(model_config: Optional[Dict[str, Any]]) -> Optional[HPIInfo]:
-    if not model_config or "Hpi" not in model_config:
-        return None
-    try:
-        return HPIInfo.model_validate(model_config["Hpi"])
-    except ValidationError as e:
-        raise RuntimeError(f"Invalid HPI info: {str(e)}") from e
-
-
 def _inject_trt_info(
     model_config: Optional[Dict[str, Any]],
     engine_config: Dict[str, Any],
 ) -> Dict[str, Any]:
-    hpi_info = _get_hpi_info(model_config)
+    hpi_info = get_hpi_info(model_config)
     if hpi_info is None:
         return engine_config
     paddle_info = None
@@ -102,19 +91,10 @@ class PaddleStaticEngine(RunnerEngine):
         del model_name
         valid_fields = set(PaddleStaticRunnerConfig.model_fields)
         raw = {key: value for key, value in raw.items() if key in valid_fields}
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_dep_available("paddlepaddle"):
             raise RuntimeError(
                 "Engine 'paddle_static' is unavailable because dependency "
@@ -128,7 +108,7 @@ class PaddleStaticEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         del binding
         if model_dir is None:
@@ -170,19 +150,10 @@ class PaddleDynamicEngine(RunnerEngine):
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
         if not is_dep_available("paddlepaddle"):
             raise RuntimeError(
                 "Engine 'paddle_dynamic' is unavailable because dependency "
@@ -196,7 +167,7 @@ class PaddleDynamicEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         runner_builder = None
         if binding is not None:

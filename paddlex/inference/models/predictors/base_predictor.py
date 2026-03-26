@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
@@ -23,12 +23,11 @@ from ....utils.flags import (
     INFER_BENCHMARK_WARMUP,
     PIPELINE_BENCHMARK,
 )
-from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ...common.batch_sampler import BaseBatchSampler
 from ...utils.benchmark import ENTRY_POINT_NAME, benchmark
 
 
-class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
+class BasePredictor(ABC, metaclass=ABCMeta):
     """Abstract predictor interface."""
 
     def __init__(

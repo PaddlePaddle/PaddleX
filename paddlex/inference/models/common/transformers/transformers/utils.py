@@ -45,12 +45,9 @@ def fn_args_to_dict(func, *args, **kwargs):
     Inspect function `func` and its arguments for running, and extract a
     dict mapping between argument names and keys.
     """
-    if hasattr(inspect, "getfullargspec"):
-        (spec_args, spec_varargs, spec_varkw, spec_defaults, _, _, _) = (
-            inspect.getfullargspec(func)
-        )
-    else:
-        (spec_args, spec_varargs, spec_varkw, spec_defaults) = inspect.getargspec(func)
+    (spec_args, spec_varargs, spec_varkw, spec_defaults, _, _, _) = (
+        inspect.getfullargspec(func)
+    )
     # add positional argument values
     init_dict = dict(zip(spec_args, args))
     # add default argument values

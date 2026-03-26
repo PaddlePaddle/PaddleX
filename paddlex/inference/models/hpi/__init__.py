@@ -20,6 +20,7 @@ from .hpi_info import (
     ModelInfo,
     PaddleInferenceInfo,
     TensorRTInfo,
+    get_hpi_info,
 )
 
 __all__ = [
@@ -29,4 +30,5 @@ __all__ = [
     "ModelInfo",
     "PaddleInferenceInfo",
     "TensorRTInfo",
+    "get_hpi_info",
 ]

@@ -14,7 +14,6 @@
 
 import numpy as np
 
-from ....modules.formula_recognition.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
@@ -37,8 +36,6 @@ from .result import FormulaRecResult
 
 class FormulaRecRunnerPredictor(RunnerPredictor):
     """FormulaRecRunnerPredictor that inherits from RunnerPredictor."""
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

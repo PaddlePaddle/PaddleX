@@ -49,7 +49,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -
 
 ```bash
 # CPU
-python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+python -m pip install paddlepaddle==3.3.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu，requires GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)
  python -m pip install paddlepaddle-gpu==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/

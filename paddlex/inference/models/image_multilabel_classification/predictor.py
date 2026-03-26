@@ -16,7 +16,6 @@ from typing import Any, Dict, List, Union
 
 import numpy as np
 
-from ....modules.multilabel_classification.model_list import MODELS
 from ..image_classification import ClasRunnerPredictor
 from .processors import MultiLabelThreshOutput
 from .result import MLClassResult
@@ -24,8 +23,6 @@ from .result import MLClassResult
 
 class MLClasPredictor(ClasRunnerPredictor):
     """MLClasPredictor that inherits from ClasRunnerPredictor."""
-
-    entities = MODELS
 
     def __init__(
         self,

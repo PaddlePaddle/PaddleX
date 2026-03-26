@@ -20,7 +20,7 @@ from typing import Any, Dict, Optional, Tuple, Type
 
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
-from ....utils.device import parse_device
+from ..bindings import Binding
 from ..runners import ONNXRuntimeRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
@@ -54,33 +54,24 @@ class ONNXRuntimeEngine(RunnerEngine):
         device: Optional[str] = None,
     ) -> Dict[str, Any]:
         del model_name
-        if device:
-            device_type, device_ids = parse_device(device)
-            raw["device_type"] = device_type
-            raw["device_id"] = device_ids[0] if device_ids is not None else None
+        self._apply_device(raw, device)
         return raw
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
+    def ensure_environment(self) -> None:
         if not is_dep_available("onnxruntime"):
             raise RuntimeError(
                 "Engine 'onnxruntime' is unavailable because dependency "
                 "'onnxruntime' is not installed."
             )
-        device_type = (engine_config or {}).get("device_type")
-        if device_type is None and device is not None:
-            device_type, _ = parse_device(device)
+
+    def _check_device_support(self, engine_config: Dict[str, Any]) -> None:
+        device_type = engine_config.get("device_type")
         if device_type is None or device_type == "cpu":
             return
         if device_type != "gpu":
             raise ValueError(
                 "`engine='onnxruntime'` currently only supports `cpu` and `gpu`."
             )
-
         import onnxruntime as ort
 
         available_providers = set(ort.get_available_providers())
@@ -98,11 +89,12 @@ class ONNXRuntimeEngine(RunnerEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         del model_name, model_config, binding
         if model_dir is None:
             raise ValueError("`model_dir` is required for engine='onnxruntime'.")
+        self._check_device_support(engine_config)
         return ONNXRuntimeRunner(
             model_dir=model_dir,
             model_file_prefix=MODEL_FILE_PREFIX,

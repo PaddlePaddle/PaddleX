@@ -15,6 +15,7 @@
 import numpy as np
 
 from .... import constants
+from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.import_guard import import_paddle
 from ..bindings import create_binding_registration, register_predictor_binding_map
 from ..engines.paddle import PaddleDynamicEngine
@@ -59,7 +60,7 @@ register_predictor_binding_map(
     WhisperRunnerPredictor,
     {
         "paddle_dynamic": create_binding_registration(
-            WhisperRunnerPredictor.entities,
+            MODELS,
             **{
                 PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: _build_whisper_runner,
             },

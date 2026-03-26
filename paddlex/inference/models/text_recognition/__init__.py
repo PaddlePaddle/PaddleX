@@ -12,37 +12,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.text_recognition.model_list import MODELS
 from ..bindings import create_binding_registration, register_predictor_binding_map
 from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
-    MODELS,
     TEXT_REC_TRANSFORMERS_MODELS,
     TextRecRunnerPredictor,
     TextRecTransformersPredictor,
 )
 
 
-def _load_ppocrv5_rec():
-    from .modeling import PPOCRV5Rec
+def _load_ppocrv5_mobile_rec():
+    from .modeling import PPOCRV5MobileRec
 
-    return PPOCRV5Rec
+    return PPOCRV5MobileRec
+
+
+def _load_ppocrv5_server_rec():
+    from .modeling import PPOCRV5ServerRec
+
+    return PPOCRV5ServerRec
 
 
 register_predictor_binding_map(
     TextRecRunnerPredictor,
     {
         "paddle_static": MODELS,
-        "paddle_dynamic": create_binding_registration(
-            ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"),
-            **{
-                PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
-                    _load_ppocrv5_rec,
-                    use_safetensors=True,
-                    convert_from_hf=True,
-                    dtype="float32",
-                ),
-            },
+        "paddle_dynamic": (
+            create_binding_registration(
+                ("PP-OCRv5_mobile_rec",),
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppocrv5_mobile_rec,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    ),
+                },
+            ),
+            create_binding_registration(
+                ("PP-OCRv5_server_rec",),
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppocrv5_server_rec,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    ),
+                },
+            ),
         ),
         "hpi": MODELS,
         "onnxruntime": MODELS,

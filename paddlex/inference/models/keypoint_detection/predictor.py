@@ -16,7 +16,6 @@ from typing import Any, List, Optional, Sequence
 
 import numpy as np
 
-from ....modules.keypoint_detection.model_list import MODELS
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
 from ..common import ToBatch
@@ -62,8 +61,6 @@ class KptBatchSampler(ImageBatchSampler):
 
 class KptRunnerPredictor(DetRunnerPredictor):
     """Keypoint detection predictor."""
-
-    entities = MODELS
 
     flip_perm = [  # The left-right joints exchange order list
         [1, 2],

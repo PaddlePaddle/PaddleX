@@ -17,6 +17,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
 
+from pydantic import BaseModel
+
 from ...utils import errors, logging
 from ..utils.official_models import official_models
 from .anomaly_detection import UadPredictor
@@ -150,7 +152,7 @@ def _get_inference_engine(engine: str) -> InferenceEngine:
 
 def normalize_engine_config(
     engine: str,
-    cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+    cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, BaseModel]],
     *,
     model_name: Optional[str] = None,
     device: Optional[str] = None,
@@ -213,7 +215,7 @@ def _select_engine_config_source(
     pp_option,
     hpi_config,
     genai_config,
-) -> Optional[Union[Dict[str, Any], HPIConfig, GenAIConfig]]:
+) -> Optional[Union[Dict[str, Any], PaddlePredictorOption, HPIConfig, GenAIConfig]]:
     if engine_config is not None:
         return engine_config
     if engine == "paddle_static":
@@ -325,7 +327,7 @@ def create_predictor(
     engine: Optional[str] = None,
     engine_config: Optional[Dict[str, Any]] = None,
     batch_size: int = 1,
-    pp_option=None,
+    pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: bool = False,
     hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     genai_config: Optional[Union[Dict[str, Any], GenAIConfig]] = None,
@@ -403,13 +405,13 @@ def create_predictor(
         model_dir_resolved=model_dir_resolved,
     )
 
-    if pp_option is not None and engine != "paddle_static":
+    if engine_config is None and pp_option is not None and engine != "paddle_static":
         logging.warning(
             "`pp_option` only applies to engine='paddle_static'. "
             "For engine=%r, pp_option will be ignored.",
             engine,
         )
-    if hpi_config is not None and engine != "hpi":
+    if engine_config is None and hpi_config is not None and engine != "hpi":
         logging.warning(
             "`hpi_config` only applies to engine='hpi'. "
             "For engine=%r, hpi_config will be ignored.",
@@ -431,10 +433,7 @@ def create_predictor(
     )
     if need_local:
         requested_engine.ensure_model_files(model_dir_resolved)
-    requested_engine.ensure_environment(
-        device=device,
-        engine_config=normalized_engine_config,
-    )
+    requested_engine.ensure_environment()
     if resolved_config and need_local:
         config = resolved_config
     else:

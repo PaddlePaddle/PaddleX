@@ -22,7 +22,9 @@ from typing import Any, Dict, Optional, Tuple, Type, Union
 from pydantic import BaseModel, ValidationError
 
 from ....constants import MODEL_FILE_PREFIX
+from ....utils.device import parse_device
 from ....utils.subclass_register import AutoRegisterABCMetaClass
+from ..bindings import Binding
 from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_static.config import PaddlePredictorOption
 from ..utils.model_paths import LocalModelFormat, get_model_paths
@@ -53,7 +55,7 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
 
     def normalize_config(
         self,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, BaseModel]],
         *,
         model_name: Optional[str] = None,
         device: Optional[str] = None,
@@ -110,13 +112,16 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
                 f"No valid model files were found for engine {self.name!r}."
             )
 
-    def ensure_environment(
-        self,
-        *,
-        device: Optional[str] = None,
-        engine_config: Optional[Dict[str, Any]] = None,
-    ) -> None:
-        del device, engine_config
+    def ensure_environment(self) -> None:
+        """Check that required dependencies are installed."""
+
+    @staticmethod
+    def _apply_device(raw: Dict[str, Any], device: Optional[str]) -> None:
+        """Apply device_type and device_id from a device string into raw config."""
+        if device:
+            device_type, device_ids = parse_device(device)
+            raw["device_type"] = device_type
+            raw["device_id"] = device_ids[0] if device_ids is not None else None
 
     @staticmethod
     def _pp_option_to_engine_config(pp_option: PaddlePredictorOption) -> Dict[str, Any]:
@@ -129,7 +134,7 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
     @classmethod
     def _engine_config_to_dict(
         cls,
-        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, Any]],
+        cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, BaseModel]],
     ) -> Dict[str, Any]:
         if cfg is None:
             return {}
@@ -137,7 +142,7 @@ class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
             return dict(cfg)
         if isinstance(cfg, PaddlePredictorOption):
             return cls._pp_option_to_engine_config(cfg)
-        if hasattr(cfg, "model_dump"):
+        if isinstance(cfg, BaseModel):
             return cfg.model_dump(exclude_none=True, by_alias=True)
         raise TypeError(
             f"`engine_config` must be dict, Pydantic model, or PaddlePredictorOption, "
@@ -158,6 +163,6 @@ class RunnerEngine(InferenceEngine):
         model_dir: Optional[Path],
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
-        binding: Any = None,
+        binding: Optional[Binding] = None,
     ) -> InferenceRunner:
         raise NotImplementedError

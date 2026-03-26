@@ -15,7 +15,7 @@
 
 import math
 import re
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -24,6 +24,22 @@ from ...utils.benchmark import benchmark
 
 if is_dep_available("opencv-contrib-python"):
     import cv2
+
+
+def validate_text_rec_image_array(img: np.ndarray, index: Optional[int] = None) -> None:
+    """Raise ValueError if *img* has zero height or width (invalid for recognition)."""
+    if img.ndim < 2:
+        raise ValueError(
+            f"Text recognition expects images with at least 2 dimensions; "
+            f"got shape {tuple(img.shape)}."
+        )
+    h, w = int(img.shape[0]), int(img.shape[1])
+    if h <= 0 or w <= 0 or img.size == 0:
+        suffix = f" at input index {index}" if index is not None else ""
+        raise ValueError(
+            "Text recognition requires images with positive height and width; "
+            f"got shape {tuple(img.shape)}{suffix}."
+        )
 
 
 @benchmark.timeit
@@ -64,6 +80,8 @@ class OCRReisizeNormImg:
 
     def __call__(self, imgs):
         """apply"""
+        for i, img in enumerate(imgs):
+            validate_text_rec_image_array(img, index=i)
         if self.input_shape is None:
             return [self.resize(img) for img in imgs]
         else:

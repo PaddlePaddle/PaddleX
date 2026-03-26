@@ -15,7 +15,7 @@ PaddleOCR-VL is a SOTA and resource-efficient model tailored for document parsin
 Install PaddlePaddle and PaddleX:
 
 ```shell
-python -m pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+python -m pip install paddlepaddle-gpu==3.3.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 python -m pip install paddlex
 ```
 > For Windows users, please use WSL or a Docker container.

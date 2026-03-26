@@ -16,7 +16,6 @@ import shutil
 import tempfile
 from typing import Any, Dict, Iterator, List, Tuple
 
-from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ....utils.import_guard import import_paddle
@@ -38,8 +37,6 @@ from .result import BEV3DDetResult
 
 class BEVDet3DRunnerPredictor(RunnerPredictor):
     """BEVDet3DRunnerPredictor that inherits from RunnerPredictor."""
-
-    entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)

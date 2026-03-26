@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.image_unwarping.model_list import MODELS
 from ..bindings import create_binding_registration, register_predictor_binding_map
 from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
-    MODELS,
     WARP_TRANSFORMERS_MODELS,
     WarpRunnerPredictor,
     WarpTransformersPredictor,
@@ -34,7 +34,7 @@ register_predictor_binding_map(
     {
         "paddle_static": MODELS,
         "paddle_dynamic": create_binding_registration(
-            WarpRunnerPredictor.entities,
+            MODELS,
             **{
                 PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
                     _load_uvdocnet,
