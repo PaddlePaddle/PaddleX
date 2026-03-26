@@ -14,3 +14,4 @@
 
 from .hgnetv2 import HGNetV2Backbone, HGNetV2ForImageClassification
 from .pplcnet import PPLCNet
+from .pplcnetv3 import PPLCNetV3Backbone
