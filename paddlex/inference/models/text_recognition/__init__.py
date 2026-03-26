@@ -29,20 +29,39 @@ def _load_ppocrv5_rec():
     return PPOCRV5Rec
 
 
+def _load_ppocrv5_server_rec():
+    from .modeling import PPOCRV5ServerRec
+
+    return PPOCRV5ServerRec
+
+
 register_predictor_binding_map(
     TextRecRunnerPredictor,
     {
         "paddle_static": MODELS,
-        "paddle_dynamic": create_binding_registration(
-            ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"),
-            **{
-                PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
-                    _load_ppocrv5_rec,
-                    use_safetensors=True,
-                    convert_from_hf=True,
-                    dtype="float32",
-                ),
-            },
+        "paddle_dynamic": (
+            create_binding_registration(
+                ("PP-OCRv5_mobile_rec",),
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppocrv5_rec,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    ),
+                },
+            ),
+            create_binding_registration(
+                ("PP-OCRv5_server_rec",),
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppocrv5_server_rec,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    ),
+                },
+            ),
         ),
         "hpi": MODELS,
         "onnxruntime": MODELS,

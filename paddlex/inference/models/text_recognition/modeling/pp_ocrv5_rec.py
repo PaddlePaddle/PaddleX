@@ -41,7 +41,6 @@ class PPOCRV5RecConfig(PretrainedConfig):
         class_expand: int = 2048,
         dropout_prob: float = 0.0,
         class_num: int = 1000,
-        lr_mult_list: list = [1.0, 1.0, 1.0, 1.0, 1.0],
         out_indices: list | None = None,
         stage_config: dict | None = None,
         head_list: list | None = None,
