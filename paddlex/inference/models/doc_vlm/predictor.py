@@ -200,7 +200,6 @@ class DocVLMLocalPredictor(LocalModelPredictor):
         Returns:
             dict: A dictionary containing the raw sample information and prediction results for every instance of the batch.
         """
-        # TODO: Sampling settings
         # FIXME: When `skip_special_tokens` is `True`, the results from different backends may differ.
 
         assert all(isinstance(i, dict) for i in data)
