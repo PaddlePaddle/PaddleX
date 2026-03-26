@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .pp_ocrv5_rec import PPOCRV5Rec
+from .pp_ocrv5_mobile_rec import PPOCRV5MobileRec
 from .pp_ocrv5_server_rec import PPOCRV5ServerRec
