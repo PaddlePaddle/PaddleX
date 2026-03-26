@@ -307,9 +307,8 @@ class TextDetTransformersPredictor(TransformersPredictor):
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
         images = [Image.fromarray(img) for img in batch_raw_imgs]
 
-        model_inputs = self.image_processor(
+        model_inputs = self.preprocess(
             images=images,
-            return_tensors="pt",
             limit_side_len=(
                 limit_side_len if limit_side_len is not None else self.limit_side_len
             ),
@@ -318,26 +317,16 @@ class TextDetTransformersPredictor(TransformersPredictor):
                 max_side_limit if max_side_limit is not None else self.max_side_limit
             ),
         )
-        target_sizes = model_inputs["target_sizes"]
-        model_inputs = self._move_to_infer_device(model_inputs)
-
-        import torch
-
-        with torch.inference_mode():
-            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
-
-        predictions = self.image_processor.post_process_object_detection(
+        outputs = self.forward(model_inputs)
+        polys, scores = self.postprocess(
             outputs,
             threshold=thresh if thresh is not None else self.thresh,
-            target_sizes=target_sizes,
+            target_sizes=model_inputs["target_sizes"],
             box_threshold=box_thresh if box_thresh is not None else self.box_thresh,
             unclip_ratio=(
                 unclip_ratio if unclip_ratio is not None else self.unclip_ratio
             ),
         )
-
-        polys = [self._normalize_dt_polys(pred["boxes"]) for pred in predictions]
-        scores = [self._normalize_dt_scores(pred["scores"]) for pred in predictions]
 
         return {
             "input_path": batch_data.input_paths,
@@ -346,3 +335,19 @@ class TextDetTransformersPredictor(TransformersPredictor):
             "dt_polys": polys,
             "dt_scores": scores,
         }
+
+    def postprocess(
+        self, outputs, threshold, target_sizes, box_threshold, unclip_ratio
+    ):
+        predictions = self.image_processor.post_process_object_detection(
+            outputs,
+            threshold=threshold,
+            target_sizes=target_sizes,
+            box_threshold=box_threshold,
+            unclip_ratio=unclip_ratio,
+        )
+
+        polys = [self._normalize_dt_polys(pred["boxes"]) for pred in predictions]
+        scores = [self._normalize_dt_scores(pred["scores"]) for pred in predictions]
+
+        return polys, scores

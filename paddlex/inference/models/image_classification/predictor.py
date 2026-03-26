@@ -243,17 +243,26 @@ class ClasTransformersPredictor(TransformersPredictor):
     def process(
         self, batch_data: List[Union[str, np.ndarray]], topk: Optional[int] = None
     ) -> Dict[str, Any]:
-        id2label = self._resolve_id2label()
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
         images = [Image.fromarray(img) for img in batch_raw_imgs]
-        model_inputs = self.image_processor(images=images, return_tensors="pt")
-        model_inputs = self._move_to_infer_device(model_inputs)
 
+        model_inputs = self.preprocess(images=images)
+        outputs = self.forward(model_inputs)
+        indexes, batch_scores, batch_label_names = self.postprocess(outputs, topk)
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "class_ids": indexes,
+            "scores": batch_scores,
+            "label_names": batch_label_names,
+        }
+
+    def postprocess(self, outputs, topk):
         import torch
 
-        with torch.inference_mode():
-            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
-
+        id2label = self._resolve_id2label()
         logits = self._resolve_logits(outputs)
         probs = torch.softmax(logits, dim=-1).detach().cpu().numpy()
         k = int(topk if topk is not None else self.topk)
@@ -265,11 +274,4 @@ class ClasTransformersPredictor(TransformersPredictor):
             [id2label.get(int(i), str(i)) for i in row] for row in indexes
         ]
 
-        return {
-            "input_path": batch_data.input_paths,
-            "page_index": batch_data.page_indexes,
-            "input_img": batch_raw_imgs,
-            "class_ids": indexes,
-            "scores": batch_scores,
-            "label_names": batch_label_names,
-        }
+        return indexes, batch_scores, batch_label_names
