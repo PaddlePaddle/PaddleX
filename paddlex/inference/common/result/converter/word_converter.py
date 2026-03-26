@@ -16,8 +16,25 @@
 
 from __future__ import annotations
 
+import math
 from copy import deepcopy
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
+
+# Block type labels that represent image-like content
+_IMAGE_LABELS = ("chart", "image", "seal")
+
+
+def _get_image_size(abs_path: str) -> Optional[Tuple[int, int]]:
+    """Return (width, height) in pixels for the image at abs_path, or None on error."""
+    try:
+        from PIL import Image as _PILImage
+
+        img = _PILImage.open(abs_path)
+        size = img.size
+        img.close()
+        return size
+    except Exception:
+        return None
 
 
 def _set_paragraph_style(para, config):
@@ -263,7 +280,7 @@ def _write_block(
     config = block.get("config") or {}
 
     # --- image/chart/seal ---
-    if label in ["chart", "image", "seal"]:
+    if label in _IMAGE_LABELS:
         image_name = block.get("content")
         if not image_name:
             return
@@ -286,19 +303,13 @@ def _write_block(
                 )
                 # Apply max_height_emu constraint (aspect-ratio preserving)
                 if max_height_emu and max_height_emu > 0:
-                    try:
-                        from PIL import Image as _PILImage
-
-                        _img = _PILImage.open(abs_image_path)
-                        natural_w, natural_h = _img.size
-                        _img.close()
-                        if natural_w > 0 and natural_h > 0:
-                            rendered_h = int(img_width * natural_h / natural_w)
-                            if rendered_h > max_height_emu:
-                                img_width = int(max_height_emu * natural_w / natural_h)
-                                img_width = max(Inches(0.5), img_width)
-                    except Exception:
-                        pass
+                    dims = _get_image_size(abs_image_path)
+                    if dims:
+                        natural_w, natural_h = dims
+                        rendered_h = int(img_width * natural_h / natural_w)
+                        if rendered_h > max_height_emu:
+                            img_width = int(max_height_emu * natural_w / natural_h)
+                            img_width = max(Inches(0.5), img_width)
                 run.add_picture(abs_image_path, width=img_width)
             else:
                 img_width = max(1.0, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
@@ -831,7 +842,9 @@ def _compute_vertical_spacing(blocks, scale_y):
     return spacings
 
 
-def _estimate_block_height(block, column_width_emu, abs_image_paths, scale_x, scale_y):
+def _estimate_block_height(
+    block, column_width_emu, abs_image_paths, scale_x, scale_y, original_image_width=0
+):
     """Estimate the rendered height of a single block in Word (EMU).
 
     Args:
@@ -840,11 +853,13 @@ def _estimate_block_height(block, column_width_emu, abs_image_paths, scale_x, sc
         abs_image_paths: Dict mapping image name to absolute path.
         scale_x: Pixels-to-EMU X factor.
         scale_y: Pixels-to-EMU Y factor.
+        original_image_width: Original page width in pixels, used for image
+            aspect-ratio calculation (same value as passed to _write_block).
 
     Returns:
         int: Estimated height in EMU.
     """
-    import math
+    from docx.shared import Inches
 
     label = block.get("type", "")
     bbox = block.get("bbox")
@@ -855,28 +870,26 @@ def _estimate_block_height(block, column_width_emu, abs_image_paths, scale_x, sc
 
     LINE_HEIGHT_FACTOR = 1.2  # Word line height ≈ font_size × 1.2
 
-    if label in ("chart", "image", "seal"):
+    if label in _IMAGE_LABELS:
         image_name = block.get("content")
         abs_path = abs_image_paths.get(image_name) if image_name else None
         if abs_path and bbox and column_width_emu > 0:
-            try:
-                from PIL import Image as _PILImage
-
-                _img = _PILImage.open(abs_path)
-                natural_w, natural_h = _img.size
-                _img.close()
-                # Replicate _write_block width calculation
-                original_image_width_px = max(1, int(column_width_emu / scale_x))
-                ratio = (bbox[2] - bbox[0]) / max(original_image_width_px, 1)
-                from docx.shared import Inches
-
+            dims = _get_image_size(abs_path)
+            if dims:
+                natural_w, natural_h = dims
+                # Use original_image_width (page pixel width) as denominator — same
+                # as _write_block — so the ratio is a fraction of the page, not column.
+                ref_width = (
+                    original_image_width
+                    if original_image_width > 0
+                    else max(1, int(column_width_emu / scale_x))
+                )
+                ratio = (bbox[2] - bbox[0]) / max(ref_width, 1)
                 img_width = max(
                     Inches(1.0), min(int(ratio * column_width_emu), column_width_emu)
                 )
                 rendered_h = int(img_width * natural_h / max(natural_w, 1))
                 return max(rendered_h, 914400 // 10)  # min 0.1"
-            except Exception:
-                pass
         # Fallback: bbox-based
         if bbox:
             return int((bbox[3] - bbox[1]) * scale_y)
@@ -919,8 +932,39 @@ def _estimate_block_height(block, column_width_emu, abs_image_paths, scale_x, sc
     return int(num_lines * font_size_emu * LINE_HEIGHT_FACTOR)
 
 
+def _col_widths_emu_from_gaps(x_gaps, num_cols, usable_width_emu, page_width_px):
+    """Compute per-column widths in EMU from _x_gaps gap data.
+
+    Args:
+        x_gaps: List of (gap_start_px, gap_end_px) tuples (column separator gaps).
+        num_cols: Expected number of columns.
+        usable_width_emu: Total usable page width in EMU.
+        page_width_px: Original page width in pixels.
+
+    Returns:
+        List[int]: Column widths in EMU, length == num_cols.
+        Falls back to equal-width split if gaps are absent or inconsistent.
+    """
+    if x_gaps and len(x_gaps) == num_cols - 1:
+        col_edges = []
+        prev_end = 0
+        for gap_start, gap_end in x_gaps:
+            col_edges.append((prev_end, gap_start))
+            prev_end = gap_end + 1
+        col_edges.append((prev_end, page_width_px))
+        col_widths_px = [max(1, e - s) for s, e in col_edges]
+        gap_widths_px = [g[1] - g[0] for g in x_gaps]
+        total_px = sum(col_widths_px) + sum(gap_widths_px)
+        if total_px > 0:
+            px_to_emu = usable_width_emu / total_px
+            return [int(w * px_to_emu) for w in col_widths_px]
+    # Equal-width fallback
+    col_w = usable_width_emu // max(num_cols, 1)
+    return [col_w] * num_cols
+
+
 def _estimate_page_content_height(
-    segments, page_metrics, abs_image_paths, scale_y, x_gap_cols=None
+    segments, page_metrics, abs_image_paths, scale_y, original_image_width=0
 ):
     """Estimate total vertical content height for one page (EMU).
 
@@ -929,8 +973,8 @@ def _estimate_page_content_height(
         page_metrics: Dict from _build_page_metrics().
         abs_image_paths: Dict mapping image name to absolute path.
         scale_y: Pixels-to-EMU Y factor.
-        x_gap_cols: Optional list of (col_widths_emu, gap_widths_emu) per segment,
-            for accurate multi-column width. If None, use equal-width split.
+        original_image_width: Original page width in pixels (passed through to
+            _estimate_block_height for accurate image aspect-ratio calculation).
 
     Returns:
         int: Estimated total height in EMU.
@@ -939,7 +983,7 @@ def _estimate_page_content_height(
     usable_width_emu = page_metrics["usable_width_emu"]
     total = 0
 
-    for seg_idx, segment in enumerate(segments):
+    for segment in segments:
         seg_type = segment["type"]
 
         if seg_type == "single":
@@ -948,7 +992,12 @@ def _estimate_page_content_height(
             seg_height = 0
             for block, sp in zip(blocks, spacings):
                 seg_height += _estimate_block_height(
-                    block, usable_width_emu, abs_image_paths, scale_x, scale_y
+                    block,
+                    usable_width_emu,
+                    abs_image_paths,
+                    scale_x,
+                    scale_y,
+                    original_image_width,
                 )
                 if sp:
                     seg_height += sp
@@ -958,32 +1007,12 @@ def _estimate_page_content_height(
             columns = segment["columns"]
             num_cols = len(columns)
 
-            # Compute per-column width from _x_gaps if available
-            x_gaps = segment.get("_x_gaps", [])
-            col_widths_emu = []
-            if x_gaps and len(x_gaps) == num_cols - 1:
-                # Replicate the same logic as convert_v2()
-                page_width_px = max(
-                    (b["bbox"][2] for col in columns for b in col if b.get("bbox")),
-                    default=1000,
-                )
-                col_edges = []
-                prev_end = 0
-                for gap_start, gap_end in x_gaps:
-                    col_edges.append((prev_end, gap_start))
-                    prev_end = gap_end + 1
-                col_edges.append((prev_end, page_width_px))
-                col_widths_px = [max(1, e - s) for s, e in col_edges]
-                gap_widths_px = [g[1] - g[0] for g in x_gaps]
-                total_px = sum(col_widths_px) + sum(gap_widths_px)
-                if total_px > 0:
-                    px_to_emu = usable_width_emu / total_px
-                    col_widths_emu = [int(w * px_to_emu) for w in col_widths_px]
-
-            if not col_widths_emu:
-                # Equal-width fallback
-                col_w = usable_width_emu // max(num_cols, 1)
-                col_widths_emu = [col_w] * num_cols
+            col_widths_emu = _col_widths_emu_from_gaps(
+                segment.get("_x_gaps", []),
+                num_cols,
+                usable_width_emu,
+                original_image_width,
+            )
 
             col_heights = []
             for col_idx, col_blocks in enumerate(columns):
@@ -996,7 +1025,12 @@ def _estimate_page_content_height(
                 ch = 0
                 for block, sp in zip(col_blocks, spacings):
                     ch += _estimate_block_height(
-                        block, col_w, abs_image_paths, scale_x, scale_y
+                        block,
+                        col_w,
+                        abs_image_paths,
+                        scale_x,
+                        scale_y,
+                        original_image_width,
                     )
                     if sp:
                         ch += sp
@@ -1287,7 +1321,7 @@ class WordConverter:
             # Word's text reflow (font metrics, column-width-induced line wrapping, etc.).
             usable_height_emu = page_metrics["usable_height_emu"]
             estimated_height = _estimate_page_content_height(
-                segments, page_metrics, abs_image_paths, scale_y
+                segments, page_metrics, abs_image_paths, scale_y, original_image_width
             )
             SAFETY_MARGIN = 0.95  # keep 5% buffer to avoid edge-case overflow
             if estimated_height > usable_height_emu * SAFETY_MARGIN:
@@ -1322,7 +1356,6 @@ class WordConverter:
                             col_edges.append((prev_end, gap_start))
                             prev_end = gap_end + 1
                         col_edges.append((prev_end, page_width))
-
                         col_widths_px = [e - s for s, e in col_edges]
                         gap_widths_px = [g[1] - g[0] for g in x_gaps]
                         total_px = sum(col_widths_px) + sum(gap_widths_px)
@@ -1382,11 +1415,12 @@ class WordConverter:
                                     abs_image_paths,
                                     scale_x,
                                     scale_y,
+                                    original_image_width,
                                 )
                                 * img_height_scale
                             )
                             if img_height_scale < 1.0
-                            and block.get("type") in ("chart", "image", "seal")
+                            and block.get("type") in _IMAGE_LABELS
                             else None
                         )
                         _write_block(
@@ -1420,11 +1454,12 @@ class WordConverter:
                                         abs_image_paths,
                                         scale_x,
                                         scale_y,
+                                        original_image_width,
                                     )
                                     * img_height_scale
                                 )
                                 if img_height_scale < 1.0
-                                and block.get("type") in ("chart", "image", "seal")
+                                and block.get("type") in _IMAGE_LABELS
                                 else None
                             )
                             _write_block(
