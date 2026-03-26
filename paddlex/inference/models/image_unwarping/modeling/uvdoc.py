@@ -244,10 +244,10 @@ class UVDocPointPositions2D(nn.Layer):
 class UVDocBackbone(nn.Layer):
     """UVDoc backbone with ResNet and bridge modules for feature extraction."""
 
-    def __init__(self, config):
+    def __init__(self, backbone_config):
         super().__init__()
-        self.resnet = UVDocResNet(config)
-        self.bridge = UVDocBridge(config)
+        self.resnet = UVDocResNet(backbone_config)
+        self.bridge = UVDocBridge(backbone_config)
 
     def forward(self, pixel_values):
         hidden_states = self.resnet(pixel_values)
@@ -260,7 +260,7 @@ class UVDocHead(nn.Layer):
 
     def __init__(self, config):
         super().__init__()
-        num_bridge_layers = len(config.stage_configs)
+        num_bridge_layers = len(config.backbone_config.stage_configs)
 
         self.bridge_connector = UVDocConvLayer(
             in_channels=config.bridge_connector[0] * num_bridge_layers,
@@ -285,7 +285,7 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
 
     def __init__(self, config: UVDocConfig):
         super().__init__(config)
-        self.backbone = UVDocBackbone(config)
+        self.backbone = UVDocBackbone(config.backbone_config)
         self.head = UVDocHead(config)
         self.upsample_size = config.upsample_size
         self.upsample_mode = config.upsample_mode
