@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,35 +8,35 @@
       
       
       
-        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/other_devices_support/multi_devices_use_guide.html">
+        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/en/other_devices_support/paddlepaddle_install_P800.html">
       
       
-        <link rel="prev" href="../pipeline_deploy/packaging.html">
+        <link rel="prev" href="paddlepaddle_install_XPU.html">
       
       
-        <link rel="next" href="paddlepaddle_install_DCU.html">
+        <link rel="next" href="paddlepaddle_install_GCU.html">
       
       
         
-          <link rel="alternate" href="multi_devices_use_guide.html" hreflang="zh">
+          <link rel="alternate" href="../../other_devices_support/paddlepaddle_install_P800.html" hreflang="zh">
         
-          <link rel="alternate" href="../en/other_devices_support/multi_devices_use_guide.html" hreflang="en">
+          <link rel="alternate" href="paddlepaddle_install_P800.html" hreflang="en">
         
       
       
-      <link rel="icon" href="../assets/favicon.png">
+      <link rel="icon" href="../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>多硬件使用指南 - PaddleX 文档</title>
+        <title>昆仑芯 Kunlunxin P800 飞桨安装教程 - PaddleX Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -59,7 +59,7 @@
     
       <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -94,8 +94,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#paddlex" class="md-skip">
-          跳转至
+        <a href="#kunlunxin-xpu-paddlepaddle-installation-tutorial" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -109,12 +109,12 @@
             <div class="md-banner__inner md-grid md-typeset">
               
 You're not viewing the latest version.
-<a href="../..">
+<a href="../../..">
     <strong>Click here to go to latest.</strong>
 </a>
 
             </div>
-            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL(".."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
           </aside>
         
       </div>
@@ -125,8 +125,8 @@ You're not viewing the latest version.
   
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
-    <a href="../index.html" title="PaddleX 文档" class="md-header__button md-logo" aria-label="PaddleX 文档" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="PaddleX Documentation" class="md-header__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
@@ -145,13 +145,13 @@ You're not viewing the latest version.
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            PaddleX 文档
+            PaddleX Documentation
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              多硬件使用指南
+              昆仑芯 Kunlunxin P800 飞桨安装教程
             
           </span>
         </div>
@@ -191,20 +191,20 @@ You're not viewing the latest version.
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="选择当前语言">
+    <button class="md-header__button md-icon" aria-label="Select language">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="multi_devices_use_guide.html" hreflang="zh" class="md-select__link">
+            <a href="../../other_devices_support/paddlepaddle_install_P800.html" hreflang="zh" class="md-select__link">
               简体中文
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="../en/other_devices_support/multi_devices_use_guide.html" hreflang="en" class="md-select__link">
+            <a href="paddlepaddle_install_P800.html" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -225,21 +225,21 @@ You're not viewing the latest version.
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -252,7 +252,7 @@ You're not viewing the latest version.
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -264,7 +264,7 @@ You're not viewing the latest version.
     
     
       <div class="md-header__source">
-        <a href="https://github.com/PaddlePaddle/PaddleX" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/PaddlePaddle/PaddleX" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
@@ -279,7 +279,7 @@ You're not viewing the latest version.
   
     
       
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -316,7 +316,7 @@ You're not viewing the latest version.
   
     
   
-  安装
+  Installation
 
         </a>
       </li>
@@ -338,7 +338,7 @@ You're not viewing the latest version.
   
     
   
-  产线使用教程
+  Pipeline Tutorials
 
         </a>
       </li>
@@ -367,7 +367,7 @@ You're not viewing the latest version.
   
     
   
-  单功能模块使用教程
+  Module Tutorials
 
         </a>
       </li>
@@ -392,7 +392,7 @@ You're not viewing the latest version.
   
     
   
-  模型产线部署
+  Pipeline Deploy
 
         </a>
       </li>
@@ -416,7 +416,7 @@ You're not viewing the latest version.
   
     
   
-  多硬件使用
+  Multi-Device Usage
 
         </a>
       </li>
@@ -445,7 +445,7 @@ You're not viewing the latest version.
   
     
   
-  数据标注教程
+  Data Annotation Tutorials
 
         </a>
       </li>
@@ -470,7 +470,7 @@ You're not viewing the latest version.
   
     
   
-  产线列表
+  Pipeline List
 
         </a>
       </li>
@@ -492,7 +492,7 @@ You're not viewing the latest version.
   
     
   
-  模型列表
+  Model List
 
         </a>
       </li>
@@ -514,7 +514,7 @@ You're not viewing the latest version.
   
     
   
-  产业实践教程&范例
+  Practical Tutorials & Examples
 
         </a>
       </li>
@@ -534,7 +534,7 @@ You're not viewing the latest version.
   
     
   
-  可视化工具
+  VisualDL
 
       </a>
     </li>
@@ -572,7 +572,7 @@ You're not viewing the latest version.
   
     
   
-  近期更新
+  Recently Update
 
       </a>
     </li>
@@ -605,9 +605,9 @@ You're not viewing the latest version.
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../index.html" title="PaddleX 文档" class="md-nav__button md-logo" aria-label="PaddleX 文档" data-md-component="logo">
+    <a href="../index.html" title="PaddleX Documentation" class="md-nav__button md-logo" aria-label="PaddleX Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
@@ -618,11 +618,11 @@ You're not viewing the latest version.
 </svg>
 
     </a>
-    PaddleX 文档
+    PaddleX Documentation
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/PaddlePaddle/PaddleX" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/PaddlePaddle/PaddleX" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
@@ -700,7 +700,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    安装
+    Installation
   
 
     
@@ -716,7 +716,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    安装
+    Installation
   
 
           </label>
@@ -736,7 +736,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    安装PaddlePaddle
+    PaddlePaddle Install
   
 
     
@@ -764,7 +764,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    安装PaddleX
+    PaddleX Install
   
 
     
@@ -837,7 +837,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    产线使用教程
+    Pipeline Tutorials
   
 
     
@@ -853,7 +853,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    产线使用教程
+    Pipeline Tutorials
   
 
           </label>
@@ -873,7 +873,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    概述
+    Overview
   
 
     
@@ -925,7 +925,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文本图像智能分析
+    Information Extraction
   
 
     
@@ -941,7 +941,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    文本图像智能分析
+    Information Extraction
   
 
           </label>
@@ -961,7 +961,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文档场景信息抽取v3产线
+    PP-ChatOCRv3-doc
   
 
     
@@ -989,7 +989,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文档场景信息抽取v4产线
+    PP-ChatOCRv4-doc
   
 
     
@@ -1099,7 +1099,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用OCR产线
+    OCR
   
 
     
@@ -1127,7 +1127,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用表格识别产线
+    General Table Recognition
   
 
     
@@ -1155,7 +1155,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用表格识别v2产线
+    General Table Recognition V2
   
 
     
@@ -1183,7 +1183,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用版面解析产线
+    General Layout Parsing
   
 
     
@@ -1211,7 +1211,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用版面解析v3产线
+    PP-StructureV3
   
 
     
@@ -1239,7 +1239,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    公式识别产线
+    Formula Recognition
   
 
     
@@ -1267,7 +1267,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    印章文本识别产线
+    Seal Recognition
   
 
     
@@ -1295,7 +1295,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文档图像预处理产线
+    Document Image Preprocessing
   
 
     
@@ -1323,7 +1323,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleOCR-VL产线
+    PaddleOCR-VL
   
 
     
@@ -1411,7 +1411,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    计算机视觉
+    Computer Vision
   
 
     
@@ -1427,7 +1427,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    计算机视觉
+    Computer Vision
   
 
           </label>
@@ -1447,7 +1447,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用图像分类
+    General Image Classification
   
 
     
@@ -1475,7 +1475,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用目标检测
+    General Object Detection
   
 
     
@@ -1503,7 +1503,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用实例分割
+    General Instance Segmentation
   
 
     
@@ -1531,7 +1531,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用语义分割
+    General Semantic Segmentation
   
 
     
@@ -1559,7 +1559,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像多标签分类
+    Image Multi-label Classification
   
 
     
@@ -1587,7 +1587,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    小目标检测
+    Small Object Detection
   
 
     
@@ -1615,7 +1615,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像异常检测
+    Image Anomaly Detection
   
 
     
@@ -1643,7 +1643,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    3D多模态融合检测
+    3D Multi-modal Fusion Detection
   
 
     
@@ -1671,7 +1671,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    人体关键点检测
+    Human Keypoint Detection
   
 
     
@@ -1699,7 +1699,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    开放词汇检测
+    Open Vocabulary Detection
   
 
     
@@ -1727,7 +1727,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    开放词汇分割
+    Open Vocabulary Segmentation
   
 
     
@@ -1755,7 +1755,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    旋转目标检测
+    Rotated Object Detection
   
 
     
@@ -1783,7 +1783,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用图像识别
+    Image Feature
   
 
     
@@ -1811,7 +1811,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    行人属性识别
+    Pedestrian Attribute Recognition
   
 
     
@@ -1839,7 +1839,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    车辆属性识别
+    Vehicle Attribute Recognition
   
 
     
@@ -1867,7 +1867,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    人脸识别
+    Face Feature
   
 
     
@@ -1929,7 +1929,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序分析
+    Time Series Analysis
   
 
     
@@ -1945,7 +1945,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    时序分析
+    Time Series Analysis
   
 
           </label>
@@ -1965,7 +1965,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序预测产线
+    Time Series Forecasting
   
 
     
@@ -1993,7 +1993,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序异常检测产线
+    Time Series Anomaly Detection
   
 
     
@@ -2021,7 +2021,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序分类产线
+    Time Series Classification
   
 
     
@@ -2079,7 +2079,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    语音处理
+    Speech
   
 
     
@@ -2095,7 +2095,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    语音处理
+    Speech
   
 
           </label>
@@ -2115,7 +2115,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    多语种语音识别
+    Multilingual Speech Recognition
   
 
     
@@ -2175,7 +2175,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    视频分析
+    Video
   
 
     
@@ -2191,7 +2191,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    视频分析
+    Video
   
 
           </label>
@@ -2211,7 +2211,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用视频分类
+    General Video Classification
   
 
     
@@ -2239,7 +2239,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    通用视频检测
+    General Video Detection
   
 
     
@@ -2397,7 +2397,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    说明文件
+    Instructions
   
 
     
@@ -2413,7 +2413,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    说明文件
+    Instructions
   
 
           </label>
@@ -2433,7 +2433,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线命令行使用说明
+    PaddleX Pipeline CLI Usage
   
 
     
@@ -2461,7 +2461,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线Python脚本使用说明
+    PaddleX Pipeline Python API Usage
   
 
     
@@ -2600,7 +2600,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    单功能模块使用教程
+    Module Tutorials
   
 
     
@@ -2616,7 +2616,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    单功能模块使用教程
+    Module Tutorials
   
 
           </label>
@@ -2714,7 +2714,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文本检测模块
+    Text Detection
   
 
     
@@ -2742,7 +2742,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    印章文本检测模块
+    Seal Detection
   
 
     
@@ -2770,7 +2770,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文本识别模块
+    Text Recognition
   
 
     
@@ -2798,7 +2798,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    版面区域检测模块
+    Layout Detection
   
 
     
@@ -2826,7 +2826,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    表格结构识别模块
+    Table Structure Recognition
   
 
     
@@ -2854,7 +2854,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    表格单元格检测模块
+    Table Cell Detection
   
 
     
@@ -2882,7 +2882,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    表格分类模块
+    Table Classification
   
 
     
@@ -2910,7 +2910,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文档图像方向分类
+    Document Image Orientation Classification
   
 
     
@@ -2938,7 +2938,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文本图像矫正模块
+    Text Image Unwarping
   
 
     
@@ -2966,7 +2966,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文本行方向分类
+    Text Line Orientation Classification
   
 
     
@@ -2994,7 +2994,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    公式识别模块
+    Formula Recognition
   
 
     
@@ -3058,7 +3058,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像分类
+    Image Classification
   
 
     
@@ -3074,7 +3074,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    图像分类
+    Image Classification
   
 
           </label>
@@ -3094,7 +3094,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像分类模块
+    Image Classification
   
 
     
@@ -3122,7 +3122,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像多标签分类模块
+    Image Multi-label Classification
   
 
     
@@ -3150,7 +3150,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    行人属性识别模块
+    Pedestrian Attribute Recognition
   
 
     
@@ -3178,7 +3178,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    车辆属性识别模块
+    Vehicle Attribute Recognition
   
 
     
@@ -3238,7 +3238,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像特征
+    Image Features
   
 
     
@@ -3254,7 +3254,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    图像特征
+    Image Features
   
 
           </label>
@@ -3274,7 +3274,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像特征模块
+    Image Feature
   
 
     
@@ -3302,7 +3302,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    人脸特征模块
+    Face Feature
   
 
     
@@ -3374,7 +3374,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    目标检测
+    Object Detection
   
 
     
@@ -3390,7 +3390,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    目标检测
+    Object Detection
   
 
           </label>
@@ -3410,7 +3410,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    目标检测模块
+    Object Detection
   
 
     
@@ -3438,7 +3438,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    小目标检测模块
+    Small Object Detection
   
 
     
@@ -3466,7 +3466,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    人脸检测模块
+    Face Detection
   
 
     
@@ -3494,7 +3494,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    主体检测模块
+    Main Body Detection
   
 
     
@@ -3522,7 +3522,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    行人检测模块
+    Human Detection
   
 
     
@@ -3550,7 +3550,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    车辆检测模块
+    Vehicle Detection
   
 
     
@@ -3578,7 +3578,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    人体关键点检测模块
+    Human Keypoint Detection
   
 
     
@@ -3606,7 +3606,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    开放词汇目标检测模块
+    Open-Vocabulary Object Detection
   
 
     
@@ -3670,7 +3670,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像分割
+    Image Segmentation
   
 
     
@@ -3686,7 +3686,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    图像分割
+    Image Segmentation
   
 
           </label>
@@ -3706,7 +3706,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    语义分割模块
+    Semantic Segmentation
   
 
     
@@ -3734,7 +3734,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    实例分割模块
+    Instance Segmentation
   
 
     
@@ -3762,7 +3762,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像异常检测模块
+    Image Anomaly Detection
   
 
     
@@ -3790,7 +3790,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    开放词汇目标分割模块
+    Open-Vocabulary Segmentation
   
 
     
@@ -3852,7 +3852,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序分析
+    Time Series Analysis
   
 
     
@@ -3868,7 +3868,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    时序分析
+    Time Series Analysis
   
 
           </label>
@@ -3888,7 +3888,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序预测模块
+    Time Series Forecasting
   
 
     
@@ -3916,7 +3916,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序异常检测模块
+    Time Series Anomaly Detection
   
 
     
@@ -3944,7 +3944,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序分类模块
+    Time Series Classification
   
 
     
@@ -4002,7 +4002,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    语音识别
+    Speech
   
 
     
@@ -4018,7 +4018,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    语音识别
+    Speech
   
 
           </label>
@@ -4038,7 +4038,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    多语种语音识别模块
+    Multilingual Speech Recognition Task
   
 
     
@@ -4096,7 +4096,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    3D检测
+    3D
   
 
     
@@ -4112,7 +4112,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    3D检测
+    3D
   
 
           </label>
@@ -4132,7 +4132,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    BEV融合3D检测模块
+    3D Multimodal Fusion Detection
   
 
     
@@ -4228,7 +4228,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文档类视觉语言模型模块
+    Document Vision-Language Model
   
 
     
@@ -4320,7 +4320,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    说明文件
+    Instructions
   
 
     
@@ -4336,7 +4336,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    说明文件
+    Instructions
   
 
           </label>
@@ -4356,7 +4356,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX单模型Python脚本使用说明
+    PaddleX Module Python API Usage
   
 
     
@@ -4384,7 +4384,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX通用模型配置文件参数说明
+    PaddleX Common Module Config Parameters
   
 
     
@@ -4412,7 +4412,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX时序任务模型配置文件参数说明
+    PaddleX Time Series Module Config Parameters
   
 
     
@@ -4513,7 +4513,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    模型产线部署
+    Pipeline Deploy
   
 
     
@@ -4529,7 +4529,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    模型产线部署
+    Pipeline Deploy
   
 
           </label>
@@ -4549,7 +4549,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    高性能推理
+    High Performance Inference
   
 
     
@@ -4577,7 +4577,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    服务化部署
+    Serving
   
 
     
@@ -4605,7 +4605,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    端侧部署
+    On-Device Deployment
   
 
     
@@ -4633,7 +4633,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    获取 ONNX 模型
+    Obtaining ONNX Models
   
 
     
@@ -4661,7 +4661,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    打包PaddleX项目
+    Package PaddleX Projects
   
 
     
@@ -4723,7 +4723,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    多硬件使用
+    Multi-Device Usage
   
 
     
@@ -4739,7 +4739,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    多硬件使用
+    Multi-Device Usage
   
 
           </label>
@@ -4749,44 +4749,17 @@ You're not viewing the latest version.
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    多硬件使用指南
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="multi_devices_use_guide.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="multi_devices_use_guide.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    多硬件使用指南
+    Multi-Device Usage Guide
   
 
     
@@ -4795,104 +4768,6 @@ You're not viewing the latest version.
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1、安装
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1、安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-paddlepaddle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.1 PaddlePaddle安装
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-paddlex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2 PaddleX安装
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.2 PaddleX安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#121-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.1 Wheel包安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#122" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.2 插件安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2、使用
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -4902,8 +4777,10 @@ You're not viewing the latest version.
                 
   
   
+    
   
   
+  
     
     
       
@@ -4931,13 +4808,11 @@ You're not viewing the latest version.
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
         
           
           <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
@@ -4947,7 +4822,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    飞桨多硬件安装
+    PaddlePaddle Installation on Multiple Devices
   
 
     
@@ -4958,12 +4833,12 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6_2">
             <span class="md-nav__icon md-icon"></span>
             
   
-    飞桨多硬件安装
+    PaddlePaddle Installation on Multiple Devices
   
 
           </label>
@@ -4983,7 +4858,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    海光 DCU 飞桨安装教程
+    HYGON DCU PaddlePaddle Installation Guide
   
 
     
@@ -5011,7 +4886,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    寒武纪 MLU 飞桨安装教程
+    Cambricon MLU PaddlePaddle Installation Guide
   
 
     
@@ -5039,7 +4914,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    昇腾 NPU 飞桨安装教程
+    Ascend NPU PaddlePaddle Installation Guide
   
 
     
@@ -5067,7 +4942,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    昆仑芯 Kunlunxin 2 飞桨安装教程
+    Kunlunxin 2 PaddlePaddle Installation Guide
   
 
     
@@ -5085,10 +4960,37 @@ You're not viewing the latest version.
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="paddlepaddle_install_P800.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    昆仑芯 Kunlunxin P800 飞桨安装教程
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="paddlepaddle_install_P800.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -5104,6 +5006,48 @@ You're not viewing the latest version.
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-docker-environment-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Docker Environment Preparation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-install-paddle-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Install Paddle Package
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -5123,7 +5067,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    燧原 GCU 飞桨安装教程
+    Enflame GCU PaddlePaddle Installation Guide
   
 
     
@@ -5192,7 +5136,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    数据标注教程
+    Data Annotation Tutorials
   
 
     
@@ -5208,7 +5152,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    数据标注教程
+    Data Annotation Tutorials
   
 
           </label>
@@ -5260,7 +5204,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    计算机视觉
+    Computer Vision
   
 
     
@@ -5276,7 +5220,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    计算机视觉
+    Computer Vision
   
 
           </label>
@@ -5296,7 +5240,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像分类任务模块
+    Image Classification Task
   
 
     
@@ -5324,7 +5268,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像特征任务模块
+    Image Feature Task
   
 
     
@@ -5352,7 +5296,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    实例分割任务模块
+    Instance Segmentation Task
   
 
     
@@ -5380,7 +5324,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    图像多标签分类
+    Image Multi-label Classification
   
 
     
@@ -5408,7 +5352,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    目标检测任务模块
+    Object Detection Task
   
 
     
@@ -5436,7 +5380,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    语义分割任务模块
+    Semantic Segmentation Task
   
 
     
@@ -5532,7 +5476,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    表格识别任务模块
+    Table Recognition Task
   
 
     
@@ -5560,7 +5504,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    文本检测/识别任务模块
+    Text Detection/Recognition Task
   
 
     
@@ -5622,7 +5566,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序分析
+    Time Series Analysis
   
 
     
@@ -5638,7 +5582,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    时序分析
+    Time Series Analysis
   
 
           </label>
@@ -5658,7 +5602,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序异常检测任务模块
+    Time Series Anomaly Detection Task
   
 
     
@@ -5686,7 +5630,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序分类任务模块
+    Time Series Classification Task
   
 
     
@@ -5714,7 +5658,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    时序预测任务模块
+    Time Series Forecasting Task
   
 
     
@@ -5787,7 +5731,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    产线列表
+    Pipeline List
   
 
     
@@ -5803,7 +5747,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    产线列表
+    Pipeline List
   
 
           </label>
@@ -5823,7 +5767,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线列表(CPU/GPU)
+    PaddleX Pipeline List (CPU/GPU)
   
 
     
@@ -5851,7 +5795,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线列表(DCU)
+    PaddleX Pipeline List (DCU)
   
 
     
@@ -5879,7 +5823,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线列表(MLU)
+    PaddleX Pipeline List (MLU)
   
 
     
@@ -5907,7 +5851,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线列表(NPU)
+    PaddleX Pipeline List (NPU)
   
 
     
@@ -5935,7 +5879,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX产线列表(XPU)
+    PaddleX Pipeline List (XPU)
   
 
     
@@ -6002,7 +5946,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    模型列表
+    Model List
   
 
     
@@ -6018,7 +5962,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    模型列表
+    Model List
   
 
           </label>
@@ -6038,7 +5982,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX模型列表(CPU/GPU)
+    PaddleX Model List (CPU/GPU)
   
 
     
@@ -6066,7 +6010,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX模型列表(DCU)
+    PaddleX Model List (DCU)
   
 
     
@@ -6094,7 +6038,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX模型列表(MLU)
+    PaddleX Model List (MLU)
   
 
     
@@ -6122,7 +6066,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX模型列表(NPU)
+    PaddleX Model List (NPU)
   
 
     
@@ -6150,7 +6094,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX模型列表(XPU)
+    PaddleX Model List (XPU)
   
 
     
@@ -6178,7 +6122,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    PaddleX模型列表(GCU)
+    PaddleX Model List (GCU)
   
 
     
@@ -6269,7 +6213,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    产业实践教程&范例
+    Practical Tutorials & Examples
   
 
     
@@ -6285,7 +6229,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
             
   
-    产业实践教程&范例
+    Practical Tutorials & Examples
   
 
           </label>
@@ -6816,7 +6760,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    可视化工具
+    VisualDL
   
 
     
@@ -6870,7 +6814,7 @@ You're not viewing the latest version.
   <span class="md-ellipsis">
     
   
-    近期更新
+    Recently Update
   
 
     
@@ -6896,7 +6840,7 @@ You're not viewing the latest version.
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -6905,82 +6849,26 @@ You're not viewing the latest version.
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#1-docker-environment-preparation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1、安装
+        1. Docker Environment Preparation
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="1、安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-paddlepaddle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.1 PaddlePaddle安装
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-paddlex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2 PaddleX安装
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.2 PaddleX安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#121-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.1 Wheel包安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#122" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.2 插件安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#2-install-paddle-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2、使用
+        2. Install Paddle Package
       
     </span>
   </a>
@@ -7005,7 +6893,7 @@ You're not viewing the latest version.
   
 
 
-  <nav class="md-path" aria-label="导航栏" >
+  <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
       
         
@@ -7033,7 +6921,25 @@ You're not viewing the latest version.
         <a href="multi_devices_use_guide.html" class="md-path__link">
           
   <span class="md-ellipsis">
-    多硬件使用
+    Multi-Device Usage
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="paddlepaddle_install_DCU.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    PaddlePaddle Installation on Multiple Devices
   </span>
 
         </a>
@@ -7052,7 +6958,7 @@ You're not viewing the latest version.
 
 
   
-    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/other_devices_support/multi_devices_use_guide.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/other_devices_support/paddlepaddle_install_P800.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -7061,175 +6967,37 @@ You're not viewing the latest version.
     
       
     
-    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/other_devices_support/multi_devices_use_guide.md" title="查看本页的源代码" class="md-content__button md-icon">
+    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/other_devices_support/paddlepaddle_install_P800.en.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="paddlex">PaddleX多硬件使用指南<a class="headerlink" href="#paddlex" title="Permanent link">&para;</a></h1>
-<p>本文档主要针对昇腾 NPU、昆仑 XPU、寒武纪 MLU、海光DCU 硬件平台，介绍 PaddleX 使用指南。</p>
-<h2 id="1">1、安装<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
-<h3 id="11-paddlepaddle">1.1 PaddlePaddle安装<a class="headerlink" href="#11-paddlepaddle" title="Permanent link">&para;</a></h3>
-<p>首先请您根据所属硬件平台，完成飞桨 PaddlePaddle 的安装，各硬件的飞桨安装教程如下：</p>
-<p>昇腾 NPU：<a href="paddlepaddle_install_NPU.html">昇腾 NPU 飞桨安装教程</a></p>
-<p>昆仑芯 XPU2：<a href="paddlepaddle_install_XPU.html">昆仑芯二代 AI 芯片飞桨安装教程</a></p>
-<p>昆仑芯 P800: <a href="paddlepaddle_install_P800.html">昆仑芯 P800 飞桨安装教程</a></p>
-<p>寒武纪 MLU：<a href="paddlepaddle_install_MLU.html">寒武纪 MLU 飞桨安装教程</a></p>
-<p>海光 DCU：<a href="paddlepaddle_install_DCU.html">海光 DCU 飞桨安装教程</a></p>
-<p>燧原 GCU：<a href="paddlepaddle_install_GCU.html">燧原 GCU 飞桨安装教程</a></p>
-<h3 id="12-paddlex">1.2 PaddleX安装<a class="headerlink" href="#12-paddlex" title="Permanent link">&para;</a></h3>
-<p>欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请先明确您的开发需求，并根据您的需求选择合适的安装模式。</p>
-<p>PaddleX为您提供了两种安装模式：Wheel包安装和插件安装，下面详细介绍这两种安装模式的应用场景和安装方法。</p>
-<h4 id="121-wheel">1.2.1 Wheel包安装模式<a class="headerlink" href="#121-wheel" title="Permanent link">&para;</a></h4>
-<p>若您使用PaddleX的应用场景为<b>模型推理与集成</b> ，那么推荐您使用<b>更便捷</b>、<b>更轻量</b>的Wheel包安装模式。</p>
-<p>快速安装轻量级的Wheel包之后，您即可基于PaddleX支持的所有模型进行推理，并能直接集成进您的项目中。</p>
-<p>安装飞桨后，您可直接执行如下指令快速安装PaddleX的Wheel包：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
+<h1 id="kunlunxin-xpu-paddlepaddle-installation-tutorial">Kunlunxin XPU PaddlePaddle Installation Tutorial<a class="headerlink" href="#kunlunxin-xpu-paddlepaddle-installation-tutorial" title="Permanent link">&para;</a></h1>
+<p>Currently, PaddleX supports Kunlunxin P800. Considering environmental differences, we recommend using the <b>Kunlunxin P800 development image officially released by PaddlePaddle</b>, which is pre-installed with the Kunlunxin basic runtime environment library (XRE).</p>
+<h2 id="1-docker-environment-preparation">1. Docker Environment Preparation<a class="headerlink" href="#1-docker-environment-preparation" title="Permanent link">&para;</a></h2>
+<p>Pull the image. This image is only for the development environment and does not include a pre-compiled PaddlePaddle installation package.</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleqa:xpu-ubuntu2204-x86_64-gcc123-py310
 </span></code></pre></div>
-<h4 id="122">1.2.2 插件安装模式<a class="headerlink" href="#122" title="Permanent link">&para;</a></h4>
-<p>若您使用PaddleX的应用场景为<b>二次开发</b> ，那么推荐您使用<b>功能更加强大</b>的插件安装模式。</p>
-<p>安装您需要的PaddleX插件之后，您不仅同样能够对插件支持的模型进行推理与集成，还可以对其进行模型训练等二次开发更高级的操作。</p>
-<p>PaddleX支持的插件如下，请您根据开发需求，确定所需的一个或多个插件名称：</p>
-<details><summary>👉 <b>插件和产线对应关系（点击展开）</b></summary>
-
-<table>
-<thead>
-<tr>
-<th>模型产线</th>
-<th>模块</th>
-<th>对应插件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>通用图像分类</td>
-<td>图像分类</td>
-<td>PaddleClas</td>
-</tr>
-<tr>
-<td>通用目标检测</td>
-<td>目标检测</td>
-<td>PaddleDetection</td>
-</tr>
-<tr>
-<td>通用语义分割</td>
-<td>语义分割</td>
-<td>PaddleSeg</td>
-</tr>
-<tr>
-<td>通用实例分割</td>
-<td>实例分割</td>
-<td>PaddleDetection</td>
-</tr>
-<tr>
-<td>通用OCR</td>
-<td>文本检测<br>文本识别</td>
-<td>PaddleOCR</td>
-</tr>
-<tr>
-<td>通用表格识别</td>
-<td>版面区域检测<br>表格结构识别<br>文本检测<br>文本识别</td>
-<td>PaddleOCR<br>PaddleDetection</td>
-</tr>
-<tr>
-<td>文档场景信息抽取v3</td>
-<td>表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文本图像矫正<br>文档图像方向分类</td>
-<td>PaddleOCR<br>PaddleDetection<br>PaddleClas</td>
-</tr>
-<tr>
-<td>时序预测</td>
-<td>时序预测模块</td>
-<td>PaddleTS</td>
-</tr>
-<tr>
-<td>时序异常检测</td>
-<td>时序异常检测模块</td>
-<td>PaddleTS</td>
-</tr>
-<tr>
-<td>时序分类</td>
-<td>时序分类模块</td>
-<td>PaddleTS</td>
-</tr>
-<tr>
-<td>通用多标签分类</td>
-<td>图像多标签分类</td>
-<td>PaddleClas</td>
-</tr>
-<tr>
-<td>小目标检测</td>
-<td>小目标检测</td>
-<td>PaddleDetection</td>
-</tr>
-<tr>
-<td>图像异常检测</td>
-<td>无监督异常检测</td>
-<td>PaddleSeg</td>
-</tr>
-</tbody>
-</table></details>
-
-<p>若您需要安装的插件为PaddleXXX（可以有多个），在安装飞桨后，您可以直接执行如下指令快速安装PaddleX的对应插件：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># 下载 PaddleX 源码
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git clone https://github.com/PaddlePaddle/PaddleX.git
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cd PaddleX
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># 安装 PaddleX whl
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># -e：以可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pip install -e .
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># 安装 PaddleX 插件
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>paddlex --install PaddleXXX
+Refer to the following command to start the container:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--name<span class="w"> </span>paddle-xpu-dev<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/work<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-v<span class="w"> </span>/usr/local/bin/xpu-smi:/usr/local/bin/xpu-smi<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-w<span class="o">=</span>/work<span class="w"> </span>--shm-size<span class="o">=</span>128G<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>--privileged<span class="w">  </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--cap-add<span class="o">=</span>SYS_PTRACE<span class="w"> </span>--security-opt<span class="w"> </span><span class="nv">seccomp</span><span class="o">=</span>unconfined<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleqa:xpu-ubuntu2204-x86_64-gcc123-py310<span class="w"> </span>/bin/bash
 </span></code></pre></div>
-例如，您需要安装PaddleOCR、PaddleClas插件，则需要执行如下命令安装插件：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># 安装 PaddleOCR、PaddleClas 插件
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>paddlex --install PaddleOCR PaddleClas
+<h2 id="2-install-paddle-package">2. Install Paddle Package<a class="headerlink" href="#2-install-paddle-package" title="Permanent link">&para;</a></h2>
+<p>Currently, Python3.10 wheel installation packages are provided. If you have a need for other Python versions, you can refer to the <a href="https://www.paddlepaddle.org.cn/en/install/quick">PaddlePaddle official documentation</a> to compile and install them yourself.</p>
+<p>Install the Python3.10 wheel installation package:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>paddlepaddle-xpu<span class="w"> </span>-i<span class="w"> </span>https://www.paddlepaddle.org.cn/packages/nightly/xpu-p800/<span class="w">   </span><span class="c1"># For X86 architecture</span>
 </span></code></pre></div>
-若您需要安装全部插件，则无需填写具体插件名称，只需执行如下命令：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># 安装 PaddleX 全部插件
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>paddlex --install
+<p>Verify the installation package. After installation, run the following command:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import paddle; paddle.utils.run_check()&quot;</span>
 </span></code></pre></div>
-插件的默认克隆源为  github.com，同时也支持 gitee.com 克隆源，您可以通过<code>--platform</code> 指定克隆源。</p>
-<p>例如，您需要使用 gitee.com 克隆源安装全部PaddleX插件，只需执行如下命令：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># 安装 PaddleX 插件
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>paddlex --install --platform gitee.com
+<p>The expected output is:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PaddlePaddle is installed successfully! Let&#39;s start deep learning with PaddlePaddle now.
 </span></code></pre></div>
-安装完成后，将会有如下提示：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>All packages are installed.
-</span></code></pre></div>
-<h2 id="2">2、使用<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
-<p>基于昇腾 NPU、寒武纪 MLU、昆仑 XPU、海光DCU、燧原 GCU 硬件平台的 PaddleX 模型产线开发工具使用方法与 GPU 相同，只需根据所属硬件平台，修改配置设备的参数。
-下面以通用 OCR 产线为例介绍使用方法。通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA，可以直接使用该产线提供的预训练模型进行推理：
-* 命令行方式</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>OCR<span class="w"> </span>--input<span class="w"> </span>general_ocr_002.png<span class="w"> </span>--device<span class="w"> </span>npu:0<span class="w"> </span><span class="c1"># 将设备名修改为 npu、mlu、xpu、dcu 或 gcu</span>
-</span></code></pre></div>
-* Python脚本方式</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;OCR&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;npu:0&quot;</span><span class="p">)</span> <span class="c1"># 将设备名修改为 npu、mlu、xpu、dcu 或 gcu</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;general_ocr_002.png&quot;</span><span class="p">)</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-如果对预训练模型的效果不满意，可以进行模型微调，以 PP-OCRv4 移动端文本检测模型（<code>PP-OCRv4_mobile_det</code>）为例介绍单模型开发：</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 训练</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>train<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/ocr_det_dataset_examples<span class="w"> </span><span class="se">\ </span><span class="c1"># 修改为自己的数据集路径</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-o<span class="w"> </span>Global.device<span class="o">=</span>npu:0,1,2,3<span class="w"> </span><span class="c1"># 多卡训练，将设备名修改为 npu、mlu、xpu 或 dcu</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 推理</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;./output/best_accuracy/inference&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;general_ocr_001.png&quot;</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>-o<span class="w"> </span>Global.device<span class="o">=</span>npu<span class="w"> </span><span class="c1"># 将设备名修改为 npu、mlu、xpu、dcu 或 gcu</span>
-</span></code></pre></div>
-更多产线的使用教程可以查阅<a href="../pipeline_usage/pipeline_develop_guide.html">PaddleX产线开发工具本地使用教程</a></p>
 
 
 
@@ -7249,20 +7017,20 @@ You're not viewing the latest version.
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年2月14日 12:42:02 UTC">2026年2月14日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 14, 2026 12:42:02 UTC">February 14, 2026</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年2月14日 12:42:02 UTC">2026年2月14日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 14, 2026 12:42:02 UTC">February 14, 2026</span>
   </span>
 
     
@@ -7270,7 +7038,7 @@ You're not viewing the latest version.
       
   
   <span class="md-source-file__fact">
-    <span class="md-icon" title="贡献者">
+    <span class="md-icon" title="Contributors">
       
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
       
@@ -7291,7 +7059,7 @@ You're not viewing the latest version.
 
 
 
-<h2 id="__comments">评论</h2>
+<h2 id="__comments">Comments</h2>
 <!-- Insert generated snippet here -->
 
 <script src="https://giscus.app/client.js"
@@ -7356,7 +7124,7 @@ You're not viewing the latest version.
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -7365,33 +7133,33 @@ You're not viewing the latest version.
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../pipeline_deploy/packaging.html" class="md-footer__link md-footer__link--prev" aria-label="上一页: 打包PaddleX项目">
+          <a href="paddlepaddle_install_XPU.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Kunlunxin 2 PaddlePaddle Installation Guide">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                打包PaddleX项目
+                Kunlunxin 2 PaddlePaddle Installation Guide
               </div>
             </div>
           </a>
         
         
           
-          <a href="paddlepaddle_install_DCU.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 海光 DCU 飞桨安装教程">
+          <a href="paddlepaddle_install_GCU.html" class="md-footer__link md-footer__link--next" aria-label="Next: Enflame GCU PaddlePaddle Installation Guide">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                海光 DCU 飞桨安装教程
+                Enflame GCU PaddlePaddle Installation Guide
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -7444,12 +7212,12 @@ You're not viewing the latest version.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../javascripts/katex.min.js"></script>
+        <script src="../../javascripts/katex.min.js"></script>
       
         <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
       

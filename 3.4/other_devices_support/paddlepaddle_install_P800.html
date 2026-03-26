@@ -8,19 +8,19 @@
       
       
       
-        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/other_devices_support/multi_devices_use_guide.html">
+        <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.4/other_devices_support/paddlepaddle_install_P800.html">
       
       
-        <link rel="prev" href="../pipeline_deploy/packaging.html">
+        <link rel="prev" href="paddlepaddle_install_XPU.html">
       
       
-        <link rel="next" href="paddlepaddle_install_DCU.html">
+        <link rel="next" href="paddlepaddle_install_GCU.html">
       
       
         
-          <link rel="alternate" href="multi_devices_use_guide.html" hreflang="zh">
+          <link rel="alternate" href="paddlepaddle_install_P800.html" hreflang="zh">
         
-          <link rel="alternate" href="../en/other_devices_support/multi_devices_use_guide.html" hreflang="en">
+          <link rel="alternate" href="../en/other_devices_support/paddlepaddle_install_P800.html" hreflang="en">
         
       
       
@@ -29,7 +29,7 @@
     
     
       
-        <title>多硬件使用指南 - PaddleX 文档</title>
+        <title>昆仑芯 Kunlunxin P800 飞桨安装教程 - PaddleX 文档</title>
       
     
     
@@ -94,7 +94,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#paddlex" class="md-skip">
+        <a href="#p800" class="md-skip">
           跳转至
         </a>
       
@@ -151,7 +151,7 @@ You're not viewing the latest version.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              多硬件使用指南
+              昆仑芯 Kunlunxin P800 飞桨安装教程
             
           </span>
         </div>
@@ -198,13 +198,13 @@ You're not viewing the latest version.
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="multi_devices_use_guide.html" hreflang="zh" class="md-select__link">
+            <a href="paddlepaddle_install_P800.html" hreflang="zh" class="md-select__link">
               简体中文
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="../en/other_devices_support/multi_devices_use_guide.html" hreflang="en" class="md-select__link">
+            <a href="../en/other_devices_support/paddlepaddle_install_P800.html" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -4749,37 +4749,10 @@ You're not viewing the latest version.
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    多硬件使用指南
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="multi_devices_use_guide.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="multi_devices_use_guide.html" class="md-nav__link">
         
   
   
@@ -4795,104 +4768,6 @@ You're not viewing the latest version.
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1、安装
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1、安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-paddlepaddle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.1 PaddlePaddle安装
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-paddlex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2 PaddleX安装
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.2 PaddleX安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#121-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.1 Wheel包安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#122" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.2 插件安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2、使用
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -4902,8 +4777,10 @@ You're not viewing the latest version.
                 
   
   
+    
   
   
+  
     
     
       
@@ -4931,13 +4808,11 @@ You're not viewing the latest version.
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
         
           
           <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
@@ -4958,7 +4833,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -5085,10 +4960,37 @@ You're not viewing the latest version.
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="paddlepaddle_install_P800.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    昆仑芯 Kunlunxin P800 飞桨安装教程
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="paddlepaddle_install_P800.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -5104,6 +5006,48 @@ You're not viewing the latest version.
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1、docker环境准备
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2paddle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2、安装paddle包
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -6910,77 +6854,21 @@ You're not viewing the latest version.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#1docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1、安装
+        1、docker环境准备
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="1、安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#11-paddlepaddle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.1 PaddlePaddle安装
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#12-paddlex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2 PaddleX安装
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.2 PaddleX安装">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#121-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.1 Wheel包安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#122" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.2.2 插件安装模式
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#2paddle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2、使用
+        2、安装paddle包
       
     </span>
   </a>
@@ -7042,6 +6930,24 @@ You're not viewing the latest version.
   
 
       
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="paddlepaddle_install_DCU.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    飞桨多硬件安装
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
     </ol>
   </nav>
 
@@ -7052,7 +6958,7 @@ You're not viewing the latest version.
 
 
   
-    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/other_devices_support/multi_devices_use_guide.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/PaddlePaddle/PaddleX/edit/develop/docs/other_devices_support/paddlepaddle_install_P800.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -7061,175 +6967,40 @@ You're not viewing the latest version.
     
       
     
-    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/other_devices_support/multi_devices_use_guide.md" title="查看本页的源代码" class="md-content__button md-icon">
+    <a href="https://github.com/PaddlePaddle/PaddleX/raw/develop/docs/other_devices_support/paddlepaddle_install_P800.md" title="查看本页的源代码" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="paddlex">PaddleX多硬件使用指南<a class="headerlink" href="#paddlex" title="Permanent link">&para;</a></h1>
-<p>本文档主要针对昇腾 NPU、昆仑 XPU、寒武纪 MLU、海光DCU 硬件平台，介绍 PaddleX 使用指南。</p>
-<h2 id="1">1、安装<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
-<h3 id="11-paddlepaddle">1.1 PaddlePaddle安装<a class="headerlink" href="#11-paddlepaddle" title="Permanent link">&para;</a></h3>
-<p>首先请您根据所属硬件平台，完成飞桨 PaddlePaddle 的安装，各硬件的飞桨安装教程如下：</p>
-<p>昇腾 NPU：<a href="paddlepaddle_install_NPU.html">昇腾 NPU 飞桨安装教程</a></p>
-<p>昆仑芯 XPU2：<a href="paddlepaddle_install_XPU.html">昆仑芯二代 AI 芯片飞桨安装教程</a></p>
-<p>昆仑芯 P800: <a href="paddlepaddle_install_P800.html">昆仑芯 P800 飞桨安装教程</a></p>
-<p>寒武纪 MLU：<a href="paddlepaddle_install_MLU.html">寒武纪 MLU 飞桨安装教程</a></p>
-<p>海光 DCU：<a href="paddlepaddle_install_DCU.html">海光 DCU 飞桨安装教程</a></p>
-<p>燧原 GCU：<a href="paddlepaddle_install_GCU.html">燧原 GCU 飞桨安装教程</a></p>
-<h3 id="12-paddlex">1.2 PaddleX安装<a class="headerlink" href="#12-paddlex" title="Permanent link">&para;</a></h3>
-<p>欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请先明确您的开发需求，并根据您的需求选择合适的安装模式。</p>
-<p>PaddleX为您提供了两种安装模式：Wheel包安装和插件安装，下面详细介绍这两种安装模式的应用场景和安装方法。</p>
-<h4 id="121-wheel">1.2.1 Wheel包安装模式<a class="headerlink" href="#121-wheel" title="Permanent link">&para;</a></h4>
-<p>若您使用PaddleX的应用场景为<b>模型推理与集成</b> ，那么推荐您使用<b>更便捷</b>、<b>更轻量</b>的Wheel包安装模式。</p>
-<p>快速安装轻量级的Wheel包之后，您即可基于PaddleX支持的所有模型进行推理，并能直接集成进您的项目中。</p>
-<p>安装飞桨后，您可直接执行如下指令快速安装PaddleX的Wheel包：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
+<h1 id="p800">昆仑芯 P800 飞桨安装教程<a class="headerlink" href="#p800" title="Permanent link">&para;</a></h1>
+<p>当前 PaddleX 支持昆仑 P800 等芯片。考虑到环境差异性，我们推荐使用<b>飞桨官方发布的昆仑芯 XPU 开发镜像</b>，该镜像预装有昆仑基础运行环境库（XRE）。</p>
+<h2 id="1docker">1、docker环境准备<a class="headerlink" href="#1docker" title="Permanent link">&para;</a></h2>
+<p>拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包</p>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># 拉取镜像
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleqa:xpu-ubuntu2204-x86_64-gcc123-py310
 </span></code></pre></div>
-<h4 id="122">1.2.2 插件安装模式<a class="headerlink" href="#122" title="Permanent link">&para;</a></h4>
-<p>若您使用PaddleX的应用场景为<b>二次开发</b> ，那么推荐您使用<b>功能更加强大</b>的插件安装模式。</p>
-<p>安装您需要的PaddleX插件之后，您不仅同样能够对插件支持的模型进行推理与集成，还可以对其进行模型训练等二次开发更高级的操作。</p>
-<p>PaddleX支持的插件如下，请您根据开发需求，确定所需的一个或多个插件名称：</p>
-<details><summary>👉 <b>插件和产线对应关系（点击展开）</b></summary>
-
-<table>
-<thead>
-<tr>
-<th>模型产线</th>
-<th>模块</th>
-<th>对应插件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>通用图像分类</td>
-<td>图像分类</td>
-<td>PaddleClas</td>
-</tr>
-<tr>
-<td>通用目标检测</td>
-<td>目标检测</td>
-<td>PaddleDetection</td>
-</tr>
-<tr>
-<td>通用语义分割</td>
-<td>语义分割</td>
-<td>PaddleSeg</td>
-</tr>
-<tr>
-<td>通用实例分割</td>
-<td>实例分割</td>
-<td>PaddleDetection</td>
-</tr>
-<tr>
-<td>通用OCR</td>
-<td>文本检测<br>文本识别</td>
-<td>PaddleOCR</td>
-</tr>
-<tr>
-<td>通用表格识别</td>
-<td>版面区域检测<br>表格结构识别<br>文本检测<br>文本识别</td>
-<td>PaddleOCR<br>PaddleDetection</td>
-</tr>
-<tr>
-<td>文档场景信息抽取v3</td>
-<td>表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文本图像矫正<br>文档图像方向分类</td>
-<td>PaddleOCR<br>PaddleDetection<br>PaddleClas</td>
-</tr>
-<tr>
-<td>时序预测</td>
-<td>时序预测模块</td>
-<td>PaddleTS</td>
-</tr>
-<tr>
-<td>时序异常检测</td>
-<td>时序异常检测模块</td>
-<td>PaddleTS</td>
-</tr>
-<tr>
-<td>时序分类</td>
-<td>时序分类模块</td>
-<td>PaddleTS</td>
-</tr>
-<tr>
-<td>通用多标签分类</td>
-<td>图像多标签分类</td>
-<td>PaddleClas</td>
-</tr>
-<tr>
-<td>小目标检测</td>
-<td>小目标检测</td>
-<td>PaddleDetection</td>
-</tr>
-<tr>
-<td>图像异常检测</td>
-<td>无监督异常检测</td>
-<td>PaddleSeg</td>
-</tr>
-</tbody>
-</table></details>
-
-<p>若您需要安装的插件为PaddleXXX（可以有多个），在安装飞桨后，您可以直接执行如下指令快速安装PaddleX的对应插件：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># 下载 PaddleX 源码
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git clone https://github.com/PaddlePaddle/PaddleX.git
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cd PaddleX
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># 安装 PaddleX whl
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># -e：以可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pip install -e .
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># 安装 PaddleX 插件
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>paddlex --install PaddleXXX
+参考如下命令启动容器</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># 参考如下命令，启动容器
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker run -it --name paddle-xpu-dev -v $(pwd):/work \
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  -v /usr/local/bin/xpu-smi:/usr/local/bin/xpu-smi \
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  -w=/work --shm-size=128G --network=host --privileged  \
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleqa:xpu-ubuntu2204-x86_64-gcc123-py310 /bin/bash
 </span></code></pre></div>
-例如，您需要安装PaddleOCR、PaddleClas插件，则需要执行如下命令安装插件：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># 安装 PaddleOCR、PaddleClas 插件
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>paddlex --install PaddleOCR PaddleClas
+<h2 id="2paddle">2、安装paddle包<a class="headerlink" href="#2paddle" title="Permanent link">&para;</a></h2>
+<p>当前提供 Python3.10 的 wheel 安装包。如有其他 Python 版本需求，可以参考<a href="https://www.paddlepaddle.org.cn/install/quick">飞桨官方文档</a>自行编译安装。</p>
+<p>安装 Python3.10 的 wheel 安装包</p>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># 下载并安装 wheel 包
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python -m pip install --pre paddlepaddle-xpu -i https://www.paddlepaddle.org.cn/packages/nightly/xpu-p800/
 </span></code></pre></div>
-若您需要安装全部插件，则无需填写具体插件名称，只需执行如下命令：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># 安装 PaddleX 全部插件
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>paddlex --install
+验证安装包 安装完成之后，运行如下命令</p>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python -c &quot;import paddle; paddle.utils.run_check()&quot;
 </span></code></pre></div>
-插件的默认克隆源为  github.com，同时也支持 gitee.com 克隆源，您可以通过<code>--platform</code> 指定克隆源。</p>
-<p>例如，您需要使用 gitee.com 克隆源安装全部PaddleX插件，只需执行如下命令：</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># 安装 PaddleX 插件
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>paddlex --install --platform gitee.com
+预期得到如下输出结果</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PaddlePaddle is installed successfully! Let&#39;s start deep learning with PaddlePaddle now.
 </span></code></pre></div>
-安装完成后，将会有如下提示：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>All packages are installed.
-</span></code></pre></div>
-<h2 id="2">2、使用<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
-<p>基于昇腾 NPU、寒武纪 MLU、昆仑 XPU、海光DCU、燧原 GCU 硬件平台的 PaddleX 模型产线开发工具使用方法与 GPU 相同，只需根据所属硬件平台，修改配置设备的参数。
-下面以通用 OCR 产线为例介绍使用方法。通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA，可以直接使用该产线提供的预训练模型进行推理：
-* 命令行方式</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>OCR<span class="w"> </span>--input<span class="w"> </span>general_ocr_002.png<span class="w"> </span>--device<span class="w"> </span>npu:0<span class="w"> </span><span class="c1"># 将设备名修改为 npu、mlu、xpu、dcu 或 gcu</span>
-</span></code></pre></div>
-* Python脚本方式</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;OCR&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;npu:0&quot;</span><span class="p">)</span> <span class="c1"># 将设备名修改为 npu、mlu、xpu、dcu 或 gcu</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;general_ocr_002.png&quot;</span><span class="p">)</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-如果对预训练模型的效果不满意，可以进行模型微调，以 PP-OCRv4 移动端文本检测模型（<code>PP-OCRv4_mobile_det</code>）为例介绍单模型开发：</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 训练</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>train<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-o<span class="w"> </span>Global.dataset_dir<span class="o">=</span>./dataset/ocr_det_dataset_examples<span class="w"> </span><span class="se">\ </span><span class="c1"># 修改为自己的数据集路径</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-o<span class="w"> </span>Global.device<span class="o">=</span>npu:0,1,2,3<span class="w"> </span><span class="c1"># 多卡训练，将设备名修改为 npu、mlu、xpu 或 dcu</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 推理</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;./output/best_accuracy/inference&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;general_ocr_001.png&quot;</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>-o<span class="w"> </span>Global.device<span class="o">=</span>npu<span class="w"> </span><span class="c1"># 将设备名修改为 npu、mlu、xpu、dcu 或 gcu</span>
-</span></code></pre></div>
-更多产线的使用教程可以查阅<a href="../pipeline_usage/pipeline_develop_guide.html">PaddleX产线开发工具本地使用教程</a></p>
 
 
 
@@ -7368,7 +7139,7 @@ You're not viewing the latest version.
       <nav class="md-footer__inner md-grid" aria-label="页脚" >
         
           
-          <a href="../pipeline_deploy/packaging.html" class="md-footer__link md-footer__link--prev" aria-label="上一页: 打包PaddleX项目">
+          <a href="paddlepaddle_install_XPU.html" class="md-footer__link md-footer__link--prev" aria-label="上一页: 昆仑芯 Kunlunxin 2 飞桨安装教程">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -7378,20 +7149,20 @@ You're not viewing the latest version.
                 上一页
               </span>
               <div class="md-ellipsis">
-                打包PaddleX项目
+                昆仑芯 Kunlunxin 2 飞桨安装教程
               </div>
             </div>
           </a>
         
         
           
-          <a href="paddlepaddle_install_DCU.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 海光 DCU 飞桨安装教程">
+          <a href="paddlepaddle_install_GCU.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 燧原 GCU 飞桨安装教程">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 下一页
               </span>
               <div class="md-ellipsis">
-                海光 DCU 飞桨安装教程
+                燧原 GCU 飞桨安装教程
               </div>
             </div>
             <div class="md-footer__button md-icon">
