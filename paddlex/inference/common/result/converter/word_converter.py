@@ -37,58 +37,6 @@ def _set_paragraph_style(para, config):
         para.paragraph_format.first_line_indent = Inches(0.3)
 
 
-def _write_aside_text(doc, content, config, bbox, page_width):
-    """Write aside_text (marginal note) as a framed paragraph in the document.
-
-    Uses w:framePr to position the paragraph in the left or right margin,
-    determined automatically by the block's horizontal center vs page_width/2.
-
-    Args:
-        doc: docx.Document object.
-        content: Text content of the aside note.
-        config: Style config dict (uses 'size' key; defaults to 10pt).
-        bbox: Optional [x1, y1, x2, y2] list in pixel coordinates.
-        page_width: Page width in pixels, used to determine left/right side.
-    """
-    from docx.oxml import OxmlElement
-    from docx.oxml.ns import qn
-    from docx.shared import Pt, Twips
-
-    para = doc.add_paragraph(content)
-    # Apply font size
-    size_pt = config.get("size", 10) if config else 10
-    for run in para.runs:
-        run.font.size = Pt(size_pt)
-
-    # Build w:framePr element to position in margin
-    pPr = para._element.get_or_add_pPr()
-    framePr = OxmlElement("w:framePr")
-
-    # Determine left vs right based on bbox x_center
-    is_left = True
-    if bbox and page_width and page_width > 0:
-        x_center = (bbox[0] + bbox[2]) / 2.0
-        is_left = x_center < page_width / 2.0
-
-    # Convert positions: use twips (1 inch = 1440 twips, 1 pt = 20 twips)
-    # Place frame near left or right margin
-    frame_w = Twips(1440)  # ~1 inch wide frame
-    if is_left:
-        frame_x = Twips(0)  # left margin
-    else:
-        frame_x = Twips(11520)  # right margin area (8 inches * 1440)
-
-    framePr.set(qn("w:w"), str(int(frame_w)))
-    framePr.set(qn("w:hSpace"), "180")
-    framePr.set(qn("w:wrap"), "around")
-    framePr.set(qn("w:hAnchor"), "page")
-    framePr.set(qn("w:vAnchor"), "text")
-    framePr.set(qn("w:x"), str(int(frame_x)))
-    framePr.set(qn("w:xAlign"), "left" if is_left else "right")
-
-    pPr.insert(0, framePr)
-
-
 def _classify_number_position(bbox, page_width, page_height):
     """Classify a 'number' block's semantic role based on its bbox position.
 
@@ -844,7 +792,7 @@ class WordConverter:
                 _set_section_columns(new_section, num_cols=1)
             first_page = False
 
-            # Write header/footer/aside_text for this page into current section
+            # Write header/footer for this page into current section
             for block in page_blocks:
                 label = block.get("type", "")
                 content = block.get("content", "")
@@ -860,10 +808,6 @@ class WordConverter:
                     section.footer.is_linked_to_previous = False
                     para = section.footer.add_paragraph(content)
                     para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                elif label == "aside_text" and content:
-                    config = block.get("config") or {}
-                    bbox = block.get("bbox")
-                    _write_aside_text(doc, content, config, bbox, page_width)
 
             # Segment the page using XY-Cut projection
             body_blocks = [
