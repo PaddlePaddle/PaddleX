@@ -74,13 +74,23 @@ class WordMixin:
         save_path = Path(save_path)
         save_file = save_path / f"{fn.stem}.docx"
 
+        use_layout = os.environ.get("PADDLEX_WORD_LAYOUT", "0") == "1"
+
         word_data = self._to_word()
         abs_image_paths = save_images(word_data["images"], save_path)
-        doc = WordConverter.convert(
-            word_data["word_blocks"],
-            abs_image_paths=abs_image_paths,
-            original_image_width=word_data.get("original_image_width", 500),
-        )
+        if use_layout:
+            doc = WordConverter.convert_v2(
+                word_data["word_blocks"],
+                abs_image_paths=abs_image_paths,
+                original_image_width=word_data.get("original_image_width", 500),
+                original_image_height=word_data.get("original_image_height", 700),
+            )
+        else:
+            doc = WordConverter.convert(
+                word_data["word_blocks"],
+                abs_image_paths=abs_image_paths,
+                original_image_width=word_data.get("original_image_width", 500),
+            )
         doc.save(save_file.as_posix())
 
 
