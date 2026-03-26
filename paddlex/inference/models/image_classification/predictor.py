@@ -259,7 +259,7 @@ class ClasTransformersPredictor(TransformersPredictor):
             "label_names": batch_label_names,
         }
 
-    def postprocess(self, outputs, topk, **kwargs):
+    def postprocess(self, outputs, *, topk, **kwargs):
         import torch
 
         id2label = self._resolve_id2label()

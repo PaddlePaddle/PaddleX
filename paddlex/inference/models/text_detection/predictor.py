@@ -337,7 +337,7 @@ class TextDetTransformersPredictor(TransformersPredictor):
         }
 
     def postprocess(
-        self, outputs, threshold, target_sizes, box_threshold, unclip_ratio, **kwargs
+        self, outputs, *, threshold, target_sizes, box_threshold, unclip_ratio, **kwargs
     ):
         predictions = self.image_processor.post_process_object_detection(
             outputs,
