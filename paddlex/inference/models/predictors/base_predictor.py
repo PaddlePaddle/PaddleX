@@ -61,7 +61,8 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         **kwargs: Any,
     ) -> Iterator[Any]:
         """Default: delegate to apply."""
-        self.batch_sampler.batch_size = batch_size
+        if batch_size is not None:
+            self.batch_sampler.batch_size = batch_size
         if INFER_BENCHMARK:
             # TODO(zhang-prog): Get metadata of input data
             @benchmark.timeit_with_options(name=ENTRY_POINT_NAME)
