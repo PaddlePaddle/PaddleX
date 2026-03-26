@@ -223,7 +223,15 @@ def build_word_blocks(
     return word_blocks, images
 
 
-def _write_block(doc, block, abs_image_paths, original_image_width=500):
+def _write_block(
+    doc,
+    block,
+    abs_image_paths,
+    original_image_width=500,
+    space_before_emu=None,
+    left_indent_emu=None,
+    usable_width_emu=None,
+):
     """Write a single word_block to the given docx Document (or container).
 
     Handles image/chart/seal, table, and text blocks. Header/footer blocks
@@ -237,9 +245,12 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
         abs_image_paths: Dict mapping original image path → absolute path.
         original_image_width: Width of the original page image in pixels, used to
             calculate proportional image width in the Word document.
+        space_before_emu: Optional space before this block in EMU.
+        left_indent_emu: Optional left indent in EMU (single-column only).
+        usable_width_emu: Optional usable page width in EMU for proportional sizing.
     """
     from docx.enum.text import WD_ALIGN_PARAGRAPH
-    from docx.shared import Inches
+    from docx.shared import Emu, Inches, Pt
 
     label = block.get("type")
     content = block.get("content", "")
@@ -256,16 +267,25 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
         if not abs_image_path:
             return
         para = doc.add_paragraph()
+        if space_before_emu is not None:
+            para.paragraph_format.space_before = Emu(space_before_emu)
+            para.paragraph_format.space_after = Emu(0)
         run = para.add_run()
         # Calculate proportional width based on bbox ratio
-        USABLE_PAGE_WIDTH = 6.0  # inches (A4/Letter with ~1.25" margins)
+        USABLE_PAGE_WIDTH = 6.0  # inches fallback
         bbox = block.get("bbox")
         if bbox and original_image_width > 0:
             ratio = (bbox[2] - bbox[0]) / original_image_width
-            img_width = max(1.0, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
+            if usable_width_emu:
+                img_width = max(
+                    Inches(1.0), min(int(ratio * usable_width_emu), usable_width_emu)
+                )
+                run.add_picture(abs_image_path, width=img_width)
+            else:
+                img_width = max(1.0, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
+                run.add_picture(abs_image_path, width=Inches(img_width))
         else:
-            img_width = 5.0  # fallback: maintain backward compatibility
-        run.add_picture(abs_image_path, width=Inches(img_width))
+            run.add_picture(abs_image_path, width=Inches(5.0))
         para.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     # --- table ---
@@ -276,9 +296,27 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
             else [r.split("\t") for r in content.split("\n") if r.strip()]
         )
         if rows:
+            # Insert spacer paragraph for spacing before table
+            if space_before_emu is not None and space_before_emu > 0:
+                spacer = doc.add_paragraph()
+                spacer.paragraph_format.space_before = Emu(space_before_emu)
+                spacer.paragraph_format.space_after = Emu(0)
+                run = spacer.add_run()
+                run.font.size = Pt(1)
+
             max_cols = max(len(r) for r in rows)
             table = doc.add_table(rows=0, cols=max_cols)
             table.style = "Table Grid"
+
+            # Set proportional table width from bbox
+            bbox = block.get("bbox")
+            if bbox and original_image_width > 0 and usable_width_emu:
+                ratio = (bbox[2] - bbox[0]) / original_image_width
+                table_width = max(Inches(2), int(ratio * usable_width_emu))
+                col_width = table_width // max_cols
+                for col in table.columns:
+                    col.width = col_width
+
             for row_cells in rows:
                 row = table.add_row().cells
                 for i in range(max_cols):
@@ -301,6 +339,11 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
     ):
         para = doc.add_paragraph(content)
         _set_paragraph_style(para, config)
+        if space_before_emu is not None:
+            para.paragraph_format.space_before = Emu(space_before_emu)
+            para.paragraph_format.space_after = Emu(0)
+        if left_indent_emu is not None:
+            para.paragraph_format.left_indent = Emu(left_indent_emu)
 
 
 def _is_full_span(block, page_width, threshold=0.6):
@@ -575,6 +618,7 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
                 "columns": col_blocks,
                 "_y": (y_start, y_end),
                 "_dividers": dividers,
+                "_x_gaps": x_gaps,
             }
         )
 
@@ -658,7 +702,151 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
     return merged
 
 
-def _set_section_columns(section, num_cols=1, space=720):
+def _build_page_metrics(body_blocks, page_width_px, page_height_px):
+    """Compute layout metrics for one page.
+
+    Args:
+        body_blocks: List of block dicts (header/footer/aside_text already excluded).
+        page_width_px: Original page width in pixels.
+        page_height_px: Original page height in pixels.
+
+    Returns:
+        Dict with keys:
+            scale_x, scale_y: float (px to EMU)
+            content_bbox: (x1, y1, x2, y2) in px — body content bounding box
+            margins: (left, right, top, bottom) in EMU
+            usable_width_emu: int — page usable width after margins
+    """
+    # A4: 210mm x 297mm = 7560820 x 10693400 EMU
+    PAGE_WIDTH_EMU = 7560820
+    PAGE_HEIGHT_EMU = 10693400
+    MIN_MARGIN_EMU = 274320  # 0.3 inch
+    MAX_MARGIN_EMU = 1828800  # 2.0 inch
+
+    scale_x = PAGE_WIDTH_EMU / max(page_width_px, 1)
+    scale_y = PAGE_HEIGHT_EMU / max(page_height_px, 1)
+
+    blocks_with_bbox = [b for b in body_blocks if b.get("bbox")]
+    if not blocks_with_bbox:
+        # Default margins: 1 inch on all sides
+        default_margin = 914400
+        usable = PAGE_WIDTH_EMU - 2 * default_margin
+        return {
+            "scale_x": scale_x,
+            "scale_y": scale_y,
+            "content_bbox": None,
+            "margins": (default_margin, default_margin, default_margin, default_margin),
+            "usable_width_emu": usable,
+        }
+
+    x1s = [b["bbox"][0] for b in blocks_with_bbox]
+    y1s = [b["bbox"][1] for b in blocks_with_bbox]
+    x2s = [b["bbox"][2] for b in blocks_with_bbox]
+    y2s = [b["bbox"][3] for b in blocks_with_bbox]
+
+    content_x1, content_y1 = min(x1s), min(y1s)
+    content_x2, content_y2 = max(x2s), max(y2s)
+
+    left_px = content_x1
+    right_px = max(0, page_width_px - content_x2)
+    top_px = content_y1
+    bottom_px = max(0, page_height_px - content_y2)
+
+    def _clamp(val_emu):
+        return max(MIN_MARGIN_EMU, min(MAX_MARGIN_EMU, val_emu))
+
+    left_m = _clamp(int(left_px * scale_x))
+    right_m = _clamp(int(right_px * scale_x))
+    top_m = _clamp(int(top_px * scale_y))
+    bottom_m = _clamp(int(bottom_px * scale_y))
+
+    usable_width_emu = PAGE_WIDTH_EMU - left_m - right_m
+
+    return {
+        "scale_x": scale_x,
+        "scale_y": scale_y,
+        "content_bbox": (content_x1, content_y1, content_x2, content_y2),
+        "margins": (left_m, right_m, top_m, bottom_m),
+        "usable_width_emu": max(usable_width_emu, 1),
+    }
+
+
+def _compute_vertical_spacing(blocks, scale_y):
+    """Compute space_before (EMU) for each block based on y-gap from previous block.
+
+    Args:
+        blocks: List of block dicts with "bbox" key, sorted by y.
+        scale_y: Pixels-to-EMU conversion factor for Y axis.
+
+    Returns:
+        List of int|None, same length as blocks. None means use default spacing.
+        First block always returns 0.
+    """
+    MAX_SPACE_EMU = 914400  # 1 inch cap
+    QUANTIZE_STEP = 38100  # 3pt quantization to reduce OCR bbox noise
+
+    spacings = []
+    prev_y2 = None
+    for block in blocks:
+        bbox = block.get("bbox")
+        if not bbox:
+            spacings.append(None)
+            prev_y2 = None
+            continue
+        y1, y2 = bbox[1], bbox[3]
+        if prev_y2 is None:
+            spacings.append(0)
+        else:
+            gap_px = max(0, y1 - prev_y2)
+            space_emu = int(gap_px * scale_y)
+            space_emu = min(space_emu, MAX_SPACE_EMU)
+            # Quantize to 3pt steps to reduce OCR noise
+            space_emu = round(space_emu / QUANTIZE_STEP) * QUANTIZE_STEP
+            spacings.append(space_emu)
+        prev_y2 = y2
+    return spacings
+
+
+def _compute_horizontal_indent(block, content_x1_px, page_width_px, scale_x):
+    """Compute left_indent (EMU) for a single-column block.
+
+    Only applies indent when the block's left edge is significantly offset
+    from the content area's left edge (more than 3% of page width).
+    Centered blocks (by config) are skipped.
+
+    Args:
+        block: Block dict with "bbox" and "config".
+        content_x1_px: X coordinate of the content area left edge in pixels.
+        page_width_px: Page width in pixels.
+        scale_x: Pixels-to-EMU conversion factor for X axis.
+
+    Returns:
+        int or None: left_indent in EMU, or None for no indent.
+    """
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+    config = block.get("config") or {}
+    if config.get("align") == WD_ALIGN_PARAGRAPH.CENTER:
+        return None
+
+    bbox = block.get("bbox")
+    if not bbox:
+        return None
+
+    block_x1 = bbox[0]
+    offset_px = block_x1 - content_x1_px
+    threshold_px = page_width_px * 0.03
+    if offset_px < threshold_px:
+        return None
+
+    indent_emu = int(offset_px * scale_x)
+    indent_emu = min(indent_emu, 2743200)  # 3 inch cap
+    return indent_emu if indent_emu > 0 else None
+
+
+def _set_section_columns(
+    section, num_cols=1, space=720, col_widths_twips=None, gap_widths_twips=None
+):
     """Set the number of columns in a section via direct XML manipulation.
 
     python-docx 1.2.0 has no native multi-column API, so we operate on
@@ -668,6 +856,11 @@ def _set_section_columns(section, num_cols=1, space=720):
         section: docx.section.Section object.
         num_cols: Number of columns (1 = single column, 2 = two columns).
         space: Space between columns in twips (default 720 = 0.5 inch).
+            Used only when col_widths_twips is None.
+        col_widths_twips: Optional list of individual column widths in twips.
+            When provided, creates unequal-width columns.
+        gap_widths_twips: Optional list of gap widths (length = num_cols - 1).
+            Used together with col_widths_twips for column spacing.
     """
     from docx.oxml.ns import qn
     from lxml import etree
@@ -679,7 +872,22 @@ def _set_section_columns(section, num_cols=1, space=720):
 
     cols_elem = etree.SubElement(sectPr, qn("w:cols"))
     cols_elem.set(qn("w:num"), str(num_cols))
-    if num_cols > 1:
+
+    if col_widths_twips and len(col_widths_twips) == num_cols and num_cols > 1:
+        # Unequal column widths
+        cols_elem.set(qn("w:equalWidth"), "0")
+        cols_elem.set(qn("w:space"), "0")
+        for i, col_w in enumerate(col_widths_twips):
+            col_el = etree.SubElement(cols_elem, qn("w:col"))
+            col_el.set(qn("w:w"), str(int(col_w)))
+            if i < num_cols - 1:
+                gap = (
+                    gap_widths_twips[i]
+                    if gap_widths_twips and i < len(gap_widths_twips)
+                    else space
+                )
+                col_el.set(qn("w:space"), str(int(gap)))
+    elif num_cols > 1:
         cols_elem.set(qn("w:space"), str(space))
         cols_elem.set(qn("w:equalWidth"), "1")
 
@@ -830,6 +1038,28 @@ class WordConverter:
             if not segments:
                 continue
 
+            # Compute page-level layout metrics (scale, margins, usable width)
+            page_metrics = _build_page_metrics(body_blocks, page_width, page_height)
+            scale_x = page_metrics["scale_x"]
+            scale_y = page_metrics["scale_y"]
+            usable_width_emu = page_metrics["usable_width_emu"]
+            content_bbox = page_metrics["content_bbox"]
+            content_x1 = content_bbox[0] if content_bbox else 0
+
+            # Apply page margins to the current section (first section of this page)
+            page_section = doc.sections[-1]
+            left_m, right_m, top_m, bottom_m = page_metrics["margins"]
+            from docx.shared import Emu as _Emu
+
+            page_section.left_margin = _Emu(left_m)
+            page_section.right_margin = _Emu(right_m)
+            page_section.top_margin = _Emu(top_m)
+            page_section.bottom_margin = _Emu(bottom_m)
+
+            # EMU_PER_TWIP = 635 (1 twip = 20 points = 635 EMU)
+            EMU_PER_TWIP = 635
+            usable_width_twips = usable_width_emu // EMU_PER_TWIP
+
             first_segment = True
             for segment in segments:
                 seg_type = segment["type"]
@@ -842,24 +1072,79 @@ class WordConverter:
                 else:
                     num_cols = 1
 
+                # Compute unequal column widths from _x_gaps if available
+                col_widths_twips = None
+                gap_widths_twips = None
+                if num_cols > 1:
+                    x_gaps = segment.get("_x_gaps", [])
+                    if x_gaps and len(x_gaps) == num_cols - 1:
+                        # Build column x-boundaries from gaps
+                        col_edges = []
+                        prev_end = 0
+                        for gap_start, gap_end in x_gaps:
+                            col_edges.append((prev_end, gap_start))
+                            prev_end = gap_end + 1
+                        col_edges.append((prev_end, page_width))
+
+                        col_widths_px = [e - s for s, e in col_edges]
+                        gap_widths_px = [g[1] - g[0] for g in x_gaps]
+                        total_px = sum(col_widths_px) + sum(gap_widths_px)
+                        if total_px > 0:
+                            scale = usable_width_twips / total_px
+                            col_widths_twips = [
+                                max(360, int(w * scale)) for w in col_widths_px
+                            ]
+                            gap_widths_twips = [
+                                max(144, int(w * scale)) for w in gap_widths_px
+                            ]
+
                 if first_segment:
                     section = doc.sections[-1]
-                    _set_section_columns(section, num_cols=num_cols)
+                    _set_section_columns(
+                        section,
+                        num_cols=num_cols,
+                        col_widths_twips=col_widths_twips,
+                        gap_widths_twips=gap_widths_twips,
+                    )
                     first_segment = False
                 else:
                     section = doc.add_section(WD_SECTION.CONTINUOUS)
-                    _set_section_columns(section, num_cols=num_cols)
+                    _set_section_columns(
+                        section,
+                        num_cols=num_cols,
+                        col_widths_twips=col_widths_twips,
+                        gap_widths_twips=gap_widths_twips,
+                    )
 
                 if seg_type == "single":
-                    for block in segment["blocks"]:
-                        _write_block(doc, block, abs_image_paths, original_image_width)
+                    blocks_list = segment["blocks"]
+                    spacings = _compute_vertical_spacing(blocks_list, scale_y)
+                    for block, spacing in zip(blocks_list, spacings):
+                        indent = _compute_horizontal_indent(
+                            block, content_x1, page_width, scale_x
+                        )
+                        _write_block(
+                            doc,
+                            block,
+                            abs_image_paths,
+                            original_image_width,
+                            space_before_emu=spacing,
+                            left_indent_emu=indent,
+                            usable_width_emu=usable_width_emu,
+                        )
                 else:
                     # multi-column: write columns left-to-right, separated by column breaks
                     columns = segment["columns"]
                     for col_idx, col_blocks in enumerate(columns):
-                        for block in col_blocks:
+                        spacings = _compute_vertical_spacing(col_blocks, scale_y)
+                        for block, spacing in zip(col_blocks, spacings):
                             _write_block(
-                                doc, block, abs_image_paths, original_image_width
+                                doc,
+                                block,
+                                abs_image_paths,
+                                original_image_width,
+                                space_before_emu=spacing,
+                                usable_width_emu=usable_width_emu,
                             )
                         # Insert column break after each column except the last
                         if col_idx < len(columns) - 1 and any(
