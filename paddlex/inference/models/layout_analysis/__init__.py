@@ -29,20 +29,39 @@ def _load_ppdoclayoutv2():
     return PPDocLayoutV2
 
 
+def _load_ppdoclayoutv3():
+    from ..object_detection.modeling import PPDocLayoutV3
+
+    return PPDocLayoutV3
+
+
 register_predictor_binding_map(
     LayoutAnalysisRunnerPredictor,
     {
         "paddle_static": LAYOUTANALYSIS_MODELS,
-        "paddle_dynamic": create_binding_registration(
-            ("PP-DocLayoutV2",),
-            **{
-                PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
-                    _load_ppdoclayoutv2,
-                    use_safetensors=True,
-                    convert_from_hf=True,
-                    dtype="float32",
-                ),
-            },
+        "paddle_dynamic": (
+            create_binding_registration(
+                ("PP-DocLayoutV2",),
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppdoclayoutv2,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    ),
+                },
+            ),
+            create_binding_registration(
+                ("PP-DocLayoutV3",),
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_ppdoclayoutv3,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    ),
+                },
+            ),
         ),
         "hpi": LAYOUTANALYSIS_MODELS,
         "onnxruntime": LAYOUTANALYSIS_MODELS,
