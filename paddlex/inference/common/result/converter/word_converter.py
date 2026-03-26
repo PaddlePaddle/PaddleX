@@ -233,6 +233,7 @@ def _write_block(
     space_before_emu=None,
     left_indent_emu=None,
     usable_width_emu=None,
+    max_height_emu=None,
 ):
     """Write a single word_block to the given docx Document (or container).
 
@@ -250,6 +251,7 @@ def _write_block(
         space_before_emu: Optional space before this block in EMU.
         left_indent_emu: Optional left indent in EMU (single-column only).
         usable_width_emu: Optional usable page width in EMU for proportional sizing.
+        max_height_emu: Optional maximum rendered height in EMU for image scaling.
     """
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.shared import Emu, Inches, Pt
@@ -282,6 +284,21 @@ def _write_block(
                 img_width = max(
                     Inches(1.0), min(int(ratio * usable_width_emu), usable_width_emu)
                 )
+                # Apply max_height_emu constraint (aspect-ratio preserving)
+                if max_height_emu and max_height_emu > 0:
+                    try:
+                        from PIL import Image as _PILImage
+
+                        _img = _PILImage.open(abs_image_path)
+                        natural_w, natural_h = _img.size
+                        _img.close()
+                        if natural_w > 0 and natural_h > 0:
+                            rendered_h = int(img_width * natural_h / natural_w)
+                            if rendered_h > max_height_emu:
+                                img_width = int(max_height_emu * natural_w / natural_h)
+                                img_width = max(Inches(0.5), img_width)
+                    except Exception:
+                        pass
                 run.add_picture(abs_image_path, width=img_width)
             else:
                 img_width = max(1.0, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
@@ -734,12 +751,14 @@ def _build_page_metrics(body_blocks, page_width_px, page_height_px):
         # Default margins: 1 inch on all sides
         default_margin = 914400
         usable = PAGE_WIDTH_EMU - 2 * default_margin
+        usable_h = PAGE_HEIGHT_EMU - 2 * default_margin
         return {
             "scale_x": scale_x,
             "scale_y": scale_y,
             "content_bbox": None,
             "margins": (default_margin, default_margin, default_margin, default_margin),
             "usable_width_emu": usable,
+            "usable_height_emu": max(usable_h, 1),
         }
 
     x1s = [b["bbox"][0] for b in blocks_with_bbox]
@@ -764,6 +783,7 @@ def _build_page_metrics(body_blocks, page_width_px, page_height_px):
     bottom_m = _clamp(int(bottom_px * scale_y))
 
     usable_width_emu = PAGE_WIDTH_EMU - left_m - right_m
+    usable_height_emu = PAGE_HEIGHT_EMU - top_m - bottom_m
 
     return {
         "scale_x": scale_x,
@@ -771,6 +791,7 @@ def _build_page_metrics(body_blocks, page_width_px, page_height_px):
         "content_bbox": (content_x1, content_y1, content_x2, content_y2),
         "margins": (left_m, right_m, top_m, bottom_m),
         "usable_width_emu": max(usable_width_emu, 1),
+        "usable_height_emu": max(usable_height_emu, 1),
     }
 
 
@@ -808,6 +829,185 @@ def _compute_vertical_spacing(blocks, scale_y):
             spacings.append(space_emu)
         prev_y2 = y2
     return spacings
+
+
+def _estimate_block_height(block, column_width_emu, abs_image_paths, scale_x, scale_y):
+    """Estimate the rendered height of a single block in Word (EMU).
+
+    Args:
+        block: Block dict with "type", "content", "config", optional "bbox".
+        column_width_emu: Available column width in EMU.
+        abs_image_paths: Dict mapping image name to absolute path.
+        scale_x: Pixels-to-EMU X factor.
+        scale_y: Pixels-to-EMU Y factor.
+
+    Returns:
+        int: Estimated height in EMU.
+    """
+    import math
+
+    label = block.get("type", "")
+    bbox = block.get("bbox")
+    config = block.get("config") or {}
+    content = block.get("content", "")
+    if isinstance(content, str):
+        content = content.strip()
+
+    LINE_HEIGHT_FACTOR = 1.2  # Word line height ≈ font_size × 1.2
+
+    if label in ("chart", "image", "seal"):
+        image_name = block.get("content")
+        abs_path = abs_image_paths.get(image_name) if image_name else None
+        if abs_path and bbox and column_width_emu > 0:
+            try:
+                from PIL import Image as _PILImage
+
+                _img = _PILImage.open(abs_path)
+                natural_w, natural_h = _img.size
+                _img.close()
+                # Replicate _write_block width calculation
+                original_image_width_px = max(1, int(column_width_emu / scale_x))
+                ratio = (bbox[2] - bbox[0]) / max(original_image_width_px, 1)
+                from docx.shared import Inches
+
+                img_width = max(
+                    Inches(1.0), min(int(ratio * column_width_emu), column_width_emu)
+                )
+                rendered_h = int(img_width * natural_h / max(natural_w, 1))
+                return max(rendered_h, 914400 // 10)  # min 0.1"
+            except Exception:
+                pass
+        # Fallback: bbox-based
+        if bbox:
+            return int((bbox[3] - bbox[1]) * scale_y)
+        return int(Inches(2.0))  # type: ignore[return-value]
+
+    if label == "table":
+        if bbox:
+            bbox_h_px = bbox[3] - bbox[1]
+            bbox_w_px = max(1, bbox[2] - bbox[0])
+            original_height_emu = int(bbox_h_px * scale_y)
+            bbox_w_emu = int(bbox_w_px * scale_x)
+            inflation = (
+                bbox_w_emu / column_width_emu
+                if column_width_emu > 0 and bbox_w_emu > column_width_emu
+                else 1.0
+            )
+            return int(original_height_emu * inflation * 1.3)
+        return 914400  # 1 inch fallback
+
+    # Text blocks
+    if bbox:
+        bbox_h_px = bbox[3] - bbox[1]
+        bbox_w_px = max(1, bbox[2] - bbox[0])
+        original_height_emu = int(bbox_h_px * scale_y)
+        bbox_w_emu = int(bbox_w_px * scale_x)
+        inflation = (
+            bbox_w_emu / column_width_emu
+            if column_width_emu > 0 and bbox_w_emu > column_width_emu
+            else 1.0
+        )
+        return int(original_height_emu * inflation * LINE_HEIGHT_FACTOR)
+
+    # No bbox — char-count based estimate
+    font_size_emu = int(config.get("size", 12) * 12700)
+    if column_width_emu > 0 and font_size_emu > 0:
+        chars_per_line = max(1, column_width_emu / (font_size_emu * 0.52))
+        num_lines = max(1, math.ceil(len(content) / chars_per_line))
+    else:
+        num_lines = max(1, len(content) // 80 + 1)
+    return int(num_lines * font_size_emu * LINE_HEIGHT_FACTOR)
+
+
+def _estimate_page_content_height(
+    segments, page_metrics, abs_image_paths, scale_y, x_gap_cols=None
+):
+    """Estimate total vertical content height for one page (EMU).
+
+    Args:
+        segments: List of segment dicts from _xy_cut_segment().
+        page_metrics: Dict from _build_page_metrics().
+        abs_image_paths: Dict mapping image name to absolute path.
+        scale_y: Pixels-to-EMU Y factor.
+        x_gap_cols: Optional list of (col_widths_emu, gap_widths_emu) per segment,
+            for accurate multi-column width. If None, use equal-width split.
+
+    Returns:
+        int: Estimated total height in EMU.
+    """
+    scale_x = page_metrics["scale_x"]
+    usable_width_emu = page_metrics["usable_width_emu"]
+    total = 0
+
+    for seg_idx, segment in enumerate(segments):
+        seg_type = segment["type"]
+
+        if seg_type == "single":
+            blocks = segment["blocks"]
+            spacings = _compute_vertical_spacing(blocks, scale_y)
+            seg_height = 0
+            for block, sp in zip(blocks, spacings):
+                seg_height += _estimate_block_height(
+                    block, usable_width_emu, abs_image_paths, scale_x, scale_y
+                )
+                if sp:
+                    seg_height += sp
+            total += seg_height
+        else:
+            # Multi-column: take the tallest column
+            columns = segment["columns"]
+            num_cols = len(columns)
+
+            # Compute per-column width from _x_gaps if available
+            x_gaps = segment.get("_x_gaps", [])
+            col_widths_emu = []
+            if x_gaps and len(x_gaps) == num_cols - 1:
+                # Replicate the same logic as convert_v2()
+                page_width_px = max(
+                    (b["bbox"][2] for col in columns for b in col if b.get("bbox")),
+                    default=1000,
+                )
+                col_edges = []
+                prev_end = 0
+                for gap_start, gap_end in x_gaps:
+                    col_edges.append((prev_end, gap_start))
+                    prev_end = gap_end + 1
+                col_edges.append((prev_end, page_width_px))
+                col_widths_px = [max(1, e - s) for s, e in col_edges]
+                gap_widths_px = [g[1] - g[0] for g in x_gaps]
+                total_px = sum(col_widths_px) + sum(gap_widths_px)
+                if total_px > 0:
+                    px_to_emu = usable_width_emu / total_px
+                    col_widths_emu = [int(w * px_to_emu) for w in col_widths_px]
+
+            if not col_widths_emu:
+                # Equal-width fallback
+                col_w = usable_width_emu // max(num_cols, 1)
+                col_widths_emu = [col_w] * num_cols
+
+            col_heights = []
+            for col_idx, col_blocks in enumerate(columns):
+                col_w = (
+                    col_widths_emu[col_idx]
+                    if col_idx < len(col_widths_emu)
+                    else col_widths_emu[-1]
+                )
+                spacings = _compute_vertical_spacing(col_blocks, scale_y)
+                ch = 0
+                for block, sp in zip(col_blocks, spacings):
+                    ch += _estimate_block_height(
+                        block, col_w, abs_image_paths, scale_x, scale_y
+                    )
+                    if sp:
+                        ch += sp
+                col_heights.append(ch)
+            total += max(col_heights) if col_heights else 0
+
+    # Section break overhead: each CONTINUOUS break ≈ 1 line (12pt ≈ 152400 EMU)
+    section_break_count = max(0, len(segments) - 1)
+    total += section_break_count * 152400
+
+    return total
 
 
 def _compute_horizontal_indent(block, content_x1_px, page_width_px, scale_x):
@@ -1082,6 +1282,21 @@ class WordConverter:
             EMU_PER_TWIP = 635
             usable_width_twips = usable_width_emu // EMU_PER_TWIP
 
+            # Vertical budget: estimate total content height and compute compression ratio.
+            # This prevents single-page content from overflowing into a second page due to
+            # Word's text reflow (font metrics, column-width-induced line wrapping, etc.).
+            usable_height_emu = page_metrics["usable_height_emu"]
+            estimated_height = _estimate_page_content_height(
+                segments, page_metrics, abs_image_paths, scale_y
+            )
+            SAFETY_MARGIN = 0.95  # keep 5% buffer to avoid edge-case overflow
+            if estimated_height > usable_height_emu * SAFETY_MARGIN:
+                v_scale = (usable_height_emu * SAFETY_MARGIN) / max(estimated_height, 1)
+            else:
+                v_scale = 1.0
+            # When overflow is severe (>15%), also scale down images
+            img_height_scale = (v_scale / 0.85) if v_scale < 0.85 else 1.0
+
             first_segment = True
             for segment in segments:
                 seg_type = segment["type"]
@@ -1131,6 +1346,17 @@ class WordConverter:
                     first_segment = False
                 else:
                     section = doc.add_section(WD_SECTION.CONTINUOUS)
+                    # Minimize section break paragraph height (avoids default line height overhead)
+                    if doc.paragraphs:
+                        brk_para = doc.paragraphs[-1]
+                        brk_para.paragraph_format.space_before = _Emu(0)
+                        brk_para.paragraph_format.space_after = _Emu(0)
+                        from docx.shared import Pt as _Pt
+
+                        if not brk_para.runs:
+                            brk_para.add_run()
+                        brk_para.runs[0].font.size = _Pt(1)
+                        brk_para.paragraph_format.line_spacing = _Pt(1)
                     _set_section_columns(
                         section,
                         num_cols=num_cols,
@@ -1145,28 +1371,70 @@ class WordConverter:
                         indent = _compute_horizontal_indent(
                             block, content_x1, page_width, scale_x
                         )
+                        adjusted_sp = (
+                            int(spacing * v_scale) if spacing is not None else None
+                        )
+                        max_h = (
+                            int(
+                                _estimate_block_height(
+                                    block,
+                                    usable_width_emu,
+                                    abs_image_paths,
+                                    scale_x,
+                                    scale_y,
+                                )
+                                * img_height_scale
+                            )
+                            if img_height_scale < 1.0
+                            and block.get("type") in ("chart", "image", "seal")
+                            else None
+                        )
                         _write_block(
                             doc,
                             block,
                             abs_image_paths,
                             original_image_width,
-                            space_before_emu=spacing,
+                            space_before_emu=adjusted_sp,
                             left_indent_emu=indent,
                             usable_width_emu=usable_width_emu,
+                            max_height_emu=max_h,
                         )
                 else:
                     # multi-column: write columns left-to-right, separated by column breaks
                     columns = segment["columns"]
                     for col_idx, col_blocks in enumerate(columns):
+                        # Determine per-column width for max_height estimation
+                        col_w_emu = usable_width_emu // max(num_cols, 1)
+                        if col_widths_twips and col_idx < len(col_widths_twips):
+                            col_w_emu = col_widths_twips[col_idx] * EMU_PER_TWIP
                         spacings = _compute_vertical_spacing(col_blocks, scale_y)
                         for block, spacing in zip(col_blocks, spacings):
+                            adjusted_sp = (
+                                int(spacing * v_scale) if spacing is not None else None
+                            )
+                            max_h = (
+                                int(
+                                    _estimate_block_height(
+                                        block,
+                                        col_w_emu,
+                                        abs_image_paths,
+                                        scale_x,
+                                        scale_y,
+                                    )
+                                    * img_height_scale
+                                )
+                                if img_height_scale < 1.0
+                                and block.get("type") in ("chart", "image", "seal")
+                                else None
+                            )
                             _write_block(
                                 doc,
                                 block,
                                 abs_image_paths,
                                 original_image_width,
-                                space_before_emu=spacing,
+                                space_before_emu=adjusted_sp,
                                 usable_width_emu=usable_width_emu,
+                                max_height_emu=max_h,
                             )
                         # Insert column break after each column except the last
                         if col_idx < len(columns) - 1 and any(
