@@ -28,17 +28,48 @@ def _get_package_dir():
     return os.path.dirname(__file__)
 
 
-def get_pdx_version():
-    """get_pdx_version"""
-    version_file = os.path.join(_get_package_dir(), ".version")
+def _get_repo_root():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+
+def _version_from_metadata():
     try:
-        with open(version_file, "r", encoding="ascii") as fv:
-            ver = fv.read().rstrip()
-    except FileNotFoundError:
-        # Fallback version if .version file is not found (e.g., in some
-        # PyInstaller configurations where the file wasn't included)
-        ver = "unknown"
-    return ver
+        from importlib.metadata import PackageNotFoundError, version
+    except ImportError:
+        return None
+    try:
+        return version("paddlex")
+    except PackageNotFoundError:
+        return None
+
+
+def _version_from_setuptools_scm():
+    try:
+        from setuptools_scm import get_version
+    except ImportError:
+        return None
+    try:
+        return get_version(root=_get_repo_root())
+    except (LookupError, ValueError):
+        return None
+
+
+def get_pdx_version():
+    """Return the installed or source-tree PaddleX version string.
+
+    Resolution order:
+    1. `importlib.metadata` (normal pip / wheel install).
+    2. `setuptools_scm.get_version` when running from a git checkout.
+    3. `\"0.0.0\"` if nothing matches.
+    """
+    for fn in (
+        _version_from_metadata,
+        _version_from_setuptools_scm,
+    ):
+        ver = fn()
+        if ver:
+            return ver
+    return "0.0.0"
 
 
 def get_version_dict():

@@ -82,6 +82,7 @@ MOD_TO_DEP = {
     "ruamel.yaml": "ruamel.yaml",
     "safetensors": "safetensors",
     "scipy": "scipy",
+    "setuptools_scm": "setuptools-scm",
     "skimage": "scikit-image",
     "sklearn": "scikit-learn",
     "sentencepiece": "sentencepiece",

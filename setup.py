@@ -298,12 +298,6 @@ def extras():
     return dic
 
 
-def version():
-    """get version"""
-    with open(os.path.join("paddlex", ".version"), "r") as file:
-        return file.read().rstrip()
-
-
 def get_data_files(directory: str, filetypes: list = None):
     all_files = []
     filetypes = filetypes or []
@@ -344,7 +338,6 @@ def packages_and_package_data():
     ]
     pkg_data.extend(pipeline_config)
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
-    pkg_data.append(".version")
     pkg_data.append("hpip_links.html")
     pkg_data.append("hpip_links_cu12.html")
     pkg_data.append("inference/utils/hpi_model_info_collection.json")
@@ -367,7 +360,7 @@ if __name__ == "__main__":
 
     s = setup(
         name="paddlex",
-        version=version(),
+        use_scm_version=True,
         description=("Low-code development tool based on PaddlePaddle."),
         long_description=readme(),
         long_description_content_type="text/markdown",
