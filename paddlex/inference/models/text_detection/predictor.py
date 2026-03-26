@@ -307,7 +307,7 @@ class TextDetTransformersPredictor(TransformersPredictor):
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
         images = [Image.fromarray(img) for img in batch_raw_imgs]
 
-        model_inputs = self.preprocess(
+        model_inputs = self.preprocess_images(
             images=images,
             limit_side_len=(
                 limit_side_len if limit_side_len is not None else self.limit_side_len
@@ -337,7 +337,7 @@ class TextDetTransformersPredictor(TransformersPredictor):
         }
 
     def postprocess(
-        self, outputs, threshold, target_sizes, box_threshold, unclip_ratio
+        self, outputs, threshold, target_sizes, box_threshold, unclip_ratio, **kwargs
     ):
         predictions = self.image_processor.post_process_object_detection(
             outputs,

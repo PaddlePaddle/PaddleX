@@ -162,10 +162,10 @@ class TransformersPredictor(LocalModelPredictor):
         raise NotImplementedError
 
     @benchmark.timeit
-    def preprocess(self, images, **kwargs):
+    def preprocess_images(self, images, **kwargs):
         if getattr(self, "image_processor", None) is None:
             raise ValueError(
-                "Please make sure `self.image_processor` is set before calling `preprocess`."
+                "Please make sure `self.image_processor` is set before calling `preprocess_images`."
             )
         model_inputs = self.image_processor(
             images=images, return_tensors="pt", **kwargs
@@ -189,7 +189,7 @@ class TransformersPredictor(LocalModelPredictor):
         return outputs
 
     @abstractmethod
-    def postprocess(self):
+    def postprocess(self, outputs, **kwargs):
         raise NotImplementedError
 
     @abstractmethod

@@ -246,7 +246,7 @@ class ClasTransformersPredictor(TransformersPredictor):
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
         images = [Image.fromarray(img) for img in batch_raw_imgs]
 
-        model_inputs = self.preprocess(images=images)
+        model_inputs = self.preprocess_images(images=images)
         outputs = self.forward(model_inputs)
         indexes, batch_scores, batch_label_names = self.postprocess(outputs, topk)
 
@@ -259,7 +259,7 @@ class ClasTransformersPredictor(TransformersPredictor):
             "label_names": batch_label_names,
         }
 
-    def postprocess(self, outputs, topk):
+    def postprocess(self, outputs, topk, **kwargs):
         import torch
 
         id2label = self._resolve_id2label()

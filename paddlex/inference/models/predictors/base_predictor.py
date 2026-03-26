@@ -16,6 +16,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
+from ....utils import logging
 from ....utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_ITERS,
@@ -54,6 +55,10 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
     def engine_config(self) -> Dict[str, Any]:
         return dict(self._engine_config)
 
+    @property
+    def supports_benchmark(self) -> bool:
+        return True
+
     def __call__(
         self,
         input: Any,
@@ -63,7 +68,14 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
         """Default: delegate to apply."""
         if batch_size is not None:
             self.batch_sampler.batch_size = batch_size
-        if INFER_BENCHMARK:
+
+        benchmark_enabled = INFER_BENCHMARK or PIPELINE_BENCHMARK
+        if benchmark_enabled and not self.supports_benchmark:
+            logging.warning(
+                "%s does not support benchmark, but benchmark is enabled. Skipping.",
+                self.__class__.__name__,
+            )
+        elif INFER_BENCHMARK:
             # TODO(zhang-prog): Get metadata of input data
             @benchmark.timeit_with_options(name=ENTRY_POINT_NAME)
             def _apply(input, **kwargs):
@@ -71,6 +83,9 @@ class BasePredictor(ABC, metaclass=AutoRegisterABCMetaClass):
 
             if isinstance(input, list):
                 raise TypeError("`input` cannot be a list in benchmark mode")
+
+            if batch_size is None:
+                batch_size = 1
             input = [input] * batch_size
 
             if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITERS > 0):
