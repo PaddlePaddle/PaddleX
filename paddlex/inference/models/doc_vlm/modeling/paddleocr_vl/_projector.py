@@ -93,9 +93,9 @@ class Projector(nn.Layer):
                     image_feature,
                     "(t h p1 w p2) d -> (t h w) (p1 p2 d)",
                     t=int(t),
-                    h=int(h // m1),
+                    h=int(h) // int(m1),
                     p1=int(m1),
-                    w=int(w // m2),
+                    w=int(w) // int(m2),
                     p2=int(m2),
                 )
                 hidden_states = self.linear_1(image_feature)
