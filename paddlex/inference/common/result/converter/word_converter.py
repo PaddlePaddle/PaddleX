@@ -142,10 +142,19 @@ def build_word_blocks(
     for block in parsing_res_list:
         label = block.label
         content = getattr(block, "content", "")
-        if label in ["image", "chart", "seal"]:
+        if label in ["image", "seal"]:
             if block.image is None:
                 continue
             content = block.image["path"]
+        elif label == "chart":
+            if block.image is not None:
+                content = block.image["path"]
+            elif content:
+                # VLM chart recognition: pipe-delimited table text → reuse table rendering
+                content = content.replace("|", "\t")
+                label = "table"
+            else:
+                continue
         config = style_map.get(label, default_config)
         word_block = {
             "type": label,
