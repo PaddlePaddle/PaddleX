@@ -156,7 +156,6 @@ ACT2CLS = {
     "gelu_10": (ClippedGELUActivation, {"min": -10, "max": 10}),
     "gelu_fast": FastGELUActivation,
     "gelu_new": NewGELUActivation,
-    "hardswish": nn.Hardswish,
     # HACK
     "gelu_pytorch_tanh": NewGELUActivation,
     "gelu_python": (GELUActivation, {"use_gelu_python": True}),
