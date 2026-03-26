@@ -241,7 +241,7 @@ class RTDETRConfig(PretrainedConfig):
     ):
         if backbone_config["model_type"] != "hgnet_v2":
             raise RuntimeError(
-                f"There is no dynamic graph implementation for backbone {repr(backbone_config["model_type"])}."
+                f"There is no dynamic graph implementation for backbone {repr(backbone_config['model_type'])}."
             )
         self.arch = backbone_config["arch"]
         self.freeze_stem_only = backbone_config["freeze_stem_only"]
