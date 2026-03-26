@@ -963,6 +963,27 @@ def _col_widths_emu_from_gaps(x_gaps, num_cols, usable_width_emu, page_width_px)
     return [col_w] * num_cols
 
 
+def _minimize_section_break_para(para):
+    """Minimize the height of a section-break paragraph.
+
+    After doc.add_section(WD_SECTION.CONTINUOUS), the last paragraph becomes the
+    section-break carrier. Set its font size and line spacing to 1pt so it contributes
+    negligible vertical space to the page.
+
+    Args:
+        para: docx Paragraph object (typically doc.paragraphs[-1]).
+    """
+    from docx.shared import Emu as _Emu
+    from docx.shared import Pt as _Pt
+
+    para.paragraph_format.space_before = _Emu(0)
+    para.paragraph_format.space_after = _Emu(0)
+    if not para.runs:
+        para.add_run()
+    para.runs[0].font.size = _Pt(1)
+    para.paragraph_format.line_spacing = _Pt(1)
+
+
 def _estimate_page_content_height(
     segments, page_metrics, abs_image_paths, scale_y, original_image_width=0
 ):
@@ -973,22 +994,28 @@ def _estimate_page_content_height(
         page_metrics: Dict from _build_page_metrics().
         abs_image_paths: Dict mapping image name to absolute path.
         scale_y: Pixels-to-EMU Y factor.
-        original_image_width: Original page width in pixels (passed through to
-            _estimate_block_height for accurate image aspect-ratio calculation).
+        original_image_width: Original page width in pixels; used as page_width_px
+            for _col_widths_emu_from_gaps and passed to _estimate_block_height for
+            accurate image aspect-ratio calculation.
 
     Returns:
-        int: Estimated total height in EMU.
+        Tuple[int, Dict]: (estimated_height_emu, spacings_cache) where spacings_cache
+            maps segment index to pre-computed spacing lists (single: list, multi:
+            list-of-lists) so the write loop can reuse them without recomputing.
     """
     scale_x = page_metrics["scale_x"]
     usable_width_emu = page_metrics["usable_width_emu"]
+    page_width_px = original_image_width if original_image_width > 0 else 1000
     total = 0
+    spacings_cache: Dict[int, Any] = {}
 
-    for segment in segments:
+    for seg_idx, segment in enumerate(segments):
         seg_type = segment["type"]
 
         if seg_type == "single":
             blocks = segment["blocks"]
             spacings = _compute_vertical_spacing(blocks, scale_y)
+            spacings_cache[seg_idx] = spacings
             seg_height = 0
             for block, sp in zip(blocks, spacings):
                 seg_height += _estimate_block_height(
@@ -1011,9 +1038,10 @@ def _estimate_page_content_height(
                 segment.get("_x_gaps", []),
                 num_cols,
                 usable_width_emu,
-                original_image_width,
+                page_width_px,
             )
 
+            col_spacings_list = []
             col_heights = []
             for col_idx, col_blocks in enumerate(columns):
                 col_w = (
@@ -1022,6 +1050,7 @@ def _estimate_page_content_height(
                     else col_widths_emu[-1]
                 )
                 spacings = _compute_vertical_spacing(col_blocks, scale_y)
+                col_spacings_list.append(spacings)
                 ch = 0
                 for block, sp in zip(col_blocks, spacings):
                     ch += _estimate_block_height(
@@ -1035,13 +1064,14 @@ def _estimate_page_content_height(
                     if sp:
                         ch += sp
                 col_heights.append(ch)
+            spacings_cache[seg_idx] = col_spacings_list
             total += max(col_heights) if col_heights else 0
 
     # Section break overhead: each CONTINUOUS break ≈ 1 line (12pt ≈ 152400 EMU)
     section_break_count = max(0, len(segments) - 1)
     total += section_break_count * 152400
 
-    return total
+    return total, spacings_cache
 
 
 def _compute_horizontal_indent(block, content_x1_px, page_width_px, scale_x):
@@ -1320,7 +1350,7 @@ class WordConverter:
             # This prevents single-page content from overflowing into a second page due to
             # Word's text reflow (font metrics, column-width-induced line wrapping, etc.).
             usable_height_emu = page_metrics["usable_height_emu"]
-            estimated_height = _estimate_page_content_height(
+            estimated_height, spacings_cache = _estimate_page_content_height(
                 segments, page_metrics, abs_image_paths, scale_y, original_image_width
             )
             SAFETY_MARGIN = 0.95  # keep 5% buffer to avoid edge-case overflow
@@ -1332,7 +1362,7 @@ class WordConverter:
             img_height_scale = (v_scale / 0.85) if v_scale < 0.85 else 1.0
 
             first_segment = True
-            for segment in segments:
+            for seg_idx, segment in enumerate(segments):
                 seg_type = segment["type"]
 
                 # Determine column count for Word section
@@ -1381,15 +1411,7 @@ class WordConverter:
                     section = doc.add_section(WD_SECTION.CONTINUOUS)
                     # Minimize section break paragraph height (avoids default line height overhead)
                     if doc.paragraphs:
-                        brk_para = doc.paragraphs[-1]
-                        brk_para.paragraph_format.space_before = _Emu(0)
-                        brk_para.paragraph_format.space_after = _Emu(0)
-                        from docx.shared import Pt as _Pt
-
-                        if not brk_para.runs:
-                            brk_para.add_run()
-                        brk_para.runs[0].font.size = _Pt(1)
-                        brk_para.paragraph_format.line_spacing = _Pt(1)
+                        _minimize_section_break_para(doc.paragraphs[-1])
                     _set_section_columns(
                         section,
                         num_cols=num_cols,
@@ -1399,7 +1421,9 @@ class WordConverter:
 
                 if seg_type == "single":
                     blocks_list = segment["blocks"]
-                    spacings = _compute_vertical_spacing(blocks_list, scale_y)
+                    spacings = spacings_cache.get(seg_idx) or _compute_vertical_spacing(
+                        blocks_list, scale_y
+                    )
                     for block, spacing in zip(blocks_list, spacings):
                         indent = _compute_horizontal_indent(
                             block, content_x1, page_width, scale_x
@@ -1436,12 +1460,17 @@ class WordConverter:
                 else:
                     # multi-column: write columns left-to-right, separated by column breaks
                     columns = segment["columns"]
+                    cached_col_spacings = spacings_cache.get(seg_idx) or []
                     for col_idx, col_blocks in enumerate(columns):
                         # Determine per-column width for max_height estimation
                         col_w_emu = usable_width_emu // max(num_cols, 1)
                         if col_widths_twips and col_idx < len(col_widths_twips):
                             col_w_emu = col_widths_twips[col_idx] * EMU_PER_TWIP
-                        spacings = _compute_vertical_spacing(col_blocks, scale_y)
+                        spacings = (
+                            cached_col_spacings[col_idx]
+                            if col_idx < len(cached_col_spacings)
+                            else _compute_vertical_spacing(col_blocks, scale_y)
+                        )
                         for block, spacing in zip(col_blocks, spacings):
                             adjusted_sp = (
                                 int(spacing * v_scale) if spacing is not None else None
