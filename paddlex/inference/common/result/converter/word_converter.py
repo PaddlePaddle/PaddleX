@@ -35,6 +35,8 @@ def _set_paragraph_style(para, config):
     para.alignment = config.get("align", WD_ALIGN_PARAGRAPH.LEFT)
     if config.get("indent", False):
         para.paragraph_format.first_line_indent = Inches(0.3)
+    # Force single line spacing to prevent default 1.15x from consuming extra vertical space
+    para.paragraph_format.line_spacing = 1.0
 
 
 def _classify_number_position(bbox, page_width, page_height):
@@ -301,6 +303,7 @@ def _write_block(
                 spacer = doc.add_paragraph()
                 spacer.paragraph_format.space_before = Emu(space_before_emu)
                 spacer.paragraph_format.space_after = Emu(0)
+                spacer.paragraph_format.line_spacing = Pt(1)
                 run = spacer.add_run()
                 run.font.size = Pt(1)
 
@@ -991,6 +994,19 @@ class WordConverter:
             pages.setdefault(page_idx, []).append(block)
 
         doc = Document()
+        # Override pPrDefault: set line spacing to single (240 = 1.0x) and after to 0.
+        # python-docx default template has w:line="276" (1.15x) which consumes
+        # extra vertical space in column breaks and other unstyled paragraphs.
+        from docx.oxml.ns import qn as _qn
+
+        styles_element = doc.styles.element
+        ppr_default = styles_element.find(".//" + _qn("w:pPrDefault"))
+        if ppr_default is not None:
+            spacing = ppr_default.find(".//" + _qn("w:spacing"))
+            if spacing is not None:
+                spacing.set(_qn("w:line"), "240")
+                spacing.set(_qn("w:lineRule"), "auto")
+                spacing.set(_qn("w:after"), "0")
         first_page = True
 
         HEADER_FOOTER_LABELS = {
@@ -1055,6 +1071,12 @@ class WordConverter:
             page_section.right_margin = _Emu(right_m)
             page_section.top_margin = _Emu(top_m)
             page_section.bottom_margin = _Emu(bottom_m)
+            # Set page size to A4 to match _build_page_metrics() which uses A4 dimensions.
+            # python-docx default is US Letter (11"), causing ~0.69" overflow for A4 content.
+            _PAGE_WIDTH_EMU = 7560820  # A4 width  (8.27")
+            _PAGE_HEIGHT_EMU = 10693400  # A4 height (11.69")
+            page_section.page_width = _Emu(_PAGE_WIDTH_EMU)
+            page_section.page_height = _Emu(_PAGE_HEIGHT_EMU)
 
             # EMU_PER_TWIP = 635 (1 twip = 20 points = 635 EMU)
             EMU_PER_TWIP = 635
@@ -1153,6 +1175,8 @@ class WordConverter:
                             from docx.enum.text import WD_BREAK
 
                             para = doc.add_paragraph()
+                            para.paragraph_format.space_before = _Emu(0)
+                            para.paragraph_format.space_after = _Emu(0)
                             run = para.add_run()
                             run.add_break(WD_BREAK.COLUMN)
 
