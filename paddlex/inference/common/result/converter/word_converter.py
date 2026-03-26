@@ -211,8 +211,11 @@ def build_word_blocks(
             "content": deepcopy(content),
             "config": config,
         }
-        if include_bbox and hasattr(block, "bbox") and block.bbox is not None:
-            word_block["bbox"] = list(block.bbox)
+        if include_bbox:
+            if hasattr(block, "bbox") and block.bbox is not None:
+                word_block["bbox"] = list(block.bbox)
+            if hasattr(block, "page_index") and block.page_index is not None:
+                word_block["page_index"] = block.page_index
         word_blocks.append(word_block)
         if block.image is not None:
             images.append({"path": block.image["path"], "img": block.image["img"]})
@@ -232,7 +235,8 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
             add_paragraph() / add_table().
         block: Dict with keys "type", "content", "config".
         abs_image_paths: Dict mapping original image path → absolute path.
-        original_image_width: Reserved for future scaling (currently unused).
+        original_image_width: Width of the original page image in pixels, used to
+            calculate proportional image width in the Word document.
     """
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.shared import Inches
@@ -253,7 +257,15 @@ def _write_block(doc, block, abs_image_paths, original_image_width=500):
             return
         para = doc.add_paragraph()
         run = para.add_run()
-        run.add_picture(abs_image_path, width=Inches(5))
+        # Calculate proportional width based on bbox ratio
+        USABLE_PAGE_WIDTH = 6.0  # inches (A4/Letter with ~1.25" margins)
+        bbox = block.get("bbox")
+        if bbox and original_image_width > 0:
+            ratio = (bbox[2] - bbox[0]) / original_image_width
+            img_width = max(1.0, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
+        else:
+            img_width = 5.0  # fallback: maintain backward compatibility
+        run.add_picture(abs_image_path, width=Inches(img_width))
         para.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     # --- table ---
