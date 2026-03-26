@@ -21,7 +21,6 @@ from paddle import ParamAttr
 from paddle.nn.initializer import KaimingNormal
 from paddle.regularizer import L2Decay
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
@@ -692,9 +691,6 @@ class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
             fix_nan=self.head_fix_nan,
         )
 
-    add_inference_operations("pp_ocrv5_mobile_det_forward")
-
-    @benchmark.timeit_with_options(name="pp_ocrv5_mobile_det_forward")
     def forward(self, x: List) -> List:
 
         if isinstance(x, (list, tuple)):

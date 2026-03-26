@@ -17,7 +17,6 @@ from typing import List, Optional
 import paddle
 import paddle.nn as nn
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
@@ -258,9 +257,6 @@ class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
             else nn.Identity()
         )
 
-    add_inference_operations("pplcnet_forward")
-
-    @benchmark.timeit_with_options(name="pplcnet_forward")
     def forward(self, x: List) -> List:
         pixel_values = paddle.to_tensor(x[0])
 

@@ -14,7 +14,6 @@
 
 import paddle
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
 from .slanext_modules.rec_vary_vit import Vary_VIT_B
 from .slanext_modules.table_att_head import SLAHead
@@ -69,9 +68,6 @@ class SLANeXt(PretrainedModel):
             loc_reg_num=self.config.loc_reg_num,
         )
 
-    add_inference_operations("slanext_forward")
-
-    @benchmark.timeit_with_options(name="slanext_forward")
     def forward(self, x):
         x = paddle.to_tensor(x[0])
         x = self.backbone(x)

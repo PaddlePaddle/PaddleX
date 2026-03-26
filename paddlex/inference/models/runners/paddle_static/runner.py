@@ -23,7 +23,6 @@ from pydantic import BaseModel, ConfigDict
 
 from paddlex.inference.models.runners.utils import sort_inputs
 from paddlex.inference.models.utils.model_paths import get_model_paths
-from paddlex.inference.utils.benchmark import add_inference_operations, benchmark
 from paddlex.utils import logging
 from paddlex.utils.deps import class_requires_deps
 from paddlex.utils.device import check_supported_device_type
@@ -35,6 +34,7 @@ from paddlex.utils.flags import (
 )
 from paddlex.utils.import_guard import import_paddle, import_paddle_module
 
+from ..inference_runner import InferenceRunner
 from .config import (
     DISABLE_TRT_HALF_OPS_CONFIG,
     MKLDNN_BLOCKLIST,
@@ -66,12 +66,6 @@ class PaddleStaticRunnerConfig(BaseModel):
     trt_shape_range_info_path: Optional[str] = None
     trt_allow_rebuild_at_runtime: Optional[bool] = None
     mkldnn_cache_capacity: Optional[int] = None
-
-
-INFERENCE_OPERATIONS = [
-    "PaddleRunnerChainLegacy",
-]
-add_inference_operations(*INFERENCE_OPERATIONS)
 
 
 def resolve_paddle_static_engine_config(
@@ -247,7 +241,6 @@ def _convert_trt(
     convert(pp_model_path, trt_config)
 
 
-@benchmark.timeit
 class PaddleRunnerChainLegacy:
     """Legacy Paddle Inference chain wrapper."""
 
@@ -274,7 +267,7 @@ class PaddleRunnerChainLegacy:
 
 
 @class_requires_deps("paddlepaddle")
-class PaddleStaticRunner:
+class PaddleStaticRunner(InferenceRunner):
     """Paddle static graph inference runner (Paddle Inference API)."""
 
     def __init__(

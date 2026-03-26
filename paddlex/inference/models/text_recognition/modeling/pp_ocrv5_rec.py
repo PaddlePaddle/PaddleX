@@ -15,7 +15,6 @@
 
 import paddle
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import PretrainedConfig, PretrainedModel
 from .pp_ocrv5_rec_modules.rec_lcnetv3 import PPLCNetV3
 from .pp_ocrv5_rec_modules.rec_multi_head import MultiHead
@@ -52,7 +51,7 @@ class PPOCRV5RecConfig(PretrainedConfig):
         if self.model_type == "pp_ocrv5_mobile_rec":
             self.net_config = net_config
             self.scale = scale
-            self.conv_kxk_num =conv_kxk_num
+            self.conv_kxk_num = conv_kxk_num
             self.lr_mult_list = lr_mult_list
             self.lab_lr = lab_lr
         elif self.model_type == "pp_ocrv5_server_rec":
@@ -67,7 +66,7 @@ class PPOCRV5RecConfig(PretrainedConfig):
             self.class_num = class_num
             self.lr_mult_list = lr_mult_list
             self.out_indices = out_indices
-    
+
         self.head_list = head_list
         self.decode_list = decode_list
         self.tensor_parallel_degree = 1
@@ -107,9 +106,6 @@ class PPOCRV5Rec(PretrainedModel):
             head_list=self.config.head_list,
         )
 
-    add_inference_operations("pp_ocrv5_rec_forward")
-
-    @benchmark.timeit_with_options(name="pp_ocrv5_rec_forward")
     def forward(self, x):
         x = paddle.to_tensor(x[0])
         x = self.backbone(x)
@@ -123,7 +119,7 @@ class PPOCRV5Rec(PretrainedModel):
             "attn.qkv",
             "mixer.qkv",
             "cross_attn.kv",
-            "mixer.proj"
+            "mixer.proj",
         ]
         need_to_transpose = []
         all_weight_keys = []

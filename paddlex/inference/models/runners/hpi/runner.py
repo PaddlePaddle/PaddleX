@@ -28,10 +28,10 @@ from paddlex.inference.models.runners.paddle_static import (
 from paddlex.inference.models.runners.paddle_static.config import get_default_run_mode
 from paddlex.inference.models.runners.utils import sort_inputs
 from paddlex.inference.models.utils.model_paths import get_model_paths
-from paddlex.inference.utils.benchmark import add_inference_operations, benchmark
 from paddlex.utils import logging
 from paddlex.utils.deps import class_requires_deps, require_hpip
 
+from ..inference_runner import InferenceRunner
 from .backend import suggest_inference_backend_and_config
 from .config import (
     HPIConfig,
@@ -41,10 +41,7 @@ from .config import (
     TensorRTConfig,
 )
 
-add_inference_operations("MultiBackendInfer")
 
-
-@benchmark.timeit
 @class_requires_deps("ultra-infer")
 class MultiBackendInfer(object):
     def __init__(self, ui_runtime):
@@ -56,7 +53,7 @@ class MultiBackendInfer(object):
 
 
 @class_requires_deps("ultra-infer")
-class HPIRunner:
+class HPIRunner(InferenceRunner):
     """HPI runner supporting multiple backends (Paddle, ONNX, TensorRT, etc.)."""
 
     def __init__(
