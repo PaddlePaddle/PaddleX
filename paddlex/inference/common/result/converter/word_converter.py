@@ -17,11 +17,19 @@
 from __future__ import annotations
 
 import math
-from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple
 
-# Block type labels that represent image-like content
+# Block type labels that represent image-like content (chart/image/seal)
 _IMAGE_LABELS = ("chart", "image", "seal")
+
+# Labels excluded from body content (written to section header/footer or skipped)
+_HEADER_FOOTER_LABELS = {
+    "header",
+    "footer",
+    "header_image",
+    "footer_image",
+    "aside_text",
+}
 
 
 def _get_image_size(abs_path: str) -> Optional[Tuple[int, int]]:
@@ -227,7 +235,7 @@ def build_word_blocks(
         config = style_map.get(label, default_config)
         word_block = {
             "type": label,
-            "content": deepcopy(content),
+            "content": content,
             "config": config,
         }
         if include_bbox:
@@ -551,9 +559,10 @@ def _xy_cut_segment(blocks, page_width, page_height, max_cols=3):
         if not strip_blocks:
             continue
 
-        # Separate full-span and narrow blocks in this strip
-        full_span = [b for b in strip_blocks if _is_full_span(b, page_width)]
-        narrow = [b for b in strip_blocks if not _is_full_span(b, page_width)]
+        # Separate full-span and narrow blocks in this strip (single pass)
+        full_span, narrow = [], []
+        for b in strip_blocks:
+            (full_span if _is_full_span(b, page_width) else narrow).append(b)
 
         if not narrow:
             # Only full-span blocks → single segment
@@ -772,10 +781,7 @@ def _build_page_metrics(body_blocks, page_width_px, page_height_px):
             "usable_height_emu": max(usable_h, 1),
         }
 
-    x1s = [b["bbox"][0] for b in blocks_with_bbox]
-    y1s = [b["bbox"][1] for b in blocks_with_bbox]
-    x2s = [b["bbox"][2] for b in blocks_with_bbox]
-    y2s = [b["bbox"][3] for b in blocks_with_bbox]
+    x1s, y1s, x2s, y2s = zip(*(b["bbox"][:4] for b in blocks_with_bbox))
 
     content_x1, content_y1 = min(x1s), min(y1s)
     content_x2, content_y2 = max(x2s), max(y2s)
@@ -1273,14 +1279,6 @@ class WordConverter:
                 spacing.set(_qn("w:after"), "0")
         first_page = True
 
-        HEADER_FOOTER_LABELS = {
-            "header",
-            "footer",
-            "header_image",
-            "footer_image",
-            "aside_text",
-        }
-
         for page_idx in sorted(pages.keys()):
             page_blocks = pages[page_idx]
             page_width = original_image_width if original_image_width > 0 else 1000
@@ -1311,7 +1309,7 @@ class WordConverter:
 
             # Segment the page using XY-Cut projection
             body_blocks = [
-                b for b in page_blocks if b.get("type", "") not in HEADER_FOOTER_LABELS
+                b for b in page_blocks if b.get("type", "") not in _HEADER_FOOTER_LABELS
             ]
             segments = _xy_cut_segment(body_blocks, page_width, page_height)
 
