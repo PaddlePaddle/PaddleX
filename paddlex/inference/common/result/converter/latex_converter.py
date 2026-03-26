@@ -83,20 +83,17 @@ def _generate_table_latex(block: Dict) -> str:
     content = block.get("content", "")
     if "<table" in content:
         soup = BeautifulSoup(content, "html.parser")
-        rows = [
-            [
-                (
-                    _escape_latex(td.get_text(strip=True))
-                    if not re.search(
-                        r"(\$.*?\$|\\\(.*?\\\)|\\\[.*?\\\])",
-                        td.get_text(strip=True),
-                    )
-                    else td.get_text(strip=True)
+        rows = []
+        for tr in soup.find_all("tr"):
+            row = []
+            for td in tr.find_all(["td", "th"]):
+                cell = td.get_text(strip=True)
+                row.append(
+                    cell
+                    if re.search(r"(\$.*?\$|\\\(.*?\\\)|\\\[.*?\\\])", cell)
+                    else _escape_latex(cell)
                 )
-                for td in tr.find_all(["td", "th"])
-            ]
-            for tr in soup.find_all("tr")
-        ]
+            rows.append(row)
     else:
         rows = [
             [
