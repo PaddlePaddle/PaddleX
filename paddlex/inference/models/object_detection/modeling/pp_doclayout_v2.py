@@ -36,9 +36,6 @@ def bbox_cxcywh_to_xyxy(x):
 __all__ = ["PPDocLayoutV2"]
 
 
-# ---------------------------------------------------------------------------
-# Utility functions
-# ---------------------------------------------------------------------------
 
 def inverse_sigmoid(x, eps=1e-5):
     x = x.clip(min=0, max=1)
@@ -63,9 +60,7 @@ def get_order(order_logits):
     return order_seq, order_votes
 
 
-# ---------------------------------------------------------------------------
 # PPDocLayoutV2FrozenBatchNorm2d
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutV2FrozenBatchNorm2d(nn.Layer):
     """
@@ -90,9 +85,6 @@ class PPDocLayoutV2FrozenBatchNorm2d(nn.Layer):
         return x * scale + bias
 
 
-# ---------------------------------------------------------------------------
-# Reading Order components
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutV2GlobalPointer(nn.Layer):
     def __init__(self, config):
@@ -604,9 +596,7 @@ class PPDocLayoutV2ReadingOrder(nn.Layer):
         return read_order_logits
 
 
-# ---------------------------------------------------------------------------
 # Detection model components
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutV2MLPPredictionHead(nn.Layer):
     """Simple multi-layer perceptron for bbox prediction."""
@@ -956,9 +946,6 @@ class PPDocLayoutV2HybridEncoder(nn.Layer):
         return pan_feature_maps
 
 
-# ---------------------------------------------------------------------------
-# Deformable Attention
-# ---------------------------------------------------------------------------
 
 class MultiScaleDeformableAttention(nn.Layer):
     """Eager fallback implementation using grid_sample."""
@@ -1103,9 +1090,6 @@ class PPDocLayoutV2MultiscaleDeformableAttention(nn.Layer):
         return output, attn_weights
 
 
-# ---------------------------------------------------------------------------
-# Decoder
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutV2DecoderLayer(nn.Layer):
     def __init__(self, config):
@@ -1257,9 +1241,7 @@ class PPDocLayoutV2Decoder(nn.Layer):
         }
 
 
-# ---------------------------------------------------------------------------
 # Backbone wrapper
-# ---------------------------------------------------------------------------
 
 def replace_batch_norm(model):
     """Recursively replace all nn.BatchNorm2D with PPDocLayoutV2FrozenBatchNorm2d."""
@@ -1297,9 +1279,6 @@ class PPDocLayoutV2ConvEncoder(nn.Layer):
         return features[-n:]
 
 
-# ---------------------------------------------------------------------------
-# PPDocLayoutV2Model (encoder-decoder backbone)
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutV2Model(nn.Layer):
     def __init__(self, config):
@@ -1480,9 +1459,6 @@ class PPDocLayoutV2Model(nn.Layer):
         return decoder_outputs
 
 
-# ---------------------------------------------------------------------------
-# Post-processing
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutPostProcess:
     def __init__(
@@ -1605,9 +1581,6 @@ class PPDocLayoutPostProcess:
         return bbox_pred, bbox_num, mask_pred
 
 
-# ---------------------------------------------------------------------------
-# Top-level PPDocLayoutV2 model (PaddleX inference model)
-# ---------------------------------------------------------------------------
 
 class PPDocLayoutV2(BatchNormHFStateDictMixin, PretrainedModel):
 
