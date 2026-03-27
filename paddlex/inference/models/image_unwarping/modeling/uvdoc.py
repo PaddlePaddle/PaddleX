@@ -283,6 +283,7 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
     """UVDoc model for document image rectification."""
 
     config_class = UVDocConfig
+    _keys_to_ignore_on_load_unexpected = ["num_batches_tracked"]
 
     def __init__(self, config: UVDocConfig):
         super().__init__(config)

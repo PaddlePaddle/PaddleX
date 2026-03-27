@@ -115,28 +115,13 @@ class WarpTransformersPredictor(TransformersPredictor):
         return image_processor, model
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
-        import torch
-
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
         images = [Image.fromarray(img[..., ::-1]) for img in batch_raw_imgs]
 
-        model_inputs = self.image_processor(images=images, return_tensors="pt")
+        model_inputs = self.preprocess_images(images=images)
         original_images = model_inputs.pop("original_images")
-        model_inputs = self._move_to_infer_device(model_inputs)
-
-        with torch.inference_mode():
-            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
-
-        results = self.image_processor.post_process_document_rectification(
-            outputs.last_hidden_state, original_images=original_images
-        )
-
-        batch_warp_preds = []
-        for res in results:
-            warped = res["images"]
-            if isinstance(warped, torch.Tensor):
-                warped = warped.detach().cpu().numpy()
-            batch_warp_preds.append(warped)
+        outputs = self.forward(model_inputs)
+        batch_warp_preds = self.postprocess(outputs, original_images=original_images)
 
         return {
             "input_path": batch_data.input_paths,
@@ -144,3 +129,16 @@ class WarpTransformersPredictor(TransformersPredictor):
             "input_img": batch_raw_imgs,
             "doctr_img": batch_warp_preds,
         }
+
+    def postprocess(self, outputs, *, original_images, **kwargs):
+        results = self.image_processor.post_process_document_rectification(
+            outputs.last_hidden_state, original_images=original_images
+        )
+
+        batch_warp_preds = []
+        for res in results:
+            warped = res["images"]
+            warped = warped.detach().cpu().numpy()
+            batch_warp_preds.append(warped)
+
+        return batch_warp_preds

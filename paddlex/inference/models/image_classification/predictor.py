@@ -245,7 +245,7 @@ class ClasTransformersPredictor(TransformersPredictor):
 
         model_inputs = self.preprocess_images(images=images)
         outputs = self.forward(model_inputs)
-        indexes, batch_scores, batch_label_names = self.postprocess(outputs, topk)
+        indexes, batch_scores, batch_label_names = self.postprocess(outputs, topk=topk)
 
         return {
             "input_path": batch_data.input_paths,
