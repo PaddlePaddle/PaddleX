@@ -79,7 +79,14 @@ class TextDetPredictor(BasePredictor):
         pre_tfs["ToBatch"] = ToBatch()
 
         if self._use_static_model:
-            infer = self.create_static_infer()
+            if self._use_hpip and self.hpi_config.device_type == "npu":
+                from ais_bench.infer.interface import InferSession
+                MODEL_PATH_DET = self.model_dir / \
+                    f"{self.MODEL_FILE_PREFIX}.{self.hpi_config.backend}"
+                infer = InferSession(
+                    device_id=0, model_path=str(MODEL_PATH_DET))
+            else:
+                infer = self.create_static_infer()
         else:
             if self.model_name == "PP-OCRv5_mobile_det":
                 from .modeling import PPOCRV5MobileDet
@@ -115,7 +122,6 @@ class TextDetPredictor(BasePredictor):
         unclip_ratio: Union[float, None] = None,
         max_side_limit: Union[int, None] = None,
     ):
-
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
         batch_imgs, batch_shapes = self.pre_tfs["Resize"](
             imgs=batch_raw_imgs,
@@ -130,7 +136,10 @@ class TextDetPredictor(BasePredictor):
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
 
         if self._use_static_model:
-            batch_preds = self.infer(x=x)
+            if self._use_hpip and self.hpi_config.device_type == "npu":
+                batch_preds = self.infer.infer(x, mode='dymshape', custom_sizes=100000000)
+            else:
+                batch_preds = self.infer(x)
         else:
             with TemporaryDeviceChanger(self.device):
                 batch_preds = self.infer(x=x)
