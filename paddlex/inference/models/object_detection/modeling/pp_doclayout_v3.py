@@ -1361,11 +1361,29 @@ class PPDocLayoutV3(BatchNormHFStateDictMixin, PretrainedModel):
         return keys
 
     def set_hf_state_dict(self, state_dict, *args, **kwargs):
-        return super().set_hf_state_dict(
-            _apply_rt_detr_key_conversion(state_dict), *args, **kwargs
-        )
+        converted = _apply_rt_detr_key_conversion(state_dict)
+        # decoder.class_embed and decoder.bbox_embed are tied to enc_score_head and
+        # enc_bbox_head respectively (HF _tied_weights_keys). Safetensors only stores
+        # the canonical enc_*_head keys, so we duplicate them under the decoder paths
+        # so that Paddle's set_state_dict does not warn about missing keys.
+        aliases = {}
+        for k, v in converted.items():
+            if k.startswith("model.enc_score_head."):
+                aliases[k.replace("model.enc_score_head.", "model.decoder.class_embed.")] = v
+            elif k.startswith("model.enc_bbox_head."):
+                aliases[k.replace("model.enc_bbox_head.", "model.decoder.bbox_embed.")] = v
+        converted.update(aliases)
+        return super().set_hf_state_dict(converted, *args, **kwargs)
 
     def get_hf_state_dict(self, *args, **kwargs):
-        return _reverse_rt_detr_key_conversion(
+        state_dict = _reverse_rt_detr_key_conversion(
             super().get_hf_state_dict(*args, **kwargs)
         )
+        # Remove tied-weight duplicates: decoder.class_embed and decoder.bbox_embed
+        # are aliases of enc_score_head and enc_bbox_head; only keep the canonical keys.
+        return {
+            k: v
+            for k, v in state_dict.items()
+            if not k.startswith("model.decoder.class_embed.")
+            and not k.startswith("model.decoder.bbox_embed.")
+        }
