@@ -67,6 +67,7 @@ class QWenTokenizer(PretrainedTokenizer):
         vocab_file,
         errors="replace",
         padding_side="left",
+        extra_special_tokens=None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -88,6 +89,8 @@ class QWenTokenizer(PretrainedTokenizer):
                 SPECIAL_TOKENS, start=len(self.mergeable_ranks)
             )
         }
+        if extra_special_tokens:
+            self.special_tokens.update(extra_special_tokens)
 
         enc = tiktoken.Encoding(
             "Qwen",
