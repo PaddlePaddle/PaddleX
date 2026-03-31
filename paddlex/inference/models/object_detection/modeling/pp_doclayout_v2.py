@@ -835,7 +835,7 @@ class PPDocLayoutV2SinePositionEmbedding(nn.Layer):
         grid_w = paddle.arange(width).astype(dtype)
         grid_h = paddle.arange(height).astype(dtype)
         # paddle.meshgrid default indexing is "ij", so swap order for "xy" effect
-        grid_w, grid_h = paddle.meshgrid(grid_w, grid_h)
+        grid_h, grid_w = paddle.meshgrid(grid_h, grid_w)
 
         if self.embed_dim % 4 != 0:
             raise ValueError("Embed dimension must be divisible by 4 for 2D sin-cos position embedding")
@@ -1713,12 +1713,14 @@ class PPDocLayoutV2(BatchNormHFStateDictMixin, PretrainedModel):
         t_layers = [
             "fc",
             "o_proj",
+            "out_proj",
             "q_proj",
             "k_proj",
             "v_proj",
             "linear_1",
             "linear_2",
             "enc_bbox_head",
+            "enc_output",
             "spatial_proj",
             "query",
             "key",
