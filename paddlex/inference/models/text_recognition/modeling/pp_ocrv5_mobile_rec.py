@@ -18,17 +18,13 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
 )
 from ...image_classification.modeling.pplcnetv3 import PPLCNetV3Backbone, make_divisible
-from .pp_ocrv5_server_rec import (
-    PPOCRV5ServerRecBlock,
-    PPOCRV5ServerRecConvLayer,
-)
 from ._config_pp_ocrv5_mobile_rec import PPOCRV5MobileRecConfig
+from .pp_ocrv5_server_rec import PPOCRV5ServerRecBlock, PPOCRV5ServerRecConvLayer
 
 
 class PPOCRV5MobileRecEncoderWithSVTR(nn.Layer):
@@ -133,9 +129,6 @@ class PPOCRV5MobileRec(BatchNormHFStateDictMixin, PretrainedModel):
         self.model = PPOCRV5MobileRecModel(config)
         self.head = PPOCRV5MobileRecHead(config)
 
-    add_inference_operations("pp_ocrv5_mobile_rec_forward")
-
-    @benchmark.timeit_with_options(name="pp_ocrv5_mobile_rec_forward")
     def forward(self, x: List) -> List:
         x = paddle.to_tensor(x[0])
         hidden_state = self.model(x)
