@@ -17,6 +17,7 @@ from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
     CLAS_TRANSFORMERS_MODELS,
+    HGNETV2_MODELS,
     MODELS,
     PPLCNET_MODELS,
     ClasRunnerPredictor,
@@ -30,20 +31,38 @@ def _load_pplcnet():
     return PPLCNet
 
 
+def _load_hgnetv2():
+    from .modeling import HGNetV2ForImageClassification
+
+    return HGNetV2ForImageClassification
+
+
 register_predictor_binding_map(
     ClasRunnerPredictor,
     {
         "paddle_static": MODELS,
-        "paddle_dynamic": create_binding_registration(
-            PPLCNET_MODELS,
-            **{
-                PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
-                    _load_pplcnet,
-                    use_safetensors=True,
-                    convert_from_hf=True,
-                ),
-            },
-        ),
+        "paddle_dynamic": [
+            create_binding_registration(
+                PPLCNET_MODELS,
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_pplcnet,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                    ),
+                },
+            ),
+            create_binding_registration(
+                HGNETV2_MODELS,
+                **{
+                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
+                        _load_hgnetv2,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                    ),
+                },
+            ),
+        ],
         "hpi": MODELS,
         "onnxruntime": MODELS,
     },

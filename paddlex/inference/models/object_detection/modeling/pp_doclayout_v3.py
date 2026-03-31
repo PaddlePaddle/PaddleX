@@ -16,6 +16,7 @@ from __future__ import absolute_import, division, print_function
 
 import math
 
+import numpy as np
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
@@ -26,50 +27,16 @@ from ...common.transformers.transformers import (
     PretrainedModel,
 )
 from ...image_classification.modeling.hgnetv2 import HGNetV2Backbone
-from ._config_pp_doclayout_v2 import PPDocLayoutV2Config
+from ._config_pp_doclayout_v3 import PPDocLayoutV3Config
+from .pp_doclayout_v2 import _apply_rt_detr_key_conversion, _reverse_rt_detr_key_conversion
 
 
 def bbox_cxcywh_to_xyxy(x):
     cxcy, wh = paddle.split(x, 2, axis=-1)
     return paddle.concat([cxcy - 0.5 * wh, cxcy + 0.5 * wh], axis=-1)
 
-__all__ = ["PPDocLayoutV2"]
 
-
-def _apply_rt_detr_key_conversion(state_dict):
-    """Convert safetensors old key names to new HF transformers key names.
-
-    Matches the rt_detr conversion_mapping in HF transformers:
-    - out_proj -> o_proj
-    - layers.N.fc1 -> layers.N.mlp.fc1
-    - layers.N.fc2 -> layers.N.mlp.fc2
-    - encoder.encoder.N.layers -> encoder.aifi.N.layers
-    """
-    import re
-
-    new_sd = {}
-    for k, v in state_dict.items():
-        k = k.replace("out_proj", "o_proj")
-        k = re.sub(r"layers\.(\d+)\.fc1", r"layers.\1.mlp.fc1", k)
-        k = re.sub(r"layers\.(\d+)\.fc2", r"layers.\1.mlp.fc2", k)
-        k = re.sub(r"encoder\.encoder\.(\d+)\.layers", r"encoder.aifi.\1.layers", k)
-        new_sd[k] = v
-    return new_sd
-
-
-def _reverse_rt_detr_key_conversion(state_dict):
-    """Reverse conversion: new HF key names back to safetensors old key names."""
-    import re
-
-    new_sd = {}
-    for k, v in state_dict.items():
-        k = k.replace("o_proj", "out_proj")
-        k = re.sub(r"layers\.(\d+)\.mlp\.fc1", r"layers.\1.fc1", k)
-        k = re.sub(r"layers\.(\d+)\.mlp\.fc2", r"layers.\1.fc2", k)
-        k = re.sub(r"encoder\.aifi\.(\d+)\.layers", r"encoder.encoder.\1.layers", k)
-        new_sd[k] = v
-    return new_sd
-
+__all__ = ["PPDocLayoutV3"]
 
 
 def inverse_sigmoid(x, eps=1e-5):
@@ -91,16 +58,60 @@ def get_order(order_logits):
     order_seq = paddle.full(order_pointers.shape, -1, dtype=order_pointers.dtype)
     batch_indices = paddle.arange(B).reshape([-1, 1]).expand([B, N])
     order_seq[batch_indices, order_pointers] = paddle.arange(N).expand([B, N])
-
     return order_seq, order_votes
 
 
-# PPDocLayoutV2FrozenBatchNorm2d
+def mask_to_box_coordinate(mask, dtype):
+    """Convert binary masks to normalized bounding box coordinates (cx, cy, w, h)."""
+    mask = mask.astype("bool")
+    mask_float = mask.astype(dtype)
+    height, width = mask.shape[-2:]
 
-class PPDocLayoutV2FrozenBatchNorm2d(nn.Layer):
-    """
-    BatchNorm2d where the batch statistics and the affine parameters are fixed.
-    """
+    y_coords, x_coords = paddle.meshgrid(
+        paddle.arange(height), paddle.arange(width)
+    )
+    x_coords = x_coords.astype(dtype)
+    y_coords = y_coords.astype(dtype)
+
+    finfo_max = paddle.to_tensor(np.finfo(np.float32).max, dtype=dtype)
+
+    x_coords_masked = x_coords * mask_float
+    x_max = x_coords_masked.flatten(start_axis=-2).max(axis=-1) + 1
+    x_min = (
+        paddle.where(mask, x_coords_masked, finfo_max.expand(x_coords_masked.shape))
+        .flatten(start_axis=-2)
+        .min(axis=-1)
+    )
+
+    y_coords_masked = y_coords * mask_float
+    y_max = y_coords_masked.flatten(start_axis=-2).max(axis=-1) + 1
+    y_min = (
+        paddle.where(mask, y_coords_masked, finfo_max.expand(y_coords_masked.shape))
+        .flatten(start_axis=-2)
+        .min(axis=-1)
+    )
+
+    unnormalized_bbox = paddle.stack([x_min, y_min, x_max, y_max], axis=-1)
+    is_mask_non_empty = paddle.any(mask, axis=[-2, -1]).unsqueeze(-1).astype(dtype)
+    unnormalized_bbox = unnormalized_bbox * is_mask_non_empty
+
+    norm_tensor = paddle.to_tensor([width, height, width, height], dtype=dtype)
+    normalized_bbox_xyxy = unnormalized_bbox / norm_tensor
+
+    x_min_norm, y_min_norm, x_max_norm, y_max_norm = paddle.unbind(
+        normalized_bbox_xyxy, axis=-1
+    )
+
+    center_x = (x_min_norm + x_max_norm) / 2
+    center_y = (y_min_norm + y_max_norm) / 2
+    box_width = x_max_norm - x_min_norm
+    box_height = y_max_norm - y_min_norm
+
+    return paddle.stack([center_x, center_y, box_width, box_height], axis=-1)
+
+
+class PPDocLayoutV3FrozenBatchNorm2d(nn.Layer):
+    """BatchNorm2d where the batch statistics and the affine parameters are fixed."""
 
     def __init__(self, n):
         super().__init__()
@@ -120,12 +131,11 @@ class PPDocLayoutV2FrozenBatchNorm2d(nn.Layer):
         return x * scale + bias
 
 
-
-class PPDocLayoutV2GlobalPointer(nn.Layer):
+class PPDocLayoutV3GlobalPointer(nn.Layer):
     def __init__(self, config):
         super().__init__()
         self.head_size = config.global_pointer_head_size
-        self.dense = nn.Linear(config.hidden_size, self.head_size * 2)
+        self.dense = nn.Linear(config.d_model, self.head_size * 2)
         self.dropout = nn.Dropout(config.gp_dropout_value)
 
     def forward(self, inputs):
@@ -138,7 +148,6 @@ class PPDocLayoutV2GlobalPointer(nn.Layer):
 
         logits = paddle.matmul(queries, keys.transpose([0, 2, 1])) / (self.head_size ** 0.5)
         mask = paddle.tril(paddle.ones([sequence_length, sequence_length])).astype("bool")
-        # masked_fill: where mask is True, fill with -1e4
         logits = paddle.where(
             mask.unsqueeze(0).expand([batch_size, sequence_length, sequence_length]),
             paddle.full_like(logits, -1e4),
@@ -148,492 +157,7 @@ class PPDocLayoutV2GlobalPointer(nn.Layer):
         return logits
 
 
-class PPDocLayoutV2PositionRelationEmbedding(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.config = config
-        self.embed_dim = config.relation_bias_embed_dim
-        self.scale = config.relation_bias_scale
-        self.pos_proj = nn.Conv2D(
-            in_channels=self.embed_dim * 4,
-            out_channels=config.num_attention_heads,
-            kernel_size=1,
-        )
-        inv_freq = self._compute_inv_freq(config)
-        self.register_buffer("inv_freq", inv_freq, persistable=False)
-
-    @staticmethod
-    def _compute_inv_freq(config):
-        base = config.relation_bias_theta
-        dim = config.relation_bias_embed_dim
-        half_dim = dim // 2
-        inv_freq = 1.0 / (
-            base ** (paddle.arange(0, dim, 2).astype("float32") / half_dim)
-        )
-        return inv_freq
-
-    def box_relative_encoding(self, source_boxes, target_boxes=None, epsilon=1e-5):
-        source_boxes = source_boxes.unsqueeze(-2)
-        target_boxes = target_boxes.unsqueeze(-3)
-        source_coordinates, source_dim = source_boxes[..., :2], source_boxes[..., 2:]
-        target_coordinates, target_dim = target_boxes[..., :2], target_boxes[..., 2:]
-
-        coordinate_difference = paddle.abs(source_coordinates - target_coordinates)
-        relative_coordinates = paddle.log(coordinate_difference / (source_dim + epsilon) + 1.0)
-        relative_dim = paddle.log((source_dim + epsilon) / (target_dim + epsilon))
-
-        relative_encoding = paddle.concat([relative_coordinates, relative_dim], axis=-1)
-        return relative_encoding
-
-    def get_position_embedding(self, x, scale=100.0):
-        embedding = (x * scale).unsqueeze(-1) * self.inv_freq
-        embedding = paddle.concat(
-            [embedding.sin(), embedding.cos()], axis=-1
-        ).flatten(start_axis=-2).astype(x.dtype)
-        return embedding
-
-    def forward(self, source_boxes, target_boxes=None):
-        if target_boxes is None:
-            target_boxes = source_boxes
-        with paddle.no_grad():
-            relative_encoding = self.box_relative_encoding(source_boxes, target_boxes)
-            position_embedding = self.get_position_embedding(relative_encoding, self.scale)
-            position_embedding = position_embedding.transpose([0, 3, 1, 2])
-        out = self.pos_proj(position_embedding)
-        return out
-
-
-class PPDocLayoutV2ReadingOrderSelfAttention(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        if config.hidden_size % config.num_attention_heads != 0 and not hasattr(config, "embedding_size"):
-            raise ValueError(
-                f"The hidden size ({config.hidden_size}) is not a multiple of the number of attention "
-                f"heads ({config.num_attention_heads})"
-            )
-
-        self.num_attention_heads = config.num_attention_heads
-        self.attention_head_size = int(config.hidden_size / config.num_attention_heads)
-        self.all_head_size = self.num_attention_heads * self.attention_head_size
-
-        self.query = nn.Linear(config.hidden_size, self.all_head_size)
-        self.key = nn.Linear(config.hidden_size, self.all_head_size)
-        self.value = nn.Linear(config.hidden_size, self.all_head_size)
-
-        self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
-        self.has_relative_attention_bias = config.has_relative_attention_bias
-        self.has_spatial_attention_bias = config.has_spatial_attention_bias
-
-    def cogview_attention(self, attention_scores, alpha=32):
-        scaled_attention_scores = attention_scores / alpha
-        max_value = scaled_attention_scores.max(axis=-1, keepdim=True)
-        new_attention_scores = (scaled_attention_scores - max_value) * alpha
-        return nn.functional.softmax(new_attention_scores, axis=-1)
-
-    def forward(self, hidden_states, attention_mask=None, rel_pos=None, rel_2d_pos=None):
-        batch_size, seq_length, _ = hidden_states.shape
-        query_layer = (
-            self.query(hidden_states)
-            .reshape([batch_size, -1, self.num_attention_heads, self.attention_head_size])
-            .transpose([0, 2, 1, 3])
-        )
-        key_layer = (
-            self.key(hidden_states)
-            .reshape([batch_size, -1, self.num_attention_heads, self.attention_head_size])
-            .transpose([0, 2, 1, 3])
-        )
-        value_layer = (
-            self.value(hidden_states)
-            .reshape([batch_size, -1, self.num_attention_heads, self.attention_head_size])
-            .transpose([0, 2, 1, 3])
-        )
-
-        attention_scores = paddle.matmul(
-            query_layer / math.sqrt(self.attention_head_size),
-            key_layer.transpose([0, 1, 3, 2]),
-        )
-
-        if rel_2d_pos is not None:
-            attention_scores += rel_2d_pos
-        elif self.has_relative_attention_bias:
-            attention_scores += rel_pos / math.sqrt(self.attention_head_size)
-
-        if attention_mask is not None:
-            attention_scores = attention_scores + attention_mask
-
-        attention_probs = self.cogview_attention(attention_scores)
-        attention_probs = self.dropout(attention_probs)
-
-        context_layer = paddle.matmul(attention_probs, value_layer)
-        context_layer = context_layer.transpose([0, 2, 1, 3])
-        new_context_layer_shape = list(context_layer.shape[:-2]) + [self.all_head_size]
-        context_layer = context_layer.reshape(new_context_layer_shape)
-
-        return context_layer, attention_probs
-
-
-class PPDocLayoutV2ReadingOrderSelfOutput(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.dense = nn.Linear(config.hidden_size, config.hidden_size)
-        self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.norm = nn.LayerNorm(config.hidden_size, epsilon=config.layer_norm_eps)
-
-    def forward(self, hidden_states, input_tensor):
-        hidden_states = self.dense(hidden_states)
-        hidden_states = self.dropout(hidden_states)
-        hidden_states = self.norm(hidden_states + input_tensor)
-        return hidden_states
-
-
-class PPDocLayoutV2ReadingOrderIntermediate(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.dense = nn.Linear(config.hidden_size, config.intermediate_size)
-        if isinstance(config.hidden_act, str):
-            self.intermediate_act_fn = ACT2FN[config.hidden_act]
-        else:
-            self.intermediate_act_fn = config.hidden_act
-
-    def forward(self, hidden_states):
-        hidden_states = self.dense(hidden_states)
-        hidden_states = self.intermediate_act_fn(hidden_states)
-        return hidden_states
-
-
-class PPDocLayoutV2ReadingOrderOutput(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
-        self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.norm = nn.LayerNorm(config.hidden_size, epsilon=config.layer_norm_eps)
-
-    def forward(self, hidden_states, input_tensor):
-        hidden_states = self.dense(hidden_states)
-        hidden_states = self.dropout(hidden_states)
-        hidden_states = self.norm(hidden_states + input_tensor)
-        return hidden_states
-
-
-class PPDocLayoutV2ReadingOrderAttention(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.self = PPDocLayoutV2ReadingOrderSelfAttention(config)
-        self.output = PPDocLayoutV2ReadingOrderSelfOutput(config)
-
-    def forward(self, hidden_states, attention_mask=None, rel_pos=None, rel_2d_pos=None):
-        residual = hidden_states
-        attention_output, _ = self.self(
-            hidden_states,
-            attention_mask,
-            rel_pos=rel_pos,
-            rel_2d_pos=rel_2d_pos,
-        )
-        attention_output = self.output(attention_output, residual)
-        return attention_output
-
-
-class PPDocLayoutV2ReadingOrderLayer(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.chunk_size_feed_forward = config.chunk_size_feed_forward
-        self.seq_len_dim = 1
-        self.attention = PPDocLayoutV2ReadingOrderAttention(config)
-        self.intermediate = PPDocLayoutV2ReadingOrderIntermediate(config)
-        self.output = PPDocLayoutV2ReadingOrderOutput(config)
-
-    def forward(
-        self,
-        hidden_states,
-        attention_mask=None,
-        rel_pos=None,
-        rel_2d_pos=None,
-    ):
-        attention_output = self.attention(
-            hidden_states,
-            attention_mask,
-            rel_pos=rel_pos,
-            rel_2d_pos=rel_2d_pos,
-        )
-        layer_output = self.feed_forward_chunk(attention_output)
-        return layer_output
-
-    def feed_forward_chunk(self, attention_output):
-        intermediate_output = self.intermediate(attention_output)
-        layer_output = self.output(intermediate_output, attention_output)
-        return layer_output
-
-
-class PPDocLayoutV2ReadingOrderEncoder(nn.Layer):
-    def __init__(self, config):
-        super().__init__()
-        self.config = config
-        self.layer = nn.LayerList(
-            [PPDocLayoutV2ReadingOrderLayer(config) for _ in range(config.num_hidden_layers)]
-        )
-
-        self.has_relative_attention_bias = config.has_relative_attention_bias
-        self.has_spatial_attention_bias = config.has_spatial_attention_bias
-
-        if self.has_relative_attention_bias:
-            self.rel_pos_bins = config.rel_pos_bins
-            self.max_rel_pos = config.max_rel_pos
-            self.rel_pos_bias = nn.Linear(self.rel_pos_bins, config.num_attention_heads, bias_attr=False)
-
-        if self.has_spatial_attention_bias:
-            self.max_rel_2d_pos = config.max_rel_2d_pos
-            self.rel_2d_pos_bins = config.rel_2d_pos_bins
-            self.rel_pos_x_bias = nn.Linear(self.rel_2d_pos_bins, config.num_attention_heads, bias_attr=False)
-            self.rel_pos_y_bias = nn.Linear(self.rel_2d_pos_bins, config.num_attention_heads, bias_attr=False)
-        self.rel_bias_module = PPDocLayoutV2PositionRelationEmbedding(config)
-
-    def relative_position_bucket(self, relative_position, bidirectional=True, num_buckets=32, max_distance=128):
-        ret = 0
-        if bidirectional:
-            num_buckets //= 2
-            ret += (relative_position > 0).astype("int64") * num_buckets
-            n = paddle.abs(relative_position)
-        else:
-            n = paddle.maximum(-relative_position, paddle.zeros_like(relative_position))
-
-        max_exact = num_buckets // 2
-        is_small = n < max_exact
-
-        val_if_large = max_exact + (
-            paddle.log(n.astype("float32") / max_exact) / math.log(max_distance / max_exact) * (num_buckets - max_exact)
-        ).astype("int64")
-        val_if_large = paddle.minimum(val_if_large, paddle.full_like(val_if_large, num_buckets - 1))
-
-        ret += paddle.where(is_small, n, val_if_large)
-        return ret
-
-    def _cal_1d_pos_emb(self, position_ids):
-        rel_pos_mat = position_ids.unsqueeze(-2) - position_ids.unsqueeze(-1)
-
-        rel_pos = self.relative_position_bucket(
-            rel_pos_mat,
-            num_buckets=self.rel_pos_bins,
-            max_distance=self.max_rel_pos,
-        )
-        with paddle.no_grad():
-            # self.rel_pos_bias.weight has shape [rel_pos_bins, num_attention_heads] in Paddle
-            # We need: rel_pos_bias.weight.T[rel_pos] -> [B, seq, seq, num_heads] -> permute to [B, num_heads, seq, seq]
-            rel_pos = self.rel_pos_bias.weight.transpose([1, 0])[rel_pos].transpose([0, 3, 1, 2])
-        return rel_pos
-
-    def _cal_2d_pos_emb(self, bbox):
-        x_min, y_min, x_max, y_max = (
-            bbox[..., 0],
-            bbox[..., 1],
-            bbox[..., 2],
-            bbox[..., 3],
-        )
-
-        width = (x_max - x_min).clip(min=1e-3)
-        height = (y_max - y_min).clip(min=1e-3)
-
-        center_x = (x_min + x_max) * 0.5
-        center_y = (y_min + y_max) * 0.5
-
-        center_width_height_bbox = paddle.stack([center_x, center_y, width, height], axis=-1)
-
-        result = self.rel_bias_module(center_width_height_bbox)
-        return result
-
-    def forward(
-        self,
-        hidden_states,
-        bbox=None,
-        attention_mask=None,
-        position_ids=None,
-    ):
-        rel_pos = self._cal_1d_pos_emb(position_ids) if self.has_relative_attention_bias else None
-        rel_2d_pos = self._cal_2d_pos_emb(bbox) if self.has_spatial_attention_bias else None
-
-        for layer_module in self.layer:
-            hidden_states = layer_module(
-                hidden_states,
-                attention_mask,
-                rel_pos=rel_pos,
-                rel_2d_pos=rel_2d_pos,
-            )
-
-        return hidden_states
-
-
-class PPDocLayoutV2TextEmbeddings(nn.Layer):
-    """PPDocLayoutV2 text embeddings with spatial (layout) embeddings."""
-
-    def __init__(self, config):
-        super().__init__()
-        self.word_embeddings = nn.Embedding(config.vocab_size, config.hidden_size, padding_idx=config.pad_token_id)
-        self.token_type_embeddings = nn.Embedding(config.type_vocab_size, config.hidden_size)
-        self.dropout = nn.Dropout(config.hidden_dropout_prob)
-
-        self.register_buffer(
-            "position_ids",
-            paddle.arange(config.max_position_embeddings).unsqueeze(0),
-            persistable=False,
-        )
-
-        self.padding_idx = config.pad_token_id
-        self.position_embeddings = nn.Embedding(
-            config.max_position_embeddings, config.hidden_size, padding_idx=self.padding_idx
-        )
-
-        self.x_position_embeddings = nn.Embedding(config.max_2d_position_embeddings, config.coordinate_size)
-        self.y_position_embeddings = nn.Embedding(config.max_2d_position_embeddings, config.coordinate_size)
-        self.h_position_embeddings = nn.Embedding(config.max_2d_position_embeddings, config.shape_size)
-        self.w_position_embeddings = nn.Embedding(config.max_2d_position_embeddings, config.shape_size)
-        self.norm = nn.LayerNorm(config.hidden_size, epsilon=config.layer_norm_eps)
-        spatial_embed_dim = 4 * config.coordinate_size + 2 * config.shape_size
-        self.spatial_proj = nn.Linear(spatial_embed_dim, config.hidden_size)
-
-    def calculate_spatial_position_embeddings(self, bbox):
-        left_position_embeddings = self.x_position_embeddings(bbox[:, :, 0])
-        upper_position_embeddings = self.y_position_embeddings(bbox[:, :, 1])
-        right_position_embeddings = self.x_position_embeddings(bbox[:, :, 2])
-        lower_position_embeddings = self.y_position_embeddings(bbox[:, :, 3])
-
-        h_position_embeddings = self.h_position_embeddings(
-            paddle.clip(bbox[:, :, 3] - bbox[:, :, 1], 0, 1023)
-        )
-        w_position_embeddings = self.w_position_embeddings(
-            paddle.clip(bbox[:, :, 2] - bbox[:, :, 0], 0, 1023)
-        )
-
-        spatial_position_embeddings = paddle.concat(
-            [
-                left_position_embeddings,
-                upper_position_embeddings,
-                right_position_embeddings,
-                lower_position_embeddings,
-                h_position_embeddings,
-                w_position_embeddings,
-            ],
-            axis=-1,
-        )
-        return spatial_position_embeddings
-
-    def create_position_ids_from_input_ids(self, input_ids, padding_idx):
-        mask = (input_ids != padding_idx).astype("int32")
-        incremental_indices = paddle.cumsum(mask, axis=1).astype(mask.dtype) * mask
-        return incremental_indices.astype("int64") + padding_idx
-
-    def forward(
-        self,
-        input_ids=None,
-        bbox=None,
-        token_type_ids=None,
-        position_ids=None,
-        inputs_embeds=None,
-    ):
-        if position_ids is None:
-            if input_ids is not None:
-                position_ids = self.create_position_ids_from_input_ids(input_ids, self.padding_idx)
-            else:
-                input_shape = inputs_embeds.shape[:-1]
-                sequence_length = input_shape[1]
-                position_ids = paddle.arange(
-                    self.padding_idx + 1, sequence_length + self.padding_idx + 1, dtype="int64"
-                ).unsqueeze(0).expand(input_shape)
-
-        if input_ids is not None:
-            input_shape = input_ids.shape
-        else:
-            input_shape = inputs_embeds.shape[:-1]
-
-        if token_type_ids is None:
-            token_type_ids = paddle.zeros(input_shape, dtype="int64")
-
-        if inputs_embeds is None:
-            inputs_embeds = self.word_embeddings(input_ids)
-
-        token_type_embeddings = self.token_type_embeddings(token_type_ids)
-        embeddings = inputs_embeds + token_type_embeddings
-
-        position_embeddings = self.position_embeddings(position_ids)
-        embeddings += position_embeddings
-
-        spatial_position_embeddings = self.calculate_spatial_position_embeddings(bbox)
-        spatial_position_embeddings = self.spatial_proj(spatial_position_embeddings)
-        embeddings += spatial_position_embeddings
-        return embeddings
-
-
-class PPDocLayoutV2ReadingOrder(nn.Layer):
-    """PP-DocLayoutV2 ReadingOrder Model with encoder and GlobalPointer head."""
-
-    def __init__(self, config):
-        super().__init__()
-        self.embeddings = PPDocLayoutV2TextEmbeddings(config)
-        self.label_embeddings = nn.Embedding(config.num_classes, config.hidden_size)
-        self.label_features_projection = nn.Linear(config.hidden_size, config.hidden_size)
-        self.encoder = PPDocLayoutV2ReadingOrderEncoder(config)
-        self.relative_head = PPDocLayoutV2GlobalPointer(config)
-        self.config = config
-
-    def forward(self, boxes, labels=None, mask=None):
-        batch_size, seq_len = mask.shape
-        num_pred = mask.sum(axis=1)
-
-        input_ids = paddle.full(
-            [batch_size, seq_len + 2], self.config.pad_token_id, dtype="int64"
-        )
-        input_ids[:, 0] = self.config.start_token_id
-
-        pred_col_idx = paddle.arange(seq_len + 2).unsqueeze(0)
-        pred_mask = (pred_col_idx >= 1) & (pred_col_idx <= num_pred.unsqueeze(1))
-        input_ids[pred_mask] = self.config.pred_token_id
-        end_col_indices = num_pred + 1
-        input_ids[paddle.arange(batch_size), end_col_indices] = self.config.end_token_id
-
-        pad_box = paddle.zeros(shape=[boxes.shape[0], 1, boxes.shape[-1]], dtype=boxes.dtype)
-        pad_boxes = paddle.concat([pad_box, boxes, pad_box], axis=1)
-        bbox_embedding = self.embeddings(input_ids=input_ids, bbox=pad_boxes.astype("int64"))
-
-        if labels is not None:
-            label_embs = self.label_embeddings(labels)
-            label_proj = self.label_features_projection(label_embs)
-            pad = paddle.zeros(
-                shape=[label_proj.shape[0], 1, label_proj.shape[-1]], dtype=label_proj.dtype
-            )
-            label_proj = paddle.concat([pad, label_proj, pad], axis=1)
-        else:
-            label_proj = paddle.zeros_like(bbox_embedding)
-
-        final_embeddings = bbox_embedding + label_proj
-        final_embeddings = self.embeddings.norm(final_embeddings)
-        final_embeddings = self.embeddings.dropout(final_embeddings)
-
-        # Create attention mask: True for valid positions
-        attention_mask_bool = pred_col_idx < (num_pred + 2).unsqueeze(1)
-        # Convert to additive mask: 0 for valid, large negative for invalid
-        attention_mask = paddle.zeros_like(attention_mask_bool, dtype=final_embeddings.dtype)
-        attention_mask = paddle.where(
-            attention_mask_bool,
-            paddle.zeros_like(attention_mask, dtype=final_embeddings.dtype),
-            paddle.full_like(attention_mask, -1e9, dtype=final_embeddings.dtype),
-        )
-        # Expand to [batch, 1, 1, seq_len] for broadcasting with attention scores [batch, heads, seq, seq]
-        attention_mask = attention_mask.unsqueeze(1).unsqueeze(2)
-
-        position_ids = paddle.arange(seq_len + 2).unsqueeze(0).expand([batch_size, seq_len + 2])
-
-        encoder_output = self.encoder(
-            hidden_states=final_embeddings,
-            bbox=pad_boxes,
-            attention_mask=attention_mask,
-            position_ids=position_ids,
-        )
-        token = encoder_output[:, 1: 1 + seq_len, :]
-        read_order_logits = self.relative_head(token)
-        return read_order_logits
-
-
-# Detection model components
-
-class PPDocLayoutV2MLPPredictionHead(nn.Layer):
+class PPDocLayoutV3MLPPredictionHead(nn.Layer):
     """Simple multi-layer perceptron for bbox prediction."""
 
     def __init__(self, input_dim, hidden_dim, output_dim, num_layers):
@@ -641,16 +165,122 @@ class PPDocLayoutV2MLPPredictionHead(nn.Layer):
         self.num_layers = num_layers
         h = [hidden_dim] * (num_layers - 1)
         self.layers = nn.LayerList(
-            [nn.Linear(n, k) for n, k in zip([input_dim] + h, h + [output_dim])]
+            nn.Linear(n, k)
+            for n, k in zip([input_dim] + h, h + [output_dim])
         )
 
     def forward(self, x):
         for i, layer in enumerate(self.layers):
-            x = nn.functional.relu(layer(x)) if i < self.num_layers - 1 else layer(x)
+            x = F.relu(layer(x)) if i < self.num_layers - 1 else layer(x)
         return x
 
 
-class PPDocLayoutV2MLP(nn.Layer):
+class PPDocLayoutV3ConvLayer(nn.Layer):
+    """Conv layer with convolution/normalization attribute names (for mask feature modules)."""
+
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, activation="relu"):
+        super().__init__()
+        self.convolution = nn.Conv2D(
+            in_channels, out_channels,
+            kernel_size=kernel_size, stride=stride,
+            padding=kernel_size // 2, bias_attr=False,
+        )
+        self.normalization = nn.BatchNorm2D(out_channels)
+        self.activation = ACT2FN[activation] if activation is not None else nn.Identity()
+
+    def forward(self, x):
+        x = self.convolution(x)
+        x = self.normalization(x)
+        x = self.activation(x)
+        return x
+
+
+class PPDocLayoutV3ScaleHead(nn.Layer):
+    def __init__(self, in_channels, feature_channels, fpn_stride, base_stride, align_corners=False):
+        super().__init__()
+        head_length = max(1, int(np.log2(fpn_stride) - np.log2(base_stride)))
+        self.layers = nn.LayerList()
+        for k in range(head_length):
+            in_c = in_channels if k == 0 else feature_channels
+            self.layers.append(PPDocLayoutV3ConvLayer(in_c, feature_channels, 3, 1, "silu"))
+            if fpn_stride != base_stride:
+                self.layers.append(nn.Upsample(scale_factor=2, mode="bilinear", align_corners=align_corners))
+
+    def forward(self, x):
+        for layer in self.layers:
+            x = layer(x)
+        return x
+
+
+class PPDocLayoutV3MaskFeatFPN(nn.Layer):
+    def __init__(
+        self,
+        in_channels=[256, 256, 256],
+        fpn_strides=[32, 16, 8],
+        feature_channels=256,
+        dropout_ratio=0.0,
+        out_channels=256,
+        align_corners=False,
+    ):
+        super().__init__()
+
+        reorder_index = np.argsort(fpn_strides, axis=0).tolist()
+        in_channels = [in_channels[i] for i in reorder_index]
+        fpn_strides = [fpn_strides[i] for i in reorder_index]
+
+        self.reorder_index = reorder_index
+        self.fpn_strides = fpn_strides
+        self.dropout_ratio = dropout_ratio
+        self.align_corners = align_corners
+        if self.dropout_ratio > 0:
+            self.dropout = nn.Dropout2D(dropout_ratio)
+
+        self.scale_heads = nn.LayerList()
+        for i in range(len(fpn_strides)):
+            self.scale_heads.append(
+                PPDocLayoutV3ScaleHead(
+                    in_channels=in_channels[i],
+                    feature_channels=feature_channels,
+                    fpn_stride=fpn_strides[i],
+                    base_stride=fpn_strides[0],
+                    align_corners=align_corners,
+                )
+            )
+        self.output_conv = PPDocLayoutV3ConvLayer(feature_channels, out_channels, 3, 1, "silu")
+
+    def forward(self, inputs):
+        x = [inputs[i] for i in self.reorder_index]
+
+        output = self.scale_heads[0](x[0])
+        for i in range(1, len(self.fpn_strides)):
+            output = output + F.interpolate(
+                self.scale_heads[i](x[i]),
+                size=output.shape[2:],
+                mode="bilinear",
+                align_corners=self.align_corners,
+            )
+
+        if self.dropout_ratio > 0:
+            output = self.dropout(output)
+        output = self.output_conv(output)
+        return output
+
+
+class PPDocLayoutV3EncoderMaskOutput(nn.Layer):
+    def __init__(self, in_channels, num_prototypes):
+        super().__init__()
+        self.base_conv = PPDocLayoutV3ConvLayer(in_channels, in_channels, 3, 1, "silu")
+        self.conv = nn.Conv2D(in_channels, num_prototypes, kernel_size=1)
+
+    def forward(self, x):
+        x = self.base_conv(x)
+        x = self.conv(x)
+        return x
+
+
+class PPDocLayoutV3MLP(nn.Layer):
+    """Feed-forward MLP used in encoder and decoder layers."""
+
     def __init__(self, config, hidden_size, intermediate_size, activation_function):
         super().__init__()
         self.fc1 = nn.Linear(hidden_size, intermediate_size)
@@ -661,18 +291,17 @@ class PPDocLayoutV2MLP(nn.Layer):
 
     def forward(self, hidden_states):
         hidden_states = self.activation_fn(self.fc1(hidden_states))
-        hidden_states = nn.functional.dropout(hidden_states, p=self.activation_dropout, training=self.training)
+        hidden_states = F.dropout(hidden_states, p=self.activation_dropout, training=self.training)
         hidden_states = self.fc2(hidden_states)
-        hidden_states = nn.functional.dropout(hidden_states, p=self.dropout, training=self.training)
+        hidden_states = F.dropout(hidden_states, p=self.dropout, training=self.training)
         return hidden_states
 
 
-class PPDocLayoutV2SelfAttention(nn.Layer):
-    """Multi-headed self-attention. Position embeddings added to queries and keys."""
+class PPDocLayoutV3SelfAttention(nn.Layer):
+    """Multi-headed self-attention. Position embeddings added to queries and keys (not values)."""
 
     def __init__(self, config, hidden_size, num_attention_heads, dropout=0.0, bias=True):
         super().__init__()
-        self.config = config
         self.head_dim = hidden_size // num_attention_heads
         self.num_heads = num_attention_heads
         self.scaling = self.head_dim ** -0.5
@@ -686,25 +315,35 @@ class PPDocLayoutV2SelfAttention(nn.Layer):
     def forward(self, hidden_states, attention_mask=None, position_embeddings=None):
         batch_size, seq_len, _ = hidden_states.shape
 
-        query_key_input = hidden_states + position_embeddings if position_embeddings is not None else hidden_states
+        query_key_input = (
+            hidden_states + position_embeddings
+            if position_embeddings is not None
+            else hidden_states
+        )
 
-        query_states = self.q_proj(query_key_input).reshape(
-            [batch_size, seq_len, self.num_heads, self.head_dim]
-        ).transpose([0, 2, 1, 3])
-        key_states = self.k_proj(query_key_input).reshape(
-            [batch_size, seq_len, self.num_heads, self.head_dim]
-        ).transpose([0, 2, 1, 3])
-        value_states = self.v_proj(hidden_states).reshape(
-            [batch_size, seq_len, self.num_heads, self.head_dim]
-        ).transpose([0, 2, 1, 3])
+        query_states = (
+            self.q_proj(query_key_input)
+            .reshape([batch_size, seq_len, self.num_heads, self.head_dim])
+            .transpose([0, 2, 1, 3])
+        )
+        key_states = (
+            self.k_proj(query_key_input)
+            .reshape([batch_size, seq_len, self.num_heads, self.head_dim])
+            .transpose([0, 2, 1, 3])
+        )
+        value_states = (
+            self.v_proj(hidden_states)
+            .reshape([batch_size, seq_len, self.num_heads, self.head_dim])
+            .transpose([0, 2, 1, 3])
+        )
 
         attn_weights = paddle.matmul(query_states, key_states.transpose([0, 1, 3, 2])) * self.scaling
 
         if attention_mask is not None:
             attn_weights = attn_weights + attention_mask
 
-        attn_weights = nn.functional.softmax(attn_weights, axis=-1)
-        attn_weights = nn.functional.dropout(attn_weights, p=self.attention_dropout, training=self.training)
+        attn_weights = F.softmax(attn_weights, axis=-1)
+        attn_weights = F.dropout(attn_weights, p=self.attention_dropout, training=self.training)
 
         attn_output = paddle.matmul(attn_weights, value_states)
         attn_output = attn_output.transpose([0, 2, 1, 3]).reshape([batch_size, seq_len, -1])
@@ -712,14 +351,13 @@ class PPDocLayoutV2SelfAttention(nn.Layer):
         return attn_output, attn_weights
 
 
-class PPDocLayoutV2ConvNormLayer(nn.Layer):
+class PPDocLayoutV3ConvNormLayer(nn.Layer):
+    """Conv layer with conv/norm attribute names (for encoder/decoder)."""
+
     def __init__(self, config, in_channels, out_channels, kernel_size, stride, padding=None, activation=None):
         super().__init__()
         self.conv = nn.Conv2D(
-            in_channels,
-            out_channels,
-            kernel_size,
-            stride,
+            in_channels, out_channels, kernel_size, stride,
             padding=(kernel_size - 1) // 2 if padding is None else padding,
             bias_attr=False,
         )
@@ -733,21 +371,21 @@ class PPDocLayoutV2ConvNormLayer(nn.Layer):
         return hidden_state
 
 
-class PPDocLayoutV2EncoderLayer(nn.Layer):
+class PPDocLayoutV3EncoderLayer(nn.Layer):
     def __init__(self, config):
         super().__init__()
         self.normalize_before = config.normalize_before
         self.hidden_size = config.encoder_hidden_dim
 
-        self.self_attn = PPDocLayoutV2SelfAttention(
+        self.self_attn = PPDocLayoutV3SelfAttention(
             config=config,
             hidden_size=self.hidden_size,
-            num_attention_heads=config.num_attention_heads,
+            num_attention_heads=config.encoder_attention_heads,
             dropout=config.dropout,
         )
         self.self_attn_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
-        self.dropout_val = config.dropout
-        self.mlp = PPDocLayoutV2MLP(
+        self.dropout = config.dropout
+        self.mlp = PPDocLayoutV3MLP(
             config, self.hidden_size, config.encoder_ffn_dim, config.encoder_activation_function
         )
         self.final_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
@@ -763,7 +401,7 @@ class PPDocLayoutV2EncoderLayer(nn.Layer):
             position_embeddings=spatial_position_embeddings,
         )
 
-        hidden_states = nn.functional.dropout(hidden_states, p=self.dropout_val, training=self.training)
+        hidden_states = F.dropout(hidden_states, p=self.dropout, training=self.training)
         hidden_states = residual + hidden_states
         if not self.normalize_before:
             hidden_states = self.self_attn_layer_norm(hidden_states)
@@ -781,15 +419,15 @@ class PPDocLayoutV2EncoderLayer(nn.Layer):
         return hidden_states
 
 
-class PPDocLayoutV2RepVggBlock(nn.Layer):
+class PPDocLayoutV3RepVggBlock(nn.Layer):
     """RepVGG architecture block."""
 
     def __init__(self, config):
         super().__init__()
         activation = config.activation_function
         hidden_channels = int(config.encoder_hidden_dim * config.hidden_expansion)
-        self.conv1 = PPDocLayoutV2ConvNormLayer(config, hidden_channels, hidden_channels, 3, 1, padding=1)
-        self.conv2 = PPDocLayoutV2ConvNormLayer(config, hidden_channels, hidden_channels, 1, 1, padding=0)
+        self.conv1 = PPDocLayoutV3ConvNormLayer(config, hidden_channels, hidden_channels, 3, 1, padding=1)
+        self.conv2 = PPDocLayoutV3ConvNormLayer(config, hidden_channels, hidden_channels, 1, 1, padding=0)
         self.activation = nn.Identity() if activation is None else ACT2CLS[activation]()
 
     def forward(self, x):
@@ -797,7 +435,7 @@ class PPDocLayoutV2RepVggBlock(nn.Layer):
         return self.activation(y)
 
 
-class PPDocLayoutV2CSPRepLayer(nn.Layer):
+class PPDocLayoutV3CSPRepLayer(nn.Layer):
     """Cross Stage Partial (CSP) network layer with RepVGG blocks."""
 
     def __init__(self, config):
@@ -808,11 +446,11 @@ class PPDocLayoutV2CSPRepLayer(nn.Layer):
         activation = config.activation_function
 
         hidden_channels = int(out_channels * config.hidden_expansion)
-        self.conv1 = PPDocLayoutV2ConvNormLayer(config, in_channels, hidden_channels, 1, 1, activation=activation)
-        self.conv2 = PPDocLayoutV2ConvNormLayer(config, in_channels, hidden_channels, 1, 1, activation=activation)
-        self.bottlenecks = nn.Sequential(*[PPDocLayoutV2RepVggBlock(config) for _ in range(num_blocks)])
+        self.conv1 = PPDocLayoutV3ConvNormLayer(config, in_channels, hidden_channels, 1, 1, activation=activation)
+        self.conv2 = PPDocLayoutV3ConvNormLayer(config, in_channels, hidden_channels, 1, 1, activation=activation)
+        self.bottlenecks = nn.Sequential(*[PPDocLayoutV3RepVggBlock(config) for _ in range(num_blocks)])
         if hidden_channels != out_channels:
-            self.conv3 = PPDocLayoutV2ConvNormLayer(config, hidden_channels, out_channels, 1, 1, activation=activation)
+            self.conv3 = PPDocLayoutV3ConvNormLayer(config, hidden_channels, out_channels, 1, 1, activation=activation)
         else:
             self.conv3 = nn.Identity()
 
@@ -823,8 +461,8 @@ class PPDocLayoutV2CSPRepLayer(nn.Layer):
         return self.conv3(hidden_state_1 + hidden_state_2)
 
 
-class PPDocLayoutV2SinePositionEmbedding(nn.Layer):
-    """2D sinusoidal position embedding used in RT-DETR hybrid encoder."""
+class PPDocLayoutV3SinePositionEmbedding(nn.Layer):
+    """2D sinusoidal position embedding."""
 
     def __init__(self, embed_dim=256, temperature=10000):
         super().__init__()
@@ -834,7 +472,6 @@ class PPDocLayoutV2SinePositionEmbedding(nn.Layer):
     def forward(self, width, height, dtype):
         grid_w = paddle.arange(width).astype(dtype)
         grid_h = paddle.arange(height).astype(dtype)
-        # paddle.meshgrid default indexing is "ij", so swap order for "xy" effect
         grid_h, grid_w = paddle.meshgrid(grid_h, grid_w)
 
         if self.embed_dim % 4 != 0:
@@ -849,7 +486,7 @@ class PPDocLayoutV2SinePositionEmbedding(nn.Layer):
         return paddle.concat([out_h.sin(), out_h.cos(), out_w.sin(), out_w.cos()], axis=1).unsqueeze(0)
 
 
-class PPDocLayoutV2AIFILayer(nn.Layer):
+class PPDocLayoutV3AIFILayer(nn.Layer):
     """AIFI (Attention-based Intra-scale Feature Interaction) layer."""
 
     def __init__(self, config):
@@ -858,11 +495,11 @@ class PPDocLayoutV2AIFILayer(nn.Layer):
         self.encoder_hidden_dim = config.encoder_hidden_dim
         self.eval_size = config.eval_size
 
-        self.position_embedding = PPDocLayoutV2SinePositionEmbedding(
+        self.position_embedding = PPDocLayoutV3SinePositionEmbedding(
             embed_dim=self.encoder_hidden_dim,
             temperature=config.positional_encoding_temperature,
         )
-        self.layers = nn.LayerList([PPDocLayoutV2EncoderLayer(config) for _ in range(config.encoder_layers)])
+        self.layers = nn.LayerList([PPDocLayoutV3EncoderLayer(config) for _ in range(config.encoder_layers)])
 
     def forward(self, hidden_states):
         batch_size = hidden_states.shape[0]
@@ -893,10 +530,8 @@ class PPDocLayoutV2AIFILayer(nn.Layer):
         return hidden_states
 
 
-class PPDocLayoutV2HybridEncoder(nn.Layer):
-    """
-    Hybrid encoder: AIFI layers + top-down FPN + bottom-up PAN.
-    """
+class PPDocLayoutV3HybridEncoder(nn.Layer):
+    """Hybrid encoder: AIFI layers + top-down FPN + bottom-up PAN + mask features."""
 
     def __init__(self, config):
         super().__init__()
@@ -910,13 +545,13 @@ class PPDocLayoutV2HybridEncoder(nn.Layer):
         self.num_pan_stages = len(self.in_channels) - 1
 
         # AIFI layers
-        self.aifi = nn.LayerList([PPDocLayoutV2AIFILayer(config) for _ in range(len(self.encode_proj_layers))])
+        self.aifi = nn.LayerList([PPDocLayoutV3AIFILayer(config) for _ in range(len(self.encode_proj_layers))])
 
         # top-down FPN
         self.lateral_convs = nn.LayerList()
         self.fpn_blocks = nn.LayerList()
         for _ in range(self.num_fpn_stages):
-            lateral_conv = PPDocLayoutV2ConvNormLayer(
+            lateral_conv = PPDocLayoutV3ConvNormLayer(
                 config,
                 in_channels=self.encoder_hidden_dim,
                 out_channels=self.encoder_hidden_dim,
@@ -924,7 +559,7 @@ class PPDocLayoutV2HybridEncoder(nn.Layer):
                 stride=1,
                 activation=config.activation_function,
             )
-            fpn_block = PPDocLayoutV2CSPRepLayer(config)
+            fpn_block = PPDocLayoutV3CSPRepLayer(config)
             self.lateral_convs.append(lateral_conv)
             self.fpn_blocks.append(fpn_block)
 
@@ -932,7 +567,7 @@ class PPDocLayoutV2HybridEncoder(nn.Layer):
         self.downsample_convs = nn.LayerList()
         self.pan_blocks = nn.LayerList()
         for _ in range(self.num_pan_stages):
-            downsample_conv = PPDocLayoutV2ConvNormLayer(
+            downsample_conv = PPDocLayoutV3ConvNormLayer(
                 config,
                 in_channels=self.encoder_hidden_dim,
                 out_channels=self.encoder_hidden_dim,
@@ -940,11 +575,25 @@ class PPDocLayoutV2HybridEncoder(nn.Layer):
                 stride=2,
                 activation=config.activation_function,
             )
-            pan_block = PPDocLayoutV2CSPRepLayer(config)
+            pan_block = PPDocLayoutV3CSPRepLayer(config)
             self.downsample_convs.append(downsample_conv)
             self.pan_blocks.append(pan_block)
 
-    def forward(self, feature_maps):
+        # Mask feature head (V3-specific)
+        feat_strides = config.feat_strides
+        mask_feature_channels = config.mask_feature_channels
+        self.mask_feature_head = PPDocLayoutV3MaskFeatFPN(
+            [self.encoder_hidden_dim] * len(feat_strides),
+            feat_strides,
+            feature_channels=mask_feature_channels[0],
+            out_channels=mask_feature_channels[1],
+        )
+        self.encoder_mask_lateral = PPDocLayoutV3ConvLayer(config.x4_feat_dim, mask_feature_channels[1], 3, 1, "silu")
+        self.encoder_mask_output = PPDocLayoutV3EncoderMaskOutput(
+            in_channels=mask_feature_channels[1], num_prototypes=config.num_prototypes
+        )
+
+    def forward(self, feature_maps, x4_feat):
         # AIFI: Apply transformer encoder to specified feature levels
         if self.config.encoder_layers > 0:
             for i, enc_ind in enumerate(self.encode_proj_layers):
@@ -974,8 +623,13 @@ class PPDocLayoutV2HybridEncoder(nn.Layer):
             new_pan_feature_map = pan_block(fused_feature_map)
             pan_feature_maps.append(new_pan_feature_map)
 
-        return pan_feature_maps
+        # Mask feature processing (V3-specific)
+        mask_feat = self.mask_feature_head(pan_feature_maps)
+        mask_feat = F.interpolate(mask_feat, scale_factor=2, mode="bilinear", align_corners=False)
+        mask_feat = mask_feat + self.encoder_mask_lateral(x4_feat)
+        mask_feat = self.encoder_mask_output(mask_feat)
 
+        return pan_feature_maps, mask_feat
 
 
 class MultiScaleDeformableAttention(nn.Layer):
@@ -1001,15 +655,12 @@ class MultiScaleDeformableAttention(nn.Layer):
         sampling_grids = 2 * sampling_locations - 1
         sampling_value_list = []
         for level_id, (height, width) in enumerate(value_spatial_shapes_list):
-            # [batch_size, H*W, num_heads, hidden_dim] -> [batch_size*num_heads, hidden_dim, H, W]
             value_l_ = (
                 value_list[level_id]
                 .flatten(2)
                 .transpose([0, 2, 1])
                 .reshape([batch_size * num_heads, hidden_dim, height, width])
             )
-            # [batch_size, num_queries, num_heads, num_points, 2]
-            # -> [batch_size*num_heads, num_queries, num_points, 2]
             sampling_grid_l_ = (
                 sampling_grids[:, :, :, level_id]
                 .transpose([0, 2, 1, 3])
@@ -1036,7 +687,7 @@ class MultiScaleDeformableAttention(nn.Layer):
         return output.transpose([0, 2, 1])
 
 
-class PPDocLayoutV2MultiscaleDeformableAttention(nn.Layer):
+class PPDocLayoutV3MultiscaleDeformableAttention(nn.Layer):
     """Multiscale deformable attention as proposed in Deformable DETR."""
 
     def __init__(self, config, num_heads, n_points):
@@ -1121,13 +772,12 @@ class PPDocLayoutV2MultiscaleDeformableAttention(nn.Layer):
         return output, attn_weights
 
 
-
-class PPDocLayoutV2DecoderLayer(nn.Layer):
+class PPDocLayoutV3DecoderLayer(nn.Layer):
     def __init__(self, config):
         super().__init__()
         self.hidden_size = config.d_model
 
-        self.self_attn = PPDocLayoutV2SelfAttention(
+        self.self_attn = PPDocLayoutV3SelfAttention(
             config=config,
             hidden_size=self.hidden_size,
             num_attention_heads=config.decoder_attention_heads,
@@ -1136,13 +786,13 @@ class PPDocLayoutV2DecoderLayer(nn.Layer):
         self.dropout = config.dropout
 
         self.self_attn_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
-        self.encoder_attn = PPDocLayoutV2MultiscaleDeformableAttention(
+        self.encoder_attn = PPDocLayoutV3MultiscaleDeformableAttention(
             config,
             num_heads=config.decoder_attention_heads,
             n_points=config.decoder_n_points,
         )
         self.encoder_attn_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
-        self.mlp = PPDocLayoutV2MLP(
+        self.mlp = PPDocLayoutV3MLP(
             config, self.hidden_size, config.decoder_ffn_dim, config.decoder_activation_function
         )
         self.final_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
@@ -1167,7 +817,7 @@ class PPDocLayoutV2DecoderLayer(nn.Layer):
             position_embeddings=object_queries_position_embeddings,
         )
 
-        hidden_states = nn.functional.dropout(hidden_states, p=self.dropout, training=self.training)
+        hidden_states = F.dropout(hidden_states, p=self.dropout, training=self.training)
         hidden_states = residual + hidden_states
         hidden_states = self.self_attn_layer_norm(hidden_states)
 
@@ -1184,7 +834,7 @@ class PPDocLayoutV2DecoderLayer(nn.Layer):
             level_start_index=level_start_index,
         )
 
-        hidden_states = nn.functional.dropout(hidden_states, p=self.dropout, training=self.training)
+        hidden_states = F.dropout(hidden_states, p=self.dropout, training=self.training)
         hidden_states = residual + hidden_states
         hidden_states = self.encoder_attn_layer_norm(hidden_states)
 
@@ -1197,16 +847,18 @@ class PPDocLayoutV2DecoderLayer(nn.Layer):
         return hidden_states
 
 
-class PPDocLayoutV2Decoder(nn.Layer):
+class PPDocLayoutV3Decoder(nn.Layer):
     def __init__(self, config):
         super().__init__()
         self.dropout = config.dropout
-        self.layers = nn.LayerList([PPDocLayoutV2DecoderLayer(config) for _ in range(config.decoder_layers)])
-        self.query_pos_head = PPDocLayoutV2MLPPredictionHead(4, 2 * config.d_model, config.d_model, num_layers=2)
+        self.layers = nn.LayerList([PPDocLayoutV3DecoderLayer(config) for _ in range(config.decoder_layers)])
+        self.query_pos_head = PPDocLayoutV3MLPPredictionHead(4, 2 * config.d_model, config.d_model, num_layers=2)
 
-        # Set by ForObjectDetection
+        # Set by PPDocLayoutV3Model
         self.bbox_embed = None
         self.class_embed = None
+
+        self.num_queries = config.num_queries
 
     def forward(
         self,
@@ -1217,12 +869,19 @@ class PPDocLayoutV2Decoder(nn.Layer):
         spatial_shapes=None,
         spatial_shapes_list=None,
         level_start_index=None,
+        order_head=None,
+        global_pointer=None,
+        mask_query_head=None,
+        norm=None,
+        mask_feat=None,
     ):
         hidden_states = inputs_embeds
 
         intermediate = []
         intermediate_reference_points = []
         intermediate_logits = []
+        decoder_out_order_logits = []
+        decoder_out_masks = []
 
         reference_points = F.sigmoid(reference_points)
 
@@ -1241,8 +900,9 @@ class PPDocLayoutV2Decoder(nn.Layer):
                 encoder_attention_mask=encoder_attention_mask,
             )
 
+            # Iterative bounding box refinement
             if self.bbox_embed is not None:
-                predicted_corners = self.bbox_embed[idx](hidden_states)
+                predicted_corners = self.bbox_embed(hidden_states)
                 new_reference_points = F.sigmoid(predicted_corners + inverse_sigmoid(reference_points))
                 reference_points = new_reference_points.detach()
 
@@ -1251,30 +911,48 @@ class PPDocLayoutV2Decoder(nn.Layer):
                 new_reference_points if self.bbox_embed is not None else reference_points
             )
 
+            # Mask and class prediction at each decoder layer
+            out_query = norm(hidden_states)
+            mask_query_embed = mask_query_head(out_query)
+            batch_size, mask_dim, _ = mask_query_embed.shape
+            _, _, mask_h, mask_w = mask_feat.shape
+            out_mask = paddle.bmm(mask_query_embed, mask_feat.flatten(start_axis=2)).reshape(
+                [batch_size, mask_dim, mask_h, mask_w]
+            )
+            decoder_out_masks.append(out_mask)
+
             if self.class_embed is not None:
-                logits = self.class_embed[idx](hidden_states)
+                logits = self.class_embed(out_query)
                 intermediate_logits.append(logits)
+
+            if order_head is not None and global_pointer is not None:
+                valid_query = out_query[:, -self.num_queries:] if self.num_queries is not None else out_query
+                order_logits = global_pointer(order_head[idx](valid_query))
+                decoder_out_order_logits.append(order_logits)
 
         intermediate = paddle.stack(intermediate, axis=1)
         intermediate_reference_points = paddle.stack(intermediate_reference_points, axis=1)
         if self.class_embed is not None:
             intermediate_logits = paddle.stack(intermediate_logits, axis=1)
+        if order_head is not None and global_pointer is not None:
+            decoder_out_order_logits = paddle.stack(decoder_out_order_logits, axis=1)
+        decoder_out_masks = paddle.stack(decoder_out_masks, axis=1)
 
         return {
             "last_hidden_state": hidden_states,
             "intermediate_hidden_states": intermediate,
             "intermediate_logits": intermediate_logits,
             "intermediate_reference_points": intermediate_reference_points,
+            "out_order_logits": decoder_out_order_logits,
+            "out_masks": decoder_out_masks,
         }
 
 
-# Backbone wrapper
-
 def replace_batch_norm(model):
-    """Recursively replace all nn.BatchNorm2D with PPDocLayoutV2FrozenBatchNorm2d."""
+    """Recursively replace all nn.BatchNorm2D with PPDocLayoutV3FrozenBatchNorm2d."""
     for name, module in model.named_children():
         if isinstance(module, nn.BatchNorm2D):
-            new_module = PPDocLayoutV2FrozenBatchNorm2d(module._num_features)
+            new_module = PPDocLayoutV3FrozenBatchNorm2d(module._num_features)
             new_module.weight.set_value(module.weight)
             new_module.bias.set_value(module.bias)
             new_module._mean.set_value(module._mean)
@@ -1285,7 +963,7 @@ def replace_batch_norm(model):
             replace_batch_norm(module)
 
 
-class PPDocLayoutV2ConvEncoder(nn.Layer):
+class PPDocLayoutV3ConvEncoder(nn.Layer):
     """Convolutional backbone using HGNetV2Backbone."""
 
     def __init__(self, config):
@@ -1296,30 +974,25 @@ class PPDocLayoutV2ConvEncoder(nn.Layer):
             with paddle.no_grad():
                 replace_batch_norm(backbone)
         self.model = backbone
-        # Use encoder_in_channels from config (matches the selected backbone stages)
-        self.intermediate_channel_sizes = config.encoder_in_channels
+        self.intermediate_channel_sizes = backbone.out_channels
 
     def forward(self, pixel_values):
         features = self.model(pixel_values)
-        # Select last N stages matching encoder_in_channels
-        n = len(self.intermediate_channel_sizes)
-        return features[-n:]
+        return features
 
 
-
-class PPDocLayoutV2Model(nn.Layer):
+class PPDocLayoutV3Model(nn.Layer):
     def __init__(self, config):
         super().__init__()
         self.config = config
 
         # Create backbone
-        self.backbone = PPDocLayoutV2ConvEncoder(config)
+        self.backbone = PPDocLayoutV3ConvEncoder(config)
         intermediate_channel_sizes = self.backbone.intermediate_channel_sizes
 
-        # Create encoder input projection layers
-        num_backbone_outs = len(intermediate_channel_sizes)
+        # Create encoder input projection layers (skip stage1, project stages 2-4)
         encoder_input_proj_list = []
-        for i in range(num_backbone_outs):
+        for i in range(len(intermediate_channel_sizes)):
             in_channels = intermediate_channel_sizes[i]
             encoder_input_proj_list.append(
                 nn.Sequential(
@@ -1327,12 +1000,12 @@ class PPDocLayoutV2Model(nn.Layer):
                     nn.BatchNorm2D(config.encoder_hidden_dim),
                 )
             )
-        self.encoder_input_proj = nn.LayerList(encoder_input_proj_list)
+        self.encoder_input_proj = nn.LayerList(encoder_input_proj_list[1:])
 
         # Create encoder
-        self.encoder = PPDocLayoutV2HybridEncoder(config)
+        self.encoder = PPDocLayoutV3HybridEncoder(config)
 
-        # denoising embedding (always created for state dict compatibility)
+        # denoising embedding (ForObjectDetection version: no padding_idx)
         self.denoising_class_embed = nn.Embedding(config.num_labels, config.d_model)
 
         # decoder embedding
@@ -1345,7 +1018,7 @@ class PPDocLayoutV2Model(nn.Layer):
             nn.LayerNorm(config.d_model, epsilon=config.layer_norm_eps),
         )
         self.enc_score_head = nn.Linear(config.d_model, config.num_labels)
-        self.enc_bbox_head = PPDocLayoutV2MLPPredictionHead(config.d_model, config.d_model, 4, num_layers=3)
+        self.enc_bbox_head = PPDocLayoutV3MLPPredictionHead(config.d_model, config.d_model, 4, num_layers=3)
 
         # Create decoder input projection layers
         num_backbone_outs = len(config.decoder_in_channels)
@@ -1369,7 +1042,24 @@ class PPDocLayoutV2Model(nn.Layer):
         self.decoder_input_proj = nn.LayerList(decoder_input_proj_list)
 
         # decoder
-        self.decoder = PPDocLayoutV2Decoder(config)
+        self.decoder = PPDocLayoutV3Decoder(config)
+
+        # Order prediction (V3-specific)
+        self.decoder_order_head = nn.LayerList(
+            [nn.Linear(config.d_model, config.d_model) for _ in range(config.decoder_layers)]
+        )
+        self.decoder_global_pointer = PPDocLayoutV3GlobalPointer(config)
+        self.decoder_norm = nn.LayerNorm(config.d_model, epsilon=config.layer_norm_eps)
+
+        # Tie decoder class_embed and bbox_embed to encoder heads (weight sharing)
+        self.decoder.class_embed = self.enc_score_head
+        self.decoder.bbox_embed = self.enc_bbox_head
+
+        # Mask (V3-specific)
+        self.mask_enhanced = config.mask_enhanced
+        self.mask_query_head = PPDocLayoutV3MLPPredictionHead(
+            config.d_model, config.d_model, config.num_prototypes, num_layers=3
+        )
 
     def generate_anchors(self, spatial_shapes, grid_size=0.05, dtype="float32"):
         anchors = []
@@ -1397,10 +1087,14 @@ class PPDocLayoutV2Model(nn.Layer):
         if pixel_mask is None:
             pixel_mask = paddle.ones([batch_size, height, width])
 
+        # Backbone: returns 4 features (stage1..stage4)
         features = self.backbone(pixel_values)
-        proj_feats = [self.encoder_input_proj[level](source) for level, source in enumerate(features)]
+        x4_feat = features[0]  # stage1 feature for mask lateral
+        remaining_features = features[1:]  # stages 2-4
+        proj_feats = [self.encoder_input_proj[level](source) for level, source in enumerate(remaining_features)]
 
-        encoder_outputs = self.encoder(proj_feats)
+        # Encoder (hybrid encoder + mask feature head)
+        encoder_outputs, mask_feat = self.encoder(proj_feats, x4_feat)
 
         # _get_encoder_input
         sources = []
@@ -1451,13 +1145,14 @@ class PPDocLayoutV2Model(nn.Layer):
             axis=1,
         )
 
-        enc_topk_bboxes = F.sigmoid(reference_points_unact)
+        # _get_pred_class_and_mask
+        batch_ind = paddle.arange(memory.shape[0]).unsqueeze(1)
+        target = output_memory[batch_ind, topk_ind]
+        out_query = self.decoder_norm(target)
+        mask_query_embed = self.mask_query_head(out_query)
+        batch_size_m, mask_dim, _ = mask_query_embed.shape
 
-        enc_topk_logits = paddle.take_along_axis(
-            enc_outputs_class,
-            topk_ind.unsqueeze(-1).expand([-1, -1, enc_outputs_class.shape[-1]]),
-            axis=1,
-        )
+        enc_topk_bboxes = F.sigmoid(reference_points_unact)
 
         # extract region features
         if self.config.learn_initial_query:
@@ -1470,6 +1165,14 @@ class PPDocLayoutV2Model(nn.Layer):
             )
             target = target.detach()
 
+        if self.mask_enhanced:
+            _, _, mask_h, mask_w = mask_feat.shape
+            enc_out_masks = paddle.bmm(mask_query_embed, mask_feat.flatten(start_axis=2)).reshape(
+                [batch_size_m, mask_dim, mask_h, mask_w]
+            )
+            reference_points = mask_to_box_coordinate(enc_out_masks > 0, dtype=reference_points_unact.dtype)
+            reference_points_unact = inverse_sigmoid(reference_points)
+
         init_reference_points = reference_points_unact.detach()
 
         # decoder
@@ -1481,45 +1184,31 @@ class PPDocLayoutV2Model(nn.Layer):
             spatial_shapes=spatial_shapes,
             spatial_shapes_list=spatial_shapes_list,
             level_start_index=level_start_index,
+            order_head=self.decoder_order_head,
+            global_pointer=self.decoder_global_pointer,
+            mask_query_head=self.mask_query_head,
+            norm=self.decoder_norm,
+            mask_feat=mask_feat,
         )
 
         return decoder_outputs
 
 
-
-class PPDocLayoutPostProcess:
+class PPDocLayoutV3PostProcess:
     def __init__(
         self,
         num_classes=25,
-        num_top_queries=100,
-        dual_queries=False,
-        dual_groups=0,
-        use_focal_loss=False,
-        with_mask=False,
-        mask_stride=4,
-        mask_threshold=0.5,
-        use_avg_mask_score=False,
+        num_top_queries=300,
+        use_focal_loss=True,
         bbox_decode_type="origin",
     ):
         self.num_classes = num_classes
         self.num_top_queries = num_top_queries
-        self.dual_queries = dual_queries
-        self.dual_groups = dual_groups
         self.use_focal_loss = use_focal_loss
-        self.with_mask = with_mask
-        self.mask_stride = mask_stride
-        self.mask_threshold = mask_threshold
-        self.use_avg_mask_score = use_avg_mask_score
         self.bbox_decode_type = bbox_decode_type
 
     def __call__(self, head_out, order_logits, im_shape, scale_factor, pad_shape):
-        bboxes, logits, masks = head_out
-        if self.dual_queries:
-            num_queries = logits.shape[1]
-            logits, bboxes = (
-                logits[:, : int(num_queries // (self.dual_groups + 1)), :],
-                bboxes[:, : int(num_queries // (self.dual_groups + 1)), :],
-            )
+        bboxes, logits = head_out
 
         bbox_pred = bbox_cxcywh_to_xyxy(bboxes)
 
@@ -1534,9 +1223,7 @@ class PPDocLayoutPostProcess:
             raise Exception(f"Wrong `bbox_decode_type`: {self.bbox_decode_type}.")
         bbox_pred *= out_shape
 
-        scores = (
-            F.sigmoid(logits) if self.use_focal_loss else F.softmax(logits)[:, :, :-1]
-        )
+        scores = F.sigmoid(logits) if self.use_focal_loss else F.softmax(logits)[:, :, :-1]
 
         pad_order_seq, pad_order_votes = get_order(order_logits)
 
@@ -1570,27 +1257,6 @@ class PPDocLayoutPostProcess:
             pad_order_seq = paddle.gather_nd(pad_order_seq, index)
             pad_order_votes = paddle.gather_nd(pad_order_votes, index)
 
-        mask_pred = None
-        if self.with_mask:
-            assert masks is not None
-            assert masks.shape[0] == 1
-            masks = paddle.gather_nd(masks, index)
-            if self.bbox_decode_type == "pad":
-                masks = F.interpolate(
-                    masks,
-                    scale_factor=self.mask_stride,
-                    mode="bilinear",
-                    align_corners=False,
-                )
-                h, w = im_shape.astype("int32")[0]
-                masks = masks[..., :h, :w]
-            img_h = img_h[0].astype("int32")
-            img_w = img_w[0].astype("int32")
-            masks = F.interpolate(
-                masks, size=[img_h, img_w], mode="bilinear", align_corners=False
-            )
-            mask_pred, scores = self._mask_postprocess(masks, scores)
-
         bbox_pred = paddle.concat(
             [
                 labels.unsqueeze(-1).astype("float32"),
@@ -1605,36 +1271,22 @@ class PPDocLayoutPostProcess:
             [bbox_pred.shape[0]]
         )
         bbox_pred = bbox_pred.reshape([-1, 8])
-        return bbox_pred, bbox_num, mask_pred
+        return bbox_pred, bbox_num
 
 
+class PPDocLayoutV3(BatchNormHFStateDictMixin, PretrainedModel):
 
-class PPDocLayoutV2(BatchNormHFStateDictMixin, PretrainedModel):
-
-    config_class = PPDocLayoutV2Config
+    config_class = PPDocLayoutV3Config
 
     def __init__(self, config):
-        super(PPDocLayoutV2, self).__init__(config)
+        super(PPDocLayoutV3, self).__init__(config)
         self.config = config
 
-        # Build the detection model (PPDocLayoutV2ForObjectDetection equivalent)
-        self.model = PPDocLayoutV2Model(config)
+        # Build the detection model
+        self.model = PPDocLayoutV3Model(config)
 
-        # Set up decoder bbox_embed and class_embed (from ForObjectDetection)
-        num_pred = config.decoder_layers
-        self.model.decoder.class_embed = nn.LayerList(
-            [nn.Linear(config.d_model, config.num_labels) for _ in range(num_pred)]
-        )
-        self.model.decoder.bbox_embed = nn.LayerList(
-            [PPDocLayoutV2MLPPredictionHead(config.d_model, config.d_model, 4, num_layers=3) for _ in range(num_pred)]
-        )
-
-        # Reading order model
-        self.reading_order = PPDocLayoutV2ReadingOrder(config.reading_order_config)
-        self.num_queries = config.num_queries
-
-        # Post-process (used in the old-style forward path)
-        self.post_process = PPDocLayoutPostProcess(
+        # Post-process
+        self.post_process = PPDocLayoutV3PostProcess(
             num_top_queries=config.num_queries,
             use_focal_loss=True,
         )
@@ -1644,61 +1296,25 @@ class PPDocLayoutV2(BatchNormHFStateDictMixin, PretrainedModel):
         im_shape = paddle.to_tensor(inputs[0])
         scale_factor = paddle.to_tensor(inputs[2])
 
-        # Run the detection model (backbone -> encoder -> decoder)
+        # Run the detection model
         decoder_outputs = self.model(pixel_values)
 
         intermediate_reference_points = decoder_outputs["intermediate_reference_points"]
         intermediate_logits = decoder_outputs["intermediate_logits"]
+        order_logits = decoder_outputs["out_order_logits"]
 
         # Take last layer outputs
-        raw_bboxes = intermediate_reference_points[:, -1]
+        pred_boxes = intermediate_reference_points[:, -1]
         logits = intermediate_logits[:, -1]
+        order_logits = order_logits[:, -1]
 
-        # Convert center-format boxes to [x1,y1,x2,y2] in [0,1000] scale for reading order
-        box_centers, box_sizes = raw_bboxes.split(2, axis=-1)
-        bboxes = paddle.concat([box_centers - 0.5 * box_sizes, box_centers + 0.5 * box_sizes], axis=-1) * 1000
-        bboxes = bboxes.clip(0.0, 1000.0)
-
-        max_logits = logits.max(axis=-1)
-        class_ids = logits.argmax(axis=-1)
-        max_probs = F.sigmoid(max_logits)
-
-        class_thresholds = paddle.to_tensor(self.config.class_thresholds, dtype="float32")
-        thresholds = paddle.index_select(class_thresholds, class_ids.flatten(), axis=0).reshape(class_ids.shape)
-        mask = max_probs >= thresholds
-
-        indices = paddle.argsort(mask.astype("int32"), axis=1, descending=True)
-
-        sorted_class_ids = paddle.take_along_axis(class_ids, indices, axis=1)
-        sorted_boxes = paddle.take_along_axis(bboxes, indices.unsqueeze(-1).expand([-1, -1, 4]), axis=1)
-        pred_boxes = paddle.take_along_axis(raw_bboxes, indices.unsqueeze(-1).expand([-1, -1, 4]), axis=1)
-        logits_sorted = paddle.take_along_axis(
-            logits, indices.unsqueeze(-1).expand([-1, -1, logits.shape[-1]]), axis=1
-        )
-
-        sorted_mask = paddle.take_along_axis(mask.astype("int32"), indices, axis=1).astype("bool")
-
-        pad_boxes = paddle.where(sorted_mask.unsqueeze(-1), sorted_boxes, paddle.zeros_like(sorted_boxes))
-        pad_class_ids = paddle.where(sorted_mask, sorted_class_ids, paddle.zeros_like(sorted_class_ids))
-
-        class_order = paddle.to_tensor(self.config.class_order, dtype="int32")
-        pad_class_ids = paddle.index_select(class_order, pad_class_ids.flatten(), axis=0).reshape(pad_class_ids.shape)
-
-        order_logits = self.reading_order(
-            boxes=pad_boxes,
-            labels=pad_class_ids,
-            mask=sorted_mask,
-        )
-        order_logits = order_logits[:, :, :self.num_queries]
-
-        # Use the post-process for final output (sorted to match order_logits)
-        head_out = (pred_boxes, logits_sorted, None)
-        # Compute pad_shape from pixel_values shape
+        # Post-process
+        head_out = (pred_boxes, logits)
         pad_shape = paddle.to_tensor(
             [[pixel_values.shape[2], pixel_values.shape[3]]] * pixel_values.shape[0],
             dtype="float32",
         )
-        bbox, bbox_num, mask_pred = self.post_process(
+        bbox, bbox_num = self.post_process(
             head_out,
             order_logits,
             im_shape,
@@ -1714,31 +1330,23 @@ class PPDocLayoutV2(BatchNormHFStateDictMixin, PretrainedModel):
             "fc",
             "o_proj",
             "out_proj",
+            "output_proj",
             "q_proj",
             "k_proj",
             "v_proj",
-            "linear_1",
-            "linear_2",
             "enc_bbox_head",
             "enc_output",
-            "spatial_proj",
-            "query",
-            "key",
-            "value",
-            "intermediate",
-            "attention",
-            "output",
-            "relative_head",
             "query_pos_head",
             "enc_score_head",
-            "in_proj_weight",
-            "linear1",
-            "linear2",
-            "label_features_projection",
-            "reading_order.encoder.layer",
             "encoder_attn",
             "decoder.bbox_embed",
             "decoder.class_embed",
+            "decoder_order_head",
+            "decoder_global_pointer",
+            "mask_query_head",
+            "sampling_offsets",
+            "attention_weights",
+            "value_proj",
         ]
         keys = []
         for key, _ in self.get_hf_state_dict().items():
@@ -1752,15 +1360,32 @@ class PPDocLayoutV2(BatchNormHFStateDictMixin, PretrainedModel):
                     and "enc_output.1" not in key
                 ):
                     keys.append(key)
-
         return keys
 
     def set_hf_state_dict(self, state_dict, *args, **kwargs):
-        return super().set_hf_state_dict(
-            _apply_rt_detr_key_conversion(state_dict), *args, **kwargs
-        )
+        converted = _apply_rt_detr_key_conversion(state_dict)
+        # decoder.class_embed and decoder.bbox_embed are tied to enc_score_head and
+        # enc_bbox_head respectively (HF _tied_weights_keys). Safetensors only stores
+        # the canonical enc_*_head keys, so we duplicate them under the decoder paths
+        # so that Paddle's set_state_dict does not warn about missing keys.
+        aliases = {}
+        for k, v in converted.items():
+            if k.startswith("model.enc_score_head."):
+                aliases[k.replace("model.enc_score_head.", "model.decoder.class_embed.")] = v
+            elif k.startswith("model.enc_bbox_head."):
+                aliases[k.replace("model.enc_bbox_head.", "model.decoder.bbox_embed.")] = v
+        converted.update(aliases)
+        return super().set_hf_state_dict(converted, *args, **kwargs)
 
     def get_hf_state_dict(self, *args, **kwargs):
-        return _reverse_rt_detr_key_conversion(
+        state_dict = _reverse_rt_detr_key_conversion(
             super().get_hf_state_dict(*args, **kwargs)
         )
+        # Remove tied-weight duplicates: decoder.class_embed and decoder.bbox_embed
+        # are aliases of enc_score_head and enc_bbox_head; only keep the canonical keys.
+        return {
+            k: v
+            for k, v in state_dict.items()
+            if not k.startswith("model.decoder.class_embed.")
+            and not k.startswith("model.decoder.bbox_embed.")
+        }

@@ -22,8 +22,8 @@ DEFAULT_BACKBONE_CONFIG = {
 }
 
 
-class PPOCRV5MobileDetConfig(PretrainedConfig):
-    model_type = "pp_ocrv5_mobile_det"
+class PPOCRV5MobileRecConfig(PretrainedConfig):
+    model_type = "pp_ocrv5_mobile_rec"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -36,10 +36,13 @@ class PPOCRV5MobileDetConfig(PretrainedConfig):
         else:
             self.backbone_config = PPLCNetV3Config(**DEFAULT_BACKBONE_CONFIG)
 
-        self.reduction = kwargs.get("reduction", 4)
-        self.neck_out_channels = kwargs.get("neck_out_channels", 96)
-        self.interpolate_mode = kwargs.get("interpolate_mode", "nearest")
-        self.kernel_list = kwargs.get("kernel_list", [3, 2, 2])
-        self.layer_list_out_channels = kwargs.get(
-            "layer_list_out_channels", [12, 18, 42, 360]
-        )
+        self.hidden_act = kwargs.get("hidden_act", "silu")
+        self.hidden_size = kwargs.get("hidden_size", 120)
+        self.mlp_ratio = kwargs.get("mlp_ratio", 2.0)
+        self.depth = kwargs.get("depth", 2)
+        self.head_out_channels = kwargs.get("head_out_channels", 18385)
+        self.conv_kernel_size = kwargs.get("conv_kernel_size", [1, 3])
+        self.qkv_bias = kwargs.get("qkv_bias", True)
+        self.num_attention_heads = kwargs.get("num_attention_heads", 8)
+        self.attention_dropout = kwargs.get("attention_dropout", 0.0)
+        self.layer_norm_eps = kwargs.get("layer_norm_eps", 1e-6)
