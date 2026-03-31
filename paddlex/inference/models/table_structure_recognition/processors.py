@@ -123,10 +123,10 @@ class TableLabelDecode:
 
     def __call__(self, pred, img_size, ori_img_size):
         """apply"""
-        bbox_preds = np.array([list(pred[0][0])])
-        structure_probs = np.array([list(pred[1][0])])
+        bbox_preds = np.array(pred[0])
+        structure_probs = np.array(pred[1])
 
-        bbox_list, structure_str_list, structure_score = self.decode(
+        bbox_list, structure_str_list, structure_scores = self.decode(
             structure_probs, bbox_preds, img_size, ori_img_size
         )
         structure_str_list = [
@@ -138,8 +138,10 @@ class TableLabelDecode:
             for structure in structure_str_list
         ]
         return [
-            {"bbox": bbox, "structure": structure, "structure_score": structure_score}
-            for bbox, structure in zip(bbox_list, structure_str_list)
+            {"bbox": bbox, "structure": structure, "structure_score": score}
+            for bbox, structure, score in zip(
+                bbox_list, structure_str_list, structure_scores
+            )
         ]
 
     def decode(self, structure_probs, bbox_preds, padding_size, ori_img_size):
@@ -152,13 +154,13 @@ class TableLabelDecode:
 
         structure_batch_list = []
         bbox_batch_list = []
+        structure_score_list = []
         batch_size = len(structure_idx)
-        bbox_list = []
-        scale_list = []
-        scales = [0] * 8
         for batch_idx in range(batch_size):
             structure_list = []
             score_list = []
+            bbox_list = []
+            scale_list = []
             for idx in range(len(structure_idx[batch_idx])):
                 char_idx = int(structure_idx[batch_idx][idx])
                 if idx > 0 and char_idx == end_idx:
@@ -171,6 +173,7 @@ class TableLabelDecode:
                     h_scale, w_scale = self._get_bbox_scales(
                         padding_size[batch_idx], ori_img_size[batch_idx]
                     )
+                    scales = [0] * 8
                     scales[0::2] = [h_scale] * 4
                     scales[1::2] = [w_scale] * 4
                     bbox_list.append(bbox)
@@ -179,12 +182,18 @@ class TableLabelDecode:
                 structure_list.append(text)
                 score_list.append(structure_probs[batch_idx, idx])
             structure_batch_list.append(structure_list)
-            structure_score = np.mean(score_list)
+            structure_score_list.append(
+                np.mean(score_list) if score_list else 0.0
+            )
+            if bbox_list:
+                bbox_batch_array = np.multiply(
+                    np.array(bbox_list), np.array(scale_list)
+                )
+                bbox_batch_list.append(bbox_batch_array.astype(int).tolist())
+            else:
+                bbox_batch_list.append([])
 
-        bbox_batch_array = np.multiply(np.array(bbox_list), np.array(scale_list))
-        bbox_batch_list = [bbox_batch_array.astype(int).tolist()]
-
-        return bbox_batch_list, structure_batch_list, structure_score
+        return bbox_batch_list, structure_batch_list, structure_score_list
 
     def decode_label(self, batch):
         """convert text-label into text-index."""

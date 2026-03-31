@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import annotations
-
 import copy
 import re
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -878,7 +876,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_chart_recognition: Union[bool, None],
         use_region_detection: Union[bool, None],
         format_block_content: Union[bool, None],
-        markdown_ignore_labels: Optional[list[str]] = None,
+        markdown_ignore_labels: Optional[List[str]] = None,
     ) -> dict:
         """
         Get the model settings based on the provided parameters or default values.
@@ -937,7 +935,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
 
     def predict(
         self,
-        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Union[bool, None] = None,
         use_doc_unwarping: Union[bool, None] = None,
         use_textline_orientation: Optional[bool] = None,
@@ -969,7 +967,7 @@ class _LayoutParsingPipelineV2(BasePipeline):
         use_ocr_results_with_table_cells: bool = True,
         use_e2e_wired_table_rec_model: bool = False,
         use_e2e_wireless_table_rec_model: bool = True,
-        markdown_ignore_labels: Optional[list[str]] = None,
+        markdown_ignore_labels: Optional[List[str]] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """

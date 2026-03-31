@@ -47,7 +47,10 @@ BASE_DEP_SPECS = {
     "langchain-text-splitters": ">= 0.2, < 1.0",
     "lxml": "",
     "matplotlib": "",
-    "modelscope": ">=1.28.0",
+    "modelscope": [
+        '>= 1.28.0, < 1.30; python_version == "3.8"',
+        '>= 1.28.0; python_version >= "3.9"',
+    ],
     "numpy": ">= 1.24",
     "openai": ">= 1.63",
     "OpenCC": "",
@@ -297,12 +300,6 @@ def extras():
     return dic
 
 
-def version():
-    """get version"""
-    with open(os.path.join("paddlex", ".version"), "r") as file:
-        return file.read().rstrip()
-
-
 def get_data_files(directory: str, filetypes: list = None):
     all_files = []
     filetypes = filetypes or []
@@ -343,7 +340,6 @@ def packages_and_package_data():
     ]
     pkg_data.extend(pipeline_config)
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
-    pkg_data.append(".version")
     pkg_data.append("hpip_links.html")
     pkg_data.append("hpip_links_cu12.html")
     pkg_data.append("inference/utils/hpi_model_info_collection.json")
@@ -366,12 +362,13 @@ if __name__ == "__main__":
 
     s = setup(
         name="paddlex",
-        version=version(),
+        use_scm_version=True,
         description=("Low-code development tool based on PaddlePaddle."),
         long_description=readme(),
         long_description_content_type="text/markdown",
         author="PaddlePaddle Authors",
         author_email="",
+        python_requires=">=3.8",
         install_requires=dependencies(),
         extras_require=extras(),
         packages=pkgs,
@@ -396,6 +393,7 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.13",
             "Topic :: Scientific/Engineering",
             "Topic :: Scientific/Engineering :: Mathematics",
             "Topic :: Scientific/Engineering :: Artificial Intelligence",

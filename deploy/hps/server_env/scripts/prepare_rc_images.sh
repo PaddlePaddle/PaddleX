@@ -19,7 +19,7 @@ for device_type in 'gpu' 'cpu'; do
     --build-arg http_proxy="${http_proxy}" 
     --build-arg https_proxy="${https_proxy}" 
     )
-    [[ -n "$pip_index_url" ]] && args+=( --build-arg PIP_INDEX_URL="${pip_index_url}" )
+    [ -n "${pip_index_url}" ] && args+=( --build-arg PIP_INDEX_URL="${pip_index_url}" )
 
     DOCKER_BUILDKIT=1 docker build "${args[@]}" .
 

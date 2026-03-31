@@ -12,7 +12,7 @@ hide:
 
 <p align="center">
     <a href=""><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.13-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
@@ -62,13 +62,13 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 🛠️ Installation
 
 !!! warning
-    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc1 version depends on PaddlePaddle version <b>3.0.0</b> and above.
+    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.13</b>). The PaddleX 3.0-rc1 version depends on PaddlePaddle version <b>3.0.0</b> and above.
 
 ### Installing PaddlePaddle
 
 === "CPU version"
     ```bash
-    python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.3.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "GPU version, requiring a GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)."
     ```bash

@@ -112,6 +112,7 @@ bool OrtBackend::BuildOption(const OrtBackendOption &option) {
     } else {
       OrtCUDAProviderOptions cuda_options;
       cuda_options.device_id = option.device_id;
+      cuda_options.cudnn_conv_algo_search = OrtCudnnConvAlgoSearchHeuristic;
       if (option.external_stream_) {
         cuda_options.has_user_compute_stream = 1;
         cuda_options.user_compute_stream = option.external_stream_;
