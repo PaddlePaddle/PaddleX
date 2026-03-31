@@ -1329,11 +1329,13 @@ class PPDocLayoutV3(BatchNormHFStateDictMixin, PretrainedModel):
         t_layers = [
             "fc",
             "o_proj",
+            "out_proj",
             "output_proj",
             "q_proj",
             "k_proj",
             "v_proj",
             "enc_bbox_head",
+            "enc_output",
             "query_pos_head",
             "enc_score_head",
             "encoder_attn",
