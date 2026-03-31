@@ -285,7 +285,19 @@ class DocVLMLocalPredictor(LocalModelPredictor):
             )
         elif is_in_group(self.model_name, "PP-Chart2Table"):
             image_processor = GOTImageProcessor(1024)
-            tokenizer = QWenTokenizer.from_pretrained(self.model_dir)
+            # Load GOT-OCR2 special tokens (<img>, </img>, <imgpad>, etc.)
+            # from added_tokens.json so they encode as single tokens.
+            extra_special_tokens = None
+            added_tokens_file = Path(self.model_dir) / "added_tokens.json"
+            if added_tokens_file.exists():
+                import json
+
+                with open(added_tokens_file) as f:
+                    extra_special_tokens = json.load(f)
+            tokenizer = QWenTokenizer(
+                vocab_file=str(Path(self.model_dir) / "qwen.tiktoken"),
+                extra_special_tokens=extra_special_tokens,
+            )
             return PPChart2TableProcessor(
                 image_processor=image_processor, tokenizer=tokenizer, dtype=self.dtype
             )
