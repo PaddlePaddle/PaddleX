@@ -976,11 +976,24 @@ class GetInferInput:
         infer_input = []
 
         img = sample.get("img", None)[0]
+        if img is None or img.size == 0:
+            raise ValueError(
+                "No image data found in sample. Please check if the input data "
+                "contains valid multi-view images."
+            )
         infer_input.append(img.astype(np.float32))
+
         lidar2img = np.stack(sample["img_metas"][0]["lidar2img"]).astype(np.float32)
         infer_input.append(lidar2img)
+
         points = sample.get("points", None)[0]
+        if points is None or points.size == 0:
+            raise ValueError(
+                "No point cloud data found in sample. Please check if the input data "
+                "contains valid point cloud data."
+            )
         infer_input.append(points.astype(np.float32))
+
         img_metas = {
             "input_lidar_path": sample["img_metas"][0]["pts_filename"],
             "input_img_paths": sample["img_metas"][0]["filename"],

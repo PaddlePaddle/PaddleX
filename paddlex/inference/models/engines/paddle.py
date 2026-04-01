@@ -20,14 +20,13 @@ from typing import Any, Dict, Optional, Tuple, Type
 from ....constants import MODEL_FILE_PREFIX
 from ....utils import logging
 from ....utils.deps import is_dep_available
-from ..bindings import Binding
 from ..hpi import get_hpi_info
-from ..runners import PaddleStaticRunner
+from ..runners import PaddleDynamicRunner, PaddleStaticRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_dynamic_runner import PaddleDynamicRunnerConfig
 from ..runners.paddle_static import PaddleStaticRunnerConfig
 from ..utils.model_paths import LocalModelFormat
-from ._base import RunnerEngine
+from ._base import RunnerBuilder, RunnerEngine
 
 
 def _inject_trt_info(
@@ -101,33 +100,40 @@ class PaddleStaticEngine(RunnerEngine):
                 "'paddlepaddle' is not installed."
             )
 
-    def build_runner(
-        self,
-        *,
-        model_name: str,
-        model_dir: Optional[Path],
-        model_config: Optional[Dict[str, Any]],
-        engine_config: Dict[str, Any],
-        binding: Optional[Binding] = None,
-    ) -> InferenceRunner:
-        del binding
-        if model_dir is None:
-            raise ValueError("`model_dir` is required for engine='paddle_static'.")
-        runner_config = _inject_trt_info(model_config, dict(engine_config))
-        return PaddleStaticRunner(
-            model_name=model_name,
-            model_dir=model_dir,
-            model_file_prefix=MODEL_FILE_PREFIX,
-            config=runner_config,
-        )
+    def get_default_runner_builder(self) -> RunnerBuilder:
+        def runner_builder(
+            *,
+            model_name: str,
+            model_dir: Optional[Path],
+            model_config: Optional[Dict[str, Any]],
+            engine_config: Dict[str, Any],
+            default_builder: Optional[RunnerBuilder] = None,
+        ) -> InferenceRunner:
+            del default_builder
+            if model_dir is None:
+                raise ValueError("`model_dir` is required for engine='paddle_static'.")
+            runner_config = _inject_trt_info(model_config, dict(engine_config))
+            return PaddleStaticRunner(
+                model_name=model_name,
+                model_dir=model_dir,
+                model_file_prefix=MODEL_FILE_PREFIX,
+                config=runner_config,
+            )
+
+        return runner_builder
+
+    def validate_runner(self, runner: InferenceRunner) -> None:
+        if not isinstance(runner, PaddleStaticRunner):
+            raise TypeError(
+                "Engine 'paddle_static' must build a PaddleStaticRunner, "
+                f"but got {type(runner).__name__}."
+            )
 
 
 class PaddleDynamicEngine(RunnerEngine):
     """Engine for Paddle dynamic-graph inference."""
 
     entities = "paddle_dynamic"
-
-    BINDING_EXTRA_RUNNER_BUILDER_KEY = "runner_builder"
 
     @property
     def name(self) -> str:
@@ -160,27 +166,12 @@ class PaddleDynamicEngine(RunnerEngine):
                 "'paddlepaddle' is not installed."
             )
 
-    def build_runner(
-        self,
-        *,
-        model_name: str,
-        model_dir: Optional[Path],
-        model_config: Optional[Dict[str, Any]],
-        engine_config: Dict[str, Any],
-        binding: Optional[Binding] = None,
-    ) -> InferenceRunner:
-        runner_builder = None
-        if binding is not None:
-            runner_builder = binding.extra_info.get(
-                self.BINDING_EXTRA_RUNNER_BUILDER_KEY
+    def get_default_runner_builder(self) -> Optional[RunnerBuilder]:
+        return None
+
+    def validate_runner(self, runner: InferenceRunner) -> None:
+        if not isinstance(runner, PaddleDynamicRunner):
+            raise TypeError(
+                "Engine 'paddle_dynamic' must build a PaddleDynamicRunner, "
+                f"but got {type(runner).__name__}."
             )
-        if not callable(runner_builder):
-            raise RuntimeError(
-                f"Model {model_name!r} does not provide paddle_dynamic runner metadata."
-            )
-        return runner_builder(
-            model_name,
-            model_dir,
-            model_config,
-            engine_config,
-        )

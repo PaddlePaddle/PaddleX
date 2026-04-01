@@ -14,7 +14,6 @@
 
 from ....modules.object_detection.model_list import LAYOUTANALYSIS_MODELS
 from ..bindings import create_binding_registration, register_predictor_binding_map
-from ..engines.paddle import PaddleDynamicEngine
 from ..runners import create_pretrained_dynamic_runner_builder
 from .predictor import (
     LAYOUT_ANALYSIS_TRANSFORMERS_MODELS,
@@ -42,25 +41,21 @@ register_predictor_binding_map(
         "paddle_dynamic": (
             create_binding_registration(
                 ("PP-DocLayoutV2",),
-                **{
-                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
-                        _load_ppdoclayoutv2,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    ),
-                },
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppdoclayoutv2,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
             ),
             create_binding_registration(
                 ("PP-DocLayoutV3",),
-                **{
-                    PaddleDynamicEngine.BINDING_EXTRA_RUNNER_BUILDER_KEY: create_pretrained_dynamic_runner_builder(
-                        _load_ppdoclayoutv3,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    ),
-                },
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppdoclayoutv3,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
             ),
         ),
         "hpi": LAYOUTANALYSIS_MODELS,
