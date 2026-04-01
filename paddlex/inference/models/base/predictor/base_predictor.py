@@ -475,6 +475,7 @@ class BasePredictor(
 
         return hpi_config
 
+
     # Should this be static?
     def _get_device_info(self, device):
         if device is None:
