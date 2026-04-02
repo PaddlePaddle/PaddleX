@@ -34,20 +34,21 @@ safetensors on-disk format and the model's parameter names (see
 
 from __future__ import absolute_import, division, print_function
 
-import math
-
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ...common.transformers.activations import ACT2FN, ACT2CLS
+from ...common.transformers.activations import ACT2CLS, ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
 )
 from ...image_classification.modeling.hgnetv2 import HGNetV2Backbone
 from ._config_rt_detr import RTDETRConfig
-from .pp_doclayout_v2 import _apply_rt_detr_key_conversion, _reverse_rt_detr_key_conversion
+from .pp_doclayout_v2 import (
+    _apply_rt_detr_key_conversion,
+    _reverse_rt_detr_key_conversion,
+)
 
 __all__ = ["RTDETR"]
 
@@ -62,7 +63,6 @@ def inverse_sigmoid(x, eps=1e-5):
     x1 = x.clip(min=eps)
     x2 = (1 - x).clip(min=eps)
     return paddle.log(x1 / x2)
-
 
 
 class RTDETRFrozenBatchNorm2d(nn.Layer):
@@ -94,8 +94,7 @@ class RTDETRMLPPredictionHead(nn.Layer):
         self.num_layers = num_layers
         h = [hidden_dim] * (num_layers - 1)
         self.layers = nn.LayerList(
-            nn.Linear(n, k)
-            for n, k in zip([input_dim] + h, h + [output_dim])
+            nn.Linear(n, k) for n, k in zip([input_dim] + h, h + [output_dim])
         )
 
     def forward(self, x):
@@ -117,7 +116,9 @@ class RTDETTMLP(nn.Layer):
 
     def forward(self, hidden_states):
         hidden_states = self.activation_fn(self.fc1(hidden_states))
-        hidden_states = F.dropout(hidden_states, p=self.activation_dropout, training=self.training)
+        hidden_states = F.dropout(
+            hidden_states, p=self.activation_dropout, training=self.training
+        )
         hidden_states = self.fc2(hidden_states)
         hidden_states = F.dropout(hidden_states, p=self.dropout, training=self.training)
         return hidden_states
@@ -126,11 +127,13 @@ class RTDETTMLP(nn.Layer):
 class RTDETRSelfAttention(nn.Layer):
     """Multi-headed self-attention. Position embeddings added to queries and keys."""
 
-    def __init__(self, config, hidden_size, num_attention_heads, dropout=0.0, bias=True):
+    def __init__(
+        self, config, hidden_size, num_attention_heads, dropout=0.0, bias=True
+    ):
         super().__init__()
         self.head_dim = hidden_size // num_attention_heads
         self.num_heads = num_attention_heads
-        self.scaling = self.head_dim ** -0.5
+        self.scaling = self.head_dim**-0.5
         self.attention_dropout = dropout
 
         self.k_proj = nn.Linear(hidden_size, hidden_size, bias_attr=bias)
@@ -163,16 +166,23 @@ class RTDETRSelfAttention(nn.Layer):
             .transpose([0, 2, 1, 3])
         )
 
-        attn_weights = paddle.matmul(query_states, key_states.transpose([0, 1, 3, 2])) * self.scaling
+        attn_weights = (
+            paddle.matmul(query_states, key_states.transpose([0, 1, 3, 2]))
+            * self.scaling
+        )
 
         if attention_mask is not None:
             attn_weights = attn_weights + attention_mask
 
         attn_weights = F.softmax(attn_weights, axis=-1)
-        attn_weights = F.dropout(attn_weights, p=self.attention_dropout, training=self.training)
+        attn_weights = F.dropout(
+            attn_weights, p=self.attention_dropout, training=self.training
+        )
 
         attn_output = paddle.matmul(attn_weights, value_states)
-        attn_output = attn_output.transpose([0, 2, 1, 3]).reshape([batch_size, seq_len, -1])
+        attn_output = attn_output.transpose([0, 2, 1, 3]).reshape(
+            [batch_size, seq_len, -1]
+        )
         attn_output = self.o_proj(attn_output)
         return attn_output, attn_weights
 
@@ -180,10 +190,22 @@ class RTDETRSelfAttention(nn.Layer):
 class RTDETRConvNormLayer(nn.Layer):
     """Conv layer with conv/norm attribute names."""
 
-    def __init__(self, config, in_channels, out_channels, kernel_size, stride, padding=None, activation=None):
+    def __init__(
+        self,
+        config,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride,
+        padding=None,
+        activation=None,
+    ):
         super().__init__()
         self.conv = nn.Conv2D(
-            in_channels, out_channels, kernel_size, stride,
+            in_channels,
+            out_channels,
+            kernel_size,
+            stride,
             padding=(kernel_size - 1) // 2 if padding is None else padding,
             bias_attr=False,
         )
@@ -209,12 +231,19 @@ class RTDETREncoderLayer(nn.Layer):
             num_attention_heads=config.encoder_attention_heads,
             dropout=config.dropout,
         )
-        self.self_attn_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
+        self.self_attn_layer_norm = nn.LayerNorm(
+            self.hidden_size, epsilon=config.layer_norm_eps
+        )
         self.dropout = config.dropout
         self.mlp = RTDETTMLP(
-            config, self.hidden_size, config.encoder_ffn_dim, config.encoder_activation_function
+            config,
+            self.hidden_size,
+            config.encoder_ffn_dim,
+            config.encoder_activation_function,
         )
-        self.final_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
+        self.final_layer_norm = nn.LayerNorm(
+            self.hidden_size, epsilon=config.layer_norm_eps
+        )
 
     def forward(self, hidden_states, attention_mask, spatial_position_embeddings=None):
         residual = hidden_states
@@ -252,8 +281,12 @@ class RTDETRRepVggBlock(nn.Layer):
         super().__init__()
         activation = config.activation_function
         hidden_channels = int(config.encoder_hidden_dim * config.hidden_expansion)
-        self.conv1 = RTDETRConvNormLayer(config, hidden_channels, hidden_channels, 3, 1, padding=1)
-        self.conv2 = RTDETRConvNormLayer(config, hidden_channels, hidden_channels, 1, 1, padding=0)
+        self.conv1 = RTDETRConvNormLayer(
+            config, hidden_channels, hidden_channels, 3, 1, padding=1
+        )
+        self.conv2 = RTDETRConvNormLayer(
+            config, hidden_channels, hidden_channels, 1, 1, padding=0
+        )
         self.activation = nn.Identity() if activation is None else ACT2CLS[activation]()
 
     def forward(self, x):
@@ -272,11 +305,19 @@ class RTDETRCSPRepLayer(nn.Layer):
         activation = config.activation_function
 
         hidden_channels = int(out_channels * config.hidden_expansion)
-        self.conv1 = RTDETRConvNormLayer(config, in_channels, hidden_channels, 1, 1, activation=activation)
-        self.conv2 = RTDETRConvNormLayer(config, in_channels, hidden_channels, 1, 1, activation=activation)
-        self.bottlenecks = nn.Sequential(*[RTDETRRepVggBlock(config) for _ in range(num_blocks)])
+        self.conv1 = RTDETRConvNormLayer(
+            config, in_channels, hidden_channels, 1, 1, activation=activation
+        )
+        self.conv2 = RTDETRConvNormLayer(
+            config, in_channels, hidden_channels, 1, 1, activation=activation
+        )
+        self.bottlenecks = nn.Sequential(
+            *[RTDETRRepVggBlock(config) for _ in range(num_blocks)]
+        )
         if hidden_channels != out_channels:
-            self.conv3 = RTDETRConvNormLayer(config, hidden_channels, out_channels, 1, 1, activation=activation)
+            self.conv3 = RTDETRConvNormLayer(
+                config, hidden_channels, out_channels, 1, 1, activation=activation
+            )
         else:
             self.conv3 = nn.Identity()
 
@@ -301,15 +342,19 @@ class RTDETRSinePositionEmbedding(nn.Layer):
         grid_h, grid_w = paddle.meshgrid(grid_h, grid_w)
 
         if self.embed_dim % 4 != 0:
-            raise ValueError("Embed dimension must be divisible by 4 for 2D sin-cos position embedding")
+            raise ValueError(
+                "Embed dimension must be divisible by 4 for 2D sin-cos position embedding"
+            )
         pos_dim = self.embed_dim // 4
         omega = paddle.arange(pos_dim).astype(dtype) / pos_dim
-        omega = 1.0 / (self.temperature ** omega)
+        omega = 1.0 / (self.temperature**omega)
 
         out_w = grid_w.flatten().unsqueeze(-1) @ omega.unsqueeze(0)
         out_h = grid_h.flatten().unsqueeze(-1) @ omega.unsqueeze(0)
 
-        return paddle.concat([out_h.sin(), out_h.cos(), out_w.sin(), out_w.cos()], axis=1).unsqueeze(0)
+        return paddle.concat(
+            [out_h.sin(), out_h.cos(), out_w.sin(), out_w.cos()], axis=1
+        ).unsqueeze(0)
 
 
 class RTDETRAIFILayer(nn.Layer):
@@ -325,7 +370,9 @@ class RTDETRAIFILayer(nn.Layer):
             embed_dim=self.encoder_hidden_dim,
             temperature=config.positional_encoding_temperature,
         )
-        self.layers = nn.LayerList([RTDETREncoderLayer(config) for _ in range(config.encoder_layers)])
+        self.layers = nn.LayerList(
+            [RTDETREncoderLayer(config) for _ in range(config.encoder_layers)]
+        )
 
     def forward(self, hidden_states):
         batch_size = hidden_states.shape[0]
@@ -349,12 +396,11 @@ class RTDETRAIFILayer(nn.Layer):
                 spatial_position_embeddings=pos_embed,
             )
 
-        hidden_states = (
-            hidden_states.transpose([0, 2, 1]).reshape([batch_size, self.encoder_hidden_dim, height, width])
+        hidden_states = hidden_states.transpose([0, 2, 1]).reshape(
+            [batch_size, self.encoder_hidden_dim, height, width]
         )
 
         return hidden_states
-
 
 
 class RTDETRHybridEncoder(nn.Layer):
@@ -372,7 +418,9 @@ class RTDETRHybridEncoder(nn.Layer):
         self.num_pan_stages = len(self.in_channels) - 1
 
         # AIFI layers
-        self.aifi = nn.LayerList([RTDETRAIFILayer(config) for _ in range(len(self.encode_proj_layers))])
+        self.aifi = nn.LayerList(
+            [RTDETRAIFILayer(config) for _ in range(len(self.encode_proj_layers))]
+        )
 
         # top-down FPN
         self.lateral_convs = nn.LayerList()
@@ -414,13 +462,19 @@ class RTDETRHybridEncoder(nn.Layer):
 
         # top-down FPN
         fpn_feature_maps = [feature_maps[-1]]
-        for idx, (lateral_conv, fpn_block) in enumerate(zip(self.lateral_convs, self.fpn_blocks)):
+        for idx, (lateral_conv, fpn_block) in enumerate(
+            zip(self.lateral_convs, self.fpn_blocks)
+        ):
             backbone_feature_map = feature_maps[self.num_fpn_stages - idx - 1]
             top_fpn_feature_map = fpn_feature_maps[-1]
             top_fpn_feature_map = lateral_conv(top_fpn_feature_map)
             fpn_feature_maps[-1] = top_fpn_feature_map
-            top_fpn_feature_map = F.interpolate(top_fpn_feature_map, scale_factor=2.0, mode="nearest")
-            fused_feature_map = paddle.concat([top_fpn_feature_map, backbone_feature_map], axis=1)
+            top_fpn_feature_map = F.interpolate(
+                top_fpn_feature_map, scale_factor=2.0, mode="nearest"
+            )
+            fused_feature_map = paddle.concat(
+                [top_fpn_feature_map, backbone_feature_map], axis=1
+            )
             new_fpn_feature_map = fpn_block(fused_feature_map)
             fpn_feature_maps.append(new_fpn_feature_map)
 
@@ -428,16 +482,19 @@ class RTDETRHybridEncoder(nn.Layer):
 
         # bottom-up PAN
         pan_feature_maps = [fpn_feature_maps[0]]
-        for idx, (downsample_conv, pan_block) in enumerate(zip(self.downsample_convs, self.pan_blocks)):
+        for idx, (downsample_conv, pan_block) in enumerate(
+            zip(self.downsample_convs, self.pan_blocks)
+        ):
             top_pan_feature_map = pan_feature_maps[-1]
             fpn_feature_map = fpn_feature_maps[idx + 1]
             downsampled_feature_map = downsample_conv(top_pan_feature_map)
-            fused_feature_map = paddle.concat([downsampled_feature_map, fpn_feature_map], axis=1)
+            fused_feature_map = paddle.concat(
+                [downsampled_feature_map, fpn_feature_map], axis=1
+            )
             new_pan_feature_map = pan_block(fused_feature_map)
             pan_feature_maps.append(new_pan_feature_map)
 
         return pan_feature_maps
-
 
 
 class MultiScaleDeformableAttention(nn.Layer):
@@ -483,9 +540,8 @@ class MultiScaleDeformableAttention(nn.Layer):
             )
             sampling_value_list.append(sampling_value_l_)
 
-        attention_weights = (
-            attention_weights.transpose([0, 2, 1, 3, 4])
-            .reshape([batch_size * num_heads, 1, num_queries, num_levels * num_points])
+        attention_weights = attention_weights.transpose([0, 2, 1, 3, 4]).reshape(
+            [batch_size * num_heads, 1, num_queries, num_levels * num_points]
         )
         output = (
             (paddle.stack(sampling_value_list, axis=-2).flatten(-2) * attention_weights)
@@ -507,8 +563,12 @@ class RTDETRMultiscaleDeformableAttention(nn.Layer):
         self.n_heads = num_heads
         self.n_points = n_points
 
-        self.sampling_offsets = nn.Linear(config.d_model, num_heads * self.n_levels * n_points * 2)
-        self.attention_weights = nn.Linear(config.d_model, num_heads * self.n_levels * n_points)
+        self.sampling_offsets = nn.Linear(
+            config.d_model, num_heads * self.n_levels * n_points * 2
+        )
+        self.attention_weights = nn.Linear(
+            config.d_model, num_heads * self.n_levels * n_points
+        )
         self.value_proj = nn.Linear(config.d_model, config.d_model)
         self.output_proj = nn.Linear(config.d_model, config.d_model)
 
@@ -538,7 +598,9 @@ class RTDETRMultiscaleDeformableAttention(nn.Layer):
                 value,
                 paddle.zeros_like(value),
             )
-        value = value.reshape([batch_size, sequence_length, self.n_heads, self.d_model // self.n_heads])
+        value = value.reshape(
+            [batch_size, sequence_length, self.n_heads, self.d_model // self.n_heads]
+        )
         sampling_offsets = self.sampling_offsets(hidden_states).reshape(
             [batch_size, num_queries, self.n_heads, self.n_levels, self.n_points, 2]
         )
@@ -561,10 +623,15 @@ class RTDETRMultiscaleDeformableAttention(nn.Layer):
         elif num_coordinates == 4:
             sampling_locations = (
                 reference_points[:, :, None, :, None, :2]
-                + sampling_offsets / self.n_points * reference_points[:, :, None, :, None, 2:] * 0.5
+                + sampling_offsets
+                / self.n_points
+                * reference_points[:, :, None, :, None, 2:]
+                * 0.5
             )
         else:
-            raise ValueError(f"Last dim of reference_points must be 2 or 4, but got {reference_points.shape[-1]}")
+            raise ValueError(
+                f"Last dim of reference_points must be 2 or 4, but got {reference_points.shape[-1]}"
+            )
 
         output = self.attn(
             value,
@@ -580,7 +647,6 @@ class RTDETRMultiscaleDeformableAttention(nn.Layer):
         return output, attn_weights
 
 
-
 class RTDETRDecoderLayer(nn.Layer):
     def __init__(self, config):
         super().__init__()
@@ -594,17 +660,26 @@ class RTDETRDecoderLayer(nn.Layer):
         )
         self.dropout = config.dropout
 
-        self.self_attn_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
+        self.self_attn_layer_norm = nn.LayerNorm(
+            self.hidden_size, epsilon=config.layer_norm_eps
+        )
         self.encoder_attn = RTDETRMultiscaleDeformableAttention(
             config,
             num_heads=config.decoder_attention_heads,
             n_points=config.decoder_n_points,
         )
-        self.encoder_attn_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
-        self.mlp = RTDETTMLP(
-            config, self.hidden_size, config.decoder_ffn_dim, config.decoder_activation_function
+        self.encoder_attn_layer_norm = nn.LayerNorm(
+            self.hidden_size, epsilon=config.layer_norm_eps
         )
-        self.final_layer_norm = nn.LayerNorm(self.hidden_size, epsilon=config.layer_norm_eps)
+        self.mlp = RTDETTMLP(
+            config,
+            self.hidden_size,
+            config.decoder_ffn_dim,
+            config.decoder_activation_function,
+        )
+        self.final_layer_norm = nn.LayerNorm(
+            self.hidden_size, epsilon=config.layer_norm_eps
+        )
 
     def forward(
         self,
@@ -660,15 +735,25 @@ class RTDETRDecoder(nn.Layer):
     def __init__(self, config):
         super().__init__()
         self.dropout = config.dropout
-        self.layers = nn.LayerList([RTDETRDecoderLayer(config) for _ in range(config.decoder_layers)])
-        self.query_pos_head = RTDETRMLPPredictionHead(4, 2 * config.d_model, config.d_model, num_layers=2)
+        self.layers = nn.LayerList(
+            [RTDETRDecoderLayer(config) for _ in range(config.decoder_layers)]
+        )
+        self.query_pos_head = RTDETRMLPPredictionHead(
+            4, 2 * config.d_model, config.d_model, num_layers=2
+        )
 
         # Per-layer prediction heads (with_box_refine=True)
         self.class_embed = nn.LayerList(
-            [nn.Linear(config.d_model, config.num_labels) for _ in range(config.decoder_layers)]
+            [
+                nn.Linear(config.d_model, config.num_labels)
+                for _ in range(config.decoder_layers)
+            ]
         )
         self.bbox_embed = nn.LayerList(
-            [RTDETRMLPPredictionHead(config.d_model, config.d_model, 4, num_layers=3) for _ in range(config.decoder_layers)]
+            [
+                RTDETRMLPPredictionHead(config.d_model, config.d_model, 4, num_layers=3)
+                for _ in range(config.decoder_layers)
+            ]
         )
 
         self.num_queries = config.num_queries
@@ -707,20 +792,23 @@ class RTDETRDecoder(nn.Layer):
 
             # Per-layer bbox refinement
             predicted_corners = self.bbox_embed[idx](hidden_states)
-            new_reference_points = F.sigmoid(predicted_corners + inverse_sigmoid(reference_points))
+            new_reference_points = F.sigmoid(
+                predicted_corners + inverse_sigmoid(reference_points)
+            )
             reference_points = new_reference_points.detach()
 
             intermediate_reference_points.append(new_reference_points)
             intermediate_logits.append(self.class_embed[idx](hidden_states))
 
-        intermediate_reference_points = paddle.stack(intermediate_reference_points, axis=1)
+        intermediate_reference_points = paddle.stack(
+            intermediate_reference_points, axis=1
+        )
         intermediate_logits = paddle.stack(intermediate_logits, axis=1)
 
         return {
             "intermediate_logits": intermediate_logits,
             "intermediate_reference_points": intermediate_reference_points,
         }
-
 
 
 def replace_batch_norm(model):
@@ -769,7 +857,12 @@ class RTDETRModel(nn.Layer):
         for in_channels in config.encoder_in_channels:
             encoder_input_proj_list.append(
                 nn.Sequential(
-                    nn.Conv2D(in_channels, config.encoder_hidden_dim, kernel_size=1, bias_attr=False),
+                    nn.Conv2D(
+                        in_channels,
+                        config.encoder_hidden_dim,
+                        kernel_size=1,
+                        bias_attr=False,
+                    ),
                     nn.BatchNorm2D(config.encoder_hidden_dim),
                 )
             )
@@ -793,7 +886,9 @@ class RTDETRModel(nn.Layer):
             nn.LayerNorm(config.d_model, epsilon=config.layer_norm_eps),
         )
         self.enc_score_head = nn.Linear(config.d_model, config.num_labels)
-        self.enc_bbox_head = RTDETRMLPPredictionHead(config.d_model, config.d_model, 4, num_layers=3)
+        self.enc_bbox_head = RTDETRMLPPredictionHead(
+            config.d_model, config.d_model, 4, num_layers=3
+        )
 
         # Create decoder input projection layers
         num_backbone_outs = len(config.decoder_in_channels)
@@ -802,14 +897,23 @@ class RTDETRModel(nn.Layer):
             in_channels = config.decoder_in_channels[i]
             decoder_input_proj_list.append(
                 nn.Sequential(
-                    nn.Conv2D(in_channels, config.d_model, kernel_size=1, bias_attr=False),
+                    nn.Conv2D(
+                        in_channels, config.d_model, kernel_size=1, bias_attr=False
+                    ),
                     nn.BatchNorm2D(config.d_model, epsilon=config.batch_norm_eps),
                 )
             )
         for _ in range(config.num_feature_levels - num_backbone_outs):
             decoder_input_proj_list.append(
                 nn.Sequential(
-                    nn.Conv2D(in_channels, config.d_model, kernel_size=3, stride=2, padding=1, bias_attr=False),
+                    nn.Conv2D(
+                        in_channels,
+                        config.d_model,
+                        kernel_size=3,
+                        stride=2,
+                        padding=1,
+                        bias_attr=False,
+                    ),
                     nn.BatchNorm2D(config.d_model, epsilon=config.batch_norm_eps),
                 )
             )
@@ -830,13 +934,17 @@ class RTDETRModel(nn.Layer):
             grid_xy = grid_xy.unsqueeze(0) + 0.5
             grid_xy[..., 0] /= width
             grid_xy[..., 1] /= height
-            wh = paddle.ones_like(grid_xy) * grid_size * (2.0 ** level)
-            anchors.append(paddle.concat([grid_xy, wh], axis=-1).reshape([-1, height * width, 4]))
+            wh = paddle.ones_like(grid_xy) * grid_size * (2.0**level)
+            anchors.append(
+                paddle.concat([grid_xy, wh], axis=-1).reshape([-1, height * width, 4])
+            )
         eps = 1e-2
         anchors = paddle.concat(anchors, axis=1)
         valid_mask = ((anchors > eps) & (anchors < 1 - eps)).all(axis=-1, keepdim=True)
         anchors = paddle.log(anchors / (1 - anchors))
-        anchors = paddle.where(valid_mask, anchors, paddle.full_like(anchors, float("inf")))
+        anchors = paddle.where(
+            valid_mask, anchors, paddle.full_like(anchors, float("inf"))
+        )
         return anchors, valid_mask
 
     def forward(self, pixel_values, pixel_mask=None):
@@ -846,7 +954,10 @@ class RTDETRModel(nn.Layer):
         features = self.backbone(pixel_values)
         num_proj = len(self.encoder_input_proj)
         features = features[-num_proj:]
-        proj_feats = [self.encoder_input_proj[level](source) for level, source in enumerate(features)]
+        proj_feats = [
+            self.encoder_input_proj[level](source)
+            for level, source in enumerate(features)
+        ]
 
         # Encoder (hybrid FPN/PAN)
         encoder_outputs = self.encoder(proj_feats)
@@ -890,7 +1001,9 @@ class RTDETRModel(nn.Layer):
         enc_outputs_class = self.enc_score_head(output_memory)
         enc_outputs_coord_logits = self.enc_bbox_head(output_memory) + anchors
 
-        _, topk_ind = paddle.topk(enc_outputs_class.max(-1), self.config.num_queries, axis=1)
+        _, topk_ind = paddle.topk(
+            enc_outputs_class.max(-1), self.config.num_queries, axis=1
+        )
 
         reference_points_unact = paddle.take_along_axis(
             enc_outputs_coord_logits,
@@ -901,7 +1014,9 @@ class RTDETRModel(nn.Layer):
         enc_topk_bboxes = F.sigmoid(reference_points_unact)
 
         if self.config.learn_initial_query:
-            target = self.weight_embedding.weight.unsqueeze(0).expand([batch_size, -1, -1])
+            target = self.weight_embedding.weight.unsqueeze(0).expand(
+                [batch_size, -1, -1]
+            )
         else:
             target = paddle.take_along_axis(
                 output_memory,
@@ -924,7 +1039,6 @@ class RTDETRModel(nn.Layer):
         )
 
         return decoder_outputs
-
 
 
 class DETRPostProcess(object):
@@ -1002,10 +1116,10 @@ class DETRPostProcess(object):
         return bbox_pred, bbox_num
 
 
-
 class RTDETR(BatchNormHFStateDictMixin, PretrainedModel):
 
     config_class = RTDETRConfig
+    _keys_to_ignore_on_load_unexpected = ["num_batches_tracked"]
 
     def __init__(self, config):
         super(RTDETR, self).__init__(config)
