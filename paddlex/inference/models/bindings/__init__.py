@@ -13,13 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Binding registry: model_name × engine → predictor + extra_info."""
+"""Binding registry: model_name × engine → predictor + structured binding data."""
 
 from .registry import (
     Binding,
     BindingRegistration,
     BindingRegistry,
     ModelRegistryLookupError,
+    RunnerBinding,
     UnknownModelError,
     UnsupportedEngineError,
     create_binding_registration,
@@ -37,6 +38,7 @@ __all__ = [
     "BindingRegistration",
     "BindingRegistry",
     "ModelRegistryLookupError",
+    "RunnerBinding",
     "UnknownModelError",
     "UnsupportedEngineError",
     "create_binding_registration",

@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Registry for model_name × engine → predictor + extra_info bindings."""
+"""Registry for model_name × engine bindings and structured binding data."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Type
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple, Type
 
 from ....utils import errors
 from ..predictors import BasePredictor
@@ -64,36 +64,43 @@ class UnsupportedEngineError(ModelRegistryLookupError):
         )
 
 
-@dataclass
+@dataclass(frozen=True)
+class RunnerBinding:
+    """Structured binding data currently interpreted by runner engines."""
+
+    runner_builder: Optional[Callable[..., Any]] = None
+
+
+@dataclass(frozen=True)
 class Binding:
-    """Binding of (model_name, engine) to a predictor class and optional extra_info."""
+    """Binding of (model_name, engine) to a predictor class and optional structured data."""
 
     predictor: Type[BasePredictor]
-    extra_info: Dict[str, Any] = field(default_factory=dict)
-
-    def __post_init__(self) -> None:
-        self.extra_info = dict(self.extra_info)
+    runner_binding: Optional[RunnerBinding] = None
 
 
 @dataclass(frozen=True)
 class BindingRegistration:
-    """Registration entry: model names + optional extra_info for an engine."""
+    """Registration entry with model names and optional structured binding data."""
 
     model_names: Tuple[str, ...]
-    extra_info: Dict[str, Any] = field(default_factory=dict)
-
-    def __post_init__(self) -> None:
-        object.__setattr__(self, "extra_info", dict(self.extra_info))
+    runner_binding: Optional[RunnerBinding] = None
 
 
 def create_binding_registration(
     model_names: Sequence[str] | str,
-    **extra_info: Any,
+    *,
+    runner_builder: Optional[Callable[..., Any]] = None,
 ) -> BindingRegistration:
-    """Create a registration entry with optional extra_info (e.g. runner_builder)."""
+    """Create a registration entry with optional structured binding data."""
     if isinstance(model_names, str):
         model_names = (model_names,)
-    return BindingRegistration(model_names=tuple(model_names), extra_info=extra_info)
+    runner_binding = None
+    if runner_builder is not None:
+        runner_binding = RunnerBinding(runner_builder=runner_builder)
+    return BindingRegistration(
+        model_names=tuple(model_names), runner_binding=runner_binding
+    )
 
 
 def _normalize_registrations(
@@ -131,12 +138,12 @@ class BindingRegistry:
                     engine_map = self._registry.setdefault(model_name, {})
                     binding = Binding(
                         predictor=predictor_cls,
-                        extra_info=dict(reg.extra_info),
+                        runner_binding=reg.runner_binding,
                     )
                     existing = engine_map.get(engine)
                     if existing is not None and (
                         existing.predictor is not predictor_cls
-                        or existing.extra_info != binding.extra_info
+                        or existing.runner_binding != binding.runner_binding
                     ):
                         raise errors.DuplicateRegistrationError(
                             f"Conflicting registration for model {model_name!r} "

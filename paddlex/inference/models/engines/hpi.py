@@ -21,12 +21,11 @@ from typing import Any, Dict, Optional, Tuple, Type
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
 from ....utils.device import get_default_device, parse_device
-from ..bindings import Binding
 from ..hpi import get_hpi_info
 from ..runners.hpi import HPIConfig, HPIRunner
 from ..runners.inference_runner import InferenceRunner
 from ..utils.model_paths import LocalModelFormat
-from ._base import RunnerEngine
+from ._base import RunnerBuilder, RunnerEngine
 
 
 class HPIEngine(RunnerEngine):
@@ -70,27 +69,36 @@ class HPIEngine(RunnerEngine):
                 "'ultra-infer' is not installed."
             )
 
-    def build_runner(
-        self,
-        *,
-        model_name: str,
-        model_dir: Optional[Path],
-        model_config: Optional[Dict[str, Any]],
-        engine_config: Dict[str, Any],
-        binding: Optional[Binding] = None,
-    ) -> InferenceRunner:
-        del binding
-        if model_dir is None:
-            raise ValueError("`model_dir` is required for engine='hpi'.")
-        hpi_cfg = dict(engine_config)
-        hpi_cfg.setdefault("model_name", model_name)
-        if "hpi_info" not in hpi_cfg:
-            hpi_info = get_hpi_info(model_config)
-            if hpi_info is not None:
-                hpi_cfg["hpi_info"] = hpi_info
-        hpi_config = HPIConfig.model_validate(hpi_cfg)
-        return HPIRunner(
-            model_dir=model_dir,
-            model_file_prefix=MODEL_FILE_PREFIX,
-            config=hpi_config,
-        )
+    def get_default_runner_builder(self) -> RunnerBuilder:
+        def runner_builder(
+            *,
+            model_name: str,
+            model_dir: Optional[Path],
+            model_config: Optional[Dict[str, Any]],
+            engine_config: Dict[str, Any],
+            default_builder: Optional[RunnerBuilder] = None,
+        ) -> InferenceRunner:
+            del default_builder
+            if model_dir is None:
+                raise ValueError("`model_dir` is required for engine='hpi'.")
+            hpi_cfg = dict(engine_config)
+            hpi_cfg.setdefault("model_name", model_name)
+            if "hpi_info" not in hpi_cfg:
+                hpi_info = get_hpi_info(model_config)
+                if hpi_info is not None:
+                    hpi_cfg["hpi_info"] = hpi_info
+            hpi_config = HPIConfig.model_validate(hpi_cfg)
+            return HPIRunner(
+                model_dir=model_dir,
+                model_file_prefix=MODEL_FILE_PREFIX,
+                config=hpi_config,
+            )
+
+        return runner_builder
+
+    def validate_runner(self, runner: InferenceRunner) -> None:
+        if not isinstance(runner, HPIRunner):
+            raise TypeError(
+                "Engine 'hpi' must build an HPIRunner, "
+                f"but got {type(runner).__name__}."
+            )

@@ -424,7 +424,7 @@ class LatexMixin:
                     content = escape_latex(re.sub(r"^\[\d+\]\s*", "", line))
                     key = f"ref{abs(hash(line)) % 100000}"
                     bibitems.append(f"\\bibitem{{{key}}} {content}")
-                return "\n".join(bibitems) + "\n", "\n".join(bibitems) + "\n"
+                return "\n".join(bibitems) + "\n"
             return f"% [Unknown block: {label}] {escape_latex(content)}\n\n"
 
         def blocks_to_latex(blocks, abs_image_paths) -> str:

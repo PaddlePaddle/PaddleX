@@ -17,7 +17,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, Optional, Tuple, Type, Union
 
 from pydantic import BaseModel, ValidationError
 
@@ -28,6 +28,8 @@ from ..bindings import Binding
 from ..runners.inference_runner import InferenceRunner
 from ..runners.paddle_static.config import PaddlePredictorOption
 from ..utils.model_paths import LocalModelFormat, get_model_paths
+
+RunnerBuilder = Callable[..., InferenceRunner]
 
 
 class InferenceEngine(ABC, metaclass=AutoRegisterABCMetaClass):
@@ -155,7 +157,22 @@ class RunnerEngine(InferenceEngine):
 
     __is_base = True
 
+    def get_default_runner_builder(self) -> Optional[RunnerBuilder]:
+        return None
+
+    def get_runner_builder(
+        self, binding: Optional[Binding] = None
+    ) -> Optional[RunnerBuilder]:
+        if binding is not None and binding.runner_binding is not None:
+            runner_builder = binding.runner_binding.runner_builder
+            if callable(runner_builder):
+                return runner_builder
+        return self.get_default_runner_builder()
+
     @abstractmethod
+    def validate_runner(self, runner: InferenceRunner) -> None:
+        raise NotImplementedError
+
     def build_runner(
         self,
         *,
@@ -165,4 +182,17 @@ class RunnerEngine(InferenceEngine):
         engine_config: Dict[str, Any],
         binding: Optional[Binding] = None,
     ) -> InferenceRunner:
-        raise NotImplementedError
+        runner_builder = self.get_runner_builder(binding)
+        if not callable(runner_builder):
+            raise RuntimeError(
+                f"Model {model_name!r} does not provide {self.name} runner metadata."
+            )
+        runner = runner_builder(
+            model_name=model_name,
+            model_dir=model_dir,
+            model_config=model_config,
+            engine_config=engine_config,
+            default_builder=self.get_default_runner_builder(),
+        )
+        self.validate_runner(runner)
+        return runner

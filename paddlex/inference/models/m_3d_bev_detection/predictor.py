@@ -18,7 +18,6 @@ from typing import Any, Dict, Iterator, List, Tuple
 
 from ....utils import logging
 from ....utils.func_register import FuncRegister
-from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
 from ..predictors import RunnerPredictor
@@ -77,14 +76,6 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
         Returns:
             tuple: A tuple containing the preprocessors.
         """
-        paddle = import_paddle()
-
-        if paddle.is_compiled_with_cuda() and not paddle.is_compiled_with_rocm():
-            from ....ops.iou3d_nms import nms_gpu  # noqa: F401
-            from ....ops.voxelize import hard_voxelize  # noqa: F401
-        else:
-            logging.error("3D BEVFusion custom ops only support GPU platform!")
-
         pre_tfs = {"Read": ReadNuscenesData()}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
@@ -150,9 +141,15 @@ class BEVDet3DRunnerPredictor(RunnerPredictor):
             dict: A dictionary containing the input path, input img, input points, input lidar2img, output bboxes, output labels, output scores and label names. Keys include 'input_path', 'input_img', 'input_points', 'input_lidar2img', 'boxes_3d', 'labels_3d' and 'scores_3d'.
         """
         sample = self.pre_tfs["Read"](batch_data=batch_data)
+        if not sample or len(sample) == 0:
+            raise ValueError("No sample data loaded from batch_data")
         sample = self.pre_tfs["LoadPointsFromFile"](results=sample[0])
+        if sample is None or "points" not in sample or sample["points"] is None:
+            raise ValueError("Failed to load point cloud data")
         sample = self.pre_tfs["LoadPointsFromMultiSweeps"](results=sample)
         sample = self.pre_tfs["LoadMultiViewImageFromFiles"](sample=sample)
+        if sample is None or "img" not in sample or sample["img"] is None:
+            raise ValueError("Failed to load multi-view image data")
         sample = self.pre_tfs["ResizeImage"](results=sample)
         sample = self.pre_tfs["NormalizeImage"](results=sample)
         sample = self.pre_tfs["PadImage"](results=sample)

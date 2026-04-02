@@ -36,9 +36,7 @@ class PaddleDynamicRunnerConfig(BaseModel):
     device_id: Optional[int] = None
 
 
-PaddleDynamicRunnerBuilder = Callable[
-    [str, Path, Optional[Dict[str, Any]], Dict[str, Any]], InferenceRunner
-]
+PaddleDynamicRunnerBuilder = Callable[..., InferenceRunner]
 ModelClassLoader = Callable[[], Any]
 
 
@@ -73,12 +71,14 @@ def create_pretrained_dynamic_runner_builder(
     """Create a runner_builder callable for pretrained Paddle models."""
 
     def runner_builder(
+        *,
         model_name: str,
         model_dir: Path,
         model_config: Optional[Dict[str, Any]],
         engine_config: Dict[str, Any],
+        default_builder: Optional[PaddleDynamicRunnerBuilder] = None,
     ) -> InferenceRunner:
-        del model_name, model_config
+        del model_name, model_config, default_builder
         model_cls = model_cls_loader()
         return build_paddle_dynamic_pretrained_runner(
             model_dir=model_dir,
