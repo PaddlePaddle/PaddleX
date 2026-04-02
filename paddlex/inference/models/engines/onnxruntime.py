@@ -20,12 +20,11 @@ from typing import Any, Dict, Optional, Tuple, Type
 
 from ....constants import MODEL_FILE_PREFIX
 from ....utils.deps import is_dep_available
-from ..bindings import Binding
 from ..runners import ONNXRuntimeRunner
 from ..runners.inference_runner import InferenceRunner
 from ..runners.onnxruntime_runner import ONNXRuntimeRunnerConfig
 from ..utils.model_paths import LocalModelFormat
-from ._base import RunnerEngine
+from ._base import RunnerBuilder, RunnerEngine
 
 
 class ONNXRuntimeEngine(RunnerEngine):
@@ -82,21 +81,30 @@ class ONNXRuntimeEngine(RunnerEngine):
                 f"Available providers: {sorted(available_providers)!r}."
             )
 
-    def build_runner(
-        self,
-        *,
-        model_name: str,
-        model_dir: Optional[Path],
-        model_config: Optional[Dict[str, Any]],
-        engine_config: Dict[str, Any],
-        binding: Optional[Binding] = None,
-    ) -> InferenceRunner:
-        del model_name, model_config, binding
-        if model_dir is None:
-            raise ValueError("`model_dir` is required for engine='onnxruntime'.")
-        self._check_device_support(engine_config)
-        return ONNXRuntimeRunner(
-            model_dir=model_dir,
-            model_file_prefix=MODEL_FILE_PREFIX,
-            config=engine_config,
-        )
+    def get_default_runner_builder(self) -> RunnerBuilder:
+        def runner_builder(
+            *,
+            model_name: str,
+            model_dir: Optional[Path],
+            model_config: Optional[Dict[str, Any]],
+            engine_config: Dict[str, Any],
+            default_builder: Optional[RunnerBuilder] = None,
+        ) -> InferenceRunner:
+            del model_name, model_config, default_builder
+            if model_dir is None:
+                raise ValueError("`model_dir` is required for engine='onnxruntime'.")
+            self._check_device_support(engine_config)
+            return ONNXRuntimeRunner(
+                model_dir=model_dir,
+                model_file_prefix=MODEL_FILE_PREFIX,
+                config=engine_config,
+            )
+
+        return runner_builder
+
+    def validate_runner(self, runner: InferenceRunner) -> None:
+        if not isinstance(runner, ONNXRuntimeRunner):
+            raise TypeError(
+                "Engine 'onnxruntime' must build an ONNXRuntimeRunner, "
+                f"but got {type(runner).__name__}."
+            )
