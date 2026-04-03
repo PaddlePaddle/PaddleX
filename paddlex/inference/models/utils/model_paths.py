@@ -14,9 +14,13 @@
 
 """Model file paths and format resolution for inference model directory convention."""
 
+from __future__ import annotations
+
 from os import PathLike
 from pathlib import Path
-from typing import Literal, Tuple, TypeAlias, TypedDict, Union, cast, get_args
+from typing import Literal, Tuple, TypedDict, Union, cast, get_args
+
+from typing_extensions import TypeAlias
 
 from ....constants import MODEL_FILE_PREFIX
 
