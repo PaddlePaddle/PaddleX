@@ -264,7 +264,7 @@ class TextRecTransformersPredictor(TransformersPredictor):
         return 3, img_h, img_w
 
     def process(self, batch_data, return_word_box: Optional[bool] = None):
-        if return_word_box is None:
+        if return_word_box is not None:
             logging.warning("transformers engine doesn't support `return_word_box`")
 
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
