@@ -21,6 +21,7 @@ from .modules import (
     build_evaluator,
     build_exportor,
     build_trainer,
+    build_weight_converter,
 )
 
 
@@ -43,6 +44,9 @@ class _BaseModel:
 
     def export(self, *args, **kwargs):
         raise Exception("export is not supported!")
+
+    def pdparams2safetensors(self, *args, **kwargs):
+        raise Exception("pdparams2safetensors is not supported!")
 
     def predict(self, *args, **kwargs):
         raise Exception("predict is not supported!")
@@ -134,6 +138,10 @@ class _ModelBasedConfig(_BaseModel):
     def export(self):
         exportor = build_exportor(self._config)
         return exportor.export()
+
+    def pdparams2safetensors(self):
+        converter = build_weight_converter(self._config)
+        return converter.convert()
 
     def predict(self):
         predict_kwargs, predictor = self._build_predictor()
