@@ -1,0 +1,454 @@
+# Copyright (c) 2026 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Inference metadata for pdparams2safetensors conversion.
+
+Provides per-model inference.yml content (label_list, PreProcess,
+PostProcess, etc.) and preprocessor_config.json content.
+"""
+
+from pathlib import Path
+
+from .....utils import logging
+
+# ---------------------------------------------------------------------------
+# Label lists
+# ---------------------------------------------------------------------------
+
+_LABEL_DOC_ORI = ["0", "90", "180", "270"]
+_LABEL_TABLE_CLS = ["wired_table", "wireless_table"]
+_LABEL_TEXTLINE_ORI = ["0_degree", "180_degree"]
+
+_LABEL_TABLE_CELL_DET = ["cell"]
+_LABEL_DOC_BLOCK_LAYOUT = ["Region"]
+_LABEL_DOC_LAYOUT_PLUS = [
+    "paragraph_title", "image", "text", "number", "abstract", "content",
+    "figure_title", "formula", "table", "reference", "doc_title", "footnote",
+    "header", "algorithm", "footer", "seal", "chart", "formula_number",
+    "aside_text", "reference_content",
+]
+_LABEL_DOC_LAYOUT_V2V3 = [
+    "abstract", "algorithm", "aside_text", "chart", "content",
+    "display_formula", "doc_title", "figure_title", "footer", "footer_image",
+    "footnote", "formula_number", "header", "header_image", "image",
+    "inline_formula", "number", "paragraph_title", "reference",
+    "reference_content", "seal", "table", "text", "vertical_text", "vision_footnote",
+]
+
+
+# ---------------------------------------------------------------------------
+# PreProcess / PostProcess templates
+# ---------------------------------------------------------------------------
+
+_CLS_PREPROCESS_224 = {
+    "PreProcess": {
+        "transform_ops": [
+            {"ResizeImage": {"resize_short": 256}},
+            {"CropImage": {"size": 224}},
+            {"NormalizeImage": {
+                "channel_num": 3,
+                "mean": [0.485, 0.456, 0.406],
+                "std": [0.229, 0.224, 0.225],
+                "scale": 1.0 / 255,
+                "order": "",
+            }},
+            {"ToCHWImage": None},
+        ]
+    },
+}
+
+_CLS_PREPROCESS_TEXTLINE = {
+    "PreProcess": {
+        "transform_ops": [
+            {"ResizeImage": {"size": [160, 80]}},
+            {"NormalizeImage": {
+                "channel_num": 3,
+                "mean": [0.485, 0.456, 0.406],
+                "std": [0.229, 0.224, 0.225],
+                "scale": 1.0 / 255,
+                "order": "",
+            }},
+            {"ToCHWImage": None},
+        ]
+    },
+}
+
+_DET_PREPROCESS = {
+    "transform_ops": [
+        {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
+        {"DetLabelEncode": None},
+        {"DetResizeForTest": {"resize_long": 960}},
+        {"NormalizeImage": {
+            "mean": [0.485, 0.456, 0.406],
+            "std": [0.229, 0.224, 0.225],
+            "scale": "1./255.",
+            "order": "hwc",
+        }},
+        {"ToCHWImage": None},
+        {"KeepKeys": {"keep_keys": ["image", "shape", "polys", "ignore_tags"]}},
+    ]
+}
+
+_DET_POSTPROCESS = {
+    "PreProcess": _DET_PREPROCESS,
+    "PostProcess": {
+        "name": "DBPostProcess",
+        "thresh": 0.3,
+        "box_thresh": 0.6,
+        "max_candidates": 1000,
+        "unclip_ratio": 1.5,
+    },
+}
+
+_RTDETR_PREPROCESS_800 = [
+    {"type": "Resize", "target_size": [800, 800], "keep_ratio": False, "interp": 2},
+    {"type": "NormalizeImage", "mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0], "norm_type": "none"},
+    {"type": "Permute"},
+]
+
+_RTDETR_PREPROCESS_640 = [
+    {"type": "Resize", "target_size": [640, 640], "keep_ratio": False, "interp": 2},
+    {"type": "NormalizeImage", "mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0], "norm_type": "none"},
+    {"type": "Permute"},
+]
+
+_REC_IMAGE_SHAPE = [3, 48, 320]
+
+
+# ---------------------------------------------------------------------------
+# Hpi (TensorRT dynamic shape) templates
+# ---------------------------------------------------------------------------
+
+def _hpi_simple(input_name, shapes):
+    """Build Hpi section with a single input (cls/det/rec/uvdoc)."""
+    tds = {input_name: shapes}
+    return {"backend_configs": {
+        "paddle_infer": {"trt_dynamic_shapes": tds},
+        "tensorrt": {"dynamic_shapes": tds},
+    }}
+
+
+def _hpi_rtdetr(image_size):
+    """Build Hpi for RT-DETR models (im_shape + image + scale_factor)."""
+    b = 8
+    tds = {
+        "im_shape": [[1, 2], [1, 2], [b, 2]],
+        "image": [[1, 3, image_size, image_size],
+                  [1, 3, image_size, image_size],
+                  [b, 3, image_size, image_size]],
+        "scale_factor": [[1, 2], [1, 2], [b, 2]],
+    }
+    sf_data = {
+        "im_shape": [[image_size, image_size], [image_size, image_size],
+                      [image_size] * (2 * b)],
+        "scale_factor": [[2, 2], [1, 1], [0.67] * (2 * b)],
+    }
+    return {"backend_configs": {
+        "paddle_infer": {
+            "trt_dynamic_shapes": tds,
+            "trt_dynamic_shape_input_data": sf_data,
+        },
+        "tensorrt": {"dynamic_shapes": tds},
+    }}
+
+
+def _hpi_doclayoutv3(image_size):
+    """Build Hpi for PP-DocLayoutV3 (image + scale_factor, no im_shape)."""
+    b = 8
+    tds = {
+        "image": [[1, 3, image_size, image_size],
+                  [1, 3, image_size, image_size],
+                  [b, 3, image_size, image_size]],
+        "scale_factor": [[1, 2], [1, 2], [b, 2]],
+    }
+    sf_data = {
+        "scale_factor": [[2, 2], [1, 1], [0.67] * (2 * b)],
+    }
+    return {"backend_configs": {
+        "paddle_infer": {
+            "trt_dynamic_shapes": tds,
+            "trt_dynamic_shape_input_data": sf_data,
+        },
+        "tensorrt": {"dynamic_shapes": tds},
+    }}
+
+
+# RT-DETR/DocLayout extra top-level keys
+_RTDETR_EXTRA_KEYS = {
+    "mode": "paddle",
+    "metric": "COCO",
+    "use_dynamic_shape": False,
+    "arch": "DETR",
+    "min_subgraph_size": 3,
+}
+
+
+# ---------------------------------------------------------------------------
+# Per-model inference metadata
+# ---------------------------------------------------------------------------
+
+def _meta_cls_doc_ori():
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 224, 224], [1, 3, 224, 224], [8, 3, 224, 224]]),
+        **_CLS_PREPROCESS_224,
+        "PostProcess": {"Topk": {"topk": 1, "label_list": _LABEL_DOC_ORI}},
+    }
+
+def _meta_cls_table():
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 224, 224], [1, 3, 224, 224], [8, 3, 224, 224]]),
+        **_CLS_PREPROCESS_224,
+        "PostProcess": {"Topk": {"topk": 5, "label_list": _LABEL_TABLE_CLS}},
+    }
+
+def _meta_cls_textline():
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 80, 160], [1, 3, 80, 160], [8, 3, 80, 160]]),
+        **_CLS_PREPROCESS_TEXTLINE,
+        "PostProcess": {"Topk": {"topk": 1, "label_list": _LABEL_TEXTLINE_ORI}},
+    }
+
+def _meta_det():
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 32, 32], [1, 3, 736, 736], [1, 3, 4000, 4000]]),
+        **_DET_POSTPROCESS,
+    }
+
+def _meta_det_rtdetr(labels, preprocess, image_size):
+    return {
+        **_RTDETR_EXTRA_KEYS,
+        "draw_threshold": 0.5,
+        "Preprocess": preprocess,
+        "label_list": labels,
+        "Hpi": _hpi_rtdetr(image_size),
+    }
+
+def _meta_doclayoutv3():
+    return {
+        **_RTDETR_EXTRA_KEYS,
+        "draw_threshold": 0.5,
+        "Preprocess": _RTDETR_PREPROCESS_800,
+        "label_list": _LABEL_DOC_LAYOUT_V2V3,
+        "Hpi": _hpi_doclayoutv3(800),
+    }
+
+def _meta_rec():
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 48, 160], [1, 3, 48, 320], [8, 3, 48, 3200]]),
+        "PreProcess": {
+            "transform_ops": [
+                {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
+                {"MultiLabelEncode": {"gtc_encode": "NRTRLabelEncode"}},
+                {"RecResizeImg": {"image_shape": _REC_IMAGE_SHAPE}},
+                {"KeepKeys": {"keep_keys": ["image", "label_ctc", "label_gtc",
+                                            "length", "valid_ratio"]}},
+            ]
+        },
+        "PostProcess": {
+            "name": "CTCLabelDecode",
+        },
+    }
+
+def _meta_uvdoc():
+    return {
+        "Hpi": _hpi_simple("img", [[1, 3, 128, 64], [1, 3, 256, 128], [8, 3, 512, 256]]),
+    }
+
+
+_INFERENCE_META_REGISTRY = {
+    "PP-LCNet_x1_0_doc_ori": _meta_cls_doc_ori,
+    "PP-LCNet_x1_0_table_cls": _meta_cls_table,
+    "PP-LCNet_x0_25_textline_ori": _meta_cls_textline,
+    "PP-LCNet_x1_0_textline_ori": _meta_cls_textline,
+    "PP-OCRv5_mobile_det": _meta_det,
+    "PP-OCRv5_server_det": _meta_det,
+    "PP-OCRv5_mobile_rec": _meta_rec,
+    "PP-OCRv5_server_rec": _meta_rec,
+    "SLANeXt_wired": lambda: {},
+    "SLANeXt_wireless": lambda: {},
+    "PP-DocLayoutV2": _meta_doclayoutv3,
+    "PP-DocLayoutV3": _meta_doclayoutv3,
+    "RT-DETR-L_wired_table_cell_det": lambda: _meta_det_rtdetr(
+        _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640),
+    "RT-DETR-L_wireless_table_cell_det": lambda: _meta_det_rtdetr(
+        _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640),
+    "PP-DocLayout_plus-L": lambda: _meta_det_rtdetr(
+        _LABEL_DOC_LAYOUT_PLUS, _RTDETR_PREPROCESS_800, 800),
+    "PP-DocBlockLayout": lambda: _meta_det_rtdetr(
+        _LABEL_DOC_BLOCK_LAYOUT, _RTDETR_PREPROCESS_640, 640),
+    "UVDoc": _meta_uvdoc,
+}
+
+
+# ---------------------------------------------------------------------------
+# Preprocessor configs (preprocessor_config.json)
+# ---------------------------------------------------------------------------
+
+_VALID_PROCESSOR_KEYS = [
+    "images", "do_resize", "size", "resample", "do_rescale",
+    "rescale_factor", "do_normalize", "image_mean", "image_std",
+    "return_tensors", "data_format", "input_data_format",
+]
+
+_PPLCNET_PREPROC_BASE = {
+    "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
+    "do_normalize": True,
+    "do_rescale": True,
+    "do_resize": True,
+    "image_processor_type": "PPLCNetImageProcessor",
+    "model_input_names": ["pixel_values", "original_image_size"],
+    "image_mode": "BGR",
+    "channel_first": False,
+    "image_mean": [0.406, 0.456, 0.485],
+    "image_std": [0.225, 0.224, 0.229],
+    "rescale_factor": 1.0 / 255,
+    "resample": 2,
+    "keep_keys": ["image", "shape", "polys", "ignore_tags"],
+}
+
+_PPLCNET_CROP_PREPROC = {
+    **_PPLCNET_PREPROC_BASE,
+    "do_center_crop": True,
+    "crop_size": 224,
+    "resize_short": 256,
+}
+
+_PPLCNET_TEXTLINE_PREPROC = {
+    **_PPLCNET_PREPROC_BASE,
+    "do_center_crop": False,
+    "size": {"width": 160, "height": 80},
+    "resize_short": None,
+}
+
+_DET_PREPROC_BASE = {
+    "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
+    "do_normalize": True,
+    "do_rescale": True,
+    "do_resize": True,
+    "model_input_names": ["pixel_values", "original_image_size"],
+    "image_mode": "BGR",
+    "channel_first": False,
+    "limit_side_len": 960,
+    "max_side_limit": 4000,
+    "image_mean": [0.406, 0.456, 0.485],
+    "image_std": [0.225, 0.224, 0.229],
+    "rescale_factor": 1.0 / 255,
+    "resample": 2,
+    "keep_keys": ["image", "shape", "polys", "ignore_tags"],
+}
+
+_MOBILE_DET_PREPROC = {
+    **_DET_PREPROC_BASE,
+    "model_type": "pp_ocrv5_mobile_det",
+}
+
+_SERVER_DET_PREPROC = {
+    **_DET_PREPROC_BASE,
+    "image_processor_type": "PPOCRV5ServerDetImageProcessor",
+    "limit_type": "max",
+    "normalize_order": "hwc",
+    "do_to_chw": True,
+}
+
+_REC_PREPROC_BASE = {
+    "size": {"height": 48, "width": 320},
+    "pad_size": {"height": 48, "width": 320},
+    "do_resize": True,
+    "do_rescale": True,
+    "do_convert_rgb": True,
+    "do_normalize": True,
+    "do_pad": True,
+    "max_image_width": 3200,
+}
+
+_MOBILE_REC_PREPROC = {
+    "model_type": "pp_ocrv5_mobile_rec",
+    **_REC_PREPROC_BASE,
+}
+
+_SERVER_REC_PREPROC = {
+    **_REC_PREPROC_BASE,
+}
+
+
+def _rtdetr_preproc(image_processor_type, height, width):
+    return {
+        "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
+        "do_normalize": True,
+        "do_rescale": True,
+        "do_resize": True,
+        "image_processor_type": image_processor_type,
+        "image_mean": [0, 0, 0],
+        "image_std": [1, 1, 1],
+        "rescale_factor": 1.0 / 255,
+        "resample": 3,
+        "size": {"height": height, "width": width},
+    }
+
+
+_UVDOC_PREPROC = {
+    "data_format": "channels_first",
+    "do_rescale": True,
+    "do_resize": True,
+    "image_processor_type": "UVDocImageProcessor",
+    "resample": 2,
+    "rescale_factor": 1.0 / 255,
+    "size": {"height": 712, "width": 488},
+}
+
+PREPROCESSOR_CONFIGS = {
+    "PP-LCNet_x1_0_doc_ori": _PPLCNET_CROP_PREPROC,
+    "PP-LCNet_x1_0_table_cls": _PPLCNET_CROP_PREPROC,
+    "PP-LCNet_x0_25_textline_ori": _PPLCNET_TEXTLINE_PREPROC,
+    "PP-LCNet_x1_0_textline_ori": _PPLCNET_TEXTLINE_PREPROC,
+    "PP-OCRv5_mobile_det": _MOBILE_DET_PREPROC,
+    "PP-OCRv5_server_det": _SERVER_DET_PREPROC,
+    "PP-OCRv5_mobile_rec": _MOBILE_REC_PREPROC,
+    "PP-OCRv5_server_rec": _SERVER_REC_PREPROC,
+    "PP-DocLayoutV3": _rtdetr_preproc("PPDocLayoutV3ImageProcessor", 800, 800),
+    "RT-DETR-L_wired_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
+    "RT-DETR-L_wireless_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
+    "PP-DocLayout_plus-L": _rtdetr_preproc("RTDetrImageProcessor", 800, 800),
+    "PP-DocBlockLayout": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
+    "UVDoc": _UVDOC_PREPROC,
+}
+
+
+def build_inference_meta(model_name):
+    """Build inference.yml metadata for a model."""
+    if model_name not in _INFERENCE_META_REGISTRY:
+        raise ValueError(f"No inference metadata defined for {model_name}")
+    return _INFERENCE_META_REGISTRY[model_name]()
+
+
+# ---------------------------------------------------------------------------
+# Character dict loading
+# ---------------------------------------------------------------------------
+
+_BUNDLED_DICT_PATH = Path(__file__).resolve().parent.parent.parent / "res" / "ppocrv5_dict.txt"
+
+
+def load_character_dict():
+    """Load PP-OCRv5 character dict from bundled file.
+
+    Returns list of character strings (18383 chars).
+    """
+    if not _BUNDLED_DICT_PATH.exists():
+        raise FileNotFoundError(
+            f"Bundled character dict not found at {_BUNDLED_DICT_PATH}. "
+            "This file is required for rec model conversion."
+        )
+    chars = _BUNDLED_DICT_PATH.read_text("utf-8").rstrip("\n").split("\n")
+    logging.info(f"Loaded character dict ({len(chars)} chars)")
+    return chars
