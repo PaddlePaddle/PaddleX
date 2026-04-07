@@ -291,9 +291,101 @@ _UVDOC_MAPPING = [
     (r"^bridge_concat\.1\.", r"head.bridge_connector.normalization."),
 ]
 
-# TODO: derive from model code
-_PPOCRV5_MOBILE_REC_MAPPING = []  # PP-OCRv5_mobile_rec
-_PPOCRV5_SERVER_REC_MAPPING = []  # PP-OCRv5_server_rec
+# ---------------------------------------------------------------------------
+# Shared SVTR encoder + CTC head mapping (used by both mobile and server rec)
+# ---------------------------------------------------------------------------
+# OLD PaddleOCR MultiHead structure:
+#   head.ctc_encoder.encoder.{conv1,conv2,conv3,conv4,conv1x1} -> EncoderWithSVTR
+#   head.ctc_encoder.encoder.svtr_block.{0,1} -> Block (norm1/mixer/norm2/mlp)
+#   head.ctc_encoder.encoder.norm -> LayerNorm
+#   head.ctc_head.fc -> CTCHead linear
+# NEW HF structure:
+#   head.encoder.conv_block.{0..4} -> ConvLayer
+#   head.encoder.svtr_block.{0,1} -> Block (layer_norm1/self_attn/layer_norm2/mlp)
+#   head.encoder.norm -> LayerNorm
+#   head.head -> Linear
+
+_SVTR_CTC_HEAD_MAPPING = [
+    # SVTR encoder conv blocks: conv1->0, conv2->1, conv3->2, conv4->3, conv1x1->4
+    (r"^head\.ctc_encoder\.encoder\.conv1\.conv\.", r"head.encoder.conv_block.0.convolution."),
+    (r"^head\.ctc_encoder\.encoder\.conv1\.norm\.", r"head.encoder.conv_block.0.normalization."),
+    (r"^head\.ctc_encoder\.encoder\.conv2\.conv\.", r"head.encoder.conv_block.1.convolution."),
+    (r"^head\.ctc_encoder\.encoder\.conv2\.norm\.", r"head.encoder.conv_block.1.normalization."),
+    (r"^head\.ctc_encoder\.encoder\.conv3\.conv\.", r"head.encoder.conv_block.2.convolution."),
+    (r"^head\.ctc_encoder\.encoder\.conv3\.norm\.", r"head.encoder.conv_block.2.normalization."),
+    (r"^head\.ctc_encoder\.encoder\.conv4\.conv\.", r"head.encoder.conv_block.3.convolution."),
+    (r"^head\.ctc_encoder\.encoder\.conv4\.norm\.", r"head.encoder.conv_block.3.normalization."),
+    (r"^head\.ctc_encoder\.encoder\.conv1x1\.conv\.", r"head.encoder.conv_block.4.convolution."),
+    (r"^head\.ctc_encoder\.encoder\.conv1x1\.norm\.", r"head.encoder.conv_block.4.normalization."),
+    # SVTR transformer blocks
+    (r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.norm1\.", r"head.encoder.svtr_block.\1.layer_norm1."),
+    (r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.norm2\.", r"head.encoder.svtr_block.\1.layer_norm2."),
+    (r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.mixer\.qkv\.", r"head.encoder.svtr_block.\1.self_attn.qkv."),
+    (r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.mixer\.proj\.", r"head.encoder.svtr_block.\1.self_attn.projection."),
+    (r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.mlp\.", r"head.encoder.svtr_block.\1.mlp."),
+    # Final norm
+    (r"^head\.ctc_encoder\.encoder\.norm\.", r"head.encoder.norm."),
+    # CTC head: head.ctc_head.fc -> head.head
+    (r"^head\.ctc_head\.fc\.", r"head.head."),
+]
+
+# PP-OCRv5_mobile_rec (PPLCNetV3 backbone + SVTR encoder + CTC head)
+_PPOCRV5_MOBILE_REC_MAPPING = [
+    # Backbone conv1 (stem)
+    (r"^backbone\.conv1\.conv\.(\w+)$", r"model.backbone.encoder.convolution.convolution.\1"),
+    (r"^backbone\.conv1\.bn\.(\w+)$", r"model.backbone.encoder.convolution.normalization.\1"),
+    # Block index mapping: blocks2->blocks.0, blocks3->blocks.1, etc.
+    (r"^backbone\.blocks2\.(\d+)\.", r"model.backbone.encoder.blocks.0.layers.\1."),
+    (r"^backbone\.blocks3\.(\d+)\.", r"model.backbone.encoder.blocks.1.layers.\1."),
+    (r"^backbone\.blocks4\.(\d+)\.", r"model.backbone.encoder.blocks.2.layers.\1."),
+    (r"^backbone\.blocks5\.(\d+)\.", r"model.backbone.encoder.blocks.3.layers.\1."),
+    (r"^backbone\.blocks6\.(\d+)\.", r"model.backbone.encoder.blocks.4.layers.\1."),
+    # Sub-module renaming (applied after block mapping)
+    (r"\.dw_conv\.", r".depthwise_convolution."),
+    (r"\.pw_conv\.", r".pointwise_convolution."),
+    (r"\.conv_kxk\.(\d+)\.conv\.", r".conv_symmetric.\1.convolution."),
+    (r"\.conv_kxk\.(\d+)\.bn\.", r".conv_symmetric.\1.normalization."),
+    (r"\.conv_1x1\.conv\.", r".conv_small_symmetric.convolution."),
+    (r"\.conv_1x1\.bn\.", r".conv_small_symmetric.normalization."),
+    (r"\.se\.conv1\.", r".squeeze_excitation_module.convolutions.0."),
+    (r"\.se\.conv2\.", r".squeeze_excitation_module.convolutions.2."),
+] + _SVTR_CTC_HEAD_MAPPING
+
+# PP-OCRv5_server_rec (HGNetV2 backbone + SVTR encoder + CTC head)
+_PPOCRV5_SERVER_REC_MAPPING = [
+    # Stem: backbone.stem.stemX.conv/bn -> model.backbone.embedder.stemX.convolution/normalization
+    (r"^backbone\.stem\.(\w+)\.conv\.(\w+)$", r"model.backbone.embedder.\1.convolution.\2"),
+    (r"^backbone\.stem\.(\w+)\.bn\.(\w+)$", r"model.backbone.embedder.\1.normalization.\2"),
+    # Stages prefix: backbone.stages -> model.backbone.encoder.stages
+    (r"^backbone\.stages\.", r"model.backbone.encoder.stages."),
+    # Aggregation (must come before generic conv/bn rules)
+    (r"\.aggregation_squeeze_conv\.conv\.", r".aggregation.0.convolution."),
+    (r"\.aggregation_squeeze_conv\.bn\.", r".aggregation.0.normalization."),
+    (r"\.aggregation_excitation_conv\.conv\.", r".aggregation.1.convolution."),
+    (r"\.aggregation_excitation_conv\.bn\.", r".aggregation.1.normalization."),
+    # Downsample
+    (r"\.downsample\.conv\.", r".downsample.convolution."),
+    (r"\.downsample\.bn\.", r".downsample.normalization."),
+    # Light block layers (conv1/conv2 sub-layers) — must come before generic
+    (r"\.layers\.(\d+)\.conv(\d)\.conv\.", r".layers.\1.conv\2.convolution."),
+    (r"\.layers\.(\d+)\.conv(\d)\.bn\.", r".layers.\1.conv\2.normalization."),
+    # Non-light block layers
+    (r"\.layers\.(\d+)\.conv\.", r".layers.\1.convolution."),
+    (r"\.layers\.(\d+)\.bn\.", r".layers.\1.normalization."),
+] + _SVTR_CTC_HEAD_MAPPING
+
+# Keys to drop during rec model conversion (NRTR head + unused backbone layers)
+_REC_DROP_PREFIXES = [
+    "head.before_gtc.",   # NRTR preprocessing (FCTranspose)
+    "head.gtc_head.",     # NRTR decoder (Transformer)
+    "head.encoder_reshape.",  # Im2Seq (no params, but just in case)
+]
+_SERVER_REC_DROP_PREFIXES = _REC_DROP_PREFIXES + [
+    "backbone.fc.",        # Classification head (not used in rec inference)
+    "backbone.last_conv.", # Last conv (not used in rec inference)
+]
+
+# SLANeXt — deferred to Phase 2
 _SLANEXT_MAPPING = []  # SLANeXt_wired, SLANeXt_wireless
 
 
@@ -328,34 +420,166 @@ def _apply_key_mapping(state_dict, mapping):
 
 
 # ---------------------------------------------------------------------------
+# Per-model inference metadata (for inference.yml output)
+# ---------------------------------------------------------------------------
+# inference.yml is load-bearing: predictors read label_list, character_dict,
+# image_shape, etc. from it at runtime. Missing required fields cause failures.
+
+# Classification label lists
+_LABEL_DOC_ORI = ["0", "90", "180", "270"]
+_LABEL_TABLE_CLS = ["wired_table", "wireless_table"]
+_LABEL_TEXTLINE_ORI = ["0_degree", "180_degree"]
+
+# Detection/layout label lists
+_LABEL_TABLE_CELL_DET = ["cell"]
+_LABEL_DOC_BLOCK_LAYOUT = ["Region"]
+_LABEL_DOC_LAYOUT_PLUS = [
+    "paragraph_title", "image", "text", "number", "abstract", "content",
+    "figure_title", "formula", "table", "reference", "doc_title", "footnote",
+    "header", "algorithm", "footer", "seal", "chart", "formula_number",
+    "aside_text", "reference_content",
+]
+_LABEL_DOC_LAYOUT_V2V3 = [
+    "abstract", "algorithm", "aside_text", "chart", "content",
+    "display_formula", "doc_title", "figure_title", "footer", "footer_image",
+    "footnote", "formula_number", "header", "header_image", "image",
+    "inline_formula", "number", "paragraph_title", "reference",
+    "reference_content", "seal", "table", "text", "title", "vision_footnote",
+]
+
+# DBPostProcess defaults for text detection
+_DET_POSTPROCESS = {
+    "PostProcess": {
+        "name": "DBPostProcess",
+        "thresh": 0.3,
+        "box_thresh": 0.6,
+        "max_candidates": 1000,
+        "unclip_ratio": 1.5,
+    }
+}
+
+# Text recognition: image_shape and character_dict are required.
+# character_dict (18383 chars) is loaded at runtime from a known file.
+_REC_IMAGE_SHAPE = [3, 48, 320]
+
+
+def _build_rec_inference_meta(model_name):
+    """Build inference_meta for rec models, loading character_dict at runtime."""
+    meta = {
+        "PreProcess": {
+            "transform_ops": [
+                {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
+                {"RecResizeImg": {"image_shape": _REC_IMAGE_SHAPE}},
+            ]
+        },
+        "PostProcess": {
+            "name": "CTCLabelDecode",
+        },
+    }
+    return meta
+
+
+_BUNDLED_DICT_PATH = Path(__file__).resolve().parent / "res" / "ppocrv5_dict.txt"
+
+
+def _load_character_dict():
+    """Load PP-OCRv5 character dict.
+
+    Uses the bundled dict file shipped with PaddleX
+    (paddlex/modules/base/res/ppocrv5_dict.txt).
+    """
+    if not _BUNDLED_DICT_PATH.exists():
+        raise FileNotFoundError(
+            f"Bundled character dict not found at {_BUNDLED_DICT_PATH}. "
+            "This file is required for rec model conversion."
+        )
+    chars = _BUNDLED_DICT_PATH.read_text("utf-8").strip().split("\n")
+    logging.info(f"Loaded character dict ({len(chars)} chars)")
+    return chars
+
+
+# ---------------------------------------------------------------------------
 # Model registry
 # ---------------------------------------------------------------------------
-# model_name -> (key_mapping, config_overrides, inference_meta)
+# model_name -> (key_mapping, config_overrides, inference_meta, drop_key_prefixes)
+# drop_key_prefixes: list of key prefixes to drop from pdparams before conversion
+#   (e.g., NRTR head keys in rec models that are not used for CTC inference)
+#
+# inference_meta can be a dict (static) or a callable returning a dict (dynamic).
+# Rec models use a callable to load the character_dict at runtime.
+
+_META_CLS_DOC_ORI = {
+    "PostProcess": {"Topk": {"topk": 1, "label_list": _LABEL_DOC_ORI}},
+}
+_META_CLS_TABLE = {
+    "PostProcess": {"Topk": {"topk": 5, "label_list": _LABEL_TABLE_CLS}},
+}
+_META_CLS_TEXTLINE = {
+    "PostProcess": {"Topk": {"topk": 1, "label_list": _LABEL_TEXTLINE_ORI}},
+}
+
+_META_DET_RTDETR = lambda labels: {
+    "label_list": labels,
+    "draw_threshold": 0.5,
+}
 
 _MODEL_REGISTRY = {
     # PPLCNet family
-    "PP-LCNet_x1_0_doc_ori": (_PPLCNET_MAPPING, {}, {}),
-    "PP-LCNet_x1_0_table_cls": (_PPLCNET_MAPPING, {"class_num": 2}, {}),
-    "PP-LCNet_x0_25_textline_ori": (_PPLCNET_MAPPING, {"scale": 0.25, "class_num": 2}, {}),
-    "PP-LCNet_x1_0_textline_ori": (_PPLCNET_MAPPING, {"class_num": 2}, {}),
+    "PP-LCNet_x1_0_doc_ori": (
+        _PPLCNET_MAPPING, {}, _META_CLS_DOC_ORI, [],
+    ),
+    "PP-LCNet_x1_0_table_cls": (
+        _PPLCNET_MAPPING, {"class_num": 2}, _META_CLS_TABLE, [],
+    ),
+    "PP-LCNet_x0_25_textline_ori": (
+        _PPLCNET_MAPPING, {"scale": 0.25, "class_num": 2}, _META_CLS_TEXTLINE, [],
+    ),
+    "PP-LCNet_x1_0_textline_ori": (
+        _PPLCNET_MAPPING, {"class_num": 2}, _META_CLS_TEXTLINE, [],
+    ),
     # Text detection
-    "PP-OCRv5_mobile_det": (_PPOCRV5_MOBILE_DET_MAPPING, {}, {}),
-    "PP-OCRv5_server_det": (_PPOCRV5_SERVER_DET_MAPPING, {}, {}),
-    # Text recognition
-    "PP-OCRv5_mobile_rec": (_PPOCRV5_MOBILE_REC_MAPPING, {}, {}),  # TODO: mapping
-    "PP-OCRv5_server_rec": (_PPOCRV5_SERVER_REC_MAPPING, {}, {}),  # TODO: mapping
-    # Table structure recognition
-    "SLANeXt_wired": (_SLANEXT_MAPPING, {}, {}),  # TODO: mapping
-    "SLANeXt_wireless": (_SLANEXT_MAPPING, {}, {}),  # TODO: mapping
-    # Layout analysis / Object detection (RT-DETR based)
-    "PP-DocLayoutV2": (_RTDETR_MAPPING, {}, {}),
-    "PP-DocLayoutV3": (_RTDETR_MAPPING, {}, {}),
-    "RT-DETR-L_wired_table_cell_det": (_RTDETR_MAPPING, {"num_labels": 1}, {}),
-    "RT-DETR-L_wireless_table_cell_det": (_RTDETR_MAPPING, {"num_labels": 1}, {}),
-    "PP-DocLayout_plus-L": (_RTDETR_MAPPING, {"num_labels": 11}, {}),
-    "PP-DocBlockLayout": (_RTDETR_MAPPING, {"num_labels": 11}, {}),
+    "PP-OCRv5_mobile_det": (_PPOCRV5_MOBILE_DET_MAPPING, {}, _DET_POSTPROCESS, []),
+    "PP-OCRv5_server_det": (_PPOCRV5_SERVER_DET_MAPPING, {}, _DET_POSTPROCESS, []),
+    # Text recognition — inference_meta built dynamically (character_dict loaded at runtime)
+    "PP-OCRv5_mobile_rec": (
+        _PPOCRV5_MOBILE_REC_MAPPING, {},
+        _build_rec_inference_meta, _REC_DROP_PREFIXES,
+    ),
+    "PP-OCRv5_server_rec": (
+        _PPOCRV5_SERVER_REC_MAPPING, {},
+        _build_rec_inference_meta, _SERVER_REC_DROP_PREFIXES,
+    ),
+    # Table structure recognition — deferred to Phase 2
+    "SLANeXt_wired": (_SLANEXT_MAPPING, {}, {}, []),
+    "SLANeXt_wireless": (_SLANEXT_MAPPING, {}, {}, []),
+    # Layout analysis (RT-DETR based, 25 labels)
+    "PP-DocLayoutV2": (
+        _RTDETR_MAPPING, {},
+        _META_DET_RTDETR(_LABEL_DOC_LAYOUT_V2V3), [],
+    ),
+    "PP-DocLayoutV3": (
+        _RTDETR_MAPPING, {},
+        _META_DET_RTDETR(_LABEL_DOC_LAYOUT_V2V3), [],
+    ),
+    # Object detection (RT-DETR based)
+    "RT-DETR-L_wired_table_cell_det": (
+        _RTDETR_MAPPING, {"num_labels": 1},
+        _META_DET_RTDETR(_LABEL_TABLE_CELL_DET), [],
+    ),
+    "RT-DETR-L_wireless_table_cell_det": (
+        _RTDETR_MAPPING, {"num_labels": 1},
+        _META_DET_RTDETR(_LABEL_TABLE_CELL_DET), [],
+    ),
+    "PP-DocLayout_plus-L": (
+        _RTDETR_MAPPING, {"num_labels": 20},
+        _META_DET_RTDETR(_LABEL_DOC_LAYOUT_PLUS), [],
+    ),
+    "PP-DocBlockLayout": (
+        _RTDETR_MAPPING, {"num_labels": 1},
+        _META_DET_RTDETR(_LABEL_DOC_BLOCK_LAYOUT), [],
+    ),
     # Image unwarping
-    "UVDoc": (_UVDOC_MAPPING, {}, {}),
+    "UVDoc": (_UVDOC_MAPPING, {}, {}, []),
 }
 
 
@@ -544,33 +768,66 @@ class WeightConverter:
     def convert(self):
         """Execute the pdparams -> safetensors conversion.
 
-        Flow matches Stage 1 (pdparams2safetensors.py + convert.py):
-          1. paddle.load() -> state dict with OLD keys
-          2. BN rename (_mean -> running_mean, _variance -> running_var)
-          3. Preprocess tensors: dtype cast, transpose, in_proj split (on OLD keys)
-          4. Apply per-architecture regex key mapping (old keys -> HF keys)
-          5. Save outputs
+        Flow (matches Stage 1 pdparams2safetensors.py + convert.py order):
+          1. Load pdparams, drop unused keys, BN rename, preprocess tensors,
+             apply per-architecture regex key mapping
+          2. Save model.safetensors, config.json, preprocess_config.json,
+             inference.yml (and llm config for Chart2Table models)
+        """
+        from ...inference.models.doc_vlm.constants import PP_CHART2TABLE_MODELS
+
+        key_mapping, config_overrides, inference_meta_or_fn, drop_prefixes = (
+            _MODEL_REGISTRY[self.model_name]
+        )
+
+        if callable(inference_meta_or_fn):
+            inference_meta = inference_meta_or_fn(self.model_name)
+        else:
+            inference_meta = inference_meta_or_fn
+
+        numpy_sd = self._convert_weights(key_mapping, drop_prefixes)
+
+        os.makedirs(self.output_dir, exist_ok=True)
+        self._save_safetensors(numpy_sd)
+        self._save_model_config(config_overrides)
+        self._save_preprocess_config()
+        self._save_inference_yml(inference_meta)
+
+        if self.model_name in PP_CHART2TABLE_MODELS:
+            self._save_llm_config()
+
+        logging.info(
+            f"Conversion complete. Output saved to: {self.output_dir}"
+        )
+
+    def _convert_weights(self, key_mapping, drop_prefixes):
+        """Load pdparams and convert to numpy state dict with HF key names.
+
+        Performs: load → drop unused keys → BN rename → tensor preprocessing
+        (dtype cast, transpose, in_proj split) → regex key mapping.
+        Returns dict of {hf_key: numpy_array}.
         """
         import paddle
 
-        key_mapping, config_overrides, inference_meta = _MODEL_REGISTRY[
-            self.model_name
-        ]
-
-        # 1. Resolve input path
         resolved_path = _resolve_input_path(self.input_path)
         logging.info(f"Loading weights from: {resolved_path}")
-
-        # 2. Load pdparams state dict
         state_dict = paddle.load(resolved_path)
 
-        # 3. Rename BatchNorm keys (_mean -> running_mean, _variance -> running_var)
-        state_dict = _rename_bn_keys(state_dict)
+        if drop_prefixes:
+            dropped = [
+                k for k in state_dict
+                if any(k.startswith(p) for p in drop_prefixes)
+            ]
+            for k in dropped:
+                del state_dict[k]
+            if dropped:
+                logging.info(
+                    f"Dropped {len(dropped)} keys not needed for inference"
+                )
 
-        # 4. Preprocess: dtype cast, transpose linears, in_proj split (on OLD keys)
+        state_dict = _rename_bn_keys(state_dict)
         numpy_sd = _preprocess_tensors(state_dict)
 
-        # 5. Apply per-architecture regex key mapping (old keys -> HF keys)
         if key_mapping:
             numpy_sd = _apply_key_mapping(numpy_sd, key_mapping)
         else:
@@ -579,16 +836,7 @@ class WeightConverter:
                 "Keys will be saved as-is from pdparams."
             )
 
-        # 6. Save outputs
-        os.makedirs(self.output_dir, exist_ok=True)
-        self._save_safetensors(numpy_sd)
-        self._save_config_json(config_overrides)
-        self._save_preprocess_config()
-        self._save_inference_yml(inference_meta)
-
-        logging.info(
-            f"Conversion complete. Output saved to: {self.output_dir}"
-        )
+        return numpy_sd
 
     def _save_safetensors(self, numpy_sd):
         """Save numpy state dict as model.safetensors."""
@@ -598,46 +846,55 @@ class WeightConverter:
         save_file(numpy_sd, out_path)
         logging.info(f"Saved model.safetensors to: {out_path}")
 
-    def _save_config_json(self, config_overrides):
+    def _save_model_config(self, config_overrides):
         """Save model config as config.json."""
-        # TODO: use model config class defaults + overrides for full config
         out_path = os.path.join(self.output_dir, "config.json")
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(config_overrides, f, indent=2, ensure_ascii=False)
         logging.info(f"Saved config.json to: {out_path}")
 
     def _save_preprocess_config(self):
-        """Save preprocess_config.json from per-architecture template."""
-        # TODO: populate per-architecture preprocess templates
+        """Save preprocess_config.json (placeholder for HF image processor)."""
         out_path = os.path.join(self.output_dir, "preprocess_config.json")
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump({}, f, indent=2)
         logging.info(f"Saved preprocess_config.json to: {out_path}")
 
     def _save_inference_yml(self, inference_meta):
-        """Save inference.yml from per-model template.
+        """Save inference.yml from per-model metadata template.
 
         This file is load-bearing: predictors read label_list, character_dict,
-        image_shape, and other fields from it at runtime.
+        image_shape, etc. from it at runtime. Missing required fields cause
+        runtime failures.
 
-        Required fields by architecture:
-        - Detection/layout: label_list (REQUIRED at object_detection/predictor.py:350
-          and layout_analysis/predictor.py:176), draw_threshold
-        - Text recognition: RecResizeImg.image_shape (at text_recognition/predictor.py:151),
-          PostProcess.character_dict (at text_recognition/predictor.py:199)
-        - Table structure: TableLabelEncode.merge_no_span_structure
-          (at table_structure_recognition/predictor.py:59),
-          PostProcess.character_dict (at table_structure_recognition/predictor.py:185)
-        - Classification: label_list NOT required (Topk falls back to numeric ids
-          at image_classification/processors.py:72)
+        For rec models, the character_dict (18K+ chars) is loaded from a
+        known file location rather than hardcoded.
         """
-        # TODO: populate per-model required fields
         import yaml
 
         inference_config = {"Global": {"model_name": self.model_name}}
         inference_config.update(inference_meta)
 
+        if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
+            char_dict = _load_character_dict()
+            inference_config.setdefault("PostProcess", {})["character_dict"] = char_dict
+
         out_path = os.path.join(self.output_dir, "inference.yml")
         with open(out_path, "w", encoding="utf-8") as f:
-            yaml.dump(inference_config, f, default_flow_style=False, allow_unicode=True)
+            yaml.dump(
+                inference_config, f,
+                default_flow_style=False,
+                allow_unicode=True,
+            )
         logging.info(f"Saved inference.yml to: {out_path}")
+
+    def _save_llm_config(self):
+        """Save LLM config for Chart2Table models (tokenizer assets, etc.).
+
+        TODO: implement in Phase 2 (requires tokenizer asset handling from
+        doc_vlm/predictor.py).
+        """
+        raise NotImplementedError(
+            f"LLM config saving is not yet implemented for {self.model_name}. "
+            "This will be added in Phase 2."
+        )
