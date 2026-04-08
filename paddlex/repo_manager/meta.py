@@ -94,7 +94,7 @@ REPO_META = {
     "PaddleNLP": {
         "git_path": "/PaddlePaddle/PaddleNLP.git",
         "platform": "github",
-        "branch": "release/2.9",
+        "branch": "release/3.0",
         "install_pkg": True,
         "dist_name": "paddlenlp",
         "import_name": "paddlenlp",
