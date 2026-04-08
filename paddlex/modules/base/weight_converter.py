@@ -244,21 +244,17 @@ class WeightConverter:
     """Converts Paddle .pdparams weights to safetensors format."""
 
     def __init__(self, config):
-        self.global_config = config.Global
         self.model_name = config.Global.model
 
         convert_config = config.Pdparams2safetensors
-        self.input_path = (
-            convert_config.get("input_path")
+        self._get = (
+            convert_config.get
             if isinstance(convert_config, dict)
-            else getattr(convert_config, "input_path", None)
-        )
-        self.output_dir = (
-            convert_config.get("output_dir")
-            if isinstance(convert_config, dict)
-            else getattr(convert_config, "output_dir", None)
+            else lambda k, d=None: getattr(convert_config, k, d)
         )
 
+        self.input_path = self._get("input_path")
+        self.output_dir = self._get("output_dir")
         if self.input_path is None:
             raise ValueError(
                 "Pdparams2safetensors.input_path is required. "
@@ -274,21 +270,55 @@ class WeightConverter:
                 f"pdparams2safetensors conversion. Supported models: {supported}"
             )
 
+        self._input_is_dir = Path(self.input_path).is_dir()
+        self._user_configs = self._load_user_configs()
+
+    def _load_user_configs(self):
+        """Load user-provided config files from input directory."""
+        if not self._input_is_dir:
+            logging.info(
+                "Input is a single pdparams file. "
+                "Using official config files for %s.",
+                self.model_name,
+            )
+            return {}
+
+        import yaml
+
+        input_dir = Path(self.input_path)
+        user_configs = {}
+
+        for fname, loader in [
+            ("config.json", lambda f: json.load(f)),
+            ("preprocessor_config.json", lambda f: json.load(f)),
+            ("inference.yml", lambda f: yaml.safe_load(f)),
+        ]:
+            fpath = input_dir / fname
+            if fpath.exists():
+                with open(fpath, encoding="utf-8") as f:
+                    user_configs[fname] = loader(f)
+                logging.info(f"Loaded user config: {fpath}")
+            else:
+                logging.warning(
+                    f"{fname} not found in {input_dir}. "
+                    f"Using official default for {self.model_name}."
+                )
+
+        return user_configs
+
     def convert(self):
         """Execute the pdparams -> safetensors conversion."""
         from ...inference.models.doc_vlm.constants import PP_CHART2TABLE_MODELS
 
         key_mapping, drop_prefixes = _MODEL_REGISTRY[self.model_name]
-        config_overrides = MODEL_CONFIGS.get(self.model_name, {})
-        inference_meta = build_inference_meta(self.model_name)
 
         numpy_sd = self._convert_weights(key_mapping, drop_prefixes)
 
         os.makedirs(self.output_dir, exist_ok=True)
         self._save_safetensors(numpy_sd)
-        self._save_model_config(config_overrides)
+        self._save_model_config()
         self._save_preprocessor_config()
-        self._save_inference_yml(inference_meta)
+        self._save_inference_yml()
 
         if self.model_name in PP_CHART2TABLE_MODELS:
             self._save_llm_config()
@@ -381,42 +411,51 @@ class WeightConverter:
         save_file(numpy_sd, out_path)
         logging.info(f"Saved model.safetensors to: {out_path}")
 
-    def _save_model_config(self, config_overrides):
-        """Save model config as config.json."""
+    def _save_model_config(self):
+        """Save config.json — user-provided or official default."""
+        data = self._user_configs.get(
+            "config.json",
+            MODEL_CONFIGS.get(self.model_name, {}),
+        )
         out_path = os.path.join(self.output_dir, "config.json")
         with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(config_overrides, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=2, ensure_ascii=False)
         logging.info(f"Saved config.json to: {out_path}")
 
     def _save_preprocessor_config(self):
-        """Save preprocessor_config.json from per-model HF image processor config."""
-        preproc = dict(PREPROCESSOR_CONFIGS.get(self.model_name, {}))
-
-        if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
-            preproc["character_list"] = (
-                ["blank"] + load_character_dict() + [" "]
-            )
+        """Save preprocessor_config.json — user-provided or official default."""
+        if "preprocessor_config.json" in self._user_configs:
+            data = self._user_configs["preprocessor_config.json"]
+        else:
+            data = dict(PREPROCESSOR_CONFIGS.get(self.model_name, {}))
+            if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
+                data["character_list"] = (
+                    ["blank"] + load_character_dict() + [" "]
+                )
 
         out_path = os.path.join(self.output_dir, "preprocessor_config.json")
         with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(preproc, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=2, ensure_ascii=False)
         logging.info(f"Saved preprocessor_config.json to: {out_path}")
 
-    def _save_inference_yml(self, inference_meta):
-        """Save inference.yml from per-model metadata template."""
+    def _save_inference_yml(self):
+        """Save inference.yml — user-provided or official default."""
         import yaml
 
-        inference_config = {"Global": {"model_name": self.model_name}}
-        inference_config.update(inference_meta)
-
-        if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
-            char_dict = load_character_dict()
-            inference_config.setdefault("PostProcess", {})["character_dict"] = char_dict
+        if "inference.yml" in self._user_configs:
+            data = self._user_configs["inference.yml"]
+        else:
+            data = {"Global": {"model_name": self.model_name}}
+            data.update(build_inference_meta(self.model_name))
+            if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
+                data.setdefault("PostProcess", {})["character_dict"] = (
+                    load_character_dict()
+                )
 
         out_path = os.path.join(self.output_dir, "inference.yml")
         with open(out_path, "w", encoding="utf-8") as f:
             yaml.dump(
-                inference_config, f,
+                data, f,
                 default_flow_style=False,
                 allow_unicode=True,
             )
