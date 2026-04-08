@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import hashlib
 import os
 import shutil
 import tempfile
@@ -20,6 +21,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional, Sequence, Set, Tuple
 
+import filelock
 import huggingface_hub as hf_hub
 import huggingface_hub.utils as hf_hub_utils
 
@@ -46,7 +48,7 @@ except Exception as e:
         e,
     )
 
-from ...utils.cache import CACHE_DIR
+from ...utils.cache import CACHE_DIR, FILE_LOCK_DIR
 from ...utils.download import download_and_extract
 from ...utils.flags import (
     DISABLE_MODEL_SOURCE_CHECK,
@@ -560,6 +562,14 @@ def _resolve_download_model_names(
     return tuple(model_names)
 
 
+def _official_model_download_lock_path(model_names: Tuple[str, ...]) -> str:
+    """Cross-process lock path for a resolved official model download key."""
+    lock_dir = os.path.join(FILE_LOCK_DIR, "official_models")
+    os.makedirs(lock_dir, exist_ok=True)
+    key = hashlib.sha256("\0".join(model_names).encode("utf-8")).hexdigest()
+    return os.path.join(lock_dir, f"{key}.lock")
+
+
 def _iter_exception_chain(exc: Exception):
     current = exc
     visited = set()
@@ -822,8 +832,6 @@ class _ModelManager:
     def __init__(self) -> None:
         self._hosters = None
         self._hosters_lock = threading.Lock()
-        self._download_locks = {}
-        self._download_locks_guard = threading.Lock()
 
     def _build_hosters(self):
 
@@ -863,14 +871,6 @@ class _ModelManager:
                     self._hosters = self._build_hosters()
         return self._hosters
 
-    def _get_download_lock(self, model_names: Tuple[str, ...]):
-        with self._download_locks_guard:
-            lock = self._download_locks.get(model_names)
-            if lock is None:
-                lock = threading.Lock()
-                self._download_locks[model_names] = lock
-            return lock
-
     def _get_model_local_path(self, model_name):
         model_names = (
             (model_name,) if isinstance(model_name, str) else tuple(model_name)
@@ -892,8 +892,8 @@ class _ModelManager:
                 break
 
         if model_dir is None:
-            download_lock = self._get_download_lock(tuple(resolved_names))
-            with download_lock:
+            lock_path = _official_model_download_lock_path(tuple(resolved_names))
+            with filelock.FileLock(lock_path):
                 for candidate_name in resolved_names:
                     candidate_dir = self._save_dir / f"{candidate_name}"
                     if os.path.exists(candidate_dir):

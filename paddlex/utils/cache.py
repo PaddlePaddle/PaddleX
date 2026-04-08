@@ -32,6 +32,33 @@ FILE_LOCK_DIR = osp.join(CACHE_DIR, "locks")
 TEMP_DIR = osp.join(CACHE_DIR, "temp")
 
 
+def _ensure_persist_dirs():
+    """Ensure cache dirs exist. Safe for concurrent creation (exist_ok=True)."""
+    os.makedirs(FUNC_CACHE_DIR, exist_ok=True)
+    os.makedirs(FILE_LOCK_DIR, exist_ok=True)
+
+
+def _atomic_write_pickle(obj, dest_path: str, cache_dir: str) -> None:
+    """Write pickle atomically (temp file + os.replace) under an exclusive lock."""
+    with tempfile.NamedTemporaryFile(
+        mode="wb",
+        delete=False,
+        dir=cache_dir,
+        prefix="persist_",
+        suffix=".tmp",
+    ) as tf:
+        tmp_path = tf.name
+        pickle.dump(obj, tf)
+    try:
+        os.replace(tmp_path, dest_path)
+    except OSError:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
 def create_cache_dir(*args, **kwargs):
     """create cache dir"""
     # `args` and `kwargs` reserved for extension
@@ -81,6 +108,7 @@ def persist(cond=None):
     def _deco(func):
         @functools.wraps(func)
         def _wrapper(*args, **kwargs):
+            _ensure_persist_dirs()
             sig = inspect.signature(func)
             bnd_args = sig.bind(*args, **kwargs)
             bnd_args.apply_defaults()
@@ -90,14 +118,22 @@ def persist(cond=None):
             )
             lock = filelock.FileLock(osp.join(FILE_LOCK_DIR, f"{key}.lock"))
             with lock:
+                ret = None
+                loaded = False
                 if osp.exists(cache_file_path):
-                    with open(cache_file_path, "rb") as f:
-                        ret = pickle.load(f)
-                else:
+                    try:
+                        with open(cache_file_path, "rb") as f:
+                            ret = pickle.load(f)
+                        loaded = True
+                    except (pickle.UnpicklingError, EOFError, ValueError, OSError):
+                        try:
+                            os.remove(cache_file_path)
+                        except OSError:
+                            pass
+                if not loaded:
                     ret = func(*args, **kwargs)
                     if cond(ret):
-                        with open(cache_file_path, "wb") as f:
-                            pickle.dump(ret, f)
+                        _atomic_write_pickle(ret, cache_file_path, FUNC_CACHE_DIR)
             return ret
 
         return _wrapper
