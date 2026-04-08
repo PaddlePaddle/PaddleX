@@ -46,6 +46,7 @@ BASE_DEP_SPECS = {
     "langchain-openai": ">= 0.1, < 1.0",
     "langchain-text-splitters": ">= 0.2, < 1.0",
     "lxml": "",
+    "latex2mathml": "",
     "matplotlib": "",
     "modelscope": [
         '>= 1.28.0, < 1.30; python_version == "3.8"',

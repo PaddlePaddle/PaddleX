@@ -17,10 +17,72 @@
 from __future__ import annotations
 
 import math
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 # Block type labels that represent image-like content (chart/image/seal)
 _IMAGE_LABELS = ("chart", "image", "seal")
+
+# Formula block labels
+_FORMULA_LABELS = ("inline_formula", "display_formula", "formula")
+
+# Cached XSLT transform for LaTeX→OMML conversion (lazy-loaded on first use)
+_OMML_TRANSFORM = None
+
+
+def _get_omml_transform():
+    """Return (and cache) the XSLT transform object for MathML→OMML conversion."""
+    global _OMML_TRANSFORM
+    if _OMML_TRANSFORM is None:
+        from lxml import etree as _etree
+
+        xsl_path = Path(__file__).parent / "MML2OMML.XSL"
+        _OMML_TRANSFORM = _etree.XSLT(_etree.parse(str(xsl_path)))
+    return _OMML_TRANSFORM
+
+
+def _strip_latex_markers(content: str) -> Tuple[str, bool]:
+    """Strip $/$$ markers from formula content.
+
+    Returns:
+        (raw_latex, is_display) where is_display=True for $$ or \\[...\\].
+    """
+    s = content.strip()
+    if s.startswith("$$") and s.endswith("$$"):
+        return s[2:-2].strip(), True
+    if s.startswith("\\[") and s.endswith("\\]"):
+        return s[2:-2].strip(), True
+    if s.startswith("$") and s.endswith("$"):
+        return s[1:-1].strip(), False
+    if s.startswith("\\(") and s.endswith("\\)"):
+        return s[2:-2].strip(), False
+    # No markers → treat as display formula (most formula blocks are display)
+    return s, False
+
+
+def _latex_to_omml(latex_str: str, display: bool = False):
+    """Convert a LaTeX string to an OMML XML element (<m:oMath>).
+
+    Args:
+        latex_str: Raw LaTeX (without surrounding $ markers).
+        display: True for display-mode (block), False for inline.
+
+    Returns:
+        lxml Element (<m:oMath>) or None if conversion fails.
+    """
+    try:
+        import latex2mathml.converter
+        from lxml import etree as _etree
+
+        mode = "block" if display else "inline"
+        mathml = latex2mathml.converter.convert(latex_str, display=mode)
+        transform = _get_omml_transform()
+        mml_root = _etree.fromstring(mathml.encode())
+        omml_tree = transform(mml_root)
+        return omml_tree.getroot()  # <m:oMath> element
+    except Exception:
+        return None
+
 
 # Labels excluded from body content (written to section header/footer or skipped)
 _HEADER_FOOTER_LABELS = {
@@ -360,6 +422,25 @@ def _write_block(
                 row = table.add_row().cells
                 for i in range(max_cols):
                     row[i].text = row_cells[i].strip() if i < len(row_cells) else ""
+
+    # --- formula (inline_formula / display_formula / formula) ---
+    elif label in _FORMULA_LABELS and content:
+        raw_latex, is_display = _strip_latex_markers(content)
+        omml_elem = _latex_to_omml(raw_latex, display=is_display) if raw_latex else None
+
+        para = doc.add_paragraph()
+        _set_paragraph_style(para, config)
+        if space_before_emu is not None:
+            para.paragraph_format.space_before = Emu(space_before_emu)
+            para.paragraph_format.space_after = Emu(0)
+        if left_indent_emu is not None:
+            para.paragraph_format.left_indent = Emu(left_indent_emu)
+
+        if omml_elem is not None:
+            para._element.append(omml_elem)
+        else:
+            # Fallback: write raw content as plain text
+            para.add_run(content)
 
     # --- other text content ---
     elif (

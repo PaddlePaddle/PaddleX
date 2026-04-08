@@ -58,6 +58,7 @@ MOD_TO_DEP = {
     "langchain_openai": "langchain-openai",
     "langchain_text_splitters": "langchain-text-splitters",
     "lxml": "lxml",
+    "latex2mathml": "latex2mathml",
     "matplotlib": "matplotlib",
     "modelscope": "modelscope",
     "numpy": "numpy",
