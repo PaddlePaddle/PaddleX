@@ -90,11 +90,14 @@ def _latex_to_omml(latex_str: str, display: bool = False):
 
     Returns:
         lxml Element (<m:oMath>) or None if conversion fails.
-    """
-    try:
-        import latex2mathml.converter
-        from lxml import etree as _etree
 
+    Raises:
+        ImportError: If latex2mathml or lxml is not installed.
+    """
+    import latex2mathml.converter
+    from lxml import etree as _etree
+
+    try:
         mode = "block" if display else "inline"
         mathml = latex2mathml.converter.convert(latex_str, display=mode)
         transform = _get_omml_transform()
