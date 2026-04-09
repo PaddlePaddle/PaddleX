@@ -492,8 +492,6 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
                 "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
             }
         """
-        import os
-
         from docx.enum.text import WD_ALIGN_PARAGRAPH
 
         from ...common.result.converter import build_word_blocks
@@ -533,11 +531,9 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
         else:
             original_image_height = int(raw_h or 0)
 
-        use_layout = os.environ.get("PADDLEX_WORD_LAYOUT", "0") == "1"
         word_blocks, images = build_word_blocks(
             self["parsing_res_list"],
             extra_style_map=extra_style_map,
-            include_bbox=use_layout,
         )
 
         return {

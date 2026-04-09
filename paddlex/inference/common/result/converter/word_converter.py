@@ -227,7 +227,6 @@ def _parse_html_table(html: str) -> List[List[str]]:
 def build_word_blocks(
     parsing_res_list: List[Any],
     extra_style_map: Optional[Dict[str, Dict]] = None,
-    include_bbox: bool = False,
     page_width: int = 0,
     page_height: int = 0,
 ) -> tuple:
@@ -240,8 +239,6 @@ def build_word_blocks(
         parsing_res_list: List of block objects with .label, .content, .image attrs.
         extra_style_map: Optional dict of label->style overrides merged on top of
             BASE_STYLE_MAP via dict.update(). Use for pipeline-specific labels.
-        include_bbox: If True, include "bbox" field in each word_block dict.
-            Defaults to False for backwards compatibility.
         page_width: Page width in pixels, used to classify 'number' blocks.
             0 means unknown (defaults to footer classification).
         page_height: Page height in pixels, used to classify 'number' blocks.
@@ -250,7 +247,7 @@ def build_word_blocks(
     Returns:
         Tuple of (word_blocks, images) where:
             word_blocks: List[Dict] with keys "type", "content", "config",
-                and optionally "bbox".
+                and optionally "bbox" and "page_index".
             images: List[Dict] with keys "path" and "img".
     """
     from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -357,11 +354,10 @@ def build_word_blocks(
             "content": content,
             "config": config,
         }
-        if include_bbox:
-            if hasattr(block, "bbox") and block.bbox is not None:
-                word_block["bbox"] = list(block.bbox)
-            if hasattr(block, "page_index") and block.page_index is not None:
-                word_block["page_index"] = block.page_index
+        if hasattr(block, "bbox") and block.bbox is not None:
+            word_block["bbox"] = list(block.bbox)
+        if hasattr(block, "page_index") and block.page_index is not None:
+            word_block["page_index"] = block.page_index
         word_blocks.append(word_block)
         if block.image is not None:
             images.append({"path": block.image["path"], "img": block.image["img"]})
