@@ -517,6 +517,8 @@ def _write_block(
         not in [
             "header",
             "footer",
+            "header_image",
+            "footer_image",
             "table",
             "chart",
             "image",
