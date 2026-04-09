@@ -528,30 +528,33 @@ def _write_block(
         ]
         and content
     ):
-        if "$" in content:
-            parts = _split_inline_formulas(content)
-            has_formula = any(is_formula for _, is_formula in parts)
-        else:
-            parts = []
-            has_formula = False
+        lines = [l for l in content.split("\n") if l.strip()]
+        for i, line in enumerate(lines):
+            first = i == 0
+            if "$" in line:
+                parts = _split_inline_formulas(line)
+                has_formula = any(is_formula for _, is_formula in parts)
+            else:
+                parts = []
+                has_formula = False
 
-        if has_formula:
-            para = doc.add_paragraph()
-            _set_paragraph_style(para, config)
-            if space_before_emu is not None:
-                para.paragraph_format.space_before = Emu(space_before_emu)
-                para.paragraph_format.space_after = Emu(0)
-            if left_indent_emu is not None:
-                para.paragraph_format.left_indent = Emu(left_indent_emu)
-            _write_mixed_runs(para, parts, config)
-        else:
-            para = doc.add_paragraph(content)
-            _set_paragraph_style(para, config)
-            if space_before_emu is not None:
-                para.paragraph_format.space_before = Emu(space_before_emu)
-                para.paragraph_format.space_after = Emu(0)
-            if left_indent_emu is not None:
-                para.paragraph_format.left_indent = Emu(left_indent_emu)
+            if has_formula:
+                para = doc.add_paragraph()
+                _set_paragraph_style(para, config)
+                if first and space_before_emu is not None:
+                    para.paragraph_format.space_before = Emu(space_before_emu)
+                    para.paragraph_format.space_after = Emu(0)
+                if left_indent_emu is not None:
+                    para.paragraph_format.left_indent = Emu(left_indent_emu)
+                _write_mixed_runs(para, parts, config)
+            else:
+                para = doc.add_paragraph(line)
+                _set_paragraph_style(para, config)
+                if first and space_before_emu is not None:
+                    para.paragraph_format.space_before = Emu(space_before_emu)
+                    para.paragraph_format.space_after = Emu(0)
+                if left_indent_emu is not None:
+                    para.paragraph_format.left_indent = Emu(left_indent_emu)
 
 
 def _build_page_metrics(body_blocks, page_width_px, page_height_px):
