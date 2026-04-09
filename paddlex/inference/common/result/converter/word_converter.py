@@ -17,11 +17,15 @@
 from __future__ import annotations
 
 import math
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 # Block type labels that represent image-like content (chart/image/seal)
 _IMAGE_LABELS = ("chart", "image", "seal")
+
+# Regex to detect $$ display $$ or $ inline $ formula markers in plain text
+_INLINE_FORMULA_RE = re.compile(r"(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$)")
 
 # Formula block labels
 _FORMULA_LABELS = ("inline_formula", "display_formula", "formula")
@@ -39,6 +43,23 @@ def _get_omml_transform():
         xsl_path = Path(__file__).parent / "MML2OMML.XSL"
         _OMML_TRANSFORM = _etree.XSLT(_etree.parse(str(xsl_path)))
     return _OMML_TRANSFORM
+
+
+def _split_inline_formulas(text: str) -> List[Tuple[str, bool]]:
+    """Split text into (segment, is_formula) pairs.
+
+    is_formula=True if the segment is a $...$ or $$...$$ formula marker.
+    """
+    parts: List[Tuple[str, bool]] = []
+    last_end = 0
+    for m in _INLINE_FORMULA_RE.finditer(text):
+        if m.start() > last_end:
+            parts.append((text[last_end : m.start()], False))
+        parts.append((m.group(), True))
+        last_end = m.end()
+    if last_end < len(text):
+        parts.append((text[last_end:], False))
+    return parts
 
 
 def _strip_latex_markers(content: str) -> Tuple[str, bool]:
@@ -124,6 +145,38 @@ def _set_paragraph_style(para, config):
         para.paragraph_format.first_line_indent = Inches(0.3)
     # Force single line spacing to prevent default 1.15x from consuming extra vertical space
     para.paragraph_format.line_spacing = 1.0
+
+
+def _write_mixed_runs(para, parts: List[Tuple[str, bool]], config: dict) -> None:
+    """Write alternating text/formula segments into an existing paragraph.
+
+    For formula segments: attempts OMML conversion; falls back to plain text.
+    For text segments: adds a styled run with font settings from config.
+    """
+    from docx.oxml.ns import qn
+    from docx.shared import Pt
+
+    font_name = config.get("font", "Times New Roman")
+    font_size = config.get("size", 12)
+    bold = config.get("bold", False)
+
+    for segment, is_formula in parts:
+        if not segment:
+            continue
+        if is_formula:
+            raw_latex, is_display = _strip_latex_markers(segment)
+            omml_elem = (
+                _latex_to_omml(raw_latex, display=is_display) if raw_latex else None
+            )
+            if omml_elem is not None:
+                para._element.append(omml_elem)
+                continue
+            # Fallback: write as plain text run
+        run = para.add_run(segment)
+        run.font.name = font_name
+        run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
+        run.font.size = Pt(font_size)
+        run.bold = bold
 
 
 def _classify_number_position(bbox, page_width, page_height):
@@ -442,7 +495,7 @@ def _write_block(
             # Fallback: write raw content as plain text
             para.add_run(content)
 
-    # --- other text content ---
+    # --- other text content (including text blocks with possible $...$ formulas) ---
     elif (
         label
         not in [
@@ -457,13 +510,30 @@ def _write_block(
         ]
         and content
     ):
-        para = doc.add_paragraph(content)
-        _set_paragraph_style(para, config)
-        if space_before_emu is not None:
-            para.paragraph_format.space_before = Emu(space_before_emu)
-            para.paragraph_format.space_after = Emu(0)
-        if left_indent_emu is not None:
-            para.paragraph_format.left_indent = Emu(left_indent_emu)
+        if "$" in content:
+            parts = _split_inline_formulas(content)
+            has_formula = any(is_formula for _, is_formula in parts)
+        else:
+            parts = []
+            has_formula = False
+
+        if has_formula:
+            para = doc.add_paragraph()
+            _set_paragraph_style(para, config)
+            if space_before_emu is not None:
+                para.paragraph_format.space_before = Emu(space_before_emu)
+                para.paragraph_format.space_after = Emu(0)
+            if left_indent_emu is not None:
+                para.paragraph_format.left_indent = Emu(left_indent_emu)
+            _write_mixed_runs(para, parts, config)
+        else:
+            para = doc.add_paragraph(content)
+            _set_paragraph_style(para, config)
+            if space_before_emu is not None:
+                para.paragraph_format.space_before = Emu(space_before_emu)
+                para.paragraph_format.space_after = Emu(0)
+            if left_indent_emu is not None:
+                para.paragraph_format.left_indent = Emu(left_indent_emu)
 
 
 def _is_full_span(block, page_width, threshold=0.6):
