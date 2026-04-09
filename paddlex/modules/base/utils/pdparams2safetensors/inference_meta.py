@@ -260,6 +260,62 @@ def _meta_rec():
         },
     }
 
+_SLANEXT_CHARACTER_DICT = [
+    "<thead>", "</thead>", "<tbody>", "</tbody>", "<tr>", "</tr>",
+    "<td>", "<td", ">", "</td>",
+    ' colspan="2"', ' colspan="3"', ' colspan="4"', ' colspan="5"',
+    ' colspan="6"', ' colspan="7"', ' colspan="8"', ' colspan="9"',
+    ' colspan="10"', ' colspan="11"', ' colspan="12"', ' colspan="13"',
+    ' colspan="14"', ' colspan="15"', ' colspan="16"', ' colspan="17"',
+    ' colspan="18"', ' colspan="19"', ' colspan="20"',
+    ' rowspan="2"', ' rowspan="3"', ' rowspan="4"', ' rowspan="5"',
+    ' rowspan="6"', ' rowspan="7"', ' rowspan="8"', ' rowspan="9"',
+    ' rowspan="10"', ' rowspan="11"', ' rowspan="12"', ' rowspan="13"',
+    ' rowspan="14"', ' rowspan="15"', ' rowspan="16"', ' rowspan="17"',
+    ' rowspan="18"', ' rowspan="19"', ' rowspan="20"',
+]
+
+
+def _meta_slanext(model_name):
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 512, 512], [1, 3, 512, 512], [1, 3, 512, 512]]),
+        "PreProcess": {
+            "transform_ops": [
+                {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
+                {"TableLabelEncode": {
+                    "learn_empty_box": False,
+                    "loc_reg_num": 8,
+                    "max_text_length": 500,
+                    "merge_no_span_structure": True,
+                    "replace_empty_cell_token": False,
+                }},
+                {"TableBoxEncode": {
+                    "in_box_format": "xyxyxyxy",
+                    "out_box_format": "xyxyxyxy",
+                }},
+                {"ResizeTableImage": {"max_len": 512, "resize_bboxes": True}},
+                {"NormalizeImage": {
+                    "mean": [0.485, 0.456, 0.406],
+                    "order": "hwc",
+                    "scale": "1./255.",
+                    "std": [0.229, 0.224, 0.225],
+                }},
+                {"PaddingTableImage": {"size": [512, 512]}},
+                {"ToCHWImage": None},
+                {"KeepKeys": {"keep_keys": [
+                    "image", "structure", "bboxes", "bbox_masks",
+                    "length", "shape",
+                ]}},
+            ]
+        },
+        "PostProcess": {
+            "name": "TableLabelDecode",
+            "merge_no_span_structure": True,
+            "character_dict": _SLANEXT_CHARACTER_DICT,
+        },
+    }
+
+
 def _meta_uvdoc():
     return {
         "Hpi": _hpi_simple("img", [[1, 3, 128, 64], [1, 3, 256, 128], [8, 3, 512, 256]]),
@@ -275,8 +331,8 @@ _INFERENCE_META_REGISTRY = {
     "PP-OCRv5_server_det": _meta_det,
     "PP-OCRv5_mobile_rec": _meta_rec,
     "PP-OCRv5_server_rec": _meta_rec,
-    "SLANeXt_wired": lambda: {},
-    "SLANeXt_wireless": lambda: {},
+    "SLANeXt_wired": lambda: _meta_slanext("SLANeXt_wired"),
+    "SLANeXt_wireless": lambda: _meta_slanext("SLANeXt_wireless"),
     "PP-DocLayoutV2": _meta_doclayoutv3,
     "PP-DocLayoutV3": _meta_doclayoutv3,
     "RT-DETR-L_wired_table_cell_det": lambda: _meta_det_rtdetr(
@@ -416,6 +472,22 @@ PREPROCESSOR_CONFIGS = {
     "PP-OCRv5_server_det": _SERVER_DET_PREPROC,
     "PP-OCRv5_mobile_rec": _MOBILE_REC_PREPROC,
     "PP-OCRv5_server_rec": _SERVER_REC_PREPROC,
+    "SLANeXt_wired": {
+        "do_resize": True,
+        "size": {"height": 512, "width": 512},
+        "do_normalize": True,
+        "image_mean": [0.485, 0.456, 0.406],
+        "image_std": [0.229, 0.224, 0.225],
+        "do_pad": True,
+    },
+    "SLANeXt_wireless": {
+        "do_resize": True,
+        "size": {"height": 512, "width": 512},
+        "do_normalize": True,
+        "image_mean": [0.485, 0.456, 0.406],
+        "image_std": [0.229, 0.224, 0.225],
+        "do_pad": True,
+    },
     "PP-DocLayoutV3": _rtdetr_preproc("PPDocLayoutV3ImageProcessor", 800, 800),
     "RT-DETR-L_wired_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "RT-DETR-L_wireless_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),

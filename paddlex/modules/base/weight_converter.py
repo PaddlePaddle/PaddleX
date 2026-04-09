@@ -41,6 +41,7 @@ from .utils.pdparams2safetensors import (
     PPOCRV5_MOBILE_REC_MAPPING,
     PPOCRV5_SERVER_REC_MAPPING,
     SLANEXT_MAPPING,
+    SLANEXT_DROP_PREFIXES,
     REC_DROP_PREFIXES,
     SERVER_REC_DROP_PREFIXES,
     MOBILE_DET_DROP_PREFIXES,
@@ -69,8 +70,8 @@ _MODEL_REGISTRY = {
     "PP-OCRv5_server_det": (PPOCRV5_SERVER_DET_MAPPING, SERVER_DET_DROP_PREFIXES),
     "PP-OCRv5_mobile_rec": (PPOCRV5_MOBILE_REC_MAPPING, REC_DROP_PREFIXES),
     "PP-OCRv5_server_rec": (PPOCRV5_SERVER_REC_MAPPING, SERVER_REC_DROP_PREFIXES),
-    "SLANeXt_wired": (SLANEXT_MAPPING, []),
-    "SLANeXt_wireless": (SLANEXT_MAPPING, []),
+    "SLANeXt_wired": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
+    "SLANeXt_wireless": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "PP-DocLayoutV2": (RTDETR_MAPPING, []),
     "PP-DocLayoutV3": (RTDETR_MAPPING, []),
     "RT-DETR-L_wired_table_cell_det": (RTDETR_MAPPING, []),
@@ -132,6 +133,13 @@ _TRANSPOSE_SUBSTRINGS = [
     "head.head",
     "ctc_head",
     "conv_reduce_channel",
+    "structure_attention_cell.score",
+    "structure_attention_cell.i2h",
+    "structure_attention_cell.h2h",
+    "structure_generator.0.",
+    "structure_generator.1.",
+    "loc_generator.0.",
+    "loc_generator.1.",
 ]
 
 

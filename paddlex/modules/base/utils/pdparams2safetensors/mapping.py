@@ -460,7 +460,27 @@ PPOCRV5_SERVER_REC_MAPPING = [
 # SLANeXt — deferred to Phase 2
 # ---------------------------------------------------------------------------
 
-SLANEXT_MAPPING = []
+SLANEXT_DROP_PREFIXES = [
+    "backbone.vision_tower_high.net_3.",
+]
+
+SLANEXT_MAPPING = [
+    # net_2 must be renamed before the general vision_tower_high rule
+    (r"backbone\.vision_tower_high\.net_2\.", "backbone.post_conv."),
+    (r"vision_tower_high\.", "vision_tower."),
+    (r"\.blocks\.", ".layers."),
+    (r"\.norm1\.", ".layer_norm1."),
+    (r"\.norm2\.", ".layer_norm2."),
+    (r"patch_embed\.proj\.", "patch_embed.projection."),
+    (r"\.neck\.0\.", ".neck.conv1."),
+    (r"\.neck\.1\.", ".neck.layer_norm1."),
+    (r"\.neck\.2\.", ".neck.conv2."),
+    (r"\.neck\.3\.", ".neck.layer_norm2."),
+    (r"structure_generator\.0\.", "structure_generator.fc1."),
+    (r"structure_generator\.1\.", "structure_generator.fc2."),
+    (r"\.i2h\.", ".input_to_hidden."),
+    (r"\.h2h\.", ".hidden_to_hidden."),
+]
 
 
 # ---------------------------------------------------------------------------
