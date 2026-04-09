@@ -328,6 +328,10 @@ def build_word_blocks(
             if block.image is None:
                 continue
             content = block.image["path"]
+        elif label in ("header_image", "footer_image"):
+            if block.image is None:
+                continue
+            content = block.image["path"]
         elif label == "chart":
             if block.image is not None:
                 content = block.image["path"]
@@ -946,6 +950,7 @@ class WordConverter:
         """
         from docx import Document
         from docx.enum.text import WD_ALIGN_PARAGRAPH
+        from docx.shared import Inches
 
         doc = Document()
         current_page = None
@@ -973,6 +978,22 @@ class WordConverter:
                 section.footer.is_linked_to_previous = False
                 para = section.footer.add_paragraph(content)
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            elif label == "header_image" and content:
+                abs_path = abs_image_paths.get(content)
+                if abs_path:
+                    section = doc.sections[-1]
+                    section.header.is_linked_to_previous = False
+                    para = section.header.add_paragraph()
+                    para.alignment = WD_ALIGN_PARAGRAPH.LEFT
+                    para.add_run().add_picture(abs_path, width=Inches(1.0))
+            elif label == "footer_image" and content:
+                abs_path = abs_image_paths.get(content)
+                if abs_path:
+                    section = doc.sections[-1]
+                    section.footer.is_linked_to_previous = False
+                    para = section.footer.add_paragraph()
+                    para.alignment = WD_ALIGN_PARAGRAPH.LEFT
+                    para.add_run().add_picture(abs_path, width=Inches(1.0))
 
             _write_block(doc, block, abs_image_paths, original_image_width)
 
