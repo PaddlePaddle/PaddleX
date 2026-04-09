@@ -474,7 +474,19 @@ def _write_block(
             for row_cells in rows:
                 row = table.add_row().cells
                 for i in range(max_cols):
-                    row[i].text = row_cells[i].strip() if i < len(row_cells) else ""
+                    cell_text = row_cells[i].strip() if i < len(row_cells) else ""
+                    if "$" in cell_text:
+                        parts = _split_inline_formulas(cell_text)
+                        has_formula = any(is_formula for _, is_formula in parts)
+                    else:
+                        parts = []
+                        has_formula = False
+
+                    if has_formula:
+                        cell_para = row[i].paragraphs[0]
+                        _write_mixed_runs(cell_para, parts, {})
+                    else:
+                        row[i].text = cell_text
 
     # --- formula (inline_formula / display_formula / formula) ---
     elif label in _FORMULA_LABELS and content:
