@@ -927,6 +927,20 @@ def _compute_horizontal_indent(block, content_x1_px, page_width_px, scale_x):
     return indent_emu if indent_emu > 0 else None
 
 
+def _header_text_alignment(bbox, page_width_px):
+    """Return tab prefix for header/footer companion text based on bbox position."""
+    if not bbox or page_width_px <= 0:
+        return "\t\t"  # fallback: right
+    x_center = (bbox[0] + bbox[2]) / 2
+    ratio = x_center / page_width_px
+    if ratio < 0.35:
+        return ""  # left — no tab
+    elif ratio < 0.65:
+        return "\t"  # center — one tab
+    else:
+        return "\t\t"  # right — two tabs
+
+
 class WordConverter:
     """Convert structured word_blocks to a :class:`docx.Document`."""
 
@@ -950,12 +964,16 @@ class WordConverter:
         """
         from docx import Document
         from docx.enum.text import WD_ALIGN_PARAGRAPH
-        from docx.shared import Inches
+        from docx.shared import Inches, Pt
 
         doc = Document()
         current_page = None
+        consumed: set = set()
 
-        for block in word_blocks:
+        for i, block in enumerate(word_blocks):
+            if i in consumed:
+                continue
+
             page_idx = block.get("page_index", 0)
             if current_page is None:
                 current_page = page_idx
@@ -983,17 +1001,53 @@ class WordConverter:
                 if abs_path:
                     section = doc.sections[-1]
                     section.header.is_linked_to_previous = False
+                    # look-ahead: merge with next header text block on the same page
+                    next_block = (
+                        word_blocks[i + 1] if i + 1 < len(word_blocks) else None
+                    )
+                    next_same_page = (
+                        next_block is not None
+                        and next_block.get("type") == "header"
+                        and next_block.get("page_index", 0) == page_idx
+                    )
                     para = section.header.add_paragraph()
                     para.alignment = WD_ALIGN_PARAGRAPH.LEFT
                     para.add_run().add_picture(abs_path, width=Inches(1.0))
+                    if next_same_page:
+                        next_content = next_block.get("content", "").strip()
+                        if next_content:
+                            tab_prefix = _header_text_alignment(
+                                next_block.get("bbox"), original_image_width
+                            )
+                            run = para.add_run(tab_prefix + next_content)
+                            run.font.size = Pt(9)
+                        consumed.add(i + 1)
             elif label == "footer_image" and content:
                 abs_path = abs_image_paths.get(content)
                 if abs_path:
                     section = doc.sections[-1]
                     section.footer.is_linked_to_previous = False
+                    # look-ahead: merge with next footer text block on the same page
+                    next_block = (
+                        word_blocks[i + 1] if i + 1 < len(word_blocks) else None
+                    )
+                    next_same_page = (
+                        next_block is not None
+                        and next_block.get("type") == "footer"
+                        and next_block.get("page_index", 0) == page_idx
+                    )
                     para = section.footer.add_paragraph()
                     para.alignment = WD_ALIGN_PARAGRAPH.LEFT
                     para.add_run().add_picture(abs_path, width=Inches(1.0))
+                    if next_same_page:
+                        next_content = next_block.get("content", "").strip()
+                        if next_content:
+                            tab_prefix = _header_text_alignment(
+                                next_block.get("bbox"), original_image_width
+                            )
+                            run = para.add_run(tab_prefix + next_content)
+                            run.font.size = Pt(9)
+                        consumed.add(i + 1)
 
             _write_block(doc, block, abs_image_paths, original_image_width)
 
