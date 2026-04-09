@@ -18,7 +18,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
@@ -96,9 +95,7 @@ class PPOCRV5ServerRecAttention(nn.Layer):
         bsz, tgt_len, embed_dim = hidden_states.shape
 
         mixed_qkv = self.qkv(hidden_states)
-        mixed_qkv = mixed_qkv.reshape(
-            [bsz, tgt_len, 3, self.num_heads, self.head_dim]
-        )
+        mixed_qkv = mixed_qkv.reshape([bsz, tgt_len, 3, self.num_heads, self.head_dim])
         mixed_qkv = mixed_qkv.transpose([2, 0, 3, 1, 4])
         query_states = mixed_qkv[0]
         key_states = mixed_qkv[1]
@@ -242,9 +239,6 @@ class PPOCRV5ServerRec(BatchNormHFStateDictMixin, PretrainedModel):
         self.model = PPOCRV5ServerRecModel(config)
         self.head = PPOCRV5ServerRecHead(config)
 
-    add_inference_operations("pp_ocrv5_server_rec_forward")
-
-    @benchmark.timeit_with_options(name="pp_ocrv5_server_rec_forward")
     def forward(self, x: List) -> List:
         x = paddle.to_tensor(x[0])
         hidden_state = self.model(x)

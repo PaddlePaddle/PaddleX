@@ -469,7 +469,6 @@ SAFETENSORS_SUPPORTED_MODELS: Set[str] = (
 PADDLE_DYN_SUPPORTED_MODELS: Set[str] = {
     "PP-DocBee-2B",
     "PP-DocBee-7B",
-    "PP-Chart2Table",
     "PP-DocBee2-3B",
     "whisper_large",
     "whisper_medium",

@@ -23,7 +23,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
@@ -80,8 +79,12 @@ class SLANeXtBackbone(nn.Layer):
         super().__init__()
         self.vision_tower = GotOcr2VisionEncoder(config.vision_config)
         self.post_conv = nn.Conv2D(
-            config.post_conv_in_channels, config.post_conv_out_channels,
-            kernel_size=3, stride=2, padding=1, bias_attr=False,
+            config.post_conv_in_channels,
+            config.post_conv_out_channels,
+            kernel_size=3,
+            stride=2,
+            padding=1,
+            bias_attr=False,
         )
 
     def forward(self, pixel_values):
@@ -100,7 +103,9 @@ class SLANeXtSLAHead(nn.Layer):
         super().__init__()
         self.config = config
         self.structure_attention_cell = SLANeXtAttentionGRUCell(
-            config.post_conv_out_channels, config.hidden_size, config.out_channels,
+            config.post_conv_out_channels,
+            config.hidden_size,
+            config.out_channels,
         )
         self.structure_generator = SLANeXtMLP(config.hidden_size, config.out_channels)
 
@@ -116,7 +121,9 @@ class SLANeXtSLAHead(nn.Layer):
                 predicted_chars, self.config.out_channels
             ).astype("float32")
             features, _ = self.structure_attention_cell(
-                features, hidden_states.astype("float32"), embedding_feature,
+                features,
+                hidden_states.astype("float32"),
+                embedding_feature,
             )
             structure_step = self.structure_generator(features)
             predicted_chars = structure_step.argmax(axis=1)
@@ -154,9 +161,6 @@ class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
         self.backbone = SLANeXtBackbone(config)
         self.head = SLANeXtSLAHead(config)
 
-    add_inference_operations("slanext_forward")
-
-    @benchmark.timeit_with_options(name="slanext_forward")
     def forward(self, x):
         pixel_values = paddle.to_tensor(x[0])
 
@@ -171,7 +175,11 @@ class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
         # with the predictor/postprocessor pipeline.
         # HF model doesn't predict locations; fill with zeros.
         loc_preds = paddle.zeros(
-            [structure_probs.shape[0], structure_probs.shape[1], self.config.loc_reg_num],
+            [
+                structure_probs.shape[0],
+                structure_probs.shape[1],
+                self.config.loc_reg_num,
+            ],
             dtype=structure_probs.dtype,
         )
         return [loc_preds, structure_probs]

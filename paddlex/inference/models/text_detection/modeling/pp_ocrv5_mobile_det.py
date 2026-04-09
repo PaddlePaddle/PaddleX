@@ -18,7 +18,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
@@ -238,9 +237,6 @@ class PPOCRV5MobileDet(BatchNormHFStateDictMixin, PretrainedModel):
         self.model = PPOCRV5MobileDetModel(config)
         self.head = PPOCRV5MobileDetHead(config)
 
-    add_inference_operations("pp_ocrv5_mobile_det_forward")
-
-    @benchmark.timeit_with_options(name="pp_ocrv5_mobile_det_forward")
     def forward(self, x: List) -> List:
         x = paddle.to_tensor(x[0])
         neck_output = self.model(x)

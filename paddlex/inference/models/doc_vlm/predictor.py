@@ -641,7 +641,7 @@ class DocVLMTransformersPredictor(TransformersPredictor):
                     "role": "user",
                     "content": [
                         {"type": "image", "image": image},
-                        {"type": "text", "text": item["query"]},
+                        {"type": "text", "text": item.get("query", "")},
                     ],
                 }
             ]
@@ -680,10 +680,19 @@ class DocVLMTransformersPredictor(TransformersPredictor):
         with torch.inference_mode():
             generated_ids = self.infer.generate(**model_inputs, **generate_kwargs)
 
+        preds = self.postprocess(
+            generated_ids,
+            model_inputs=model_inputs,
+            skip_special_tokens=skip_special_tokens,
+        )
+
+        return format_doc_vlm_result_dict(preds, src_data, add_input_path=True)
+
+    def postprocess(self, outputs, *, model_inputs, skip_special_tokens, **kwargs):
         prompt_ids = model_inputs["input_ids"]
         generated_ids_trimmed = [
             output_ids[len(input_ids) :]
-            for input_ids, output_ids in zip(prompt_ids, generated_ids)
+            for input_ids, output_ids in zip(prompt_ids, outputs)
         ]
         preds = self.processor.batch_decode(
             generated_ids_trimmed,
@@ -692,4 +701,5 @@ class DocVLMTransformersPredictor(TransformersPredictor):
             ),
             clean_up_tokenization_spaces=False,
         )
-        return format_doc_vlm_result_dict(preds, src_data, add_input_path=True)
+
+        return preds
