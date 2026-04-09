@@ -527,6 +527,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
         else:
             original_image_width = self["width"]
 
+        raw_h = self.get("height", 0)
+        if isinstance(raw_h, list):
+            original_image_height = raw_h[0] if raw_h else 0
+        else:
+            original_image_height = int(raw_h or 0)
+
         use_layout = os.environ.get("PADDLEX_WORD_LAYOUT", "0") == "1"
         word_blocks, images = build_word_blocks(
             self["parsing_res_list"],
@@ -537,6 +543,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
         return {
             "word_blocks": word_blocks,
             "original_image_width": original_image_width,
+            "original_image_height": original_image_height,
             "input_path": self["input_path"],
             "images": images,
         }
