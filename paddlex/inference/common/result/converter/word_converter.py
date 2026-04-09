@@ -950,6 +950,7 @@ class WordConverter:
         *,
         abs_image_paths: Dict[str, str],
         original_image_width: int = 500,
+        original_image_height: int = 0,
     ):
         """Convert word_blocks to a docx.Document object.
 
@@ -958,15 +959,35 @@ class WordConverter:
                 optional "page_index".
             abs_image_paths: Dict[str, str] — {original_path: abs_path} from save_images().
             original_image_width: int — reserved for future scaling (currently unused).
+            original_image_height: int — used to detect landscape orientation.
 
         Returns:
             docx.Document
         """
         from docx import Document
+        from docx.enum.section import WD_ORIENT
         from docx.enum.text import WD_ALIGN_PARAGRAPH
-        from docx.shared import Inches, Pt
+        from docx.shared import Emu, Inches, Pt
+
+        # Detect landscape: width must exceed height by at least 20%
+        is_landscape = (
+            original_image_height > 0
+            and original_image_width > original_image_height * 1.2
+        )
+
+        # A4 portrait:  210mm × 297mm  →  7560820 × 10693400 EMU
+        # A4 landscape: 297mm × 210mm  → 10693400 × 7560820 EMU
+        _PAGE_W = 10693400 if is_landscape else 7560820
+        _PAGE_H = 7560820 if is_landscape else 10693400
+
+        def _apply_page_size(section):
+            if is_landscape:
+                section.orientation = WD_ORIENT.LANDSCAPE
+            section.page_width = Emu(_PAGE_W)
+            section.page_height = Emu(_PAGE_H)
 
         doc = Document()
+        _apply_page_size(doc.sections[0])
         current_page = None
         consumed: set = set()
 
@@ -978,7 +999,7 @@ class WordConverter:
             if current_page is None:
                 current_page = page_idx
             elif page_idx != current_page:
-                doc.add_section()
+                _apply_page_size(doc.add_section())
                 current_page = page_idx
 
             label = block.get("type")

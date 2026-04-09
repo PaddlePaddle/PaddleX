@@ -80,6 +80,7 @@ class WordMixin:
             word_data["word_blocks"],
             abs_image_paths=abs_image_paths,
             original_image_width=word_data.get("original_image_width", 500),
+            original_image_height=word_data.get("original_image_height", 0),
         )
         doc.save(save_file.as_posix())
 
