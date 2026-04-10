@@ -18,10 +18,7 @@ Each entry maps a model_name to the full config dict that will be
 saved as config.json, matching the official HuggingFace repos exactly.
 """
 
-# ---------------------------------------------------------------------------
 # PP-LCNet configs
-# ---------------------------------------------------------------------------
-
 _PPLCNET_BASE = {
     "model_type": "pp_lcnet",
     "scale": 1.0,
@@ -46,10 +43,7 @@ _TEXTLINE_BLOCK_CONFIGS = [
     [[5, 256, 512, [2, 1], True], [5, 512, 512, 1, True]],
 ]
 
-# ---------------------------------------------------------------------------
 # PP-OCRv5 configs
-# ---------------------------------------------------------------------------
-
 _PPOCRV5_MOBILE_DET_CONFIG = {
     "model_type": "pp_ocrv5_mobile_det",
     "reduction": 4,
@@ -169,10 +163,7 @@ _PPOCRV5_SERVER_REC_CONFIG = {
     **_PPOCRV5_REC_BASE,
 }
 
-# ---------------------------------------------------------------------------
 # RT-DETR / DocLayout configs
-# ---------------------------------------------------------------------------
-
 _RTDETR_BACKBONE_CONFIG = {
     "arch": "L",
     "depths": [3, 4, 6, 3],
@@ -308,13 +299,31 @@ _DOCLAYOUTV3_CONFIG = {
     "feature_strides": [8, 16, 32],
     "hidden_expansion": 1.0,
     "id2label": {
-        "0": "abstract", "1": "algorithm", "2": "aside_text", "3": "chart",
-        "4": "content", "5": "formula", "6": "doc_title", "7": "figure_title",
-        "8": "footer", "9": "footer", "10": "footnote", "11": "formula_number",
-        "12": "header", "13": "header", "14": "image", "15": "formula",
-        "16": "number", "17": "paragraph_title", "18": "reference",
-        "19": "reference_content", "20": "seal", "21": "table", "22": "text",
-        "23": "text", "24": "vision_footnote",
+        "0": "abstract",
+        "1": "algorithm",
+        "2": "aside_text",
+        "3": "chart",
+        "4": "content",
+        "5": "formula",
+        "6": "doc_title",
+        "7": "figure_title",
+        "8": "footer",
+        "9": "footer",
+        "10": "footnote",
+        "11": "formula_number",
+        "12": "header",
+        "13": "header",
+        "14": "image",
+        "15": "formula",
+        "16": "number",
+        "17": "paragraph_title",
+        "18": "reference",
+        "19": "reference_content",
+        "20": "seal",
+        "21": "table",
+        "22": "text",
+        "23": "text",
+        "24": "vision_footnote",
     },
     "initializer_range": 0.01,
     "is_encoder_decoder": True,
@@ -341,10 +350,7 @@ _DOCLAYOUTV3_CONFIG = {
     "x4_feat_dim": 128,
 }
 
-# ---------------------------------------------------------------------------
 # UVDoc config
-# ---------------------------------------------------------------------------
-
 _UVDOC_CONFIG = {
     "model_type": "uvdoc",
     "kernel_size": 5,
@@ -377,7 +383,12 @@ _UVDOC_CONFIG = {
             [[128, 18], [128, 12], [128, 6]],
         ],
         "out_features": [
-            "stage1", "stage2", "stage3", "stage4", "stage5", "stage6",
+            "stage1",
+            "stage2",
+            "stage3",
+            "stage4",
+            "stage5",
+            "stage6",
         ],
         "out_indices": [1, 2, 3, 4, 5, 6],
     },
@@ -388,19 +399,30 @@ _UVDOC_CONFIG = {
     "hidden_act": "prelu",
 }
 
-# ---------------------------------------------------------------------------
 # Label dicts for RT-DETR models
-# ---------------------------------------------------------------------------
-
 _TABLE_CELL_LABELS = {"0": "cell"}
 _TABLE_CELL_LABEL2ID = {"cell": 0}
 
 _DOC_LAYOUT_PLUS_ID2LABEL = {
-    "0": "paragraph_title", "1": "image", "2": "text", "3": "number",
-    "4": "abstract", "5": "content", "6": "figure_title", "7": "formula",
-    "8": "table", "9": "reference", "10": "doc_title", "11": "footnote",
-    "12": "header", "13": "algorithm", "14": "footer", "15": "seal",
-    "16": "chart", "17": "formula_number", "18": "aside_text",
+    "0": "paragraph_title",
+    "1": "image",
+    "2": "text",
+    "3": "number",
+    "4": "abstract",
+    "5": "content",
+    "6": "figure_title",
+    "7": "formula",
+    "8": "table",
+    "9": "reference",
+    "10": "doc_title",
+    "11": "footnote",
+    "12": "header",
+    "13": "algorithm",
+    "14": "footer",
+    "15": "seal",
+    "16": "chart",
+    "17": "formula_number",
+    "18": "aside_text",
     "19": "reference_content",
 }
 _DOC_LAYOUT_PLUS_LABEL2ID = {v: int(k) for k, v in _DOC_LAYOUT_PLUS_ID2LABEL.items()}
@@ -408,10 +430,7 @@ _DOC_LAYOUT_PLUS_LABEL2ID = {v: int(k) for k, v in _DOC_LAYOUT_PLUS_ID2LABEL.ite
 _DOC_BLOCK_LABELS = {"0": "Region"}
 _DOC_BLOCK_LABEL2ID = {"Region": 0}
 
-# ---------------------------------------------------------------------------
 # Model config registry
-# ---------------------------------------------------------------------------
-
 MODEL_CONFIGS = {
     "PP-LCNet_x1_0_doc_ori": {
         **_PPLCNET_BASE,
@@ -493,16 +512,20 @@ MODEL_CONFIGS = {
     "PP-DocLayoutV2": _DOCLAYOUTV3_CONFIG,
     "PP-DocLayoutV3": _DOCLAYOUTV3_CONFIG,
     "RT-DETR-L_wired_table_cell_det": _rtdetr_config(
-        _TABLE_CELL_LABELS, _TABLE_CELL_LABEL2ID,
+        _TABLE_CELL_LABELS,
+        _TABLE_CELL_LABEL2ID,
     ),
     "RT-DETR-L_wireless_table_cell_det": _rtdetr_config(
-        _TABLE_CELL_LABELS, _TABLE_CELL_LABEL2ID,
+        _TABLE_CELL_LABELS,
+        _TABLE_CELL_LABEL2ID,
     ),
     "PP-DocLayout_plus-L": _rtdetr_config(
-        _DOC_LAYOUT_PLUS_ID2LABEL, _DOC_LAYOUT_PLUS_LABEL2ID,
+        _DOC_LAYOUT_PLUS_ID2LABEL,
+        _DOC_LAYOUT_PLUS_LABEL2ID,
     ),
     "PP-DocBlockLayout": _rtdetr_config(
-        _DOC_BLOCK_LABELS, _DOC_BLOCK_LABEL2ID,
+        _DOC_BLOCK_LABELS,
+        _DOC_BLOCK_LABEL2ID,
     ),
     "UVDoc": _UVDOC_CONFIG,
     "PP-Chart2Table": {

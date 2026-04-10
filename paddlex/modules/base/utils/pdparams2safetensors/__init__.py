@@ -12,33 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .mapping import (
-    apply_key_mapping,
-    rename_bn_keys,
-    PPLCNET_MAPPING,
-    PPOCRV5_MOBILE_DET_MAPPING,
-    PPOCRV5_SERVER_DET_MAPPING,
-    RTDETR_MAPPING,
-    UVDOC_MAPPING,
-    PPOCRV5_MOBILE_REC_MAPPING,
-    PPOCRV5_SERVER_REC_MAPPING,
-    SLANEXT_MAPPING,
-    SLANEXT_DROP_PREFIXES,
-    REC_DROP_PREFIXES,
-    SERVER_REC_DROP_PREFIXES,
-    MOBILE_DET_DROP_PREFIXES,
-    SERVER_DET_DROP_PREFIXES,
-    UVDOC_DROP_PREFIXES,
-    PP_CHART2TABLE_MAPPING,
-    PP_CHART2TABLE_DROP_PREFIXES,
-)
-from .model_config import MODEL_CONFIGS
 from .inference_meta import (
-    build_inference_meta,
-    load_character_dict,
-    PREPROCESSOR_CONFIGS,
     CHART2TABLE_ADDED_TOKENS,
     CHART2TABLE_GENERATION_CONFIG,
     CHART2TABLE_SPECIAL_TOKENS_MAP,
     CHART2TABLE_TOKENIZER_CONFIG,
+    PREPROCESSOR_CONFIGS,
+    build_inference_meta,
+    load_character_dict,
 )
+from .mapping import (
+    MOBILE_DET_DROP_PREFIXES,
+    PP_CHART2TABLE_DROP_PREFIXES,
+    PP_CHART2TABLE_MAPPING,
+    PPLCNET_MAPPING,
+    PPOCRV5_MOBILE_DET_MAPPING,
+    PPOCRV5_MOBILE_REC_MAPPING,
+    PPOCRV5_SERVER_DET_MAPPING,
+    PPOCRV5_SERVER_REC_MAPPING,
+    REC_DROP_PREFIXES,
+    RTDETR_MAPPING,
+    SERVER_DET_DROP_PREFIXES,
+    SERVER_REC_DROP_PREFIXES,
+    SLANEXT_DROP_PREFIXES,
+    SLANEXT_MAPPING,
+    UVDOC_DROP_PREFIXES,
+    UVDOC_MAPPING,
+    apply_key_mapping,
+    rename_bn_keys,
+)
+from .model_config import MODEL_CONFIGS

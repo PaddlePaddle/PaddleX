@@ -29,31 +29,31 @@ from pathlib import Path
 from ...utils import logging
 from ...utils.config import AttrDict
 from .utils.pdparams2safetensors import (
-    apply_key_mapping,
-    rename_bn_keys,
-    build_inference_meta,
-    load_character_dict,
-    PPLCNET_MAPPING,
-    PPOCRV5_MOBILE_DET_MAPPING,
-    PPOCRV5_SERVER_DET_MAPPING,
-    RTDETR_MAPPING,
-    UVDOC_MAPPING,
-    PPOCRV5_MOBILE_REC_MAPPING,
-    PPOCRV5_SERVER_REC_MAPPING,
-    SLANEXT_MAPPING,
-    SLANEXT_DROP_PREFIXES,
-    REC_DROP_PREFIXES,
-    SERVER_REC_DROP_PREFIXES,
-    MOBILE_DET_DROP_PREFIXES,
-    SERVER_DET_DROP_PREFIXES,
-    UVDOC_DROP_PREFIXES,
-    PP_CHART2TABLE_MAPPING,
-    PP_CHART2TABLE_DROP_PREFIXES,
-    PREPROCESSOR_CONFIGS,
     CHART2TABLE_ADDED_TOKENS,
     CHART2TABLE_GENERATION_CONFIG,
     CHART2TABLE_SPECIAL_TOKENS_MAP,
     CHART2TABLE_TOKENIZER_CONFIG,
+    MOBILE_DET_DROP_PREFIXES,
+    PP_CHART2TABLE_DROP_PREFIXES,
+    PP_CHART2TABLE_MAPPING,
+    PPLCNET_MAPPING,
+    PPOCRV5_MOBILE_DET_MAPPING,
+    PPOCRV5_MOBILE_REC_MAPPING,
+    PPOCRV5_SERVER_DET_MAPPING,
+    PPOCRV5_SERVER_REC_MAPPING,
+    PREPROCESSOR_CONFIGS,
+    REC_DROP_PREFIXES,
+    RTDETR_MAPPING,
+    SERVER_DET_DROP_PREFIXES,
+    SERVER_REC_DROP_PREFIXES,
+    SLANEXT_DROP_PREFIXES,
+    SLANEXT_MAPPING,
+    UVDOC_DROP_PREFIXES,
+    UVDOC_MAPPING,
+    apply_key_mapping,
+    build_inference_meta,
+    load_character_dict,
+    rename_bn_keys,
 )
 from .utils.pdparams2safetensors.model_config import MODEL_CONFIGS
 
@@ -63,10 +63,7 @@ def build_weight_converter(config: AttrDict) -> "WeightConverter":
     return WeightConverter(config)
 
 
-# ---------------------------------------------------------------------------
 # Model registry: model_name -> (key_mapping, drop_key_prefixes)
-# ---------------------------------------------------------------------------
-
 _MODEL_REGISTRY = {
     "PP-LCNet_x1_0_doc_ori": (PPLCNET_MAPPING, []),
     "PP-LCNet_x1_0_table_cls": (PPLCNET_MAPPING, []),
@@ -169,6 +166,7 @@ def _preprocess_tensors(state_dict):
     for key, tensor in state_dict.items():
         if hasattr(tensor, "numpy"):
             import paddle
+
             if tensor.dtype in (paddle.bfloat16, paddle.float16):
                 tensor = tensor.astype(paddle.float32)
             np_weight = tensor.cpu().numpy()
@@ -184,19 +182,29 @@ def _preprocess_tensors(state_dict):
             if "weight" in key:
                 np_weight = np_weight.transpose()
                 split_size = np_weight.shape[0] // 3
-                result[key.replace("in_proj_weight", "q_proj.weight")] = np_weight[:split_size]
-                result[key.replace("in_proj_weight", "k_proj.weight")] = np_weight[split_size:2*split_size]
-                result[key.replace("in_proj_weight", "v_proj.weight")] = np_weight[2*split_size:]
+                result[key.replace("in_proj_weight", "q_proj.weight")] = np_weight[
+                    :split_size
+                ]
+                result[key.replace("in_proj_weight", "k_proj.weight")] = np_weight[
+                    split_size : 2 * split_size
+                ]
+                result[key.replace("in_proj_weight", "v_proj.weight")] = np_weight[
+                    2 * split_size :
+                ]
             elif "bias" in key:
                 split_size = np_weight.shape[0] // 3
-                result[key.replace("in_proj_bias", "q_proj.bias")] = np_weight[:split_size]
-                result[key.replace("in_proj_bias", "k_proj.bias")] = np_weight[split_size:2*split_size]
-                result[key.replace("in_proj_bias", "v_proj.bias")] = np_weight[2*split_size:]
+                result[key.replace("in_proj_bias", "q_proj.bias")] = np_weight[
+                    :split_size
+                ]
+                result[key.replace("in_proj_bias", "k_proj.bias")] = np_weight[
+                    split_size : 2 * split_size
+                ]
+                result[key.replace("in_proj_bias", "v_proj.bias")] = np_weight[
+                    2 * split_size :
+                ]
             continue
 
-        if (np_weight.ndim == 2
-                and "bias" not in key
-                and _should_transpose(key)):
+        if np_weight.ndim == 2 and "bias" not in key and _should_transpose(key):
             np_weight = np_weight.transpose()
 
         result[key] = np_weight
@@ -215,9 +223,7 @@ def _resolve_input_path(input_path):
 
     if p.is_file():
         if not p.name.endswith(".pdparams"):
-            raise ValueError(
-                f"input_path file must end with .pdparams, got: {p}"
-            )
+            raise ValueError(f"input_path file must end with .pdparams, got: {p}")
         return str(p)
 
     if p.is_dir():
@@ -242,17 +248,12 @@ def _resolve_input_path(input_path):
                 "Please specify the exact file path."
             )
         else:
-            raise FileNotFoundError(
-                f"No .pdparams files found in directory: {p}"
-            )
+            raise FileNotFoundError(f"No .pdparams files found in directory: {p}")
 
     raise FileNotFoundError(f"input_path does not exist: {p}")
 
 
-# ---------------------------------------------------------------------------
 # WeightConverter
-# ---------------------------------------------------------------------------
-
 class WeightConverter:
     """Converts Paddle .pdparams weights to safetensors format."""
 
@@ -336,9 +337,7 @@ class WeightConverter:
         if self.model_name in PP_CHART2TABLE_MODELS:
             self._save_llm_config()
 
-        logging.info(
-            f"Conversion complete. Output saved to: {self.output_dir}"
-        )
+        logging.info(f"Conversion complete. Output saved to: {self.output_dir}")
 
     def _convert_weights(self, key_mapping, drop_prefixes):
         """Load pdparams and convert to numpy state dict with HF key names."""
@@ -350,15 +349,12 @@ class WeightConverter:
 
         if drop_prefixes:
             dropped = [
-                k for k in state_dict
-                if any(k.startswith(p) for p in drop_prefixes)
+                k for k in state_dict if any(k.startswith(p) for p in drop_prefixes)
             ]
             for k in dropped:
                 del state_dict[k]
             if dropped:
-                logging.info(
-                    f"Dropped {len(dropped)} keys not needed for inference"
-                )
+                logging.info(f"Dropped {len(dropped)} keys not needed for inference")
 
         state_dict = rename_bn_keys(state_dict)
         numpy_sd = _preprocess_tensors(state_dict)
@@ -387,12 +383,12 @@ class WeightConverter:
             current_size = numpy_sd[embed_key].shape[0]
             if current_size < expected_size:
                 pad = np.zeros(
-                    (expected_size - current_size,
-                     numpy_sd[embed_key].shape[1]),
+                    (expected_size - current_size, numpy_sd[embed_key].shape[1]),
                     dtype=numpy_sd[embed_key].dtype,
                 )
                 numpy_sd[embed_key] = np.concatenate(
-                    [numpy_sd[embed_key], pad], axis=0,
+                    [numpy_sd[embed_key], pad],
+                    axis=0,
                 )
                 logging.info(
                     f"Padded {embed_key} from {current_size} to "
@@ -416,8 +412,7 @@ class WeightConverter:
             nbt_keys = [
                 k.replace(".running_mean", ".num_batches_tracked")
                 for k in numpy_sd
-                if k.endswith(".running_mean")
-                and not k.startswith("model.backbone.")
+                if k.endswith(".running_mean") and not k.startswith("model.backbone.")
             ]
             added = 0
             for k in nbt_keys:
@@ -425,9 +420,7 @@ class WeightConverter:
                     numpy_sd[k] = np.int64(0)
                     added += 1
             if added:
-                logging.info(
-                    f"Added {added} num_batches_tracked keys"
-                )
+                logging.info(f"Added {added} num_batches_tracked keys")
 
     def _save_safetensors(self, numpy_sd):
         """Save numpy state dict as model.safetensors."""
@@ -455,9 +448,7 @@ class WeightConverter:
         else:
             data = dict(PREPROCESSOR_CONFIGS.get(self.model_name, {}))
             if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
-                data["character_list"] = (
-                    ["blank"] + load_character_dict() + [" "]
-                )
+                data["character_list"] = ["blank"] + load_character_dict() + [" "]
 
         out_path = os.path.join(self.output_dir, "preprocessor_config.json")
         with open(out_path, "w", encoding="utf-8") as f:
@@ -474,14 +465,15 @@ class WeightConverter:
             data = {"Global": {"model_name": self.model_name}}
             data.update(build_inference_meta(self.model_name))
             if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
-                data.setdefault("PostProcess", {})["character_dict"] = (
-                    load_character_dict()
-                )
+                data.setdefault("PostProcess", {})[
+                    "character_dict"
+                ] = load_character_dict()
 
         out_path = os.path.join(self.output_dir, "inference.yml")
         with open(out_path, "w", encoding="utf-8") as f:
             yaml.dump(
-                data, f,
+                data,
+                f,
                 default_flow_style=False,
                 allow_unicode=True,
             )
@@ -541,7 +533,13 @@ class WeightConverter:
 
         # Try official HF cache
         from ...utils.cache import CACHE_DIR
-        cache_path = Path(CACHE_DIR) / "official_models" / f"{self.model_name}_safetensors" / "qwen.tiktoken"
+
+        cache_path = (
+            Path(CACHE_DIR)
+            / "official_models"
+            / f"{self.model_name}_safetensors"
+            / "qwen.tiktoken"
+        )
         if cache_path.exists():
             return str(cache_path)
 

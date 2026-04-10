@@ -22,10 +22,7 @@ from pathlib import Path
 
 from .....utils import logging
 
-# ---------------------------------------------------------------------------
 # Label lists
-# ---------------------------------------------------------------------------
-
 _LABEL_DOC_ORI = ["0", "90", "180", "270"]
 _LABEL_TABLE_CLS = ["wired_table", "wireless_table"]
 _LABEL_TEXTLINE_ORI = ["0_degree", "180_degree"]
@@ -33,36 +30,71 @@ _LABEL_TEXTLINE_ORI = ["0_degree", "180_degree"]
 _LABEL_TABLE_CELL_DET = ["cell"]
 _LABEL_DOC_BLOCK_LAYOUT = ["Region"]
 _LABEL_DOC_LAYOUT_PLUS = [
-    "paragraph_title", "image", "text", "number", "abstract", "content",
-    "figure_title", "formula", "table", "reference", "doc_title", "footnote",
-    "header", "algorithm", "footer", "seal", "chart", "formula_number",
-    "aside_text", "reference_content",
+    "paragraph_title",
+    "image",
+    "text",
+    "number",
+    "abstract",
+    "content",
+    "figure_title",
+    "formula",
+    "table",
+    "reference",
+    "doc_title",
+    "footnote",
+    "header",
+    "algorithm",
+    "footer",
+    "seal",
+    "chart",
+    "formula_number",
+    "aside_text",
+    "reference_content",
 ]
 _LABEL_DOC_LAYOUT_V2V3 = [
-    "abstract", "algorithm", "aside_text", "chart", "content",
-    "display_formula", "doc_title", "figure_title", "footer", "footer_image",
-    "footnote", "formula_number", "header", "header_image", "image",
-    "inline_formula", "number", "paragraph_title", "reference",
-    "reference_content", "seal", "table", "text", "vertical_text", "vision_footnote",
+    "abstract",
+    "algorithm",
+    "aside_text",
+    "chart",
+    "content",
+    "display_formula",
+    "doc_title",
+    "figure_title",
+    "footer",
+    "footer_image",
+    "footnote",
+    "formula_number",
+    "header",
+    "header_image",
+    "image",
+    "inline_formula",
+    "number",
+    "paragraph_title",
+    "reference",
+    "reference_content",
+    "seal",
+    "table",
+    "text",
+    "vertical_text",
+    "vision_footnote",
 ]
 
 
-# ---------------------------------------------------------------------------
 # PreProcess / PostProcess templates
-# ---------------------------------------------------------------------------
-
 _CLS_PREPROCESS_224 = {
     "PreProcess": {
         "transform_ops": [
             {"ResizeImage": {"resize_short": 256}},
             {"CropImage": {"size": 224}},
-            {"NormalizeImage": {
-                "channel_num": 3,
-                "mean": [0.485, 0.456, 0.406],
-                "std": [0.229, 0.224, 0.225],
-                "scale": 1.0 / 255,
-                "order": "",
-            }},
+            {
+                "NormalizeImage": {
+                    "channel_num": 3,
+                    "mean": [0.485, 0.456, 0.406],
+                    "std": [0.229, 0.224, 0.225],
+                    "scale": 1.0 / 255,
+                    "order": "",
+                }
+            },
             {"ToCHWImage": None},
         ]
     },
@@ -72,13 +104,15 @@ _CLS_PREPROCESS_TEXTLINE = {
     "PreProcess": {
         "transform_ops": [
             {"ResizeImage": {"size": [160, 80]}},
-            {"NormalizeImage": {
-                "channel_num": 3,
-                "mean": [0.485, 0.456, 0.406],
-                "std": [0.229, 0.224, 0.225],
-                "scale": 1.0 / 255,
-                "order": "",
-            }},
+            {
+                "NormalizeImage": {
+                    "channel_num": 3,
+                    "mean": [0.485, 0.456, 0.406],
+                    "std": [0.229, 0.224, 0.225],
+                    "scale": 1.0 / 255,
+                    "order": "",
+                }
+            },
             {"ToCHWImage": None},
         ]
     },
@@ -89,12 +123,14 @@ _DET_PREPROCESS = {
         {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
         {"DetLabelEncode": None},
         {"DetResizeForTest": {"resize_long": 960}},
-        {"NormalizeImage": {
-            "mean": [0.485, 0.456, 0.406],
-            "std": [0.229, 0.224, 0.225],
-            "scale": "1./255.",
-            "order": "hwc",
-        }},
+        {
+            "NormalizeImage": {
+                "mean": [0.485, 0.456, 0.406],
+                "std": [0.229, 0.224, 0.225],
+                "scale": "1./255.",
+                "order": "hwc",
+            }
+        },
         {"ToCHWImage": None},
         {"KeepKeys": {"keep_keys": ["image", "shape", "polys", "ignore_tags"]}},
     ]
@@ -113,30 +149,40 @@ _DET_POSTPROCESS = {
 
 _RTDETR_PREPROCESS_800 = [
     {"type": "Resize", "target_size": [800, 800], "keep_ratio": False, "interp": 2},
-    {"type": "NormalizeImage", "mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0], "norm_type": "none"},
+    {
+        "type": "NormalizeImage",
+        "mean": [0.0, 0.0, 0.0],
+        "std": [1.0, 1.0, 1.0],
+        "norm_type": "none",
+    },
     {"type": "Permute"},
 ]
 
 _RTDETR_PREPROCESS_640 = [
     {"type": "Resize", "target_size": [640, 640], "keep_ratio": False, "interp": 2},
-    {"type": "NormalizeImage", "mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0], "norm_type": "none"},
+    {
+        "type": "NormalizeImage",
+        "mean": [0.0, 0.0, 0.0],
+        "std": [1.0, 1.0, 1.0],
+        "norm_type": "none",
+    },
     {"type": "Permute"},
 ]
 
 _REC_IMAGE_SHAPE = [3, 48, 320]
 
 
-# ---------------------------------------------------------------------------
 # Hpi (TensorRT dynamic shape) templates
-# ---------------------------------------------------------------------------
 
 def _hpi_simple(input_name, shapes):
     """Build Hpi section with a single input (cls/det/rec/uvdoc)."""
     tds = {input_name: shapes}
-    return {"backend_configs": {
-        "paddle_infer": {"trt_dynamic_shapes": tds},
-        "tensorrt": {"dynamic_shapes": tds},
-    }}
+    return {
+        "backend_configs": {
+            "paddle_infer": {"trt_dynamic_shapes": tds},
+            "tensorrt": {"dynamic_shapes": tds},
+        }
+    }
 
 
 def _hpi_rtdetr(image_size):
@@ -144,44 +190,55 @@ def _hpi_rtdetr(image_size):
     b = 8
     tds = {
         "im_shape": [[1, 2], [1, 2], [b, 2]],
-        "image": [[1, 3, image_size, image_size],
-                  [1, 3, image_size, image_size],
-                  [b, 3, image_size, image_size]],
+        "image": [
+            [1, 3, image_size, image_size],
+            [1, 3, image_size, image_size],
+            [b, 3, image_size, image_size],
+        ],
         "scale_factor": [[1, 2], [1, 2], [b, 2]],
     }
     sf_data = {
-        "im_shape": [[image_size, image_size], [image_size, image_size],
-                      [image_size] * (2 * b)],
+        "im_shape": [
+            [image_size, image_size],
+            [image_size, image_size],
+            [image_size] * (2 * b),
+        ],
         "scale_factor": [[2, 2], [1, 1], [0.67] * (2 * b)],
     }
-    return {"backend_configs": {
-        "paddle_infer": {
-            "trt_dynamic_shapes": tds,
-            "trt_dynamic_shape_input_data": sf_data,
-        },
-        "tensorrt": {"dynamic_shapes": tds},
-    }}
+    return {
+        "backend_configs": {
+            "paddle_infer": {
+                "trt_dynamic_shapes": tds,
+                "trt_dynamic_shape_input_data": sf_data,
+            },
+            "tensorrt": {"dynamic_shapes": tds},
+        }
+    }
 
 
 def _hpi_doclayoutv3(image_size):
     """Build Hpi for PP-DocLayoutV3 (image + scale_factor, no im_shape)."""
     b = 8
     tds = {
-        "image": [[1, 3, image_size, image_size],
-                  [1, 3, image_size, image_size],
-                  [b, 3, image_size, image_size]],
+        "image": [
+            [1, 3, image_size, image_size],
+            [1, 3, image_size, image_size],
+            [b, 3, image_size, image_size],
+        ],
         "scale_factor": [[1, 2], [1, 2], [b, 2]],
     }
     sf_data = {
         "scale_factor": [[2, 2], [1, 1], [0.67] * (2 * b)],
     }
-    return {"backend_configs": {
-        "paddle_infer": {
-            "trt_dynamic_shapes": tds,
-            "trt_dynamic_shape_input_data": sf_data,
-        },
-        "tensorrt": {"dynamic_shapes": tds},
-    }}
+    return {
+        "backend_configs": {
+            "paddle_infer": {
+                "trt_dynamic_shapes": tds,
+                "trt_dynamic_shape_input_data": sf_data,
+            },
+            "tensorrt": {"dynamic_shapes": tds},
+        }
+    }
 
 
 # RT-DETR/DocLayout extra top-level keys
@@ -194,16 +251,14 @@ _RTDETR_EXTRA_KEYS = {
 }
 
 
-# ---------------------------------------------------------------------------
 # Per-model inference metadata
-# ---------------------------------------------------------------------------
-
 def _meta_cls_doc_ori():
     return {
         "Hpi": _hpi_simple("x", [[1, 3, 224, 224], [1, 3, 224, 224], [8, 3, 224, 224]]),
         **_CLS_PREPROCESS_224,
         "PostProcess": {"Topk": {"topk": 1, "label_list": _LABEL_DOC_ORI}},
     }
+
 
 def _meta_cls_table():
     return {
@@ -212,6 +267,7 @@ def _meta_cls_table():
         "PostProcess": {"Topk": {"topk": 5, "label_list": _LABEL_TABLE_CLS}},
     }
 
+
 def _meta_cls_textline():
     return {
         "Hpi": _hpi_simple("x", [[1, 3, 80, 160], [1, 3, 80, 160], [8, 3, 80, 160]]),
@@ -219,11 +275,13 @@ def _meta_cls_textline():
         "PostProcess": {"Topk": {"topk": 1, "label_list": _LABEL_TEXTLINE_ORI}},
     }
 
+
 def _meta_det():
     return {
         "Hpi": _hpi_simple("x", [[1, 3, 32, 32], [1, 3, 736, 736], [1, 3, 4000, 4000]]),
         **_DET_POSTPROCESS,
     }
+
 
 def _meta_det_rtdetr(labels, preprocess, image_size):
     return {
@@ -234,6 +292,7 @@ def _meta_det_rtdetr(labels, preprocess, image_size):
         "Hpi": _hpi_rtdetr(image_size),
     }
 
+
 def _meta_doclayoutv3():
     return {
         **_RTDETR_EXTRA_KEYS,
@@ -243,6 +302,7 @@ def _meta_doclayoutv3():
         "Hpi": _hpi_doclayoutv3(800),
     }
 
+
 def _meta_rec():
     return {
         "Hpi": _hpi_simple("x", [[1, 3, 48, 160], [1, 3, 48, 320], [8, 3, 48, 3200]]),
@@ -251,8 +311,17 @@ def _meta_rec():
                 {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
                 {"MultiLabelEncode": {"gtc_encode": "NRTRLabelEncode"}},
                 {"RecResizeImg": {"image_shape": _REC_IMAGE_SHAPE}},
-                {"KeepKeys": {"keep_keys": ["image", "label_ctc", "label_gtc",
-                                            "length", "valid_ratio"]}},
+                {
+                    "KeepKeys": {
+                        "keep_keys": [
+                            "image",
+                            "label_ctc",
+                            "label_gtc",
+                            "length",
+                            "valid_ratio",
+                        ]
+                    }
+                },
             ]
         },
         "PostProcess": {
@@ -260,19 +329,56 @@ def _meta_rec():
         },
     }
 
+
 _SLANEXT_CHARACTER_DICT = [
-    "<thead>", "</thead>", "<tbody>", "</tbody>", "<tr>", "</tr>",
-    "<td>", "<td", ">", "</td>",
-    ' colspan="2"', ' colspan="3"', ' colspan="4"', ' colspan="5"',
-    ' colspan="6"', ' colspan="7"', ' colspan="8"', ' colspan="9"',
-    ' colspan="10"', ' colspan="11"', ' colspan="12"', ' colspan="13"',
-    ' colspan="14"', ' colspan="15"', ' colspan="16"', ' colspan="17"',
-    ' colspan="18"', ' colspan="19"', ' colspan="20"',
-    ' rowspan="2"', ' rowspan="3"', ' rowspan="4"', ' rowspan="5"',
-    ' rowspan="6"', ' rowspan="7"', ' rowspan="8"', ' rowspan="9"',
-    ' rowspan="10"', ' rowspan="11"', ' rowspan="12"', ' rowspan="13"',
-    ' rowspan="14"', ' rowspan="15"', ' rowspan="16"', ' rowspan="17"',
-    ' rowspan="18"', ' rowspan="19"', ' rowspan="20"',
+    "<thead>",
+    "</thead>",
+    "<tbody>",
+    "</tbody>",
+    "<tr>",
+    "</tr>",
+    "<td>",
+    "<td",
+    ">",
+    "</td>",
+    ' colspan="2"',
+    ' colspan="3"',
+    ' colspan="4"',
+    ' colspan="5"',
+    ' colspan="6"',
+    ' colspan="7"',
+    ' colspan="8"',
+    ' colspan="9"',
+    ' colspan="10"',
+    ' colspan="11"',
+    ' colspan="12"',
+    ' colspan="13"',
+    ' colspan="14"',
+    ' colspan="15"',
+    ' colspan="16"',
+    ' colspan="17"',
+    ' colspan="18"',
+    ' colspan="19"',
+    ' colspan="20"',
+    ' rowspan="2"',
+    ' rowspan="3"',
+    ' rowspan="4"',
+    ' rowspan="5"',
+    ' rowspan="6"',
+    ' rowspan="7"',
+    ' rowspan="8"',
+    ' rowspan="9"',
+    ' rowspan="10"',
+    ' rowspan="11"',
+    ' rowspan="12"',
+    ' rowspan="13"',
+    ' rowspan="14"',
+    ' rowspan="15"',
+    ' rowspan="16"',
+    ' rowspan="17"',
+    ' rowspan="18"',
+    ' rowspan="19"',
+    ' rowspan="20"',
 ]
 
 
@@ -282,30 +388,44 @@ def _meta_slanext(model_name):
         "PreProcess": {
             "transform_ops": [
                 {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
-                {"TableLabelEncode": {
-                    "learn_empty_box": False,
-                    "loc_reg_num": 8,
-                    "max_text_length": 500,
-                    "merge_no_span_structure": True,
-                    "replace_empty_cell_token": False,
-                }},
-                {"TableBoxEncode": {
-                    "in_box_format": "xyxyxyxy",
-                    "out_box_format": "xyxyxyxy",
-                }},
+                {
+                    "TableLabelEncode": {
+                        "learn_empty_box": False,
+                        "loc_reg_num": 8,
+                        "max_text_length": 500,
+                        "merge_no_span_structure": True,
+                        "replace_empty_cell_token": False,
+                    }
+                },
+                {
+                    "TableBoxEncode": {
+                        "in_box_format": "xyxyxyxy",
+                        "out_box_format": "xyxyxyxy",
+                    }
+                },
                 {"ResizeTableImage": {"max_len": 512, "resize_bboxes": True}},
-                {"NormalizeImage": {
-                    "mean": [0.485, 0.456, 0.406],
-                    "order": "hwc",
-                    "scale": "1./255.",
-                    "std": [0.229, 0.224, 0.225],
-                }},
+                {
+                    "NormalizeImage": {
+                        "mean": [0.485, 0.456, 0.406],
+                        "order": "hwc",
+                        "scale": "1./255.",
+                        "std": [0.229, 0.224, 0.225],
+                    }
+                },
                 {"PaddingTableImage": {"size": [512, 512]}},
                 {"ToCHWImage": None},
-                {"KeepKeys": {"keep_keys": [
-                    "image", "structure", "bboxes", "bbox_masks",
-                    "length", "shape",
-                ]}},
+                {
+                    "KeepKeys": {
+                        "keep_keys": [
+                            "image",
+                            "structure",
+                            "bboxes",
+                            "bbox_masks",
+                            "length",
+                            "shape",
+                        ]
+                    }
+                },
             ]
         },
         "PostProcess": {
@@ -318,7 +438,9 @@ def _meta_slanext(model_name):
 
 def _meta_uvdoc():
     return {
-        "Hpi": _hpi_simple("img", [[1, 3, 128, 64], [1, 3, 256, 128], [8, 3, 512, 256]]),
+        "Hpi": _hpi_simple(
+            "img", [[1, 3, 128, 64], [1, 3, 256, 128], [8, 3, 512, 256]]
+        ),
     }
 
 
@@ -342,26 +464,36 @@ _INFERENCE_META_REGISTRY = {
     "PP-DocLayoutV2": _meta_doclayoutv3,
     "PP-DocLayoutV3": _meta_doclayoutv3,
     "RT-DETR-L_wired_table_cell_det": lambda: _meta_det_rtdetr(
-        _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640),
+        _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640
+    ),
     "RT-DETR-L_wireless_table_cell_det": lambda: _meta_det_rtdetr(
-        _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640),
+        _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640
+    ),
     "PP-DocLayout_plus-L": lambda: _meta_det_rtdetr(
-        _LABEL_DOC_LAYOUT_PLUS, _RTDETR_PREPROCESS_800, 800),
+        _LABEL_DOC_LAYOUT_PLUS, _RTDETR_PREPROCESS_800, 800
+    ),
     "PP-DocBlockLayout": lambda: _meta_det_rtdetr(
-        _LABEL_DOC_BLOCK_LAYOUT, _RTDETR_PREPROCESS_640, 640),
+        _LABEL_DOC_BLOCK_LAYOUT, _RTDETR_PREPROCESS_640, 640
+    ),
     "UVDoc": _meta_uvdoc,
     "PP-Chart2Table": _meta_chart2table,
 }
 
 
-# ---------------------------------------------------------------------------
 # Preprocessor configs (preprocessor_config.json)
-# ---------------------------------------------------------------------------
-
 _VALID_PROCESSOR_KEYS = [
-    "images", "do_resize", "size", "resample", "do_rescale",
-    "rescale_factor", "do_normalize", "image_mean", "image_std",
-    "return_tensors", "data_format", "input_data_format",
+    "images",
+    "do_resize",
+    "size",
+    "resample",
+    "do_rescale",
+    "rescale_factor",
+    "do_normalize",
+    "image_mean",
+    "image_std",
+    "return_tensors",
+    "data_format",
+    "input_data_format",
 ]
 
 _PPLCNET_PREPROC_BASE = {
@@ -497,7 +629,9 @@ PREPROCESSOR_CONFIGS = {
     },
     "PP-DocLayoutV3": _rtdetr_preproc("PPDocLayoutV3ImageProcessor", 800, 800),
     "RT-DETR-L_wired_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
-    "RT-DETR-L_wireless_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
+    "RT-DETR-L_wireless_table_cell_det": _rtdetr_preproc(
+        "RTDetrImageProcessor", 640, 640
+    ),
     "PP-DocLayout_plus-L": _rtdetr_preproc("RTDetrImageProcessor", 800, 800),
     "PP-DocBlockLayout": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "UVDoc": _UVDOC_PREPROC,
@@ -529,11 +663,10 @@ def build_inference_meta(model_name):
     return _INFERENCE_META_REGISTRY[model_name]()
 
 
-# ---------------------------------------------------------------------------
 # Character dict loading
-# ---------------------------------------------------------------------------
-
-_BUNDLED_DICT_PATH = Path(__file__).resolve().parent.parent.parent / "res" / "ppocrv5_dict.txt"
+_BUNDLED_DICT_PATH = (
+    Path(__file__).resolve().parent.parent.parent / "res" / "ppocrv5_dict.txt"
+)
 
 
 def load_character_dict():
@@ -551,10 +684,7 @@ def load_character_dict():
     return chars
 
 
-# ---------------------------------------------------------------------------
 # PP-Chart2Table tokenizer assets
-# ---------------------------------------------------------------------------
-
 def _build_chart2table_added_tokens():
     """Build the expanded added_tokens.json for PP-Chart2Table."""
     tokens = {}
@@ -585,9 +715,18 @@ CHART2TABLE_GENERATION_CONFIG = {
 
 CHART2TABLE_SPECIAL_TOKENS_MAP = {
     "additional_special_tokens": [
-        "<|endoftext|>", "<|im_start|>", "<|im_end|>",
-        "<ref>", "</ref>", "<box>", "</box>",
-        "<quad>", "</quad>", "<img>", "</img>", "<imgpad>",
+        "<|endoftext|>",
+        "<|im_start|>",
+        "<|im_end|>",
+        "<ref>",
+        "</ref>",
+        "<box>",
+        "</box>",
+        "<quad>",
+        "</quad>",
+        "<img>",
+        "</img>",
+        "<imgpad>",
     ],
     "eos_token": {
         "content": "<|im_end|>",
