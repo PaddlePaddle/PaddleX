@@ -491,6 +491,7 @@ PPOCRV5_SERVER_REC_MAPPING = [
 
 SLANEXT_DROP_PREFIXES = [
     "backbone.vision_tower_high.net_3.",
+    "head.loc_generator.",
 ]
 
 SLANEXT_MAPPING = [

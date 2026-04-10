@@ -145,8 +145,6 @@ _TRANSPOSE_SUBSTRINGS = [
     "structure_attention_cell.h2h",
     "structure_generator.0.",
     "structure_generator.1.",
-    "loc_generator.0.",
-    "loc_generator.1.",
 ]
 
 

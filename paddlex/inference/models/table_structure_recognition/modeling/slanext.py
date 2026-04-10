@@ -23,7 +23,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
@@ -103,11 +102,6 @@ class SLANeXtSLAHead(nn.Layer):
             config.post_conv_out_channels, config.hidden_size, config.out_channels,
         )
         self.structure_generator = SLANeXtMLP(config.hidden_size, config.out_channels)
-        self.loc_generator = nn.Sequential(
-            nn.Linear(config.hidden_size, config.hidden_size),
-            nn.Linear(config.hidden_size, config.loc_reg_num),
-            nn.Sigmoid(),
-        )
 
     def forward(self, hidden_states):
         batch_size = hidden_states.shape[0]
@@ -115,21 +109,20 @@ class SLANeXtSLAHead(nn.Layer):
         predicted_chars = paddle.zeros([batch_size], dtype="int64")
 
         structure_preds_list = []
-        loc_preds_list = []
         structure_ids_list = []
         for _ in range(self.config.max_text_length + 1):
             embedding_feature = F.one_hot(
                 predicted_chars, self.config.out_channels
             ).astype("float32")
             features, _ = self.structure_attention_cell(
-                features, hidden_states.astype("float32"), embedding_feature,
+                features,
+                hidden_states.astype("float32"),
+                embedding_feature,
             )
             structure_step = self.structure_generator(features)
-            loc_step = self.loc_generator(features.astype("float32"))
             predicted_chars = structure_step.argmax(axis=1)
 
             structure_preds_list.append(structure_step)
-            loc_preds_list.append(loc_step)
             structure_ids_list.append(predicted_chars)
             if (
                 paddle.stack(structure_ids_list, axis=1)
@@ -141,8 +134,7 @@ class SLANeXtSLAHead(nn.Layer):
 
         structure_preds = paddle.stack(structure_preds_list, axis=1)
         structure_probs = F.softmax(structure_preds, axis=-1)
-        loc_preds = paddle.stack(loc_preds_list, axis=1)
-        return [loc_preds, structure_probs]
+        return structure_probs
 
 
 class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
@@ -163,9 +155,6 @@ class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
         self.backbone = SLANeXtBackbone(config)
         self.head = SLANeXtSLAHead(config)
 
-    add_inference_operations("slanext_forward")
-
-    @benchmark.timeit_with_options(name="slanext_forward")
     def forward(self, x):
         pixel_values = paddle.to_tensor(x[0])
 
@@ -174,7 +163,20 @@ class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
             pixel_values = paddle.expand(pixel_values, [-1, 3, -1, -1])
 
         features = self.backbone(pixel_values)
-        return self.head(features)
+        structure_probs = self.head(features)
+
+        # Return [loc_preds, structure_probs] for backward compatibility
+        # with the predictor/postprocessor pipeline.
+        # HF model doesn't predict locations; fill with zeros.
+        loc_preds = paddle.zeros(
+            [
+                structure_probs.shape[0],
+                structure_probs.shape[1],
+                self.config.loc_reg_num,
+            ],
+            dtype=structure_probs.dtype,
+        )
+        return [loc_preds, structure_probs]
 
     def get_transpose_weight_keys(self):
         t_layers = [
@@ -187,8 +189,6 @@ class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
             "structure_attention_cell.hidden_to_hidden",
             "structure_generator.fc1",
             "structure_generator.fc2",
-            "loc_generator.0",
-            "loc_generator.1",
         ]
         keys = []
         for key, _ in self.get_hf_state_dict().items():

@@ -203,3 +203,7 @@ class TableTransformersPredictor(TransformersPredictor):
         structure_score = results["structure_score"]
 
         return [structure], [structure_score]
+
+    def _pack_res(self, single):
+        keys = ["input_path", "bbox", "structure"]
+        return TableRecResult({key: single[key] for key in keys})
