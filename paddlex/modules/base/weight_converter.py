@@ -47,7 +47,13 @@ from .utils.pdparams2safetensors import (
     MOBILE_DET_DROP_PREFIXES,
     SERVER_DET_DROP_PREFIXES,
     UVDOC_DROP_PREFIXES,
+    PP_CHART2TABLE_MAPPING,
+    PP_CHART2TABLE_DROP_PREFIXES,
     PREPROCESSOR_CONFIGS,
+    CHART2TABLE_ADDED_TOKENS,
+    CHART2TABLE_GENERATION_CONFIG,
+    CHART2TABLE_SPECIAL_TOKENS_MAP,
+    CHART2TABLE_TOKENIZER_CONFIG,
 )
 from .utils.pdparams2safetensors.model_config import MODEL_CONFIGS
 
@@ -79,6 +85,7 @@ _MODEL_REGISTRY = {
     "PP-DocLayout_plus-L": (RTDETR_MAPPING, []),
     "PP-DocBlockLayout": (RTDETR_MAPPING, []),
     "UVDoc": (UVDOC_MAPPING, UVDOC_DROP_PREFIXES),
+    "PP-Chart2Table": (PP_CHART2TABLE_MAPPING, PP_CHART2TABLE_DROP_PREFIXES),
 }
 
 
@@ -394,6 +401,19 @@ class WeightConverter:
                     f"{expected_size} (added background class)"
                 )
 
+        # PP-Chart2Table: lm_head.weight is a tied embedding weight [vocab, hidden],
+        # NOT a linear weight. _preprocess_tensors wrongly transposed it because
+        # "lm_head" is in _TRANSPOSE_SUBSTRINGS. Undo the transpose.
+        lm_head_key = "lm_head.weight"
+        if lm_head_key in numpy_sd and config.get("model_type") == "pp_chart2table":
+            vocab_size = config.get("vocab_size", 151860)
+            if numpy_sd[lm_head_key].shape[0] != vocab_size:
+                numpy_sd[lm_head_key] = numpy_sd[lm_head_key].transpose()
+                logging.info(
+                    f"Reverted transpose on {lm_head_key} "
+                    f"(tied embedding, not linear)"
+                )
+
         if config.get("model_type") == "rt_detr":
             nbt_keys = [
                 k.replace(".running_mean", ".num_batches_tracked")
@@ -470,8 +490,65 @@ class WeightConverter:
         logging.info(f"Saved inference.yml to: {out_path}")
 
     def _save_llm_config(self):
-        """Save LLM config for Chart2Table models (Phase 2)."""
-        raise NotImplementedError(
-            f"LLM config saving is not yet implemented for {self.model_name}. "
-            "This will be added in Phase 2."
+        """Save tokenizer and generation config for Chart2Table models.
+
+        Outputs: qwen.tiktoken, added_tokens.json, generation_config.json,
+        special_tokens_map.json, tokenizer_config.json.
+        """
+        import shutil
+
+        # qwen.tiktoken: binary file, must be copied (not hardcoded)
+        tiktoken_src = self._resolve_tiktoken_source()
+        tiktoken_dst = os.path.join(self.output_dir, "qwen.tiktoken")
+        shutil.copy2(tiktoken_src, tiktoken_dst)
+        logging.info(f"Copied qwen.tiktoken to: {tiktoken_dst}")
+
+        # JSON tokenizer assets: user-provided or hardcoded defaults
+        _TOKENIZER_DEFAULTS = {
+            "added_tokens.json": CHART2TABLE_ADDED_TOKENS,
+            "generation_config.json": CHART2TABLE_GENERATION_CONFIG,
+            "special_tokens_map.json": CHART2TABLE_SPECIAL_TOKENS_MAP,
+            "tokenizer_config.json": CHART2TABLE_TOKENIZER_CONFIG,
+        }
+        for fname, default_data in _TOKENIZER_DEFAULTS.items():
+            if self._input_is_dir:
+                src = Path(self.input_path) / fname
+                if src.exists():
+                    data = json.load(open(src, encoding="utf-8"))
+                    logging.info(f"Loaded user tokenizer config: {src}")
+                else:
+                    data = default_data
+                    logging.warning(
+                        f"{fname} not found in {self.input_path}. "
+                        f"Using default for {self.model_name}."
+                    )
+            else:
+                data = default_data
+
+            out_path = os.path.join(self.output_dir, fname)
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            logging.info(f"Saved {fname} to: {out_path}")
+
+    def _resolve_tiktoken_source(self):
+        """Find qwen.tiktoken for Chart2Table conversion."""
+        if self._input_is_dir:
+            src = Path(self.input_path) / "qwen.tiktoken"
+            if src.exists():
+                return str(src)
+            logging.warning(
+                f"qwen.tiktoken not found in {self.input_path}. "
+                "Falling back to official model cache."
+            )
+
+        # Try official HF cache
+        from ...utils.cache import CACHE_DIR
+        cache_path = Path(CACHE_DIR) / "official_models" / f"{self.model_name}_safetensors" / "qwen.tiktoken"
+        if cache_path.exists():
+            return str(cache_path)
+
+        raise FileNotFoundError(
+            f"qwen.tiktoken not found. For single-file input, ensure the official "
+            f"model is cached at {cache_path} (run inference once to download). "
+            f"For directory input, include qwen.tiktoken in the input directory."
         )

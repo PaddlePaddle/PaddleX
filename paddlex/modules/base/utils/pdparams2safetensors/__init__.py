@@ -29,10 +29,16 @@ from .mapping import (
     MOBILE_DET_DROP_PREFIXES,
     SERVER_DET_DROP_PREFIXES,
     UVDOC_DROP_PREFIXES,
+    PP_CHART2TABLE_MAPPING,
+    PP_CHART2TABLE_DROP_PREFIXES,
 )
 from .model_config import MODEL_CONFIGS
 from .inference_meta import (
     build_inference_meta,
     load_character_dict,
     PREPROCESSOR_CONFIGS,
+    CHART2TABLE_ADDED_TOKENS,
+    CHART2TABLE_GENERATION_CONFIG,
+    CHART2TABLE_SPECIAL_TOKENS_MAP,
+    CHART2TABLE_TOKENIZER_CONFIG,
 )

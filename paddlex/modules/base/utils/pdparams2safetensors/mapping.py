@@ -393,6 +393,35 @@ UVDOC_DROP_PREFIXES = [
 
 
 # ---------------------------------------------------------------------------
+# PP-Chart2Table (GOT-OCR2 + Qwen2 VLM)
+# ---------------------------------------------------------------------------
+
+PP_CHART2TABLE_MAPPING = [
+    # Multi-modal projector: specific renames before general vision_tower_high rule
+    (r"^qwen2\.vision_tower_high\.net_2\.weight$", "model.multi_modal_projector.conv_upsampler1.weight"),
+    (r"^qwen2\.vision_tower_high\.net_3\.weight$", "model.multi_modal_projector.conv_upsampler2.weight"),
+    (r"^qwen2\.mm_projector_vary\.", "model.multi_modal_projector.multimodal_projector."),
+    # Vision tower: norm1/norm2 must be renamed before the general blocks rule
+    (r"^qwen2\.vision_tower_high\.blocks\.(\d+)\.norm1\.", r"model.vision_tower.layers.\1.layer_norm1."),
+    (r"^qwen2\.vision_tower_high\.blocks\.(\d+)\.norm2\.", r"model.vision_tower.layers.\1.layer_norm2."),
+    (r"^qwen2\.vision_tower_high\.blocks\.(\d+)\.", r"model.vision_tower.layers.\1."),
+    (r"^qwen2\.vision_tower_high\.patch_embed\.proj\.", "model.vision_tower.patch_embed.projection."),
+    (r"^qwen2\.vision_tower_high\.pos_embed$", "model.vision_tower.pos_embed"),
+    (r"^qwen2\.vision_tower_high\.neck\.0\.", "model.vision_tower.neck.conv1."),
+    (r"^qwen2\.vision_tower_high\.neck\.1\.", "model.vision_tower.neck.layer_norm1."),
+    (r"^qwen2\.vision_tower_high\.neck\.2\.", "model.vision_tower.neck.conv2."),
+    (r"^qwen2\.vision_tower_high\.neck\.3\.", "model.vision_tower.neck.layer_norm2."),
+    # Language model
+    (r"^qwen2\.layers\.(\d+)\.", r"model.language_model.layers.\1."),
+    (r"^qwen2\.norm\.", "model.language_model.norm."),
+]
+
+PP_CHART2TABLE_DROP_PREFIXES = [
+    "qwen2.embed_tokens.",  # tied to lm_head.weight (tie_word_embeddings=True)
+]
+
+
+# ---------------------------------------------------------------------------
 # Shared SVTR encoder + CTC head mapping (used by both mobile and server rec)
 # ---------------------------------------------------------------------------
 

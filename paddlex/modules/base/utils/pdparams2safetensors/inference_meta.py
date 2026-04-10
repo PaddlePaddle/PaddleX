@@ -322,6 +322,12 @@ def _meta_uvdoc():
     }
 
 
+def _meta_chart2table():
+    return {
+        "mode": "paddle",
+    }
+
+
 _INFERENCE_META_REGISTRY = {
     "PP-LCNet_x1_0_doc_ori": _meta_cls_doc_ori,
     "PP-LCNet_x1_0_table_cls": _meta_cls_table,
@@ -344,6 +350,7 @@ _INFERENCE_META_REGISTRY = {
     "PP-DocBlockLayout": lambda: _meta_det_rtdetr(
         _LABEL_DOC_BLOCK_LAYOUT, _RTDETR_PREPROCESS_640, 640),
     "UVDoc": _meta_uvdoc,
+    "PP-Chart2Table": _meta_chart2table,
 }
 
 
@@ -494,6 +501,24 @@ PREPROCESSOR_CONFIGS = {
     "PP-DocLayout_plus-L": _rtdetr_preproc("RTDetrImageProcessor", 800, 800),
     "PP-DocBlockLayout": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "UVDoc": _UVDOC_PREPROC,
+    "PP-Chart2Table": {
+        "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
+        "do_normalize": True,
+        "do_rescale": True,
+        "do_resize": True,
+        "image_processor_type": "PPChart2TableImageProcessor",
+        "model_input_names": ["pixel_values", "original_image_size"],
+        "image_mode": "RGB",
+        "channel_first": False,
+        "image_mean": [0.48145466, 0.4578275, 0.40821073],
+        "image_std": [0.26862954, 0.26130258, 0.27577711],
+        "rescale_factor": 0.00392156862745098,
+        "resample": 3,
+        "normalize_order": "hwc",
+        "do_to_chw": True,
+        "size": {"height": 1024, "width": 1024},
+        "keep_keys": ["image", "shape", "polys", "ignore_tags"],
+    },
 }
 
 
@@ -524,3 +549,69 @@ def load_character_dict():
     chars = _BUNDLED_DICT_PATH.read_text("utf-8").rstrip("\n").split("\n")
     logging.info(f"Loaded character dict ({len(chars)} chars)")
     return chars
+
+
+# ---------------------------------------------------------------------------
+# PP-Chart2Table tokenizer assets
+# ---------------------------------------------------------------------------
+
+def _build_chart2table_added_tokens():
+    """Build the expanded added_tokens.json for PP-Chart2Table."""
+    tokens = {}
+    tokens["<|endoftext|>"] = 151643
+    tokens["<|im_start|>"] = 151644
+    tokens["<|im_end|>"] = 151645
+    for i in range(205):
+        tokens[f"<|extra_{i}|>"] = 151646 + i
+    tokens["<ref>"] = 151851
+    tokens["</ref>"] = 151852
+    tokens["<box>"] = 151853
+    tokens["</box>"] = 151854
+    tokens["<quad>"] = 151855
+    tokens["</quad>"] = 151856
+    tokens["<img>"] = 151857
+    tokens["</img>"] = 151858
+    tokens["<imgpad>"] = 151859
+    return tokens
+
+
+CHART2TABLE_ADDED_TOKENS = _build_chart2table_added_tokens()
+
+CHART2TABLE_GENERATION_CONFIG = {
+    "eos_token_id": 151645,
+    "pad_token_id": 151643,
+    "max_new_tokens": 2048,
+}
+
+CHART2TABLE_SPECIAL_TOKENS_MAP = {
+    "additional_special_tokens": [
+        "<|endoftext|>", "<|im_start|>", "<|im_end|>",
+        "<ref>", "</ref>", "<box>", "</box>",
+        "<quad>", "</quad>", "<img>", "</img>", "<imgpad>",
+    ],
+    "eos_token": {
+        "content": "<|im_end|>",
+        "lstrip": False,
+        "normalized": False,
+        "rstrip": False,
+        "single_word": False,
+    },
+    "pad_token": {
+        "content": "<|endoftext|>",
+        "lstrip": False,
+        "normalized": False,
+        "rstrip": False,
+        "single_word": False,
+    },
+}
+
+CHART2TABLE_TOKENIZER_CONFIG = {
+    "add_prefix_space": None,
+    "backend": "tokenizers",
+    "bos_token": None,
+    "eos_token": "<|endoftext|>",
+    "model_max_length": 1000000000000000019884624838656,
+    "pad_token": "<|endoftext|>",
+    "tokenizer_class": "Qwen2Tokenizer",
+    "unk_token": "<|endoftext|>",
+}
