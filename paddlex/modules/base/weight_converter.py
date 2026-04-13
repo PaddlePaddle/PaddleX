@@ -36,6 +36,8 @@ from .utils.pdparams2safetensors import (
     MOBILE_DET_DROP_PREFIXES,
     PP_CHART2TABLE_DROP_PREFIXES,
     PP_CHART2TABLE_MAPPING,
+    PP_DOCLAYOUTV2_DROP_PREFIXES,
+    PP_DOCLAYOUTV2_MAPPING,
     PPLCNET_MAPPING,
     PPOCRV5_MOBILE_DET_MAPPING,
     PPOCRV5_MOBILE_REC_MAPPING,
@@ -75,7 +77,7 @@ _MODEL_REGISTRY = {
     "PP-OCRv5_server_rec": (PPOCRV5_SERVER_REC_MAPPING, SERVER_REC_DROP_PREFIXES),
     "SLANeXt_wired": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "SLANeXt_wireless": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
-    "PP-DocLayoutV2": (RTDETR_MAPPING, []),
+    "PP-DocLayoutV2": (PP_DOCLAYOUTV2_MAPPING, PP_DOCLAYOUTV2_DROP_PREFIXES),
     "PP-DocLayoutV3": (RTDETR_MAPPING, []),
     "RT-DETR-L_wired_table_cell_det": (RTDETR_MAPPING, []),
     "RT-DETR-L_wireless_table_cell_det": (RTDETR_MAPPING, []),
@@ -142,6 +144,16 @@ _TRANSPOSE_SUBSTRINGS = [
     "structure_attention_cell.h2h",
     "structure_generator.0.",
     "structure_generator.1.",
+    # Reading order (PP-DocLayoutV2) linear layers
+    "spatial_proj",
+    "attention.self.query",
+    "attention.self.key",
+    "attention.self.value",
+    "intermediate.dense",
+    ".output.dense",
+    "relative_head",
+    "label_features_projection",
+    "pos_proj",
 ]
 
 

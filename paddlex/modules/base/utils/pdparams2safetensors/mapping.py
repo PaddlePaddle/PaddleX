@@ -497,6 +497,25 @@ RTDETR_MAPPING = [
     (r"^transformer\.denoising_class_embed\.", r"model.denoising_class_embed."),
 ]
 
+# PP-DocLayoutV2 extends RTDETR with reading_order mapping
+PP_DOCLAYOUTV2_MAPPING = RTDETR_MAPPING + [
+    # Reading order: prefix rename (applied first via iterative mapping)
+    (
+        r"^transformer\.reading_order_predictor\.",
+        r"reading_order.",
+    ),
+    # Reading order: LayerNorm → norm (applied on second iteration)
+    (r"reading_order\.embeddings\.LayerNorm\.", r"reading_order.embeddings.norm."),
+    (
+        r"reading_order\.encoder\.layer\.(\d+)\.attention\.output\.LayerNorm\.",
+        r"reading_order.encoder.layer.\1.attention.output.norm.",
+    ),
+    (
+        r"reading_order\.encoder\.layer\.(\d+)\.output\.LayerNorm\.",
+        r"reading_order.encoder.layer.\1.output.norm.",
+    ),
+]
+
 
 # UVDoc
 UVDOC_MAPPING = [
@@ -807,6 +826,13 @@ UVDOC_DROP_PREFIXES = [
 
 PP_CHART2TABLE_DROP_PREFIXES = [
     "qwen2.embed_tokens.",  # tied to lm_head.weight (tie_word_embeddings=True)
+]
+
+PP_DOCLAYOUTV2_DROP_PREFIXES = [
+    "transformer.reading_order_predictor.global_agg.",
+    "transformer.reading_order_predictor.global_gate.",
+    "transformer.reading_order_predictor.global_visual_proj.",
+    "transformer.reading_order_predictor.visual_features_projection.",
 ]
 
 SLANEXT_DROP_PREFIXES = [
