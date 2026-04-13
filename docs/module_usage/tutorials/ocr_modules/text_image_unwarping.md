@@ -83,7 +83,6 @@ comments: true
     </tbody>
 </table>
 
-
 ## 三、快速集成
 在快速集成前，首先需要安装PaddleX的wheel包，wheel的安装方式请参考 [PaddleX本地安装教程](../../../installation/installation.md)。完成wheel包的安装后，几行代码即可完成图像矫正模块的推理，可以任意切换该模块下的模型，您也可以将图像矫正的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/doc_test.jpg)到本地。
 
@@ -108,7 +107,6 @@ for res in output:
 运行结果参数含义如下：
 - `input_path`：表示输入待矫正图像的路径
 - `doctr_img`：表示矫正后的图像结果，由于数据过多不便于直接print，所以此处用`...`替换，可以通过`res.save_to_img()`将预测结果保存为图片，通过`res.save_to_json()`将预测结果保存为json文件。
-
 
 可视化图片如下：
 
@@ -294,7 +292,7 @@ for res in output:
 
 ## 五、权重转换
 
-本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 引擎中直接加载使用。
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`UVDoc`。
 
 * 通过命令行的方式进行权重转换，以 `UVDoc` 模型为例：
 ```bash
@@ -309,8 +307,6 @@ python main.py -c paddlex/configs/modules/image_unwarping/UVDoc.yaml \
     * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
     * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
 
-转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`inference.yml` 等文件，可直接用于推理。
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
 
-本模块中支持权重转换的模型包括：`UVDoc`。
-
-其他相关参数均可通过修改`.yaml`配置文件中的`Pdparams2safetensors`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

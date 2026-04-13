@@ -347,7 +347,6 @@ for res in output:
 可视化图片如下：
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_det/layout_res_plus.jpg"/>
 
-
 相关方法、参数等说明如下：
 
 * `create_model`实例化目标检测模型（此处以`PP-DocLayout_plus-L`为例），具体说明如下：
@@ -648,9 +647,7 @@ for res in output:
 </tr>
 </table>
 
-
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
-
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的版面区域定位模型。在使用PaddleX开发版面区域定位模型之前，请务必安装PaddleX的Detection相关的模型训练能力，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
@@ -839,7 +836,7 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
 
 #### 4.4.3 权重转换
 
-本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 引擎中直接加载使用。
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-DocLayoutV2`、`PP-DocLayout_plus-L`、`PP-DocBlockLayout`。
 
 * 通过命令行的方式进行权重转换，以 `PP-DocLayoutV2` 模型为例：
 ```bash
@@ -854,8 +851,6 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayoutV2.yaml \
     * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
     * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
 
-转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`inference.yml` 等文件，可直接用于推理。
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
 
-本模块中支持权重转换的模型包括：`PP-DocLayoutV2`、`PP-DocLayout_plus-L`、`PP-DocBlockLayout`。
-
-其他相关参数均可通过修改`.yaml`配置文件中的`Pdparams2safetensors`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

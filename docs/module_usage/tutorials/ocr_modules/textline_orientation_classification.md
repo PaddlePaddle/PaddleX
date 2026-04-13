@@ -70,7 +70,6 @@ comments: true
       <li><b>推理模式说明</b></li>
   </ul>
 
-
 <table border="1">
     <thead>
         <tr>
@@ -508,7 +507,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 
 #### 4.4.3 权重转换
 
-本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 引擎中直接加载使用。
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-LCNet_x0_25_textline_ori`、`PP-LCNet_x1_0_textline_ori`。
 
 * 通过命令行的方式进行权重转换，以 `PP-LCNet_x0_25_textline_ori` 模型为例：
 ```bash
@@ -523,8 +522,6 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
     * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
     * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
 
-转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`inference.yml` 等文件，可直接用于推理。
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
 
-本模块中支持权重转换的模型包括：`PP-LCNet_x0_25_textline_ori`、`PP-LCNet_x1_0_textline_ori`。
-
-其他相关参数均可通过修改`.yaml`配置文件中的`Pdparams2safetensors`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

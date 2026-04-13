@@ -226,7 +226,6 @@ Relevant methods, parameters, and explanations are as follows:
 <li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
 <li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
 
-
 <td>None</td>
 </tr>
 <tr>
@@ -333,7 +332,6 @@ Relevant methods, parameters, and explanations are as follows:
 <ul>
 <li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
 <li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -650,7 +648,7 @@ You can also use the PaddleX high-performance inference plugin to optimize the i
 
 #### 4.4.3 Weight Conversion
 
-This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` engine.
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-OCRv5_mobile_det`, `PP-OCRv5_server_det`.
 
 * To perform weight conversion via command line, taking `PP-OCRv5_mobile_det` as an example:
 ```bash
@@ -665,8 +663,6 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yam
     * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
     * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
 
-After conversion, the output directory will contain `model.safetensors`, `config.json`, `inference.yml`, and other files ready for inference.
-
-Models supporting weight conversion in this module: `PP-OCRv5_mobile_det`, `PP-OCRv5_server_det`.
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
 
 For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
