@@ -397,6 +397,7 @@ def _write_block(
         max_height_emu: Optional maximum rendered height in EMU for image scaling.
     """
     from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.oxml.ns import qn
     from docx.shared import Emu, Inches, Pt
 
     label = block.get("type")
@@ -490,6 +491,12 @@ def _write_block(
                         _write_mixed_runs(cell_para, parts, {})
                     else:
                         row[i].text = cell_text
+                        if cell_text:
+                            cell_para = row[i].paragraphs[0]
+                            for run in cell_para.runs:
+                                run.font.name = "Times New Roman"
+                                run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
+                                run.font.size = Pt(12)
 
     # --- formula (inline_formula / display_formula / formula) ---
     elif label in _FORMULA_LABELS and content:
@@ -971,6 +978,7 @@ class WordConverter:
         from docx import Document
         from docx.enum.section import WD_ORIENT
         from docx.enum.text import WD_ALIGN_PARAGRAPH
+        from docx.oxml.ns import qn
         from docx.shared import Emu, Inches, Pt
 
         # Detect landscape: width must exceed height by at least 20%
@@ -1014,13 +1022,19 @@ class WordConverter:
             if label == "header" and content:
                 section = doc.sections[-1]
                 section.header.is_linked_to_previous = False
-                para = section.header.add_paragraph(content)
+                para = section.header.add_paragraph()
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                run = para.add_run(content)
+                run.font.name = "Times New Roman"
+                run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
             elif label == "footer" and content:
                 section = doc.sections[-1]
                 section.footer.is_linked_to_previous = False
-                para = section.footer.add_paragraph(content)
+                para = section.footer.add_paragraph()
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                run = para.add_run(content)
+                run.font.name = "Times New Roman"
+                run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
             elif label == "header_image" and content:
                 abs_path = abs_image_paths.get(content)
                 if abs_path:
@@ -1045,6 +1059,8 @@ class WordConverter:
                                 next_block.get("bbox"), original_image_width
                             )
                             run = para.add_run(tab_prefix + next_content)
+                            run.font.name = "Times New Roman"
+                            run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
                             run.font.size = Pt(9)
                         consumed.add(i + 1)
             elif label == "footer_image" and content:
@@ -1071,6 +1087,8 @@ class WordConverter:
                                 next_block.get("bbox"), original_image_width
                             )
                             run = para.add_run(tab_prefix + next_content)
+                            run.font.name = "Times New Roman"
+                            run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
                             run.font.size = Pt(9)
                         consumed.add(i + 1)
 
