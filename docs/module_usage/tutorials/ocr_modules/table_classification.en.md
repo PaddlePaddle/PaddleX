@@ -481,3 +481,26 @@ The table classification module can be integrated into the PaddleX pipeline such
 The weights you generate can be directly integrated into the table classification module. You can refer to the Python example code in [Quick Integration](#Three-Quick-Integration). Just replace the model with the path of the model you have trained.
 
 You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+#### 4.4.3 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` engine.
+
+* To perform weight conversion via command line, taking `PP-LCNet_x1_0_table_cls` as an example:
+```bash
+python main.py -c paddlex/configs/modules/table_classification/PP-LCNet_x1_0_table_cls.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `inference.yml`, and other files ready for inference.
+
+Models supporting weight conversion in this module: `PP-LCNet_x1_0_table_cls`.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

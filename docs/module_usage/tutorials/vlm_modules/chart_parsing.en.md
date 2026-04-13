@@ -230,3 +230,26 @@ For more information on using the API for single model inference in PaddleX, you
 
 ## IV. Secondary Development
 The current module temporarily does not support fine-tuning training, only inference integration. Support for fine-tuning training in this module is planned for the future.
+
+## V. Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` engine.
+
+* To perform weight conversion via command line, taking `PP-Chart2Table` as an example:
+```bash
+python main.py -c paddlex/configs/modules/chart_parsing/PP-Chart2Table.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `inference.yml`, and other files ready for inference.
+
+Models supporting weight conversion in this module: `PP-Chart2Table`.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
