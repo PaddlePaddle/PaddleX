@@ -400,7 +400,7 @@ class RepositoryGroupInstaller(object):
                 # HACK
                 line_s = "imgaug @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/imgaug-0.4.0%2Bpdx-py2.py3-none-any.whl"
             elif "tool_helpers" in req.name:
-                # For compatibility with higher versions of Python (python>=3.14)
+                # For compatibility with higher versions of Python (python>=3.12)
                 continue
             lines.append(line_s)
 
