@@ -380,6 +380,8 @@ class RepositoryGroupInstaller(object):
             if req.name in REPO_DIST_NAMES:
                 # Skip repo packages
                 continue
+            elif "tool_helpers" in req.name:
+                continue
             elif req.name.replace("_", "-") in (
                 "opencv-python",
                 "opencv-contrib-python",
