@@ -603,6 +603,7 @@ The weights you produce can be directly integrated into the layout analysis modu
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-DocLayoutV3`.
 
 * To perform weight conversion via command line, taking `PP-DocLayoutV3` as an example:
+
 ```bash
 python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
     -o Global.mode=pdparams2safetensors \

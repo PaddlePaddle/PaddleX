@@ -517,6 +517,7 @@ You can also use the PaddleX high-performance inference plugin to optimize the i
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-LCNet_x1_0_doc_ori`.
 
 * To perform weight conversion via command line, taking `PP-LCNet_x1_0_doc_ori` as an example:
+
 ```bash
 python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=pdparams2safetensors \

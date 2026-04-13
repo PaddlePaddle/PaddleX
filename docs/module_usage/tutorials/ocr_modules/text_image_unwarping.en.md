@@ -301,6 +301,7 @@ You can also use the PaddleX high-performance inference plugin to optimize the i
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `UVDoc`.
 
 * To perform weight conversion via command line, taking `UVDoc` as an example:
+
 ```bash
 python main.py -c paddlex/configs/modules/image_unwarping/UVDoc.yaml \
     -o Global.mode=pdparams2safetensors \

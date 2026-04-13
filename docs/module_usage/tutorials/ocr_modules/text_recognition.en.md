@@ -920,6 +920,7 @@ You can also use the PaddleX high-performance inference plugin to optimize the i
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-OCRv5_mobile_rec`, `PP-OCRv5_server_rec`.
 
 * To perform weight conversion via command line, taking `PP-OCRv5_mobile_rec` as an example:
+
 ```bash
 python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv5_mobile_rec.yaml \
     -o Global.mode=pdparams2safetensors \

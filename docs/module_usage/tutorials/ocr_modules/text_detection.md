@@ -642,6 +642,7 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yam
 本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-OCRv5_mobile_det`、`PP-OCRv5_server_det`。
 
 * 通过命令行的方式进行权重转换，以 `PP-OCRv5_mobile_det` 模型为例：
+
 ```bash
 python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
     -o Global.mode=pdparams2safetensors \

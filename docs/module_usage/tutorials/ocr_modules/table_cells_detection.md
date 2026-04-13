@@ -571,6 +571,7 @@ python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_
 本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`RT-DETR-L_wired_table_cell_det`、`RT-DETR-L_wireless_table_cell_det`。
 
 * 通过命令行的方式进行权重转换，以 `RT-DETR-L_wired_table_cell_det` 模型为例：
+
 ```bash
 python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_table_cell_det.yaml \
     -o Global.mode=pdparams2safetensors \

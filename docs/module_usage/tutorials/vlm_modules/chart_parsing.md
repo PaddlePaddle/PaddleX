@@ -234,6 +234,7 @@ for res in results:
 本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-Chart2Table`。
 
 * 通过命令行的方式进行权重转换，以 `PP-Chart2Table` 模型为例：
+
 ```bash
 python main.py -c paddlex/configs/modules/chart_parsing/PP-Chart2Table.yaml \
     -o Global.mode=pdparams2safetensors \

@@ -573,6 +573,7 @@ You can also use the PaddleX high-performance inference plugin to optimize the i
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `RT-DETR-L_wired_table_cell_det`, `RT-DETR-L_wireless_table_cell_det`.
 
 * To perform weight conversion via command line, taking `RT-DETR-L_wired_table_cell_det` as an example:
+
 ```bash
 python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_table_cell_det.yaml \
     -o Global.mode=pdparams2safetensors \
