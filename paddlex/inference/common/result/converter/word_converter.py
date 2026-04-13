@@ -530,7 +530,6 @@ def _write_block(
             "image",
             "seal",
             "aside_text",
-            "vision_footnote",
         ]
         and content
     ):
