@@ -24,6 +24,9 @@ from typing import Any, Dict, List, Optional, Tuple
 # Block type labels that represent image-like content (chart/image/seal)
 _IMAGE_LABELS = ("chart", "image", "seal")
 
+# Maximum rendered height for header/footer images (keeps logos from expanding the band)
+_MAX_HEADER_IMG_HEIGHT_EMU = 457200  # 0.5 inch in EMU
+
 # Regex to detect $$ display $$ or $ inline $ formula markers in plain text
 _INLINE_FORMULA_RE = re.compile(r"(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$)")
 
@@ -132,6 +135,37 @@ def _get_image_size(abs_path: str) -> Optional[Tuple[int, int]]:
         return size
     except Exception:
         return None
+
+
+def _header_image_width(
+    abs_path: str,
+    bbox,
+    original_image_width: int,
+    usable_width_emu: Optional[int],
+) -> int:
+    """Compute display width (EMU) for a header/footer image.
+
+    Scales proportionally from bbox, capped by usable page width and
+    _MAX_HEADER_IMG_HEIGHT_EMU (aspect-ratio preserving).
+    Falls back to Inches(1.0) when bbox or image dimensions are unavailable.
+    """
+    from docx.shared import Inches
+
+    if bbox and original_image_width > 0 and usable_width_emu:
+        ratio = (bbox[2] - bbox[0]) / original_image_width
+        width = max(Inches(0.2), min(int(ratio * usable_width_emu), usable_width_emu))
+        dims = _get_image_size(abs_path)
+        if dims:
+            natural_w, natural_h = dims
+            if natural_w > 0:
+                rendered_h = int(width * natural_h / natural_w)
+                if rendered_h > _MAX_HEADER_IMG_HEIGHT_EMU:
+                    width = max(
+                        Inches(0.2),
+                        int(_MAX_HEADER_IMG_HEIGHT_EMU * natural_w / natural_h),
+                    )
+        return width
+    return Inches(1.0)  # fallback
 
 
 def _set_paragraph_style(para, config):
@@ -981,7 +1015,7 @@ class WordConverter:
         from docx.enum.section import WD_ORIENT
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         from docx.oxml.ns import qn
-        from docx.shared import Emu, Inches, Pt
+        from docx.shared import Emu, Pt
 
         # Detect landscape: width must exceed height by at least 20%
         is_landscape = (
@@ -993,6 +1027,8 @@ class WordConverter:
         # A4 landscape: 297mm × 210mm  → 10693400 × 7560820 EMU
         _PAGE_W = 10693400 if is_landscape else 7560820
         _PAGE_H = 7560820 if is_landscape else 10693400
+        # Usable width assuming default 1-inch margins (914400 EMU each side)
+        _USABLE_W = _PAGE_W - 2 * 914400
 
         def _apply_page_size(section):
             if is_landscape:
@@ -1053,7 +1089,13 @@ class WordConverter:
                     )
                     para = section.header.add_paragraph()
                     para.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                    para.add_run().add_picture(abs_path, width=Inches(1.0))
+                    img_w = _header_image_width(
+                        abs_path,
+                        block.get("bbox"),
+                        original_image_width,
+                        _USABLE_W,
+                    )
+                    para.add_run().add_picture(abs_path, width=img_w)
                     if next_same_page:
                         next_content = next_block.get("content", "").strip()
                         if next_content:
@@ -1081,7 +1123,13 @@ class WordConverter:
                     )
                     para = section.footer.add_paragraph()
                     para.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                    para.add_run().add_picture(abs_path, width=Inches(1.0))
+                    img_w = _header_image_width(
+                        abs_path,
+                        block.get("bbox"),
+                        original_image_width,
+                        _USABLE_W,
+                    )
+                    para.add_run().add_picture(abs_path, width=img_w)
                     if next_same_page:
                         next_content = next_block.get("content", "").strip()
                         if next_content:
