@@ -65,22 +65,16 @@ def format_title(block):
         if "." in title
         else 1
     )
-    return f"#{'#' * level} {title}".replace("-\n", "").replace(
-        "\n",
-        " ",
-    )
+    return _collapse_soft_newlines(f"#{'#' * level} {title}")
 
 
 def format_para_title(block):
     """Normalize paragraph title, using title_level if available."""
-    if not hasattr(block, "title_level"):
+    if getattr(block, "title_level", None) is None:
         return format_title(block)
     level = block.title_level
     title = block.content
-    return f"#{'#' * level} {title}".replace("-\n", "").replace(
-        "\n",
-        " ",
-    )
+    return _collapse_soft_newlines(f"#{'#' * level} {title}")
 
 
 def format_centered_by_html(content, collapse_newlines=True):
@@ -100,7 +94,7 @@ def format_centered_by_html(content, collapse_newlines=True):
         newline.
     """
     if collapse_newlines:
-        content = content.replace("-\n", "").replace("\n", " ")
+        content = _collapse_soft_newlines(content)
     return f'<div style="text-align: center;">{content}</div>' + "\n"
 
 
@@ -141,7 +135,7 @@ def format_image_scaled_by_html(block, original_image_width, show_ocr_content=Fa
     scale = int(image_width / original_image_width * 100)
     img_tags.append(
         '<img src="{}" alt="Image" width="{}%" />'.format(
-            image_path.replace("-\n", "").replace("\n", " "), scale
+            _collapse_soft_newlines(image_path), scale
         ),
     )
     image_info = "\n".join(img_tags)
@@ -166,9 +160,7 @@ def format_image_plain(block, show_ocr_content=False):
     img_tags = []
     if block.image:
         image_path = block.image["path"]
-        img_tags.append(
-            "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
-        )
+        img_tags.append("![]({})".format(_collapse_soft_newlines(image_path)))
         image_info = "\n".join(img_tags)
         if show_ocr_content:
             ocr_content = block.content
@@ -295,6 +287,11 @@ def merge_formula_and_number(formula, formula_number):
 # ---------------------------------------------------------------------------
 
 
+def _collapse_soft_newlines(s: str) -> str:
+    """Collapse soft-hyphen line breaks and newlines into spaces."""
+    return s.replace("-\n", "").replace("\n", " ")
+
+
 def _format_normalize_newlines(block):
     """Normalize double newlines to single, then single to double for markdown spacing."""
     return block.content.replace("\n\n", "\n").replace("\n", "\n\n")
@@ -333,9 +330,7 @@ def build_handle_funcs_dict(
         "abstract_title": format_title,
         "reference_title": format_title,
         "content_title": format_title,
-        "doc_title": lambda block: f"# {block.content}".replace("-\n", "").replace(
-            "\n", " "
-        ),
+        "doc_title": lambda block: _collapse_soft_newlines(f"# {block.content}"),
         "table_title": text_func,
         "figure_title": text_func,
         "chart_title": text_func,
