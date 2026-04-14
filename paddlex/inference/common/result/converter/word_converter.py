@@ -84,6 +84,29 @@ def _strip_latex_markers(content: str) -> Tuple[str, bool]:
     return s, False
 
 
+_OMML_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+_OMML_SCRIPT_TAGS = ("sSup", "sSub", "sSubSup")
+_ZWSP = "\u200b"  # zero-width space — invisible placeholder, prevents Word □ box
+
+
+def _fill_empty_bases(omml_root):
+    """Replace empty <m:e/> in sSup/sSub/sSubSup with a zero-width space run.
+
+    Word renders a visible placeholder box (□) for truly empty <m:e/> elements.
+    Inserting a zero-width character suppresses the box while remaining invisible.
+    """
+    from lxml import etree as _etree
+
+    ns = _OMML_NS
+    for tag in _OMML_SCRIPT_TAGS:
+        for base_elem in omml_root.findall(f".//{{{ns}}}{tag}/{{{ns}}}e"):
+            if len(base_elem) == 0 and not (base_elem.text or "").strip():
+                mr = _etree.SubElement(base_elem, f"{{{ns}}}r")
+                mt = _etree.SubElement(mr, f"{{{ns}}}t")
+                mt.text = _ZWSP
+    return omml_root
+
+
 def _latex_to_omml(latex_str: str, display: bool = False):
     """Convert a LaTeX string to an OMML XML element (<m:oMath>).
 
@@ -109,7 +132,7 @@ def _latex_to_omml(latex_str: str, display: bool = False):
         transform = _get_omml_transform()
         mml_root = _etree.fromstring(mathml.encode())
         omml_tree = transform(mml_root)
-        return omml_tree.getroot()  # <m:oMath> element
+        return _fill_empty_bases(omml_tree.getroot())  # <m:oMath> element
     except Exception:
         return None
 
