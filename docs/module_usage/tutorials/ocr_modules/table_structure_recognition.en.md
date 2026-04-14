@@ -104,7 +104,6 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
     </tbody>
 </table>
 
-
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
@@ -397,7 +396,6 @@ CheckDataset:
     -o CheckDataset.split.val_percent=10
 </code></pre></details>
 
-
 ### 4.2 Model Training
 A single command can complete the model training. Taking the training of the table structure recognition model SLANet as an example:
 
@@ -467,7 +465,6 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the input data path: `-o Predict.input="..."`. Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 * Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
 
-
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or directly into your own project.
 
@@ -480,3 +477,25 @@ The table structure recognition module can be integrated into PaddleX pipelines 
 The model weights you produce can be directly integrated into the table structure recognition module. Refer to the Python example code in [Quick Integration](#iii-quick-integration) , and simply replace the model with the path to your trained model.
 
 You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+#### 4.4.3 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `SLANeXt_wired`, `SLANeXt_wireless`.
+
+* To perform weight conversion via command line, taking `SLANeXt_wired` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/table_structure_recognition/SLANeXt_wired.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

@@ -592,7 +592,6 @@ The explanations for the methods, parameters, etc., are as follows:
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
 
-
 * The `predict()` method of the formula recognition model is called for inference prediction. The `predict()` method has parameters `input` and `batch_size`, which are explained as follows:
 
 <table>
@@ -713,7 +712,6 @@ The explanations for the methods, parameters, etc., are as follows:
 
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
-
 ## IV. Custom Development
 
 If you are seeking higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better  text recognition models. Before using PaddleX to develop text recognition models, please ensure that you have installed the relevant model training plugins for OCR in PaddleX. The installation process can be found in the custom development section of the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -792,7 +790,6 @@ Additionally, the dataset validation also analyzes the distribution of character
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_recog/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
-
 
 After completing data validation, you can convert the dataset format or re-split the training/validation ratio of the dataset by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
@@ -879,7 +876,6 @@ Similar to model training, the following steps are required:
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
-
 <details><summary>👉 <b>More Information (Click to Expand)</b></summary>
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path. If you need to change it, simply append the command line parameter to set it, such as <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including  acc、norm_edit_dis；</p></details>
@@ -891,7 +887,6 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction via the command line, simply use the following command:
 
 Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png) to your local machine.
-
 
 ```bash
 python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
@@ -919,3 +914,25 @@ The text recognition module can be integrated into PaddleX pipelines such as the
 The weights you produce can be directly integrated into the text recognition module. Refer to the [Quick Integration](#iii-quick-integration) Python example code. Simply replace the model with the path to your trained model.
 
 You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+#### 4.4.3 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-OCRv5_mobile_rec`, `PP-OCRv5_server_rec`.
+
+* To perform weight conversion via command line, taking `PP-OCRv5_mobile_rec` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv5_mobile_rec.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

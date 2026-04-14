@@ -223,7 +223,6 @@ for res in output:
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
 <li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
 
-
 <td>None</td>
 </tr>
 <tr>
@@ -330,7 +329,6 @@ for res in output:
 <ul>
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
 <li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -450,7 +448,6 @@ for res in output:
 <td rowspan="1">获取格式为<code>dict</code>的可视化图像</td>
 </tr>
 </table>
-
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考 [PaddleX单模型Python脚本使用说明](../../../module_usage/instructions/model_python_API.md)。
 
@@ -602,7 +599,6 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yam
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
 
-
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 <code>precision</code>、<code>recall</code>、<code>hmean</code>。</p></details>
@@ -640,3 +636,25 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yam
 您产出的权重可以直接集成到文本检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
 
 您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
+
+#### 4.4.3 权重转换
+
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-OCRv5_mobile_det`、`PP-OCRv5_server_det`。
+
+* 通过命令行的方式进行权重转换，以 `PP-OCRv5_mobile_det` 模型为例：
+
+```bash
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* 参数说明：
+    * `Global.mode`：指定模式为权重转换：`pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
+    * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
+
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
+
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

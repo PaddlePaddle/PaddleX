@@ -370,7 +370,6 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <p>Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):</p>
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png"/></p></details>
 
-
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing data validation, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
@@ -409,7 +408,6 @@ CheckDataset:
     -o CheckDataset.split.train_percent=90 \
     -o CheckDataset.split.val_percent=10
 </code></pre></details>
-
 
 ### 4.2 Model Training
 
@@ -513,3 +511,25 @@ The document image classification module can be integrated into PaddleX pipeline
 The weights you produce can be directly integrated into the document image orientation classification module. You can refer to the Python sample code in [Quick Integration](#iii-quick-integration) and just replace the model with the path to the model you trained.
 
 You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+#### 4.4.3 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-LCNet_x1_0_doc_ori`.
+
+* To perform weight conversion via command line, taking `PP-LCNet_x1_0_doc_ori` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

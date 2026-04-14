@@ -24,7 +24,7 @@ comments: true
 <tr>
 <td>mode</td>
 <td>str</td>
-<td>指定模式（check_dataset/train/evaluate/export/predict）</td>
+<td>指定模式（check_dataset/train/evaluate/export/predict/pdparams2safetensors）</td>
 <td>check_dataset</td>
 </tr>
 <tr>
@@ -274,5 +274,31 @@ comments: true
 <td></td>
 </tr>
 
+</tbody>
+</table>
+
+# pdparams2safetensors
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>数据类型</th>
+<th>描述</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>input_path</td>
+<td>str</td>
+<td>动态图权重路径（文件或文件夹）</td>
+<td>（必填）</td>
+</tr>
+<tr>
+<td>output_dir</td>
+<td>str</td>
+<td>转换后的safetensors格式模型路径</td>
+<td></td>
+</tr>
 </tbody>
 </table>

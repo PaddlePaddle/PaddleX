@@ -102,7 +102,6 @@ comments: true
     </tbody>
 </table>
 
-
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)。完成 wheel 包的安装后，几行代码即可完成表格结构识别模块的推理，可以任意切换该模块下的模型，您也可以将表格结构识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)到本地。
 
@@ -472,9 +471,30 @@ python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yam
 
 表格结构识别模块可以集成的PaddleX产线有[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成相关产线的表格结构识别模块的模型更新，具体对应关系详见产线文档。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
-
 2.<b>模块集成</b>
 
 您产出的权重可以直接集成到表格结构识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
 
 您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
+
+#### 4.4.3 权重转换
+
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`SLANeXt_wired`、`SLANeXt_wireless`。
+
+* 通过命令行的方式进行权重转换，以 `SLANeXt_wired` 模型为例：
+
+```bash
+python main.py -c paddlex/configs/modules/table_structure_recognition/SLANeXt_wired.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* 参数说明：
+    * `Global.mode`：指定模式为权重转换：`pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
+    * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
+
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
+
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

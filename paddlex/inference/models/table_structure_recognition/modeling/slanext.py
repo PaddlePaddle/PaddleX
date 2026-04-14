@@ -79,12 +79,8 @@ class SLANeXtBackbone(nn.Layer):
         super().__init__()
         self.vision_tower = GotOcr2VisionEncoder(config.vision_config)
         self.post_conv = nn.Conv2D(
-            config.post_conv_in_channels,
-            config.post_conv_out_channels,
-            kernel_size=3,
-            stride=2,
-            padding=1,
-            bias_attr=False,
+            config.post_conv_in_channels, config.post_conv_out_channels,
+            kernel_size=3, stride=2, padding=1, bias_attr=False,
         )
 
     def forward(self, pixel_values):
@@ -103,9 +99,7 @@ class SLANeXtSLAHead(nn.Layer):
         super().__init__()
         self.config = config
         self.structure_attention_cell = SLANeXtAttentionGRUCell(
-            config.post_conv_out_channels,
-            config.hidden_size,
-            config.out_channels,
+            config.post_conv_out_channels, config.hidden_size, config.out_channels,
         )
         self.structure_generator = SLANeXtMLP(config.hidden_size, config.out_channels)
 

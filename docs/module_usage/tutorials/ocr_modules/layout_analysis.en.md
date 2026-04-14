@@ -319,7 +319,6 @@ Relevant methods, parameters, and explanations are as follows:
 
 For more information on using PaddleX's single-model inference API, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
-
 ## IV. Custom Development
 If you seek higher accuracy from existing models, you can use PaddleX's custom development capabilities to develop better layout analysis models. Before developing a layout analysis model with PaddleX, ensure you have installed PaddleX's Detection-related model training capabilities. The installation process can be found in [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
@@ -598,3 +597,25 @@ The layout analysis module can be integrated into PaddleX pipelines such as the 
 2. <b>Module Integration</b>
 
 The weights you produce can be directly integrated into the layout analysis module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
+
+#### 4.4.3 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-DocLayoutV3`.
+
+* To perform weight conversion via command line, taking `PP-DocLayoutV3` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

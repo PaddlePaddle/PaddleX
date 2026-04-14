@@ -37,7 +37,6 @@ The core task of structure analysis is to parse and segment the content of input
 </tbody>
 </table>
 
-
 * <b>The layout detection model includes 1 category: Block:</b>
 <table>
 <thead>
@@ -63,7 +62,6 @@ The core task of structure analysis is to parse and segment the content of input
 <tr>
 </tbody>
 </table>
-
 
 * <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure title, table, table title, seal, chart title, chart, header image, footer image, and sidebar text</b>
 <table>
@@ -303,7 +301,6 @@ The core task of structure analysis is to parse and segment the content of input
 </table>
 
 </details>
-
 
 ## III. Quick Integration  <a id="quick"> </a>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
@@ -773,3 +770,25 @@ The structure analysis module can be integrated into PaddleX pipelines such as t
 The weights you produce can be directly integrated into the layout area localization module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
 
 You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+#### 4.4.3 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-DocLayoutV2`, `PP-DocLayout_plus-L`, `PP-DocBlockLayout`.
+
+* To perform weight conversion via command line, taking `PP-DocLayoutV2` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayoutV2.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
