@@ -276,15 +276,40 @@ def _classify_number_position(bbox, page_width, page_height):
     return "footer"
 
 
-def _parse_html_table(html: str) -> List[List[str]]:
-    """Parse an HTML table into a list of rows (each row is a list of cell texts)."""
-    from bs4 import BeautifulSoup
+def _parse_html_table(html: str) -> List[List[List[Tuple[str, str]]]]:
+    """Parse an HTML table into rows of cells, each cell a list of (kind, value) segments.
+
+    kind is "text" for text content or "img" for image src paths.
+    """
+    from bs4 import BeautifulSoup, Tag
+    from bs4.element import NavigableString
 
     soup = BeautifulSoup(html, "html.parser")
-    return [
-        [cell.get_text(strip=True) for cell in tr.find_all(["td", "th"])]
-        for tr in soup.find_all("tr")
-    ]
+    rows = []
+    for tr in soup.find_all("tr"):
+        if not isinstance(tr, Tag):
+            continue
+        cells = []
+        for cell in tr.find_all(["td", "th"]):
+            if not isinstance(cell, Tag):
+                continue
+            segments: List[Tuple[str, str]] = []
+            for child in cell.children:
+                if isinstance(child, NavigableString):
+                    text = child.strip()
+                    if text:
+                        segments.append(("text", text))
+                elif isinstance(child, Tag) and child.name == "img":
+                    src = str(child.get("src", "") or "")
+                    if src:
+                        segments.append(("img", src))
+                elif isinstance(child, Tag):
+                    text = child.get_text(strip=True)
+                    if text:
+                        segments.append(("text", text))
+            cells.append(segments)
+        rows.append(cells)
+    return rows
 
 
 def build_word_blocks(
@@ -292,6 +317,7 @@ def build_word_blocks(
     extra_style_map: Optional[Dict[str, Dict]] = None,
     page_width: int = 0,
     page_height: int = 0,
+    imgs_in_doc: Optional[List[Dict]] = None,
 ) -> tuple:
     """Build word_blocks and images list from a parsing_res_list.
 
@@ -306,6 +332,9 @@ def build_word_blocks(
             0 means unknown (defaults to footer classification).
         page_height: Page height in pixels, used to classify 'number' blocks.
             0 means unknown (defaults to footer classification).
+        imgs_in_doc: Optional list of {"path": str, "img": PIL.Image} dicts from
+            self["imgs_in_doc"], covering images embedded in table cells. These
+            are merged into the returned images list (parallel to MarkdownConverter).
 
     Returns:
         Tuple of (word_blocks, images) where:
@@ -425,6 +454,17 @@ def build_word_blocks(
         if block.image is not None:
             images.append({"path": block.image["path"], "img": block.image["img"]})
 
+    # Include table-embedded images (parallel to MarkdownConverter.convert() logic)
+    if imgs_in_doc:
+        existing_paths = {img["path"] for img in images}
+        for item in imgs_in_doc:
+            if (
+                item.get("path")
+                and item.get("img") is not None
+                and item["path"] not in existing_paths
+            ):
+                images.append({"path": item["path"], "img": item["img"]})
+
     return word_blocks, images
 
 
@@ -507,11 +547,15 @@ def _write_block(
 
     # --- table ---
     elif label == "table" and content:
-        rows = (
-            _parse_html_table(content)
-            if "<table" in content
-            else [r.split("\t") for r in content.split("\n") if r.strip()]
-        )
+        if "<table" in content:
+            rows = _parse_html_table(content)
+        else:
+            # Plain-text table: wrap each cell string as a single text segment
+            rows = [
+                [[("text", c)] for c in r.split("\t")]
+                for r in content.split("\n")
+                if r.strip()
+            ]
         if rows:
             # Insert spacer paragraph for spacing before table
             if space_before_emu is not None and space_before_emu > 0:
@@ -526,7 +570,8 @@ def _write_block(
             table = doc.add_table(rows=0, cols=max_cols)
             table.style = "Table Grid"
 
-            # Set proportional table width from bbox
+            # Set proportional table width from bbox; also compute col_width for images
+            col_width = None
             bbox = block.get("bbox")
             if bbox and original_image_width > 0 and usable_width_emu:
                 ratio = (bbox[2] - bbox[0]) / original_image_width
@@ -538,25 +583,28 @@ def _write_block(
             for row_cells in rows:
                 row = table.add_row().cells
                 for i in range(max_cols):
-                    cell_text = row_cells[i].strip() if i < len(row_cells) else ""
-                    if "$" in cell_text:
-                        parts = _split_inline_formulas(cell_text)
-                        has_formula = any(is_formula for _, is_formula in parts)
-                    else:
-                        parts = []
-                        has_formula = False
-
-                    if has_formula:
-                        cell_para = row[i].paragraphs[0]
-                        _write_mixed_runs(cell_para, parts, {})
-                    else:
-                        row[i].text = cell_text
-                        if cell_text:
-                            cell_para = row[i].paragraphs[0]
-                            for run in cell_para.runs:
+                    segments = row_cells[i] if i < len(row_cells) else [("text", "")]
+                    cell_para = row[i].paragraphs[0]
+                    for seg_kind, seg_val in segments:
+                        if seg_kind == "text":
+                            text = seg_val.strip()
+                            if not text:
+                                continue
+                            if "$" in text:
+                                parts = _split_inline_formulas(text)
+                                _write_mixed_runs(cell_para, parts, {})
+                            else:
+                                run = cell_para.add_run(text)
                                 run.font.name = "Times New Roman"
                                 run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
                                 run.font.size = Pt(12)
+                        elif seg_kind == "img":
+                            abs_path = abs_image_paths.get(seg_val)
+                            if abs_path:
+                                img_w = (
+                                    int(col_width * 0.9) if col_width else Inches(1.0)
+                                )
+                                cell_para.add_run().add_picture(abs_path, width=img_w)
 
     # --- formula (inline_formula / display_formula / formula) ---
     elif label in _FORMULA_LABELS and content:

@@ -370,7 +370,10 @@ class LayoutParsingResultV2(
         """
         from ...common.result.converter import build_word_blocks
 
-        word_blocks, images = build_word_blocks(self["parsing_res_list"])
+        word_blocks, images = build_word_blocks(
+            self["parsing_res_list"],
+            imgs_in_doc=self.get("imgs_in_doc", []),
+        )
 
         return {
             "word_blocks": word_blocks,
