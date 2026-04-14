@@ -163,13 +163,15 @@ class TransformersPredictor(LocalModelPredictor):
 
     @benchmark.timeit
     def preprocess_images(self, images, **kwargs):
-        if getattr(self, "image_processor", None) is None:
+        if getattr(self, "image_processor", None) is not None:
+            processor = self.image_processor
+        elif getattr(self, "processor", None) is not None:
+            processor = self.processor
+        else:
             raise ValueError(
-                "Please make sure `self.image_processor` is set before calling `preprocess_images`."
+                "Please make sure `self.image_processor` or `self.processor` is set before calling `preprocess_images`."
             )
-        model_inputs = self.image_processor(
-            images=images, return_tensors="pt", **kwargs
-        )
+        model_inputs = processor(images=images, return_tensors="pt", **kwargs)
         model_inputs = self._move_to_infer_device(model_inputs)
 
         return model_inputs
@@ -185,6 +187,20 @@ class TransformersPredictor(LocalModelPredictor):
 
         with torch.inference_mode():
             outputs = self.infer(**model_inputs)
+
+        return outputs
+
+    @benchmark.timeit_with_options(name="TransformersInfer")
+    def generate(self, model_inputs, generate_kwargs):
+        if getattr(self, "infer", None) is None:
+            raise ValueError(
+                "Please make sure `self.infer` is set before calling `forward`."
+            )
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer.generate(**model_inputs, **generate_kwargs)
 
         return outputs
 
