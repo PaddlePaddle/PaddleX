@@ -98,6 +98,9 @@ def _latex_to_omml(latex_str: str, display: bool = False):
     from lxml import etree as _etree
 
     try:
+        # Normalize bare ^ or _ (no base) to {}^{} or {}_{} per LaTeX spec
+        if latex_str.startswith(("^", "_")):
+            latex_str = "{}" + latex_str
         mode = "block" if display else "inline"
         mathml = latex2mathml.converter.convert(latex_str, display=mode)
         transform = _get_omml_transform()
