@@ -532,6 +532,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
         word_blocks, images = build_word_blocks(
             self["parsing_res_list"],
             extra_style_map=extra_style_map,
+            imgs_in_doc=self.get("imgs_in_doc", []),
         )
 
         return {
