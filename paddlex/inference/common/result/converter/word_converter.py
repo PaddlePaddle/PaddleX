@@ -463,7 +463,7 @@ def _write_block(
             ratio = (bbox[2] - bbox[0]) / original_image_width
             if usable_width_emu:
                 img_width = max(
-                    Inches(1.0), min(int(ratio * usable_width_emu), usable_width_emu)
+                    Inches(0.1), min(int(ratio * usable_width_emu), usable_width_emu)
                 )
                 # Apply max_height_emu constraint (aspect-ratio preserving)
                 if max_height_emu and max_height_emu > 0:
@@ -473,10 +473,10 @@ def _write_block(
                         rendered_h = int(img_width * natural_h / natural_w)
                         if rendered_h > max_height_emu:
                             img_width = int(max_height_emu * natural_w / natural_h)
-                            img_width = max(Inches(0.5), img_width)
+                            img_width = max(Inches(0.1), img_width)
                 run.add_picture(abs_image_path, width=img_width)
             else:
-                img_width = max(1.0, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
+                img_width = max(0.1, min(ratio * USABLE_PAGE_WIDTH, USABLE_PAGE_WIDTH))
                 run.add_picture(abs_image_path, width=Inches(img_width))
         else:
             run.add_picture(abs_image_path, width=Inches(5.0))
@@ -1142,6 +1142,12 @@ class WordConverter:
                             run.font.size = Pt(9)
                         consumed.add(i + 1)
 
-            _write_block(doc, block, abs_image_paths, original_image_width)
+            _write_block(
+                doc,
+                block,
+                abs_image_paths,
+                original_image_width,
+                usable_width_emu=_USABLE_W,
+            )
 
         return doc
