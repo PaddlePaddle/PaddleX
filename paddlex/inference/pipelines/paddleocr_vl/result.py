@@ -133,6 +133,11 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
             label for label in SKIP_ORDER_LABELS.copy() + markdown_ignore_labels
         ]
 
+    def _page_image_width(self) -> int:
+        """Return the page image width, unwrapping list if necessary."""
+        w = self["width"]
+        return w[0] if isinstance(w, list) else w
+
     def _to_img(self) -> dict[str, np.ndarray]:
         """
         Convert the parsing result to a dictionary of images.
@@ -291,10 +296,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
             "use_ocr_for_image_block", False
         )
         use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
-        if isinstance(self["width"], list):
-            original_image_width = self["width"][0]
-        else:
-            original_image_width = self["width"]
+        original_image_width = self._page_image_width()
 
         if pretty:
             format_text_func = lambda block: format_centered_by_html(
@@ -319,10 +321,10 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
         else:
             format_text_func = lambda block: block.content
             format_image_func = lambda block: format_image_plain(
-                block, use_ocr_for_image_block
+                block, show_ocr_content=use_ocr_for_image_block
             )
             format_seal_func = lambda block: format_image_plain(
-                block, use_seal_recognition
+                block, show_ocr_content=use_seal_recognition
             )
 
         format_chart_func = (
@@ -520,16 +522,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
             "footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
         }
 
-        if isinstance(self["width"], list):
-            original_image_width = self["width"][0]
-        else:
-            original_image_width = self["width"]
+        original_image_width = self._page_image_width()
 
-        raw_h = self.get("height", 0)
-        if isinstance(raw_h, list):
-            original_image_height = raw_h[0] if raw_h else 0
-        else:
-            original_image_height = int(raw_h or 0)
+        height_val = self.get("height", 0)
+        original_image_height = (
+            height_val[0] if isinstance(height_val, list) else int(height_val or 0)
+        )
 
         word_blocks, images = build_word_blocks(
             self["parsing_res_list"],
