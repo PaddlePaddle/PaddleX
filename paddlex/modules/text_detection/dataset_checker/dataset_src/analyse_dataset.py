@@ -190,9 +190,9 @@ def deep_analyse(dataset_path, output):
     canvas = FigureCanvasAgg(fig)
     canvas.draw()
     width, height = fig.get_size_inches() * fig.get_dpi()
-    bar_array = np.frombuffer(canvas.tostring_rgb(), dtype="uint8").reshape(
-        int(height), int(width), 3
-    )
+    bar_array = np.asarray(canvas.buffer_rgba()).reshape(
+        int(height), int(width), 4
+    )[:, :, :3]
 
     # pie
     fig, ax = plt.subplots()
@@ -202,9 +202,9 @@ def deep_analyse(dataset_path, output):
     canvas = FigureCanvasAgg(fig)
     canvas.draw()
     width, height = fig.get_size_inches() * fig.get_dpi()
-    pie_array = np.frombuffer(canvas.tostring_rgb(), dtype="uint8").reshape(
-        int(height), int(width), 3
-    )
+    pie_array = np.asarray(canvas.buffer_rgba()).reshape(
+        int(height), int(width), 4
+    )[:, :, :3]
 
     os.makedirs(output, exist_ok=True)
     fig_path = os.path.join(output, "histogram.png")
