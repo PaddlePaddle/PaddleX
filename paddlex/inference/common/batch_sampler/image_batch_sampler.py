@@ -44,7 +44,15 @@ class ImgBatch(Batch):
 
 class ImageBatchSampler(BaseBatchSampler):
 
-    IMG_SUFFIX = ["jpg", "png", "jpeg", "bmp"]
+    IMG_SUFFIX = [
+        "bmp", "dib", 
+        "jpeg", "jpg", 
+        "png", 
+        "webp", 
+        "pbm", "pgm", "ppm", "pnm", 
+        "sr", "ras", 
+        "tiff", "tif"
+    ]
     PDF_SUFFIX = ["pdf"]
 
     def __init__(self, *args, **kwargs):
@@ -119,7 +127,7 @@ class ImageBatchSampler(BaseBatchSampler):
                     yield from self.sample(file_list)
                 else:
                     logging.error(
-                        f"Not supported input file type! Only PDF and image files ended with suffix `{', '.join(self.IMG_SUFFIX + self.PDF_SUFFIX)}` are supported! But recevied `{input}`."
+                        f"Not supported input file type! Only PDF and image files ended with suffix `{', '.join(self.IMG_SUFFIX + self.PDF_SUFFIX)}` are supported! But received `{input}`."
                     )
                     yield batch
             else:

@@ -63,19 +63,17 @@ sys_platform = platform.platform().lower()
 
 
 def get_paddle_version():
+    # NOTE: This function only checks paddlepaddle-gpu and paddlepaddle packages,
+    # and does not support other hardware-specific distributions (e.g., XPU, NPU).
+    from importlib.metadata import version as get_version
+
     paddle_version = ""
     try:
-        import pkg_resources
-
-        paddle_version = pkg_resources.require("paddlepaddle-gpu")[0].version.split(
-            ".post"
-        )[0]
-    except:
+        paddle_version = get_version("paddlepaddle-gpu").split(".post")[0]
+    except Exception:
         try:
-            paddle_version = pkg_resources.require("paddlepaddle")[0].version.split(
-                ".post"
-            )[0]
-        except:
+            paddle_version = get_version("paddlepaddle").split(".post")[0]
+        except Exception:
             pass
     return paddle_version
 

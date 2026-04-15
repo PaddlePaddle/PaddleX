@@ -134,7 +134,7 @@ class PaddlePredictorOption(object):
             "run_mode": get_default_run_mode(model_name, device_type),
             "device_type": device_type,
             "device_id": device_id,
-            "cpu_threads": 10,
+            "cpu_threads": int(os.getenv("PADDLE_PDX_CPU_NUM_THREADS", 10)),
             "delete_pass": [],
             "enable_new_ir": True if model_name not in NEWIR_BLOCKLIST else False,
             "enable_cinn": False,

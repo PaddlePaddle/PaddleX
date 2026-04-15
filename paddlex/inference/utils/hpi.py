@@ -16,6 +16,7 @@ import ctypes.util
 import importlib.resources
 import importlib.util
 import json
+import os
 import platform
 from collections import defaultdict
 from functools import lru_cache
@@ -58,11 +59,11 @@ InferenceBackend: TypeAlias = Literal[
 
 
 class OpenVINOConfig(BaseModel):
-    cpu_num_threads: int = 10
+    cpu_num_threads: int = Field(default_factory=lambda: int(os.getenv("PADDLE_PDX_CPU_NUM_THREADS", 10)))
 
 
 class ONNXRuntimeConfig(BaseModel):
-    cpu_num_threads: int = 10
+    cpu_num_threads: int = Field(default_factory=lambda: int(os.getenv("PADDLE_PDX_CPU_NUM_THREADS", 10)))
 
 
 class TensorRTConfig(BaseModel):

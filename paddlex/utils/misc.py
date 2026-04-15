@@ -44,7 +44,7 @@ def convert_and_remove_types(data):
         return int(data)
     elif isinstance(data, np.bool_):
         return bool(data)
-    elif isinstance(data, (np.str_, np.unicode_)):
+    elif isinstance(data, np.str_):
         return str(data)
     return data
 

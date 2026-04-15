@@ -16,6 +16,7 @@ import importlib
 import os
 import os.path as osp
 import shutil
+import sys
 import tempfile
 
 from packaging.requirements import Requirement
@@ -394,11 +395,23 @@ class RepositoryGroupInstaller(object):
                 line_s = "albumentations @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albumentations-1.4.10%2Bpdx-py3-none-any.whl"
                 line_s += "\nalbucore @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albucore-0.0.13%2Bpdx-py3-none-any.whl"
             elif req.name.replace("_", "-") == "nuscenes-devkit":
-                # HACK
-                line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
+                # HACK: Use patched wheel with opencv-contrib-python.
+                # 1.2.0+pdx requires Python >=3.9; 1.1.11+pdx for older Python.
+                if sys.version_info >= (3, 9):
+                    line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.2.0%2Bpdx-py3-none-any.whl"
+                else:
+                    line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
             elif req.name == "imgaug":
                 # HACK
                 line_s = "imgaug @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/imgaug-0.4.0%2Bpdx-py2.py3-none-any.whl"
+            elif "tool_helpers" in req.name:
+                # For compatibility with higher versions of Python (python>=3.12)
+                continue
+            elif req.name in ("multiprocess", "dill"):
+                # For compatibility with higher versions of Python (python>=3.12)
+                # These are transitive dependencies of `datasets` and will be
+                # installed without the restrictive version pins.
+                continue
             lines.append(line_s)
 
         return "\n".join(lines)

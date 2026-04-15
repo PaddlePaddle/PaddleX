@@ -15,7 +15,7 @@
 import math
 from collections.abc import Iterable, Mapping, Sequence
 from functools import partial
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Set, Tuple, Union
 
 import numpy as np
 
@@ -1002,14 +1002,14 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                 cu_seqlens=cu_seqlens,
             )
 
-        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> set[str]:
+        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> Set[str]:
             stacked_params_mapping = [
                 ("qkv_proj", "q_proj", "q"),
                 ("qkv_proj", "k_proj", "k"),
                 ("qkv_proj", "v_proj", "v"),
             ]
             params_dict = dict(self.named_parameters(remove_duplicate=False))
-            loaded_params: set[str] = set()
+            loaded_params: Set[str] = set()
             for name, loaded_weight in weights:
                 if "rotary_emb.inv_freq" in name:
                     continue
@@ -1197,7 +1197,7 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
 
             return inputs_embeds
 
-        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> set[str]:
+        def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]) -> Set[str]:
 
             loader = AutoWeightsLoader(self)
             autoloaded_weights = loader.load_weights(weights)

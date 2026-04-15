@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
-
 import copy
 import re
 from copy import deepcopy
 from functools import partial
-from typing import List
+from typing import Dict, List
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -192,7 +190,7 @@ class LayoutParsingResultV2(
         WordMixin.__init__(self)
         LatexMixin.__init__(self)
 
-    def _to_img(self) -> dict[str, np.ndarray]:
+    def _to_img(self) -> Dict[str, np.ndarray]:
         from .utils import get_show_color
 
         res_img_dict = {}
@@ -256,7 +254,7 @@ class LayoutParsingResultV2(
 
         return res_img_dict
 
-    def _to_str(self, *args, **kwargs) -> dict[str, str]:
+    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
         """Converts the instance's attributes to a dictionary and then to a string.
 
         Args:
@@ -311,7 +309,7 @@ class LayoutParsingResultV2(
 
         return JsonMixin._to_str(data, *args, **kwargs)
 
-    def _to_json(self, *args, **kwargs) -> dict[str, str]:
+    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """
         Converts the object's data to a JSON dictionary.
 
@@ -460,7 +458,7 @@ class LayoutParsingResultV2(
                 data["formula_res_list"].append(formula_res.json["res"])
         return JsonMixin._to_json(data, *args, **kwargs)
 
-    def _to_html(self) -> dict[str, str]:
+    def _to_html(self) -> Dict[str, str]:
         """Converts the prediction to its corresponding HTML representation.
 
         Returns:
@@ -476,7 +474,7 @@ class LayoutParsingResultV2(
                 res_html_dict[key] = table_res.html["pred"]
         return res_html_dict
 
-    def _to_xlsx(self) -> dict[str, str]:
+    def _to_xlsx(self) -> Dict[str, str]:
         """Converts the prediction HTML to an XLSX file path.
 
         Returns:

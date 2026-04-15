@@ -157,8 +157,8 @@ class PaddleOCRVLProcessor(object):
                     text[i] = text[i].replace(
                         self.image_token,
                         "<|placeholder|>"
-                        * int(
-                            image_grid_thw[index].prod()
+                        * (
+                            int(image_grid_thw[index].prod())
                             // self.image_processor.merge_size
                             // self.image_processor.merge_size
                         ),

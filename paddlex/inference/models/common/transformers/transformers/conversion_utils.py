@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar
 
 import numpy as np
 import paddle
@@ -42,7 +43,7 @@ class StateDictNameMapping:
     action: Optional[str] = None  # the value can be: transpose, merge_last_two_dim
     index: Optional[int] = None
 
-    slots: list[str] = None
+    slots: List[str] = None
 
     def __post_init__(self):
         self.target_name = self.target_name or self.source_name
@@ -54,7 +55,7 @@ class StateDictNameMapping:
         """check that whether merge last two dim"""
         return self.action == "merge_last_two_dim"
 
-    def run(self, state_dict: dict[str, ndarray], name: str) -> ndarray:
+    def run(self, state_dict: Dict[str, ndarray], name: str) -> ndarray:
         """run some custom operation on ndarray, eg: transpose, merge_last_two_dim
 
         Args:

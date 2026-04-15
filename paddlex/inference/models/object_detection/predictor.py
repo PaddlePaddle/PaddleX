@@ -156,6 +156,17 @@ class DetPredictor(BasePredictor):
                         dtype="float32",
                     )
                     infer.eval()
+            elif self.model_name == "PP-DocLayoutV2":
+                from .modeling import PPDocLayoutV2
+
+                with TemporaryDeviceChanger(self.device):
+                    infer = PPDocLayoutV2.from_pretrained(
+                        self.model_dir,
+                        use_safetensors=True,
+                        convert_from_hf=True,
+                        dtype="float32",
+                    )
+                    infer.eval()
             else:
                 raise RuntimeError(
                     f"There is no dynamic graph implementation for model {repr(self.model_name)}."

@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
-
 import random
 from functools import partial
+from typing import Dict
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -271,7 +270,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             label for label in SKIP_ORDER_LABELS.copy() + markdown_ignore_labels
         ]
 
-    def _to_img(self) -> dict[str, np.ndarray]:
+    def _to_img(self) -> Dict[str, np.ndarray]:
         """
         Convert the parsing result to a dictionary of images.
 
@@ -350,7 +349,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         return res_img_dict
 
-    def _to_html(self) -> dict[str, str]:
+    def _to_html(self) -> Dict[str, str]:
         """
         Converts the prediction to its corresponding HTML representation.
 
@@ -366,7 +365,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_html_dict[key] = table_res.html["pred"]
         return res_html_dict
 
-    def _to_xlsx(self) -> dict[str, str]:
+    def _to_xlsx(self) -> Dict[str, str]:
         """
         Converts the prediction HTML to an XLSX file path.
 
@@ -382,7 +381,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_str(self, *args, **kwargs) -> dict[str, str]:
+    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
         """
         Converts the instance's attributes to a dictionary and then to a string.
 
@@ -423,7 +422,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["parsing_res_list"] = parsing_res_list
         return JsonMixin._to_str(data, *args, **kwargs)
 
-    def _to_json(self, *args, **kwargs) -> dict[str, str]:
+    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """
         Converts the object's data to a JSON dictionary.
 
