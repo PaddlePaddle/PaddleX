@@ -24,7 +24,7 @@ from .custom_device_list import (
     NPU_BLACKLIST,
     XPU_WHITELIST,
 )
-from .deps import class_requires_deps, function_requires_deps
+from .deps import class_requires_deps, function_requires_deps, is_dep_available
 from .flags import DISABLE_DEV_MODEL_WL
 from .import_guard import import_paddle
 
@@ -51,14 +51,28 @@ def constr_device(device_type, device_ids):
         return f"{device_type}"
 
 
-@function_requires_deps("paddlepaddle")
+# TODO: Consider integrating this function into engine classes in the future.
 def get_default_device():
-    paddle = import_paddle()
-
-    if paddle.device.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0:
-        return constr_device("gpu", [0])
-    else:
+    if is_dep_available("paddlepaddle"):
+        paddle = import_paddle()
+        if (
+            paddle.device.is_compiled_with_cuda()
+            and paddle.device.cuda.device_count() > 0
+        ):
+            return constr_device("gpu", [0])
         return "cpu"
+    if is_dep_available("torch"):
+        import torch
+
+        if torch.cuda.is_available() and torch.version.cuda:
+            return constr_device("gpu", [0])
+    if is_dep_available("onnxruntime"):
+        import onnxruntime as ort
+
+        providers = set(ort.get_available_providers())
+        if providers & {"CUDAExecutionProvider"}:
+            return constr_device("gpu", [0])
+    return "cpu"
 
 
 def parse_device(device):
