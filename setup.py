@@ -183,6 +183,7 @@ EXTRAS = {
             "ftfy",
             "imagesize",
             "Jinja2",
+            "latex2mathml",
             "lxml",
             "opencv-contrib-python",
             "openpyxl",
