@@ -36,7 +36,7 @@ for res in output:
     * `config`：`dict | None` 类型，直接传入产线配置字典。若传入该参数，可不传 `pipeline`；
     * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
     * `engine`：`str | None` 类型，推理引擎。可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`genai_client`；
-    * `engine_config`：`dict | None` 类型，推理引擎配置。若设置，将传递并合并到各子模块；
+    * `engine_config`：`dict | None` 类型，推理引擎配置（针对解析后引擎的扁平 dict，或仅按引擎名分桶的 dict；见 4.2 节）。若设置，将传递并合并到各子模块；
     * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[5-兼容配置（PaddlePredictorOption）](#5-兼容配置paddlepredictoroption)；
     * `use_hpip`：`bool | None` 类型，是否启用高性能推理插件（`None` 表示使用配置文件中的配置）；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
@@ -111,7 +111,18 @@ PaddleX 产线支持统一的 `engine` + `engine_config` 配置，并支持“�
 * `transformers`：基于 Hugging Face Transformers 的推理引擎；
 * `genai_client`：调用外部生成式 AI 服务的客户端引擎。
 
-#### 4.2 配置方式
+#### 4.2 扁平与分桶 `engine_config`
+
+本节说明**同一层级**上 `engine_config` 字典的**形态**（与下一节「配置方式」并列，而不是第四种配置途径）。
+
+在同一层级（例如 `create_pipeline(...)` 或 YAML 中某一块）中，`engine_config` 可以是：
+
+* **扁平：** 仅针对**最终解析出的**引擎的参数字典，例如 `paddle_static` 下的 `{"device_type": "gpu", "device_id": 0}`。
+* **分桶：** 顶层键**只能**为已注册的引擎名（`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`onnxruntime`、`genai_client`），每个键对应一个嵌套 dict。最终引擎确定后，仅使用当前解析引擎对应键下的配置（作为该引擎的扁平配置）。若该引擎无对应键，则使用空配置并发出警告。
+
+**严格规则：** 同一顶层**禁止**混用「分桶键」与「扁平字段」。请要么全部使用扁平 dict，要么全部使用分桶 dict。
+
+#### 4.3 配置方式
 
 **方式 1：通过 `create_pipeline` 传参设置全局引擎**
 
@@ -164,7 +175,7 @@ SubModules:
       device_id: 0
 ```
 
-#### 4.3 生效规则
+#### 4.4 生效规则
 
 * `create_pipeline(..., engine=...)` 传参优先级高于配置文件中的同名字段；
 * 全局 `engine_config` 会与子模块或子产线的 `engine_config` 合并，同名字段以后者优先；
@@ -179,7 +190,7 @@ SubModules:
 * 显式设置 `engine` 时，`use_hpip` 不再生效；
 * 显式设置 `engine_config` 时，`pp_option` 与 `hpi_config` 作为兼容参数通常不再需要。
 
-#### 4.4 是否必须安装 PaddlePaddle
+#### 4.5 是否必须安装 PaddlePaddle
 
 在以下场景中可以不安装 PaddlePaddle：
 
@@ -187,7 +198,7 @@ SubModules:
 
 > 注意：若产线中模块最终使用 `paddle` / `hpi` 引擎，仍需安装 PaddlePaddle；使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。
 
-#### 4.5 各引擎 `engine_config` 字段说明
+#### 4.6 各引擎 `engine_config` 字段说明
 
 以下字段同样适用于产线中各子模块（全局配置可被子模块覆盖）：
 

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+from collections.abc import Mapping
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
@@ -165,30 +166,62 @@ def normalize_engine_config(
     )
 
 
-def _warn_if_legacy_configs_are_overridden(
-    *,
-    engine_config,
-    pp_option,
-    hpi_config,
-    genai_config,
-) -> None:
-    if engine_config is None:
-        return
-    if pp_option is not None:
-        logging.warning(
-            "`pp_option` is ignored when `engine_config` is specified. "
-            "Use `engine_config` for paddle_static configuration."
+@lru_cache(maxsize=1)
+def _engine_config_bucket_key_allowlist() -> frozenset:
+    """Registered inference engine ids (bucket keys)."""
+    return frozenset(InferenceEngine.all().keys())
+
+
+def _flatten_bucketed_engine_config(engine: str, cfg: Dict[str, Any]) -> Dict[str, Any]:
+    """Resolve bucketed engine_config to a single dict for the resolved engine.
+
+    Bucketed form: every top-level key must be a registered engine name, and every
+    value must be a mapping. Mixing those keys with any other top-level key is not
+    allowed (strict).
+    """
+    allowlist = _engine_config_bucket_key_allowlist()
+    keys = set(cfg.keys())
+    allowlisted = {k for k in keys if k in allowlist}
+    other = keys - allowlisted
+
+    if allowlisted and other:
+        raise ValueError(
+            "engine_config cannot mix per-engine bucket keys with flat config keys. "
+            "Use either a flat dict for the resolved engine only, or a dict whose "
+            "top-level keys are exclusively inference engine names. "
+            f"Flat-like keys: {sorted(other)!r}; bucket-like keys: {sorted(allowlisted)!r}."
         )
-    if hpi_config is not None:
+
+    if not allowlisted:
+        return cfg
+
+    for k, v in cfg.items():
+        if not isinstance(v, Mapping):
+            raise ValueError(
+                "Bucketed engine_config requires each top-level value to be a mapping; "
+                f"key {k!r} has type {type(v).__name__!r}."
+            )
+
+    bucket = cfg.get(engine)
+    flat_for_engine = dict(bucket) if isinstance(bucket, Mapping) else {}
+
+    if engine not in cfg:
         logging.warning(
-            "`hpi_config` is ignored when `engine_config` is specified. "
-            "Use `engine_config` for hpi configuration."
+            "Bucketed engine_config has no entry for resolved engine %r; using an "
+            "empty config for that engine.",
+            engine,
         )
-    if genai_config is not None:
-        logging.warning(
-            "`genai_config` is ignored when `engine_config` is specified. "
-            "Use `engine_config` for genai_client configuration."
-        )
+
+    return flat_for_engine
+
+
+def _maybe_flatten_bucketed_engine_config(
+    engine: str,
+    cfg: Optional[Union[Dict[str, Any], PaddlePredictorOption, HPIConfig, GenAIConfig]],
+) -> Optional[Union[Dict[str, Any], PaddlePredictorOption, HPIConfig, GenAIConfig]]:
+    if cfg is None or not isinstance(cfg, dict):
+        return cfg
+    return _flatten_bucketed_engine_config(engine, cfg)
 
 
 def _resolve_effective_engine(
@@ -351,7 +384,11 @@ def create_predictor(
             becomes `'genai_client'`; else if `use_hpip=True` and model supports
             hpi, engine becomes `'hpi'`; else if model is flexible-only, engine
             becomes `'flexible'`; otherwise defaults to `'paddle'`.
-        engine_config (Optional[Dict[str, Any]]): Engine-specific config.
+        engine_config (Optional[Dict[str, Any]]): Engine-specific config for the
+            resolved engine (flat dict), **or** a bucketed dict whose top-level keys
+            are only registered engine names (e.g. ``hpi``, ``paddle_static``), each
+            mapping to a nested dict. Bucketed and flat keys must not be mixed at the
+            same level; use either form exclusively.
         batch_size (int): Batch size for inference. Defaults to 1.
         pp_option (Optional[PaddlePredictorOption]): Paddle predictor options. Used when
             `engine='paddle_static'` and `engine_config` is not specified. Prefer
@@ -376,13 +413,6 @@ def create_predictor(
             engine,
         )
 
-    _warn_if_legacy_configs_are_overridden(
-        engine_config=engine_config,
-        pp_option=pp_option,
-        hpi_config=hpi_config,
-        genai_config=genai_config,
-    )
-
     model_name, model_dir_resolved, resolved_config = resolve_model_name(
         model_name=model_name,
         model_dir=model_dir,
@@ -405,25 +435,15 @@ def create_predictor(
         model_dir_resolved=model_dir_resolved,
     )
 
-    if engine_config is None and pp_option is not None and engine != "paddle_static":
-        logging.warning(
-            "`pp_option` only applies to engine='paddle_static'. "
-            "For engine=%r, pp_option will be ignored.",
-            engine,
-        )
-    if engine_config is None and hpi_config is not None and engine != "hpi":
-        logging.warning(
-            "`hpi_config` only applies to engine='hpi'. "
-            "For engine=%r, hpi_config will be ignored.",
-            engine,
-        )
-
     config_to_validate = _select_engine_config_source(
         engine=engine,
         engine_config=engine_config,
         pp_option=pp_option,
         hpi_config=hpi_config,
         genai_config=genai_config,
+    )
+    config_to_validate = _maybe_flatten_bucketed_engine_config(
+        engine, config_to_validate
     )
     normalized_engine_config = normalize_engine_config(
         engine,

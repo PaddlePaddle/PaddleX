@@ -35,7 +35,7 @@ In short, there are only three steps:
     * `config`: `dict | None` type, pipeline configuration dictionary. If provided, `pipeline` can be omitted;
     * `device`: `str` type, used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, using 0 id GPU if available, otherwise CPU;
     * `engine`: `str | None` type, inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `genai_client`;
-    * `engine_config`: `dict | None` type, engine-specific configuration. It can be merged and overridden per submodule;
+    * `engine_config`: `dict | None` type, engine-specific configuration (flat dict for the resolved engine, or a bucketed dict keyed only by engine name; see §4.2). It can be merged and overridden per submodule;
     * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). See "5. Compatibility Configuration (`PaddlePredictorOption`)" for details;
     * `use_hpip`：`bool | None` type, whether to enable the high-performance inference plugin (`None` for using the setting from the configuration file);
     * `hpi_config`：`dict | None` type, high-performance inference configuration;
@@ -110,7 +110,18 @@ PaddleX pipelines support unified inference configuration via `engine` + `engine
 * `transformers`: Hugging Face Transformers-based engine;
 * `genai_client`: Client engine for remote generative AI services.
 
-#### 4.2 Configuration Methods
+#### 4.2 Flat and bucketed `engine_config`
+
+This section describes the **shape** of the `engine_config` dict at one level (it is not a separate “configuration method” from §4.3).
+
+At a single level (e.g. `create_pipeline(...)` or one YAML block), `engine_config` may be:
+
+* **Flat:** a dict of options for the **resolved** engine only, e.g. `{"device_type": "gpu", "device_id": 0}` for `paddle_static`.
+* **Bucketed:** a dict whose **top-level keys are only** registered engine names (`paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`), each mapping to a nested dict of options for that engine. After the final engine is chosen, only the entry for the resolved engine is used (as that engine’s flat config). Missing entry for the resolved engine yields an empty dict and a warning.
+
+**Strict rule:** mixing bucket-style keys and flat keys at the **same** top level is **not** allowed. Use either a fully flat dict or a fully bucketed dict.
+
+#### 4.3 Configuration Methods
 
 **Method 1: Configure globally via `create_pipeline` arguments**
 
@@ -163,7 +174,7 @@ SubModules:
       device_id: 0
 ```
 
-#### 4.3 Effective Rules
+#### 4.4 Effective Rules
 
 * `create_pipeline(..., engine=...)` has higher priority than the same field in YAML config;
 * Global `engine_config` is merged with `engine_config` from submodules or sub-pipelines; fields at the lower level override global ones;
@@ -178,7 +189,7 @@ SubModules:
 * When `engine` is explicitly set, `use_hpip` is ignored;
 * When `engine_config` is explicitly set, `pp_option` and `hpi_config` are usually unnecessary compatibility options.
 
-#### 4.4 Is PaddlePaddle Required?
+#### 4.5 Is PaddlePaddle Required?
 
 PaddlePaddle is not required in the following scenarios:
 
@@ -186,7 +197,7 @@ PaddlePaddle is not required in the following scenarios:
 
 > Note: If a module finally runs on `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
 
-#### 4.5 `engine_config` Fields by Engine
+#### 4.6 `engine_config` Fields by Engine
 
 The following field sets also apply to submodules in a pipeline:
 
