@@ -349,6 +349,7 @@ class LayoutParsingResultV2(
         result = MarkdownConverter.convert(
             self["parsing_res_list"],
             handle_funcs_dict=handle_funcs_dict,
+            show_formula_number=show_formula_number,
             use_seg_flag=True,
             get_seg_flag_func=get_seg_flag,
             imgs_in_doc=self["imgs_in_doc"],
