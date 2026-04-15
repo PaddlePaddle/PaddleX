@@ -1,0 +1,58 @@
+name: ultra-infer aarch64 wheel
+
+on:
+  release:
+    types: [published]
+  push:
+    branches: ["develop"]
+    paths:
+      - "deploy/ultra-infer/**"
+      - "paddlex/inference/utils/hpi.py"
+      - ".github/workflows/ultra-infer-aarch64.yml"
+  pull_request:
+    branches: ["develop"]
+    paths:
+      - "deploy/ultra-infer/**"
+      - "paddlex/inference/utils/hpi.py"
+      - ".github/workflows/ultra-infer-aarch64.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ultra-infer aarch64 wheel
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/ultra-infer/Dockerfile.aarch64
+          platforms: linux/arm64
+          push: false
+          outputs: type=local,dest=./dist
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ultra-infer-aarch64
+          path: dist/*.whl
+          retention-days: 30

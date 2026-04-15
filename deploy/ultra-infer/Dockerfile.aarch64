@@ -1,0 +1,39 @@
+# Build ultra-infer wheel for Linux aarch64 (ARM64).
+#
+# Usage (via workflow or manually with QEMU):
+#   docker buildx build --platform linux/arm64 \
+#       --output type=local,dest=./dist \
+#       -f deploy/ultra-infer/Dockerfile.aarch64 .
+
+ARG PYTHON_VERSION=3.12
+FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        patchelf \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir wheel numpy setuptools
+
+COPY deploy/ultra-infer /build/ultra-infer
+WORKDIR /build/ultra-infer/python
+
+ENV WITH_GPU=OFF
+ENV ENABLE_ORT_BACKEND=ON
+ENV ENABLE_OPENVINO_BACKEND=OFF
+ENV ENABLE_TRT_BACKEND=OFF
+ENV ENABLE_PADDLE_BACKEND=OFF
+ENV ENABLE_VISION=OFF
+ENV ENABLE_TEXT=OFF
+ENV ENABLE_BENCHMARK=OFF
+ENV CC=gcc
+ENV CXX=g++
+
+RUN python setup.py build && python setup.py bdist_wheel
+
+# Final stage: only the wheel, for --output extraction
+FROM scratch
+COPY --from=builder /build/ultra-infer/python/dist/*.whl /
