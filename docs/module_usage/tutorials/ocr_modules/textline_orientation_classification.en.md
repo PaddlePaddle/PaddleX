@@ -174,7 +174,29 @@ The explanations for the methods, parameters, etc., are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td><code>hpi_config</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
+</table>
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>None</td>
@@ -496,20 +518,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the path to the input data: `-o Predict.input="..."`
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
-#### 4.4.2 Model Integration
-The model can be directly integrated into the PaddleX pipeline or into your own project.
-
-1. **Pipeline Integration**
-
-The text line orientation classification module can be integrated into the [Document Scene Information Extraction v3 Pipeline (PP-ChatOCRv3-doc)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the text line orientation classification module.
-
-2. **Module Integration**
-
-The weights you produce can be directly integrated into the text line orientation classification module. You can refer to the Python example code in [Quick Integration](##Quick-Integration) and only need to replace the model with the path to your trained model.
-
-You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
-
-#### 4.4.3 Weight Conversion
+#### 4.4.2 Weight Conversion
 
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-LCNet_x0_25_textline_ori`, `PP-LCNet_x1_0_textline_ori`.
 
@@ -530,3 +539,17 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
 
 For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+
+#### 4.4.3 Model Integration
+
+The model can be directly integrated into the PaddleX pipeline or into your own project.
+
+1. **Pipeline Integration**
+
+The text line orientation classification module can be integrated into the [Document Scene Information Extraction v3 Pipeline (PP-ChatOCRv3-doc)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the text line orientation classification module.
+
+2. **Module Integration**
+
+The weights you produce can be directly integrated into the text line orientation classification module. You can refer to the Python example code in [Quick Integration](##Quick-Integration) and only need to replace the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

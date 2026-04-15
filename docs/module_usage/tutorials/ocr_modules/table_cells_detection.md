@@ -171,6 +171,27 @@ for res in output:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str | None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict | None</code></td>
+<td>不同引擎支持不同字段，请参考<a href="../../instructions/model_python_API.md#4-推理引擎与配置">推理引擎与配置</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>用于改变运行模式等配置项</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>关于推理配置的详细说明，请参考<a href="../../instructions/model_python_API.md#5-兼容配置paddlepredictoroption">兼容配置（PaddlePredictorOption）</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>输入图像大小；如果不指定，将默认使用PaddleX官方模型配置</td>
 <td><code>int/list</code></td>
@@ -555,18 +576,7 @@ python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-#### 4.4.2 模型集成
-模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
-
-1.<b>产线集成</b>
-
-表格单元格检测模块可以集成的PaddleX产线有[通用表格识别产线v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)，只需要替换模型路径即可完成相关产线的表格单元格检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
-
-2.<b>模块集成</b>
-
-您产出的权重可以直接集成到表格单元格检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
-
-#### 4.4.3 权重转换
+#### 4.4.2 权重转换
 
 本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`RT-DETR-L_wired_table_cell_det`、`RT-DETR-L_wireless_table_cell_det`。
 
@@ -587,3 +597,15 @@ python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_
 转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
 
 其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+
+#### 4.4.3 模型集成
+
+模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
+
+1.<b>产线集成</b>
+
+表格单元格检测模块可以集成的PaddleX产线有[通用表格识别产线v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)，只需要替换模型路径即可完成相关产线的表格单元格检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+
+2.<b>模块集成</b>
+
+您产出的权重可以直接集成到表格单元格检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
