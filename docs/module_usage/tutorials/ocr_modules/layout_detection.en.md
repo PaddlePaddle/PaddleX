@@ -463,7 +463,29 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td><code>hpi_config</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
+</table>
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>Effective when <code>engine="hpi"</code> and <code>engine_config</code> is not explicitly provided</td>
@@ -760,18 +782,7 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 * Alternatively, you can use the PaddleX wheel package for inference and integrate the model into your own project. Based on the quick integration example in Section III, add `model_dir="/output/best_model/inference"`, and optionally append `engine=...` and `engine_config=...` when needed.
 
-#### 4.4.2 Model Integration
-The model can be directly integrated into PaddleX pipelines or into your own projects.
-
-1. <b>Pipeline Integration</b>
-The structure analysis module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3-doc)](../../..//pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the layout area localization module. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
-
-1. <b>Module Integration</b>
-The weights you produce can be directly integrated into the layout area localization module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
-
-You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
-
-#### 4.4.3 Weight Conversion
+#### 4.4.2 Weight Conversion
 
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-DocLayoutV2`, `PP-DocLayout_plus-L`, `PP-DocBlockLayout`.
 
@@ -792,3 +803,15 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayoutV2.yaml \
 After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
 
 For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+
+#### 4.4.3 Model Integration
+
+The model can be directly integrated into PaddleX pipelines or into your own projects.
+
+1. <b>Pipeline Integration</b>
+The structure analysis module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3-doc)](../../..//pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the layout area localization module. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
+
+1. <b>Module Integration</b>
+The weights you produce can be directly integrated into the layout area localization module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

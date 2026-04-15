@@ -162,7 +162,29 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td><code>hpi_config</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
+</table>
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>None</td>
@@ -292,28 +314,7 @@ Relevant methods, parameters, and explanations are as follows:
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
+
 The current module temporarily does not support fine-tuning training and only supports inference integration. Fine-tuning training for this module is planned to be supported in the future.
 
 You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
-
-## V. Weight Conversion
-
-This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `UVDoc`.
-
-* To perform weight conversion via command line, taking `UVDoc` as an example:
-
-```bash
-python main.py -c paddlex/configs/modules/image_unwarping/UVDoc.yaml \
-    -o Global.mode=pdparams2safetensors \
-    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
-    -o Pdparams2safetensors.output_dir=./output/safetensors/
-```
-
-* Parameter description:
-    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
-    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
-    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
-
-After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
-
-For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

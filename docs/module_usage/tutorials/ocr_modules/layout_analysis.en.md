@@ -116,6 +116,27 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>Size of the input image; if not specified, the default PaddleX official model configuration will be used</td>
 <td><code>int/list/None</code></td>
@@ -587,18 +608,7 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 * Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own project. To integrate, simply add the `model_dir="/output/best_model/inference"` parameter to the `create_model` function in the quick integration method from Step 3.
 
-#### 4.4.2 Model Integration
-The model can be directly integrated into PaddleX pipelines or into your own projects.
-
-1. <b>Pipeline Integration</b>
-
-The layout analysis module can be integrated into PaddleX pipelines such as the [Document Parsing Pipeline (PaddleOCR-VL and PaddleOCR-VL-1.5)](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.en.md). Simply replace the model path to update the layout analysis module.
-
-2. <b>Module Integration</b>
-
-The weights you produce can be directly integrated into the layout analysis module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.
-
-#### 4.4.3 Weight Conversion
+#### 4.4.2 Weight Conversion
 
 This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-DocLayoutV3`.
 
@@ -619,3 +629,15 @@ python main.py -c paddlex/configs/modules/layout_analysis/PP-DocLayoutV3.yaml \
 After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
 
 For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+
+
+#### 4.4.3 Model Integration
+The model can be directly integrated into PaddleX pipelines or into your own projects.
+
+1. <b>Pipeline Integration</b>
+
+The layout analysis module can be integrated into PaddleX pipelines such as the [Document Parsing Pipeline (PaddleOCR-VL and PaddleOCR-VL-1.5)](../../../pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.en.md). Simply replace the model path to update the layout analysis module.
+
+2. <b>Module Integration</b>
+
+The weights you produce can be directly integrated into the layout analysis module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.

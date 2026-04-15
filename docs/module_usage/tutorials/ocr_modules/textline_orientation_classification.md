@@ -177,6 +177,27 @@ for res in output:
 <td>无</td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str | None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict | None</code></td>
+<td>不同引擎支持不同字段，请参考<a href="../../instructions/model_python_API.md#4-推理引擎与配置">推理引擎与配置</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>用于改变运行模式等配置项</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>关于推理配置的详细说明，请参考<a href="../../instructions/model_python_API.md#5-兼容配置paddlepredictoroption">兼容配置（PaddlePredictorOption）</a>。</td>
+<td><code>None</code></td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
@@ -494,18 +515,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-#### 4.4.2 模型集成
-模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。
-
-1.<b>产线集成</b>
-
-文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用版面解析产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)、[通用版面解析v3产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
-
-2.<b>模块集成</b>
-
-您产出的权重可以直接集成到文本行方向分类模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
-
-#### 4.4.3 权重转换
+#### 4.4.2 权重转换
 
 本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-LCNet_x0_25_textline_ori`、`PP-LCNet_x1_0_textline_ori`。
 
@@ -526,3 +536,15 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
 
 其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+
+#### 4.4.3 模型集成
+
+模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。
+
+1.<b>产线集成</b>
+
+文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用版面解析产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)、[通用版面解析v3产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
+
+2.<b>模块集成</b>
+
+您产出的权重可以直接集成到文本行方向分类模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。

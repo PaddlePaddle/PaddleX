@@ -651,13 +651,17 @@ class DocVLMTransformersPredictor(TransformersPredictor):
             images.append(image)
             texts.append(prompt)
 
-        processor_kwargs = {"images": images, "text": texts, "return_tensors": "pt"}
-        if min_pixels is not None:
-            processor_kwargs["min_pixels"] = min_pixels
-        if max_pixels is not None:
-            processor_kwargs["max_pixels"] = max_pixels
-        model_inputs = self.processor(**processor_kwargs)
-        model_inputs = self._move_to_infer_device(model_inputs)
+        if is_in_group(self.model_name, "PaddleOCR-VL"):
+            images_kwargs = {"size": dict(self.processor.image_processor.size)}
+            if min_pixels is not None:
+                images_kwargs["size"]["shortest_edge"] = min_pixels
+            if max_pixels is not None:
+                images_kwargs["size"]["longest_edge"] = max_pixels
+            model_inputs = self.preprocess_images(
+                images=images, text=texts, images_kwargs=images_kwargs
+            )
+        else:
+            model_inputs = self.preprocess_images(images=images, text=texts)
 
         generate_kwargs = {
             "max_new_tokens": (
@@ -675,10 +679,7 @@ class DocVLMTransformersPredictor(TransformersPredictor):
         if use_cache is not None:
             generate_kwargs["use_cache"] = use_cache
 
-        import torch
-
-        with torch.inference_mode():
-            generated_ids = self.infer.generate(**model_inputs, **generate_kwargs)
+        generated_ids = self.generate(model_inputs, generate_kwargs)
 
         preds = self.postprocess(
             generated_ids,
