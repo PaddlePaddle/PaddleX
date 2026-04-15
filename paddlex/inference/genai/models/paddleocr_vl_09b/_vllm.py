@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import math
 from collections.abc import Iterable, Mapping, Sequence
 from functools import partial
 from typing import List, Optional, Set, Tuple, Union
@@ -20,6 +19,7 @@ from typing import List, Optional, Set, Tuple, Union
 import numpy as np
 
 from .....utils.deps import is_dep_available
+from ._image_utils import prepare_hf_processor_mm_data, smart_resize
 
 if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
     import torch
@@ -84,47 +84,6 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
     )
     from vllm.multimodal.profiling import BaseDummyInputsBuilder
     from vllm.sequence import IntermediateTensors
-
-    def smart_resize(
-        height: int,
-        width: int,
-        factor: int = 28,
-        min_pixels: int = 28 * 28 * 130,
-        max_pixels: int = 28 * 28 * 1280,
-    ):
-        """Rescales the image so that the following conditions are met:
-
-        1. Both dimensions (height and width) are divisible by 'factor'.
-
-        2. The total number of pixels is within the range ['min_pixels', 'max_pixels'].
-
-        3. The aspect ratio of the image is maintained as closely as possible.
-
-        """
-
-        if height < factor:
-            width = round((width * factor) / height)
-            height = factor
-
-        if width < factor:
-            height = round((height * factor) / width)
-            width = factor
-
-        if max(height, width) / min(height, width) > 200:
-            raise ValueError(
-                f"absolute aspect ratio must be smaller than 200, got {max(height, width) / min(height, width)}"
-            )
-        h_bar = round(height / factor) * factor
-        w_bar = round(width / factor) * factor
-        if h_bar * w_bar > max_pixels:
-            beta = math.sqrt((height * width) / max_pixels)
-            h_bar = math.floor(height / beta / factor) * factor
-            w_bar = math.floor(width / beta / factor) * factor
-        elif h_bar * w_bar < min_pixels:
-            beta = math.sqrt(min_pixels / (height * width))
-            h_bar = math.ceil(height * beta / factor) * factor
-            w_bar = math.ceil(width * beta / factor) * factor
-        return h_bar, w_bar
 
     class PaddleOCRVLProcessingInfo(BaseProcessingInfo):
 
@@ -225,9 +184,13 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
             tok_kwargs: Mapping[str, object],
         ) -> BatchFeature:
             if mm_data:
+                hf_processor = self.info.get_hf_processor(**mm_kwargs)
+                prepared_mm_data = prepare_hf_processor_mm_data(
+                    mm_data, hf_processor.image_processor
+                )
                 processed_outputs = self.info.ctx.call_hf_processor(
-                    self.info.get_hf_processor(**mm_kwargs),
-                    dict(text=prompt, **mm_data),
+                    hf_processor,
+                    dict(text=prompt, **prepared_mm_data),
                     dict(**mm_kwargs, **tok_kwargs),
                 )
                 processed_outputs["pixel_values"] = processed_outputs[
