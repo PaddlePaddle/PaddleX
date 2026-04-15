@@ -18,6 +18,7 @@ from pydantic import BaseModel
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
+from .shared.export import DocumentExports, OutputFormatsMixin
 
 __all__ = [
     "ANALYZE_IMAGES_ENDPOINT",
@@ -34,7 +35,7 @@ __all__ = [
 ANALYZE_IMAGES_ENDPOINT: Final[str] = "/doctrans-visual"
 
 
-class AnalyzeImagesRequest(ocr.BaseInferRequest):
+class AnalyzeImagesRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
     useTextlineOrientation: Optional[bool] = None
@@ -73,6 +74,7 @@ class LayoutParsingResult(BaseModel):
     markdown: ocr.MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
+    exports: Optional[DocumentExports] = None
 
 
 class AnalyzeImagesResult(BaseModel):
@@ -83,7 +85,7 @@ class AnalyzeImagesResult(BaseModel):
 TRANSLATE_ENDPOINT: Final[str] = "/doctrans-translate"
 
 
-class TranslateRequest(BaseModel):
+class TranslateRequest(OutputFormatsMixin):
     markdownList: List[ocr.MarkdownData]
     targetLanguage: str = "zh"
     chunkSize: int = 5000
@@ -100,6 +102,7 @@ class TranslateRequest(BaseModel):
 class TranslationResult(BaseModel):
     language: str
     markdown: ocr.MarkdownData
+    exports: Optional[DocumentExports] = None
 
 
 class TranslateResult(BaseModel):

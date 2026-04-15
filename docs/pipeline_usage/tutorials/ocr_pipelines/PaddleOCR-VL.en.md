@@ -1549,6 +1549,12 @@ Below are the API references for basic service-based deployment and examples of 
   visualize: False</code></pre>Images will not be returned by default, and the default behavior can be overridden by the <code>visualize</code> parameter in the request body. If this parameter is not set in either the request body or the configuration file (or <code>null</code> is passed in the request body and the configuration file is not set), images will be returned by default.</td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code>|<code>null</code></td>
+<td>Optional list of extra document formats to return. By default, no extra formats are returned. Currently only <code>"docx"</code> is supported: when requested, each layout item may include <code>exports.docx</code> with a Word document; <code>exports.docx.content</code> is Base64 by default, or a URL when file storage with URL delivery is configured (same policy as Markdown images).</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -1604,6 +1610,11 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>inputImage</code></td>
 <td><code>string</code>|<code>null</code></td>
 <td>Input image. The image is in JPEG format and encoded using Base64.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "...", "fileName": "..."}}</code>, where <code>content</code> is Base64 or a download URL depending on storage settings.</td>
 </tr>
 </tbody>
 </table>
@@ -1685,6 +1696,12 @@ Below are the API references for basic service-based deployment and examples of 
     <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
     <td>No</td>
     </tr>
+    <tr>
+    <td><code>outputFormats</code></td>
+    <td><code>array</code>|<code>null</code></td>
+    <td>Optional extra export formats; same meaning as <code>outputFormats</code> on <code>infer</code>. Only <code>"docx"</code> is supported. For DOCX export, <code>markdownImages</code> supplied per page is used to restore figure/chart/seal images, consistent with <code>infer</code>&apos;s <code>markdown.images</code>.</td>
+    <td>No</td>
+    </tr>
   </tbody>
 </table>
 
@@ -1727,7 +1744,7 @@ Below are the API references for basic service-based deployment and examples of 
     <tr>
       <td><code>layoutParsingResults</code></td>
       <td><code>array</code></td>
-      <td>The restructured layout parsing results. For the fields that every element contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images).</td>
+      <td>The restructured layout parsing results. For the fields that every element contains, please refer to the description of the result returned by the <code>infer</code> operation (excluding visualization result images and intermediate images). When <code>outputFormats</code> is used, elements may also include <code>exports</code>.</td>
     </tr>
   </tbody>
 </table>

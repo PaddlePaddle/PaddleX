@@ -2492,6 +2492,12 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 </td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Optional list of extra formats to return. Currently only <code>"docx"</code> is supported. The response item may include <code>exports.docx</code>; <code>content</code> is Base64 by default or a URL when storage/URL return is configured.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -2547,6 +2553,11 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>The input image. The image is in JPEG format and is Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Optional additional exports (e.g., <code>docx</code>) when <code>outputFormats</code> is present.</td>
 </tr>
 </tbody>
 </table>

@@ -41,7 +41,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         for i, page in enumerate(input.pages):
             orig_res = _to_original_result(page.prunedResult, i)
             original_results.append(orig_res)
-            if input.concatenatePages:
+            if input.concatenatePages and page.markdownImages:
                 markdown_images.update(page.markdownImages)
 
         restructured_results = self.pipeline.restructure_pages(
@@ -67,6 +67,19 @@ class TritonPythonModel(BaseTritonPythonModel):
                 text=md_data["markdown_texts"],
                 images=markdown_images,
             )
+            if app_common.normalize_output_formats(input.outputFormats):
+                res_obj = restructured_results[0]
+                app_common.refill_paddleocr_vl_images_from_markdown(
+                    res_obj, markdown_images
+                )
+                layout_parsing_result["exports"] = app_common.build_pipeline_exports(
+                    input.outputFormats,
+                    res_obj,
+                    log_id=log_id,
+                    file_storage=None,
+                    return_urls=False,
+                    url_expires_in=-1,
+                )
             layout_parsing_results.append(layout_parsing_result)
         else:
             for new_res, old_page in zip(restructured_results, input.pages):
@@ -83,6 +96,20 @@ class TritonPythonModel(BaseTritonPythonModel):
                     text=md_data["markdown_texts"],
                     images=old_page.markdownImages,
                 )
+                if app_common.normalize_output_formats(input.outputFormats):
+                    app_common.refill_paddleocr_vl_images_from_markdown(
+                        new_res, old_page.markdownImages
+                    )
+                    layout_parsing_result["exports"] = (
+                        app_common.build_pipeline_exports(
+                            input.outputFormats,
+                            new_res,
+                            log_id=log_id,
+                            file_storage=None,
+                            return_urls=False,
+                            url_expires_in=-1,
+                        )
+                    )
                 layout_parsing_results.append(layout_parsing_result)
 
         return schemas.paddleocr_vl.RestructurePagesResult(

@@ -14,7 +14,7 @@
 
 from typing import Any, Dict, List
 
-from paddlex_hps_server import BaseTritonPythonModel, schemas
+from paddlex_hps_server import BaseTritonPythonModel, app_common, schemas
 
 
 class TritonPythonModel(BaseTritonPythonModel):
@@ -52,16 +52,24 @@ class TritonPythonModel(BaseTritonPythonModel):
 
         translation_results: List[Dict[str, Any]] = []
         for item in result:
-            translation_results.append(
-                dict(
-                    language=item["language"],
-                    markdown=dict(
-                        text=item["markdown_texts"],
-                        isStart=item["page_continuation_flags"][0],
-                        isEnd=item["page_continuation_flags"][1],
-                    ),
-                )
+            tr = dict(
+                language=item["language"],
+                markdown=dict(
+                    text=item["markdown_texts"],
+                    isStart=item["page_continuation_flags"][0],
+                    isEnd=item["page_continuation_flags"][1],
+                ),
             )
+            if app_common.normalize_output_formats(input.outputFormats):
+                tr["exports"] = app_common.build_pipeline_exports(
+                    input.outputFormats,
+                    item,
+                    log_id=log_id,
+                    file_storage=None,
+                    return_urls=False,
+                    url_expires_in=-1,
+                )
+            translation_results.append(tr)
 
         return schemas.pp_doctranslation.TranslateResult(
             translationResults=translation_results,

@@ -1855,6 +1855,12 @@ for tgt_md_info in tgt_md_info_list:
 </td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式列表；当前仅支持 <code>"docx"</code>，语义与 PP-StructureV3 <code>layout-parsing</code> 接口一致。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -1910,6 +1916,11 @@ for tgt_md_info in tgt_md_info_list:
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的 <code>docx</code> 等附加导出，仅当请求 <code>outputFormats</code> 时出现。</td>
 </tr>
 </tbody>
 </table>
@@ -2023,6 +2034,12 @@ for tgt_md_info in tgt_md_info_list:
 <td>请参阅产线对象中 <code>translate</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式；当前仅支持 <code>"docx"</code>，将在每条 <code>translationResults</code> 中返回 <code>exports</code>。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -2063,6 +2080,11 @@ for tgt_md_info in tgt_md_info_list:
 <td><code>markdown</code></td>
 <td><code>object</code></td>
 <td>Markdown结果。对象定义与<code>analyzeImages</code>操作返回的<code>markdown</code>一致。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的译文 <code>docx</code> 导出（当请求 <code>outputFormats</code> 时）。</td>
 </tr>
 </tbody>
 </table>

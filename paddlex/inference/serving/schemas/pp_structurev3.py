@@ -18,6 +18,7 @@ from pydantic import BaseModel
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
+from .shared.export import DocumentExports, OutputFormatsMixin
 
 __all__ = [
     "INFER_ENDPOINT",
@@ -30,7 +31,7 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/layout-parsing"
 
 
-class InferRequest(ocr.BaseInferRequest):
+class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
     useTextlineOrientation: Optional[bool] = None
@@ -74,6 +75,7 @@ class LayoutParsingResult(BaseModel):
     markdown: ocr.MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
+    exports: Optional[DocumentExports] = None
 
 
 class InferResult(BaseModel):

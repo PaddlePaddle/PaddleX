@@ -327,21 +327,29 @@ class TritonPythonModel(BaseTritonPythonModel):
                 )
             else:
                 imgs = {}
-            layout_parsing_results.append(
-                dict(
-                    prunedResult=pruned_res,
-                    markdown=dict(
-                        text=md_text,
-                        images=md_imgs,
-                    ),
-                    outputImages=(
-                        {k: v for k, v in imgs.items() if k != "input_img"}
-                        if imgs
-                        else None
-                    ),
-                    inputImage=imgs.get("input_img"),
-                )
+            entry = dict(
+                prunedResult=pruned_res,
+                markdown=dict(
+                    text=md_text,
+                    images=md_imgs,
+                ),
+                outputImages=(
+                    {k: v for k, v in imgs.items() if k != "input_img"}
+                    if imgs
+                    else None
+                ),
+                inputImage=imgs.get("input_img"),
             )
+            if app_common.normalize_output_formats(input.outputFormats):
+                entry["exports"] = app_common.build_pipeline_exports(
+                    input.outputFormats,
+                    item,
+                    log_id=log_id,
+                    file_storage=self.context["file_storage"],
+                    return_urls=self.context["return_img_urls"],
+                    url_expires_in=self.context["url_expires_in"],
+                )
+            layout_parsing_results.append(entry)
 
         return schemas.paddleocr_vl.InferResult(
             layoutParsingResults=layout_parsing_results,

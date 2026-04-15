@@ -2446,6 +2446,12 @@ for res in output:
 </td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式列表，默认不返回。当前仅支持 <code>"docx"</code>（结果项中的 <code>exports.docx</code>）。<code>exports.docx.content</code> 默认与服务返回的 Markdown 配图一致为 Base64；若配置了对象存储并启用 URL 返回，则可能为 URL。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -2501,6 +2507,11 @@ for res in output:
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的附加导出结果。仅当请求中包含 <code>outputFormats</code> 时出现，例如 <code>{"docx": {"content": "...", "fileName": "..."}}</code>。</td>
 </tr>
 </tbody>
 </table>

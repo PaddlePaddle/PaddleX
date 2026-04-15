@@ -1577,6 +1577,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 </td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。需要额外返回的文档格式列表。默认不返回任何附加格式。当前仅支持 <code>"docx"</code>：在对应结果项的 <code>exports.docx</code> 中返回 Word 文件；<code>exports.docx.content</code> 为文件内容的 Base64（在未配置对象存储并开启 URL 返回时），或与 Markdown 图片一致的 URL 返回策略。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -1632,6 +1638,11 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的附加导出结果。仅当请求体中包含 <code>outputFormats</code> 且列出相应格式时出现。例如 <code>{"docx": {"content": "...", "fileName": "..."}}</code>，其中 <code>content</code> 为 Base64 或下载 URL（取决于服务存储配置），<code>fileName</code> 为建议文件名。</td>
 </tr>
 </tbody>
 </table>
@@ -1712,6 +1723,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式，含义与 <code>infer</code> 中的 <code>outputFormats</code> 相同。当前仅支持 <code>"docx"</code>。<code>restructure-pages</code> 导出 Word 时会利用各页传入的 <code>markdownImages</code> 恢复图块（与 <code>infer</code> 返回的 <code>markdown.images</code> 一致）。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <p><code>pages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
@@ -1751,7 +1768,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>重构后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+<td>重构后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）；若请求 <code>outputFormats</code>，同样可能包含 <code>exports</code>。</td>
 </tr>
 </tbody>
 </table>
