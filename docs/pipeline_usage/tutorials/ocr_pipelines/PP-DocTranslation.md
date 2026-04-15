@@ -1839,6 +1839,12 @@ for tgt_md_info in tgt_md_info_list:
 <td>否</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式列表；当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -1853,12 +1859,6 @@ for tgt_md_info in tgt_md_info_list:
 </code></pre>
 将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
 </td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>outputFormats</code></td>
-<td><code>array</code> | <code>null</code></td>
-<td>可选。附加导出格式列表；当前仅支持 <code>"docx"</code>，语义与 PP-StructureV3 <code>layout-parsing</code> 接口一致。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1920,7 +1920,7 @@ for tgt_md_info in tgt_md_info_list:
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>可选的 <code>docx</code> 等附加导出，仅当请求 <code>outputFormats</code> 时出现。</td>
+<td>可选的 <code>docx</code> 等附加导出，仅当请求 <code>outputFormats</code> 时出现。其中 <code>content</code> 为文件内容的Base64编码。</td>
 </tr>
 </tbody>
 </table>
@@ -2034,12 +2034,6 @@ for tgt_md_info in tgt_md_info_list:
 <td>请参阅产线对象中 <code>translate</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
-<tr>
-<td><code>outputFormats</code></td>
-<td><code>array</code> | <code>null</code></td>
-<td>可选。附加导出格式；当前仅支持 <code>"docx"</code>，将在每条 <code>translationResults</code> 中返回 <code>exports</code>。</td>
-<td>否</td>
-</tr>
 </tbody>
 </table>
 <ul>
@@ -2080,11 +2074,6 @@ for tgt_md_info in tgt_md_info_list:
 <td><code>markdown</code></td>
 <td><code>object</code></td>
 <td>Markdown结果。对象定义与<code>analyzeImages</code>操作返回的<code>markdown</code>一致。</td>
-</tr>
-<tr>
-<td><code>exports</code></td>
-<td><code>object</code> | <code>null</code></td>
-<td>可选的译文 <code>docx</code> 导出（当请求 <code>outputFormats</code> 时）。</td>
 </tr>
 </tbody>
 </table>

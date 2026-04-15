@@ -2473,6 +2473,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Optional list of extra formats to return. Currently only <code>"docx"</code> is supported.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2490,12 +2496,6 @@ For example, adding the following setting to the pipeline config file:<br/>
 will disable image return by default. This behavior can be overridden by explicitly setting the <code>visualize</code> parameter in the request.<br/>
 If neither the request body nor the configuration file is set (If <code>visualize</code> is set to <code>null</code> in the request and  not defined in the configuration file), the image is returned by default.
 </td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>outputFormats</code></td>
-<td><code>array</code> | <code>null</code></td>
-<td>Optional list of extra formats to return. Currently only <code>"docx"</code> is supported. The response item may include <code>exports.docx</code>; <code>content</code> is Base64 by default or a URL when storage/URL return is configured.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -2557,7 +2557,7 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Optional additional exports (e.g., <code>docx</code>) when <code>outputFormats</code> is present.</td>
+<td>Optional additional exports when <code>outputFormats</code> is present—for example, <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
 </tr>
 </tbody>
 </table>

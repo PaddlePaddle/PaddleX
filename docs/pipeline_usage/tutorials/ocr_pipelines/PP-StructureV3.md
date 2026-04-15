@@ -2430,6 +2430,12 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式列表，默认不返回。当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -2444,12 +2450,6 @@ for res in output:
 </code></pre>
 将默认不返回图像，通过请求体中的<code>visualize</code>参数可以覆盖默认行为。如果请求体和配置文件中均未设置（或请求体传入<code>null</code>、配置文件中未设置），则默认返回图像。
 </td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>outputFormats</code></td>
-<td><code>array</code> | <code>null</code></td>
-<td>可选。附加导出格式列表，默认不返回。当前仅支持 <code>"docx"</code>（结果项中的 <code>exports.docx</code>）。<code>exports.docx.content</code> 默认与服务返回的 Markdown 配图一致为 Base64；若配置了对象存储并启用 URL 返回，则可能为 URL。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -2511,7 +2511,7 @@ for res in output:
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>可选的附加导出结果。仅当请求中包含 <code>outputFormats</code> 时出现，例如 <code>{"docx": {"content": "...", "fileName": "..."}}</code>。</td>
+<td>可选的附加导出结果。仅当请求中包含 <code>outputFormats</code> 时出现，例如 <code>{"docx": {"content": "..."}}</code>，其中 <code>content</code> 为文件内容的Base64编码。</td>
 </tr>
 </tbody>
 </table>

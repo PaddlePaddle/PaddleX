@@ -206,16 +206,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                     isEnd=item["page_continuation_flags"][1],
                 ),
             )
-            if normalize_output_formats(request.outputFormats):
-                tr["exports"] = await serving_utils.call_async(
-                    build_pipeline_exports,
-                    request.outputFormats,
-                    item,
-                    log_id=log_id,
-                    file_storage=ctx.extra["file_storage"],
-                    return_urls=ctx.extra["return_img_urls"],
-                    url_expires_in=ctx.extra["url_expires_in"],
-                )
             translation_results.append(tr)
 
         return AIStudioResultResponse[schema.TranslateResult](

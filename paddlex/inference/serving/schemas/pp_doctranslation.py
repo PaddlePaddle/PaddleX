@@ -85,7 +85,7 @@ class AnalyzeImagesResult(BaseModel):
 TRANSLATE_ENDPOINT: Final[str] = "/doctrans-translate"
 
 
-class TranslateRequest(OutputFormatsMixin):
+class TranslateRequest(BaseModel):
     markdownList: List[ocr.MarkdownData]
     targetLanguage: str = "zh"
     chunkSize: int = 5000
@@ -102,7 +102,6 @@ class TranslateRequest(OutputFormatsMixin):
 class TranslationResult(BaseModel):
     language: str
     markdown: ocr.MarkdownData
-    exports: Optional[DocumentExports] = None
 
 
 class TranslateResult(BaseModel):
