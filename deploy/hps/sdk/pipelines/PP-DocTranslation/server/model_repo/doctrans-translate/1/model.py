@@ -14,7 +14,7 @@
 
 from typing import Any, Dict, List
 
-from paddlex_hps_server import BaseTritonPythonModel, app_common, schemas
+from paddlex_hps_server import BaseTritonPythonModel, schemas
 
 
 class TritonPythonModel(BaseTritonPythonModel):
@@ -60,15 +60,6 @@ class TritonPythonModel(BaseTritonPythonModel):
                     isEnd=item["page_continuation_flags"][1],
                 ),
             )
-            if app_common.normalize_output_formats(input.outputFormats):
-                tr["exports"] = app_common.build_pipeline_exports(
-                    input.outputFormats,
-                    item,
-                    log_id=log_id,
-                    file_storage=None,
-                    return_urls=False,
-                    url_expires_in=-1,
-                )
             translation_results.append(tr)
 
         return schemas.pp_doctranslation.TranslateResult(
