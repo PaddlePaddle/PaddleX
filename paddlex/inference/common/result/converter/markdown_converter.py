@@ -18,14 +18,14 @@ from __future__ import annotations
 
 import copy
 
-from .format_funcs import merge_formula_and_number
+from .markdown_format_funcs import merge_formula_and_number
 
 
 class MarkdownConverter:
     """Converts a list of document blocks into Markdown text + images.
 
     The caller is responsible for building ``handle_funcs_dict`` (typically via
-    :func:`~.format_funcs.build_handle_funcs_dict`) and passing it in.  This
+    :func:`~.markdown_format_funcs.build_handle_funcs_dict`) and passing it in.  This
     class centralises the iteration / image-collection / special-case logic
     that was previously duplicated across multiple Result classes.
     """
