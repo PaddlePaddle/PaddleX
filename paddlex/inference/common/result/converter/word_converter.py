@@ -81,7 +81,7 @@ def _strip_latex_markers(content: str) -> Tuple[str, bool]:
     if s.startswith("\\(") and s.endswith("\\)"):
         return s[2:-2].strip(), False
     # No markers → treat as display formula (most formula blocks are display)
-    return s, False
+    return s, True
 
 
 _OMML_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
@@ -1059,6 +1059,69 @@ def _header_text_alignment(bbox, page_width_px):
         return "\t\t"  # right — two tabs
 
 
+def _write_hf_image_block(
+    section_hf,
+    block,
+    next_block,
+    page_idx,
+    abs_image_paths,
+    original_image_width,
+    usable_width_emu,
+    companion_label,
+):
+    """Write header/footer image block with optional companion text merge.
+
+    Args:
+        section_hf: section.header or section.footer object.
+        block: Current header_image/footer_image block dict.
+        next_block: Next block in word_blocks (or None).
+        page_idx: Current page index.
+        abs_image_paths: Dict mapping image path to absolute path.
+        original_image_width: Original page image width in pixels.
+        usable_width_emu: Usable page width in EMU.
+        companion_label: "header" or "footer" — label of the companion text block.
+
+    Returns:
+        True if next_block was consumed (caller should skip it), False otherwise.
+    """
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.oxml.ns import qn
+    from docx.shared import Pt
+
+    content = block.get("content", "").strip()
+    abs_path = abs_image_paths.get(content)
+    if not abs_path:
+        return False
+
+    next_same_page = (
+        next_block is not None
+        and next_block.get("type") == companion_label
+        and next_block.get("page_index", 0) == page_idx
+    )
+    para = section_hf.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    img_w = _header_image_width(
+        abs_path,
+        block.get("bbox"),
+        original_image_width,
+        usable_width_emu,
+    )
+    para.add_run().add_picture(abs_path, width=img_w)
+    consumed_next = False
+    if next_same_page:
+        next_content = next_block.get("content", "").strip()
+        if next_content:
+            tab_prefix = _header_text_alignment(
+                next_block.get("bbox"), original_image_width
+            )
+            run = para.add_run(tab_prefix + next_content)
+            run.font.name = "Times New Roman"
+            run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
+            run.font.size = Pt(9)
+        consumed_next = True
+    return consumed_next
+
+
 class WordConverter:
     """Convert structured word_blocks to a :class:`docx.Document`."""
 
@@ -1086,7 +1149,7 @@ class WordConverter:
         from docx.enum.section import WD_ORIENT
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         from docx.oxml.ns import qn
-        from docx.shared import Emu, Pt
+        from docx.shared import Emu
 
         # Detect landscape: width must exceed height by at least 20%
         is_landscape = (
@@ -1145,80 +1208,48 @@ class WordConverter:
                 run.font.name = "Times New Roman"
                 run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
             elif label == "header_image" and content:
-                abs_path = abs_image_paths.get(content)
-                if abs_path:
+                if abs_image_paths.get(content):
                     section = doc.sections[-1]
                     section.header.is_linked_to_previous = False
-                    # look-ahead: merge with next header text block on the same page
                     next_block = (
                         word_blocks[i + 1] if i + 1 < len(word_blocks) else None
                     )
-                    next_same_page = (
-                        next_block is not None
-                        and next_block.get("type") == "header"
-                        and next_block.get("page_index", 0) == page_idx
-                    )
-                    para = section.header.add_paragraph()
-                    para.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                    img_w = _header_image_width(
-                        abs_path,
-                        block.get("bbox"),
+                    if _write_hf_image_block(
+                        section.header,
+                        block,
+                        next_block,
+                        page_idx,
+                        abs_image_paths,
                         original_image_width,
                         _USABLE_W,
-                    )
-                    para.add_run().add_picture(abs_path, width=img_w)
-                    if next_same_page:
-                        next_content = next_block.get("content", "").strip()
-                        if next_content:
-                            tab_prefix = _header_text_alignment(
-                                next_block.get("bbox"), original_image_width
-                            )
-                            run = para.add_run(tab_prefix + next_content)
-                            run.font.name = "Times New Roman"
-                            run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-                            run.font.size = Pt(9)
+                        "header",
+                    ):
                         consumed.add(i + 1)
             elif label == "footer_image" and content:
-                abs_path = abs_image_paths.get(content)
-                if abs_path:
+                if abs_image_paths.get(content):
                     section = doc.sections[-1]
                     section.footer.is_linked_to_previous = False
-                    # look-ahead: merge with next footer text block on the same page
                     next_block = (
                         word_blocks[i + 1] if i + 1 < len(word_blocks) else None
                     )
-                    next_same_page = (
-                        next_block is not None
-                        and next_block.get("type") == "footer"
-                        and next_block.get("page_index", 0) == page_idx
-                    )
-                    para = section.footer.add_paragraph()
-                    para.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                    img_w = _header_image_width(
-                        abs_path,
-                        block.get("bbox"),
+                    if _write_hf_image_block(
+                        section.footer,
+                        block,
+                        next_block,
+                        page_idx,
+                        abs_image_paths,
                         original_image_width,
                         _USABLE_W,
-                    )
-                    para.add_run().add_picture(abs_path, width=img_w)
-                    if next_same_page:
-                        next_content = next_block.get("content", "").strip()
-                        if next_content:
-                            tab_prefix = _header_text_alignment(
-                                next_block.get("bbox"), original_image_width
-                            )
-                            run = para.add_run(tab_prefix + next_content)
-                            run.font.name = "Times New Roman"
-                            run._element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-                            run.font.size = Pt(9)
+                        "footer",
+                    ):
                         consumed.add(i + 1)
-
-            _write_block(
-                doc,
-                block,
-                abs_image_paths,
-                original_image_width,
-                usable_width_emu=_USABLE_W,
-            )
+            else:
+                _write_block(
+                    doc,
+                    block,
+                    abs_image_paths,
+                    original_image_width,
+                    usable_width_emu=_USABLE_W,
+                )
 
         return doc
