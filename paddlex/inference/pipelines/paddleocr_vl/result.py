@@ -32,7 +32,7 @@ from ...common.result import (
     XlsxMixin,
 )
 from ...common.result.converter import MarkdownConverter
-from ...common.result.converter.format_funcs import (
+from ...common.result.converter.markdown_format_funcs import (
     build_handle_funcs_dict,
     format_centered_by_html,
     format_chart2html_table,
