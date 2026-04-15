@@ -23,6 +23,7 @@ from pydantic import BaseModel, ConfigDict, model_validator
 
 from ....utils.deps import class_requires_deps
 from ..utils.model_paths import get_model_paths
+from .inference_runner import InferenceRunner
 from .utils import sort_inputs
 
 __all__ = ["ONNXRuntimeRunnerConfig", "ONNXRuntimeRunner"]
@@ -68,7 +69,7 @@ class ONNXRuntimeRunnerConfig(BaseModel):
 
 
 @class_requires_deps("onnxruntime")
-class ONNXRuntimeRunner:
+class ONNXRuntimeRunner(InferenceRunner):
     """ONNX Runtime inference runner."""
 
     def __init__(

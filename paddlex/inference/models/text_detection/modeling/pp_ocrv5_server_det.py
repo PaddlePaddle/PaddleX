@@ -18,7 +18,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
@@ -252,9 +251,8 @@ class PPOCRV5ServerDetNeck(nn.Layer):
         bottom_up = [None] * self.num_backbone_stages
         bottom_up[0] = projected[0]
         for i in range(1, self.num_backbone_stages):
-            bottom_up[i] = (
-                projected[i]
-                + self.path_aggregation_head_convolution[i - 1](bottom_up[i - 1])
+            bottom_up[i] = projected[i] + self.path_aggregation_head_convolution[i - 1](
+                bottom_up[i - 1]
             )
 
         lateral_refined = []
@@ -269,14 +267,14 @@ class PPOCRV5ServerDetNeck(nn.Layer):
         ]
 
         upsampled = [
-            F.interpolate(
-                feature, scale_factor=scale_factor, mode=self.interpolate_mode
+            (
+                F.interpolate(
+                    feature, scale_factor=scale_factor, mode=self.interpolate_mode
+                )
+                if scale_factor > 1
+                else feature
             )
-            if scale_factor > 1
-            else feature
-            for feature, scale_factor in zip(
-                intraclass_refined, self.scale_factor_list
-            )
+            for feature, scale_factor in zip(intraclass_refined, self.scale_factor_list)
         ]
 
         return paddle.concat(upsampled[::-1], axis=1)
@@ -384,9 +382,6 @@ class PPOCRV5ServerDet(BatchNormHFStateDictMixin, PretrainedModel):
         self.model = PPOCRV5ServerDetModel(config)
         self.head = PPOCRV5ServerDetHead(config)
 
-    add_inference_operations("pp_ocrv5_server_det_forward")
-
-    @benchmark.timeit_with_options(name="pp_ocrv5_server_det_forward")
     def forward(self, x: List) -> List:
         x = paddle.to_tensor(x[0])
         neck_output = self.model(x)

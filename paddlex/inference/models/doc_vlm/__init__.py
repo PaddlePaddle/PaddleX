@@ -27,7 +27,7 @@ register_predictor_binding_map(
 )
 register_predictor_binding_map(
     DocVLMTransformersPredictor,
-    {"transformers": PADDLEOCR_VL_MODELS},
+    {"transformers": ("PP-Chart2Table",) + PADDLEOCR_VL_MODELS},
 )
 register_predictor_binding_map(
     DocVLMGenAIClientPredictor,

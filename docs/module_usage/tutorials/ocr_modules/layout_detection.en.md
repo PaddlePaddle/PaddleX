@@ -37,7 +37,6 @@ The core task of structure analysis is to parse and segment the content of input
 </tbody>
 </table>
 
-
 * <b>The layout detection model includes 1 category: Block:</b>
 <table>
 <thead>
@@ -63,7 +62,6 @@ The core task of structure analysis is to parse and segment the content of input
 <tr>
 </tbody>
 </table>
-
 
 * <b>The layout detection model includes 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, figure title, table, table title, seal, chart title, chart, header image, footer image, and sidebar text</b>
 <table>
@@ -304,7 +302,6 @@ The core task of structure analysis is to parse and segment the content of input
 
 </details>
 
-
 ## III. Quick Integration  <a id="quick"> </a>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
@@ -466,7 +463,29 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td><code>hpi_config</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
+</table>
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>Effective when <code>engine="hpi"</code> and <code>engine_config</code> is not explicitly provided</td>
@@ -763,7 +782,30 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 * Alternatively, you can use the PaddleX wheel package for inference and integrate the model into your own project. Based on the quick integration example in Section III, add `model_dir="/output/best_model/inference"`, and optionally append `engine=...` and `engine_config=...` when needed.
 
-#### 4.4.2 Model Integration
+#### 4.4.2 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-DocLayoutV2`, `PP-DocLayout_plus-L`, `PP-DocBlockLayout`.
+
+* To perform weight conversion via command line, taking `PP-DocLayoutV2` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayoutV2.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+
+#### 4.4.3 Model Integration
+
 The model can be directly integrated into PaddleX pipelines or into your own projects.
 
 1. <b>Pipeline Integration</b>

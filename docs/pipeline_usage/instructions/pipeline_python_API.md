@@ -37,7 +37,7 @@ for res in output:
     * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
     * `engine`：`str | None` 类型，推理引擎。可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`genai_client`；
     * `engine_config`：`dict | None` 类型，推理引擎配置。若设置，将传递并合并到各子模块；
-    * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文“5. 兼容配置（PaddlePredictorOption）”；
+    * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[5-兼容配置（PaddlePredictorOption）](#5-兼容配置paddlepredictoroption)；
     * `use_hpip`：`bool | None` 类型，是否启用高性能推理插件（`None` 表示使用配置文件中的配置）；
     * `hpi_config`：`dict | None` 类型，高性能推理配置；
   * 返回值：`BasePipeline`类型。

@@ -16,7 +16,10 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Type
 
 from ...common.batch_sampler import BaseBatchSampler
+from ...utils.benchmark import add_inference_operations, benchmark
 from .local_model_predictor import LocalModelPredictor
+
+add_inference_operations("TransformersInfer")
 
 
 class TransformersPredictor(LocalModelPredictor):
@@ -158,6 +161,53 @@ class TransformersPredictor(LocalModelPredictor):
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
         raise NotImplementedError
 
+    @benchmark.timeit
+    def preprocess_images(self, images, **kwargs):
+        if getattr(self, "image_processor", None) is not None:
+            processor = self.image_processor
+        elif getattr(self, "processor", None) is not None:
+            processor = self.processor
+        else:
+            raise ValueError(
+                "Please make sure `self.image_processor` or `self.processor` is set before calling `preprocess_images`."
+            )
+        model_inputs = processor(images=images, return_tensors="pt", **kwargs)
+        model_inputs = self._move_to_infer_device(model_inputs)
+
+        return model_inputs
+
+    @benchmark.timeit_with_options(name="TransformersInfer")
+    def forward(self, model_inputs):
+        if getattr(self, "infer", None) is None:
+            raise ValueError(
+                "Please make sure `self.infer` is set before calling `forward`."
+            )
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer(**model_inputs)
+
+        return outputs
+
+    @benchmark.timeit_with_options(name="TransformersInfer")
+    def generate(self, model_inputs, generate_kwargs):
+        if getattr(self, "infer", None) is None:
+            raise ValueError(
+                "Please make sure `self.infer` is set before calling `forward`."
+            )
+
+        import torch
+
+        with torch.inference_mode():
+            outputs = self.infer.generate(**model_inputs, **generate_kwargs)
+
+        return outputs
+
+    @abstractmethod
+    def postprocess(self, outputs, **kwargs):
+        raise NotImplementedError
+
     @abstractmethod
     def _build_batch_sampler(self) -> BaseBatchSampler:
         raise NotImplementedError
@@ -165,3 +215,8 @@ class TransformersPredictor(LocalModelPredictor):
     @abstractmethod
     def _get_result_class(self) -> type:
         raise NotImplementedError
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if "postprocess" in cls.__dict__:
+            cls.postprocess = benchmark.timeit(cls.postprocess)

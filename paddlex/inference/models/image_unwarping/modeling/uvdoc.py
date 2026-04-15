@@ -18,7 +18,6 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
@@ -54,7 +53,9 @@ class UVDocConvLayer(nn.Layer):
             bias_attr=False if not bias else None,
         )
         self.normalization = nn.BatchNorm2D(out_channels)
-        self.activation = ACT2FN[activation] if activation is not None else nn.Identity()
+        self.activation = (
+            ACT2FN[activation] if activation is not None else nn.Identity()
+        )
 
     def forward(self, hidden_state):
         hidden_state = self.convolution(hidden_state)
@@ -282,6 +283,7 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
     """UVDoc model for document image rectification."""
 
     config_class = UVDocConfig
+    _keys_to_ignore_on_load_unexpected = ["num_batches_tracked"]
 
     def __init__(self, config: UVDocConfig):
         super().__init__(config)
@@ -290,9 +292,6 @@ class UVDocNet(BatchNormHFStateDictMixin, PretrainedModel):
         self.upsample_size = config.upsample_size
         self.upsample_mode = config.upsample_mode
 
-    add_inference_operations("uvdoc_forward")
-
-    @benchmark.timeit_with_options(name="uvdoc_forward")
     def forward(self, x: Any) -> List:
         x = paddle.to_tensor(x[0])
 

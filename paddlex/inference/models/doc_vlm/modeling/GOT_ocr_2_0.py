@@ -18,13 +18,11 @@ Architecture: GotOcr2VisionEncoder + GotOcr2MultiModalProjector + Qwen2 LM.
 Safetensors key names match HF transformers exactly.
 """
 
-import collections
-from typing import List, Optional, Tuple, Union
-
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
+from ....utils.benchmark import add_inference_operations, benchmark
 from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
@@ -32,7 +30,9 @@ from ...common.transformers.transformers import (
 )
 from ...common.transformers.transformers.model_outputs import CausalLMOutputWithPast
 from ._config_pp_chart2table import PPChart2TableConfig
-from .qwen2 import Qwen2Config, Qwen2Model
+from .qwen2 import Qwen2Model
+
+add_inference_operations("chart2table_generate")
 
 
 class GotOcr2MLPBlock(nn.Layer):
@@ -52,7 +52,10 @@ class GotOcr2VisionAttention(nn.Layer):
     def __init__(self, config, window_size):
         super().__init__()
         input_size = (
-            (config.image_size // config.patch_size, config.image_size // config.patch_size)
+            (
+                config.image_size // config.patch_size,
+                config.image_size // config.patch_size,
+            )
             if window_size == 0
             else (window_size, window_size)
         )
@@ -61,7 +64,9 @@ class GotOcr2VisionAttention(nn.Layer):
         head_dim = config.hidden_size // config.num_attention_heads
         self.scale = head_dim**-0.5
 
-        self.qkv = nn.Linear(config.hidden_size, config.hidden_size * 3, bias_attr=config.qkv_bias)
+        self.qkv = nn.Linear(
+            config.hidden_size, config.hidden_size * 3, bias_attr=config.qkv_bias
+        )
         self.proj = nn.Linear(config.hidden_size, config.hidden_size)
 
         self.use_rel_pos = config.use_rel_pos
@@ -83,13 +88,17 @@ class GotOcr2VisionAttention(nn.Layer):
                 size=[max_rel_dist],
                 mode="linear",
             )
-            rel_pos_resized = rel_pos_resized.reshape([-1, max_rel_dist]).transpose([1, 0])
+            rel_pos_resized = rel_pos_resized.reshape([-1, max_rel_dist]).transpose(
+                [1, 0]
+            )
         else:
             rel_pos_resized = rel_pos
 
         q_coords = paddle.arange(q_size).unsqueeze(-1) * max(k_size / q_size, 1.0)
         k_coords = paddle.arange(k_size).unsqueeze(0) * max(q_size / k_size, 1.0)
-        relative_coords = (q_coords - k_coords) + (k_size - 1) * max(q_size / k_size, 1.0)
+        relative_coords = (q_coords - k_coords) + (k_size - 1) * max(
+            q_size / k_size, 1.0
+        )
         return rel_pos_resized[relative_coords.astype("int64")]
 
     def get_decomposed_rel_pos(self, query, rel_pos_h, rel_pos_w, q_size, k_size):
@@ -111,7 +120,9 @@ class GotOcr2VisionAttention(nn.Layer):
             .reshape([B, H * W, 3, self.num_attention_heads, -1])
             .transpose([2, 0, 3, 1, 4])
         )
-        q, k, v = qkv.reshape([3, B * self.num_attention_heads, H * W, -1]).unbind(axis=0)
+        q, k, v = qkv.reshape([3, B * self.num_attention_heads, H * W, -1]).unbind(
+            axis=0
+        )
 
         attn = (q * self.scale) @ k.transpose([0, 2, 1])
 
@@ -138,9 +149,13 @@ class GotOcr2VisionLayer(nn.Layer):
 
     def __init__(self, config, window_size):
         super().__init__()
-        self.layer_norm1 = nn.LayerNorm(config.hidden_size, epsilon=config.layer_norm_eps)
+        self.layer_norm1 = nn.LayerNorm(
+            config.hidden_size, epsilon=config.layer_norm_eps
+        )
         self.attn = GotOcr2VisionAttention(config, window_size)
-        self.layer_norm2 = nn.LayerNorm(config.hidden_size, epsilon=config.layer_norm_eps)
+        self.layer_norm2 = nn.LayerNorm(
+            config.hidden_size, epsilon=config.layer_norm_eps
+        )
         self.mlp = GotOcr2MLPBlock(config)
         self.window_size = window_size
 
@@ -152,8 +167,12 @@ class GotOcr2VisionLayer(nn.Layer):
         if pad_h > 0 or pad_w > 0:
             x = F.pad(x, pad=[0, 0, 0, pad_w, 0, pad_h], data_format="NHWC")
         Hp, Wp = H + pad_h, W + pad_w
-        x = x.reshape([B, Hp // window_size, window_size, Wp // window_size, window_size, C])
-        windows = x.transpose([0, 1, 3, 2, 4, 5]).reshape([-1, window_size, window_size, C])
+        x = x.reshape(
+            [B, Hp // window_size, window_size, Wp // window_size, window_size, C]
+        )
+        windows = x.transpose([0, 1, 3, 2, 4, 5]).reshape(
+            [-1, window_size, window_size, C]
+        )
         return windows, (Hp, Wp)
 
     @staticmethod
@@ -161,7 +180,9 @@ class GotOcr2VisionLayer(nn.Layer):
         Hp, Wp = pad_hw
         H, W = hw
         B = windows.shape[0] // (Hp * Wp // window_size // window_size)
-        x = windows.reshape([B, Hp // window_size, Wp // window_size, window_size, window_size, -1])
+        x = windows.reshape(
+            [B, Hp // window_size, Wp // window_size, window_size, window_size, -1]
+        )
         x = x.transpose([0, 1, 3, 2, 4, 5]).reshape([B, Hp, Wp, -1])
         if Hp > H or Wp > W:
             x = x[:, :H, :W, :]
@@ -172,10 +193,14 @@ class GotOcr2VisionLayer(nn.Layer):
         hidden_states = self.layer_norm1(hidden_states)
         if self.window_size > 0:
             H, W = hidden_states.shape[1], hidden_states.shape[2]
-            hidden_states, pad_hw = self.window_partition(hidden_states, self.window_size)
+            hidden_states, pad_hw = self.window_partition(
+                hidden_states, self.window_size
+            )
         hidden_states = self.attn(hidden_states)
         if self.window_size > 0:
-            hidden_states = self.window_unpartition(hidden_states, self.window_size, pad_hw, (H, W))
+            hidden_states = self.window_unpartition(
+                hidden_states, self.window_size, pad_hw, (H, W)
+            )
         hidden_states = residual + hidden_states
         hidden_states = hidden_states + self.mlp(self.layer_norm2(hidden_states))
         return hidden_states
@@ -186,13 +211,23 @@ class GotOcr2PatchEmbeddings(nn.Layer):
         super().__init__()
         image_size = config.image_size
         patch_size = config.patch_size
-        image_size = image_size if isinstance(image_size, (tuple, list)) else (image_size, image_size)
-        patch_size = patch_size if isinstance(patch_size, (tuple, list)) else (patch_size, patch_size)
+        image_size = (
+            image_size
+            if isinstance(image_size, (tuple, list))
+            else (image_size, image_size)
+        )
+        patch_size = (
+            patch_size
+            if isinstance(patch_size, (tuple, list))
+            else (patch_size, patch_size)
+        )
         self.image_size = image_size
         self.patch_size = patch_size
         self.projection = nn.Conv2D(
-            config.num_channels, config.hidden_size,
-            kernel_size=patch_size, stride=patch_size,
+            config.num_channels,
+            config.hidden_size,
+            kernel_size=patch_size,
+            stride=patch_size,
         )
 
     def forward(self, pixel_values):
@@ -222,12 +257,22 @@ class GotOcr2LayerNorm(nn.LayerNorm):
 class GotOcr2VisionNeck(nn.Layer):
     def __init__(self, config):
         super().__init__()
-        self.conv1 = nn.Conv2D(config.hidden_size, config.output_channels, kernel_size=1, bias_attr=False)
-        self.layer_norm1 = GotOcr2LayerNorm(config.output_channels, data_format="channels_first")
-        self.conv2 = nn.Conv2D(
-            config.output_channels, config.output_channels, kernel_size=3, padding=1, bias_attr=False
+        self.conv1 = nn.Conv2D(
+            config.hidden_size, config.output_channels, kernel_size=1, bias_attr=False
         )
-        self.layer_norm2 = GotOcr2LayerNorm(config.output_channels, data_format="channels_first")
+        self.layer_norm1 = GotOcr2LayerNorm(
+            config.output_channels, data_format="channels_first"
+        )
+        self.conv2 = nn.Conv2D(
+            config.output_channels,
+            config.output_channels,
+            kernel_size=3,
+            padding=1,
+            bias_attr=False,
+        )
+        self.layer_norm2 = GotOcr2LayerNorm(
+            config.output_channels, data_format="channels_first"
+        )
 
     def forward(self, hidden_states):
         # B H W C -> B C H W
@@ -248,8 +293,12 @@ class GotOcr2VisionEncoder(nn.Layer):
         self.pos_embed = None
         if config.use_abs_pos:
             self.pos_embed = self.create_parameter(
-                shape=[1, config.image_size // config.patch_size,
-                       config.image_size // config.patch_size, config.hidden_size],
+                shape=[
+                    1,
+                    config.image_size // config.patch_size,
+                    config.image_size // config.patch_size,
+                    config.hidden_size,
+                ],
                 default_initializer=nn.initializer.Constant(0.0),
             )
 
@@ -257,7 +306,9 @@ class GotOcr2VisionEncoder(nn.Layer):
         for i in range(config.num_hidden_layers):
             layer = GotOcr2VisionLayer(
                 config,
-                window_size=config.window_size if i not in config.global_attn_indexes else 0,
+                window_size=(
+                    config.window_size if i not in config.global_attn_indexes else 0
+                ),
             )
             self.layers.append(layer)
 
@@ -282,12 +333,20 @@ class GotOcr2MultiModalProjector(nn.Layer):
         vision_channels = config.vision_config.output_channels
         language_dim = config.text_config.hidden_size
         self.conv_upsampler1 = nn.Conv2D(
-            vision_channels, vision_channels * 2,
-            kernel_size=3, stride=2, padding=1, bias_attr=False,
+            vision_channels,
+            vision_channels * 2,
+            kernel_size=3,
+            stride=2,
+            padding=1,
+            bias_attr=False,
         )
         self.conv_upsampler2 = nn.Conv2D(
-            vision_channels * 2, language_dim,
-            kernel_size=3, stride=2, padding=1, bias_attr=False,
+            vision_channels * 2,
+            language_dim,
+            kernel_size=3,
+            stride=2,
+            padding=1,
+            bias_attr=False,
         )
         self.multimodal_projector = nn.Linear(language_dim, language_dim)
 
@@ -453,11 +512,14 @@ class PPChart2TableInference(BatchNormHFStateDictMixin, PretrainedModel):
             start_pos = int(positions[0].item())
             end_pos = int(positions[-1].item()) + 1
 
-            merged = paddle.concat([
-                cur_embeds[:start_pos],
-                cur_features,
-                cur_embeds[end_pos:],
-            ], axis=0)
+            merged = paddle.concat(
+                [
+                    cur_embeds[:start_pos],
+                    cur_features,
+                    cur_embeds[end_pos:],
+                ],
+                axis=0,
+            )
             new_embeds.append(merged)
 
         return paddle.stack(new_embeds, axis=0)
@@ -481,9 +543,21 @@ class PPChart2TableInference(BatchNormHFStateDictMixin, PretrainedModel):
         if pixel_values is None and images is not None:
             pixel_values = images
 
-        output_attentions = output_attentions if output_attentions is not None else self.config.text_config.output_attentions
-        output_hidden_states = output_hidden_states if output_hidden_states is not None else self.config.text_config.output_hidden_states
-        return_dict = return_dict if return_dict is not None else self.config.text_config.use_return_dict
+        output_attentions = (
+            output_attentions
+            if output_attentions is not None
+            else self.config.text_config.output_attentions
+        )
+        output_hidden_states = (
+            output_hidden_states
+            if output_hidden_states is not None
+            else self.config.text_config.output_hidden_states
+        )
+        return_dict = (
+            return_dict
+            if return_dict is not None
+            else self.config.text_config.use_return_dict
+        )
 
         if inputs_embeds is None:
             inputs_embeds = self._merge_image_features(input_ids, pixel_values)
@@ -540,19 +614,27 @@ class PPChart2TableInference(BatchNormHFStateDictMixin, PretrainedModel):
         else:
             model_inputs = {"input_ids": input_ids}
 
-        model_inputs.update({
-            "position_ids": position_ids,
-            "past_key_values": past_key_values,
-            "use_cache": kwargs.get("use_cache"),
-            "attention_mask": attention_mask,
-            # Pass images only on first iteration (no KV cache yet)
-            "images": kwargs.get("images") if past_key_values is None else None,
-        })
+        model_inputs.update(
+            {
+                "position_ids": position_ids,
+                "past_key_values": past_key_values,
+                "use_cache": kwargs.get("use_cache"),
+                "attention_mask": attention_mask,
+                # Pass images only on first iteration (no KV cache yet)
+                "images": kwargs.get("images") if past_key_values is None else None,
+            }
+        )
         return model_inputs
 
     @staticmethod
-    def update_model_kwargs_for_generation(outputs, model_kwargs, is_encoder_decoder=False):
-        if isinstance(outputs, tuple) and len(outputs) > 1 and not isinstance(outputs[1], paddle.Tensor):
+    def update_model_kwargs_for_generation(
+        outputs, model_kwargs, is_encoder_decoder=False
+    ):
+        if (
+            isinstance(outputs, tuple)
+            and len(outputs) > 1
+            and not isinstance(outputs[1], paddle.Tensor)
+        ):
             model_kwargs["past_key_values"] = outputs[1]
         if isinstance(outputs, CausalLMOutputWithPast) and "past_key_values" in outputs:
             model_kwargs["past_key_values"] = outputs.past_key_values
@@ -567,11 +649,17 @@ class PPChart2TableInference(BatchNormHFStateDictMixin, PretrainedModel):
             attention_mask = model_kwargs["attention_mask"]
             if len(attention_mask.shape) == 2:
                 model_kwargs["attention_mask"] = paddle.concat(
-                    [attention_mask, paddle.ones([attention_mask.shape[0], 1], dtype=attention_mask.dtype)],
+                    [
+                        attention_mask,
+                        paddle.ones(
+                            [attention_mask.shape[0], 1], dtype=attention_mask.dtype
+                        ),
+                    ],
                     axis=-1,
                 )
         return model_kwargs
 
+    @benchmark.timeit_with_options(name="chart2table_generate")
     def generate(self, inputs, **kwargs):
         """Generate text from image+text inputs.
 

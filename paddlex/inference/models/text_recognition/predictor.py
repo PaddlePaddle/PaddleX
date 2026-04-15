@@ -17,6 +17,7 @@ from typing import Optional
 import numpy as np
 from PIL import Image
 
+from ....utils import logging
 from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import (
     ARABIC_FONT,
@@ -263,38 +264,17 @@ class TextRecTransformersPredictor(TransformersPredictor):
         return 3, img_h, img_w
 
     def process(self, batch_data, return_word_box: Optional[bool] = None):
+        if return_word_box is not None:
+            logging.warning("transformers engine doesn't support `return_word_box`")
+
         batch_raw_imgs = self.read_op(imgs=batch_data.instances)
         for i, img in enumerate(batch_raw_imgs):
             validate_text_rec_image_array(img, index=i)
-        width_list = [img.shape[1] / float(img.shape[0]) for img in batch_raw_imgs]
-        indices = np.argsort(np.array(width_list))
         images = [Image.fromarray(img) for img in batch_raw_imgs]
-        model_inputs = self.image_processor(images=images, return_tensors="pt")
-        model_inputs = self._move_to_infer_device(model_inputs)
 
-        import torch
-
-        with torch.inference_mode():
-            outputs = self.infer(pixel_values=model_inputs["pixel_values"])
-
-        batch_preds = [outputs.last_hidden_state.detach().float().cpu().numpy()]
-        batch_num = self.batch_sampler.batch_size
-        img_num = len(batch_raw_imgs)
-        _, img_h, img_w = self._get_rec_image_shape()
-        max_wh_ratio = img_w / img_h
-        end_img_no = min(img_num, batch_num)
-        wh_ratio_list = []
-        for ino in range(0, end_img_no):
-            h, w = batch_raw_imgs[indices[ino]].shape[0:2]
-            wh_ratio = w * 1.0 / h
-            max_wh_ratio = max(max_wh_ratio, wh_ratio)
-            wh_ratio_list.append(wh_ratio)
-        texts, scores = self.post_op(
-            batch_preds,
-            return_word_box=return_word_box or self.return_word_box,
-            wh_ratio_list=wh_ratio_list,
-            max_wh_ratio=max_wh_ratio,
-        )
+        model_inputs = self.preprocess_images(images=images)
+        outputs = self.forward(model_inputs)
+        texts, scores = self.postprocess(outputs)
 
         return {
             "input_path": batch_data.input_paths,
@@ -304,3 +284,10 @@ class TextRecTransformersPredictor(TransformersPredictor):
             "rec_score": scores,
             "vis_font": [self.vis_font] * len(batch_raw_imgs),
         }
+
+    def postprocess(self, outputs, **kwargs):
+        results = self.image_processor.post_process_text_recognition(outputs)
+        texts = [r["text"] for r in results]
+        scores = [r["score"] for r in results]
+
+        return texts, scores

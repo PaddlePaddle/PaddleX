@@ -62,6 +62,10 @@ class GenAIClientPredictor(BasePredictor):
         )
 
     @property
+    def supports_benchmark(self) -> bool:
+        return False
+
+    @property
     def genai_client(self):
         """The underlying `GenAIClient` instance."""
         return self._genai_client

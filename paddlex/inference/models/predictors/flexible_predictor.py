@@ -42,6 +42,10 @@ class FlexiblePredictor(LocalModelPredictor):
             **kwargs,
         )
 
+    @property
+    def supports_benchmark(self) -> bool:
+        return False
+
     @abstractmethod
     def _build(self) -> Any:
         """Build the model. Subclasses implement their custom logic."""

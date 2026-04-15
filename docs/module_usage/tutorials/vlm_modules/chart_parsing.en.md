@@ -33,8 +33,6 @@ Multimodal chart parsing is a cutting-edge technology in the OCR field, focusing
 <b>Note: The above model scores are the results of internal evaluation set model testing, with a total of 1801 data points, including various chart types such as bar charts, line charts, and pie charts for testing samples under various scenarios such as financial reports, laws and regulations, contracts, etc. There are currently no plans to make them public.</b>
 > ❗ <b>Note</b>：The PP-Chart2Table model was upgraded on June 27, 2025. If you need to use the weights from the previous version of the model, please click the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-Chart2Table_infer.bak.tar">download link</a>
 
-
-
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, please refer to [PaddleX Local Installation Tutorial](../../../installation/installation.md)
 
@@ -230,3 +228,25 @@ For more information on using the API for single model inference in PaddleX, you
 
 ## IV. Secondary Development
 The current module temporarily does not support fine-tuning training, only inference integration. Support for fine-tuning training in this module is planned for the future.
+
+## V. Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-Chart2Table`.
+
+* To perform weight conversion via command line, taking `PP-Chart2Table` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/chart_parsing/PP-Chart2Table.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

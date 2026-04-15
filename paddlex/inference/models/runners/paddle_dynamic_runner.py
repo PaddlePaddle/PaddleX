@@ -123,7 +123,7 @@ def _output_to_list(output: Any) -> List[np.ndarray]:
 
 
 @class_requires_deps("paddlepaddle")
-class PaddleDynamicRunner:
+class PaddleDynamicRunner(InferenceRunner):
     """InferenceRunner that wraps a Paddle dynamic graph model."""
 
     def __init__(

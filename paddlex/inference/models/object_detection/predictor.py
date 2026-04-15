@@ -512,20 +512,12 @@ class DetTransformersPredictor(TransformersPredictor):
 
         datas = self.read_op(batch_data.instances)
         images = [Image.fromarray(data["img"]) for data in datas]
-        model_inputs = self.image_processor(images=images, return_tensors="pt")
-        model_inputs = self._move_to_infer_device(model_inputs)
-
-        import torch
-
-        with torch.inference_mode():
-            outputs = self.infer(**model_inputs)
-
         effective_threshold, hf_threshold = self._get_hf_threshold(threshold)
-        predictions = self.image_processor.post_process_object_detection(
-            outputs,
-            threshold=hf_threshold,
-            target_sizes=self._get_target_sizes(datas),
-        )
+
+        model_inputs = self.preprocess_images(images=images)
+        outputs = self.forward(model_inputs)
+        predictions = self.postprocess(outputs, datas=datas, threshold=hf_threshold)
+
         layout_postprocess_kwargs = self._get_layout_postprocess_kwargs(
             layout_nms=layout_nms,
             layout_unclip_ratio=layout_unclip_ratio,
@@ -547,6 +539,15 @@ class DetTransformersPredictor(TransformersPredictor):
             "input_img": [data["ori_img"] for data in datas],
             "boxes": boxes,
         }
+
+    def postprocess(self, outputs, *, datas, threshold, **kwargs):
+        predictions = self.image_processor.post_process_object_detection(
+            outputs,
+            threshold=threshold,
+            target_sizes=self._get_target_sizes(datas),
+        )
+
+        return predictions
 
     def _resolve_labels(self):
         if self.threshold is None:

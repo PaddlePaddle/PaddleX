@@ -383,8 +383,6 @@ class PPDocLayoutV2ReadingOrderEncoder(nn.Layer):
         if self.has_spatial_attention_bias:
             self.max_rel_2d_pos = config.max_rel_2d_pos
             self.rel_2d_pos_bins = config.rel_2d_pos_bins
-            self.rel_pos_x_bias = nn.Linear(self.rel_2d_pos_bins, config.num_attention_heads, bias_attr=False)
-            self.rel_pos_y_bias = nn.Linear(self.rel_2d_pos_bins, config.num_attention_heads, bias_attr=False)
         self.rel_bias_module = PPDocLayoutV2PositionRelationEmbedding(config)
 
     def relative_position_bucket(self, relative_position, bidirectional=True, num_buckets=32, max_distance=128):
