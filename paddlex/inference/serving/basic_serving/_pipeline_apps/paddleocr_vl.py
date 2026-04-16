@@ -15,6 +15,10 @@
 from typing import Any, Dict, List
 
 from .....utils.deps import function_requires_deps, is_dep_available
+from ...app_shared.document_export import (
+    build_pipeline_exports,
+    refill_paddleocr_vl_images_from_markdown,
+)
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
@@ -26,6 +30,7 @@ from ...schemas.paddleocr_vl import (
     RestructurePagesRequest,
     RestructurePagesResult,
 )
+from ...schemas.shared.export import normalize_output_formats
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
@@ -84,7 +89,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             vlm_extra_args=request.vlmExtraArgs,
         )
 
-        orig_result = result
         if request.restructurePages:
             result = await serving_utils.call_async(
                 pipeline.pipeline.restructure_pages,
@@ -131,21 +135,30 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 )
             else:
                 imgs = {}
-            layout_parsing_results.append(
-                dict(
-                    prunedResult=pruned_res,
-                    markdown=dict(
-                        text=md_text,
-                        images=md_imgs,
-                    ),
-                    outputImages=(
-                        {k: v for k, v in imgs.items() if k != "input_img"}
-                        if imgs
-                        else None
-                    ),
-                    inputImage=imgs.get("input_img"),
-                )
+            entry = dict(
+                prunedResult=pruned_res,
+                markdown=dict(
+                    text=md_text,
+                    images=md_imgs,
+                ),
+                outputImages=(
+                    {k: v for k, v in imgs.items() if k != "input_img"}
+                    if imgs
+                    else None
+                ),
+                inputImage=imgs.get("input_img"),
             )
+            if normalize_output_formats(request.outputFormats):
+                entry["exports"] = await serving_utils.call_async(
+                    build_pipeline_exports,
+                    request.outputFormats,
+                    item,
+                    log_id=log_id,
+                    file_storage=ctx.extra["file_storage"],
+                    return_urls=ctx.extra["return_img_urls"],
+                    url_expires_in=ctx.extra["url_expires_in"],
+                )
+            layout_parsing_results.append(entry)
 
         return AIStudioResultResponse[InferResult](
             logId=log_id,
@@ -177,7 +190,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         for i, page in enumerate(request.pages):
             orig_res = _to_original_result(page.prunedResult, i)
             original_results.append(orig_res)
-            if request.concatenatePages:
+            if request.concatenatePages and page.markdownImages:
                 markdown_images.update(page.markdownImages)
 
         restructured_results = await serving_utils.call_async(
@@ -204,6 +217,18 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 text=md_data["markdown_texts"],
                 images=markdown_images,
             )
+            if normalize_output_formats(request.outputFormats):
+                res_obj = restructured_results[0]
+                refill_paddleocr_vl_images_from_markdown(res_obj, markdown_images)
+                layout_parsing_result["exports"] = await serving_utils.call_async(
+                    build_pipeline_exports,
+                    request.outputFormats,
+                    res_obj,
+                    log_id=log_id,
+                    file_storage=ctx.extra["file_storage"],
+                    return_urls=ctx.extra["return_img_urls"],
+                    url_expires_in=ctx.extra["url_expires_in"],
+                )
             layout_parsing_results.append(layout_parsing_result)
         else:
             for new_res, old_page in zip(restructured_results, request.pages):
@@ -220,6 +245,19 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                     text=md_data["markdown_texts"],
                     images=old_page.markdownImages,
                 )
+                if normalize_output_formats(request.outputFormats):
+                    refill_paddleocr_vl_images_from_markdown(
+                        new_res, old_page.markdownImages
+                    )
+                    layout_parsing_result["exports"] = await serving_utils.call_async(
+                        build_pipeline_exports,
+                        request.outputFormats,
+                        new_res,
+                        log_id=log_id,
+                        file_storage=ctx.extra["file_storage"],
+                        return_urls=ctx.extra["return_img_urls"],
+                        url_expires_in=ctx.extra["url_expires_in"],
+                    )
                 layout_parsing_results.append(layout_parsing_result)
 
         return AIStudioResultResponse[RestructurePagesResult](

@@ -19,6 +19,7 @@ from typing_extensions import Annotated, Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
+from .shared.export import DocumentExports, OutputFormatsMixin
 
 __all__ = [
     "INFER_ENDPOINT",
@@ -37,7 +38,7 @@ INFER_ENDPOINT: Final[str] = "/layout-parsing"
 RESTRUCTURE_PAGES_ENDPOINT: Final[str] = "/restructure-pages"
 
 
-class InferRequest(ocr.BaseInferRequest):
+class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
     useLayoutDetection: Optional[bool] = None
@@ -216,6 +217,7 @@ class LayoutParsingResult(BaseModel):
     markdown: MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
+    exports: Optional[DocumentExports] = None
 
 
 class InferResult(BaseModel):
@@ -228,7 +230,7 @@ class Page(BaseModel):
     markdownImages: Optional[Dict[str, str]] = None
 
 
-class RestructurePagesRequest(BaseModel):
+class RestructurePagesRequest(OutputFormatsMixin):
     pages: List[Page]
     mergeTables: bool = True
     relevelTitles: bool = True

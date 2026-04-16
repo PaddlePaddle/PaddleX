@@ -1860,6 +1860,12 @@ for tgt_md_info in tgt_md_info_list:
 <td>否</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式列表；当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -1931,6 +1937,11 @@ for tgt_md_info in tgt_md_info_list:
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的 <code>docx</code> 等附加导出，仅当请求 <code>outputFormats</code> 时出现。其中 <code>content</code> 为文件内容的Base64编码。</td>
 </tr>
 </tbody>
 </table>

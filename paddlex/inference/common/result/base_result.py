@@ -112,7 +112,7 @@ class BaseResult(dict, JsonMixin, StrMixin):
             timestamp = int(time.time())
             random_number = random.randint(1000, 9999)
             fp = f"{timestamp}_{random_number}"
-            logging.warning(
+            logging.debug(
                 f"There is not input file name as reference for name of saved result file. So the saved result file would be named with timestamp and random number: `{fp}`."
             )
             self._rand_fn = Path(fp).name

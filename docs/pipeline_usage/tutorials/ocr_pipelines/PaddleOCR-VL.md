@@ -1384,10 +1384,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认对于超过10页的PDF文件，只有前10页的内容会被处理。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认不限制 PDF 处理页数。若需在服务端限制 PDF 最大处理页数，可在产线配置中设置 <code>Serving.extra.max_num_input_imgs</code> 为正整数，例如：
 <pre><code>Serving:
   extra:
-    max_num_input_imgs: null
+    max_num_input_imgs: 10
 </code></pre>
 </td>
 <td>是</td>
@@ -1561,6 +1561,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。需要额外返回的文档格式列表。默认不返回任何附加格式。当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -1632,6 +1638,11 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的附加导出结果。仅当请求体中包含 <code>outputFormats</code> 且列出相应格式时出现。例如 <code>{"docx": {"content": "..."}}</code>，其中 <code>content</code> 为文件内容的Base64编码。</td>
 </tr>
 </tbody>
 </table>
@@ -1712,6 +1723,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式，含义与 <code>infer</code> 中的 <code>outputFormats</code> 相同。当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <p><code>pages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
@@ -1751,7 +1768,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>重构后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+<td>重构后的版面解析结果。其中每个元素包含的字段请参见对 <code>infer</code> 操作返回结果的说明（不含可视化结果图和中间图像）。</td>
 </tr>
 </tbody>
 </table>

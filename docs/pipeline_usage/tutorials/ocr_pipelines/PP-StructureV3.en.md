@@ -2494,6 +2494,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Optional list of extra formats to return. Currently only <code>"docx"</code> is supported.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2568,6 +2574,11 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>The input image. The image is in JPEG format and is Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Optional additional exports when <code>outputFormats</code> is present—for example, <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
 </tr>
 </tbody>
 </table>
