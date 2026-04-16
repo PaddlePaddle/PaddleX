@@ -1047,9 +1047,12 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 all_imgs_in_doc.extend(res.get("imgs_in_doc", []))
             res_list[0]["imgs_in_doc"] = all_imgs_in_doc
             all_page_res = res_list[0]
-            all_page_res["parsing_res_list"] = [
-                blk for blks in blocks_by_page for blk in blks
-            ]
+            all_blocks = []
+            for page_idx, blks in enumerate(blocks_by_page):
+                for blk in blks:
+                    blk.page_index = page_idx
+                    all_blocks.append(blk)
+            all_page_res["parsing_res_list"] = all_blocks
             all_page_res["page_index"] = None
             all_page_res["page_count"] = len(res_list)
             if model_settings["use_layout_detection"]:
