@@ -232,7 +232,7 @@ def draw_box_formula_fine(
         img_size (Tuple[int, int]): The size of the image (width, height).
         box (np.ndarray): A numpy array representing the four corners of the bounding box.
         formula (str): The LaTeX formula to render.
-        is_debug (bool, optional): If True, enables debug mode. Defaults to False.
+        is_debug (bool, optional): If True, enables debug mode. Defaults to `False`.
 
     Returns:
         np.ndarray: An image array with the rendered formula inside the specified box.

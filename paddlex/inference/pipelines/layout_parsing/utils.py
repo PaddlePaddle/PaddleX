@@ -247,7 +247,6 @@ def calculate_overlap_ratio(
 
     inter_area = np.multiply(inter_width, inter_height, dtype=np.float64)
 
-
     bbox1_area = calculate_bbox_area(bbox1)
     bbox2_area = calculate_bbox_area(bbox2)
 
@@ -336,14 +335,41 @@ def construct_img_path(label, box):
     return f"imgs/img_in_{label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
 
 
+def _crop_image_region_for_pil(original_img, x_min, y_min, x_max, y_max):
+    """
+    Crop `original_img` to [y_min:y_max, x_min:x_max], clamped to image bounds.
+    Returns a C-contiguous array suitable for `PIL.Image.fromarray`.
+    """
+    crop = original_img[y_min:y_max, x_min:x_max]
+    if crop.size == 0:
+        return None
+    if crop.ndim == 2:
+        return np.ascontiguousarray(crop)
+    if crop.shape[-1] >= 3:
+        return np.ascontiguousarray(crop[..., :3][..., ::-1])
+    return np.ascontiguousarray(crop)
+
+
 def gather_imgs(original_img, layout_det_objs):
     imgs_in_doc = []
+    h, w = int(original_img.shape[0]), int(original_img.shape[1])
     for det_obj in layout_det_objs:
         if det_obj["label"] in BLOCK_LABEL_MAP["image_labels"]:
             label = det_obj["label"]
             x_min, y_min, x_max, y_max = list(map(int, det_obj["coordinate"]))
+            x_min = max(0, min(x_min, w))
+            x_max = max(0, min(x_max, w))
+            y_min = max(0, min(y_min, h))
+            y_max = max(0, min(y_max, h))
+            if x_max <= x_min or y_max <= y_min:
+                continue
             img_path = construct_img_path(label, det_obj["coordinate"])
-            img = Image.fromarray(original_img[y_min:y_max, x_min:x_max, ::-1])
+            arr_for_pil = _crop_image_region_for_pil(
+                original_img, x_min, y_min, x_max, y_max
+            )
+            if arr_for_pil is None:
+                continue
+            img = Image.fromarray(arr_for_pil)
             imgs_in_doc.append(
                 {
                     "path": img_path,

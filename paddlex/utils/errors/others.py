@@ -20,14 +20,19 @@ from typing import Union
 __all__ = [
     "UnsupportedAPIError",
     "UnsupportedParamError",
+    "KeyNotFoundError",
+    "ClassNotFoundException",
+    "NoEntityRegisteredException",
+    "UnsupportedDeviceError",
     "CalledProcessError",
+    "ModelNotFoundError",
+    "DuplicateRegistrationError",
     "raise_unsupported_api_error",
     "raise_key_not_found_error",
     "raise_class_not_found_error",
     "raise_no_entity_registered_error",
     "raise_unsupported_device_error",
     "raise_model_not_found_error",
-    "DuplicateRegistrationError",
 ]
 
 

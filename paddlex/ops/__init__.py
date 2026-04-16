@@ -22,6 +22,7 @@ import filelock
 
 from ..utils import logging
 from ..utils.deps import class_requires_deps
+from ..utils.import_guard import import_paddle_module
 
 
 def get_user_home() -> str:
@@ -101,7 +102,7 @@ class PaddleXCustomOperatorModule(ModuleType):
         super().__init__(modulename)
 
     def jit_build(self):
-        from paddle.utils.cpp_extension import load as paddle_jit_load
+        paddle_jit_load = import_paddle_module("paddle.utils.cpp_extension").load
 
         try:
             lockfile = "paddlex.ops.{}".format(self.modulename)

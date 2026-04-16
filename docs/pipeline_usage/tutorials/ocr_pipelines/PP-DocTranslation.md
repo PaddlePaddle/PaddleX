@@ -784,6 +784,27 @@ for tgt_md_info in tgt_md_info_list:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str | None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict | None</code></td>
+<td>不同引擎支持不同字段，请参考<a href="../../instructions/pipeline_python_API.md#4-推理引擎与配置">推理引擎与配置</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>用于改变运行模式等配置项</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>关于推理配置的详细说明，请参考<a href="../../instructions/pipeline_python_API.md#5-兼容配置paddlepredictoroption">兼容配置（PaddlePredictorOption）</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>initial_predictor</code></td>
 <td>是否初始化推理模块</td>
 <td><code>bool</code></td>

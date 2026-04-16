@@ -93,11 +93,11 @@ class GenerateKIEPrompt(BaseGeneratePrompt):
         Args:
             text_content (str): The main text content to be used in the prompt.
             key_list (list): A list of keywords for information extraction.
-            task_description (str, optional): A description of the task. Defaults to None.
-            output_format (str, optional): The desired output format. Defaults to None.
-            rules_str (str, optional): A string containing rules or instructions. Defaults to None.
-            few_shot_demo_text_content (str, optional): Text content for few-shot demos. Defaults to None.
-            few_shot_demo_key_value_list (str, optional): Key-value list for few-shot demos. Defaults to None.
+            task_description (str, optional): A description of the task. Defaults to `None`.
+            output_format (str, optional): The desired output format. Defaults to `None`.
+            rules_str (str, optional): A string containing rules or instructions. Defaults to `None`.
+            few_shot_demo_text_content (str, optional): Text content for few-shot demos. Defaults to `None`.
+            few_shot_demo_key_value_list (str, optional): Key-value list for few-shot demos. Defaults to `None`.
         Returns:
             str: The generated prompt.
 

@@ -22,7 +22,7 @@ In real production environments, many applications impose strict performance met
 
 ## 1. Installation and Basic Usage
 
-Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
+Before using the high-performance inference plugin, please ensure that you have completed the PaddlePaddle and PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
 The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, you can convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and automatic model conversion may be performed.
 
@@ -66,7 +66,7 @@ Currently, the supported processor architectures, operating systems, device type
 
 #### 1.1.1 Installing the High-Performance Inference Plugin in a Docker Container (Highly Recommended)
 
-Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obtaining-paddlex-based-on-docker) to start a PaddleX container using Docker. After starting the container, execute the following commands according to your device type to install the high-performance inference plugin:
+Refer to [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-via-docker) to start a PaddleX container using Docker. After starting the container, execute the following commands according to your device type to install the high-performance inference plugin:
 
 <table>
   <thead>
@@ -92,7 +92,7 @@ Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obt
 
 The official PaddleX Docker images come with the Paddle2ONNX plugin pre-installed, allowing PaddleX to convert model formats on demand. In addition, the GPU version of the image includes TensorRT, so the high-performance inference plugin can leverage the Paddle Inference TensorRT subgraph engine for accelerated inference.
 
-**Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-based-on-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
+**Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-via-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
 
 #### 1.1.2 Installing the High-Performance Inference Plugin Locally
 
@@ -372,7 +372,7 @@ pipeline = create_pipeline(
 
 **For the image classification module, use the `onnxruntime` backend:**
 
-<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+<details><summary>👉 Modify via Module Configuration File (click to expand)</summary>
 
 ```yaml
 Predict:
@@ -466,9 +466,9 @@ Predict:
 
 </details>
 
-### 2.4 Enabling/Disabling the High‑Performance Inference Plugin in Configuration Files
+### 2.4 Enabling/Disabling the High‑Performance Inference Plugin in Pipeline Configuration Files
 
-In the configuration file, you can use `use_hpip` to control whether the high-performance inference plugin is enabled or disabled. Unlike configuring via the CLI or API, this approach allows you to specify `use_hpip` at the sub-pipeline or sub-module level, enabling **high-performance inference only for a specific sub-pipeline or sub-module within the entire pipeline**. For example:
+In the pipeline configuration file, you can use `use_hpip` to control whether the high-performance inference plugin is enabled or disabled. Unlike configuring via the CLI or API, this approach allows you to specify `use_hpip` at the sub-pipeline or sub-module level, enabling **high-performance inference only for a specific sub-pipeline or sub-module within the entire pipeline**. For example:
 
 **In the general OCR pipeline, enable high-performance inference for the `text_detection` module, but not for the `text_recognition` module:**
 

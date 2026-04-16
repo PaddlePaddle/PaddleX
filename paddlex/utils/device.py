@@ -24,7 +24,9 @@ from .custom_device_list import (
     NPU_BLACKLIST,
     XPU_WHITELIST,
 )
+from .deps import class_requires_deps, function_requires_deps, is_dep_available
 from .flags import DISABLE_DEV_MODEL_WL
+from .import_guard import import_paddle
 
 SUPPORTED_DEVICE_TYPE = [
     "cpu",
@@ -49,13 +51,28 @@ def constr_device(device_type, device_ids):
         return f"{device_type}"
 
 
+# TODO: Consider integrating this function into engine classes in the future.
 def get_default_device():
-    import paddle
-
-    if paddle.device.is_compiled_with_cuda() and paddle.device.cuda.device_count() > 0:
-        return constr_device("gpu", [0])
-    else:
+    if is_dep_available("paddlepaddle"):
+        paddle = import_paddle()
+        if (
+            paddle.device.is_compiled_with_cuda()
+            and paddle.device.cuda.device_count() > 0
+        ):
+            return constr_device("gpu", [0])
         return "cpu"
+    if is_dep_available("torch"):
+        import torch
+
+        if torch.cuda.is_available() and torch.version.cuda:
+            return constr_device("gpu", [0])
+    if is_dep_available("onnxruntime"):
+        import onnxruntime as ort
+
+        providers = set(ort.get_available_providers())
+        if providers & {"CUDAExecutionProvider"}:
+            return constr_device("gpu", [0])
+    return "cpu"
 
 
 def parse_device(device):
@@ -97,8 +114,9 @@ def set_env_for_device(device):
     return set_env_for_device_type(device_type)
 
 
+@function_requires_deps("paddlepaddle")
 def set_env_for_device_type(device_type):
-    import paddle
+    paddle = import_paddle()
 
     def _set(envs):
         for key, val in envs.items():
@@ -181,6 +199,7 @@ def check_supported_device(device, model_name):
     return check_supported_device_type(device_type, model_name)
 
 
+@class_requires_deps("paddlepaddle")
 class TemporaryDeviceChanger(ContextDecorator):
     """
     A context manager to temporarily change global device
@@ -188,13 +207,13 @@ class TemporaryDeviceChanger(ContextDecorator):
 
     def __init__(self, new_device):
         # if new_device is None, nothing changed
-        import paddle
+        paddle = import_paddle()
 
         self.new_device = new_device
         self.original_device = paddle.device.get_device()
 
     def __enter__(self):
-        import paddle
+        paddle = import_paddle()
 
         if self.new_device is None:
             return self
@@ -202,7 +221,7 @@ class TemporaryDeviceChanger(ContextDecorator):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        import paddle
+        paddle = import_paddle()
 
         if self.new_device is None:
             return False

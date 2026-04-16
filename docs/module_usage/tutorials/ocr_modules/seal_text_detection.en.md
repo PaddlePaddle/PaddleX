@@ -93,10 +93,8 @@ The seal text detection module typically outputs multi-point bounding boxes arou
     </tbody>
 </table>
 
-
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
-
 
 Just a few lines of code can complete the inference of the Seal Text Detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Seal Text Detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
 
@@ -180,7 +178,6 @@ The explanations of related methods and parameters are as follows:
 <ul>
 <li><b>str</b>: Supports min and max. min ensures the shortest side of the image is not less than det_limit_side_len, max ensures the longest side is not greater than limit_side_len
 <li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -306,7 +303,6 @@ The explanations of related methods and parameters are as follows:
 <ul>
 <li><b>str</b>: Supports min and max. min indicates that the shortest side of the image is not less than det_limit_side_len, max indicates that the longest side of the image is not greater than limit_side_len
 <li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -476,7 +472,6 @@ python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_se
 
 After executing the above command, PaddleX will verify the dataset and collect basic information about it. Once the command runs successfully, a message saying `Check dataset passed !` will be printed in the log. The verification results will be saved in `./output/check_dataset_result.json`, and related outputs will be stored in the `./output/check_dataset` directory, including visual examples of sample images and a histogram of sample distribution.
 
-
 <details><summary>👉 <b>Verification Result Details (click to expand)</b></summary>
 <p>The specific content of the verification result file is:</p>
 <pre><code class="language-bash">{
@@ -629,7 +624,6 @@ After model training and evaluation, you can use the trained model weights for i
 
 #### 4.4.1 Model Inference
 To perform inference predictions via the command line, use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
-
 
 ```bash
 python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \

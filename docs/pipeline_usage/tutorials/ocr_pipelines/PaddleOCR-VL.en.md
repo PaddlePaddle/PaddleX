@@ -1153,7 +1153,7 @@ for res in pipeline.predict("paddleocr_vl_demo.png"):
 
 ### 3.3 Performance Tuning
 
-The default configuration is tuned on a single NVIDIA A100 and assumes exclusive client service, so it may not be suitable for other environments. If users encounter performance issues during actual use, they can try the following optimization methods.
+The default configuration may not achieve optimal performance in all environments. If users encounter performance issues during actual use, they can try the following optimization methods.
 
 #### 3.3.1 Server-side Parameter Adjustment
 

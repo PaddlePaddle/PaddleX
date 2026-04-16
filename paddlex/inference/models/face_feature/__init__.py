@@ -12,4 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....modules.face_recognition.model_list import MODELS
+from ..bindings import register_predictor_binding_map
 from .predictor import FaceFeaturePredictor
+
+register_predictor_binding_map(
+    FaceFeaturePredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)

@@ -16,14 +16,11 @@ from typing import Any, Dict, List, Union
 
 import numpy as np
 
-from ....modules.face_recognition.model_list import MODELS
-from ..image_feature import ImageFeaturePredictor
+from ..image_feature import ImageFeatureRunnerPredictor
 
 
-class FaceFeaturePredictor(ImageFeaturePredictor):
-    """FaceFeaturePredictor that inherits from ImageFeaturePredictor."""
-
-    entities = MODELS
+class FaceFeaturePredictor(ImageFeatureRunnerPredictor):
+    """FaceFeaturePredictor that inherits from ImageFeatureRunnerPredictor."""
 
     def __init__(self, *args: List, flip: bool = False, **kwargs: Dict) -> None:
         """Initializes ClasPredictor.
@@ -51,9 +48,9 @@ class FaceFeaturePredictor(ImageFeaturePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         if self.flip:
-            batch_preds_flipped = self.infer(x=[np.flip(data, axis=3) for data in x])
+            batch_preds_flipped = self.runner(x=[np.flip(data, axis=3) for data in x])
             for i in range(len(batch_preds)):
                 batch_preds[i] = batch_preds[i] + batch_preds_flipped[i]
         features = self.postprocessors["NormalizeFeatures"](batch_preds)

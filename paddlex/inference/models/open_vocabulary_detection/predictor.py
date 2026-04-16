@@ -15,12 +15,11 @@
 import inspect
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ....modules.open_vocabulary_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
 from ..object_detection.result import DetResult
+from ..predictors import RunnerPredictor
 from .processors import (
     GroundingDINOPostProcessor,
     GroundingDINOProcessor,
@@ -29,9 +28,7 @@ from .processors import (
 )
 
 
-class OVDetPredictor(BasePredictor):
-
-    entities = MODELS
+class OVDetRunnerPredictor(RunnerPredictor):
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -50,7 +47,7 @@ class OVDetPredictor(BasePredictor):
         if isinstance(thresholds, float):
             thresholds = {"threshold": thresholds}
         self.thresholds = thresholds
-        self.pre_ops, self.infer, self.post_op = self._build()
+        self.pre_ops, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -70,13 +67,10 @@ class OVDetPredictor(BasePredictor):
             if op:
                 pre_ops.append(op)
 
-        # build infer
-        infer = self.create_static_infer()
-
         # build postprocess op
         post_op = self.build_postprocess(pre_ops=pre_ops)
 
-        return pre_ops, infer, post_op
+        return pre_ops, post_op
 
     def process(
         self, batch_data: List[Any], prompt: str, thresholds: Optional[dict] = None
@@ -104,7 +98,7 @@ class OVDetPredictor(BasePredictor):
         batch_inputs = self.pre_ops[-1](datas, prompt)
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        batch_preds = self.runner(batch_inputs)
 
         # postprocess
         current_thresholds = self._parse_current_thresholds(

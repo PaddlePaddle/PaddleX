@@ -22,7 +22,15 @@ import colorlog
 
 from .flags import DEBUG
 
-__all__ = ["debug", "info", "warning", "error", "critical", "setup_logging"]
+__all__ = [
+    "critical",
+    "debug",
+    "error",
+    "exception",
+    "info",
+    "setup_logging",
+    "warning",
+]
 
 LOGGER_NAME = "paddlex"
 _LOG_CONFIG = {

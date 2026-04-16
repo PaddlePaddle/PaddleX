@@ -90,8 +90,6 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 </tr>
 </table>
 
-
-
 <b>Note: The above accuracy metrics are measured using an internally built formula recognition test set within PaddleX. The BLEU score of LaTeX_OCR_rec on the LaTeX-OCR formula recognition test set is 0.8821. All model GPU inference times are based on machines with Tesla V100 GPUs, with precision type FP32.</b>
 
 <strong>Test Environment Description:</strong>
@@ -430,7 +428,6 @@ After executing the above command, PaddleX will validate the dataset and summari
 <p>Additionally, the dataset verification also analyzes the distribution of sample numbers across all categories in the dataset and generates a distribution histogram (<code>histogram.png</code>):
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/formula_recognition/01.jpg"></p></details>
 
-
 ### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing the data verification, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
@@ -523,7 +520,6 @@ sudo apt-get install libmagickwand-dev
 python -m pip install Wand
 ```
 
-
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 
 <ul>
@@ -540,7 +536,6 @@ python -m pip install Wand
 <li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;</li>
 <li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul></details>
-
 
 ## <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
@@ -562,10 +557,8 @@ Other related parameters can be set by modifying the `Global` and `Evaluate` fie
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including exp_rate；</p></details>
 
-
 ### <b>4.4 Model Inference and Integration</b>
 After completing model training and evaluation, you can use the trained model weights for inference prediction or Python integration.
-
 
 #### 4.4.1 Model Inference
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png) to your local machine.
@@ -582,7 +575,6 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the model weights path: `-o Predict.model_dir="./output/best_accuracy/inference"`
 * Specify the input data path: `-o Predict.input="..."`.
 Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
-
 
 #### 4.4.2 Model Integration
 

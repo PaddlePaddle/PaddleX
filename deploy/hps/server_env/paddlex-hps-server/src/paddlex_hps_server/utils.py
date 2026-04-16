@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from paddlex.inference.serving.infra.utils import (
+    MAX_IMAGE_PIXELS,
+    ImageTooLargeError,
     base64_encode,
     csv_bytes_to_data_frame,
     data_frame_to_bytes,
@@ -31,6 +33,8 @@ from paddlex.inference.serving.infra.utils import (
 )
 
 __all__ = [
+    "MAX_IMAGE_PIXELS",
+    "ImageTooLargeError",
     "base64_encode",
     "csv_bytes_to_data_frame",
     "data_frame_to_bytes",

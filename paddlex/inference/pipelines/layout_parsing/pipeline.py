@@ -20,10 +20,9 @@ from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import HPIConfig, PaddlePredictorOption
 from ...models.object_detection.result import DetResult
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
@@ -39,26 +38,36 @@ class _LayoutParsingPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        **kwargs,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing various settings.
-            device (str, optional): Device to run the predictions on. Defaults to None.
-            pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
+                HPIP configuration. Defaults to `None`.
         """
-
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
         self.inintial_predictor(config)
@@ -180,12 +189,12 @@ class _LayoutParsingPipeline(BasePipeline):
             table_res_list (list): A list of table recognition results.
             seal_res_list (list): A list of seal recognition results.
             formula_res_list (list): A list of formula recognition results.
-            text_det_limit_side_len (Optional[int], optional): The maximum side length of the text detection region. Defaults to None.
-            text_det_limit_type (Optional[str], optional): The type of limit for the text detection region. Defaults to None.
-            text_det_thresh (Optional[float], optional): The confidence threshold for text detection. Defaults to None.
-            text_det_box_thresh (Optional[float], optional): The confidence threshold for text detection bounding boxes. Defaults to None
-            text_det_unclip_ratio (Optional[float], optional): The unclip ratio for text detection. Defaults to None.
-            text_rec_score_thresh (Optional[float], optional): The score threshold for text recognition. Defaults to None.
+            text_det_limit_side_len (Optional[int], optional): The maximum side length of the text detection region. Defaults to `None`.
+            text_det_limit_type (Optional[str], optional): The type of limit for the text detection region. Defaults to `None`.
+            text_det_thresh (Optional[float], optional): The confidence threshold for text detection. Defaults to `None`.
+            text_det_box_thresh (Optional[float], optional): The confidence threshold for text detection bounding boxes. Defaults to `None`
+            text_det_unclip_ratio (Optional[float], optional): The unclip ratio for text detection. Defaults to `None`.
+            text_rec_score_thresh (Optional[float], optional): The score threshold for text recognition. Defaults to `None`.
         Returns:
             list: A list of dictionaries representing the layout parsing result.
         """
@@ -402,13 +411,13 @@ class _LayoutParsingPipeline(BasePipeline):
             use_table_recognition (Optional[bool]): Whether to use table recognition.
             use_formula_recognition (Optional[bool]): Whether to use formula recognition.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
-            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_nms (Optional[bool], optional): Whether to use layout-aware NMS. Defaults to `False`.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
-                Defaults to None.
+                Defaults to `None`.
                 If it's a single number, then both width and height are used.
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
-            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to `None`.
             text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
             text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
             text_det_thresh (Optional[float]): Threshold for text detection.

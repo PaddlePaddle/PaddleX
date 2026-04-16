@@ -12,18 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....modules.text_to_pinyin.model_list import MODELS
 from ...common.batch_sampler import TextBatchSampler
-from ..base import BasePredictor
+from ..predictors import FlexiblePredictor
 from .result import TextToPinyinResult
 
 
-class TextToPinyinPredictor(BasePredictor):
-
-    entities = MODELS
+class TextToPinyinPredictor(FlexiblePredictor):
+    """Text-to-pinyin predictor using custom G2PW/ONNX implementation."""
 
     def __init__(self, *args, **kwargs):
-        """Initializes TextSegmentPredictor.
+        """Initializes TextToPinyinPredictor.
 
         Args:
             *args: Arbitrary positional arguments passed to the superclass.
@@ -72,5 +70,6 @@ class TextToPinyinPredictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
-        result = self.model(batch_data[0])
+        instances = batch_data if isinstance(batch_data, list) else batch_data.instances
+        result = self.model(instances[0])
         return {"result": [result]}

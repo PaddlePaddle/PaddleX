@@ -423,7 +423,7 @@ class LayoutBlock(object):
         Update the direction of the block based on its bounding box.
 
         Args:
-            direction (str, optional): Direction of the block. If not provided, it will be determined automatically using the bounding box. Defaults to None.
+            direction (str, optional): Direction of the block. If not provided, it will be determined automatically using the bounding box. Defaults to `None`.
         """
         if not direction:
             direction = self.get_bbox_direction()

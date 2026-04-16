@@ -16,6 +16,8 @@
 import os
 import sys
 
+from .utils.import_guard import import_paddle
+
 __all__ = ["get_pdx_version", "get_version_dict", "show_versions"]
 
 
@@ -74,7 +76,7 @@ def get_pdx_version():
 
 def get_version_dict():
     """get_version_dict"""
-    import paddle
+    paddle = import_paddle()
 
     from . import repo_manager
 

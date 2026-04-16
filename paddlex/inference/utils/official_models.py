@@ -12,30 +12,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import hashlib
 import os
 import shutil
 import tempfile
+import threading
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Optional, Sequence, Set, Tuple
 
+import filelock
 import huggingface_hub as hf_hub
+import huggingface_hub.utils as hf_hub_utils
 
 hf_hub.logging.set_verbosity_error()
 
-import modelscope
 import requests
 
 os.environ["AISTUDIO_LOG"] = "critical"
+import modelscope
+from aistudio_sdk.errors import NotExistError
 from aistudio_sdk.snapshot_download import snapshot_download as aistudio_download
 
 from ...utils import logging
-from ...utils.cache import CACHE_DIR
+
+ms_hub_errors = None
+try:
+    import modelscope.hub.errors as _ms_hub_errors
+
+    ms_hub_errors = _ms_hub_errors
+except Exception as e:
+    logging.debug(
+        "Failed to import `modelscope.hub.errors` (%r). ModelScope downloads can still "
+        "be used; not-found detection will use generic fallbacks.",
+        e,
+    )
+
+from ...utils.cache import CACHE_DIR, FILE_LOCK_DIR
 from ...utils.download import download_and_extract
 from ...utils.flags import (
     DISABLE_MODEL_SOURCE_CHECK,
     HUGGING_FACE_ENDPOINT,
     MODEL_SOURCE,
 )
+from ..models.utils.model_paths import LocalModelFormat
 
 ALL_MODELS = [
     "ResNet18",
@@ -415,6 +435,190 @@ OCR_MODELS = [
     "cyrillic_PP-OCRv5_mobile_rec",
 ]
 
+SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX: Set[str] = {
+    "PP-LCNet_x0_25_textline_ori",
+    "PP-LCNet_x1_0_doc_ori",
+    "PP-LCNet_x1_0_textline_ori",
+    "PP-LCNet_x1_0_table_cls",
+    "PP-DocLayoutV2",
+    "PP-DocLayoutV3",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
+    "UVDoc",
+    "PP-Chart2Table",
+}
+
+SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX: Set[str] = {
+    "PaddleOCR-VL-0.9B",
+    "PaddleOCR-VL-1.5-0.9B",
+}
+
+SAFETENSORS_SUPPORTED_MODELS: Set[str] = (
+    SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX
+    | SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX
+)
+
+PADDLE_DYN_SUPPORTED_MODELS: Set[str] = {
+    "PP-DocBee-2B",
+    "PP-DocBee-7B",
+    "PP-DocBee2-3B",
+    "whisper_large",
+    "whisper_medium",
+    "whisper_base",
+    "whisper_small",
+    "whisper_tiny",
+}
+
+ONNX_SUPPORTED_MODELS: Set[str] = {
+    "PP-LCNet_x0_25_textline_ori",
+    "PP-LCNet_x1_0_doc_ori",
+    "PP-LCNet_x1_0_textline_ori",
+    "PP-LCNet_x1_0_table_cls",
+    "PP-DocLayout_plus-L",
+    "PP-DocBlockLayout",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+    "RT-DETR-L_wired_table_cell_det",
+    "RT-DETR-L_wireless_table_cell_det",
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
+}
+
+
+def _canonical_download_support_name(model_name: str) -> str:
+    if model_name in {"PaddleOCR-VL", "PaddleOCR-VL-0.9B"}:
+        return "PaddleOCR-VL-0.9B"
+    return model_name
+
+
+def _format_download_model_name(model_name: str, model_format: LocalModelFormat) -> str:
+    if model_format in {"paddle", "paddle_dyn"}:
+        return model_name
+    if model_format == "safetensors":
+        if model_name in SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX:
+            return f"{model_name}_safetensors"
+        elif model_name in SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX:
+            return model_name
+        raise ValueError(f"Unknown safetensors model name: {model_name}")
+    if model_format == "onnx":
+        return f"{model_name}_onnx"
+    raise ValueError(f"Unknown official model format: {model_format!r}.")
+
+
+def _is_supported_official_model_format(
+    model_name: str, model_format: LocalModelFormat
+) -> bool:
+    canonical_name = _canonical_download_support_name(model_name)
+    if model_format == "paddle":
+        return True
+    if model_format == "paddle_dyn":
+        return canonical_name in PADDLE_DYN_SUPPORTED_MODELS
+    if model_format == "safetensors":
+        return canonical_name in SAFETENSORS_SUPPORTED_MODELS
+    if model_format == "onnx":
+        return canonical_name in ONNX_SUPPORTED_MODELS
+    if model_format == "om":
+        return False
+    raise ValueError(f"Unknown official model format: {model_format!r}.")
+
+
+def _resolve_download_model_names(
+    model_name: str,
+    model_formats: Optional[Sequence[LocalModelFormat]] = None,
+) -> Tuple[str, ...]:
+    if model_formats is None:
+        return (model_name,)
+    formats = tuple(model_formats)
+    model_names = []
+    unsupported_formats = []
+    for model_format in formats:
+        if not _is_supported_official_model_format(model_name, model_format):
+            unsupported_formats.append(model_format)
+            continue
+        download_model_name = _format_download_model_name(model_name, model_format)
+        if download_model_name not in model_names:
+            model_names.append(download_model_name)
+    if not model_names:
+        if len(formats) == 1:
+            raise ValueError(
+                f"Official model source does not provide a {formats[0]!r} package "
+                f"for model {model_name!r}."
+            )
+        raise ValueError(
+            f"Official model source does not provide any of the requested packages "
+            f"{list(unsupported_formats)!r} for model {model_name!r}."
+        )
+    return tuple(model_names)
+
+
+def _official_model_download_lock_path(model_names: Tuple[str, ...]) -> str:
+    """Cross-process lock path for a resolved official model download key."""
+    lock_dir = os.path.join(FILE_LOCK_DIR, "official_models")
+    os.makedirs(lock_dir, exist_ok=True)
+    key = hashlib.sha256("\0".join(model_names).encode("utf-8")).hexdigest()
+    return os.path.join(lock_dir, f"{key}.lock")
+
+
+def _iter_exception_chain(exc: Exception):
+    current = exc
+    visited = set()
+    while current is not None and id(current) not in visited:
+        visited.add(id(current))
+        yield current
+        current = getattr(current, "__cause__", None) or getattr(
+            current, "__context__", None
+        )
+
+
+def _exception_http_status_code(exc_obj: BaseException) -> Optional[int]:
+    # NOTE: Normally `requests.HTTPError` sets `.response`;
+    # ModelScope `hub/api.py` sometimes does `raise HTTPError(r)` without `response=`,
+    # so the `requests.Response` only appears in `args[0]`.
+    response = getattr(exc_obj, "response", None)
+    code = getattr(response, "status_code", None)
+    if isinstance(code, int):
+        return code
+    for arg in getattr(exc_obj, "args", ()) or ():
+        sc = getattr(arg, "status_code", None)
+        if isinstance(sc, int):
+            return sc
+    return None
+
+
+def _modelscope_is_model_package_not_found_error(exc: Exception) -> bool:
+    """Detect ModelScope 'model not found' errors with or without `ms_hub_errors`."""
+    if ms_hub_errors is not None:
+        for current in _iter_exception_chain(exc):
+            if isinstance(current, ms_hub_errors.NotExistError):
+                return True
+            if isinstance(current, ms_hub_errors.HTTPError):
+                if _exception_http_status_code(current) == 404:
+                    return True
+        return False
+    for current in _iter_exception_chain(exc):
+        if isinstance(current, requests.HTTPError):
+            if _exception_http_status_code(current) == 404:
+                return True
+        if current.__class__.__name__ == "NotExistError":
+            return True
+        # ModelScope hub HTTPError may not be a requests.HTTPError subclass.
+        if (
+            current.__class__.__name__ == "HTTPError"
+            and _exception_http_status_code(current) == 404
+        ):
+            return True
+    return False
+
 
 class _BaseModelHoster(ABC):
     alias = ""
@@ -425,9 +629,21 @@ class _BaseModelHoster(ABC):
     def __init__(self, save_dir):
         self._save_dir = save_dir
 
+    @staticmethod
+    def _strip_repo_suffix(model_name):
+        for suffix in ("_safetensors", "_onnx"):
+            if model_name.endswith(suffix):
+                return model_name[: -len(suffix)]
+        return model_name
+
+    def supports_model(self, model_name):
+        if model_name in self.model_list:
+            return True
+        return self._strip_repo_suffix(model_name) in self.model_list
+
     def get_model(self, model_name):
-        assert (
-            model_name in self.model_list
+        assert self.supports_model(
+            model_name
         ), f"The model {model_name} is not supported on hosting {self.__class__.__name__}!"
 
         model_dir = self._save_dir / f"{model_name}"
@@ -443,6 +659,10 @@ class _BaseModelHoster(ABC):
 
     @abstractmethod
     def _download(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_model_package_not_found_error(self, exc: Exception) -> bool:
         raise NotImplementedError
 
     @classmethod
@@ -484,6 +704,14 @@ class _BosModelHoster(_BaseModelHoster):
         url = f"{self.base_url}/{self.version}/{fn}"
         download_and_extract(url, save_dir.parent, model_name, overwrite=False)
 
+    def is_model_package_not_found_error(self, exc: Exception) -> bool:
+        for current in _iter_exception_chain(exc):
+            if isinstance(current, requests.HTTPError):
+                response = current.response
+                if response is not None and response.status_code == 404:
+                    return True
+        return False
+
 
 class _HuggingFaceModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
@@ -506,6 +734,33 @@ class _HuggingFaceModelHoster(_BaseModelHoster):
                 _clone(temp_dir)
                 shutil.move(temp_dir, save_dir)
 
+    def is_model_package_not_found_error(self, exc: Exception) -> bool:
+        for current in _iter_exception_chain(exc):
+            if isinstance(
+                current,
+                (
+                    hf_hub_utils.RepositoryNotFoundError,
+                    hf_hub_utils.EntryNotFoundError,
+                    hf_hub_utils.RevisionNotFoundError,
+                ),
+            ):
+                return True
+            if isinstance(current, hf_hub_utils.HfHubHTTPError):
+                response = current.response
+                if response is not None and response.status_code == 404:
+                    return True
+                if (
+                    response is not None
+                    and response.status_code == 401
+                    and (
+                        "Repository Not Found" in str(current)
+                        or "Entry Not Found" in str(current)
+                        or "Revision Not Found" in str(current)
+                    )
+                ):
+                    return True
+        return False
+
 
 class _ModelScopeModelHoster(_BaseModelHoster):
     model_list = OCR_MODELS
@@ -525,6 +780,9 @@ class _ModelScopeModelHoster(_BaseModelHoster):
                 temp_dir = os.path.join(td, "temp_dir")
                 _clone(temp_dir)
                 shutil.move(temp_dir, save_dir)
+
+    def is_model_package_not_found_error(self, exc: Exception) -> bool:
+        return _modelscope_is_model_package_not_found_error(exc)
 
 
 class _AIStudioModelHoster(_BaseModelHoster):
@@ -549,6 +807,16 @@ class _AIStudioModelHoster(_BaseModelHoster):
                 _clone(temp_dir)
                 shutil.move(temp_dir, save_dir)
 
+    def is_model_package_not_found_error(self, exc: Exception) -> bool:
+        for current in _iter_exception_chain(exc):
+            if isinstance(current, NotExistError):
+                return True
+            if isinstance(current, requests.HTTPError):
+                response = current.response
+                if response is not None and response.status_code == 404:
+                    return True
+        return False
+
 
 class _ModelManager:
     model_list = ALL_MODELS
@@ -561,7 +829,8 @@ class _ModelManager:
     ]
 
     def __init__(self) -> None:
-        self._hosters = self._build_hosters()
+        self._hosters = None
+        self._hosters_lock = threading.Lock()
 
     def _build_hosters(self):
 
@@ -594,55 +863,131 @@ class _ModelManager:
             )
         return hosters
 
+    def _get_hosters(self):
+        if self._hosters is None:
+            with self._hosters_lock:
+                if self._hosters is None:
+                    self._hosters = self._build_hosters()
+        return self._hosters
+
     def _get_model_local_path(self, model_name):
-        if "PaddleOCR-VL" in model_name:
-            model_name = model_name.replace("-0.9B", "")
+        model_names = (
+            (model_name,) if isinstance(model_name, str) else tuple(model_name)
+        )
+        resolved_names = []
+        for candidate_name in model_names:
+            if "PaddleOCR-VL" in candidate_name:
+                candidate_name = candidate_name.replace("-0.9B", "")
+            resolved_names.append(candidate_name)
 
-        model_dir = self._save_dir / f"{model_name}"
-        if os.path.exists(model_dir):
-            logging.info(
-                f"Model files already exist. Using cached files. To redownload, please delete the directory manually: `{model_dir}`."
-            )
-        else:
-            if len(self._hosters) == 0:
-                msg = "No available model hosting platforms detected. Please check your network connection."
-                logging.error(msg)
-                raise Exception(msg)
+        model_dir = None
+        for candidate_name in resolved_names:
+            candidate_dir = self._save_dir / f"{candidate_name}"
+            if os.path.exists(candidate_dir):
+                logging.info(
+                    f"Model files already exist. Using cached files. To redownload, please delete the directory manually: `{candidate_dir}`."
+                )
+                model_dir = candidate_dir
+                break
 
-            model_dir = self._download_from_hoster(self._hosters, model_name)
+        if model_dir is None:
+            lock_path = _official_model_download_lock_path(tuple(resolved_names))
+            with filelock.FileLock(lock_path):
+                for candidate_name in resolved_names:
+                    candidate_dir = self._save_dir / f"{candidate_name}"
+                    if os.path.exists(candidate_dir):
+                        logging.info(
+                            f"Model files already exist. Using cached files. To redownload, please delete the directory manually: `{candidate_dir}`."
+                        )
+                        model_dir = candidate_dir
+                        break
 
-        if model_name == "PaddleOCR-VL":
+                if model_dir is None:
+                    hosters = self._get_hosters()
+                    if len(hosters) == 0:
+                        msg = "No available model hosting platforms detected. Please check your network connection."
+                        logging.error(msg)
+                        raise Exception(msg)
+
+                    model_dir = self._download_from_hoster(hosters, resolved_names)
+
+        if resolved_names[0] == "PaddleOCR-VL":
             vl_model_dir = model_dir / "PaddleOCR-VL-0.9B"
             if vl_model_dir.exists() and vl_model_dir.is_dir():
                 return vl_model_dir
 
         return model_dir
 
-    def _download_from_hoster(self, hosters, model_name):
-        for idx, hoster in enumerate(hosters):
-            if model_name in hoster.model_list:
-                try:
-                    model_path = hoster.get_model(model_name)
-                    return model_path
+    def get_model_path(
+        self,
+        model_name: str,
+        *,
+        model_formats: Optional[Sequence[LocalModelFormat]] = None,
+    ):
+        download_model_names = _resolve_download_model_names(model_name, model_formats)
+        return self._get_model_local_path(download_model_names)
 
+    def _download_from_hoster(self, hosters, model_name):
+        model_names = (
+            (model_name,) if isinstance(model_name, str) else tuple(model_name)
+        )
+        last_exception = None
+        for idx, hoster in enumerate(hosters):
+            attempted_candidates = []
+            all_attempted_candidates_not_found = True
+            for candidate_idx, candidate_name in enumerate(model_names):
+                if not hoster.supports_model(candidate_name):
+                    continue
+                attempted_candidates.append(candidate_name)
+                try:
+                    model_path = hoster.get_model(candidate_name)
+                    return model_path
                 except Exception as e:
-                    if len(hosters) <= 1:
+                    last_exception = e
+                    is_not_found = hoster.is_model_package_not_found_error(e)
+                    if is_not_found:
+                        has_fallback = candidate_idx + 1 < len(model_names)
+                        if has_fallback:
+                            logging.warning(
+                                f"Model package `{candidate_name}` was not found on "
+                                f"{hoster.alias}, trying fallback package "
+                                f"`{model_names[candidate_idx + 1]}`."
+                            )
+                        continue
+                    all_attempted_candidates_not_found = False
+                    if idx + 1 >= len(hosters):
                         raise Exception(
                             f"Encounter exception when download model from {hoster.alias}. No model source is available! Please check network or use local model files!"
-                        )
+                        ) from e
                     logging.warning(
-                        f"Encountering exception when download model from {hoster.alias}: \n{e}, will try to download from other model sources: `{hosters[idx + 1].alias}`."
+                        f"Encountering exception when download model `{candidate_name}` "
+                        f"from {hoster.alias}: \n{e}, will try to download from other "
+                        f"model sources: `{hosters[idx + 1].alias}`."
                     )
-                    return self._download_from_hoster(hosters[idx + 1 :], model_name)
+                    break
+
+            if attempted_candidates and all_attempted_candidates_not_found:
+                if idx + 1 >= len(hosters):
+                    break
+                logging.warning(
+                    f"Model packages {attempted_candidates!r} were not found on "
+                    f"{hoster.alias}, will try model source `{hosters[idx + 1].alias}`."
+                )
+                continue
+
+            if attempted_candidates:
+                continue
+
         raise Exception(
-            f"No model source is available for model `{model_name}`! Please check model name and network, or use local model files!"
-        )
+            f"No model source is available for model `{model_names[0]}`! Please check "
+            f"model name and network, or use local model files!"
+        ) from last_exception
 
     def __contains__(self, model_name):
         return model_name in self.model_list
 
     def __getitem__(self, model_name):
-        return self._get_model_local_path(model_name)
+        return self.get_model_path(model_name)
 
 
 official_models = _ModelManager()

@@ -15,28 +15,27 @@
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
+from PIL import Image
 
-from ....modules.table_recognition.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
 from ..common import Normalize, ResizeByLong, ToBatch, ToCHWImage
+from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 
+TABLE_REC_TRANSFORMERS_MODELS = ["SLANeXt_wired", "SLANeXt_wireless"]
 
-class TablePredictor(BasePredictor):
-    entities = MODELS
+
+class TableRunnerPredictor(RunnerPredictor):
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         super().__init__(*args, **kwargs)
-        self.device = kwargs.get("device", None)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         return ImageBatchSampler()
@@ -54,26 +53,6 @@ class TablePredictor(BasePredictor):
             if op:
                 preprocessors.append(op)
         preprocessors.append(ToBatch())
-
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            if self.model_name in ["SLANeXt_wired", "SLANeXt_wireless"]:
-                from .modeling import SLANeXt
-
-                with TemporaryDeviceChanger(self.device):
-                    infer = SLANeXt.from_pretrained(
-                        self.model_dir,
-                        use_safetensors=True,
-                        convert_from_hf=True,
-                        dtype="float32",
-                    )
-                    infer.eval()
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
-
         postprocessors = TableLabelDecode(
             model_name=self.config["Global"]["model_name"],
             merge_no_span_structure=self.config["PreProcess"]["transform_ops"][1][
@@ -81,7 +60,7 @@ class TablePredictor(BasePredictor):
             ]["merge_no_span_structure"],
             dict_character=self.config["PostProcess"]["character_dict"],
         )
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
         """
@@ -108,11 +87,7 @@ class TablePredictor(BasePredictor):
         batch_imgs = self.preprocessors[4](imgs=pad_imgs)  # ToCHWImage
         x = self.preprocessors[5](imgs=batch_imgs)  # ToBatch
 
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
 
         table_result = self.postprocessors(
             pred=batch_preds,
@@ -178,6 +153,56 @@ class TablePredictor(BasePredictor):
     @register("KeepKeys")
     def foo(self, *args, **kwargs):
         return None
+
+    def _pack_res(self, single):
+        keys = ["input_path", "bbox", "structure"]
+        return TableRecResult({key: single[key] for key in keys})
+
+
+class TableTransformersPredictor(TransformersPredictor):
+
+    def __init__(self, *args: List, **kwargs: Dict) -> None:
+        super().__init__(*args, **kwargs)
+        self.read_op = ReadImage(format="BGR")
+        self.image_processor, self.infer = self._build()
+
+    def _build_batch_sampler(self) -> ImageBatchSampler:
+        return ImageBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return TableRecResult
+
+    def _build(self) -> Tuple:
+        from transformers import AutoImageProcessor, SLANeXtForTableRecognition
+
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(SLANeXtForTableRecognition)
+
+        return image_processor, model
+
+    def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        images = [Image.fromarray(img[..., ::-1]) for img in batch_raw_imgs]
+
+        model_inputs = self.preprocess_images(images=images)
+        outputs = self.forward(model_inputs)
+        structure, structure_score = self.postprocess(outputs)
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "bbox": [],
+            "structure": structure,
+            "structure_score": structure_score,
+        }
+
+    def postprocess(self, outputs, **kwargs):
+        results = self.image_processor.post_process_table_recognition(outputs)
+        structure = results["structure"]
+        structure_score = results["structure_score"]
+
+        return [structure], [structure_score]
 
     def _pack_res(self, single):
         keys = ["input_path", "bbox", "structure"]

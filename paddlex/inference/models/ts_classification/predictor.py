@@ -18,19 +18,16 @@ from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
 
-from ....modules.ts_classification.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasePredictor
 from ..common import BuildTSDataset, TSCutOff, TSNormalize, TStoArray, TStoBatch
+from ..predictors import RunnerPredictor
 from .processors import BuildPadMask, GetCls
 from .result import TSClsResult
 
 
-class TSClsPredictor(BasePredictor):
-    """TSClsPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class TSClsRunnerPredictor(RunnerPredictor):
+    """TSClsRunnerPredictor that inherits from RunnerPredictor."""
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSClsPredictor.
@@ -40,7 +37,7 @@ class TSClsPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> TSBatchSampler:
         """Builds and returns an TSBatchSampler instance.
@@ -59,10 +56,10 @@ class TSClsPredictor(BasePredictor):
         return TSClsResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {
             "ReadTS": ReadTS(),
@@ -81,10 +78,9 @@ class TSClsPredictor(BasePredictor):
         preprocessors["BuildPadMask"] = BuildPadMask(self.config["input_data"])
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["GetCls"] = GetCls()
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, pd.DataFrame]]) -> Dict[str, Any]:
         """
@@ -109,7 +105,7 @@ class TSClsPredictor(BasePredictor):
         batch_ts = self.preprocessors["TStoArray"](ts_list=batch_input_ts)
 
         x = self.preprocessors["TStoBatch"](ts_list=batch_ts)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
 
         batch_ts_preds = self.postprocessors["GetCls"](pred_list=batch_preds)
 

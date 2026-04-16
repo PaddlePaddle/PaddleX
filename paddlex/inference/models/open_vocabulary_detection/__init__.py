@@ -12,4 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import OVDetPredictor
+from ....modules.open_vocabulary_detection.model_list import MODELS
+from ..bindings import register_predictor_binding_map
+from .predictor import OVDetRunnerPredictor
+
+register_predictor_binding_map(
+    OVDetRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
+
+# Backward compatibility
+OVDetPredictor = OVDetRunnerPredictor

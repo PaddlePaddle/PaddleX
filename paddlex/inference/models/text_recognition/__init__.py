@@ -12,4 +12,60 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TextRecPredictor
+from ....modules.text_recognition.model_list import MODELS
+from ..bindings import create_binding_registration, register_predictor_binding_map
+from ..runners import create_pretrained_dynamic_runner_builder
+from .predictor import (
+    TEXT_REC_TRANSFORMERS_MODELS,
+    TextRecRunnerPredictor,
+    TextRecTransformersPredictor,
+)
+
+
+def _load_ppocrv5_mobile_rec():
+    from .modeling import PPOCRV5MobileRec
+
+    return PPOCRV5MobileRec
+
+
+def _load_ppocrv5_server_rec():
+    from .modeling import PPOCRV5ServerRec
+
+    return PPOCRV5ServerRec
+
+
+register_predictor_binding_map(
+    TextRecRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "paddle_dynamic": (
+            create_binding_registration(
+                ("PP-OCRv5_mobile_rec",),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv5_mobile_rec,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            ),
+            create_binding_registration(
+                ("PP-OCRv5_server_rec",),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv5_server_rec,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            ),
+        ),
+        "hpi": MODELS,
+        "onnxruntime": MODELS,
+    },
+)
+register_predictor_binding_map(
+    TextRecTransformersPredictor,
+    {"transformers": TEXT_REC_TRANSFORMERS_MODELS},
+)
+
+# Backward compatibility
+TextRecPredictor = TextRecRunnerPredictor
