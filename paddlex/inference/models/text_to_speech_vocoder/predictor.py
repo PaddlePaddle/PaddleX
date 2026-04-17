@@ -14,15 +14,12 @@
 
 import numpy as np
 
-from ....modules.text_to_speech_vocoder.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-from ..base import BasePredictor
+from ..predictors import RunnerPredictor
 from .result import PwganResult
 
 
-class PwganPredictor(BasePredictor):
-
-    entities = MODELS
+class PwganRunnerPredictor(RunnerPredictor):
 
     def __init__(self, *args, **kwargs):
         """Initializes FastspeechPredictor.
@@ -32,7 +29,6 @@ class PwganPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.infer = self.create_static_infer()
 
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
@@ -65,7 +61,7 @@ class PwganPredictor(BasePredictor):
             mel = np.load(input_data)
         else:
             mel = input_data
-        wav = self.infer([mel])
+        wav = self.runner([mel])
         result = np.array(wav).reshape(1, -1)
         return {
             "result": result,

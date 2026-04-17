@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....modules.text_to_speech_acoustic.model_list import MODELS
 from ...common.batch_sampler import AudioBatchSampler
-from ..base import BasePredictor
+from ..predictors import RunnerPredictor
 from .result import Fastspeech2Result
 
 
-class Fastspeech2Predictor(BasePredictor):
-
-    entities = MODELS
+class Fastspeech2RunnerPredictor(RunnerPredictor):
 
     def __init__(self, *args, **kwargs):
         """Initializes FastspeechPredictor.
@@ -30,7 +27,6 @@ class Fastspeech2Predictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.infer = self.create_static_infer()
 
     def _build_batch_sampler(self):
         """Builds and returns an AudioBatchSampler instance.
@@ -59,7 +55,7 @@ class Fastspeech2Predictor(BasePredictor):
             dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
         phone = batch_data
-        mel = self.infer(phone)
+        mel = self.runner(phone)
         return {
             "result": mel,
         }

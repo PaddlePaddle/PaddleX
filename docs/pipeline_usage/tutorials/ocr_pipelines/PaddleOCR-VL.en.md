@@ -1153,7 +1153,7 @@ for res in pipeline.predict("paddleocr_vl_demo.png"):
 
 ### 3.3 Performance Tuning
 
-The default configuration is tuned on a single NVIDIA A100 and assumes exclusive client service, so it may not be suitable for other environments. If users encounter performance issues during actual use, they can try the following optimization methods.
+The default configuration may not achieve optimal performance in all environments. If users encounter performance issues during actual use, they can try the following optimization methods.
 
 #### 3.3.1 Server-side Parameter Adjustment
 
@@ -1365,6 +1365,11 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>file</code></td>
 <td><code>string</code></td>
 <td>The URL of an image file or PDF file accessible to the server, or the Base64-encoded result of the content of the aforementioned file types.
+By default, there is no limit on how many PDF pages are processed. To cap the number of pages processed on the server, set <code>Serving.extra.max_num_input_imgs</code> to a positive integer in the pipeline configuration file, for example:
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: 10
+</code></pre>
 </td>
 <td>Yes</td>
 </tr>
@@ -1537,6 +1542,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code>|<code>null</code></td>
+<td>Optional list of extra document formats to return. By default, no extra formats are returned. Currently only <code>"docx"</code> is supported.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code>|<code>null</code></td>
 <td>Whether to return visualization result images and intermediate images during the processing.<ul style="margin: 0 0 0 1em; padding-left: 0em;">
@@ -1604,6 +1615,11 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>inputImage</code></td>
 <td><code>string</code>|<code>null</code></td>
 <td>Input image. The image is in JPEG format and encoded using Base64.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
 </tr>
 </tbody>
 </table>
@@ -1683,6 +1699,12 @@ Below are the API references for basic service-based deployment and examples of 
     <td><code>showFormulaNumber</code></td>
     <td><code>boolean</code></td>
     <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>outputFormats</code></td>
+    <td><code>array</code>|<code>null</code></td>
+    <td>Optional extra export formats; same meaning as <code>outputFormats</code> on <code>infer</code>. Only <code>"docx"</code> is supported.</td>
     <td>No</td>
     </tr>
   </tbody>

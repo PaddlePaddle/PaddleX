@@ -171,23 +171,31 @@ class TritonPythonModel(BaseTritonPythonModel):
                 )
             else:
                 imgs = {}
-            layout_parsing_results.append(
-                dict(
-                    prunedResult=pruned_res,
-                    markdown=dict(
-                        text=md_text,
-                        images=md_imgs,
-                        isStart=md_flags[0],
-                        isEnd=md_flags[1],
-                    ),
-                    outputImages=(
-                        {k: v for k, v in imgs.items() if k != "input_img"}
-                        if imgs
-                        else None
-                    ),
-                    inputImage=imgs.get("input_img"),
-                )
+            entry = dict(
+                prunedResult=pruned_res,
+                markdown=dict(
+                    text=md_text,
+                    images=md_imgs,
+                    isStart=md_flags[0],
+                    isEnd=md_flags[1],
+                ),
+                outputImages=(
+                    {k: v for k, v in imgs.items() if k != "input_img"}
+                    if imgs
+                    else None
+                ),
+                inputImage=imgs.get("input_img"),
             )
+            if app_common.normalize_output_formats(input.outputFormats):
+                entry["exports"] = app_common.build_pipeline_exports(
+                    input.outputFormats,
+                    item["layout_parsing_result"],
+                    log_id=log_id,
+                    file_storage=self.context["file_storage"],
+                    return_urls=self.context["return_img_urls"],
+                    url_expires_in=self.context["url_expires_in"],
+                )
+            layout_parsing_results.append(entry)
 
         return schemas.pp_doctranslation.AnalyzeImagesResult(
             layoutParsingResults=layout_parsing_results,

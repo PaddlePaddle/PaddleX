@@ -132,6 +132,7 @@ plugins:
             文本检测模块: Text Detection
             印章文本检测模块: Seal Detection
             文本识别模块: Text Recognition
+            版面分析模块: Layout Analysis
             版面区域检测模块: Layout Detection
             表格结构识别模块: Table Structure Recognition
             表格单元格检测模块: Table Cell Detection
@@ -380,6 +381,7 @@ nav:
          - 文本检测模块: module_usage/tutorials/ocr_modules/text_detection.md
          - 印章文本检测模块: module_usage/tutorials/ocr_modules/seal_text_detection.md
          - 文本识别模块: module_usage/tutorials/ocr_modules/text_recognition.md
+         - 版面分析模块: module_usage/tutorials/ocr_modules/layout_analysis.md
          - 版面区域检测模块: module_usage/tutorials/ocr_modules/layout_detection.md
          - 表格结构识别模块: module_usage/tutorials/ocr_modules/table_structure_recognition.md
          - 表格单元格检测模块: module_usage/tutorials/ocr_modules/table_cells_detection.md

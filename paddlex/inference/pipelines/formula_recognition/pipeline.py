@@ -20,10 +20,9 @@ from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import HPIConfig, PaddlePredictorOption
 from ...models.object_detection.result import DetResult
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
@@ -37,26 +36,36 @@ class _FormulaRecognitionPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        **kwargs,
     ) -> None:
         """Initializes the formula recognition pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing various settings.
-            device (str, optional): Device to run the predictions on. Defaults to None.
-            pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
+                HPIP configuration. Defaults to `None`.
         """
-
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)

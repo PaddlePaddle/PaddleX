@@ -19,9 +19,8 @@ import numpy as np
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import HPIConfig, PaddlePredictorOption
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import CropByBoxes
@@ -35,13 +34,23 @@ class _AttributeRecPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-    ):
+        **kwargs,
+    ) -> None:
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
         self.det_model = self.create_model(config["SubModules"]["Detection"])
@@ -64,7 +73,7 @@ class _AttributeRecPipeline(BasePipeline):
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         det_threshold: float = None,
         cls_threshold: Union[float, dict, list, None] = None,
-        **kwargs
+        **kwargs,
     ):
         det_threshold = self.det_threshold if det_threshold is None else det_threshold
         cls_threshold = self.cls_threshold if cls_threshold is None else cls_threshold

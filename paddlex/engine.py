@@ -45,6 +45,8 @@ class Engine(object):
         elif self._mode == "export":
             disable_pir_bydefault()
             return self._model.export()
+        elif self._mode == "pdparams2safetensors":
+            return self._model.pdparams2safetensors()
         elif self._mode == "predict":
             for res in self._model.predict():
                 if INFER_BENCHMARK:

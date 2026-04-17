@@ -12,4 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import UadPredictor
+from ....modules.anomaly_detection.model_list import MODELS
+from ..bindings import register_predictor_binding_map
+from .predictor import UadRunnerPredictor
+
+register_predictor_binding_map(
+    UadRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
+
+# Backward compatibility
+UadPredictor = UadRunnerPredictor

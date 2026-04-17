@@ -89,11 +89,11 @@ class GenerateEnsemblePrompt(BaseGeneratePrompt):
             key (str): the input question.
             result_methodA (str): the result of method A.
             result_methodB (str): the result of method B.
-            task_description (str, optional): A description of the task. Defaults to None.
-            output_format (str, optional): The desired output format. Defaults to None.
-            rules_str (str, optional): A string containing rules or instructions. Defaults to None.
-            few_shot_demo_text_content (str, optional): Text content for few-shot demos. Defaults to None.
-            few_shot_demo_key_value_list (str, optional): Key-value list for few-shot demos. Defaults to None.
+            task_description (str, optional): A description of the task. Defaults to `None`.
+            output_format (str, optional): The desired output format. Defaults to `None`.
+            rules_str (str, optional): A string containing rules or instructions. Defaults to `None`.
+            few_shot_demo_text_content (str, optional): Text content for few-shot demos. Defaults to `None`.
+            few_shot_demo_key_value_list (str, optional): Key-value list for few-shot demos. Defaults to `None`.
         Returns:
             str: The generated prompt.
 

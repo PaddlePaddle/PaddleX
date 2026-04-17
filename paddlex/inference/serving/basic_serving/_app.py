@@ -35,6 +35,7 @@ from typing_extensions import ParamSpec, TypeGuard
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
+from ....utils.flags import SERVING_SERIAL_PIPELINE_CALLS
 from ...pipelines import BasePipeline
 from ..infra.config import AppConfig
 from ..infra.models import AIStudioNoResultResponse
@@ -77,13 +78,16 @@ class PipelineWrapper(Generic[PipelineT]):
     def __init__(self, pipeline: PipelineT) -> None:
         super().__init__()
         self._pipeline = pipeline
+        self._serialize_calls = SERVING_SERIAL_PIPELINE_CALLS
         # HACK: We work around a bug in Paddle Inference by performing all
-        # inference in the same thread.
-        self._queue = Queue()
+        self._queue = Queue() if self._serialize_calls else None
         self._closed = False
         self._loop = asyncio.get_running_loop()
-        self._thread = Thread(target=self._worker, daemon=False)
-        self._thread.start()
+        self._thread = (
+            Thread(target=self._worker, daemon=False) if self._serialize_calls else None
+        )
+        if self._thread is not None:
+            self._thread.start()
 
     @property
     def pipeline(self) -> PipelineT:
@@ -107,17 +111,23 @@ class PipelineWrapper(Generic[PipelineT]):
     async def call(self, func: Callable[P, R], *args: P.args, **kwargs: P.kwargs) -> R:
         if self._closed:
             raise RuntimeError("`PipelineWrapper` has already been closed")
+        if not self._serialize_calls:
+            return await call_async(func, *args, **kwargs)
         fut = self._loop.create_future()
+        assert self._queue is not None
         self._queue.put((func, args, kwargs, fut))
         return await fut
 
     async def close(self):
         if not self._closed:
-            self._queue.put(None)
-            await call_async(self._thread.join)
+            if self._thread is not None:
+                assert self._queue is not None
+                self._queue.put(None)
+                await call_async(self._thread.join)
             self._closed = True
 
     def _worker(self):
+        assert self._queue is not None
         while not self._closed:
             item = self._queue.get()
             if item is None:

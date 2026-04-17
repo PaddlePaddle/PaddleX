@@ -14,11 +14,10 @@
 
 from typing import Union
 
-from ....modules.video_classification.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..base import BasePredictor
+from ..predictors import RunnerPredictor
 from .processors import (
     CenterCrop,
     Image2Array,
@@ -30,9 +29,7 @@ from .processors import (
 from .result import TopkVideoResult
 
 
-class VideoClasPredictor(BasePredictor):
-
-    entities = MODELS
+class VideoClasRunnerPredictor(RunnerPredictor):
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -40,7 +37,7 @@ class VideoClasPredictor(BasePredictor):
     def __init__(self, topk: Union[int, None] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.topk = topk
-        self.pre_tfs, self.infer, self.post_op = self._build()
+        self.pre_tfs, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return VideoBatchSampler()
@@ -60,8 +57,6 @@ class VideoClasPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
-
         post_op = {}
         for key in self.config["PostProcess"]:
             func = self._FUNC_MAP.get(key)
@@ -69,7 +64,7 @@ class VideoClasPredictor(BasePredictor):
             name, op = func(self, **args) if args else func(self)
             post_op[name] = op
 
-        return pre_tfs, infer, post_op
+        return pre_tfs, post_op
 
     def process(self, batch_data, topk: Union[int, None] = None):
         batch_raw_videos = self.pre_tfs["ReadVideo"](videos=batch_data)
@@ -78,7 +73,7 @@ class VideoClasPredictor(BasePredictor):
         batch_videos = self.pre_tfs["Image2Array"](videos=batch_videos)
         batch_videos = self.pre_tfs["NormalizeVideo"](videos=batch_videos)
         x = self.pre_tfs["ToBatch"](videos=batch_videos)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
 
         batch_class_ids, batch_scores, batch_label_names = self.post_op["Topk"](
             batch_preds, topk=topk or self.topk

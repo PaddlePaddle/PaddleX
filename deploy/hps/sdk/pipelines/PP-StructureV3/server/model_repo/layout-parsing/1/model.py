@@ -304,6 +304,13 @@ class TritonPythonModel(BaseTritonPythonModel):
                 file_type,
                 max_num_imgs=self.context["max_num_input_imgs"],
             )
+        except utils.ImageTooLargeError as e:
+            logging.error("Input image or PDF page exceeds pixel limit: %s", e)
+            return protocol.create_aistudio_output_without_result(
+                422,
+                str(e),
+                log_id=log_id,
+            )
         except Exception as e:
             logging.error("Failed to get input file bytes: %s", e)
             return protocol.create_aistudio_output_without_result(
@@ -350,23 +357,31 @@ class TritonPythonModel(BaseTritonPythonModel):
                 )
             else:
                 imgs = {}
-            layout_parsing_results.append(
-                dict(
-                    prunedResult=pruned_res,
-                    markdown=dict(
-                        text=md_text,
-                        images=md_imgs,
-                        isStart=md_flags[0],
-                        isEnd=md_flags[1],
-                    ),
-                    outputImages=(
-                        {k: v for k, v in imgs.items() if k != "input_img"}
-                        if imgs
-                        else None
-                    ),
-                    inputImage=imgs.get("input_img"),
-                )
+            entry = dict(
+                prunedResult=pruned_res,
+                markdown=dict(
+                    text=md_text,
+                    images=md_imgs,
+                    isStart=md_flags[0],
+                    isEnd=md_flags[1],
+                ),
+                outputImages=(
+                    {k: v for k, v in imgs.items() if k != "input_img"}
+                    if imgs
+                    else None
+                ),
+                inputImage=imgs.get("input_img"),
             )
+            if app_common.normalize_output_formats(input.outputFormats):
+                entry["exports"] = app_common.build_pipeline_exports(
+                    input.outputFormats,
+                    item,
+                    log_id=log_id,
+                    file_storage=self.context["file_storage"],
+                    return_urls=self.context["return_img_urls"],
+                    url_expires_in=self.context["url_expires_in"],
+                )
+            layout_parsing_results.append(entry)
 
         return schemas.pp_structurev3.InferResult(
             layoutParsingResults=layout_parsing_results,

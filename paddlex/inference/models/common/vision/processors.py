@@ -282,4 +282,6 @@ class ToCHWImage:
 @benchmark.timeit
 class ToBatch:
     def __call__(self, imgs):
+        if not imgs:
+            return []
         return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]

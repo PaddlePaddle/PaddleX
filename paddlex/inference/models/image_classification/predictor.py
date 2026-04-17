@@ -12,25 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+from PIL import Image
 
 from ....modules.image_classification.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
 from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
+from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import Crop, Topk
 from .result import TopkResult
 
+PPLCNET_MODELS = [name for name in MODELS if name.startswith("PP-LCNet_")]
+HGNETV2_MODELS = [name for name in MODELS if name.startswith("PP-HGNetV2")]
+CLAS_TRANSFORMERS_MODELS = PPLCNET_MODELS + HGNETV2_MODELS
 
-class ClasPredictor(BasePredictor):
-    """ClasPredictor that inherits from BasePredictor."""
 
-    entities = MODELS
+class ClasRunnerPredictor(RunnerPredictor):
+    """ClasRunnerPredictor that inherits from RunnerPredictor."""
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -47,8 +49,7 @@ class ClasPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.topk = topk
-        self.device = kwargs.get("device", None)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -67,10 +68,10 @@ class ClasPredictor(BasePredictor):
         return TopkResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         for cfg in self.config["PreProcess"]["transform_ops"]:
@@ -81,33 +82,13 @@ class ClasPredictor(BasePredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            from .modeling import PPLCNet
-
-            if self.model_name in [
-                "PP-LCNet_x1_0_doc_ori",
-                "PP-LCNet_x1_0_table_cls",
-                "PP-LCNet_x0_25_textline_ori",
-            ]:
-                with TemporaryDeviceChanger(self.device):
-                    infer = PPLCNet.from_pretrained(
-                        self.model_dir, use_safetensors=True, convert_from_hf=True
-                    )
-                infer.eval()
-
-            else:
-                raise RuntimeError(
-                    f"There is no dynamic graph implementation for model {repr(self.model_name)}."
-                )
         postprocessors = {}
         for key in self.config["PostProcess"]:
             func = self._FUNC_MAP.get(key)
             args = self.config["PostProcess"].get(key, {})
             name, op = func(self, **args) if args else func(self)
             postprocessors[name] = op
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(
         self, batch_data: List[Union[str, np.ndarray]], topk: Union[int, None] = None
@@ -129,11 +110,7 @@ class ClasPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors["Topk"](
             batch_preds, topk=topk or self.topk
         )
@@ -194,3 +171,104 @@ class ClasPredictor(BasePredictor):
         if not self.topk:
             self.topk = int(topk)
         return "Topk", Topk(class_ids=label_list)
+
+
+class ClasTransformersPredictor(TransformersPredictor):
+    """Image classification predictor backed by Hugging Face transformers."""
+
+    def __init__(self, topk: Optional[int] = None, *args: List, **kwargs: Dict) -> None:
+        super().__init__(*args, **kwargs)
+        self.topk = topk
+        self._load_default_topk()
+        self.read_op = ReadImage(format="RGB")
+        self.image_processor, self.infer = self._build()
+
+    def _load_default_topk(self) -> None:
+        if self.topk is not None:
+            return
+        post = self.model_config.get("PostProcess", {})
+        topk_cfg = post.get("Topk", {})
+        if isinstance(topk_cfg, dict) and topk_cfg.get("topk") is not None:
+            self.topk = int(topk_cfg["topk"])
+        else:
+            self.topk = 5
+
+    def _build_batch_sampler(self) -> ImageBatchSampler:
+        return ImageBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return TopkResult
+
+    def _build(self):
+        from transformers import AutoImageProcessor, AutoModelForImageClassification
+
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(AutoModelForImageClassification)
+        return image_processor, model
+
+    def _resolve_id2label(self) -> Dict[int, str]:
+        raw = dict(self.infer.config.id2label or {})
+        return {int(k): str(v) for k, v in raw.items()}
+
+    def _resolve_logits(self, outputs):
+        logits = getattr(outputs, "logits", None)
+        if logits is not None:
+            return logits
+
+        # Some Paddle-converted HF classification models expose class scores as
+        # `last_hidden_state` instead of `logits`.
+        last_hidden_state = getattr(outputs, "last_hidden_state", None)
+        if (
+            last_hidden_state is not None
+            and getattr(last_hidden_state, "ndim", None) == 2
+        ):
+            return last_hidden_state
+
+        pooler_output = getattr(outputs, "pooler_output", None)
+        if pooler_output is not None and getattr(pooler_output, "ndim", None) == 2:
+            return pooler_output
+
+        if hasattr(outputs, "to_tuple"):
+            for item in outputs.to_tuple():
+                if getattr(item, "ndim", None) == 2:
+                    return item
+
+        raise AttributeError(
+            f"{type(outputs).__name__!r} does not provide a usable classification logits tensor."
+        )
+
+    def process(
+        self, batch_data: List[Union[str, np.ndarray]], topk: Optional[int] = None
+    ) -> Dict[str, Any]:
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        images = [Image.fromarray(img) for img in batch_raw_imgs]
+
+        model_inputs = self.preprocess_images(images=images)
+        outputs = self.forward(model_inputs)
+        indexes, batch_scores, batch_label_names = self.postprocess(outputs, topk=topk)
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "class_ids": indexes,
+            "scores": batch_scores,
+            "label_names": batch_label_names,
+        }
+
+    def postprocess(self, outputs, *, topk, **kwargs):
+        import torch
+
+        id2label = self._resolve_id2label()
+        logits = self._resolve_logits(outputs)
+        probs = torch.softmax(logits, dim=-1).detach().cpu().numpy()
+        k = int(topk if topk is not None else self.topk)
+        indexes = probs.argsort(axis=1)[:, -k:][:, ::-1].astype("int32")
+        batch_scores = [
+            np.around(probs[i][idx], decimals=5) for i, idx in enumerate(indexes)
+        ]
+        batch_label_names = [
+            [id2label.get(int(i), str(i)) for i in row] for row in indexes
+        ]
+
+        return indexes, batch_scores, batch_label_names

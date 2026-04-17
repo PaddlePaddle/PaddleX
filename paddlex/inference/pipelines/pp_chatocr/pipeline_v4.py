@@ -30,9 +30,8 @@ from ....utils.deps import (
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import HPIConfig, PaddlePredictorOption
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from ..components.chat_server import BaseChat
 from ..layout_parsing.result import LayoutParsingResult
 from .pipeline_base import PP_ChatOCR_Pipeline
@@ -51,28 +50,39 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         initial_predictor: bool = True,
+        **kwargs,
     ) -> None:
-        """Initializes the pp-chatocrv3-doc pipeline.
+        """Initializes the PP-ChatOCRv4 pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing various settings.
-            device (str, optional): Device to run the predictions on. Defaults to None.
-            pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
-            initial_predictor (bool, optional): Whether to initialize the predictor. Defaults to True.
+                HPIP configuration. Defaults to `None`.
+            initial_predictor (bool, optional): Whether to initialize the predictor.
+                Defaults to `True`.
         """
-
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
         self.pipeline_name = config["pipeline_name"]
@@ -290,13 +300,13 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             use_seal_recognition (bool): Flag to use seal recognition.
             use_table_recognition (bool): Flag to use table recognition.
             layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
-            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_nms (Optional[bool], optional): Whether to use layout-aware NMS. Defaults to `False`.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
-                Defaults to None.
+                Defaults to `None`.
                 If it's a single number, then both width and height are used.
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
-            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to `None`.
             text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
             text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
             text_det_thresh (Optional[float]): Threshold for text detection.
@@ -443,8 +453,8 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             visual_info (dict): The visual information input, can be a single instance or a list of instances.
             min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
             block_size (int): The size of each chunk to split the text into.
-            flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to False.
-            retriever_config (dict): The configuration for the retriever, defaults to None.
+            flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to `False`.
+            retriever_config (dict): The configuration for the retriever, defaults to `None`.
 
         Returns:
             dict: A dictionary containing the vector info and a flag indicating if the text is too short.

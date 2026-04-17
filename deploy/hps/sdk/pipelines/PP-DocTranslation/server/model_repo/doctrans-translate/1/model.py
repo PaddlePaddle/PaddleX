@@ -52,16 +52,15 @@ class TritonPythonModel(BaseTritonPythonModel):
 
         translation_results: List[Dict[str, Any]] = []
         for item in result:
-            translation_results.append(
-                dict(
-                    language=item["language"],
-                    markdown=dict(
-                        text=item["markdown_texts"],
-                        isStart=item["page_continuation_flags"][0],
-                        isEnd=item["page_continuation_flags"][1],
-                    ),
-                )
+            tr = dict(
+                language=item["language"],
+                markdown=dict(
+                    text=item["markdown_texts"],
+                    isStart=item["page_continuation_flags"][0],
+                    isEnd=item["page_continuation_flags"][1],
+                ),
             )
+            translation_results.append(tr)
 
         return schemas.pp_doctranslation.TranslateResult(
             translationResults=translation_results,

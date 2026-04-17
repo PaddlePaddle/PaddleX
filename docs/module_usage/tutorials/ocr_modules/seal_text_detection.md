@@ -91,7 +91,6 @@ comments: true
     </tbody>
 </table>
 
-
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
@@ -119,7 +118,6 @@ for res in output:
 - `input_path`：表示输入待预测图像的路径
 - `dt_polys`：表示预测的文本检测框，其中每个文本检测框包含一个多边形的多个顶点。其中每个顶点都是一个列表，分别表示该顶点的x坐标和y坐标
 - `dt_scores`：表示预测的文本检测框的置信度
-
 
 可视化图片如下：
 
@@ -178,7 +176,6 @@ for res in output:
 <ul>
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
 <li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -304,7 +301,6 @@ for res in output:
 <ul>
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
 <li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
-
 
 <td>None</td>
 </tr>

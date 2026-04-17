@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import random
-from functools import partial
-from typing import Dict
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -28,17 +28,19 @@ from ...common.result import (
     HtmlMixin,
     JsonMixin,
     MarkdownMixin,
+    WordMixin,
     XlsxMixin,
 )
-from ..layout_parsing.result_v2 import (
+from ...common.result.converter import MarkdownConverter
+from ...common.result.converter.markdown_format_funcs import (
+    build_handle_funcs_dict,
     format_centered_by_html,
-    format_first_line_func,
-    format_image_plain_func,
-    format_image_scaled_by_html_func,
-    format_para_title_func,
-    format_text_plain_func,
-    format_title_func,
-    simplify_table_func,
+    format_chart2html_table,
+    format_image_plain,
+    format_image_scaled_by_html,
+    format_table_center,
+    format_text_plain,
+    simplify_table,
 )
 from ..ocr.result import draw_box_txt_fine, get_minarea_rect
 
@@ -105,148 +107,8 @@ class PaddleOCRVLBlock(object):
         return _str
 
 
-def merge_formula_and_number(formula, formula_number):
-    """
-    Merge a formula and its formula number for display.
-
-    Args:
-        formula (str): The formula string.
-        formula_number (str): The formula number string.
-
-    Returns:
-        str: The merged formula with tag.
-    """
-    formula = formula.replace("$$", "")
-    merge_formula = r"{} \tag*{{{}}}".format(formula, formula_number)
-    return f"$${merge_formula}$$"
-
-
-def format_chart2table_func(block):
-    lines_list = block.content.split("\n")
-    # get header and rows
-    header = lines_list[0].split("|")
-    rows = [line.split("|") for line in lines_list[1:]]
-    # construct html table
-    html = "<table border=1 style='margin: auto; width: max-content;'>\n"
-    html += (
-        "  <thead><tr>"
-        + "".join(
-            f"<th style='text-align: center;'>{cell.strip()}</th>" for cell in header
-        )
-        + "</tr></thead>\n"
-    )
-    html += "  <tbody>\n"
-    for row in rows:
-        html += (
-            "    <tr>"
-            + "".join(
-                f"<td style='text-align: center;'>{cell.strip()}</td>" for cell in row
-            )
-            + "</tr>\n"
-        )
-    html += "  </tbody>\n"
-    html += "</table>"
-    return html
-
-
-def format_table_center_func(block):
-    tabel_content = block.content
-
-    tabel_content = tabel_content.replace(
-        "<table>", "<table border=1 style='margin: auto; word-wrap: break-word;'>"
-    )
-
-    tabel_content = tabel_content.replace(
-        "<th>", "<th style='text-align: center; word-wrap: break-word;'>"
-    )
-    tabel_content = tabel_content.replace(
-        "<td>", "<td style='text-align: center; word-wrap: break-word;'>"
-    )
-
-    return tabel_content
-
-
-def build_handle_funcs_dict(
-    *,
-    text_func,
-    image_func,
-    chart_func,
-    table_func,
-    formula_func,
-    seal_func,
-):
-    """
-    Build a dictionary mapping block labels to their formatting functions.
-
-    Args:
-        text_func: Function to format text blocks.
-        image_func: Function to format image blocks.
-        chart_func: Function to format chart blocks.
-        table_func: Function to format table blocks.
-        formula_func: Function to format formula blocks.
-        seal_func: Function to format seal blocks.
-
-    Returns:
-        dict: A mapping from block label to handler function.
-    """
-    return {
-        "paragraph_title": format_para_title_func,
-        "abstract_title": format_title_func,
-        "reference_title": format_title_func,
-        "content_title": format_title_func,
-        "doc_title": lambda block: f"# {block.content}".replace("-\n", "").replace(
-            "\n", " "
-        ),
-        "table_title": text_func,
-        "figure_title": text_func,
-        "chart_title": text_func,
-        "vision_footnote": lambda block: block.content.replace("\n\n", "\n").replace(
-            "\n", "\n\n"
-        ),
-        "text": lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
-        "ocr": lambda block: block.content.replace("\n\n", "\n").replace("\n", "\n\n"),
-        "vertical_text": lambda block: block.content.replace("\n\n", "\n").replace(
-            "\n", "\n\n"
-        ),
-        "reference_content": lambda block: block.content.replace("\n\n", "\n").replace(
-            "\n", "\n\n"
-        ),
-        "abstract": partial(
-            format_first_line_func,
-            templates=["摘要", "abstract"],
-            format_func=lambda l: f"## {l}\n",
-            spliter=" ",
-        ),
-        "content": lambda block: block.content.replace("-\n", "  \n").replace(
-            "\n", "  \n"
-        ),
-        "image": image_func,
-        "chart": chart_func,
-        "formula": formula_func,
-        "display_formula": formula_func,
-        "inline_formula": formula_func,
-        "table": table_func,
-        "reference": partial(
-            format_first_line_func,
-            templates=["参考文献", "references"],
-            format_func=lambda l: f"## {l}",
-            spliter="\n",
-        ),
-        "algorithm": lambda block: block.content.strip("\n"),
-        "seal": seal_func,
-        "spotting": lambda block: block.content,
-        "number": format_text_plain_func,
-        "footnote": format_text_plain_func,
-        "header": format_text_plain_func,
-        "header_image": image_func,
-        "footer": format_text_plain_func,
-        "footer_image": image_func,
-        "aside_text": format_text_plain_func,
-    }
-
-
 @class_requires_deps("opencv-contrib-python")
-class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
+class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordMixin):
     """
     PaddleOCRVLResult class for holding and formatting OCR/VL parsing results.
     """
@@ -263,6 +125,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
+        WordMixin.__init__(self)
         markdown_ignore_labels = self["model_settings"].get(
             "markdown_ignore_labels", []
         )
@@ -270,7 +133,12 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             label for label in SKIP_ORDER_LABELS.copy() + markdown_ignore_labels
         ]
 
-    def _to_img(self) -> Dict[str, np.ndarray]:
+    def _page_image_width(self) -> int:
+        """Return the page image width, unwrapping list if necessary."""
+        w = self["width"]
+        return w[0] if isinstance(w, list) else w
+
+    def _to_img(self) -> dict[str, np.ndarray]:
         """
         Convert the parsing result to a dictionary of images.
 
@@ -349,7 +217,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         return res_img_dict
 
-    def _to_html(self) -> Dict[str, str]:
+    def _to_html(self) -> dict[str, str]:
         """
         Converts the prediction to its corresponding HTML representation.
 
@@ -365,7 +233,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_html_dict[key] = table_res.html["pred"]
         return res_html_dict
 
-    def _to_xlsx(self) -> Dict[str, str]:
+    def _to_xlsx(self) -> dict[str, str]:
         """
         Converts the prediction HTML to an XLSX file path.
 
@@ -381,7 +249,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
+    def _to_str(self, *args, **kwargs) -> dict[str, str]:
         """
         Converts the instance's attributes to a dictionary and then to a string.
 
@@ -422,7 +290,72 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["parsing_res_list"] = parsing_res_list
         return JsonMixin._to_str(data, *args, **kwargs)
 
-    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
+    def _build_handle_funcs_dict(self, pretty=True):
+        """Build label-to-handler mapping for content formatting."""
+        use_ocr_for_image_block = self["model_settings"].get(
+            "use_ocr_for_image_block", False
+        )
+        use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
+        original_image_width = self._page_image_width()
+
+        if pretty:
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html(
+                    block,
+                    original_image_width=original_image_width,
+                    show_ocr_content=use_ocr_for_image_block,
+                ),
+                collapse_newlines=not use_ocr_for_image_block,
+            )
+            format_seal_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html(
+                    block,
+                    original_image_width=original_image_width,
+                    show_ocr_content=use_seal_recognition,
+                ),
+                collapse_newlines=not use_seal_recognition,
+            )
+        else:
+            format_text_func = lambda block: block.content
+            format_image_func = lambda block: format_image_plain(
+                block, show_ocr_content=use_ocr_for_image_block
+            )
+            format_seal_func = lambda block: format_image_plain(
+                block, show_ocr_content=use_seal_recognition
+            )
+
+        format_chart_func = (
+            format_chart2html_table
+            if self["model_settings"].get("use_chart_recognition", False)
+            else format_image_func
+        )
+
+        if not self["model_settings"].get("use_layout_detection", False):
+            format_seal_func = format_text_func
+
+        if pretty:
+            format_table_func = lambda block: "\n" + format_table_center(block)
+        else:
+            format_table_func = lambda block: simplify_table("\n" + block.content)
+
+        format_formula_func = lambda block: block.content
+
+        handle_funcs_dict = build_handle_funcs_dict(
+            text_func=format_text_func,
+            image_func=format_image_func,
+            chart_func=format_chart_func,
+            table_func=format_table_func,
+            formula_func=format_formula_func,
+            seal_func=format_seal_func,
+        )
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
+        return handle_funcs_dict
+
+    def _to_json(self, *args, **kwargs) -> dict[str, str]:
         """
         Converts the object's data to a JSON dictionary.
 
@@ -443,52 +376,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["height"] = self["height"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
-        use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
         if self["model_settings"].get("format_block_content", False):
-            original_image_width = self["width"]
-            use_ocr_for_image_block = self["model_settings"].get(
-                "use_ocr_for_image_block", False
-            )
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                    show_ocr_content=use_ocr_for_image_block,
-                ),
-                remove_symbol=not use_ocr_for_image_block,
-            )
-
-            format_seal_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                    show_ocr_content=True,
-                ),
-                remove_symbol=not use_seal_recognition,
-            )
-
-            if self["model_settings"].get("use_chart_recognition", False):
-                format_chart_func = format_chart2table_func
-            else:
-                format_chart_func = format_image_func
-
-            if not self["model_settings"].get("use_layout_detection", False):
-                format_seal_func = format_text_func
-
-            format_table_func = lambda block: "\n" + format_table_center_func(block)
-            format_formula_func = lambda block: block.content
-
-            handle_funcs_dict = build_handle_funcs_dict(
-                text_func=format_text_func,
-                image_func=format_image_func,
-                chart_func=format_chart_func,
-                table_func=format_table_func,
-                formula_func=format_formula_func,
-                seal_func=format_seal_func,
-            )
+            handle_funcs_dict = self._build_handle_funcs_dict(pretty=True)
 
         parsing_res_list = self["parsing_res_list"]
         parsing_res_list_json = []
@@ -582,106 +471,77 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             dict: Markdown information with text and images.
         """
 
-        use_ocr_for_image_block = self["model_settings"].get(
-            "use_ocr_for_image_block", False
+        handle_funcs_dict = self._build_handle_funcs_dict(pretty=pretty)
+
+        result = MarkdownConverter.convert(
+            self["parsing_res_list"],
+            handle_funcs_dict=handle_funcs_dict,
+            show_formula_number=show_formula_number,
+            imgs_in_doc=self["imgs_in_doc"],
         )
-        use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
-        if isinstance(self["width"], list):
-            original_image_width = self["width"][0]
-        else:
-            original_image_width = self["width"]
+        result["page_index"] = self["page_index"]
+        result["input_path"] = self["input_path"]
+        return result
 
-        if pretty:
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                    show_ocr_content=use_ocr_for_image_block,
-                ),
-                remove_symbol=not use_ocr_for_image_block,
-            )
-            format_seal_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                    show_ocr_content=use_seal_recognition,
-                ),
-                remove_symbol=False,
-            )
-        else:
-            format_text_func = lambda block: block.content
-            format_image_func = lambda block: format_image_plain_func(
-                block, use_ocr_for_image_block
-            )
-            format_seal_func = lambda block: format_image_plain_func(
-                block, use_seal_recognition
-            )
+    def _to_word(self) -> dict:
+        """Convert the parsing result to a Word-compatible dict.
 
-        format_chart_func = (
-            format_chart2table_func
-            if self["model_settings"]["use_chart_recognition"]
-            else format_image_func
+        Returns:
+            dict: {
+                "word_blocks": List[Dict],       # Simplified list of content blocks
+                "original_image_width": int,   # Pixel width of the source page
+                "input_path": str,             # Original input file path
+                "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
+            }
+        """
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+        from ...common.result.converter import build_word_blocks
+
+        # PaddleOCR-VL specific labels not in BASE_STYLE_MAP
+        extra_style_map = {
+            "ocr": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+                "indent": True,
+            },
+            "vertical_text": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+                "indent": True,
+            },
+            "aside_text": {"size": 10, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "spotting": {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "inline_formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "display_formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
+            "reference_content": {
+                "size": 12,
+                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
+            },
+            "content": {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT},
+            "footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
+        }
+
+        original_image_width = self._page_image_width()
+
+        height_val = self.get("height", 0)
+        original_image_height = (
+            height_val[0] if isinstance(height_val, list) else int(height_val or 0)
         )
 
-        if not self["model_settings"].get("use_layout_detection", False):
-            format_seal_func = format_text_func
-
-        if pretty:
-            format_table_func = lambda block: "\n" + format_table_center_func(block)
-        else:
-            format_table_func = lambda block: simplify_table_func("\n" + block.content)
-
-        format_formula_func = lambda block: block.content
-
-        handle_funcs_dict = build_handle_funcs_dict(
-            text_func=format_text_func,
-            image_func=format_image_func,
-            chart_func=format_chart_func,
-            table_func=format_table_func,
-            formula_func=format_formula_func,
-            seal_func=format_seal_func,
+        word_blocks, images = build_word_blocks(
+            self["parsing_res_list"],
+            extra_style_map=extra_style_map,
+            imgs_in_doc=self.get("imgs_in_doc", []),
         )
-        for label in self["model_settings"].get("markdown_ignore_labels", []):
-            handle_funcs_dict.pop(label, None)
 
-        markdown_content = ""
-        markdown_info = {}
-        markdown_info["markdown_images"] = {}
-        for idx, block in enumerate(self["parsing_res_list"]):
-            label = block.label
-            if block.image is not None:
-                markdown_info["markdown_images"][block.image["path"]] = block.image[
-                    "img"
-                ]
-            handle_func = handle_funcs_dict.get(label, None)
-            if (
-                show_formula_number
-                and (label == "display_formula" or label == "formula")
-                and idx != len(self["parsing_res_list"]) - 1
-            ):
-                next_block = self["parsing_res_list"][idx + 1]
-                next_block_label = next_block.label
-                if next_block_label == "formula_number":
-                    block.content = merge_formula_and_number(
-                        block.content, next_block.content
-                    )
-            if handle_func:
-                markdown_content += (
-                    "\n\n" + handle_func(block)
-                    if markdown_content
-                    else handle_func(block)
-                )
-
-        markdown_info["page_index"] = self["page_index"]
-        markdown_info["input_path"] = self["input_path"]
-        markdown_info["markdown_texts"] = markdown_content
-        for img in self["imgs_in_doc"]:
-            markdown_info["markdown_images"][img["path"]] = img["img"]
-
-        return markdown_info
+        return {
+            "word_blocks": word_blocks,
+            "original_image_width": original_image_width,
+            "original_image_height": original_image_height,
+            "input_path": self["input_path"],
+            "images": images,
+        }
 
 
 class PaddleOCRVLPagesResult(PaddleOCRVLResult):
@@ -703,112 +563,8 @@ class PaddleOCRVLPagesResult(PaddleOCRVLResult):
         )
         return None
 
-    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
-        """
-        Save the parsing result to a Markdown file.
-
-        Args:
-            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
-            show_formula_number (bool): whether to show formula numbers.
-
-        Returns:
-            dict: Markdown information with text and images.
-        """
-
-        use_ocr_for_image_block = self["model_settings"].get(
-            "use_ocr_for_image_block", False
+    def save_to_word(self, *args, **kwargs):
+        logging.warning(
+            f"The result of multi-pages don't support to save as word format!"
         )
-        use_seal_recognition = self["model_settings"].get("use_seal_recognition", False)
-        if isinstance(self["width"], list):
-            original_image_width = self["width"][0]
-        else:
-            original_image_width = self["width"]
-
-        if pretty:
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                    show_ocr_content=use_ocr_for_image_block,
-                ),
-                remove_symbol=not use_ocr_for_image_block,
-            )
-            format_seal_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                    show_ocr_content=use_seal_recognition,
-                ),
-                remove_symbol=False,
-            )
-        else:
-            format_text_func = lambda block: block.content
-            format_image_func = lambda block: format_image_plain_func(
-                block, use_ocr_for_image_block
-            )
-            format_seal_func = lambda block: format_image_plain_func(
-                block, use_seal_recognition
-            )
-
-        format_chart_func = (
-            format_chart2table_func
-            if self["model_settings"]["use_chart_recognition"]
-            else format_image_func
-        )
-
-        if pretty:
-            format_table_func = lambda block: "\n" + format_table_center_func(block)
-        else:
-            format_table_func = lambda block: simplify_table_func("\n" + block.content)
-
-        format_formula_func = lambda block: block.content
-
-        handle_funcs_dict = build_handle_funcs_dict(
-            text_func=format_text_func,
-            image_func=format_image_func,
-            chart_func=format_chart_func,
-            table_func=format_table_func,
-            formula_func=format_formula_func,
-            seal_func=format_seal_func,
-        )
-        for label in self["model_settings"].get("markdown_ignore_labels", []):
-            handle_funcs_dict.pop(label, None)
-
-        markdown_content = ""
-        markdown_info = {}
-        markdown_info["markdown_images"] = {}
-        for idx, block in enumerate(self["parsing_res_list"]):
-            label = block.label
-            if block.image is not None:
-                markdown_info["markdown_images"][block.image["path"]] = block.image[
-                    "img"
-                ]
-            handle_func = handle_funcs_dict.get(label, None)
-            if (
-                show_formula_number
-                and (label == "display_formula" or label == "formula")
-                and idx != len(self["parsing_res_list"]) - 1
-            ):
-                next_block = self["parsing_res_list"][idx + 1]
-                next_block_label = next_block.label
-                if next_block_label == "formula_number":
-                    block.content = merge_formula_and_number(
-                        block.content, next_block.content
-                    )
-            if handle_func:
-                markdown_content += (
-                    "\n\n" + handle_func(block)
-                    if markdown_content
-                    else handle_func(block)
-                )
-
-        markdown_info["page_index"] = self["page_index"]
-        markdown_info["input_path"] = self["input_path"]
-        markdown_info["markdown_texts"] = markdown_content
-        for img in self["imgs_in_doc"]:
-            markdown_info["markdown_images"][img["path"]] = img["img"]
-
-        return markdown_info
+        return None

@@ -12,4 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import VideoClasPredictor
+from ....modules.video_classification.model_list import MODELS
+from ..bindings import register_predictor_binding_map
+from .predictor import VideoClasRunnerPredictor
+
+register_predictor_binding_map(
+    VideoClasRunnerPredictor,
+    {"paddle_static": MODELS},
+)
+
+# Backward compatibility
+VideoClasPredictor = VideoClasRunnerPredictor

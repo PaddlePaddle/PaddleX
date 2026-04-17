@@ -24,6 +24,8 @@ class MarkdownResult(BaseCVResult, MarkdownMixin, WordMixin, LatexMixin):
         """Initializes a new instance of the class with the specified data."""
         super().__init__(data)
         MarkdownMixin.__init__(self)
+        WordMixin.__init__(self)
+        LatexMixin.__init__(self)
 
     def _get_input_fn(self):
         fn = super()._get_input_fn()
@@ -40,9 +42,18 @@ class MarkdownResult(BaseCVResult, MarkdownMixin, WordMixin, LatexMixin):
     def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
         return self
 
+    def _to_word(self):
+        raise NotImplementedError(
+            "MarkdownResult generates Word output directly via save_to_word()."
+        )
+
     # in order to make MarkdownResult support save_to_word
-    def _to_word(self, save_path) -> dict:
+    def save_to_word(self, save_path, *args, **kwargs) -> None:
         from bs4 import BeautifulSoup
+
+        fn = Path(self._get_input_fn())
+        save_path = Path(save_path)
+        save_file = save_path / f"{fn.stem}.docx"
 
         md_text = self.get("markdown_texts", "")
 
@@ -173,11 +184,21 @@ class MarkdownResult(BaseCVResult, MarkdownMixin, WordMixin, LatexMixin):
         document = Document()
         process_md_page(document, md_text, save_path)
 
-        return document
+        os.makedirs(save_path, exist_ok=True)
+        document.save(save_file.as_posix())
+
+    def _to_latex(self):
+        raise NotImplementedError(
+            "MarkdownResult generates LaTeX output directly via save_to_latex()."
+        )
 
     # in order to make MarkdownResult support save_to_latex
-    def _to_latex(self, save_path) -> str:
+    def save_to_latex(self, save_path, *args, **kwargs) -> None:
         from bs4 import BeautifulSoup
+
+        fn = Path(self._get_input_fn())
+        save_path = Path(save_path)
+        save_file = save_path / f"{fn.stem}.tex"
 
         def escape_latex_outside_formula(s: str) -> str:
             """
@@ -354,7 +375,9 @@ class MarkdownResult(BaseCVResult, MarkdownMixin, WordMixin, LatexMixin):
 
         latex_lines.append("\\end{document}")
 
-        return "\n".join(latex_lines)
+        os.makedirs(save_path, exist_ok=True)
+        with open(save_file.as_posix(), "w", encoding="utf-8") as f:
+            f.write("\n".join(latex_lines))
 
 
 class DocumentResult(BaseCVResult, WordMixin):

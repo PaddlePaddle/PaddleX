@@ -15,10 +15,12 @@
 from typing import Any, Dict, List
 
 from .....utils.deps import function_requires_deps, is_dep_available
+from ...app_shared.document_export import build_pipeline_exports
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import AIStudioResultResponse
 from ...schemas.pp_structurev3 import INFER_ENDPOINT, InferRequest, InferResult
+from ...schemas.shared.export import normalize_output_formats
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
@@ -124,23 +126,32 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 )
             else:
                 imgs = {}
-            layout_parsing_results.append(
-                dict(
-                    prunedResult=pruned_res,
-                    markdown=dict(
-                        text=md_text,
-                        images=md_imgs,
-                        isStart=md_flags[0],
-                        isEnd=md_flags[1],
-                    ),
-                    outputImages=(
-                        {k: v for k, v in imgs.items() if k != "input_img"}
-                        if imgs
-                        else None
-                    ),
-                    inputImage=imgs.get("input_img"),
-                )
+            entry = dict(
+                prunedResult=pruned_res,
+                markdown=dict(
+                    text=md_text,
+                    images=md_imgs,
+                    isStart=md_flags[0],
+                    isEnd=md_flags[1],
+                ),
+                outputImages=(
+                    {k: v for k, v in imgs.items() if k != "input_img"}
+                    if imgs
+                    else None
+                ),
+                inputImage=imgs.get("input_img"),
             )
+            if normalize_output_formats(request.outputFormats):
+                entry["exports"] = await serving_utils.call_async(
+                    build_pipeline_exports,
+                    request.outputFormats,
+                    item,
+                    log_id=log_id,
+                    file_storage=ctx.extra["file_storage"],
+                    return_urls=ctx.extra["return_img_urls"],
+                    url_expires_in=ctx.extra["url_expires_in"],
+                )
+            layout_parsing_results.append(entry)
 
         return AIStudioResultResponse[InferResult](
             logId=log_id,

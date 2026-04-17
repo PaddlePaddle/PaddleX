@@ -212,19 +212,13 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
     scale_w, scale_h = scale_ratio[0] / 4, scale_ratio[1] / 4
     h_m, w_m = masks.shape[1:]
     polygon_points = []
-    iou_threshold = 0.95
 
     max_box_w = max(boxes[:, 4] - boxes[:, 3])
 
     for i in range(len(boxes)):
         x_min, y_min, x_max, y_max = boxes[i, 2:6].astype(np.int32)
         box_w, box_h = x_max - x_min, y_max - y_min
-
-        # default rect
-        rect = np.array(
-            [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
-            dtype=np.float32,
-        )
+        rect = _rect_from_box(boxes[i, 2:6])
 
         if box_w <= 0 or box_h <= 0:
             polygon_points.append(rect)
@@ -243,10 +237,6 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
             polygon_points.append(rect)
             continue
 
-        if layout_shape_mode == "rect":
-            polygon_points.append(rect)
-            continue
-
         # resize mask to match box size
         resized_mask = cv2.resize(
             cropped.astype(np.uint8), (box_w, box_h), interpolation=cv2.INTER_NEAREST
@@ -258,64 +248,107 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
             max_allowed_dist = max_box_w
 
         polygon = mask2polygon(resized_mask, max_allowed_dist)
-        if polygon is not None and len(polygon) < 4:
-            polygon_points.append(rect)
-            continue
         if polygon is not None and len(polygon) > 0:
             polygon = polygon + np.array([x_min, y_min])
-        if layout_shape_mode == "poly":
-            polygon_points.append(polygon)
-        elif layout_shape_mode == "quad":
-            # convert polygon to quadrilateral
-            quad = convert_polygon_to_quad(polygon)
-            polygon_points.append(quad if quad is not None else rect)
-        elif layout_shape_mode == "auto":
-            iou_threshold = 0.8
-
-            rect_list = rect.tolist()
-            quad = convert_polygon_to_quad(polygon)
-            if quad is not None:
-                quad_list = quad.tolist()
-
-                iou_quad = calculate_polygon_overlap_ratio(
-                    rect_list,
-                    quad_list,
-                    mode="union",
-                )
-                if iou_quad >= 0.95:
-                    # if quad is very similar to rect, use rect instead
-                    quad = rect
-
-                poly_list = (
-                    polygon.tolist() if isinstance(polygon, np.ndarray) else polygon
-                )
-
-                iou_quad = calculate_polygon_overlap_ratio(
-                    poly_list, quad_list, mode="union"
-                )
-
-                pre_poly = polygon_points[-1] if len(polygon_points) > 0 else None
-                iou_pre = 0
-                if pre_poly is not None:
-                    iou_pre = calculate_polygon_overlap_ratio(
-                        pre_poly.tolist(),
-                        rect_list,
-                        mode="small",
-                    )
-
-                if iou_quad >= iou_threshold and iou_pre < 0.01:
-                    # if quad is similar to polygon, use quad
-                    polygon_points.append(quad)
-                    continue
-
-            # if all ious are less than threshold, use polygon
-            polygon_points.append(polygon)
-        else:
-            raise ValueError(
-                "layout_shape_mode must be one of ['rect', 'poly', 'quad', 'auto']"
+        polygon_points.append(
+            _normalize_layout_polygon(
+                box=boxes[i, 2:6],
+                polygon=polygon,
+                layout_shape_mode=layout_shape_mode,
+                previous_polygon=(
+                    polygon_points[-1] if len(polygon_points) > 0 else None
+                ),
             )
+        )
 
     return polygon_points
+
+
+def normalize_polygon_points_by_boxes(boxes, polygon_points, layout_shape_mode):
+    normalized_points = []
+
+    for polygon, box in zip(polygon_points, boxes):
+        normalized_points.append(
+            _normalize_layout_polygon(
+                box=box[2:6],
+                polygon=polygon,
+                layout_shape_mode=layout_shape_mode,
+                previous_polygon=(
+                    normalized_points[-1] if len(normalized_points) > 0 else None
+                ),
+            )
+        )
+
+    return normalized_points
+
+
+def _rect_from_box(box):
+    x_min, y_min, x_max, y_max = np.asarray(box).astype(np.int32)
+    return np.array(
+        [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]],
+        dtype=np.float32,
+    )
+
+
+def _normalize_layout_polygon(
+    box,
+    polygon,
+    layout_shape_mode,
+    previous_polygon=None,
+):
+    rect = _rect_from_box(box)
+
+    if polygon is None:
+        return rect
+
+    polygon = np.asarray(polygon, dtype=np.float32)
+    if polygon.ndim == 1:
+        polygon = polygon.reshape(-1, 2)
+
+    if len(polygon) < 4:
+        return rect
+
+    if layout_shape_mode == "rect":
+        return rect
+
+    if layout_shape_mode == "poly":
+        return polygon
+
+    quad = convert_polygon_to_quad(polygon)
+    if layout_shape_mode == "quad":
+        return quad if quad is not None else rect
+
+    if layout_shape_mode == "auto":
+        rect_list = rect.tolist()
+        if quad is not None:
+            quad_list = quad.tolist()
+            iou_rect_quad = calculate_polygon_overlap_ratio(
+                rect_list, quad_list, mode="union"
+            )
+            if iou_rect_quad >= 0.95:
+                return rect
+
+            poly_list = polygon.tolist()
+            iou_poly_quad = calculate_polygon_overlap_ratio(
+                poly_list, quad_list, mode="union"
+            )
+
+            iou_pre = 0
+            if previous_polygon is not None:
+                iou_pre = calculate_polygon_overlap_ratio(
+                    previous_polygon.tolist(),
+                    rect_list,
+                    mode="small",
+                )
+
+            if iou_poly_quad >= 0.8 and iou_pre < 0.01:
+                return quad
+
+        return polygon
+
+    raise ValueError(
+        "layout_shape_mode must be one of ['rect', 'poly', 'quad', 'auto']"
+    )
 
 
 def convert_polygon_to_quad(polygon):
@@ -684,6 +717,7 @@ class LayoutAnalysisProcess:
         layout_merge_bboxes_mode: Optional[Union[str, dict]],
         masks: Optional[ndarray] = None,
         layout_shape_mode: Optional[str] = "auto",
+        polygon_points: Optional[List[ndarray]] = None,
     ) -> Boxes:
         """Apply post-processing to the detection boxes.
 
@@ -696,20 +730,31 @@ class LayoutAnalysisProcess:
         """
         if layout_shape_mode == "rect":
             masks = None
+            polygon_points = None
         boxes[:, 2:6] = np.round(boxes[:, 2:6]).astype(int)
         if isinstance(threshold, float):
             expect_boxes = (boxes[:, 1] > threshold) & (boxes[:, 0] > -1)
             boxes = boxes[expect_boxes, :]
             if masks is not None:
                 masks = masks[expect_boxes, ...]
+            if polygon_points is not None:
+                polygon_points = [
+                    polygon_points[i] for i, keep in enumerate(expect_boxes) if keep
+                ]
         elif isinstance(threshold, dict):
             category_filtered_boxes = []
             if masks is not None:
                 category_filtered_masks = []
+            if polygon_points is not None:
+                category_filtered_polygon_points = []
             for cat_id in np.unique(boxes[:, 0]):
                 category_boxes = boxes[boxes[:, 0] == cat_id]
                 if masks is not None:
                     category_masks = masks[boxes[:, 0] == cat_id]
+                if polygon_points is not None:
+                    category_polygon_points = [
+                        polygon_points[i] for i in np.where(boxes[:, 0] == cat_id)[0]
+                    ]
                 category_threshold = threshold.get(int(cat_id), 0.5)
                 selected_indices = (category_boxes[:, 1] > category_threshold) & (
                     category_boxes[:, 0] > -1
@@ -717,6 +762,16 @@ class LayoutAnalysisProcess:
                 if masks is not None:
                     category_masks = category_masks[selected_indices]
                     category_filtered_masks.append(category_masks)
+                if polygon_points is not None:
+                    category_filtered_polygon_points.extend(
+                        [
+                            poly
+                            for poly, keep in zip(
+                                category_polygon_points, selected_indices
+                            )
+                            if keep
+                        ]
+                    )
                 category_filtered_boxes.append(category_boxes[selected_indices])
             boxes = (
                 np.vstack(category_filtered_boxes)
@@ -729,12 +784,16 @@ class LayoutAnalysisProcess:
                     if category_filtered_masks
                     else np.array([])
                 )
+            if polygon_points is not None:
+                polygon_points = category_filtered_polygon_points
 
         if layout_nms:
             selected_indices = nms(boxes[:, :6], iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
             if masks is not None:
                 masks = [masks[i] for i in selected_indices]
+            if polygon_points is not None:
+                polygon_points = [polygon_points[i] for i in selected_indices]
 
         filter_large_image = True
         # boxes.shape[1] == 6 is object detection, 7 is new ordered object detection, 8 is ordered object detection
@@ -747,6 +806,7 @@ class LayoutAnalysisProcess:
             img_area = img_size[0] * img_size[1]
             filtered_boxes = []
             filtered_masks = []
+            filtered_polygon_points = []
             for idx, box in enumerate(boxes):
                 (
                     label_index,
@@ -766,17 +826,25 @@ class LayoutAnalysisProcess:
                         filtered_boxes.append(box)
                         if masks is not None:
                             filtered_masks.append(masks[idx])
+                        if polygon_points is not None:
+                            filtered_polygon_points.append(polygon_points[idx])
                 else:
                     filtered_boxes.append(box)
                     if masks is not None:
                         filtered_masks.append(masks[idx])
+                    if polygon_points is not None:
+                        filtered_polygon_points.append(polygon_points[idx])
             if len(filtered_boxes) == 0:
                 filtered_boxes = boxes
                 if masks is not None:
                     filtered_masks = masks
+                if polygon_points is not None:
+                    filtered_polygon_points = polygon_points
             boxes = np.array(filtered_boxes)
             if masks is not None:
                 masks = filtered_masks
+            if polygon_points is not None:
+                polygon_points = filtered_polygon_points
 
         if layout_merge_bboxes_mode:
             formula_index = (
@@ -846,6 +914,10 @@ class LayoutAnalysisProcess:
                 boxes = boxes[keep_mask]
                 if masks is not None:
                     masks = [mask for i, mask in enumerate(masks) if keep_mask[i]]
+                if polygon_points is not None:
+                    polygon_points = [
+                        poly for i, poly in enumerate(polygon_points) if keep_mask[i]
+                    ]
 
         if boxes.size == 0:
             return np.array([])
@@ -858,6 +930,8 @@ class LayoutAnalysisProcess:
             if masks is not None:
                 sorted_masks = [masks[i] for i in sorted_idx]
                 masks = sorted_masks
+            if polygon_points is not None:
+                polygon_points = [polygon_points[i] for i in sorted_idx]
 
         if boxes.shape[1] == 7:
             # Sort boxes by their order
@@ -867,12 +941,17 @@ class LayoutAnalysisProcess:
             if masks is not None:
                 sorted_masks = [masks[i] for i in sorted_idx]
                 masks = sorted_masks
+            if polygon_points is not None:
+                polygon_points = [polygon_points[i] for i in sorted_idx]
 
-        polygon_points = None
-        if masks is not None:
+        if polygon_points is None and masks is not None:
             scale_ratio = [h / s for h, s in zip(self.scale_size, img_size)]
             polygon_points = extract_polygon_points_by_masks(
                 boxes, np.array(masks), scale_ratio, layout_shape_mode
+            )
+        elif polygon_points is not None:
+            polygon_points = normalize_polygon_points_by_boxes(
+                boxes, polygon_points, layout_shape_mode
             )
 
         if layout_unclip_ratio:
@@ -923,15 +1002,21 @@ class LayoutAnalysisProcess:
         """
         outputs = []
         for idx, (data, output) in enumerate(zip(datas, batch_outputs)):
+            current_layout_shape_mode = layout_shape_mode
             if "masks" in output:
                 masks = output["masks"]
+                polygon_points = None
+            elif "polygon_points" in output:
+                masks = None
+                polygon_points = output["polygon_points"]
             else:
-                layout_shape_mode = "rect"
+                current_layout_shape_mode = "rect"
                 if idx == 0 and layout_shape_mode not in ["rect", "auto"]:
                     logging.warning(
                         f"The model you are using does not support polygon output, but the layout_shape_mode is specified as {layout_shape_mode}, which will be set to 'rect'"
                     )
                 masks = None
+                polygon_points = None
             boxes = self.apply(
                 output["boxes"],
                 data["ori_img_size"],
@@ -940,10 +1025,11 @@ class LayoutAnalysisProcess:
                 layout_unclip_ratio,
                 layout_merge_bboxes_mode,
                 masks,
-                layout_shape_mode,
+                current_layout_shape_mode,
+                polygon_points=polygon_points,
             )
             if filter_overlap_boxes:
-                boxes = filter_boxes(boxes, layout_shape_mode)
+                boxes = filter_boxes(boxes, current_layout_shape_mode)
             skip_order_labels = (
                 skip_order_labels
                 if skip_order_labels is not None

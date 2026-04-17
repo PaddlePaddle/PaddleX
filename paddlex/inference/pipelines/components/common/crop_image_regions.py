@@ -50,7 +50,7 @@ class CropByBoxes(BaseOperator):
                 information including 'cls_id' (class ID), 'coordinate' (bounding box
                 coordinates as a list or tuple, left, top, right, bottom),
                 and optionally 'label' (label text).
-            use_layout_mask (bool, optional): Whether to use layout mask. Defaults to False.
+            use_layout_mask (bool, optional): Whether to use layout mask. Defaults to `False`.
 
         Returns:
             list[dict]: A list of dictionaries, each containing a cropped image ('img'),
@@ -531,6 +531,8 @@ class CropByPolys(BaseOperator):
         """
         points = np.array(points).astype(np.int32).reshape(-1, 2)
         temp_crop_img, temp_box = self.get_minarea_rect(img, points)
+        if points.shape[0] < 4:
+            return temp_crop_img
 
         # 计算最小外接矩形与polygon的IoU
         def get_union(pD, pG):
@@ -552,6 +554,12 @@ class CropByPolys(BaseOperator):
 
         points_sample = self.sample_points_on_bbox(points)
         points_sample = points_sample.astype(np.int32)
+        if (
+            points_sample.ndim != 2
+            or points_sample.shape[1] != 2
+            or points_sample.shape[0] < 4
+        ):
+            return temp_crop_img
         head_edge, tail_edge, top_line, bot_line = self.reorder_poly_edge(points_sample)
 
         resample_top_line = self.sample_points_on_bbox_bp(top_line, 15)

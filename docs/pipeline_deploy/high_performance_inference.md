@@ -22,7 +22,7 @@ comments: true
 
 ## 1. 安装与基础使用方法
 
-使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了 PaddleX 的安装，且按照 PaddleX 产线命令行使用说明或 PaddleX 产线 Python 脚本使用说明跑通了产线的快速推理。
+使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了飞桨框架和 PaddleX 的安装，且按照 PaddleX 产线命令行使用说明或 PaddleX 产线 Python 脚本使用说明跑通了产线的快速推理。
 
 高性能推理插件支持处理 **飞桨静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，可以使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。
 
@@ -371,7 +371,7 @@ pipeline = create_pipeline(
 
 **图像分类模块使用 `onnxruntime` 后端：**
 
-<details><summary>👉 修改产线配置文件方式（点击展开）</summary>
+<details><summary>👉 修改模块配置文件方式（点击展开）</summary>
 
 ```yaml
 Predict:
@@ -465,9 +465,9 @@ Predict:
 
 </details>
 
-### 2.4 在配置文件中启用/禁用高性能推理插件
+### 2.4 在产线配置文件中启用/禁用高性能推理插件
 
-在配置文件中，可以使用 `use_hpip` 控制高性能推理插件的启用和禁用。与通过 CLI 和 API 配置不同的是，这种方式支持通过在子产线/子模块级别使用 `use_hpip`，实现 **仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
+在产线配置文件中，可以使用 `use_hpip` 控制高性能推理插件的启用和禁用。与通过 CLI 和 API 配置不同的是，这种方式支持通过在子产线/子模块级别使用 `use_hpip`，实现 **仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
 
 **通用OCR产线的 `text_detection` 模块使用高性能推理，`text_recognition` 模块不使用高性能推理：**
 

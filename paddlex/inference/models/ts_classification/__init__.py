@@ -12,4 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import TSClsPredictor
+from ....modules.ts_classification.model_list import MODELS
+from ..bindings import register_predictor_binding_map
+from .predictor import TSClsRunnerPredictor
+
+register_predictor_binding_map(
+    TSClsRunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
+
+# Backward compatibility
+TSClsPredictor = TSClsRunnerPredictor

@@ -677,7 +677,7 @@ class G2PWOnnxConverter:
             self.char_bopomofo_dict = json.load(fr)
 
         if self.enable_opencc:
-            import opencc as OpenCC
+            from opencc import OpenCC
 
             self.cc = OpenCC("s2tw")
 

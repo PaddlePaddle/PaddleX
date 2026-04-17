@@ -1489,6 +1489,27 @@ In the above Python script, the following steps are executed:
 <td>None</td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/pipeline_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/pipeline_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -2473,6 +2494,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Optional list of extra formats to return. Currently only <code>"docx"</code> is supported.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2547,6 +2574,11 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>The input image. The image is in JPEG format and is Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Optional additional exports when <code>outputFormats</code> is present—for example, <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
 </tr>
 </tbody>
 </table>

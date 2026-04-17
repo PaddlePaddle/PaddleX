@@ -14,12 +14,14 @@
 
 from copy import deepcopy
 
-from .inference import PaddlePredictorOption, create_predictor
+from .inference import create_predictor
+from .inference.models.runners.paddle_static.config import PaddlePredictorOption
 from .modules import (
     build_dataset_checker,
     build_evaluator,
     build_exportor,
     build_trainer,
+    build_weight_converter,
 )
 
 
@@ -42,6 +44,9 @@ class _BaseModel:
 
     def export(self, *args, **kwargs):
         raise Exception("export is not supported!")
+
+    def pdparams2safetensors(self, *args, **kwargs):
+        raise Exception("pdparams2safetensors is not supported!")
 
     def predict(self, *args, **kwargs):
         raise Exception("predict is not supported!")
@@ -84,20 +89,26 @@ class _ModelBasedConfig(_BaseModel):
         device = self._config.Global.get("device", None)
 
         UNSET = object()
+        engine = predict_kwargs.pop("engine", UNSET)
+        engine_config = predict_kwargs.pop("engine_config", UNSET)
         kernel_option = predict_kwargs.pop("kernel_option", UNSET)
         use_hpip = predict_kwargs.pop("use_hpip", UNSET)
         hpi_config = predict_kwargs.pop("hpi_config", UNSET)
         genai_config = predict_kwargs.pop("genai_config", UNSET)
 
         create_predictor_kwargs = {}
+        if engine is not UNSET:
+            create_predictor_kwargs["engine"] = engine
+        if engine_config is not UNSET:
+            create_predictor_kwargs["engine_config"] = engine_config
         if kernel_option is not UNSET:
-            create_predictor_kwargs["pp_option"] = PaddlePredictorOption(
-                **kernel_option
+            create_predictor_kwargs["pp_option"] = (
+                PaddlePredictorOption(**kernel_option)
+                if isinstance(kernel_option, dict)
+                else kernel_option
             )
         if use_hpip is not UNSET:
             create_predictor_kwargs["use_hpip"] = use_hpip
-        else:
-            create_predictor_kwargs["use_hpip"] = False
         if hpi_config is not UNSET:
             create_predictor_kwargs["hpi_config"] = hpi_config
         if genai_config is not UNSET:
@@ -127,6 +138,10 @@ class _ModelBasedConfig(_BaseModel):
     def export(self):
         exportor = build_exportor(self._config)
         return exportor.export()
+
+    def pdparams2safetensors(self):
+        converter = build_weight_converter(self._config)
+        return converter.convert()
 
     def predict(self):
         predict_kwargs, predictor = self._build_predictor()

@@ -18,10 +18,8 @@ from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
 
-from ....modules.ts_forecast.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasePredictor
 from ..common import (
     BuildTSDataset,
     TimeFeature,
@@ -30,14 +28,13 @@ from ..common import (
     TStoArray,
     TStoBatch,
 )
+from ..predictors import RunnerPredictor
 from .processors import ArraytoTS, TSDeNormalize
 from .result import TSFcResult
 
 
-class TSFcPredictor(BasePredictor):
-    """TSFcPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class TSFcRunnerPredictor(RunnerPredictor):
+    """TSFcRunnerPredictor that inherits from RunnerPredictor."""
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes TSFcPredictor.
@@ -47,7 +44,7 @@ class TSFcPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> TSBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -66,10 +63,10 @@ class TSFcPredictor(BasePredictor):
         return TSFcResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {
             "ReadTS": ReadTS(),
@@ -94,7 +91,6 @@ class TSFcPredictor(BasePredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["ArraytoTS"] = ArraytoTS(self.config["info_params"])
         if self.config.get("scale", None):
@@ -104,7 +100,7 @@ class TSFcPredictor(BasePredictor):
             postprocessors["TSDeNormalize"] = TSDeNormalize(
                 scaler_file_path, self.config["info_params"]
             )
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, pd.DataFrame]]) -> Dict[str, Any]:
         """
@@ -136,7 +132,7 @@ class TSFcPredictor(BasePredictor):
             batch_ts = self.preprocessors["TStoArray"](ts_list=batch_input_ts)
 
         x = self.preprocessors["TStoBatch"](ts_list=batch_ts)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
 
         batch_ts_preds = self.postprocessors["ArraytoTS"](
             ori_ts_list=batch_input_ts, pred_list=batch_preds

@@ -16,16 +16,13 @@ from typing import Any, Dict, List, Union
 
 import numpy as np
 
-from ....modules.multilabel_classification.model_list import MODELS
-from ..image_classification import ClasPredictor
+from ..image_classification import ClasRunnerPredictor
 from .processors import MultiLabelThreshOutput
 from .result import MLClassResult
 
 
-class MLClasPredictor(ClasPredictor):
-    """MLClasPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class MLClasPredictor(ClasRunnerPredictor):
+    """MLClasPredictor that inherits from ClasRunnerPredictor."""
 
     def __init__(
         self,
@@ -72,7 +69,7 @@ class MLClasPredictor(ClasPredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_class_ids, batch_scores, batch_label_names = self.postprocessors[
             "MultiLabelThreshOutput"
         ](
@@ -88,7 +85,7 @@ class MLClasPredictor(ClasPredictor):
             "label_names": batch_label_names,
         }
 
-    @ClasPredictor.register("MultiLabelThreshOutput")
+    @ClasRunnerPredictor.register("MultiLabelThreshOutput")
     def build_threshoutput(self, threshold: Union[float, dict, list], label_list=None):
         if self.threshold is None:
             self.threshold = threshold
