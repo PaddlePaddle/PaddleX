@@ -169,6 +169,8 @@ langsmith==0.1.147
     #   langchain
     #   langchain-community
     #   langchain-core
+latex2mathml==3.81.0
+    # via paddlex (../../../setup.py)
 lazy-loader==0.4
     # via scikit-image
 lxml==5.3.1
@@ -184,7 +186,7 @@ matplotlib==3.5.2
     # via
     #   paddlex (../../../setup.py)
     #   pycocotools
-modelscope==1.29.0
+modelscope==1.29.0 ; python_version >= "3.9"
     # via paddlex (../../../setup.py)
 more-itertools==10.6.0
     # via cssutils

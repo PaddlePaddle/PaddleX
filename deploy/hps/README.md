@@ -188,3 +188,5 @@ comments: true
 ```bash
 ./scripts/prepare_rc_image.sh -p https://pypi.tuna.tsinghua.edu.cn/simple
 ```
+
+请确保依赖收集镜像与部署镜像使用相同的 pip 镜像源。
