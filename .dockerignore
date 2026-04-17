@@ -1,6 +1,3 @@
-# Build context: PaddleX repository root (see deploy/hps/server_env/Dockerfile).
-# Docker does not read .gitignore; keep heavy / local-only paths out of COPY layers.
-
 # VCS
 .git/
 .gitattributes
