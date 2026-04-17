@@ -52,7 +52,7 @@ BASE_DEP_SPECS = {
         '>= 1.28.0, < 1.30; python_version == "3.8"',
         '>= 1.28.0; python_version >= "3.9"',
     ],
-    "numpy": ">= 1.24",
+    "numpy": ">= 1.24, < 2.4",
     "openai": ">= 1.63",
     "OpenCC": "",
     "opencv-contrib-python": "== 4.10.0.84",
