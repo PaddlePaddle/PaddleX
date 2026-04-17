@@ -276,7 +276,7 @@ for res in output:
 <td><code>engine</code></td>
 <td>推理引擎</td>
 <td><code>str | None</code></td>
-<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。</td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>。</td>
 <td><code>None</code></td>
 </tr>
 <tr>

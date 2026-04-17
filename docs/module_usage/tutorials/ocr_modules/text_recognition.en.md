@@ -526,9 +526,11 @@ for res in output:
 For more information on using PaddleX's single-model inference APIs, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 After running, the result obtained is:
+
 ```bash
 {'res': {'input_path': 'general_ocr_rec_001.png', 'page_index': None, 'rec_text': '绿洲仕格维花园公寓', 'rec_score': 0.9823867082595825}}
-````
+```
+
 The meanings of the running results parameters are as follows:
 - `input_path`：Represents the path to the image of the text line to be predicted.
 - `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
@@ -582,10 +584,17 @@ The explanations for the methods, parameters, etc., are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>engine</code></td>
 <td>Inference engine</td>
 <td><code>str | None</code></td>
-<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -600,12 +609,6 @@ The explanations for the methods, parameters, etc., are as follows:
 <td>Used for changing runtime mode and other configuration items</td>
 <td><code>PaddlePredictorOption</code></td>
 <td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
-<td><code>None</code></td>
-</tr>
-</table>
-<td>High-performance inference configuration</td>
-<td><code>dict</code> | <code>None</code></td>
-<td>None</td>
 <td><code>None</code></td>
 </tr>
 </table>

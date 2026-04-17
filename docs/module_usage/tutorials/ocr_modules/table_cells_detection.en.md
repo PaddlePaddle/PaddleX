@@ -177,7 +177,7 @@ The following is the explanation of the methods, parameters, etc.:
 <td><code>engine</code></td>
 <td>Inference engine</td>
 <td><code>str | None</code></td>
-<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr>

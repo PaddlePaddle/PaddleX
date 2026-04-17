@@ -174,12 +174,17 @@ The explanations for the methods, parameters, etc., are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
+<td><code>hpi_config</code></td>
+<td>High-performance inference configuration</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>engine</code></td>
 <td>Inference engine</td>
 <td><code>str | None</code></td>
-<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -194,12 +199,6 @@ The explanations for the methods, parameters, etc., are as follows:
 <td>Used for changing runtime mode and other configuration items</td>
 <td><code>PaddlePredictorOption</code></td>
 <td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
-<td><code>None</code></td>
-</tr>
-</table>
-<td>High-performance inference configuration</td>
-<td><code>dict</code> | <code>None</code></td>
-<td>None</td>
 <td><code>None</code></td>
 </tr>
 </table>
