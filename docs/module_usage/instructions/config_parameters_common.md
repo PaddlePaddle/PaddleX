@@ -277,7 +277,8 @@ comments: true
 </tbody>
 </table>
 
-# pdparams2safetensors
+# Pdparams2safetensors
+
 <table>
 <thead>
 <tr>
@@ -292,7 +293,7 @@ comments: true
 <td>input_path</td>
 <td>str</td>
 <td>动态图权重路径（文件或文件夹）</td>
-<td>（必填）</td>
+<td></td>
 </tr>
 <tr>
 <td>output_dir</td>
