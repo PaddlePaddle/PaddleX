@@ -35,7 +35,7 @@ RUN mkdir /paddlex
 
 RUN echo 'deb http://archive.ubuntu.com/ubuntu jammy main universe' > /etc/apt/sources.list.d/jammy-temp.list \
     && apt-get update \
-    && apt-get install -y --no-install-recommends python3.10 python3.10-venv \
+    && apt-get install -y --no-install-recommends python3.10 python3.10-venv git \
     && python3.10 -m venv /paddlex/py310 \
     && rm -rf /var/lib/apt/lists/*
 ENV PATH="/paddlex/py310/bin:${PATH}"
