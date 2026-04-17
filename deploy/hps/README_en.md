@@ -175,7 +175,7 @@ The parameters for the packaging script are described as follows:
 </tbody>
 </table>
 
-After run successfully, the packaged  will be stored in the `output` directory.
+After run successfully, the packaged artifacts will be stored in the `output` directory.
 
 ## 3. FAQ
 

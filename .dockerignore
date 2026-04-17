@@ -1,0 +1,50 @@
+# Build context: PaddleX repository root (see deploy/hps/server_env/Dockerfile).
+# Docker does not read .gitignore; keep heavy / local-only paths out of COPY layers.
+
+# VCS
+.git/
+.gitattributes
+
+# Optional cloned subrepos (see .gitignore)
+paddlex/repo_manager/repos/
+
+# Python environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Bytecode & tooling caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+htmlcov/
+
+# Packaging
+*.egg-info/
+.eggs/
+dist/
+build/
+wheels/
+pip-wheel-metadata/
+
+# IDE / OS
+.idea/
+.vscode/
+*.DS_Store
+
+# Logs & local test output
+*.log
+test_output/
+htmlcov/
+
+# Large local deps (mounted read-only in Dockerfile GPU stage, not needed in COPY)
+deploy/hps/server_env/cudnn-linux-x86_64-*.tar.xz
+deploy/hps/server_env/TensorRT-*.tar.gz
