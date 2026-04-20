@@ -444,6 +444,8 @@ SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX: Set[str] = {
     "PP-DocLayoutV3",
     "PP-DocLayout_plus-L",
     "PP-DocBlockLayout",
+    "PP-FormulaNet_plus-L",
+    "SLANet",
     "SLANet_plus",
     "SLANeXt_wired",
     "SLANeXt_wireless",

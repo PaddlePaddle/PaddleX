@@ -25,7 +25,12 @@ from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 
-TABLE_REC_TRANSFORMERS_MODELS = ["SLANet_plus", "SLANeXt_wired", "SLANeXt_wireless"]
+TABLE_REC_TRANSFORMERS_MODELS = [
+    "SLANet",
+    "SLANet_plus",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+]
 
 
 class TableRunnerPredictor(RunnerPredictor):
