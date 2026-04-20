@@ -824,7 +824,7 @@ MKL-DNN 缓存容量。
 </tr>
 <tr>
 <td><code>relevel_titles</code></td>
-<td><b>含义：</b>控制是否进行多级表格分级</td>
+<td><b>含义：</b>控制是否进行多级标题分级</td>
 <td><code>Bool</code></td>
 <td><code>True</code></td>
 </tr>

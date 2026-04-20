@@ -811,7 +811,7 @@ If not set, the initialized parameter value will be used.
 </tr>
 <tr>
 <td><code>relevel_titles</code></td>
-<td><b>Meaning:</b> Controls whether to perform multi-level table grading.</td>
+<td><b>Meaning:</b> Controls whether to perform multi-level title recognition.</td>
 <td><code>Bool</code></td>
 <td><code>True</code></td>
 </tr>
