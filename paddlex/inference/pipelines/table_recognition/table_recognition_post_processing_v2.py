@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import html as html_lib
 import math
 
 import numpy as np
@@ -188,6 +189,22 @@ def match_table_and_ocr(cell_box_list, ocr_dt_boxes, table_cells_flag, row_start
     return all_matched
 
 
+def _split_outer_bold_wrapper(content: str) -> tuple[bool, str]:
+    """Return whether content is wrapped by a single outer ``<b>...</b>`` pair."""
+    if content.startswith("<b>") and content.endswith("</b>"):
+        return True, content[3:-4]
+    return False, content
+
+
+def _escape_cell_content(content: str) -> str:
+    """Escape OCR cell text while preserving a single outer bold wrapper."""
+    is_bold, inner_content = _split_outer_bold_wrapper(content)
+    escaped_content = html_lib.escape(inner_content, quote=True)
+    if is_bold:
+        return f"<b>{escaped_content}</b>"
+    return escaped_content
+
+
 def get_html_result(
     all_matched_index: dict, ocr_contents: dict, pred_structures: list, table_cells_flag
 ) -> str:
@@ -219,7 +236,7 @@ def get_html_result(
                     continue
                 b_with = False
                 if (
-                    "<b>" in ocr_contents[matched_index[td_index][0]]
+                    ocr_contents[matched_index[td_index][0]].startswith("<b>")
                     and len(matched_index[td_index]) > 1
                 ):
                     b_with = True
@@ -231,15 +248,17 @@ def get_html_result(
                             continue
                         if content[0] == " ":
                             content = content[1:]
-                        if "<b>" in content:
+                        if content.startswith("<b>"):
                             content = content[3:]
-                        if "</b>" in content:
+                        if content.endswith("</b>"):
                             content = content[:-4]
                         if len(content) == 0:
                             continue
                         if i != len(matched_index[td_index]) - 1 and " " != content[-1]:
                             content += " "
-                    pred_html.extend(content)
+                        pred_html.append(html_lib.escape(content, quote=True))
+                    else:
+                        pred_html.append(_escape_cell_content(content))
                 if b_with:
                     pred_html.extend("</b>")
             if "<td></td>" == tag:
