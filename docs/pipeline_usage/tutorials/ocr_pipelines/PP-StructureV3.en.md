@@ -1396,6 +1396,7 @@ for res in output:
     res.print() ## Print the structured prediction output
     res.save_to_json(save_path="output") ## Save the structured JSON result of the current image
     res.save_to_markdown(save_path="output") ## Save the result of the current image in Markdown format
+    res.save_to_word(save_path="output") ## Save the result of the current image in Word format
 ```
 If it is a PDF file, each page of the PDF will be processed separately, and each page will have its own corresponding Markdown file. If you want to convert the entire PDF file into a Markdown file, it is recommended to run it in the following way:
 
@@ -2008,6 +2009,14 @@ In the above Python script, the following steps are executed:
 <tr>
 <td><code>save_to_xlsx()</code></td>
 <td>Save the table in the file as an XLSX file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supporting both directory and file paths</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>save_to_word()</code></td>
+<td>Save the layout parsing result as a Word (.docx) format file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The file path for saving, supporting both directory and file paths</td>
