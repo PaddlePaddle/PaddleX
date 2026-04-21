@@ -1,8 +1,9 @@
 # ============================================================
 # PaddleX GPU CI - GitHub Actions
+# 功能等价于 ci_config.sh + local_ci_run.sh
 # ============================================================
 
-name: CI_GPU 
+name: CI_GPU
 
 on:
   pull_request:
@@ -17,8 +18,7 @@ on:
         default: 'develop'
       AGILE_PULL_ID:
         description: 'PR 编号'
-        required: false
-        default: ''
+        required: true
       py_version:
         description: 'Python 版本'
         required: false
@@ -64,12 +64,15 @@ env:
 jobs:
   gpu-ci:
     runs-on: [self-hosted, gpu]
+    defaults:
+      run:
+        shell: bash
     container:
       image: ${{ env.PADDLEX_IMAGE }}
-      options: --gpus all --shm-size=128g --net=host
+      options: "--gpus all --shm-size=128g --net=host"
       env:
         compile_path: ${{ env.compile_path }}
-        PYTHONPATH: /workspace:
+        PYTHONPATH: "/workspace:"
         REPORT_SERVER_PASSWORD: ${{ env.REPORT_SERVER_PASSWORD }}
         no_proxy: baidu.com,baidubce.com,bj.bcebos.com
         AGILE_JOB_BUILD_ID: ${{ env.AGILE_JOB_BUILD_ID }}
@@ -89,6 +92,24 @@ jobs:
           ldconfig
           nvidia-smi
           df -hl
+
+      - name: 参数校验
+        run: |
+          set -ex
+          check_required() {
+            local var_name="$1"
+            local var_val="${!var_name}"
+            if [[ -z "${var_val}" ]]; then
+              echo "[ERROR] 必填配置项 ${var_name} 未设置"
+              exit 1
+            fi
+          }
+
+          check_required AGILE_COMPILE_BRANCH
+          check_required AGILE_PULL_ID
+          check_required AGILE_PIPELINE_BUILD_NUMBER
+          check_required py_version
+          check_required cudaid2
 
       # ============================================================
       # 辅助函数: tryCommand - 依次尝试多个代理执行命令
@@ -187,15 +208,15 @@ jobs:
           echo "[INFO] 检出分支: ${{ env.AGILE_COMPILE_BRANCH }}"
           git checkout "${{ env.AGILE_COMPILE_BRANCH }}" || git checkout -b "${{ env.AGILE_COMPILE_BRANCH }}" origin/"${{ env.AGILE_COMPILE_BRANCH }}"
           tryCommand "git fetch origin ${{ env.AGILE_COMPILE_BRANCH }}"
-          git pull --rebase || true
+          git pull --rebase
 
           echo "[INFO] 拉取 PR #${{ env.AGILE_PULL_ID }}"
           tryCommand "git fetch origin pull/${{ env.AGILE_PULL_ID }}/head:pr_${{ env.AGILE_PULL_ID }}"
           git checkout "pr_${{ env.AGILE_PULL_ID }}"
-          git merge "${{ env.AGILE_COMPILE_BRANCH }}" || true
+          git merge "${{ env.AGILE_COMPILE_BRANCH }}"
 
           # 判断测试范围
-          git reset --soft "${{ env.AGILE_COMPILE_BRANCH }}" || true
+          git reset --soft "${{ env.AGILE_COMPILE_BRANCH }}"
 
           set +e
           only_pipeline=$(git status | grep ":  " | grep -v "paddlex/pipeline" | grep -v "paddlex/utils" | grep -v "paddlex/paddlex_cli.py" | grep -v "docs/" | grep -v "api_examples/" | grep -v "libs/" | grep -v "paddlex/configs/pipelines" | grep -v "paddlex/configs/pipeline" | wc -l)
