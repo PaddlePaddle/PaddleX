@@ -52,6 +52,13 @@ env:
   # ---- 报告服务器密码 ----
   REPORT_SERVER_PASSWORD: ''
 
+  # ---- 运行环境变量 ----
+  # 注意: local_ci_run.sh 通过 -v ${WORK_DIR}/PaddleX:/workspace 把源码挂到 /workspace
+  # 这里工作流是直接把 PaddleX.tar 解压到 /workspace/PaddleX，因此 PYTHONPATH 必须指向该路径
+  PYTHONPATH: '/workspace/PaddleX:'
+  no_proxy: baidu.com,baidubce.com,bj.bcebos.com
+  USE_NEW_INFERENCE: '1'
+
   # ---- Docker 镜像 ----
   PADDLEX_IMAGE: 'ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex_ce-paddlepaddle3.2.0-gpu-cuda11.8-cudnn8.6-trt8.6'
 
@@ -61,6 +68,11 @@ env:
   # ---- PaddleTest 压缩包地址（BOS）----
   PADDLETEST_TAR_URL: 'https://paddle-model-ecology.bj.bcebos.com/paddlex/tmp/PaddleTest.tar'
 
+# 等价 local_ci_run.sh 的 RUN_ID 隔离: 同一分支/PR 串行执行，避免 /workspace 冲突
+concurrency:
+  group: gpu-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   gpu-ci:
     runs-on: [self-hosted, gpu]
@@ -68,19 +80,8 @@ jobs:
       run:
         shell: bash
     container:
-      image: ${{ env.PADDLEX_IMAGE }}
+      image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex_ce-paddlepaddle3.2.0-gpu-cuda11.8-cudnn8.6-trt8.6
       options: "--gpus all --shm-size=128g --net=host"
-      env:
-        compile_path: ${{ env.compile_path }}
-        PYTHONPATH: "/workspace:"
-        REPORT_SERVER_PASSWORD: ${{ env.REPORT_SERVER_PASSWORD }}
-        no_proxy: baidu.com,baidubce.com,bj.bcebos.com
-        AGILE_JOB_BUILD_ID: ${{ env.AGILE_JOB_BUILD_ID }}
-        py_version: ${{ env.py_version }}
-        paddle_compile: ${{ env.paddle_compile }}
-        cudaid2: ${{ env.cudaid2 }}
-        paddle_name: ${{ env.paddle_name }}
-        USE_NEW_INFERENCE: 1
 
     steps:
       # ============================================================
