@@ -1,0 +1,239 @@
+name: CI_GPU_CE
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to test (for manual trigger)'
+        required: false
+        default: ''
+      base_branch:
+        description: 'Base branch (default: develop)'
+        required: false
+        default: 'develop'
+
+concurrency:
+  group: ${{ github.event.pull_request.number || github.run_id }}-gpu-ce
+  cancel-in-progress: true
+
+env:
+  docker_image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex_ce-paddlepaddle3.2.0-gpu-cuda11.8-cudnn8.6-trt8.6
+  py_version: "3.10"
+  cudaid2: "0,1"
+  PADDLETEST_TAR_URL: "https://paddle-model-ecology.bj.bcebos.com/paddlex/tmp/PaddleTest.tar"
+
+jobs:
+  CI_GPU_CE:
+    timeout-minutes: 120
+    runs-on: [self-hosted, GPU-V100-2Card]
+    steps:
+      - name: Print current runner name
+        run: |
+          echo "Current runner name: ${{ runner.name }}"
+
+      # ============================================================
+      # 阶段 1: 代码检出 + PR 合并（等价于 local_ci_run.sh 阶段1）
+      # ============================================================
+      - name: Code Checkout
+        env:
+          BASE_BRANCH: ${{ github.base_ref || inputs.base_branch || 'develop' }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          # 清除可能残留的代理设置
+          unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY 2>/dev/null || true
+
+          REPO="https://github.com/${{ github.repository }}.git"
+          FULL_REPO="${{ github.repository }}"
+          REPO_NAME="${FULL_REPO##*/}"
+
+          # 清理旧目录（runner 是持久的，需要清理上次残留）
+          if [ -d "${REPO_NAME}" ]; then
+            echo "Directory ${REPO_NAME} exists, removing it..."
+            rm -rf "${REPO_NAME}"
+          fi
+          # 同时清理旧 PaddleTest 残留
+          rm -rf PaddleTest
+
+          git config --global user.name "PaddleCI"
+          git config --global user.email "paddle_ci@example.com"
+          git config --global --unset http.proxy 2>/dev/null || true
+          git config --global --unset https.proxy 2>/dev/null || true
+          git clone ${REPO} ${REPO_NAME} -b ${BASE_BRANCH}
+          cd ${REPO_NAME}
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin pull/${PR_NUMBER}/head:pr/${PR_NUMBER}
+            git merge pr/${PR_NUMBER}
+          elif [ -n "${PR_NUMBER}" ]; then
+            # workflow_dispatch with PR number
+            git fetch origin pull/${PR_NUMBER}/head:pr/${PR_NUMBER}
+            git merge pr/${PR_NUMBER}
+          else
+            git checkout ${{ github.sha }}
+          fi
+          git log -n 3 --oneline
+
+      # ============================================================
+      # 阶段 2: 判断测试范围（等价于 local_ci_run.sh 变更范围判断）
+      # ============================================================
+      - name: Determine test range
+        id: scope
+        env:
+          BASE_BRANCH: ${{ github.base_ref || inputs.base_branch || 'develop' }}
+        run: |
+          cd PaddleX
+
+          # 获取相对于 base 分支的变更文件列表
+          CHANGED_FILES=$(git diff --name-only origin/${BASE_BRANCH}...HEAD)
+          echo "Changed files:"
+          echo "${CHANGED_FILES}"
+
+          # 判断是否仅 pipeline 变更
+          only_pipeline=$(echo "${CHANGED_FILES}" \
+            | grep -v "^$" \
+            | grep -v "^paddlex/pipeline" \
+            | grep -v "^paddlex/utils" \
+            | grep -v "^paddlex/paddlex_cli.py" \
+            | grep -v "^docs/" \
+            | grep -v "^api_examples/" \
+            | grep -v "^libs/" \
+            | grep -v "^paddlex/configs/pipelines" \
+            | grep -v "^paddlex/configs/pipeline" \
+            | wc -l || true)
+
+          # 判断是否仅 inference 变更
+          only_inference=$(echo "${CHANGED_FILES}" \
+            | grep -v "^$" \
+            | grep -v "^paddlex/inference" \
+            | grep -v "^paddlex/utils" \
+            | grep -v "^paddlex/paddlex_cli.py" \
+            | grep -v "^docs/" \
+            | grep -v "^api_examples/" \
+            | grep -v "^libs/" \
+            | grep -v "^paddlex/configs/pipelines" \
+            | grep -v "^paddlex/pipeline" \
+            | wc -l || true)
+
+          if [ "${only_pipeline}" -eq 0 ]; then
+            TEST_RANGE="pipeline"
+          elif [ "${only_inference}" -eq 0 ]; then
+            TEST_RANGE="inference"
+          else
+            TEST_RANGE=""
+          fi
+
+          # 统计 MD 文件变更
+          MD_NUM=$(echo "${CHANGED_FILES}" | grep '\.md$' | wc -l || true)
+          WITHOUT_MD_NUM=$(echo "${CHANGED_FILES}" | grep -v "^$" | grep -v '\.md$' | grep -v 'mkdocs.yml$' | wc -l || true)
+
+          echo "TEST_RANGE=${TEST_RANGE}" >> $GITHUB_OUTPUT
+          echo "MD_NUM=${MD_NUM}" >> $GITHUB_OUTPUT
+          echo "WITHOUT_MD_NUM=${WITHOUT_MD_NUM}" >> $GITHUB_OUTPUT
+          echo "[INFO] TEST_RANGE=${TEST_RANGE}, MD_NUM=${MD_NUM}, WITHOUT_MD_NUM=${WITHOUT_MD_NUM}"
+
+      # ============================================================
+      # 阶段 3: 跳过检查（等价于 local_ci_run.sh 文档跳过逻辑）
+      # ============================================================
+      - name: Check skip conditions
+        id: skip_check
+        run: |
+          cd PaddleX
+          SKIP="false"
+          # 仅文档变更跳过
+          WITHOUT_MD_NUM="${{ steps.scope.outputs.WITHOUT_MD_NUM }}"
+          MD_NUM="${{ steps.scope.outputs.MD_NUM }}"
+          if [ "${WITHOUT_MD_NUM}" -eq 0 ] && [ "${MD_NUM}" -gt 0 ]; then
+            SKIP="true"
+            echo "Only doc changes, skipping tests"
+          fi
+          # commit message 包含 test=document_fix 跳过
+          if git log -1 --format="%B" | grep -qw "test=document_fix"; then
+            SKIP="true"
+            echo "Detected test=document_fix, skipping tests"
+          fi
+          echo "SKIP=${SKIP}" >> $GITHUB_OUTPUT
+
+      # ============================================================
+      # 阶段 4: 下载 PaddleTest（等价于 local_ci_run.sh 阶段2）
+      # ci_run.sh 在 tar 包里: PaddleTest/models/PaddleX/ci/ci_run.sh
+      # ============================================================
+      - name: Download PaddleTest and prepare CI scripts
+        if: steps.skip_check.outputs.SKIP != 'true'
+        run: |
+          # 清理旧残留
+          rm -rf PaddleTest
+          rm -rf PaddleX/ci
+
+          wget -q "${{ env.PADDLETEST_TAR_URL }}" -O PaddleTest.tar
+          tar -xf PaddleTest.tar && rm -f PaddleTest.tar
+          echo "[INFO] PaddleTest downloaded and extracted"
+
+          # 将 ci 目录复制到 PaddleX 中（容器内 /workspace/ci/ci_run.sh）
+          cp -r PaddleTest/models/PaddleX/ci PaddleX/
+          echo "[INFO] CI scripts copied: PaddleX/ci/ci_run.sh ready"
+          ls -la PaddleX/ci/
+
+      # ============================================================
+      # 阶段 5: Docker 中执行 CI（等价于 local_ci_run.sh 阶段3）
+      # 环境变量完整对齐 local_ci_run.sh 的 docker run
+      # ============================================================
+      - name: Run CI in Docker
+        if: steps.skip_check.outputs.SKIP != 'true'
+        run: |
+          # 清除宿主机代理，避免传入容器
+          unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY 2>/dev/null || true
+
+          docker run --rm --gpus all --shm-size=128g --net=host \
+            -v $(pwd)/PaddleX:/workspace -w /workspace \
+            -e "compile_path=" \
+            -e "PYTHONPATH=/workspace:" \
+            -e "REPORT_SERVER_PASSWORD=${{ secrets.REPORT_SERVER_PASSWORD }}" \
+            -e "no_proxy=baidu.com,baidubce.com,bj.bcebos.com" \
+            -e "AGILE_JOB_BUILD_ID=${{ github.run_id }}" \
+            -e "py_version=${{ env.py_version }}" \
+            -e "paddle_compile=" \
+            -e "cudaid2=${{ env.cudaid2 }}" \
+            -e "MD_NUM=${{ steps.scope.outputs.MD_NUM }}" \
+            -e "WITHOUT_MD_NUM=${{ steps.scope.outputs.WITHOUT_MD_NUM }}" \
+            -e "TEST_RANGE=${{ steps.scope.outputs.TEST_RANGE }}" \
+            -e "paddle_name=" \
+            -e "USE_NEW_INFERENCE=1" \
+            -e "PADDLE_INSTALL_VERSION=" \
+            -e "PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=true" \
+            ${{ env.docker_image }} /bin/bash -c '
+          set -ex
+          ldconfig
+          nvidia-smi
+          df -hl
+
+          echo "Python version: ${py_version}"
+          rm -rf run_env && mkdir run_env
+          ln -s "$(which python${py_version})" run_env/python
+          ln -s "$(which python${py_version})" run_env/python3
+          ln -s "$(which pip${py_version})" run_env/pip
+          export PATH=$PWD/run_env:${PATH}
+
+          # pip 镜像源
+          python${py_version} -m pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple
+
+          # 安装 paddlepaddle（镜像内已预装则跳过，使用与 local_ci_run.sh 一致的 fallback 逻辑）
+          if ! python${py_version} -c "import paddle" 2>/dev/null; then
+            echo "[INFO] paddle 未安装，开始安装 ${PADDLE_INSTALL_VERSION:-paddlepaddle-gpu==3.2.0}..."
+            env -u http_proxy -u https_proxy \
+              python${py_version} -m pip install ${PADDLE_INSTALL_VERSION:-paddlepaddle-gpu==3.2.0} \
+              -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+          fi
+
+          # 验证 paddle 安装
+          python${py_version} -c "import paddle; paddle.version.show()"
+
+          export DEVICE_ID=${cudaid2}
+          export MEM_SIZE=32
+          bash ci/ci_run.sh
+          '
