@@ -1,0 +1,28 @@
+name: Python 3.8 Compatibility
+
+on:
+  push:
+    branches: [develop, 'release/*']
+  pull_request:
+    branches: [develop, 'release/*']
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Static annotation check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.8"
+      - name: Scan for PEP 585 / PEP 604 annotations missing `from __future__ import annotations`
+        run: |
+          python .precommit/check_py38_compat.py $(
+            find paddlex -type f -name '*.py' \
+              -not -path 'paddlex/repo_manager/repos/*'
+          )
