@@ -1,6 +1,5 @@
 # ============================================================
 # PaddleX GPU CI - GitHub Actions
-# 功能等价于 ci_config.sh + local_ci_run.sh
 # ============================================================
 
 name: CI_GPU
@@ -54,7 +53,7 @@ env:
 
   # ---- 运行环境变量 ----
   # 注意: local_ci_run.sh 通过 -v ${WORK_DIR}/PaddleX:/workspace 把源码挂到 /workspace
-  # 这里工作流是直接把 PaddleX.tar 解压到 /workspace/PaddleX，因此 PYTHONPATH 必须指向该路径
+  # 这里工作流是直接把 PaddleX.tar 解压到 /workspace/PaddleX，因此 PYTHONPATH 指向该路径
   PYTHONPATH: '/workspace/PaddleX:'
   no_proxy: baidu.com,baidubce.com,bj.bcebos.com
   USE_NEW_INFERENCE: '1'
@@ -75,7 +74,7 @@ concurrency:
 
 jobs:
   gpu-ci:
-    runs-on: [self-hosted, gpu]
+    runs-on: [self-hosted, GPU-V100-2Card]
     defaults:
       run:
         shell: bash
