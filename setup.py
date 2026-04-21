@@ -49,7 +49,10 @@ BASE_DEP_SPECS = {
     "latex2mathml": "",
     "matplotlib": "",
     "modelscope": [
-        '>= 1.28.0, < 1.30; python_version == "3.8"',
+        # modelscope 1.29.2+ unconditionally imports `zoneinfo`, which is
+        # Python 3.9+ stdlib. Cap at < 1.29.2 to keep Py3.8 working; 1.29.0
+        # and 1.29.1 import cleanly.
+        '>= 1.28.0, < 1.29.2; python_version == "3.8"',
         '>= 1.28.0; python_version >= "3.9"',
     ],
     "numpy": ">= 1.24, < 2.4",
