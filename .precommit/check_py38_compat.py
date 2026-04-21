@@ -28,9 +28,7 @@ import pathlib
 import sys
 from typing import Iterator, List, Tuple
 
-PEP585_BUILTINS = frozenset(
-    {"list", "tuple", "dict", "set", "frozenset", "type"}
-)
+PEP585_BUILTINS = frozenset({"list", "tuple", "dict", "set", "frozenset", "type"})
 
 
 def has_future_annotations(tree: ast.Module) -> bool:
@@ -73,9 +71,7 @@ def find_issues(annotation: ast.AST) -> List[Tuple[int, int, str]]:
                     )
                 )
         elif isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
-            issues.append(
-                (node.lineno, node.col_offset, "PEP 604 union `X | Y`")
-            )
+            issues.append((node.lineno, node.col_offset, "PEP 604 union `X | Y`"))
     return issues
 
 
