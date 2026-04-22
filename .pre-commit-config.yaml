@@ -73,3 +73,9 @@ repos:
         additional_dependencies:
             - stdlib-list==0.10.0
             - setuptools
+    -   id: check-py38-compat
+        name: Check Python 3.8 Compatibility
+        entry: python .precommit/check_py38_compat.py
+        language: python
+        files: ^paddlex/.*\.py$
+        exclude: ^paddlex/repo_manager/repos/
