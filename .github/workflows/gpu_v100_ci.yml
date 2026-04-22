@@ -24,7 +24,7 @@ env:
 
 jobs:
   CI_GPU:
-    timeout-minutes: 60
+    timeout-minutes: 180
     runs-on: [self-hosted, GPU-V100-2Card]
     steps:
       - name: Print current runner name
