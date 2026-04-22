@@ -148,8 +148,6 @@ jobs:
       - name: Download PaddleTest and copy ci scripts
         if: steps.scope.outputs.SKIP != '1'
         run: |
-          export http_proxy="$(git config --global --get http.proxy  || true)"
-          export https_proxy="$(git config --global --get https.proxy || true)"
           rm -rf PaddleTest PaddleTest.tar
           wget -q "${PADDLETEST_TAR_URL}" -O PaddleTest.tar
           tar -xf PaddleTest.tar && rm -f PaddleTest.tar
