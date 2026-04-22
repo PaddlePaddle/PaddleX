@@ -454,6 +454,17 @@ SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX: Set[str] = {
     "PP-OCRv5_mobile_rec",
     "UVDoc",
     "PP-Chart2Table",
+    "eslav_PP-OCRv5_mobile_rec",
+    "korean_PP-OCRv5_mobile_rec",
+    "latin_PP-OCRv5_mobile_rec",
+    "en_PP-OCRv5_mobile_rec",
+    "th_PP-OCRv5_mobile_rec",
+    "el_PP-OCRv5_mobile_rec",
+    "arabic_PP-OCRv5_mobile_rec",
+    "te_PP-OCRv5_mobile_rec",
+    "ta_PP-OCRv5_mobile_rec",
+    "devanagari_PP-OCRv5_mobile_rec",
+    "cyrillic_PP-OCRv5_mobile_rec",
 }
 
 SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX: Set[str] = {

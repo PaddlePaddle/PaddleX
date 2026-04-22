@@ -40,7 +40,20 @@ register_predictor_binding_map(
         "paddle_static": MODELS,
         "paddle_dynamic": (
             create_binding_registration(
-                ("PP-OCRv5_mobile_rec",),
+                (
+                    "PP-OCRv5_mobile_rec",
+                    "eslav_PP-OCRv5_mobile_rec",
+                    "korean_PP-OCRv5_mobile_rec",
+                    "latin_PP-OCRv5_mobile_rec",
+                    "en_PP-OCRv5_mobile_rec",
+                    "th_PP-OCRv5_mobile_rec",
+                    "el_PP-OCRv5_mobile_rec",
+                    "arabic_PP-OCRv5_mobile_rec",
+                    "te_PP-OCRv5_mobile_rec",
+                    "ta_PP-OCRv5_mobile_rec",
+                    "devanagari_PP-OCRv5_mobile_rec",
+                    "cyrillic_PP-OCRv5_mobile_rec",
+                ),
                 runner_builder=create_pretrained_dynamic_runner_builder(
                     _load_ppocrv5_mobile_rec,
                     use_safetensors=True,

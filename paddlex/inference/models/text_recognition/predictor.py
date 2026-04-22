@@ -48,7 +48,21 @@ if is_dep_available("python-bidi"):
     from bidi.algorithm import get_display
 
 
-TEXT_REC_TRANSFORMERS_MODELS = ["PP-OCRv5_server_rec", "PP-OCRv5_mobile_rec"]
+TEXT_REC_TRANSFORMERS_MODELS = [
+    "PP-OCRv5_server_rec",
+    "PP-OCRv5_mobile_rec",
+    "eslav_PP-OCRv5_mobile_rec",
+    "korean_PP-OCRv5_mobile_rec",
+    "latin_PP-OCRv5_mobile_rec",
+    "en_PP-OCRv5_mobile_rec",
+    "th_PP-OCRv5_mobile_rec",
+    "el_PP-OCRv5_mobile_rec",
+    "arabic_PP-OCRv5_mobile_rec",
+    "te_PP-OCRv5_mobile_rec",
+    "ta_PP-OCRv5_mobile_rec",
+    "devanagari_PP-OCRv5_mobile_rec",
+    "cyrillic_PP-OCRv5_mobile_rec",
+]
 
 
 def get_text_rec_vis_font(model_name):
