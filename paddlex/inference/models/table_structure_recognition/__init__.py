@@ -28,17 +28,34 @@ def _load_slanext():
     return SLANeXt
 
 
+def _load_slanet():
+    from .modeling import SLANet
+
+    return SLANet
+
+
 register_predictor_binding_map(
     TableRunnerPredictor,
     {
         "paddle_static": MODELS,
-        "paddle_dynamic": create_binding_registration(
-            ("SLANeXt_wired", "SLANeXt_wireless"),
-            runner_builder=create_pretrained_dynamic_runner_builder(
-                _load_slanext,
-                use_safetensors=True,
-                convert_from_hf=True,
-                dtype="float32",
+        "paddle_dynamic": (
+            create_binding_registration(
+                ("SLANeXt_wired", "SLANeXt_wireless"),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_slanext,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            ),
+            create_binding_registration(
+                ("SLANet", "SLANet_plus"),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_slanet,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
             ),
         ),
         "hpi": MODELS,
