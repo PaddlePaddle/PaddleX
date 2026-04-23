@@ -41,6 +41,25 @@ import numpy as np
 import paddle
 import paddle.nn as nn
 
+# ROCm compatibility: Paddle HIP wheel (<=3.4.0.dev20260408) did not register
+# phi::bfloat16 for the layer_norm kernel.  This shim casts through FP32 on ROCm.
+# Remove once PaddlePaddle/Paddle PR (add bfloat16 to HIP layer_norm kernel) merges.
+if paddle.is_compiled_with_rocm():
+    import paddle.nn.functional as _F_compat
+    _orig_ln_fwd = paddle.nn.LayerNorm.forward
+    def _rocm_bf16_safe_ln_fwd(self, input):
+        if input.dtype == paddle.bfloat16:
+            x32 = paddle.cast(input, paddle.float32)
+            w = getattr(self, 'weight', None)
+            b = getattr(self, 'bias', None)
+            w32 = paddle.cast(w, paddle.float32) if w is not None else None
+            b32 = paddle.cast(b, paddle.float32) if b is not None else None
+            out = _F_compat.layer_norm(x32, self._normalized_shape, w32, b32, self._epsilon)
+            return paddle.cast(out, paddle.bfloat16)
+        return _orig_ln_fwd(self, input)
+    paddle.nn.LayerNorm.forward = _rocm_bf16_safe_ln_fwd
+    del _F_compat, _orig_ln_fwd, _rocm_bf16_safe_ln_fwd
+
 from ....common.transformers.transformers.model_outputs import (
     CausalLMOutputWithCrossAttentions,
     ModelOutput,
@@ -65,9 +84,6 @@ class PaddleOCRVLForConditionalGeneration(Ernie4_5PretrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
     config_class = PaddleOCRVLConfig
     _no_split_modules = ["Ernie4_5DecoderLayer", "SiglipEncoderLayer"]
-    # Keep visual encoder in fp32 for ROCm stability (MIOpen bf16 conv has bugs)
-    # This also improves precision for vision processing
-    _keep_in_fp32_modules = ["visual", "mlp_AR"]
     base_model_prefix = ""
 
     def __init__(self, config):

@@ -86,6 +86,9 @@ def device_guard(device="cpu", dev_id=0):
         paddle.set_device(device)
     elif device in ["gpu", "xpu", "npu"]:
         paddle.set_device("{}:{}".format(device, dev_id))
+    elif device == "dcu":
+        # DCU/ROCm: Paddle does not accept "dcu" as device name; use "gpu" instead
+        paddle.set_device("gpu:{}".format(dev_id))
     try:
         yield
     finally:
