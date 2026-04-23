@@ -14,7 +14,11 @@
 
 from ....modules.formula_recognition.model_list import MODELS
 from ..bindings import register_predictor_binding_map
-from .predictor import FormulaRecRunnerPredictor
+from .predictor import (
+    FORMULA_REC_TRANSFORMERS_MODELS,
+    FormulaRecRunnerPredictor,
+    FormulaRecTransformersPredictor,
+)
 
 register_predictor_binding_map(
     FormulaRecRunnerPredictor,
@@ -23,6 +27,11 @@ register_predictor_binding_map(
         "hpi": MODELS,
         "onnxruntime": MODELS,
     },
+)
+
+register_predictor_binding_map(
+    FormulaRecTransformersPredictor,
+    {"transformers": FORMULA_REC_TRANSFORMERS_MODELS},
 )
 
 # Backward compatibility
