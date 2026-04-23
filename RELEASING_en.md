@@ -4,7 +4,7 @@
 
 ## Scope
 
-This document describes the standard release process for PaddleX under the current workflow.
+This document describes the standard release process for PaddleX.
 
 ## Release Types
 
