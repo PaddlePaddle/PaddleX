@@ -436,6 +436,70 @@ def _meta_slanext(model_name):
     }
 
 
+def _meta_slanet(model_name):
+    # Max-batch dim in the HPI hint mirrors the uploaded inference.yml:
+    # SLANet uses batch=8; SLANet_plus uses batch=1.
+    max_batch = 8 if model_name == "SLANet" else 1
+    return {
+        "Hpi": _hpi_simple(
+            "x",
+            [
+                [1, 3, 32, 32],
+                [1, 3, 64, 448],
+                [max_batch, 3, 488, 488],
+            ],
+        ),
+        "PreProcess": {
+            "transform_ops": [
+                {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
+                {
+                    "TableLabelEncode": {
+                        "learn_empty_box": False,
+                        "loc_reg_num": 8,
+                        "max_text_length": 500,
+                        "merge_no_span_structure": True,
+                        "replace_empty_cell_token": False,
+                    }
+                },
+                {
+                    "TableBoxEncode": {
+                        "in_box_format": "xyxyxyxy",
+                        "out_box_format": "xyxyxyxy",
+                    }
+                },
+                {"ResizeTableImage": {"max_len": 488}},
+                {
+                    "NormalizeImage": {
+                        "mean": [0.485, 0.456, 0.406],
+                        "order": "hwc",
+                        "scale": "1./255.",
+                        "std": [0.229, 0.224, 0.225],
+                    }
+                },
+                {"PaddingTableImage": {"size": [488, 488]}},
+                {"ToCHWImage": None},
+                {
+                    "KeepKeys": {
+                        "keep_keys": [
+                            "image",
+                            "structure",
+                            "bboxes",
+                            "bbox_masks",
+                            "length",
+                            "shape",
+                        ]
+                    }
+                },
+            ]
+        },
+        "PostProcess": {
+            "name": "TableLabelDecode",
+            "merge_no_span_structure": True,
+            "character_dict": _SLANEXT_CHARACTER_DICT,
+        },
+    }
+
+
 def _meta_uvdoc():
     return {
         "Hpi": _hpi_simple(
@@ -459,6 +523,8 @@ _INFERENCE_META_REGISTRY = {
     "PP-OCRv5_server_det": _meta_det,
     "PP-OCRv5_mobile_rec": _meta_rec,
     "PP-OCRv5_server_rec": _meta_rec,
+    "SLANet": lambda: _meta_slanet("SLANet"),
+    "SLANet_plus": lambda: _meta_slanet("SLANet_plus"),
     "SLANeXt_wired": lambda: _meta_slanext("SLANeXt_wired"),
     "SLANeXt_wireless": lambda: _meta_slanext("SLANeXt_wireless"),
     "PP-DocLayoutV2": _meta_doclayoutv3,
@@ -611,6 +677,26 @@ PREPROCESSOR_CONFIGS = {
     "PP-OCRv5_server_det": _SERVER_DET_PREPROC,
     "PP-OCRv5_mobile_rec": _MOBILE_REC_PREPROC,
     "PP-OCRv5_server_rec": _SERVER_REC_PREPROC,
+    "SLANet": {
+        "image_processor_type": "SLANeXtImageProcessor",
+        "do_resize": True,
+        "size": {"height": 488, "width": 488},
+        "pad_size": {"height": 488, "width": 488},
+        "do_normalize": True,
+        "image_mean": [0.485, 0.456, 0.406],
+        "image_std": [0.229, 0.224, 0.225],
+        "do_pad": True,
+    },
+    "SLANet_plus": {
+        "image_processor_type": "SLANeXtImageProcessor",
+        "do_resize": True,
+        "size": {"height": 488, "width": 488},
+        "pad_size": {"height": 488, "width": 488},
+        "do_normalize": True,
+        "image_mean": [0.485, 0.456, 0.406],
+        "image_std": [0.229, 0.224, 0.225],
+        "do_pad": True,
+    },
     "SLANeXt_wired": {
         "do_resize": True,
         "size": {"height": 512, "width": 512},

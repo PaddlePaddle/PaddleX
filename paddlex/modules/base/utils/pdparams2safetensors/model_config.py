@@ -630,6 +630,32 @@ MODEL_CONFIGS = {
     "PP-OCRv5_server_det": _PPOCRV5_SERVER_DET_CONFIG,
     "PP-OCRv5_mobile_rec": _PPOCRV5_MOBILE_REC_CONFIG,
     "PP-OCRv5_server_rec": _PPOCRV5_SERVER_REC_CONFIG,
+    "SLANet": {
+        "model_type": "slanet",
+        "backbone_config": {
+            "model_type": "pp_lcnet",
+            "scale": 1,
+            "out_features": ["stage2", "stage3", "stage4", "stage5"],
+            "out_indices": [2, 3, 4, 5],
+        },
+        "post_conv_out_channels": 96,
+        "out_channels": 50,
+        "hidden_size": 256,
+        "max_text_length": 500,
+    },
+    "SLANet_plus": {
+        "model_type": "slanet",
+        "backbone_config": {
+            "model_type": "pp_lcnet",
+            "scale": 1,
+            "out_features": ["stage2", "stage3", "stage4", "stage5"],
+            "out_indices": [2, 3, 4, 5],
+        },
+        "post_conv_out_channels": 96,
+        "out_channels": 50,
+        "hidden_size": 256,
+        "max_text_length": 500,
+    },
     "SLANeXt_wired": {
         "model_type": "slanext",
         "vision_config": {

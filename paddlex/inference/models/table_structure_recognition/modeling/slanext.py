@@ -165,18 +165,10 @@ class SLANeXt(BatchNormHFStateDictMixin, PretrainedModel):
         features = self.backbone(pixel_values)
         structure_probs = self.head(features)
 
-        # Return [loc_preds, structure_probs] for backward compatibility
-        # with the predictor/postprocessor pipeline.
-        # HF model doesn't predict locations; fill with zeros.
-        loc_preds = paddle.zeros(
-            [
-                structure_probs.shape[0],
-                structure_probs.shape[1],
-                self.config.loc_reg_num,
-            ],
-            dtype=structure_probs.dtype,
-        )
-        return [loc_preds, structure_probs]
+        # HF model has no location head. Return structure only; the
+        # table-rec predictor + TableLabelDecode treat a single-element
+        # prediction as "no cell polygons".
+        return [structure_probs]
 
     def get_transpose_weight_keys(self):
         t_layers = [
