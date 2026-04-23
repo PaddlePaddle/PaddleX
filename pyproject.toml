@@ -1,3 +1,9 @@
 [build-system]
 requires = ["setuptools>=64", "wheel", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+version_scheme = "release-branch-semver"
+local_scheme = "node-and-date"
+tag_regex = "^v(?P<version>\\d+\\.\\d+\\.\\d+(?:\\.dev\\d+)?)$"
+fallback_version = "0.0.0"
