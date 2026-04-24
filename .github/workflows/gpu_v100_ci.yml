@@ -161,6 +161,13 @@ jobs:
           MD_NUM: ${{ steps.scope.outputs.MD_NUM }}
           WITHOUT_MD_NUM: ${{ steps.scope.outputs.WITHOUT_MD_NUM }}
         run: |
+          # Pull proxy from the runner's global git config (set via
+          # `git config --global http.proxy ...` on the runner host) and
+          # inject it into the container so that `paddlex --install` can
+          # reach github.com during the setup phase.
+          HTTP_PROXY_VAL="$(git config --global --get http.proxy  || true)"
+          HTTPS_PROXY_VAL="$(git config --global --get https.proxy || true)"
+
           docker_name="PaddleX_gha_${{ github.run_id }}_${{ github.run_attempt }}"
           docker rm -f "${docker_name}" 2>/dev/null || true
 
@@ -172,7 +179,14 @@ jobs:
             -v "$(pwd)/PaddleX:/workspace" \
             -w /workspace \
             -e "PYTHONPATH=/workspace:" \
-            -e "no_proxy=baidu.com,baidubce.com,bj.bcebos.com" \
+            -e "http_proxy=${HTTP_PROXY_VAL}" \
+            -e "https_proxy=${HTTPS_PROXY_VAL}" \
+            -e "HTTP_PROXY=${HTTP_PROXY_VAL}" \
+            -e "HTTPS_PROXY=${HTTPS_PROXY_VAL}" \
+            -e "no_proxy=baidu.com,baidubce.com,bj.bcebos.com,mirrors.bfsu.edu.cn,paddlepaddle.org.cn,pypi.tuna.tsinghua.edu.cn,tuna.tsinghua.edu.cn,localhost,127.0.0.1" \
+            -e "NO_PROXY=baidu.com,baidubce.com,bj.bcebos.com,mirrors.bfsu.edu.cn,paddlepaddle.org.cn,pypi.tuna.tsinghua.edu.cn,tuna.tsinghua.edu.cn,localhost,127.0.0.1" \
+            -e "GIT_HTTP_LOW_SPEED_LIMIT=1000" \
+            -e "GIT_HTTP_LOW_SPEED_TIME=15" \
             -e "AGILE_JOB_BUILD_ID=${{ github.run_id }}" \
             -e "AGILE_PULL_ID=${{ github.event.pull_request.number }}" \
             -e "AGILE_COMPILE_BRANCH=${{ github.base_ref }}" \
