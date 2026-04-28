@@ -19,13 +19,15 @@ from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
-import paddle
 import PIL.Image
 import requests
 from packaging import version
 from PIL import Image
 
+from .....utils.lazy_loader import LazyLoader
 from ...common.tokenizer.tokenizer_utils_base import ExplicitEnum
+
+paddle = LazyLoader("paddle", globals(), "paddle")
 
 
 def is_paddle_tensor(tensor):
@@ -410,7 +412,9 @@ def extract_vision_info(
 def process_vision_info(
     conversations: Union[List[dict], List[List[dict]]],
 ) -> Tuple[
-    Union[List[Image.Image], None, List[Union[paddle.Tensor, List[Image.Image]]], None]
+    Union[
+        List[Image.Image], None, List[Union["paddle.Tensor", List[Image.Image]]], None
+    ]
 ]:
     vision_infos = extract_vision_info(conversations)
     image_inputs = []

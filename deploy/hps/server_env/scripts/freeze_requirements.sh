@@ -6,11 +6,12 @@ for device_type in 'gpu' 'cpu'; do
     docker run \
         -it \
         -e DEVICE_TYPE="${device_type}" \
-        -e OUID="$(id -u)" \
-        -e OGID="$(id -g)" \
+        -e HOME=/tmp \
+        -e PIP_CACHE_DIR=/tmp/pip-cache \
         -v "$(pwd)/../../..":/workspace \
         -w /workspace/deploy/hps/server_env \
         --rm \
+        --user "$(id -u):$(id -g)" \
         "paddlex-hps-rc:${device_type}" \
         /bin/bash scripts/_freeze_requirements.sh
 done
