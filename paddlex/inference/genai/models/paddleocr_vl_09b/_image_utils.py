@@ -95,14 +95,13 @@ def _resize_image_payload(payload, *, min_pixels, max_pixels, factor):
 
 def prepare_hf_processor_mm_data(mm_data: Mapping[str, object], image_processor):
     prepared = dict(mm_data)
-    if "image" not in prepared:
-        return prepared
-
     factor = image_processor.patch_size * image_processor.merge_size
-    prepared["image"] = _resize_image_payload(
-        prepared["image"],
-        min_pixels=image_processor.min_pixels,
-        max_pixels=image_processor.max_pixels,
-        factor=factor,
-    )
+    for image_key in ("image", "images"):
+        if image_key in prepared:
+            prepared[image_key] = _resize_image_payload(
+                prepared[image_key],
+                min_pixels=image_processor.min_pixels,
+                max_pixels=image_processor.max_pixels,
+                factor=factor,
+            )
     return prepared

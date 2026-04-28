@@ -71,6 +71,18 @@ def test_prepare_hf_processor_mm_data_resizes_tiny_pil_images():
     assert prepared["image"][0].size == (336, 336)
 
 
+def test_prepare_hf_processor_mm_data_resizes_vllm_images_payload():
+    image_utils = _load_image_utils_module()
+    mm_data = {"images": [Image.new("RGB", (32, 32), "white")], "meta": "keep"}
+
+    prepared = image_utils.prepare_hf_processor_mm_data(
+        mm_data, DummyImageProcessor()
+    )
+
+    assert prepared["meta"] == "keep"
+    assert prepared["images"][0].size == (336, 336)
+
+
 def test_prepare_hf_processor_mm_data_does_not_mutate_original_payload():
     image_utils = _load_image_utils_module()
     original_image = Image.new("RGB", (32, 32), "white")
