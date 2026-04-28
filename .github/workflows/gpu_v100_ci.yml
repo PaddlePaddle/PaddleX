@@ -1,0 +1,239 @@
+name: CI_GPU
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.event.pull_request.number }}-gpu-ci
+  cancel-in-progress: true
+
+env:
+  PADDLEX_IMAGE: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex_ce-paddlepaddle3.2.0-gpu-cuda11.8-cudnn8.6-trt8.6
+  PADDLETEST_TAR_URL: https://paddle-model-ecology.bj.bcebos.com/paddlex/tmp/PaddleTest.tar
+  PY_VERSION: "3.10"
+  CUDAID2: "0,1"
+  # Leave empty to use the paddle pre-installed in the image.
+  # Only used as a fallback install target when paddle is missing in the container.
+  PADDLE_INSTALL_VERSION: ""
+
+jobs:
+  CI_GPU:
+    timeout-minutes: 360
+    runs-on: [self-hosted, GPU-V100-2Card]
+    steps:
+      - name: Print current runner name
+        run: |
+          echo "Current runner name: ${{ runner.name }}"
+          echo "== runner git global proxy =="
+          git config --global --get http.proxy  || echo "(http.proxy not set)"
+          git config --global --get https.proxy || echo "(https.proxy not set)"
+
+      - name: Code Checkout
+        env:
+          docker_image: ${{ env.PADDLEX_IMAGE }}
+        run: |
+          REPO="https://github.com/${{ github.repository }}.git"
+          FULL_REPO="${{ github.repository }}"
+          REPO_NAME="${FULL_REPO##*/}"
+          BASE_BRANCH="${{ github.base_ref }}"
+          # Pull proxy from the runner's global git config (set via
+          # `git config --global http.proxy ...` on the runner host).
+          HTTP_PROXY_VAL="$(git config --global --get http.proxy  || true)"
+          HTTPS_PROXY_VAL="$(git config --global --get https.proxy || true)"
+          # Clean the repository directory before starting
+          docker run --rm --net=host -v $(pwd):/workspace -w /workspace \
+            -e "REPO_NAME=${REPO_NAME}" \
+            -e "BASE_BRANCH=${BASE_BRANCH}" \
+            ${docker_image} /bin/bash -c '
+              if [ -d ${REPO_NAME} ]; then
+                echo "Directory ${REPO_NAME} exists, removing it..."
+                rm -rf ${REPO_NAME}
+              fi
+            '
+          git config --global user.name "PaddleCI"
+          git config --global user.email "paddle_ci@example.com"
+          export http_proxy="${HTTP_PROXY_VAL}"
+          export https_proxy="${HTTPS_PROXY_VAL}"
+          git clone ${REPO} ${REPO_NAME} -b ${BASE_BRANCH}
+          cd PaddleX
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin pull/${{ github.event.pull_request.number }}/head:pr/${{ github.event.pull_request.number }}
+            git merge pr/${{ github.event.pull_request.number }}
+            git log -n 3 --oneline
+          else
+            git checkout ${{ github.sha }}
+            git log -n 3 --oneline
+          fi
+
+      - name: Detect test scope
+        id: scope
+        run: |
+          cd PaddleX
+          BASE_BRANCH="${{ github.base_ref }}"
+          # Collect files changed by the PR (vs. base branch)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED=$(git diff --name-only "origin/${BASE_BRANCH}"...HEAD || true)
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD || true)
+          fi
+          echo "Changed files:"
+          echo "${CHANGED}"
+
+          filter_out() {
+            echo "${CHANGED}" | grep -v "^paddlex/pipeline" \
+              | grep -v "^paddlex/utils" \
+              | grep -v "^paddlex/paddlex_cli.py" \
+              | grep -v "^docs/" \
+              | grep -v "^api_examples/" \
+              | grep -v "^libs/" \
+              | grep -v "^paddlex/configs/pipelines" \
+              | grep -v "^paddlex/configs/pipeline" \
+              | wc -l
+          }
+          only_pipeline=$(echo "${CHANGED}" \
+            | grep -v "^paddlex/pipeline" \
+            | grep -v "^paddlex/utils" \
+            | grep -v "^paddlex/paddlex_cli.py" \
+            | grep -v "^docs/" \
+            | grep -v "^api_examples/" \
+            | grep -v "^libs/" \
+            | grep -v "^paddlex/configs/pipelines" \
+            | grep -v "^paddlex/configs/pipeline" \
+            | sed '/^$/d' | wc -l)
+          only_inference=$(echo "${CHANGED}" \
+            | grep -v "^paddlex/inference" \
+            | grep -v "^paddlex/utils" \
+            | grep -v "^paddlex/paddlex_cli.py" \
+            | grep -v "^docs/" \
+            | grep -v "^api_examples/" \
+            | grep -v "^libs/" \
+            | grep -v "^paddlex/configs/pipelines" \
+            | grep -v "^paddlex/pipeline" \
+            | sed '/^$/d' | wc -l)
+
+          if [ "${only_pipeline}" -eq 0 ]; then
+            TEST_RANGE="pipeline"
+          elif [ "${only_inference}" -eq 0 ]; then
+            TEST_RANGE="inference"
+          else
+            TEST_RANGE=""
+          fi
+
+          MD_NUM=$(echo "${CHANGED}" | grep 'md$' | sed '/^$/d' | wc -l)
+          WITHOUT_MD_NUM=$(echo "${CHANGED}" | grep -v 'md$' | grep -v 'mkdocs.yml$' | sed '/^$/d' | wc -l)
+
+          # Skip if commit message contains test=document_fix
+          SKIP=0
+          if git log -1 | grep -qw "test=document_fix"; then
+            echo "Detected test=document_fix, will skip tests"
+            SKIP=1
+          fi
+
+          echo "TEST_RANGE=${TEST_RANGE}"
+          echo "MD_NUM=${MD_NUM}"
+          echo "WITHOUT_MD_NUM=${WITHOUT_MD_NUM}"
+          echo "SKIP=${SKIP}"
+
+          echo "TEST_RANGE=${TEST_RANGE}" >> "$GITHUB_OUTPUT"
+          echo "MD_NUM=${MD_NUM}" >> "$GITHUB_OUTPUT"
+          echo "WITHOUT_MD_NUM=${WITHOUT_MD_NUM}" >> "$GITHUB_OUTPUT"
+          echo "SKIP=${SKIP}" >> "$GITHUB_OUTPUT"
+
+      - name: Download PaddleTest and copy ci scripts
+        if: steps.scope.outputs.SKIP != '1'
+        run: |
+          rm -rf PaddleTest PaddleTest.tar
+          wget -q "${PADDLETEST_TAR_URL}" -O PaddleTest.tar
+          tar -xf PaddleTest.tar && rm -f PaddleTest.tar
+          cp -r PaddleTest/models/PaddleX/ci PaddleX/
+
+      - name: Run CI unittest
+        if: steps.scope.outputs.SKIP != '1'
+        env:
+          docker_image: ${{ env.PADDLEX_IMAGE }}
+          TEST_RANGE: ${{ steps.scope.outputs.TEST_RANGE }}
+          MD_NUM: ${{ steps.scope.outputs.MD_NUM }}
+          WITHOUT_MD_NUM: ${{ steps.scope.outputs.WITHOUT_MD_NUM }}
+        run: |
+          # Pull proxy from the runner's global git config (set via
+          # `git config --global http.proxy ...` on the runner host) and
+          # inject it into the container so that `paddlex --install` can
+          # reach github.com during the setup phase.
+          HTTP_PROXY_VAL="$(git config --global --get http.proxy  || true)"
+          HTTPS_PROXY_VAL="$(git config --global --get https.proxy || true)"
+
+          docker_name="PaddleX_gha_${{ github.run_id }}_${{ github.run_attempt }}"
+          docker rm -f "${docker_name}" 2>/dev/null || true
+
+          docker run --rm \
+            --gpus all \
+            --name "${docker_name}" \
+            --shm-size=128g \
+            --net=host \
+            -v "$(pwd)/PaddleX:/workspace" \
+            -w /workspace \
+            -e "PYTHONPATH=/workspace:" \
+            -e "http_proxy=${HTTP_PROXY_VAL}" \
+            -e "https_proxy=${HTTPS_PROXY_VAL}" \
+            -e "HTTP_PROXY=${HTTP_PROXY_VAL}" \
+            -e "HTTPS_PROXY=${HTTPS_PROXY_VAL}" \
+            -e "no_proxy=baidu.com,baidubce.com,bj.bcebos.com,mirrors.bfsu.edu.cn,paddlepaddle.org.cn,pypi.tuna.tsinghua.edu.cn,tuna.tsinghua.edu.cn,localhost,127.0.0.1" \
+            -e "NO_PROXY=baidu.com,baidubce.com,bj.bcebos.com,mirrors.bfsu.edu.cn,paddlepaddle.org.cn,pypi.tuna.tsinghua.edu.cn,tuna.tsinghua.edu.cn,localhost,127.0.0.1" \
+            -e "GIT_HTTP_LOW_SPEED_LIMIT=1000" \
+            -e "GIT_HTTP_LOW_SPEED_TIME=15" \
+            -e "AGILE_JOB_BUILD_ID=${{ github.run_id }}" \
+            -e "AGILE_PULL_ID=${{ github.event.pull_request.number }}" \
+            -e "AGILE_COMPILE_BRANCH=${{ github.base_ref }}" \
+            -e "AGILE_PIPELINE_BUILD_NUMBER=${{ github.run_id }}" \
+            -e "py_version=${PY_VERSION}" \
+            -e "cudaid2=${CUDAID2}" \
+            -e "MD_NUM=${MD_NUM}" \
+            -e "WITHOUT_MD_NUM=${WITHOUT_MD_NUM}" \
+            -e "TEST_RANGE=${TEST_RANGE}" \
+            -e "USE_NEW_INFERENCE=1" \
+            -e "PADDLE_INSTALL_VERSION=${PADDLE_INSTALL_VERSION}" \
+            "${docker_image}" \
+            /bin/bash -c '
+              set -ex
+              ldconfig
+              nvidia-smi
+              df -hl
+
+              echo "Python version: ${py_version}"
+              rm -rf run_env
+              mkdir run_env
+              ln -sf "$(which python${py_version})" run_env/python
+              ln -sf "$(which python${py_version})" run_env/python3
+              ln -sf "$(which pip${py_version})"    run_env/pip
+              export PATH=$PWD/run_env:${PATH}
+
+              python${py_version} -m pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple
+
+              # Fallback install only when paddle is missing in the image.
+              if ! python${py_version} -c "import paddle" 2>/dev/null; then
+                echo "[INFO] paddle not installed in image, installing ${PADDLE_INSTALL_VERSION:-paddlepaddle-gpu==3.0.0}..."
+                env -u http_proxy -u https_proxy \
+                  python${py_version} -m pip install ${PADDLE_INSTALL_VERSION:-paddlepaddle-gpu==3.0.0} \
+                  -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+              else
+                echo "[INFO] paddle already installed in image, skip install"
+              fi
+
+              python${py_version} -c "import paddle; paddle.version.show()"
+
+              git config --global --add safe.directory /workspace
+              export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=true
+              export DEVICE_ID=${cudaid2}
+              export MEM_SIZE=32
+              bash ci/ci_run.sh
+            '
+
+      - name: Skipped (document-only change)
+        if: steps.scope.outputs.SKIP == '1'
+        run: echo "Only document changes detected (test=document_fix), CI skipped."
