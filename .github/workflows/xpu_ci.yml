@@ -72,5 +72,6 @@ jobs:
           git config --global --add safe.directory /workspace/PaddleX
           cd PaddleX
           export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=true
+          export DEVICE_ID=6,7
           bash tests/run_xpu_ci.sh
           "

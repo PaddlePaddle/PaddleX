@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: Better way to handle the permission problem
-
 # Should we use `pip-compile-multi`?
 
 set -e
@@ -16,7 +14,6 @@ python -m piptools compile \
     --extra 'base' \
     --extra 'serving' \
     requirements/app.in "requirements/${DEVICE_TYPE}.in" paddlex-hps-server/pyproject.toml ../../../setup.py
-chown "${OUID}":"${OGID}" "requirements/${DEVICE_TYPE}.txt"
 
 python -m piptools compile \
     -q \
@@ -27,7 +24,6 @@ python -m piptools compile \
     --no-emit-index-url \
     --no-emit-trusted-host \
     "requirements/${DEVICE_TYPE}_hpi.in"
-chown "${OUID}":"${OGID}" "requirements/${DEVICE_TYPE}_hpi.txt"
 
 python -m piptools compile \
     -q \
@@ -37,5 +33,4 @@ python -m piptools compile \
     --strip-extras \
     --no-emit-index-url \
     --no-emit-trusted-host \
-    "requirements/${DEVICE_TYPE}_dev.in" 
-chown "${OUID}":"${OGID}" "requirements/${DEVICE_TYPE}_dev.txt"
+    "requirements/${DEVICE_TYPE}_dev.in"
