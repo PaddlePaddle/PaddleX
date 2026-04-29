@@ -34,7 +34,7 @@ from .processors import (
 )
 from .result import FormulaRecResult
 
-FORMULA_REC_TRANSFORMERS_MODELS = ["PP-FormulaNet_plus-L"]
+FORMULA_REC_TRANSFORMERS_MODELS = ["PP-FormulaNet-L", "PP-FormulaNet_plus-L"]
 
 
 class FormulaRecRunnerPredictor(RunnerPredictor):
@@ -207,10 +207,10 @@ class FormulaRecTransformersPredictor(TransformersPredictor):
         return FormulaRecResult
 
     def _build(self):
-        from transformers import AutoModelForTextRecognition, AutoProcessor
+        from transformers import AutoModelForImageTextToText, AutoProcessor
 
         processor = self._load_pretrained_processor(AutoProcessor)
-        model = self._load_pretrained_model(AutoModelForTextRecognition)
+        model = self._load_pretrained_model(AutoModelForImageTextToText)
         return processor, model
 
     def process(self, batch_data):
@@ -218,7 +218,7 @@ class FormulaRecTransformersPredictor(TransformersPredictor):
         images = [Image.fromarray(img) for img in batch_raw_imgs]
 
         model_inputs = self.preprocess_images(images=images)
-        outputs = self.forward(model_inputs)
+        outputs = self.generate(model_inputs, {"do_sample": False})
         rec_formula = self.postprocess(outputs)
 
         return {
@@ -229,6 +229,6 @@ class FormulaRecTransformersPredictor(TransformersPredictor):
         }
 
     def postprocess(self, outputs, **kwargs):
-        rec_formula = self.processor.post_process(outputs.last_hidden_state, **kwargs)
+        rec_formula = self.processor.post_process(outputs, **kwargs)
 
         return rec_formula
