@@ -517,37 +517,42 @@ def _meta_chart2table():
 def _meta_pp_formulanet(model_name):
     """Build inference.yml metadata for PP-FormulaNet-L / PP-FormulaNet_plus-L.
 
-    The ``character_dict`` (UniMERNet tokenizer) is heavy (~2 MB) and not
-    bundled with PaddleX, so the converter falls back to expecting the user
-    to supply ``inference.yml`` in the input directory. This template only
-    sets the structural fields; users with a fully-prepared input dir don't
-    hit this branch.
+    The ``character_dict`` (UniMERNet tokenizer) is filled in by the converter
+    in :meth:`WeightConverter._save_inference_yml` — ``tokenizer.json`` is
+    resolved from the input dir or the official_models cache, and
+    ``tokenizer_config.json`` is hardcoded as ``UNIMERNET_TOKENIZER_CONFIG``.
+
+    Mirrors the inference.yml published with the official safetensors repos
+    (PaddlePaddle/PP-FormulaNet-L_safetensors etc.). Note the static-graph
+    input is 1-channel: ``LatexImageFormat`` selects a single channel from
+    the BGR/RGB image; the model expands 1->3 internally.
     """
-    max_new_tokens = 1024 if model_name == "PP-FormulaNet-L" else 2560
     return {
-        "Hpi": _hpi_simple("x", [[1, 3, 768, 768], [1, 3, 768, 768], [1, 3, 768, 768]]),
+        "Hpi": _hpi_simple("x", [[1, 1, 768, 768], [1, 1, 768, 768], [8, 1, 768, 768]]),
         "PreProcess": {
             "transform_ops": [
-                {"DecodeImage": {"channel_first": False, "img_mode": "RGB"}},
                 {"UniMERNetImgDecode": {"input_size": [768, 768]}},
                 {"UniMERNetTestTransform": None},
                 {"LatexImageFormat": None},
                 {
                     "UniMERNetLabelEncode": {
-                        "max_seq_len": max_new_tokens,
+                        # Matches the published artifact for both variants;
+                        # this op is registered as a no-op in the predictor,
+                        # so the exact value isn't load-bearing at runtime.
+                        "max_seq_len": 2560,
                         "rec_char_dict_path": "ppocr/utils/dict/unimernet_tokenizer",
                     }
                 },
-                {"KeepKeys": {"keep_keys": ["image", "label", "attention_mask"]}},
+                {
+                    "KeepKeys": {
+                        "keep_keys": ["image", "label", "attention_mask", "filename"]
+                    }
+                },
             ]
         },
         "PostProcess": {
             "name": "UniMERNetDecode",
-            # NOTE: ``character_dict`` must be filled with the UniMERNet
-            # tokenizer's fast_tokenizer_file + tokenizer_config_file. Users
-            # converting their own pdparams should provide a complete
-            # inference.yml in the input directory.
-            "character_dict": None,
+            # ``character_dict`` is injected by WeightConverter._save_inference_yml.
         },
     }
 
@@ -911,4 +916,71 @@ CHART2TABLE_TOKENIZER_CONFIG = {
     "pad_token": "<|endoftext|>",
     "tokenizer_class": "Qwen2Tokenizer",
     "unk_token": "<|endoftext|>",
+}
+
+
+# PP-FormulaNet tokenizer assets
+def _unimernet_special_token(content):
+    return {
+        "content": content,
+        "lstrip": False,
+        "normalized": False,
+        "rstrip": False,
+        "single_word": False,
+        "special": True,
+    }
+
+
+# Mirrors tokenizer_config.json published with
+# PaddlePaddle/PP-FormulaNet-L_safetensors and PP-FormulaNet_plus-L_safetensors.
+# tokenizer.json itself is too large to hardcode (~2.1 MB) — it is resolved at
+# conversion time via the input dir or the official_models cache.
+UNIMERNET_TOKENIZER_CONFIG = {
+    "added_tokens_decoder": {
+        str(i): _unimernet_special_token(content)
+        for i, content in enumerate(
+            [
+                "<s>",
+                "<pad>",
+                "</s>",
+                "<unk>",
+                "[START_REF]",
+                "[END_REF]",
+                "[IMAGE]",
+                "<fragments>",
+                "</fragments>",
+                "<work>",
+                "</work>",
+                "[START_SUP]",
+                "[END_SUP]",
+                "[START_SUB]",
+                "[END_SUB]",
+                "[START_DNA]",
+                "[END_DNA]",
+                "[START_AMINO]",
+                "[END_AMINO]",
+                "[START_SMILES]",
+                "[END_SMILES]",
+                "[START_I_SMILES]",
+                "[END_I_SMILES]",
+            ]
+        )
+    },
+    "additional_special_tokens": [],
+    "bos_token": "<s>",
+    "clean_up_tokenization_spaces": False,
+    "eos_token": "</s>",
+    "max_length": 4096,
+    "model_max_length": 768,
+    "pad_to_multiple_of": None,
+    "pad_token": "<pad>",
+    "pad_token_type_id": 0,
+    "padding_side": "right",
+    "processor_class": "VariableDonutProcessor",
+    "stride": 0,
+    "tokenizer_class": "NougatTokenizer",
+    "truncation_side": "right",
+    "truncation_strategy": "longest_first",
+    "unk_token": "<unk>",
+    "vocab_file": None,
 }

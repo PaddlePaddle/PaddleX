@@ -53,6 +53,7 @@ from .utils.pdparams2safetensors import (
     SLANET_MAPPING,
     SLANEXT_DROP_PREFIXES,
     SLANEXT_MAPPING,
+    UNIMERNET_TOKENIZER_CONFIG,
     UVDOC_DROP_PREFIXES,
     UVDOC_MAPPING,
     apply_key_mapping,
@@ -489,6 +490,18 @@ class WeightConverter:
                 data.setdefault("PostProcess", {})[
                     "character_dict"
                 ] = load_character_dict()
+            elif self.model_name in (
+                "PP-FormulaNet-L",
+                "PP-FormulaNet_plus-L",
+            ):
+                # UniMERNetDecode reads the tokenizer from
+                # PostProcess.character_dict — fast_tokenizer_file is the
+                # parsed tokenizer.json content (~2 MB), tokenizer_config_file
+                # is hardcoded.
+                data.setdefault("PostProcess", {})["character_dict"] = {
+                    "fast_tokenizer_file": self._load_unimernet_fast_tokenizer(),
+                    "tokenizer_config_file": UNIMERNET_TOKENIZER_CONFIG,
+                }
 
         out_path = os.path.join(self.output_dir, "inference.yml")
         with open(out_path, "w", encoding="utf-8") as f:
@@ -568,4 +581,44 @@ class WeightConverter:
             f"qwen.tiktoken not found. For single-file input, ensure the official "
             f"model is cached at {cache_path} (run inference once to download). "
             f"For directory input, include qwen.tiktoken in the input directory."
+        )
+
+    def _load_unimernet_fast_tokenizer(self):
+        """Load tokenizer.json (the UniMERNet fast tokenizer JSON) for PP-FormulaNet.
+
+        Resolution chain (mirrors :meth:`_resolve_tiktoken_source`):
+            input dir → ~/.paddlex/official_models/{name}_safetensors/tokenizer.json
+            → FileNotFoundError
+        Returns the parsed JSON dict.
+        """
+        if self._input_is_dir:
+            src = Path(self.input_path) / "tokenizer.json"
+            if src.exists():
+                logging.info(f"Loaded user tokenizer.json: {src}")
+                with open(src, encoding="utf-8") as f:
+                    return json.load(f)
+            logging.warning(
+                f"tokenizer.json not found in {self.input_path}. "
+                "Falling back to official model cache."
+            )
+
+        from ...utils.cache import CACHE_DIR
+
+        cache_path = (
+            Path(CACHE_DIR)
+            / "official_models"
+            / f"{self.model_name}_safetensors"
+            / "tokenizer.json"
+        )
+        if cache_path.exists():
+            logging.info(f"Loaded tokenizer.json from cache: {cache_path}")
+            with open(cache_path, encoding="utf-8") as f:
+                return json.load(f)
+
+        raise FileNotFoundError(
+            f"tokenizer.json not found. For single-file input, ensure the official "
+            f"model is cached at {cache_path} (run "
+            f"`create_model('{self.model_name}', engine='paddle_dynamic')` once "
+            f"to download). For directory input, include tokenizer.json in the "
+            f"input directory."
         )

@@ -18,6 +18,7 @@ from .inference_meta import (
     CHART2TABLE_SPECIAL_TOKENS_MAP,
     CHART2TABLE_TOKENIZER_CONFIG,
     PREPROCESSOR_CONFIGS,
+    UNIMERNET_TOKENIZER_CONFIG,
     build_inference_meta,
     load_character_dict,
 )
