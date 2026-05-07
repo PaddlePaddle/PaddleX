@@ -514,6 +514,44 @@ def _meta_chart2table():
     }
 
 
+def _meta_pp_formulanet(model_name):
+    """Build inference.yml metadata for PP-FormulaNet-L / PP-FormulaNet_plus-L.
+
+    The ``character_dict`` (UniMERNet tokenizer) is heavy (~2 MB) and not
+    bundled with PaddleX, so the converter falls back to expecting the user
+    to supply ``inference.yml`` in the input directory. This template only
+    sets the structural fields; users with a fully-prepared input dir don't
+    hit this branch.
+    """
+    max_new_tokens = 1024 if model_name == "PP-FormulaNet-L" else 2560
+    return {
+        "Hpi": _hpi_simple("x", [[1, 3, 768, 768], [1, 3, 768, 768], [1, 3, 768, 768]]),
+        "PreProcess": {
+            "transform_ops": [
+                {"DecodeImage": {"channel_first": False, "img_mode": "RGB"}},
+                {"UniMERNetImgDecode": {"input_size": [768, 768]}},
+                {"UniMERNetTestTransform": None},
+                {"LatexImageFormat": None},
+                {
+                    "UniMERNetLabelEncode": {
+                        "max_seq_len": max_new_tokens,
+                        "rec_char_dict_path": "ppocr/utils/dict/unimernet_tokenizer",
+                    }
+                },
+                {"KeepKeys": {"keep_keys": ["image", "label", "attention_mask"]}},
+            ]
+        },
+        "PostProcess": {
+            "name": "UniMERNetDecode",
+            # NOTE: ``character_dict`` must be filled with the UniMERNet
+            # tokenizer's fast_tokenizer_file + tokenizer_config_file. Users
+            # converting their own pdparams should provide a complete
+            # inference.yml in the input directory.
+            "character_dict": None,
+        },
+    }
+
+
 _INFERENCE_META_REGISTRY = {
     "PP-LCNet_x1_0_doc_ori": _meta_cls_doc_ori,
     "PP-LCNet_x1_0_table_cls": _meta_cls_table,
@@ -542,6 +580,8 @@ _INFERENCE_META_REGISTRY = {
         _LABEL_DOC_BLOCK_LAYOUT, _RTDETR_PREPROCESS_640, 640
     ),
     "UVDoc": _meta_uvdoc,
+    "PP-FormulaNet-L": lambda: _meta_pp_formulanet("PP-FormulaNet-L"),
+    "PP-FormulaNet_plus-L": lambda: _meta_pp_formulanet("PP-FormulaNet_plus-L"),
     "PP-Chart2Table": _meta_chart2table,
 }
 
@@ -721,6 +761,38 @@ PREPROCESSOR_CONFIGS = {
     "PP-DocLayout_plus-L": _rtdetr_preproc("RTDetrImageProcessor", 800, 800),
     "PP-DocBlockLayout": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "UVDoc": _UVDOC_PREPROC,
+    "PP-FormulaNet-L": {
+        "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
+        "image_processor_type": "PPFormulaNetImageProcessor",
+        "do_resize": True,
+        "do_rescale": True,
+        "do_normalize": True,
+        "do_pad": True,
+        "do_thumbnail": True,
+        "do_align_long_axis": False,
+        "do_crop_margin": True,
+        "size": {"height": 768, "width": 768},
+        "image_mean": [0.7931, 0.7931, 0.7931],
+        "image_std": [0.1738, 0.1738, 0.1738],
+        "rescale_factor": 1.0 / 255,
+        "resample": 2,
+    },
+    "PP-FormulaNet_plus-L": {
+        "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
+        "image_processor_type": "PPFormulaNetImageProcessor",
+        "do_resize": True,
+        "do_rescale": True,
+        "do_normalize": True,
+        "do_pad": True,
+        "do_thumbnail": True,
+        "do_align_long_axis": False,
+        "do_crop_margin": True,
+        "size": {"height": 768, "width": 768},
+        "image_mean": [0.7931, 0.7931, 0.7931],
+        "image_std": [0.1738, 0.1738, 0.1738],
+        "rescale_factor": 1.0 / 255,
+        "resample": 2,
+    },
     "PP-Chart2Table": {
         "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
         "do_normalize": True,

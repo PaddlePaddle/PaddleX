@@ -894,6 +894,50 @@ SLANEXT_MAPPING = [
 ]
 
 
+# PP-FormulaNet-L / PP-FormulaNet_plus-L
+# (SAM ViT-B encoder + multi-modal projector + MBart decoder + LM head)
+PP_FORMULANET_MAPPING = [
+    # Decoder / LM head
+    (r"^head\.decoder\.model\.decoder\.", r"model.decoder."),
+    (r"^head\.decoder\.lm_head\.", r"lm_head."),
+    # Multi-modal projector linears (live under model.encoder in HF layout)
+    (r"^backbone\.mm_projector_vary\.", r"model.encoder.multi_modal_projector.linear_1."),
+    (r"^head\.enc_to_dec_proj\.", r"model.encoder.multi_modal_projector.linear_2."),
+    # Multi-modal projector convs (paddle: vision_tower_high.net_{2,3}; HF: multi_modal_projector.conv{1,2})
+    (
+        r"^backbone\.vision_tower_high\.net_2\.",
+        r"model.encoder.multi_modal_projector.conv1.",
+    ),
+    (
+        r"^backbone\.vision_tower_high\.net_3\.",
+        r"model.encoder.multi_modal_projector.conv2.",
+    ),
+    # Vision encoder absolute pos embedding
+    (r"^backbone\.vision_tower_high\.pos_embed", r"model.encoder.pos_embed"),
+    # Vision encoder per-layer norms (specific rules before generic blocks rename)
+    (
+        r"^backbone\.vision_tower_high\.blocks\.(\d+)\.norm1\.",
+        r"model.encoder.layers.\1.layer_norm1.",
+    ),
+    (
+        r"^backbone\.vision_tower_high\.blocks\.(\d+)\.norm2\.",
+        r"model.encoder.layers.\1.layer_norm2.",
+    ),
+    # Vision encoder generic blocks → layers
+    (r"^backbone\.vision_tower_high\.blocks\.", r"model.encoder.layers."),
+    # Patch embed
+    (
+        r"^backbone\.vision_tower_high\.patch_embed\.proj\.",
+        r"model.encoder.patch_embed.projection.",
+    ),
+    # Neck
+    (r"^backbone\.vision_tower_high\.neck\.0\.", r"model.encoder.neck.conv1."),
+    (r"^backbone\.vision_tower_high\.neck\.1\.", r"model.encoder.neck.layer_norm1."),
+    (r"^backbone\.vision_tower_high\.neck\.2\.", r"model.encoder.neck.conv2."),
+    (r"^backbone\.vision_tower_high\.neck\.3\.", r"model.encoder.neck.layer_norm2."),
+]
+
+
 # Keys to drop during conversion (training-only / tied weights)
 UVDOC_DROP_PREFIXES = [
     "out_point_positions3D.",

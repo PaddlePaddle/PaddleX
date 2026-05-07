@@ -38,6 +38,7 @@ from .utils.pdparams2safetensors import (
     PP_CHART2TABLE_MAPPING,
     PP_DOCLAYOUTV2_DROP_PREFIXES,
     PP_DOCLAYOUTV2_MAPPING,
+    PP_FORMULANET_MAPPING,
     PPLCNET_MAPPING,
     PPOCRV5_MOBILE_DET_MAPPING,
     PPOCRV5_MOBILE_REC_MAPPING,
@@ -88,6 +89,8 @@ _MODEL_REGISTRY = {
     "PP-DocLayout_plus-L": (RTDETR_MAPPING, []),
     "PP-DocBlockLayout": (RTDETR_MAPPING, []),
     "UVDoc": (UVDOC_MAPPING, UVDOC_DROP_PREFIXES),
+    "PP-FormulaNet-L": (PP_FORMULANET_MAPPING, []),
+    "PP-FormulaNet_plus-L": (PP_FORMULANET_MAPPING, []),
     "PP-Chart2Table": (PP_CHART2TABLE_MAPPING, PP_CHART2TABLE_DROP_PREFIXES),
 }
 
@@ -125,6 +128,8 @@ _TRANSPOSE_SUBSTRINGS = [
     "kv_mapper",
     "clip_mapper",
     "mm_projector_vary",
+    # PP-FormulaNet projector linear (renamed to multi_modal_projector.linear_2)
+    "enc_to_dec_proj",
     "score_head",
     "enc_score_head",
     "dec_score_head",
