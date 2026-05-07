@@ -766,38 +766,9 @@ PREPROCESSOR_CONFIGS = {
     "PP-DocLayout_plus-L": _rtdetr_preproc("RTDetrImageProcessor", 800, 800),
     "PP-DocBlockLayout": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "UVDoc": _UVDOC_PREPROC,
-    "PP-FormulaNet-L": {
-        "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
-        "image_processor_type": "PPFormulaNetImageProcessor",
-        "do_resize": True,
-        "do_rescale": True,
-        "do_normalize": True,
-        "do_pad": True,
-        "do_thumbnail": True,
-        "do_align_long_axis": False,
-        "do_crop_margin": True,
-        "size": {"height": 768, "width": 768},
-        "image_mean": [0.7931, 0.7931, 0.7931],
-        "image_std": [0.1738, 0.1738, 0.1738],
-        "rescale_factor": 1.0 / 255,
-        "resample": 2,
-    },
-    "PP-FormulaNet_plus-L": {
-        "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
-        "image_processor_type": "PPFormulaNetImageProcessor",
-        "do_resize": True,
-        "do_rescale": True,
-        "do_normalize": True,
-        "do_pad": True,
-        "do_thumbnail": True,
-        "do_align_long_axis": False,
-        "do_crop_margin": True,
-        "size": {"height": 768, "width": 768},
-        "image_mean": [0.7931, 0.7931, 0.7931],
-        "image_std": [0.1738, 0.1738, 0.1738],
-        "rescale_factor": 1.0 / 255,
-        "resample": 2,
-    },
+    # PP-FormulaNet uses processor_config.json instead of preprocessor_config.json,
+    # so it has no entry here — see UNIMERNET_PROCESSOR_CONFIG and
+    # WeightConverter._save_pp_formulanet_assets.
     "PP-Chart2Table": {
         "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
         "do_normalize": True,
@@ -976,11 +947,49 @@ UNIMERNET_TOKENIZER_CONFIG = {
     "pad_token": "<pad>",
     "pad_token_type_id": 0,
     "padding_side": "right",
-    "processor_class": "VariableDonutProcessor",
+    # Standalone tokenizer_config.json on the published HF repo uses
+    # "NougatProcessor"; the embedded copy in inference.yml uses
+    # "VariableDonutProcessor". WeightConverter._save_inference_yml swaps it
+    # at injection time. Either value is functionally equivalent at runtime
+    # since UniMERNetDecode only reads added_tokens_decoder.
+    "processor_class": "NougatProcessor",
     "stride": 0,
     "tokenizer_class": "NougatTokenizer",
     "truncation_side": "right",
     "truncation_strategy": "longest_first",
     "unk_token": "<unk>",
     "vocab_file": None,
+}
+
+
+# Mirrors processor_config.json published with PP-FormulaNet HF safetensors repos.
+UNIMERNET_PROCESSOR_CONFIG = {
+    "image_processor": {
+        "do_align_long_axis": False,
+        "do_crop_margin": True,
+        "do_normalize": True,
+        "do_pad": True,
+        "do_rescale": True,
+        "do_resize": True,
+        "do_thumbnail": True,
+        "size": {"height": 768, "width": 768},
+        "image_mean": [0.7931, 0.7931, 0.7931],
+        "image_std": [0.1738, 0.1738, 0.1738],
+        "image_processor_type": "PPFormulaNetImageProcessor",
+        "resample": 2,
+        "return_tensors": "pt",
+    },
+    "processor_class": "PPFormulaNetProcessor",
+}
+
+
+# Mirrors generation_config.json published with PP-FormulaNet HF safetensors repos.
+UNIMERNET_GENERATION_CONFIG = {
+    "bos_token_id": 0,
+    "eos_token_id": 2,
+    "forced_eos_token_id": 2,
+    "decoder_start_token_id": 2,
+    "max_length": 1537,
+    "pad_token_id": 1,
+    "use_cache": True,
 }
