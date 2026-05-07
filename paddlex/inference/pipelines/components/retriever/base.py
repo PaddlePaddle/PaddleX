@@ -23,6 +23,7 @@ from .....utils.subclass_register import AutoRegisterABCMetaClass
 
 if is_dep_available("langchain"):
     from langchain_core.documents import Document
+if is_dep_available("langchain-text-splitters"):
     from langchain_text_splitters import RecursiveCharacterTextSplitter
 if is_dep_available("langchain-community"):
     from langchain_community import vectorstores
