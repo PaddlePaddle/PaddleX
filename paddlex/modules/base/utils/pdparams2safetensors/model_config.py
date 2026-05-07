@@ -665,10 +665,15 @@ _PP_FORMULANET_CONFIG_L = {
     "text_config": _pp_formulanet_text(1024),
     "vision_config": dict(_PP_FORMULANET_VISION),
 }
+
+# Published _plus-L/config.json omits vision_config.decoder_hidden_size and
+# relies on the HF default (512). Match that exactly.
+_pp_formulanet_plus_vision = dict(_PP_FORMULANET_VISION)
+_pp_formulanet_plus_vision.pop("decoder_hidden_size")
 _PP_FORMULANET_CONFIG_PLUS_L = {
     "model_type": "pp_formulanet",
     "text_config": _pp_formulanet_text(2560),
-    "vision_config": dict(_PP_FORMULANET_VISION),
+    "vision_config": _pp_formulanet_plus_vision,
 }
 
 # Model config registry
