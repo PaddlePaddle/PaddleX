@@ -20,6 +20,7 @@ __all__ = [
     "DRY_RUN",
     "CHECK_OPTS",
     "EAGER_INITIALIZATION",
+    "SERVING_SERIAL_PIPELINE_CALLS",
     "INFER_BENCHMARK",
     "PIPELINE_BENCHMARK",
     "INFER_BENCHMARK_ITERS",
@@ -49,6 +50,9 @@ DEBUG = get_flag_from_env_var("PADDLE_PDX_DEBUG", False)
 DRY_RUN = get_flag_from_env_var("PADDLE_PDX_DRY_RUN", False)
 CHECK_OPTS = get_flag_from_env_var("PADDLE_PDX_CHECK_OPTS", False)
 EAGER_INITIALIZATION = get_flag_from_env_var("PADDLE_PDX_EAGER_INIT", True)
+SERVING_SERIAL_PIPELINE_CALLS = get_flag_from_env_var(
+    "PADDLE_PDX_SERVING_SERIAL_PIPELINE_CALLS", True
+)
 FLAGS_json_format_model = get_flag_from_env_var("FLAGS_json_format_model", True)
 USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", True)
 DISABLE_DEV_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_DEV_MODEL_WL", False)

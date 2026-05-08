@@ -210,7 +210,7 @@ paddlex --pipeline PaddleOCR-VL --input ./paddleocr_vl_demo.png --use_layout_det
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>控制是否将 <code>block_content</code> 中的内容格式化为Markdown格式。如果不设置，将使用初始化的默认值，默认初始化为<code>False</code>。</td>
+<td>控制是否将 <code>block_content</code> 中的内容格式化为Markdown格式。如果不设置，将使用初始化的默认值，默认初始化为<code>False</code>。当设置为<code>True</code>时，图片类型的 block 的 <code>block_content</code> 将包含图片路径信息（如 <code>&lt;img src="..." /&gt;</code>）；当设置为<code>False</code>（默认）时，图片类型的 block 的 <code>block_content</code> 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为<code>True</code>。</td>
 <td><code>bool</code></td>
 <td></td>
 </tr>
@@ -344,6 +344,7 @@ for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_json(save_path="output") ## 保存当前图像的结构化json结果
     res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
+    res.save_to_word(save_path="output") ## 保存当前图像的Word格式的结果
 ```
 
 如果是 PDF 文件，会将 PDF 的每一页单独处理，每一页的 Markdown 文件也会对应单独的结果。如果您希望对多页的推理结果进行跨页表格合并、重建多级标和合并多页结果等需求，可以通过如下方式实现：
@@ -518,7 +519,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>控制是否将 <code>block_content</code> 中的内容格式化为Markdown格式。如果设置为<code>None</code>，将使用初始化的默认值，默认初始化为<code>False</code>。</td>
+<td>控制是否将 <code>block_content</code> 中的内容格式化为Markdown格式。如果设置为<code>None</code>，将使用初始化的默认值，默认初始化为<code>False</code>。当设置为<code>True</code>时，图片类型的 block 的 <code>block_content</code> 将包含图片路径信息（如 <code>&lt;img src="..." /&gt;</code>）；当设置为<code>False</code>（默认）时，图片类型的 block 的 <code>block_content</code> 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为<code>True</code>。</td>
 <td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
@@ -727,7 +728,7 @@ MKL-DNN 缓存容量。
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>参数含义与实例化参数基本相同。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
+<td>参数含义与实例化参数基本相同。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。当设置为<code>True</code>时，图片类型的 block 的 <code>block_content</code> 将包含图片路径信息（如 <code>&lt;img src="..." /&gt;</code>）；当设置为<code>False</code>（默认）时，图片类型的 block 的 <code>block_content</code> 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为<code>True</code>。</td>
 <td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
@@ -933,6 +934,14 @@ MKL-DNN 缓存容量。
 <td>保存的文件路径，支持目录或文件路径。</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>save_to_word()</code></td>
+<td>将版面解析结果保存为Word (.docx) 格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
 </table>
 
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
@@ -951,7 +960,7 @@ MKL-DNN 缓存容量。
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
         - `use_layout_detection`: `(bool)` 控制是否启用版面检测模块
         - `use_chart_recognition`: `(bool)` 控制是否开启图表识别功能
-        - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容
+        - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容。当设置为`True`时，图片类型的 block 的 `block_content` 将包含图片路径信息（如 `<img src="..." />`）；当设置为`False`（默认）时，图片类型的 block 的 `block_content` 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为`True`。
         - `merge_layout_blocks`: `(bool)` 控制是否对多栏布局或上下交错分栏的版面框进行合并
         - `markdown_ignore_labels`: `(List[str])` 需要在Markdown中忽略的版面标签，默认为`['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
@@ -980,7 +989,7 @@ MKL-DNN 缓存容量。
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
         - `use_layout_detection`: `(bool)` 控制是否启用版面检测模块
         - `use_chart_recognition`: `(bool)` 控制是否开启图表识别功能
-        - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容
+        - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容。当设置为`True`时，图片类型的 block 的 `block_content` 将包含图片路径信息（如 `<img src="..." />`）；当设置为`False`（默认）时，图片类型的 block 的 `block_content` 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为`True`。
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果dict，仅当`use_doc_preprocessor=True`时存在
         - `input_path`: `(str)` 文档预处理子接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`，此处为`None`
@@ -1172,7 +1181,7 @@ for res in pipeline.predict("paddleocr_vl_demo.png"):
 
 ### 3.3 性能调优
 
-默认配置是在单张 NVIDIA A100 上进行调优的，并假设客户端独占服务，因此可能不适用于其他环境。如果用户在实际使用中遇到性能问题，可以尝试以下优化方法。
+默认配置可能无法在全部环境中取得最优性能。如果用户在实际使用中遇到性能问题，可以尝试以下优化方法。
 
 #### 3.3.1 服务端参数调整
 
@@ -1384,10 +1393,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认对于超过10页的PDF文件，只有前10页的内容会被处理。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认不限制 PDF 处理页数。若需在服务端限制 PDF 最大处理页数，可在产线配置中设置 <code>Serving.extra.max_num_input_imgs</code> 为正整数，例如：
 <pre><code>Serving:
   extra:
-    max_num_input_imgs: null
+    max_num_input_imgs: 10
 </code></pre>
 </td>
 <td>是</td>
@@ -1561,6 +1570,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>否</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。需要额外返回的文档格式列表。默认不返回任何附加格式。当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -1632,6 +1647,11 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的附加导出结果。仅当请求体中包含 <code>outputFormats</code> 且列出相应格式时出现。例如 <code>{"docx": {"content": "..."}}</code>，其中 <code>content</code> 为文件内容的Base64编码。</td>
 </tr>
 </tbody>
 </table>
@@ -1712,6 +1732,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td>输出的 Markdown 文本中是否包含公式编号。默认为 <code>false</code>。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式，含义与 <code>infer</code> 中的 <code>outputFormats</code> 相同。当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <p><code>pages</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
@@ -1751,7 +1777,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>重构后的版面解析结果。其中每个元素包含的字段请参见对<code>infer</code>操作返回结果的说明（不含可视化结果图和中间图像）。</td>
+<td>重构后的版面解析结果。其中每个元素包含的字段请参见对 <code>infer</code> 操作返回结果的说明（不含可视化结果图和中间图像）。</td>
 </tr>
 </tbody>
 </table>

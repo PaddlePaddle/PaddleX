@@ -127,7 +127,7 @@ comments: true
 如需批量构建 GPU 和 CPU 镜像，可以执行以下命令：
 
 ```bash
-./srcipts/prepare_deployment_images.sh
+./scripts/prepare_deployment_images.sh
 ```
 
 ## 2. 产线物料打包
@@ -188,3 +188,5 @@ comments: true
 ```bash
 ./scripts/prepare_rc_image.sh -p https://pypi.tuna.tsinghua.edu.cn/simple
 ```
+
+请确保依赖收集镜像与部署镜像使用相同的 pip 镜像源。

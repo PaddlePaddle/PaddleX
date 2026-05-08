@@ -16,20 +16,17 @@ from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 
-from ....modules.semantic_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
 from ..common import Normalize, ToBatch, ToCHWImage
+from ..predictors import RunnerPredictor
 from .processors import Resize, SegPostProcess
 from .result import SegResult
 
 
-class SegPredictor(BasePredictor):
-    """SegPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class SegRunnerPredictor(RunnerPredictor):
+    """SegRunnerPredictor that inherits from RunnerPredictor."""
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -49,7 +46,7 @@ class SegPredictor(BasePredictor):
         """
         super().__init__(*args, **kwargs)
         self.target_size = target_size
-        self.preprocessors, self.infer, self.postprocessers = self._build()
+        self.preprocessors, self.postprocessers = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -68,10 +65,10 @@ class SegPredictor(BasePredictor):
         return SegResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         preprocessors["ToCHW"] = ToCHWImage()
@@ -89,12 +86,9 @@ class SegPredictor(BasePredictor):
         if self.target_size is not None:
             _, op = self._FUNC_MAP["Resize"](self, target_size=self.target_size)
             preprocessors["Resize"] = op
-
-        infer = self.create_static_infer()
-
         postprocessers = SegPostProcess()
 
-        return preprocessors, infer, postprocessers
+        return preprocessors, postprocessers
 
     def process(
         self,
@@ -118,7 +112,7 @@ class SegPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         if len(batch_data) > 1:
             batch_preds = np.split(batch_preds[0], len(batch_data), axis=0)
 

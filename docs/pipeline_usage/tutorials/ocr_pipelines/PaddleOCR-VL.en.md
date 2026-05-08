@@ -193,7 +193,7 @@ If not set, the initialized parameter value will be used.
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>Controls whether to format the <code>block_content</code> content within as Markdown. If not set, the initialized default value will be used, which defaults to initialization as<code>False</code>.</td>
+<td>Controls whether to format the <code>block_content</code> content within as Markdown. If not set, the initialized default value will be used, which defaults to initialization as<code>False</code>. When set to <code>True</code>, the <code>block_content</code> of image-type blocks will contain image path information (e.g., <code>&lt;img src="..." /&gt;</code>). When set to <code>False</code> (default), the <code>block_content</code> of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to <code>True</code>.</td>
 <td><code>bool</code></td>
 <td></td>
 </tr>
@@ -321,6 +321,7 @@ for res in output:
     res.print() # Print the structured prediction output
     res.save_to_json(save_path="output") # Save the current image's structured result in JSON format
     res.save_to_markdown(save_path="output") # Save the current image's result in Markdown format
+    res.save_to_word(save_path="output") # Save the current image's result in Word format
 ```
 
 For PDF files, each page will be processed individually, and a separate Markdown file will be generated for each page. If you wish to perform cross-page table merging, reconstruct multi-level labels, or merge multi-page results, you can achieve this using the following method:
@@ -493,7 +494,7 @@ If not set, the initialized parameter value will be used.
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>Controls whether to format the <code>block_content</code> content within as Markdown. If not set, the initialized default value will be used, which defaults to initialization as<code>False</code>.</td>
+<td>Controls whether to format the <code>block_content</code> content within as Markdown. If not set, the initialized default value will be used, which defaults to initialization as<code>False</code>. When set to <code>True</code>, the <code>block_content</code> of image-type blocks will contain image path information (e.g., <code>&lt;img src="..." /&gt;</code>). When set to <code>False</code> (default), the <code>block_content</code> of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to <code>True</code>.</td>
 <td><code>bool|None</code></td>
 <td><code>None</code></td>
 <td></td>
@@ -712,7 +713,7 @@ If not set, the initialized parameter value will be used.
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>The parameter meaning is basically the same as the instantiation parameter. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
+<td>The parameter meaning is basically the same as the instantiation parameter. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence. When set to <code>True</code>, the <code>block_content</code> of image-type blocks will contain image path information (e.g., <code>&lt;img src="..." /&gt;</code>). When set to <code>False</code> (default), the <code>block_content</code> of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to <code>True</code>.</td>
 <td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
@@ -921,6 +922,14 @@ If not set, the initialized parameter value will be used.
 <td>The file path for saving, supporting directory or file paths.</td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>save_to_word()</code></td>
+<td>Save the layout parsing result as a Word (.docx) format file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supporting directory or file paths.</td>
+<td><code>None</code></td>
+</tr>
 </tr>
 </table>
 
@@ -940,7 +949,7 @@ If not set, the initialized parameter value will be used.
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
         - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection module.
         - `use_chart_recognition`: `(bool)` Controls whether to enable the chart recognition function.
-        - `format_block_content`: `(bool)` Controls whether to save the formatted markdown content in `JSON`.
+        - `format_block_content`: `(bool)` Controls whether to save the formatted markdown content in `JSON`. When set to `True`, the `block_content` of image-type blocks will contain image path information (e.g., `<img src="..." />`). When set to `False` (default), the `block_content` of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to `True`.
         - `merge_layout_blocks`: `(bool)` Controls whether to merge the layout frames of multi-column layouts or top-and-bottom alternating column layouts.
         - `markdown_ignore_labels`: `(List[str])` Labels of layout regions that need to be ignored in Markdown, defaulting to `['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
@@ -968,7 +977,7 @@ If not set, the initialized parameter value will be used.
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
         - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection module.
         - `use_chart_recognition`: `(bool)` Controls whether to enable the chart recognition function.
-        - `format_block_content`: `(bool)` Controls whether to save the formatted markdown content in `JSON`.
+        - `format_block_content`: `(bool)` Controls whether to save the formatted markdown content in `JSON`. When set to `True`, the `block_content` of image-type blocks will contain image path information (e.g., `<img src="..." />`). When set to `False` (default), the `block_content` of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to `True`.
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` A dictionary of document preprocessing results, which exists only when `use_doc_preprocessor=True`.
         - `input_path`: `(str)` The image path accepted by the document preprocessing sub-pipeline. When the input is a `numpy.ndarray`, it is saved as `None`; here, it is `None`.
@@ -1153,7 +1162,7 @@ for res in pipeline.predict("paddleocr_vl_demo.png"):
 
 ### 3.3 Performance Tuning
 
-The default configuration is tuned on a single NVIDIA A100 and assumes exclusive client service, so it may not be suitable for other environments. If users encounter performance issues during actual use, they can try the following optimization methods.
+The default configuration may not achieve optimal performance in all environments. If users encounter performance issues during actual use, they can try the following optimization methods.
 
 #### 3.3.1 Server-side Parameter Adjustment
 
@@ -1365,6 +1374,11 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>file</code></td>
 <td><code>string</code></td>
 <td>The URL of an image file or PDF file accessible to the server, or the Base64-encoded result of the content of the aforementioned file types.
+By default, there is no limit on how many PDF pages are processed. To cap the number of pages processed on the server, set <code>Serving.extra.max_num_input_imgs</code> to a positive integer in the pipeline configuration file, for example:
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: 10
+</code></pre>
 </td>
 <td>Yes</td>
 </tr>
@@ -1537,6 +1551,12 @@ Below are the API references for basic service-based deployment and examples of 
 <td>No</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code>|<code>null</code></td>
+<td>Optional list of extra document formats to return. By default, no extra formats are returned. Currently only <code>"docx"</code> is supported.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code>|<code>null</code></td>
 <td>Whether to return visualization result images and intermediate images during the processing.<ul style="margin: 0 0 0 1em; padding-left: 0em;">
@@ -1604,6 +1624,11 @@ Below are the API references for basic service-based deployment and examples of 
 <td><code>inputImage</code></td>
 <td><code>string</code>|<code>null</code></td>
 <td>Input image. The image is in JPEG format and encoded using Base64.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code>|<code>null</code></td>
+<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
 </tr>
 </tbody>
 </table>
@@ -1683,6 +1708,12 @@ Below are the API references for basic service-based deployment and examples of 
     <td><code>showFormulaNumber</code></td>
     <td><code>boolean</code></td>
     <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>outputFormats</code></td>
+    <td><code>array</code>|<code>null</code></td>
+    <td>Optional extra export formats; same meaning as <code>outputFormats</code> on <code>infer</code>. Only <code>"docx"</code> is supported.</td>
     <td>No</td>
     </tr>
   </tbody>

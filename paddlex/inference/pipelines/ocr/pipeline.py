@@ -20,9 +20,8 @@ from ....utils import logging
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import HPIConfig, PaddlePredictorOption
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
 from ..components import (
@@ -43,26 +42,36 @@ class _OCRPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
+        *,
         device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
+        **kwargs,
     ) -> None:
-        """
-        Initializes the class with given configurations and options.
+        """Initializes the OCR pipeline.
 
         Args:
             config (Dict): Configuration dictionary containing various settings.
-            device (str, optional): Device to run the predictions on. Defaults to None.
-            pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
-                Defaults to None.
+                HPIP configuration. Defaults to `None`.
         """
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
@@ -403,13 +412,29 @@ class _OCRPipeline(BasePipeline):
                             doc_preprocessor_images[idx], dt_polys_list[idx]
                         )
                     )
-                    all_subs_of_imgs.extend(all_subs_of_img)
-                    chunk_indices.append(chunk_indices[-1] + len(all_subs_of_img))
+                    filtered_subs = []
+                    filtered_polys = []
+                    for sub_img, poly in zip(all_subs_of_img, dt_polys_list[idx]):
+                        if (
+                            sub_img.size > 0
+                            and sub_img.shape[0] > 0
+                            and sub_img.shape[1] > 0
+                        ):
+                            filtered_subs.append(sub_img)
+                            filtered_polys.append(poly)
+                    dt_polys_list[idx] = filtered_polys
+                    results[idx]["dt_polys"] = filtered_polys
+                    all_subs_of_imgs.extend(filtered_subs)
+                    chunk_indices.append(chunk_indices[-1] + len(filtered_subs))
 
                 # use textline orientation model
                 if model_settings["use_textline_orientation"]:
                     angles = [
-                        int(textline_angle_info["class_ids"][0])
+                        int(
+                            np.asarray(
+                                textline_angle_info["class_ids"], dtype=np.int64
+                            ).ravel()[0]
+                        )
                         for textline_angle_info in self.textline_orientation_model(
                             all_subs_of_imgs
                         )

@@ -44,11 +44,11 @@ If special environment variables need to be set when using the relevant device, 
 
 ### 2.1.4 Update Predictor Option Supported Device List
 
-When creating a Predictor, the PaddleX checks whether the device is supported. The relevant code is located in `SUPPORT_DEVICE` in [PaddleX Predictor Option](../../paddlex/inference/utils/pp_option.py).
+When creating a Predictor, the PaddleX checks whether the device is supported. The relevant code is located in `SUPPORT_DEVICE` in [PaddleX Predictor Option](../../paddlex/inference/models/runners/paddle_static/config/pp_option.py).
 
 ### 2.1.5 Update Predictor Creation Logic
 
-PaddleX's inference capability is provided based on the Paddle Inference Predictor. When creating a Predictor, you need to select different device based on device information and create passes. The relevant code is located in the `_create` function in [PaddleX Predictor Creation](../../paddlex/inference/models/common/static_infer.py).
+PaddleX's Paddle inference path is implemented by the `paddle_static` engine. When creating a Predictor, PaddleX selects the target device and configures passes according to device information. The relevant logic is in `_create` of [PaddleX PaddleStaticRunner](../../paddlex/inference/models/runners/paddle_static/runner.py).
 
 ### 2.1.6 High-Performance Inference Support
 

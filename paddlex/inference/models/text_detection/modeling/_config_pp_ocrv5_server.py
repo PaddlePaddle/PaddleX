@@ -1,4 +1,4 @@
-# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2026 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,133 +13,66 @@
 # limitations under the License.
 
 from ...common.transformers.transformers import PretrainedConfig
+from ...image_classification.modeling._config_hgnetv2 import HGNetV2Config
 
-DEFAULT_CONFIG = {
-    "model_type": "det",
-    "model_name": "PP-OCRv5_server_det",
-    "algorithm": "DB",
-    "upsample_mode": "nearest",
-    "upsample_align_mode": 1,
-    "backbone": {
-        "name": "PPHGNetV2",
-        "stem_channels": [3, 32, 48],
-        "stage_config": {
-            "stage1": [48, 48, 128, 1, False, False, 3, 6, 2],
-            "stage2": [128, 96, 512, 1, True, False, 3, 6, 2],
-            "stage3": [512, 192, 1024, 3, True, True, 5, 6, 2],
-            "stage4": [1024, 384, 2048, 1, True, True, 5, 6, 2],
-        },
-        "use_lab": False,
-        "use_last_conv": True,
-        "class_expand": 2048,
-        "dropout_prob": 0.0,
-        "class_num": 1000,
-        "lr_mult_list": [1.0, 1.0, 1.0, 1.0, 1.0],
-        "det": True,
-        "out_indices": [0, 1, 2, 3],
-    },
-    "neck": {
-        "name": "LKPAN",
-        "out_channels": 256,
-        "mode": "large",
-        "reduce_factor": 2,
-        "intraclblock_config": {
-            "reduce_channel": [1, 1, 0],
-            "return_channel": [1, 1, 0],
-            "v_layer_7x1": [[7, 1], [1, 1], [3, 0]],
-            "v_layer_5x1": [[5, 1], [1, 1], [2, 0]],
-            "v_layer_3x1": [[3, 1], [1, 1], [1, 0]],
-            "q_layer_1x7": [[1, 7], [1, 1], [0, 3]],
-            "q_layer_1x5": [[1, 5], [1, 1], [0, 2]],
-            "q_layer_1x3": [[1, 3], [1, 1], [0, 1]],
-            "c_layer_7x7": [[7, 7], [1, 1], [3, 3]],
-            "c_layer_5x5": [[5, 5], [1, 1], [2, 2]],
-            "c_layer_3x3": [[3, 3], [1, 1], [1, 1]],
-        },
-    },
-    "head": {
-        "name": "PFHeadLocal",
-        "in_channels": 1024,
-        "k": 50,
-        "mode": "large",
-        "scale_factor": 2,
-        "act": "relu",
-        "kernel_list": [3, 2, 2],
-        "fix_nan": False,
-    },
+DEFAULT_BACKBONE_CONFIG = {
+    "model_type": "hgnet_v2",
+    "num_channels": 3,
+    "embedding_size": 64,
+    "hidden_sizes": [256, 512, 1024, 2048],
+    "hidden_act": "relu",
+    "num_labels": 0,
+    "stem_channels": [3, 32, 48],
+    "stem_strides": [2, 1, 1, 2, 1],
+    "stage_in_channels": [48, 128, 512, 1024],
+    "stage_mid_channels": [48, 96, 192, 384],
+    "stage_out_channels": [128, 512, 1024, 2048],
+    "stage_num_blocks": [1, 1, 3, 1],
+    "stage_downsample": [False, True, True, True],
+    "stage_downsample_strides": [2, 2, 2, 2],
+    "stage_light_block": [False, False, True, True],
+    "stage_kernel_size": [3, 3, 5, 5],
+    "stage_numb_of_layers": [6, 6, 6, 6],
+    "use_learnable_affine_block": False,
+}
+
+DEFAULT_INTRACLASS_BLOCK_CONFIG = {
+    "reduce_channel": [1, 1, 0],
+    "vertical_long_to_small_conv_longratio": [[7, 1], [1, 1], [3, 0]],
+    "vertical_long_to_small_conv_midratio": [[5, 1], [1, 1], [2, 0]],
+    "vertical_long_to_small_conv_shortratio": [[3, 1], [1, 1], [1, 0]],
+    "horizontal_small_to_long_conv_longratio": [[1, 7], [1, 1], [0, 3]],
+    "horizontal_small_to_long_conv_midratio": [[1, 5], [1, 1], [0, 2]],
+    "horizontal_small_to_long_conv_shortratio": [[1, 3], [1, 1], [0, 1]],
+    "symmetric_conv_long_longratio": [[7, 7], [1, 1], [3, 3]],
+    "symmetric_conv_long_midratio": [[5, 5], [1, 1], [2, 2]],
+    "symmetric_conv_long_shortratio": [[3, 3], [1, 1], [1, 1]],
+    "return_channel": [1, 1, 0],
 }
 
 
 class PPOCRV5ServerDetConfig(PretrainedConfig):
-    model_type = "det"
+    model_type = "pp_ocrv5_server_det"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.model_name = kwargs.get("model_name", DEFAULT_CONFIG["model_name"])
-        self.algorithm = kwargs.get("algorithm", DEFAULT_CONFIG["algorithm"])
-        self.upsample_mode = kwargs.get(
-            "upsample_mode", DEFAULT_CONFIG["upsample_mode"]
-        )
-        self.upsample_align_mode = kwargs.get(
-            "upsample_align_mode", DEFAULT_CONFIG["upsample_align_mode"]
-        )
+        backbone_config = kwargs.get("backbone_config", DEFAULT_BACKBONE_CONFIG)
+        if isinstance(backbone_config, HGNetV2Config):
+            self.backbone_config = backbone_config
+        elif isinstance(backbone_config, dict):
+            self.backbone_config = HGNetV2Config(**backbone_config)
+        else:
+            self.backbone_config = HGNetV2Config(**DEFAULT_BACKBONE_CONFIG)
 
-        backbone_cfg = kwargs.get("backbone", DEFAULT_CONFIG["backbone"])
-        self.backbone_name = backbone_cfg.get(
-            "name", DEFAULT_CONFIG["backbone"]["name"]
+        self.interpolate_mode = kwargs.get("interpolate_mode", "nearest")
+        self.neck_out_channels = kwargs.get("neck_out_channels", 256)
+        self.reduce_factor = kwargs.get("reduce_factor", 2)
+        self.intraclass_block_number = kwargs.get("intraclass_block_number", 4)
+        self.intraclass_block_config = kwargs.get(
+            "intraclass_block_config", DEFAULT_INTRACLASS_BLOCK_CONFIG
         )
-        self.backbone_stem_channels = backbone_cfg.get(
-            "stem_channels", DEFAULT_CONFIG["backbone"]["stem_channels"]
-        )
-        self.backbone_stage_config = backbone_cfg.get(
-            "stage_config", DEFAULT_CONFIG["backbone"]["stage_config"]
-        )
-        self.backbone_use_lab = backbone_cfg.get(
-            "use_lab", DEFAULT_CONFIG["backbone"]["use_lab"]
-        )
-        self.backbone_use_last_conv = backbone_cfg.get(
-            "use_last_conv", DEFAULT_CONFIG["backbone"]["use_last_conv"]
-        )
-        self.backbone_class_expand = backbone_cfg.get(
-            "class_expand", DEFAULT_CONFIG["backbone"]["class_expand"]
-        )
-        self.backbone_class_num = backbone_cfg.get(
-            "class_num", DEFAULT_CONFIG["backbone"]["class_num"]
-        )
-        self.backbone_lr_mult_list = backbone_cfg.get(
-            "lr_mult_list", DEFAULT_CONFIG["backbone"]["lr_mult_list"]
-        )
-        self.backbone_det = backbone_cfg.get("det", DEFAULT_CONFIG["backbone"]["det"])
-        self.backbone_out_indices = backbone_cfg.get(
-            "out_indices", DEFAULT_CONFIG["backbone"]["out_indices"]
-        )
-
-        neck_cfg = kwargs.get("neck", DEFAULT_CONFIG["neck"])
-        self.neck_name = neck_cfg.get("name", DEFAULT_CONFIG["neck"]["name"])
-        self.neck_out_channels = neck_cfg.get(
-            "out_channels", DEFAULT_CONFIG["neck"]["out_channels"]
-        )
-        self.neck_mode = neck_cfg.get("mode", DEFAULT_CONFIG["neck"]["mode"])
-        self.neck_reduce_factor = neck_cfg.get(
-            "reduce_factor", DEFAULT_CONFIG["neck"]["reduce_factor"]
-        )
-        self.neck_intraclblock_config = neck_cfg.get(
-            "intraclblock_config", DEFAULT_CONFIG["neck"]["intraclblock_config"]
-        )
-
-        head_cfg = kwargs.get("head", DEFAULT_CONFIG["head"])
-        self.head_name = head_cfg.get("name", DEFAULT_CONFIG["head"]["name"])
-        self.head_in_channels = head_cfg.get(
-            "in_channels", DEFAULT_CONFIG["head"]["in_channels"]
-        )
-        self.head_k = head_cfg.get("k", DEFAULT_CONFIG["head"]["k"])
-        self.head_mode = head_cfg.get("mode", DEFAULT_CONFIG["head"]["mode"])
-        self.head_scale_factor = head_cfg.get(
-            "scale_factor", DEFAULT_CONFIG["head"]["scale_factor"]
-        )
-        self.head_act = head_cfg.get("act", DEFAULT_CONFIG["head"]["act"])
-        self.head_kernel_list = head_cfg.get(
-            "kernel_list", DEFAULT_CONFIG["head"]["kernel_list"]
-        )
-        self.head_fix_nan = head_cfg.get("fix_nan", DEFAULT_CONFIG["head"]["fix_nan"])
+        self.scale_factor = kwargs.get("scale_factor", 2)
+        self.scale_factor_list = kwargs.get("scale_factor_list", [1, 2, 4, 8])
+        self.hidden_act = kwargs.get("hidden_act", "relu")
+        self.kernel_list = kwargs.get("kernel_list", [3, 2, 2])

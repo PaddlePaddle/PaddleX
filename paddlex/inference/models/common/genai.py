@@ -55,10 +55,20 @@ class GenAIConfig(BaseModel):
         return self
 
 
-def need_local_model(genai_config):
-    if genai_config is not None and genai_config.backend in SERVER_BACKENDS:
+def uses_server_backend(genai_config) -> bool:
+    """Return whether the config targets a remote server backend."""
+    if genai_config is None:
         return False
-    return True
+    validated = (
+        genai_config
+        if isinstance(genai_config, GenAIConfig)
+        else GenAIConfig.model_validate(genai_config)
+    )
+    return validated.backend in SERVER_BACKENDS
+
+
+def need_local_model(genai_config):
+    return not uses_server_backend(genai_config)
 
 
 # TODO: Can we set the event loop externally?
@@ -502,13 +512,14 @@ class GenAIClient(object):
 
         self.backend = backend
         self._max_concurrency = max_concurrency
+        if "api_key" not in kwargs:
+            kwargs["api_key"] = "null"
+
+        self._client = AsyncOpenAI(base_url=base_url, **kwargs)
+
         if model_name is None:
             model_name = run_async(self._get_model_name(), timeout=10)
         self._model_name = model_name
-
-        if "api_key" not in kwargs:
-            kwargs["api_key"] = "null"
-        self._client = AsyncOpenAI(base_url=base_url, **kwargs)
 
         self._semaphore = asyncio.Semaphore(self._max_concurrency)
 

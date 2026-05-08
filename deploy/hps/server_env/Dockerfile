@@ -2,7 +2,6 @@
 # 2. Can I use `COPY --link` to optimize caching?
 # 3. Create a non-root user for deployment?
 # 4. Should I use APT repository mirrors?
-# 5. Use cache mounts for `pip`?
 
 ARG DEVICE_TYPE=gpu
 ARG ENV_TYPE=prod
@@ -33,24 +32,28 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir /paddlex
 
-RUN echo 'deb http://archive.ubuntu.com/ubuntu jammy main universe' > /etc/apt/sources.list.d/jammy-temp.list \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    echo 'deb http://archive.ubuntu.com/ubuntu jammy main universe' > /etc/apt/sources.list.d/jammy-temp.list \
     && apt-get update \
-    && apt-get install -y --no-install-recommends python3.10 python3.10-venv \
+    && apt-get install -y --no-install-recommends python3.10 python3.10-venv git \
     && python3.10 -m venv /paddlex/py310 \
     && rm -rf /var/lib/apt/lists/*
 ENV PATH="/paddlex/py310/bin:${PATH}"
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
-ENV PIP_NO_CACHE_DIR=0
+ENV PIP_CACHE_DIR=/root/.cache/pip
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
-RUN python -m pip install pip==25.2
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install pip==25.2
 
 # Requirement collection
 FROM base AS rc
-RUN python -m pip install pip-tools==7.4.1
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install pip-tools==7.4.1
 
 # `ENTRYPOINT` and `CMD`?
 
@@ -58,7 +61,9 @@ RUN python -m pip install pip-tools==7.4.1
 # Build stage 1
 FROM base AS build1
 
-RUN apt-get update \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update \
     && apt-get install -y --no-install-recommends wget unzip \
     && rm -rf /var/lib/apt/lists/*
 
@@ -89,29 +94,36 @@ FROM ${DEVICE_TYPE}-build2 AS build3
 ARG DEVICE_TYPE
 ARG ENV_TYPE
 
-RUN wget -P /paddlex "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/deps/tritonserver/tritonserver-2.15.0-${DEVICE_TYPE}.zip" \
-    && unzip "/paddlex/tritonserver-2.15.0-${DEVICE_TYPE}.zip" -d /paddlex \
-    && mv "/paddlex/tritonserver-2.15.0-${DEVICE_TYPE}" /paddlex/tritonserver \
-    && rm "/paddlex/tritonserver-2.15.0-${DEVICE_TYPE}.zip"
+RUN --mount=type=cache,target=/root/.cache/hps-downloads \
+    wget -nv -O "/root/.cache/hps-downloads/tritonserver-2.15.0-${DEVICE_TYPE}.zip" \
+        "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/deps/tritonserver/tritonserver-2.15.0-${DEVICE_TYPE}.zip" \
+    && unzip "/root/.cache/hps-downloads/tritonserver-2.15.0-${DEVICE_TYPE}.zip" -d /paddlex \
+    && mv "/paddlex/tritonserver-2.15.0-${DEVICE_TYPE}" /paddlex/tritonserver
 
-RUN --mount=type=bind,source=deploy/hps/server_env/requirements/${DEVICE_TYPE}.txt,target=/tmp/requirements.txt \
-    --mount=type=bind,source=deploy/hps/server_env/requirements/${DEVICE_TYPE}_hpi.txt,target=/tmp/hpi_requirements.txt \
-    --mount=type=bind,source=deploy/hps/server_env/requirements/${DEVICE_TYPE}_dev.txt,target=/tmp/dev_requirements.txt \
+COPY deploy/hps/server_env/requirements/${DEVICE_TYPE}.txt /tmp/requirements.txt
+COPY deploy/hps/server_env/requirements/${DEVICE_TYPE}_hpi.txt /tmp/hpi_requirements.txt
+COPY deploy/hps/server_env/requirements/${DEVICE_TYPE}_dev.txt /tmp/dev_requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install --requirement /tmp/requirements.txt --requirement /tmp/hpi_requirements.txt \
     && if [ "${ENV_TYPE}" = 'dev' ]; then \
         python -m pip install --requirement /tmp/dev_requirements.txt; \
     fi
 
-RUN --mount=type=bind,source=.,target=/tmp/PaddleX,rw \
+COPY . /tmp/PaddleX
+RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install --no-deps /tmp/PaddleX
-RUN --mount=type=bind,source=deploy/hps/server_env/paddlex-hps-server,target=/tmp/paddlex-hps-server,rw \
+
+COPY deploy/hps/server_env/paddlex-hps-server /tmp/paddlex-hps-server
+RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install --no-deps /tmp/paddlex-hps-server
 
 
 # GPU Deployment
 FROM base AS gpu-deployment
 
-RUN apt-get update \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update \
     && apt-get install -y --no-install-recommends datacenter-gpu-manager \
     && rm -rf /var/lib/apt/lists/*
 
@@ -138,7 +150,9 @@ RUN groupadd -g 1000 paddlex \
     && useradd -m -s /bin/bash -u 1000 -g 1000 paddlex
 
 # Not sure if all these deps are necessary
-RUN apt-get update \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update \
     && apt-get install -y --no-install-recommends libre2-5 libssl1.1 libb64-0d libnuma1 libarchive13 python3.10-dev libgl1-mesa-glx libglib2.0-0 libgomp1 ccache binutils build-essential texlive texlive-latex-base texlive-latex-extra \
     && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core fonts-liberation fonts-noto-cjk fonts-wqy-microhei fonts-freefont-ttf \
     && fc-cache -fv \

@@ -14,18 +14,15 @@
 
 from typing import Union
 
-from ....modules.video_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..base import BasePredictor
+from ..predictors import RunnerPredictor
 from .processors import DetVideoPostProcess, Image2Array, NormalizeVideo, ResizeVideo
 from .result import DetVideoResult
 
 
-class VideoDetPredictor(BasePredictor):
-
-    entities = MODELS
+class VideoDetRunnerPredictor(RunnerPredictor):
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -40,7 +37,7 @@ class VideoDetPredictor(BasePredictor):
         super().__init__(*args, **kwargs)
         self.nms_thresh = nms_thresh
         self.score_thresh = score_thresh
-        self.pre_tfs, self.infer, self.post_op = self._build()
+        self.pre_tfs, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return VideoBatchSampler()
@@ -58,8 +55,6 @@ class VideoDetPredictor(BasePredictor):
             name, op = func(self, **args) if args else func(self)
             if op:
                 pre_tfs[name] = op
-
-        infer = self.create_static_infer()
         post_op = {}
         for cfg in self.config["PostProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
@@ -72,7 +67,7 @@ class VideoDetPredictor(BasePredictor):
             if op:
                 post_op[name] = op
 
-        return pre_tfs, infer, post_op
+        return pre_tfs, post_op
 
     def process(
         self,
@@ -87,7 +82,7 @@ class VideoDetPredictor(BasePredictor):
         num_seg = len(x[0])
         pred_seg = []
         for i in range(num_seg):
-            batch_preds = self.infer(x=[x[0][i]])
+            batch_preds = self.runner(x=[x[0][i]])
             pred_seg.append(batch_preds)
         batch_bboxes = self.post_op["DetVideoPostProcess"](
             preds=[pred_seg],

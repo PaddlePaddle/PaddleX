@@ -167,6 +167,27 @@ Related methods, parameters, and other explanations are as follows:
 <td>None</td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX will be used. If `model_dir` is specified, the user-defined model will be used.
@@ -370,7 +391,6 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <p>Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):</p>
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png"/></p></details>
 
-
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing data validation, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
@@ -409,7 +429,6 @@ CheckDataset:
     -o CheckDataset.split.train_percent=90 \
     -o CheckDataset.split.val_percent=10
 </code></pre></details>
-
 
 ### 4.2 Model Training
 
@@ -500,7 +519,29 @@ Similar to model training and evaluation, the following steps are required:
 
 Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
 
-#### 4.4.2 Model Integration
+#### 4.4.2 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-LCNet_x1_0_doc_ori`.
+
+* To perform weight conversion via command line, taking `PP-LCNet_x1_0_doc_ori` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+
+#### 4.4.3 Model Integration
 
 The model can be directly integrated into the PaddleX pipeline or into your own projects.
 

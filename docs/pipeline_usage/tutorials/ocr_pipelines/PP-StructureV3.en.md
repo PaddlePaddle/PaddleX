@@ -1396,6 +1396,7 @@ for res in output:
     res.print() ## Print the structured prediction output
     res.save_to_json(save_path="output") ## Save the structured JSON result of the current image
     res.save_to_markdown(save_path="output") ## Save the result of the current image in Markdown format
+    res.save_to_word(save_path="output") ## Save the result of the current image in Word format
 ```
 If it is a PDF file, each page of the PDF will be processed separately, and each page will have its own corresponding Markdown file. If you want to convert the entire PDF file into a Markdown file, it is recommended to run it in the following way:
 
@@ -1487,6 +1488,27 @@ In the above Python script, the following steps are executed:
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/pipeline_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/pipeline_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
 <td><code>None</code></td>
 </tr>
 </tbody>
@@ -1627,7 +1649,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>Whether to format the content in <code>block_content</code> as Markdown. If set to <code>None</code>, the instantiation value is used; otherwise, this parameter takes precedence.</td>
+<td>Whether to format the content in <code>block_content</code> as Markdown. If set to <code>None</code>, the instantiation value is used; otherwise, this parameter takes precedence. When set to <code>True</code>, the <code>block_content</code> of image-type blocks will contain image path information (e.g., <code>&lt;img src="..." /&gt;</code>). When set to <code>False</code> (default), the <code>block_content</code> of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to <code>True</code>.</td>
 <td><code>bool|None</code></td>
 <td></td>
 </tr>
@@ -1992,6 +2014,14 @@ In the above Python script, the following steps are executed:
 <td>The file path for saving, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
+<tr>
+<td><code>save_to_word()</code></td>
+<td>Save the layout parsing result as a Word (.docx) format file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supporting both directory and file paths</td>
+<td>None</td>
+</tr>
 </table>
 
 - Calling the `print()` method will print the results to the terminal. The content printed to the terminal is explained as follows:
@@ -2012,7 +2042,7 @@ In the above Python script, the following steps are executed:
         - `use_seal_recognition`: `(bool)` Controls whether to enable the seal recognition sub-line.
         - `use_table_recognition`: `(bool)` Controls whether to enable the table recognition sub-line.
         - `use_formula_recognition`: `(bool)` Controls whether to enable the formula recognition sub-line.
-        - `format_block_content`: `(bool)` Controls whether to format the `block_content` into Markdown format
+        - `format_block_content`: `(bool)` Controls whether to format the `block_content` into Markdown format. When set to `True`, the `block_content` of image-type blocks will contain image path information (e.g., `<img src="..." />`). When set to `False` (default), the `block_content` of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to `True`.
         - `markdown_ignore_labels`: `(List[str])` Labels of layout regions that need to be ignored in Markdown, defaulting to `['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
     - `parsing_res_list`: `(List[Dict])` A list of parsing results, where each element is a dictionary. The order of the list is the reading order after parsing.
@@ -2473,6 +2503,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>Optional list of extra formats to return. Currently only <code>"docx"</code> is supported.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2547,6 +2583,11 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>The input image. The image is in JPEG format and is Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Optional additional exports when <code>outputFormats</code> is present—for example, <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
 </tr>
 </tbody>
 </table>

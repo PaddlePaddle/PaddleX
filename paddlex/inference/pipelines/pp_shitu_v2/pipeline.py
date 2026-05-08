@@ -17,9 +17,8 @@ from typing import Any, Dict, Optional, Union
 from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ...models import HPIConfig, PaddlePredictorOption
 from ...utils.benchmark import benchmark
-from ...utils.hpi import HPIConfig
-from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..components import CropByBoxes, FaissBuilder, FaissIndexer
 from .result import ShiTuResult
@@ -35,13 +34,36 @@ class ShiTuV2Pipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-    ):
+        **kwargs,
+    ) -> None:
+        """Initializes the ShiTuV2 pipeline.
+
+        Args:
+            config (Dict): Configuration dictionary containing various settings.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                HPIP configuration. Defaults to `None`.
+        """
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
         self._topk, self._rec_threshold, self._hamming_radius, self._det_threshold = (
@@ -131,7 +153,7 @@ class ShiTuV2Pipeline(BasePipeline):
         gallery_label,
         metric_type="IP",
         index_type="HNSW32",
-        **kwargs
+        **kwargs,
     ):
         return FaissBuilder.build(
             gallery_imgs,

@@ -17,8 +17,7 @@ from typing import Any, Dict, Optional, Union
 
 from ...utils import logging
 from ...utils.config import parse_config
-from ..utils.hpi import HPIConfig
-from ..utils.pp_option import PaddlePredictorOption
+from ..models import HPIConfig, PaddlePredictorOption
 from .anomaly_detection import AnomalyDetectionPipeline
 from .attribute_recognition import (
     PedestrianAttributeRecPipeline,
@@ -105,37 +104,31 @@ def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
 
 def create_pipeline(
     pipeline: Optional[str] = None,
+    *,
     config: Optional[Dict[str, Any]] = None,
     device: Optional[str] = None,
+    engine: Optional[str] = None,
+    engine_config: Optional[Dict[str, Any]] = None,
     pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: Optional[bool] = None,
     hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
-    *args: Any,
     **kwargs: Any,
 ) -> BasePipeline:
-    """
-    Create a pipeline instance based on the provided parameters.
+    """Create a pipeline instance from a pipeline name or config.
 
-    If the input parameter config is not provided, it is obtained from the
-    default config corresponding to the pipeline name.
 
     Args:
-        pipeline (Optional[str], optional): The name of the pipeline to
-            create, or the path to the config file. Defaults to None.
-        config (Optional[Dict[str, Any]], optional): The pipeline configuration.
-            Defaults to None.
-        device (Optional[str], optional): The device to run the pipeline on.
-            Defaults to None.
-        pp_option (Optional[PaddlePredictorOption], optional): The options for
-            the PaddlePredictor. Defaults to None.
-        use_hpip (Optional[bool], optional): Whether to use the high-performance
-            inference plugin (HPIP). If set to None, the setting from the
-            configuration file or `config` will be used. Defaults to None.
-        hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
-            high-performance inference configuration dictionary.
-            Defaults to None.
-        *args: Additional positional arguments.
-        **kwargs: Additional keyword arguments.
+        pipeline (Optional[str], optional): Pipeline name (e.g. "OCR", "object_detection") or
+            path to a YAML config file. Required if `config` is None.
+        config (Optional[Dict[str, Any]], optional): Pipeline configuration dict. If provided,
+            `pipeline` name is optional and used only for validation. If both are provided
+            and pipeline names differ, `config` takes precedence.
+        device (Optional[str], optional): Device to run on (e.g. "gpu", "cpu", "npu:0").
+        engine (Optional[str], optional): Inference engine for models in the pipeline.
+        engine_config (Optional[Dict[str, Any]], optional): Engine-specific config.
+        pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+        use_hpip (Optional[bool], optional): Whether to use HPIP.
+        hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): HPIP configuration.
 
     Returns:
         BasePipeline: The created pipeline instance.
@@ -164,14 +157,23 @@ def create_pipeline(
         hpi_config = config.pop("hpi_config", None)
     else:
         config.pop("hpi_config", None)
+    if engine is None:
+        engine = config.get("engine", None)
+    else:
+        config["engine"] = engine
+    if engine_config is None:
+        engine_config = config.get("engine_config", None)
+    else:
+        config["engine_config"] = engine_config
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
+        engine=engine,
+        engine_config=engine_config,
         pp_option=pp_option,
         use_hpip=use_hpip,
         hpi_config=hpi_config,
-        *args,
         **kwargs,
     )
     return pipeline

@@ -16,18 +16,15 @@ from typing import Any, List, Optional, Sequence, Tuple
 
 import numpy as np
 
-from ....modules.instance_segmentation.model_list import MODELS
 from ....utils import logging
-from ..object_detection import DetPredictor
+from ..object_detection import DetRunnerPredictor
 from ..object_detection.processors import ReadImage, ToBatch
 from .processors import InstanceSegPostProcess
 from .result import InstanceSegResult
 
 
-class InstanceSegPredictor(DetPredictor):
-    """InstanceSegPredictor that inherits from DetPredictor."""
-
-    entities = MODELS
+class InstanceSegRunnerPredictor(DetRunnerPredictor):
+    """InstanceSegRunnerPredictor that inherits from DetRunnerPredictor."""
 
     def __init__(self, *args, threshold: Optional[float] = None, **kwargs):
         """Initializes InstanceSegPredictor.
@@ -63,10 +60,10 @@ class InstanceSegPredictor(DetPredictor):
         return InstanceSegResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         # build preprocess ops
         pre_ops = [ReadImage(format="RGB")]
@@ -80,13 +77,10 @@ class InstanceSegPredictor(DetPredictor):
                 pre_ops.append(op)
         pre_ops.append(self.build_to_batch())
 
-        # build infer
-        infer = self.create_static_infer()
-
         # build postprocess op
         post_op = self.build_postprocess()
 
-        return pre_ops, infer, post_op
+        return pre_ops, post_op
 
     def build_to_batch(self):
 
@@ -124,10 +118,10 @@ class InstanceSegPredictor(DetPredictor):
                 batch_inputs_ = [
                     batch_input_[i][None, ...] for batch_input_ in batch_inputs
                 ]
-                batch_pred_ = self.infer(batch_inputs_)
+                batch_pred_ = self.runner(batch_inputs_)
                 batch_preds.append(batch_pred_)
         else:
-            batch_preds = self.infer(batch_inputs)
+            batch_preds = self.runner(batch_inputs)
 
         # process a batch of predictions into a list of single image result
         preds_list = self._format_output(batch_preds)

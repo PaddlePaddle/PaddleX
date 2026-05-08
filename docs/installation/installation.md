@@ -5,8 +5,6 @@ comments: true
 # PaddleX本地安装教程
 > ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.13下运行）。
 
-> ❗在大多数情况下，您需要先参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架，再执行 PaddleX 的安装步骤。[4 PaddleX 对飞桨框架的依赖](#4-paddlex-对飞桨框架的依赖) 中列举了不需要安装飞桨框架的情形。
-
 ## 1. 快速安装
 欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请首先明确您的开发需求，并根据您的需求选择合适的安装模式。
 PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安装</b>，下面分别对其应用场景进行介绍：
@@ -144,7 +142,7 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 
 当您使用官方 Docker 镜像安装时，其中<b>已经内置了 PaddlePaddle、PaddleX（包括wheel包和所有插件）</b>，并配置好了相应的CUDA环境，<b>您获取 Docker 镜像并启动容器即可开始使用</b>。<b>请注意，PaddleX 官方 Docker 镜像与飞桨框架官方 Docker 镜像不同，后者并没有预装 PaddleX。</b>
 
-当您使用自定义方式安装时，需要先安装飞桨 PaddlePaddle 框架（除 [少数情形](#4-paddlex-对飞桨框架的依赖) 外），随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
+当您使用自定义方式安装时，通常需要先参考第 4 节或第 5 节安装飞桨框架或其他依赖，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
 
 > ❗ 无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。
 
@@ -292,9 +290,12 @@ PaddleX 目前提供如下依赖组：
 
 每一条产线属于且仅属于一个依赖组；在各产线的使用文档中可以了解产线属于哪一依赖组。对于单功能模块，安装任意包含该模块的产线对应的依赖组后即可使用相关的基础功能。
 
-## 4 PaddleX 对飞桨框架的依赖
+## 4 安装飞桨框架
 
-PaddleX 的绝大部分功能依赖飞桨框架，因此，在大多数情况下，您需要在使用 PaddleX 前参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架。不过，对于以下几种情形，不必安装飞桨框架也可以使用相应的功能：
+当您使用飞桨框架进行推理时，需要参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架。
 
-- 使用 PaddleX `genai-vllm-server` 或 `genai-sglang-server` 插件提供的能力部署模型推理服务。
-- 使用 PaddleX `genai-client` 插件调用生成式 AI 推理服务。
+## 5 安装非 Paddle 引擎的额外依赖
+
+当您使用非 Paddle 引擎推理时，需要安装对应依赖：
+
+- `engine="transformers"`：安装 `transformers` 库（例如 `pip install transformers`），并参考 [Transformers 官方文档](https://huggingface.co/docs/transformers/installation) 配置运行环境。

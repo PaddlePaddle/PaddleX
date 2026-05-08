@@ -15,18 +15,15 @@
 
 from typing import Any, Dict, List
 
-from ....modules.open_vocabulary_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..predictors import RunnerPredictor
 from .processors import SAMProcessor
 from .results import SAMSegResult
 
 
-class OVSegPredictor(BasePredictor):
-
-    entities = MODELS
+class OVSegRunnerPredictor(RunnerPredictor):
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -38,7 +35,7 @@ class OVSegPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.pre_ops, self.infer, self.processor = self._build()
+        self.pre_ops, self.processor = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -58,9 +55,6 @@ class OVSegPredictor(BasePredictor):
             if op:
                 pre_ops.append(op)
 
-        # build infer
-        infer = self.create_static_infer()
-
         # build model specific processor, it's required for a OV model.
         processor_cfg = self.config["Processor"]
         tf_key = processor_cfg["type"]
@@ -69,7 +63,7 @@ class OVSegPredictor(BasePredictor):
         args = processor_cfg
         processor = func(self, **args) if args else func(self)
 
-        return pre_ops, infer, processor
+        return pre_ops, processor
 
     def process(self, batch_data: List[Any], prompts: Dict[str, Any]):
         """
@@ -94,7 +88,7 @@ class OVSegPredictor(BasePredictor):
         batch_inputs = self.processor.preprocess(datas, **prompts)
 
         # do infer
-        batch_preds = self.infer(batch_inputs)
+        batch_preds = self.runner(batch_inputs)
 
         # postprocess
         masks = self.processor.postprocess(batch_preds)

@@ -16,20 +16,17 @@ from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 
-from ....modules.anomaly_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
 from ..common import Normalize, Resize, ToBatch, ToCHWImage
+from ..predictors import RunnerPredictor
 from .processors import MapToMask
 from .result import UadResult
 
 
-class UadPredictor(BasePredictor):
-    """UadPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class UadRunnerPredictor(RunnerPredictor):
+    """UadRunnerPredictor that inherits from RunnerPredictor."""
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -42,7 +39,7 @@ class UadPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -61,10 +58,10 @@ class UadPredictor(BasePredictor):
         return UadResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="RGB")}
         preprocessors["ToCHW"] = ToCHWImage()
@@ -76,9 +73,8 @@ class UadPredictor(BasePredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
         postprocessors = {"Map_to_mask": MapToMask()}
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
         """
@@ -95,7 +91,7 @@ class UadPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_preds = self.postprocessors["Map_to_mask"](preds=batch_preds)
         if len(batch_data) > 1:
             batch_preds = np.split(batch_preds[0], len(batch_data), axis=0)

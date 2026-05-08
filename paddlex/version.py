@@ -16,7 +16,16 @@
 import os
 import sys
 
+from .utils.import_guard import import_paddle
+
 __all__ = ["get_pdx_version", "get_version_dict", "show_versions"]
+
+_SETUPTOOLS_SCM_CONFIG = {
+    "version_scheme": "release-branch-semver",
+    "local_scheme": "node-and-date",
+    "tag_regex": r"^v(?P<version>\d+\.\d+\.\d+(?:\.dev\d+)?)$",
+    "fallback_version": "0.0.0",
+}
 
 
 def _get_package_dir():
@@ -49,7 +58,7 @@ def _version_from_setuptools_scm():
     except ImportError:
         return None
     try:
-        return get_version(root=_get_repo_root())
+        return get_version(root=_get_repo_root(), **_SETUPTOOLS_SCM_CONFIG)
     except (LookupError, ValueError):
         return None
 
@@ -74,7 +83,7 @@ def get_pdx_version():
 
 def get_version_dict():
     """get_version_dict"""
-    import paddle
+    paddle = import_paddle()
 
     from . import repo_manager
 

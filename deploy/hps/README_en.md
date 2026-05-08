@@ -175,7 +175,7 @@ The parameters for the packaging script are described as follows:
 </tbody>
 </table>
 
-After run successfully, the packaged  will be stored in the `output` directory.
+After run successfully, the packaged artifacts will be stored in the `output` directory.
 
 ## 3. FAQ
 
@@ -192,3 +192,5 @@ When running the image build scripts, you can use the `-p` parameter to specify 
 ```bash
 ./scripts/prepare_rc_image.sh -p  https://pypi.tuna.tsinghua.edu.cn/simple
 ```
+
+Please ensure that the requirement-collection image and the deployment image use the same pip mirror source.

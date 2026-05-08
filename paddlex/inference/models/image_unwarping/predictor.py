@@ -15,21 +15,20 @@
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
+from PIL import Image
 
-from ....modules.image_unwarping.model_list import MODELS
-from ....utils.device import TemporaryDeviceChanger
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
 from ..common import Normalize, ToBatch, ToCHWImage
+from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 
+WARP_TRANSFORMERS_MODELS = ["UVDoc"]
 
-class WarpPredictor(BasePredictor):
-    """WarpPredictor that inherits from BasePredictor."""
 
-    entities = MODELS
+class WarpRunnerPredictor(RunnerPredictor):
+    """WarpRunnerPredictor that inherits from RunnerPredictor."""
 
     def __init__(self, *args: List, **kwargs: Dict) -> None:
         """Initializes WarpPredictor.
@@ -39,8 +38,7 @@ class WarpPredictor(BasePredictor):
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        self.device = kwargs.get("device", None)
-        self.preprocessors, self.infer, self.postprocessors = self._build()
+        self.preprocessors, self.postprocessors = self._build()
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         """Builds and returns an ImageBatchSampler instance.
@@ -59,28 +57,17 @@ class WarpPredictor(BasePredictor):
         return DocTrResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors, inference engine, and postprocessors based on the configuration.
+        """Build the preprocessors and postprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
+            tuple: A tuple containing the preprocessors and postprocessors.
         """
         preprocessors = {"Read": ReadImage(format="BGR")}
         preprocessors["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
-        if self._use_static_model:
-            infer = self.create_static_infer()
-        else:
-            from .modeling import UVDocNet
-
-            with TemporaryDeviceChanger(self.device):
-                infer = UVDocNet.from_pretrained(
-                    self.model_dir, use_safetensors=True, convert_from_hf=True
-                )
-            infer.eval()
-
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
-        return preprocessors, infer, postprocessors
+        return preprocessors, postprocessors
 
     def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
         """
@@ -96,11 +83,7 @@ class WarpPredictor(BasePredictor):
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_raw_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
-        if self._use_static_model:
-            batch_preds = self.infer(x=x)
-        else:
-            with TemporaryDeviceChanger(self.device):
-                batch_preds = self.infer(x=x)
+        batch_preds = self.runner(x=x)
         batch_warp_preds = self.postprocessors["DocTrPostProcess"](batch_preds)
 
         return {
@@ -109,3 +92,53 @@ class WarpPredictor(BasePredictor):
             "input_img": batch_raw_imgs,
             "doctr_img": batch_warp_preds,
         }
+
+
+class WarpTransformersPredictor(TransformersPredictor):
+
+    def __init__(self, *args: List, **kwargs: Dict) -> None:
+        super().__init__(*args, **kwargs)
+        self.read_op = ReadImage(format="BGR")
+        self.image_processor, self.infer = self._build()
+
+    def _build_batch_sampler(self) -> ImageBatchSampler:
+        return ImageBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return DocTrResult
+
+    def _build(self) -> Tuple:
+        from transformers import AutoImageProcessor, AutoModel
+
+        image_processor = self._load_pretrained_processor(AutoImageProcessor)
+        model = self._load_pretrained_model(AutoModel)
+        return image_processor, model
+
+    def process(self, batch_data: List[Union[str, np.ndarray]]) -> Dict[str, Any]:
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        images = [Image.fromarray(img[..., ::-1]) for img in batch_raw_imgs]
+
+        model_inputs = self.preprocess_images(images=images)
+        original_images = model_inputs.pop("original_images")
+        outputs = self.forward(model_inputs)
+        batch_warp_preds = self.postprocess(outputs, original_images=original_images)
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "doctr_img": batch_warp_preds,
+        }
+
+    def postprocess(self, outputs, *, original_images, **kwargs):
+        results = self.image_processor.post_process_document_rectification(
+            outputs.last_hidden_state, original_images=original_images
+        )
+
+        batch_warp_preds = []
+        for res in results:
+            warped = res["images"]
+            warped = warped.detach().cpu().numpy()
+            batch_warp_preds.append(warped)
+
+        return batch_warp_preds

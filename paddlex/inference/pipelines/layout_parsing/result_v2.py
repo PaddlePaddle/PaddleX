@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import copy
-import re
 from copy import deepcopy
-from functools import partial
-from typing import Dict, List
+from typing import List
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -24,7 +24,6 @@ from PIL import Image, ImageDraw, ImageFont
 from ....utils.fonts import PINGFANG_FONT
 from ...common.result import (
     BaseCVResult,
-    BaseResult,
     HtmlMixin,
     JsonMixin,
     LatexMixin,
@@ -32,147 +31,18 @@ from ...common.result import (
     WordMixin,
     XlsxMixin,
 )
+from ...common.result.converter import MarkdownConverter
+from ...common.result.converter.markdown_format_funcs import (
+    build_handle_funcs_dict,
+    format_centered_by_html,
+    format_chart2markdown_table,
+    format_image_plain,
+    format_image_scaled_by_html,
+    format_text_plain,
+    simplify_table,
+)
 from .layout_objects import LayoutBlock
 from .utils import get_seg_flag
-
-
-def compile_title_pattern():
-    # Precompiled regex pattern for matching numbering at the beginning of the title
-    numbering_pattern = (
-        r"(?:" + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|" + r"[\(\（](?:[1-9][0-9]*|["
-        r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
-        r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
-        r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)(?:\.|\s)" + r")"
-    )
-    return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
-
-
-TITLE_RE_PATTERN = compile_title_pattern()
-
-
-def format_title_func(block):
-    """
-    Normalize chapter title.
-    Add the '#' to indicate the level of the title.
-    If numbering exists, ensure there's exactly one space between it and the title content.
-    If numbering does not exist, return the original title unchanged.
-
-    :param title: Original chapter title string.
-    :return: Normalized chapter title string.
-    """
-    title = block.content
-    match = TITLE_RE_PATTERN.match(title)
-    if match:
-        numbering = match.group(1).strip()
-        title_content = match.group(3).lstrip()
-        # Return numbering and title content separated by one space
-        title = numbering + " " + title_content
-
-    title = title.rstrip(".")
-    level = (
-        title.count(
-            ".",
-        )
-        + 1
-        if "." in title
-        else 1
-    )
-    return f"#{'#' * level} {title}".replace("-\n", "").replace(
-        "\n",
-        " ",
-    )
-
-
-def format_para_title_func(block):
-    """
-    Normalize chapter title.
-    Add the '#' to indicate the level of the title.
-    If numbering exists, ensure there's exactly one space between it and the title content.
-    If numbering does not exist, return the original title unchanged.
-
-    :param title: Original chapter title string.
-    :return: Normalized chapter title string.
-    """
-    if not hasattr(block, "title_level"):
-        return format_title_func(block)
-    level = block.title_level
-    title = block.content
-    return f"#{'#' * level} {title}".replace("-\n", "").replace(
-        "\n",
-        " ",
-    )
-
-
-def format_centered_by_html(string, remove_symbol=True):
-    if remove_symbol:
-        string = string.replace("-\n", "").replace("\n", " ")
-    return f'<div style="text-align: center;">{string}</div>' + "\n"
-
-
-def format_text_plain_func(block):
-    return block.content
-
-
-def format_image_scaled_by_html_func(
-    block, original_image_width, show_ocr_content=False
-):
-    img_tags = []
-    if block.image is None:
-        return ""
-    image_path = block.image["path"]
-    image_width = block.bbox[2] - block.bbox[0]
-    scale = int(image_width / original_image_width * 100)
-    img_tags.append(
-        '<img src="{}" alt="Image" width="{}%" />'.format(
-            image_path.replace("-\n", "").replace("\n", " "), scale
-        ),
-    )
-    image_info = "\n".join(img_tags)
-    if show_ocr_content:
-        ocr_content = block.content
-        image_info += "\n\n" + ocr_content + "\n\n"
-    return image_info
-
-
-def format_image_plain_func(block, show_ocr_content=False):
-    img_tags = []
-    if block.image:
-        image_path = block.image["path"]
-        img_tags.append(
-            "![]({})".format(image_path.replace("-\n", "").replace("\n", " "))
-        )
-        image_info = "\n".join(img_tags)
-        if show_ocr_content:
-            ocr_content = block.content
-            image_info += "\n\n" + ocr_content + "\n\n"
-        return image_info
-    return ""
-
-
-def format_chart2table_func(block):
-    lines_list = block.content.split("\n")
-    column_num = len(lines_list[0].split("|"))
-    lines_list.insert(1, "|".join(["---"] * column_num))
-    lines_list = [f"|{line}|" for line in lines_list]
-    return "\n".join(lines_list)
-
-
-def simplify_table_func(table_code):
-    return "\n" + table_code.replace("<html>", "").replace("</html>", "").replace(
-        "<body>", ""
-    ).replace("</body>", "")
-
-
-def format_first_line_func(block, templates, format_func, spliter):
-    lines = block.content.split(spliter)
-    for idx in range(len(lines)):
-        line = lines[idx]
-        if line.strip() == "":
-            continue
-        if line.lower() in templates:
-            lines[idx] = format_func(line)
-        break
-    return spliter.join(lines)
 
 
 class LayoutParsingResultV2(
@@ -190,7 +60,7 @@ class LayoutParsingResultV2(
         WordMixin.__init__(self)
         LatexMixin.__init__(self)
 
-    def _to_img(self) -> Dict[str, np.ndarray]:
+    def _to_img(self) -> dict[str, np.ndarray]:
         from .utils import get_show_color
 
         res_img_dict = {}
@@ -254,7 +124,7 @@ class LayoutParsingResultV2(
 
         return res_img_dict
 
-    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
+    def _to_str(self, *args, **kwargs) -> dict[str, str]:
         """Converts the instance's attributes to a dictionary and then to a string.
 
         Args:
@@ -309,7 +179,64 @@ class LayoutParsingResultV2(
 
         return JsonMixin._to_str(data, *args, **kwargs)
 
-    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
+    def _build_handle_funcs_dict(self, pretty=True):
+        """Build label-to-handler mapping for content formatting."""
+        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+        if pretty:
+            format_text_func = lambda block: format_centered_by_html(
+                format_text_plain(block)
+            )
+            format_image_func = lambda block: format_centered_by_html(
+                format_image_scaled_by_html(
+                    block,
+                    original_image_width=original_image_width,
+                )
+            )
+        else:
+            format_text_func = lambda block: block.content
+            format_image_func = format_image_plain
+
+        if self["model_settings"].get("use_chart_recognition", False):
+            format_chart_func = format_chart2markdown_table
+        else:
+            format_chart_func = format_image_func
+
+        if self["model_settings"].get("use_seal_recognition", False):
+            format_seal_func = lambda block: "\n".join(
+                [format_image_func(block), format_text_func(block)]
+            )
+        else:
+            format_seal_func = format_image_func
+
+        if self["model_settings"].get("use_table_recognition", False):
+            if pretty:
+                format_table_func = lambda block: "\n" + format_text_func(
+                    block
+                ).replace("<table>", '<table border="1">')
+            else:
+                format_table_func = lambda block: simplify_table("\n" + block.content)
+        else:
+            format_table_func = format_image_func
+
+        if self["model_settings"].get("use_formula_recognition", False):
+            format_formula_func = lambda block: f"$${block.content}$$"
+        else:
+            format_formula_func = format_image_func
+
+        handle_funcs_dict = build_handle_funcs_dict(
+            text_func=format_text_func,
+            image_func=format_image_func,
+            chart_func=format_chart_func,
+            table_func=format_table_func,
+            formula_func=format_formula_func,
+            seal_func=format_seal_func,
+            use_plain_header_footer_image=True,
+        )
+        for label in self["model_settings"].get("markdown_ignore_labels", []):
+            handle_funcs_dict.pop(label, None)
+        return handle_funcs_dict
+
+    def _to_json(self, *args, **kwargs) -> dict[str, str]:
         """
         Converts the object's data to a JSON dictionary.
 
@@ -321,90 +248,7 @@ class LayoutParsingResultV2(
             Dict[str, str]: A dictionary containing the object's data in JSON format.
         """
         if self["model_settings"].get("format_block_content", False):
-            original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                )
-            )
-
-            if self["model_settings"].get("use_chart_recognition", False):
-                format_chart_func = format_chart2table_func
-            else:
-                format_chart_func = format_image_func
-
-            if self["model_settings"].get("use_seal_recognition", False):
-                format_seal_func = lambda block: "\n".join(
-                    [format_image_func(block), format_text_func(block)]
-                )
-            else:
-                format_seal_func = format_image_func
-
-            if self["model_settings"].get("use_table_recognition", False):
-                format_table_func = lambda block: "\n" + format_text_func(
-                    block
-                ).replace("<table>", '<table border="1">')
-            else:
-                format_table_func = format_image_func
-
-            if self["model_settings"].get("use_formula_recognition", False):
-                format_formula_func = lambda block: f"$${block.content}$$"
-            else:
-                format_formula_func = format_image_func
-
-            handle_funcs_dict = {
-                "paragraph_title": format_para_title_func,
-                "abstract_title": format_title_func,
-                "reference_title": format_title_func,
-                "content_title": format_title_func,
-                "doc_title": lambda block: f"# {block.content}".replace(
-                    "-\n",
-                    "",
-                ).replace("\n", " "),
-                "table_title": format_text_func,
-                "figure_title": format_text_func,
-                "chart_title": format_text_func,
-                "vision_footnote": lambda block: block.content.replace(
-                    "\n\n", "\n"
-                ).replace("\n", "\n\n"),
-                "text": lambda block: block.content.replace("\n\n", "\n").replace(
-                    "\n", "\n\n"
-                ),
-                "abstract": partial(
-                    format_first_line_func,
-                    templates=["摘要", "abstract"],
-                    format_func=lambda l: f"## {l}\n",
-                    spliter=" ",
-                ),
-                "content": lambda block: block.content.replace("-\n", "  \n").replace(
-                    "\n", "  \n"
-                ),
-                "image": format_image_func,
-                "chart": format_chart_func,
-                "formula": format_formula_func,
-                "table": format_table_func,
-                "reference": partial(
-                    format_first_line_func,
-                    templates=["参考文献", "references"],
-                    format_func=lambda l: f"## {l}",
-                    spliter="\n",
-                ),
-                "algorithm": lambda block: block.content.strip("\n"),
-                "seal": format_seal_func,
-                "number": format_text_plain_func,
-                "footnote": format_text_plain_func,
-                "header": format_text_plain_func,
-                "header_image": format_image_plain_func,
-                "footer": format_text_plain_func,
-                "footer_image": format_image_plain_func,
-                "aside_text": format_text_plain_func,
-            }
-            for label in self["model_settings"].get("markdown_ignore_labels", []):
-                handle_funcs_dict.pop(label, None)
+            handle_funcs_dict = self._build_handle_funcs_dict(pretty=True)
 
         data = {}
         data["input_path"] = self["input_path"]
@@ -458,7 +302,7 @@ class LayoutParsingResultV2(
                 data["formula_res_list"].append(formula_res.json["res"])
         return JsonMixin._to_json(data, *args, **kwargs)
 
-    def _to_html(self) -> Dict[str, str]:
+    def _to_html(self) -> dict[str, str]:
         """Converts the prediction to its corresponding HTML representation.
 
         Returns:
@@ -474,7 +318,7 @@ class LayoutParsingResultV2(
                 res_html_dict[key] = table_res.html["pred"]
         return res_html_dict
 
-    def _to_xlsx(self) -> Dict[str, str]:
+    def _to_xlsx(self) -> dict[str, str]:
         """Converts the prediction HTML to an XLSX file path.
 
         Returns:
@@ -500,160 +344,22 @@ class LayoutParsingResultV2(
         Returns:
             Dict
         """
-        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
+        handle_funcs_dict = self._build_handle_funcs_dict(pretty=pretty)
 
-        if pretty:
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                )
-            )
-        else:
-            format_text_func = lambda block: block.content
-            format_image_func = format_image_plain_func
-
-        if self["model_settings"].get("use_chart_recognition", False):
-            format_chart_func = format_chart2table_func
-        else:
-            format_chart_func = format_image_func
-
-        if self["model_settings"].get("use_seal_recognition", False):
-            format_seal_func = lambda block: "\n".join(
-                [format_image_func(block), format_text_func(block)]
-            )
-        else:
-            format_seal_func = format_image_func
-
-        if self["model_settings"].get("use_table_recognition", False):
-            if pretty:
-                format_table_func = lambda block: "\n" + format_text_func(
-                    block
-                ).replace("<table>", '<table border="1">')
-            else:
-                format_table_func = lambda block: simplify_table_func(
-                    "\n" + block.content
-                )
-        else:
-            format_table_func = format_image_func
-
-        if self["model_settings"].get("use_formula_recognition", False):
-            format_formula_func = lambda block: f"$${block.content}$$"
-        else:
-            format_formula_func = format_image_func
-
-        handle_funcs_dict = {
-            "paragraph_title": format_title_func,
-            "abstract_title": format_title_func,
-            "reference_title": format_title_func,
-            "content_title": format_title_func,
-            "doc_title": lambda block: f"# {block.content}".replace(
-                "-\n",
-                "",
-            ).replace("\n", " "),
-            "table_title": format_text_func,
-            "figure_title": format_text_func,
-            "chart_title": format_text_func,
-            "vision_footnote": lambda block: block.content.replace(
-                "\n\n", "\n"
-            ).replace("\n", "\n\n"),
-            "text": lambda block: block.content.replace("\n\n", "\n").replace(
-                "\n", "\n\n"
-            ),
-            "abstract": partial(
-                format_first_line_func,
-                templates=["摘要", "abstract"],
-                format_func=lambda l: f"## {l}\n",
-                spliter=" ",
-            ),
-            "content": lambda block: block.content.replace("-\n", "  \n").replace(
-                "\n", "  \n"
-            ),
-            "image": format_image_func,
-            "chart": format_chart_func,
-            "formula": format_formula_func,
-            "table": format_table_func,
-            "reference": partial(
-                format_first_line_func,
-                templates=["参考文献", "references"],
-                format_func=lambda l: f"## {l}",
-                spliter="\n",
-            ),
-            "algorithm": lambda block: block.content.strip("\n"),
-            "seal": format_seal_func,
-            "number": format_text_plain_func,
-            "footnote": format_text_plain_func,
-            "header": format_text_plain_func,
-            "header_image": format_image_plain_func,
-            "footer": format_text_plain_func,
-            "footer_image": format_image_plain_func,
-            "aside_text": format_text_plain_func,
-        }
-        for label in self["model_settings"].get("markdown_ignore_labels", []):
-            handle_funcs_dict.pop(label, None)
-
-        markdown_content = ""
-        last_label = None
-        seg_start_flag = True
-        seg_end_flag = True
-        prev_block = None
-        page_first_element_seg_start_flag = None
-        page_last_element_seg_end_flag = None
-        markdown_info = {}
-        markdown_info["markdown_images"] = {}
-        for block in self["parsing_res_list"]:
-            seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
-
-            label = block.label
-            if block.image is not None:
-                markdown_info["markdown_images"][block.image["path"]] = block.image[
-                    "img"
-                ]
-            page_first_element_seg_start_flag = (
-                seg_start_flag
-                if (page_first_element_seg_start_flag is None)
-                else page_first_element_seg_start_flag
-            )
-
-            handle_func = handle_funcs_dict.get(label, None)
-            if handle_func:
-                prev_block = block
-                if label == last_label == "text" and seg_start_flag == False:
-                    markdown_content += handle_func(block)
-                else:
-                    markdown_content += (
-                        "\n\n" + handle_func(block)
-                        if markdown_content
-                        else handle_func(block)
-                    )
-                last_label = label
-        page_first_element_seg_start_flag = (
-            True
-            if page_first_element_seg_start_flag is None
-            else page_first_element_seg_start_flag
+        result = MarkdownConverter.convert(
+            self["parsing_res_list"],
+            handle_funcs_dict=handle_funcs_dict,
+            show_formula_number=show_formula_number,
+            use_seg_flag=True,
+            get_seg_flag_func=get_seg_flag,
+            imgs_in_doc=self["imgs_in_doc"],
         )
-        page_last_element_seg_end_flag = seg_end_flag
-
-        markdown_info["page_index"] = self["page_index"]
-        markdown_info["input_path"] = self["input_path"]
-        markdown_info["markdown_texts"] = markdown_content
-        markdown_info["page_continuation_flags"] = (
-            page_first_element_seg_start_flag,
-            page_last_element_seg_end_flag,
-        )
-        for img in self["imgs_in_doc"]:
-            markdown_info["markdown_images"][img["path"]] = img["img"]
-
-        return markdown_info
+        result["page_index"] = self["page_index"]
+        result["input_path"] = self["input_path"]
+        return result
 
     def _to_word(self) -> dict:
-        from docx.enum.text import WD_ALIGN_PARAGRAPH
-
-        """
-        Convert the object's parsing result into a Word-compatible dict.
+        """Convert the object's parsing result into a Word-compatible dict.
 
         Returns:
             dict: {
@@ -663,91 +369,18 @@ class LayoutParsingResultV2(
                 "images": List[Dict]           # List of {"path": str, "img": PIL.Image}
             }
         """
+        from ...common.result.converter import build_word_blocks
 
-        word_blocks = []
-        image = []
-
-        STYLE_MAP = {
-            "doc_title": {
-                "level": 0,
-                "size": 20,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "header": {
-                "size": 16,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "abstract_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.CENTER,
-            },
-            "content_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "reference_title": {
-                "level": 1,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "paragraph_title": {
-                "level": 2,
-                "size": 14,
-                "bold": True,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "abstract": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-            "text": {
-                "size": 12,
-                "align": WD_ALIGN_PARAGRAPH.JUSTIFY,
-                "indent": True,
-            },
-            "figure_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "table_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "chart_title": {"size": 10, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "reference": {"size": 12, "align": WD_ALIGN_PARAGRAPH.JUSTIFY},
-            "algorithm": {
-                "font": "Courier New",
-                "size": 11,
-                "align": WD_ALIGN_PARAGRAPH.LEFT,
-            },
-            "formula": {"size": 12, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "vision_footnote": {"size": 9, "align": WD_ALIGN_PARAGRAPH.LEFT},
-            "number": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-            "footer": {"size": 9, "align": WD_ALIGN_PARAGRAPH.CENTER},
-        }
-
-        for block in self["parsing_res_list"]:
-
-            label = block.label
-            content = getattr(block, "content", "")
-            if label in ["image", "chart", "seal"]:
-                content = block.image["path"]
-            config = STYLE_MAP.get(
-                label,
-                {"size": 12, "align": WD_ALIGN_PARAGRAPH.LEFT, "indent": True},
-            )
-            block_dict = {
-                "type": label,
-                "content": deepcopy(content),
-                "config": config,
-            }
-            word_blocks.append(block_dict)
-            if block.image is not None:
-                image.append({"path": block.image["path"], "img": block.image["img"]})
+        word_blocks, images = build_word_blocks(
+            self["parsing_res_list"],
+            imgs_in_doc=self.get("imgs_in_doc", []),
+        )
 
         return {
             "word_blocks": word_blocks,
             "original_image_width": self["doc_preprocessor_res"]["output_img"].shape[1],
             "input_path": self["input_path"],
-            "images": image,
+            "images": images,
         }
 
     def _to_latex(self) -> dict:
@@ -768,8 +401,19 @@ class LayoutParsingResultV2(
 
             label = block.label
             content = getattr(block, "content", "")
-            if label in ["image", "chart", "seal"]:
+            if label in ["image", "seal"]:
+                if block.image is None:
+                    continue
                 content = block.image["path"]
+            elif label == "chart":
+                if block.image is not None:
+                    content = block.image["path"]
+                elif content:
+                    # VLM chart recognition: pipe-delimited table text → reuse table rendering
+                    content = content.replace("|", "\t")
+                    label = "table"
+                else:
+                    continue
             block_dict = {
                 "type": label,
                 "content": deepcopy(content),
@@ -783,159 +427,3 @@ class LayoutParsingResultV2(
             "images": image,
             "input_path": self["input_path"],
         }
-
-
-class ProcessedLayoutParsingResult(BaseResult, MarkdownMixin):
-
-    def __init__(self, data) -> None:
-        """Initializes a new instance of the class with the specified data."""
-        super().__init__(data)
-        MarkdownMixin.__init__(self)
-
-    def _to_markdown(self, pretty=True, show_formula_number=False) -> dict:
-        """
-        Save the parsing result to a Markdown file.
-
-        Args:
-            pretty (Optional[bool]): whether to pretty markdown by HTML, default by True.
-
-        Returns:
-            Dict
-        """
-
-        self["model_settings"] = self["model_settings"][0]
-        self["input_path"] = self["input_path"][0]
-        self["doc_preprocessor_res"] = self["doc_preprocessor_res"][0]
-        self["page_index"] = None
-        self["width"] = None
-        self["height"] = None
-        self["page_count"] = None
-
-        original_image_width = self["doc_preprocessor_res"]["output_img"].shape[1]
-
-        if pretty:
-            format_text_func = lambda block: format_centered_by_html(
-                format_text_plain_func(block)
-            )
-            format_image_func = lambda block: format_centered_by_html(
-                format_image_scaled_by_html_func(
-                    block,
-                    original_image_width=original_image_width,
-                )
-            )
-        else:
-            format_text_func = lambda block: block.content
-            format_image_func = format_image_plain_func
-
-        if self["model_settings"].get("use_chart_recognition", False):
-            format_chart_func = format_chart2table_func
-        else:
-            format_chart_func = format_image_func
-
-        if self["model_settings"].get("use_seal_recognition", False):
-            format_seal_func = lambda block: "\n".join(
-                [format_image_func(block), format_text_func(block)]
-            )
-        else:
-            format_seal_func = format_image_func
-
-        if self["model_settings"].get("use_table_recognition", False):
-            if pretty:
-                format_table_func = lambda block: "\n" + format_text_func(
-                    block
-                ).replace("<table>", '<table border="1">')
-            else:
-                format_table_func = lambda block: simplify_table_func(
-                    "\n" + block.content
-                )
-        else:
-            format_table_func = format_image_func
-
-        if self["model_settings"].get("use_formula_recognition", False):
-            format_formula_func = lambda block: f"$${block.content}$$"
-        else:
-            format_formula_func = format_image_func
-
-        handle_funcs_dict = {
-            "paragraph_title": format_para_title_func,
-            "abstract_title": format_title_func,
-            "reference_title": format_title_func,
-            "content_title": format_title_func,
-            "doc_title": lambda block: f"# {block.content}".replace(
-                "-\n",
-                "",
-            ).replace("\n", " "),
-            "table_title": format_text_func,
-            "figure_title": format_text_func,
-            "chart_title": format_text_func,
-            "vision_footnote": lambda block: block.content.replace(
-                "\n\n", "\n"
-            ).replace("\n", "\n\n"),
-            "text": lambda block: block.content.replace("\n\n", "\n").replace(
-                "\n", "\n\n"
-            ),
-            "abstract": partial(
-                format_first_line_func,
-                templates=["摘要", "abstract"],
-                format_func=lambda l: f"## {l}\n",
-                spliter=" ",
-            ),
-            "content": lambda block: block.content.replace("-\n", "  \n").replace(
-                "\n", "  \n"
-            ),
-            "image": format_image_func,
-            "chart": format_chart_func,
-            "formula": format_formula_func,
-            "table": format_table_func,
-            "reference": partial(
-                format_first_line_func,
-                templates=["参考文献", "references"],
-                format_func=lambda l: f"## {l}",
-                spliter="\n",
-            ),
-            "algorithm": lambda block: block.content.strip("\n"),
-            "seal": format_seal_func,
-        }
-        for label in self["model_settings"].get("markdown_ignore_labels", []):
-            handle_funcs_dict.pop(label, None)
-
-        markdown_content = ""
-        markdown_info = {}
-        markdown_info["markdown_images"] = {}
-        pages_list = self["parsing_res_list"]
-        global_block_id = 0
-
-        for page_blocks in pages_list:
-
-            if not page_blocks:
-                continue
-            for idx, block in enumerate(page_blocks):
-
-                label = block.label
-
-                if block.image is not None:
-                    markdown_info["markdown_images"][block.image["path"]] = block.image[
-                        "img"
-                    ]
-
-                handle_func = handle_funcs_dict.get(label, None)
-
-                if handle_func:
-                    current_text = handle_func(block)
-
-                    if markdown_content:
-                        markdown_content += "\n\n" + current_text
-                    else:
-                        markdown_content += current_text
-
-                if block.group_id is None:
-                    block.group_id = global_block_id
-                global_block_id += 1
-
-        markdown_info["page_index"] = self["page_index"]
-        markdown_info["input_path"] = self["input_path"]
-        markdown_info["markdown_texts"] = markdown_content
-        for img in self["imgs_in_doc"]:
-            markdown_info["markdown_images"][img["path"]] = img["img"]
-
-        return markdown_info

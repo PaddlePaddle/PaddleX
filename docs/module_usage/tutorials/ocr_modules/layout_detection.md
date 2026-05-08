@@ -347,7 +347,6 @@ for res in output:
 可视化图片如下：
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_det/layout_res_plus.jpg"/>
 
-
 相关方法、参数等说明如下：
 
 * `create_model`实例化目标检测模型（此处以`PP-DocLayout_plus-L`为例），具体说明如下：
@@ -381,6 +380,20 @@ for res in output:
 <td><code>str</code></td>
 <td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str</code> | <code>None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict</code> | <code>None</code></td>
+<td>不同引擎支持不同字段，例如 <code>device_type</code>、<code>device_id</code>、<code>dtype</code>、<code>processor_kwargs</code> 等。</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>img_size</code></td>
@@ -452,14 +465,35 @@ for res in output:
 <td><code>use_hpip</code></td>
 <td>是否启用高性能推理插件</td>
 <td><code>bool</code></td>
-<td>无</td>
+<td>仅在 <code>engine=None</code> 时生效</td>
 <td><code>False</code></td>
 </tr>
 <tr>
 <td><code>hpi_config</code></td>
 <td>高性能推理配置</td>
 <td><code>dict</code> | <code>None</code></td>
-<td>无</td>
+<td>在 <code>engine="hpi"</code> 且未显式传入 <code>engine_config</code> 时生效</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str | None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict | None</code></td>
+<td>不同引擎支持不同字段，请参考<a href="../../instructions/model_python_API.md#4-推理引擎与配置">推理引擎与配置</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>用于改变运行模式等配置项</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>关于推理配置的详细说明，请参考<a href="../../instructions/model_python_API.md#5-兼容配置paddlepredictoroption">兼容配置（PaddlePredictorOption）</a>。</td>
 <td><code>None</code></td>
 </tr>
 </table>
@@ -634,9 +668,7 @@ for res in output:
 </tr>
 </table>
 
-
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
-
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的版面区域定位模型。在使用PaddleX开发版面区域定位模型之前，请务必安装PaddleX的Detection相关的模型训练能力，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
@@ -808,9 +840,10 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
+* 如模型支持多引擎推理，也可额外指定 `-o Predict.engine=...` 与 `-o Predict.engine_config='{}'` 切换推理后端和配置；
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-* 也可以用PaddleX 的 whl 包进行推理，方便地将模型集成到您自己的项目中。集成方式只需要将第三步的快速集成方式中的create_model(model_name=model_name, , kernel_option=kernel_option)增加参数model_dir="/output/best_model/inference"。
+* 也可以用 PaddleX 的 whl 包进行推理，方便地将模型集成到您自己的项目中。集成方式是在第三步快速集成示例的基础上，增加 `model_dir="/output/best_model/inference"`，如有需要还可继续追加 `engine=...` 与 `engine_config=...`。
 #### 4.4.2 模型集成
 模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。
 
@@ -821,3 +854,47 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
 您产出的权重可以直接集成到版面区域检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
 
 您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
+
+
+
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-DocLayoutV2`、`PP-DocLayout_plus-L`、`PP-DocBlockLayout`。
+
+* 通过命令行的方式进行权重转换，以 `PP-DocLayoutV2` 模型为例：
+
+```bash
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayoutV2.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* 参数说明：
+    * `Global.mode`：指定模式为权重转换：`pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
+    * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
+
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
+
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+
+#### 4.4.3 权重转换
+
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-DocLayoutV2`、`PP-DocLayout_plus-L`、`PP-DocBlockLayout`。
+
+* 通过命令行的方式进行权重转换，以 `PP-DocLayoutV2` 模型为例：
+
+```bash
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayoutV2.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* 参数说明：
+    * `Global.mode`：指定模式为权重转换：`pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
+    * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
+
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
+
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

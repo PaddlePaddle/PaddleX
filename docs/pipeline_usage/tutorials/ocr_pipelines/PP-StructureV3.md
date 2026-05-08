@@ -1359,6 +1359,7 @@ for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_json(save_path="output") ## 保存当前图像的结构化json结果
     res.save_to_markdown(save_path="output") ## 保存当前图像的markdown格式的结果
+    res.save_to_word(save_path="output") ## 保存当前图像的Word格式的结果
 ```
 
 如果是 PDF 文件，会将 PDF 的每一页单独处理，每一页的 Markdown 文件也会对应单独的结果。如果希望整个 PDF 文件转换为 Markdown 文件，建议使用以下的方式运行：
@@ -1453,6 +1454,27 @@ for item in markdown_images:
 <td>高性能推理配置</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str | None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict | None</code></td>
+<td>不同引擎支持不同字段，请参考<a href="../../instructions/pipeline_python_API.md#4-推理引擎与配置">推理引擎与配置</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>用于改变运行模式等配置项</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>关于推理配置的详细说明，请参考<a href="../../instructions/pipeline_python_API.md#5-兼容配置paddlepredictoroption">兼容配置（PaddlePredictorOption）</a>。</td>
 <td><code>None</code></td>
 </tr>
 </tbody>
@@ -1595,7 +1617,7 @@ for item in markdown_images:
 </tr>
 <tr>
 <td><code>format_block_content</code></td>
-<td>是否将<code>block_content</code>中的内容格式化为Markdown格式。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
+<td>是否将<code>block_content</code>中的内容格式化为Markdown格式。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。当设置为<code>True</code>时，图片类型的 block 的 <code>block_content</code> 将包含图片路径信息（如 <code>&lt;img src="..." /&gt;</code>）；当设置为<code>False</code>（默认）时，图片类型的 block 的 <code>block_content</code> 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为<code>True</code>。</td>
 <td><code>bool|None</code></td>
 <td></td>
 </tr>
@@ -1947,6 +1969,14 @@ for item in markdown_images:
 <td>无</td>
 </tr>
 <tr>
+<td><code>save_to_word()</code></td>
+<td>将版面解析结果保存为Word (.docx) 格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
+<tr>
 <td><code>concatenate_markdown_pages()</code></td>
 <td>将多页Markdown内容拼接为单一文档</td>
 <td><code>markdown_list</code></td>
@@ -1974,7 +2004,7 @@ for item in markdown_images:
         - `use_seal_recognition`: `(bool)` 控制是否启用印章识别子产线
         - `use_table_recognition`: `(bool)` 控制是否启用表格识别子产线
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
-        - `format_block_content`: `(bool)` 控制是否将 `block_content` 中的内容格式化为Markdown格式
+        - `format_block_content`: `(bool)` 控制是否将 `block_content` 中的内容格式化为Markdown格式。当设置为`True`时，图片类型的 block 的 `block_content` 将包含图片路径信息（如 `<img src="..." />`）；当设置为`False`（默认）时，图片类型的 block 的 `block_content` 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为`True`。
         - `markdown_ignore_labels`: `(List[str])` 需要在Markdown中忽略的版面标签，默认为`['number','footnote','header','header_image','footer','footer_image','aside_text']`
 
     - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果字典，仅当`use_doc_preprocessor=True`时存在
@@ -2430,6 +2460,12 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
+<td><code>outputFormats</code></td>
+<td><code>array</code> | <code>null</code></td>
+<td>可选。附加导出格式列表，默认不返回。当前仅支持 <code>"docx"</code>。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>是否返回可视化结果图以及处理过程中的中间图像等。
@@ -2501,6 +2537,11 @@ for res in output:
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>可选的附加导出结果。仅当请求中包含 <code>outputFormats</code> 时出现，例如 <code>{"docx": {"content": "..."}}</code>，其中 <code>content</code> 为文件内容的Base64编码。</td>
 </tr>
 </tbody>
 </table>

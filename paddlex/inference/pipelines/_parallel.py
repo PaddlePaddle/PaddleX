@@ -14,9 +14,11 @@
 
 import abc
 from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Dict, Optional, Union
 
 from ...utils import device as device_utils
 from ..common.batch_sampler import ImageBatchSampler
+from ..models import HPIConfig, PaddlePredictorOption
 from .base import BasePipeline
 
 
@@ -75,19 +77,39 @@ class MultiDeviceSimpleInferenceExecutor(object):
 class AutoParallelSimpleInferencePipeline(BasePipeline):
     def __init__(
         self,
-        config,
-        device=None,
-        pp_option=None,
-        use_hpip=False,
-        hpi_config=None,
-        *args,
+        config: Dict,
+        *,
+        device: Optional[str] = None,
+        engine: Optional[str] = None,
+        engine_config: Optional[Dict[str, Any]] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
+        use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         **kwargs,
-    ):
+    ) -> None:
+        """Initializes the auto-parallel simple inference pipeline.
+
+        Args:
+            config (Dict): Configuration dictionary containing various settings.
+            device (Optional[str], optional): The device to use for prediction. Defaults to `None`.
+            engine (Optional[str], optional): Inference engine. Defaults to `None`.
+            engine_config (Optional[Dict[str, Any]], optional): Engine-specific config. Defaults to `None`.
+            pp_option (Optional[PaddlePredictorOption], optional): Paddle predictor options.
+                Defaults to `None`.
+            use_hpip (bool, optional): Whether to use HPIP. Defaults to `False`.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): HPIP configuration.
+                Defaults to `None`.
+        """
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+            device=device,
+            engine=engine,
+            engine_config=engine_config,
+            pp_option=pp_option,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
+            **kwargs,
         )
 
-        self._init_args = args
         self._init_kwargs = kwargs
 
         self._multi_device_inference = False
@@ -165,15 +187,17 @@ class AutoParallelImageSimpleInferencePipeline(AutoParallelSimpleInferencePipeli
         raise NotImplementedError
 
     def _create_internal_pipeline(self, config, device):
-        return self._pipeline_cls(
+        pipeline = self._pipeline_cls(
             config,
             device=device,
+            engine=self.engine,
+            engine_config=self.engine_config,
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
             hpi_config=self.hpi_config,
-            *self._init_args,
             **self._init_kwargs,
         )
+        return pipeline
 
     def _create_batch_sampler(self, batch_size):
         return ImageBatchSampler(batch_size)

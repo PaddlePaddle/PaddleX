@@ -85,7 +85,7 @@ class OpenAIBotChat(BaseChat):
 
         Args:
             prompt (str): The user's input prompt.
-            image (base64): The user's input image for MLLM, defaults to None.
+            image (base64): The user's input image for MLLM, defaults to `None`.
             temperature (float, optional): The temperature parameter for llms, defaults to 0.001.
             max_retries (int, optional): The maximum number of retries for llms API calls, defaults to 1.
 

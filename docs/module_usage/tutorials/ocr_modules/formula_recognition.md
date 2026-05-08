@@ -141,7 +141,6 @@ comments: true
     </tbody>
 </table>
 
-
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
@@ -167,7 +166,6 @@ for res in output:
 - `input_path`：表示输入待预测公式图像的路径
 - `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `rec_formula`：表示公式图像的预测LaTeX源码
-
 
 可视化图片如下，左侧是待预测的公式图像，右边是预测的结果渲染后的公式图像：
 
@@ -349,7 +347,6 @@ sudo apt-get install texlive texlive-latex-base texlive-xetex latex-cjk-all texl
 </tr>
 
 </table>
-
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 

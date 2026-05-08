@@ -12,4 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import Fastspeech2Predictor
+from ....modules.text_to_speech_acoustic.model_list import MODELS
+from ..bindings import register_predictor_binding_map
+from .predictor import Fastspeech2RunnerPredictor
+
+register_predictor_binding_map(
+    Fastspeech2RunnerPredictor,
+    {
+        "paddle_static": MODELS,
+        "hpi": MODELS,
+    },
+)
+
+# Backward compatibility
+Fastspeech2Predictor = Fastspeech2RunnerPredictor

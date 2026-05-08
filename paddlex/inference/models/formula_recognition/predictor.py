@@ -14,12 +14,11 @@
 
 import numpy as np
 
-from ....modules.formula_recognition.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasePredictor
+from ..predictors import RunnerPredictor
 from .processors import (
     LatexImageFormat,
     LaTeXOCRDecode,
@@ -35,10 +34,8 @@ from .processors import (
 from .result import FormulaRecResult
 
 
-class FormulaRecPredictor(BasePredictor):
-    """FormulaRecPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class FormulaRecRunnerPredictor(RunnerPredictor):
+    """FormulaRecRunnerPredictor that inherits from RunnerPredictor."""
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -61,7 +58,7 @@ class FormulaRecPredictor(BasePredictor):
                 f"which will lead to a slower inference speed. You are now using {self.config['Global']['model_name']}."
             )
 
-        self.pre_tfs, self.infer, self.post_op = self._build()
+        self.pre_tfs, self.post_op = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
@@ -81,10 +78,8 @@ class FormulaRecPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = self.create_static_infer()
-
         post_op = self.build_postprocess(**self.config["PostProcess"])
-        return pre_tfs, infer, post_op
+        return pre_tfs, post_op
 
     def process(self, batch_data):
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
@@ -112,7 +107,7 @@ class FormulaRecPredictor(BasePredictor):
             batch_preds = []
             max_length = 0
             for batch_img in batch_imgs:
-                batch_pred_ = self.infer([batch_img])[0].reshape([-1])
+                batch_pred_ = self.runner([batch_img])[0].reshape([-1])
                 max_length = max(max_length, batch_pred_.shape[0])
                 batch_preds.append(batch_pred_)
             for i in range(len(batch_preds)):
@@ -124,7 +119,7 @@ class FormulaRecPredictor(BasePredictor):
                 )
         else:
             x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-            batch_preds = self.infer(x=x)
+            batch_preds = self.runner(x=x)
             batch_preds = [p.reshape([-1]) for p in batch_preds[0]]
 
         rec_formula = self.post_op(batch_preds)

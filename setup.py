@@ -46,12 +46,16 @@ BASE_DEP_SPECS = {
     "langchain-openai": ">= 0.1, < 1.0",
     "langchain-text-splitters": ">= 0.2, < 1.0",
     "lxml": "",
+    "latex2mathml": "",
     "matplotlib": "",
     "modelscope": [
-        '>= 1.28.0, < 1.30; python_version == "3.8"',
+        # modelscope 1.29.2+ unconditionally imports `zoneinfo`, which is
+        # Python 3.9+ stdlib. Cap at < 1.29.2 to keep Py3.8 working; 1.29.0
+        # and 1.29.1 import cleanly.
+        '>= 1.28.0, < 1.29.2; python_version == "3.8"',
         '>= 1.28.0; python_version >= "3.9"',
     ],
-    "numpy": ">= 1.24",
+    "numpy": ">= 1.24, < 2.4",
     "openai": ">= 1.63",
     "OpenCC": "",
     "opencv-contrib-python": "== 4.10.0.84",
@@ -182,6 +186,7 @@ EXTRAS = {
             "ftfy",
             "imagesize",
             "Jinja2",
+            "latex2mathml",
             "lxml",
             "opencv-contrib-python",
             "openpyxl",
@@ -238,7 +243,7 @@ EXTRAS = {
             "vllm == 0.10.2",
         ],
         "paddle2onnx": [
-            "paddle2onnx == 2.0.2rc3",
+            "paddle2onnx == 2.1.0",
         ],
         "serving": [
             "aiohttp >= 3.9",
@@ -342,7 +347,7 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.append("hpip_links.html")
     pkg_data.append("hpip_links_cu12.html")
-    pkg_data.append("inference/utils/hpi_model_info_collection.json")
+    pkg_data.append("inference/models/runners/hpi/hpi_model_info_collection.json")
     genai_chat_templates = [
         Path(p).relative_to("paddlex").as_posix()
         for p in glob.glob("paddlex/inference/genai/chat_templates/*.jinja")

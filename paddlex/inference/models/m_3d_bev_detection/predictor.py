@@ -16,13 +16,11 @@ import shutil
 import tempfile
 from typing import Any, Dict, Iterator, List, Tuple
 
-from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
-from ..base import BasePredictor
-from ..base.predictor.base_predictor import PredictionWrap
+from ..predictors import RunnerPredictor
 from .processors import (
     GetInferInput,
     LoadMultiViewImageFromFiles,
@@ -36,10 +34,8 @@ from .processors import (
 from .result import BEV3DDetResult
 
 
-class BEVDet3DPredictor(BasePredictor):
-    """BEVDet3DPredictor that inherits from BasePredictor."""
-
-    entities = MODELS
+class BEVDet3DRunnerPredictor(RunnerPredictor):
+    """BEVDet3DRunnerPredictor that inherits from RunnerPredictor."""
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
@@ -56,7 +52,7 @@ class BEVDet3DPredictor(BasePredictor):
             f"infer data will be stored in temporary directory {self.temp_dir}"
         )
         super().__init__(*args, **kwargs)
-        self.pre_tfs, self.infer = self._build()
+        self.pre_tfs = self._build()
 
     def _build_batch_sampler(self) -> Det3DBatchSampler:
         """Builds and returns an Det3DBatchSampler instance.
@@ -75,19 +71,11 @@ class BEVDet3DPredictor(BasePredictor):
         return BEV3DDetResult
 
     def _build(self) -> Tuple:
-        """Build the preprocessors and inference engine based on the configuration.
+        """Build the preprocessors based on the configuration.
 
         Returns:
-            tuple: A tuple containing the preprocessors and inference engine.
+            tuple: A tuple containing the preprocessors.
         """
-        import paddle
-
-        if paddle.is_compiled_with_cuda() and not paddle.is_compiled_with_rocm():
-            from ....ops.iou3d_nms import nms_gpu  # noqa: F401
-            from ....ops.voxelize import hard_voxelize  # noqa: F401
-        else:
-            logging.error("3D BEVFusion custom ops only support GPU platform!")
-
         pre_tfs = {"Read": ReadNuscenesData()}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
@@ -97,10 +85,7 @@ class BEVDet3DPredictor(BasePredictor):
             if op:
                 pre_tfs[name] = op
         pre_tfs["GetInferInput"] = GetInferInput()
-
-        infer = self.create_static_infer()
-
-        return pre_tfs, infer
+        return pre_tfs
 
     def _format_output(
         self, infer_input: List[Any], outs: List[Any], img_metas: Dict[str, Any]
@@ -156,15 +141,21 @@ class BEVDet3DPredictor(BasePredictor):
             dict: A dictionary containing the input path, input img, input points, input lidar2img, output bboxes, output labels, output scores and label names. Keys include 'input_path', 'input_img', 'input_points', 'input_lidar2img', 'boxes_3d', 'labels_3d' and 'scores_3d'.
         """
         sample = self.pre_tfs["Read"](batch_data=batch_data)
+        if not sample or len(sample) == 0:
+            raise ValueError("No sample data loaded from batch_data")
         sample = self.pre_tfs["LoadPointsFromFile"](results=sample[0])
+        if sample is None or "points" not in sample or sample["points"] is None:
+            raise ValueError("Failed to load point cloud data")
         sample = self.pre_tfs["LoadPointsFromMultiSweeps"](results=sample)
         sample = self.pre_tfs["LoadMultiViewImageFromFiles"](sample=sample)
+        if sample is None or "img" not in sample or sample["img"] is None:
+            raise ValueError("Failed to load multi-view image data")
         sample = self.pre_tfs["ResizeImage"](results=sample)
         sample = self.pre_tfs["NormalizeImage"](results=sample)
         sample = self.pre_tfs["PadImage"](results=sample)
         sample = self.pre_tfs["SampleFilterByKey"](sample=sample)
         infer_input, img_metas = self.pre_tfs["GetInferInput"](sample=sample)
-        infer_output = self.infer(x=infer_input)
+        infer_output = self.runner(x=infer_input)
         results = self._format_output(infer_input, infer_output, img_metas)
         return results
 
@@ -294,9 +285,10 @@ class BEVDet3DPredictor(BasePredictor):
         try:
             for batch_data in self.batch_sampler(input):
                 prediction = self.process(batch_data, **kwargs)
-                prediction = PredictionWrap(prediction, len(batch_data))
                 for idx in range(len(batch_data)):
-                    yield self.result_class(prediction.get_by_idx(idx))
+                    yield self.result_class(
+                        {key: prediction[key][idx] for key in prediction}
+                    )
         except Exception as e:
             raise e
         finally:

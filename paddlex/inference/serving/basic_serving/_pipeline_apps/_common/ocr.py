@@ -96,6 +96,9 @@ async def get_images(
             file_type,
             max_num_imgs=app_context.extra["max_num_input_imgs"],
         )
+    except serving_utils.ImageTooLargeError as e:
+        logging.error("Input image or PDF page exceeds pixel limit: %s", e)
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:
         logging.error("Failed to read input file: %s", e)
         raise HTTPException(status_code=422, detail="Invalid input file") from e

@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, Optional
+from typing import List, Optional
 
 import paddle
 import paddle.nn as nn
-import paddle.nn.functional as F
-from paddle import ParamAttr
-from paddle.nn.initializer import KaimingNormal
-from paddle.regularizer import L2Decay
 
-from ....utils.benchmark import add_inference_operations, benchmark
+from ...common.transformers.activations import ACT2FN
 from ...common.transformers.transformers import (
     BatchNormHFStateDictMixin,
     PretrainedModel,
@@ -50,373 +46,238 @@ def make_divisible(v: float, divisor: int = 8, min_value: Optional[int] = None) 
     return new_v
 
 
-def _create_act(act: str) -> nn.Layer:
+class PPLCNetSqueezeExcitationModule(nn.Layer):
     """
-    Create activation function layer
-
-    Args:
-        act: Activation function name, supports "hardswish" / "relu" / "relu6"
-
-    Returns:
-        Activation function layer instance
-
-    Raises:
-        RuntimeError: Unsupported activation function type
-    """
-    if act == "hardswish":
-        return nn.Hardswish()
-    elif act == "relu":
-        return nn.ReLU()
-    elif act == "relu6":
-        return nn.ReLU6()
-    else:
-        raise RuntimeError("The activation function is not supported: {}".format(act))
-
-
-class AdaptiveAvgPool2D(nn.AdaptiveAvgPool2D):
-    """
-    AdaptiveAvgPool2D: : Adaptive average pooling layer optimized
-
-    Args:
-        *args: Positional arguments passed to parent class nn.AdaptiveAvgPool2D
-        **kwargs: Keyword arguments passed to parent class nn.AdaptiveAvgPool2D
-
-    Returns:
-        paddle.Tensor: Pooled tensor with shape [N, C, 1, 1] (global pooling) or specified output size
+    Squeeze-and-Excitation (SE) Module: Adaptive feature recalibration
+    Enhances the model's ability to focus on important channels by learning channel-wise attention weights.
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, channel, reduction=4):
+        super().__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2D(1)
 
-        if paddle.device.get_device().startswith("npu"):
-            self.device = "npu"
-        else:
-            self.device = None
+        self.convolutions = nn.LayerList()
+        for in_channels, out_channels, activation in [
+            [channel, channel // reduction, nn.ReLU()],
+            [channel // reduction, channel, nn.Hardsigmoid()],
+        ]:
+            self.convolutions.append(
+                nn.Conv2d(
+                    in_channels=in_channels,
+                    out_channels=out_channels,
+                    kernel_size=1,
+                    stride=1,
+                    padding=0,
+                    bias=True,
+                )
+            )
+            self.convolutions.append(activation)
 
-        if isinstance(self._output_size, int) and self._output_size == 1:
-            self._gap = True
-        elif (
-            isinstance(self._output_size, tuple)
-            and self._output_size[0] == 1
-            and self._output_size[1] == 1
-        ):
-            self._gap = True
-        else:
-            self._gap = False
+    def forward(self, hidden_state):
+        residual = hidden_state
+        hidden_state = self.avg_pool(hidden_state)
+        for layer in self.convolutions:
+            hidden_state = layer(hidden_state)
+        hidden_state = residual * hidden_state
 
-    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
-        if self.device == "npu" and self._gap:
-            # Global Average Pooling
-            N, C, _, _ = x.shape
-            x_mean = paddle.mean(x, axis=[2, 3])
-            x_mean = paddle.reshape(x_mean, [N, C, 1, 1])
-            return x_mean
-        else:
-            return F.adaptive_avg_pool2d(
-                x,
-                output_size=self._output_size,
-                data_format=self._data_format,
-                name=self._name,
+        return hidden_state
+
+
+class PPLCNetConvLayer(nn.Layer):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        kernel_size: int = 3,
+        stride: int = 1,
+        activation: str = "hardswish",
+        groups: int = 1,
+    ):
+        super().__init__()
+        self.convolution = nn.Conv2d(
+            in_channels,
+            out_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=kernel_size // 2,
+            bias=False,
+            groups=groups,
+        )
+        self.normalization = nn.BatchNorm2D(out_channels)
+        self.activation = (
+            ACT2FN[activation] if activation is not None else nn.Identity()
+        )
+
+    def forward(self, input):
+        hidden_state = self.convolution(input)
+        hidden_state = self.normalization(hidden_state)
+        hidden_state = self.activation(hidden_state)
+        return hidden_state
+
+
+class PPLCNetDepthwiseSeparableConvLayer(nn.Layer):
+    """
+    Depthwise Separable Convolution Layer: Depthwise Conv -> SE Module (optional) -> Pointwise Conv
+    Core component of lightweight models (e.g., MobileNet, PP-LCNet) that significantly reduces
+    the number of parameters and computational cost.
+    """
+
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        stride,
+        kernel_size,
+        use_squeeze_excitation,
+        config,
+    ):
+        super().__init__()
+        self.depthwise_convolution = PPLCNetConvLayer(
+            in_channels=in_channels,
+            out_channels=in_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            groups=in_channels,
+            activation=config.hidden_act,
+        )
+        self.squeeze_excitation_module = (
+            PPLCNetSqueezeExcitationModule(in_channels, config.reduction)
+            if use_squeeze_excitation
+            else nn.Identity()
+        )
+        self.pointwise_convolution = PPLCNetConvLayer(
+            in_channels=in_channels,
+            kernel_size=1,
+            out_channels=out_channels,
+            stride=1,
+            activation=config.hidden_act,
+        )
+
+    def forward(self, hidden_state):
+        hidden_state = self.depthwise_convolution(hidden_state)
+        hidden_state = self.squeeze_excitation_module(hidden_state)
+        hidden_state = self.pointwise_convolution(hidden_state)
+
+        return hidden_state
+
+
+class PPLCNetBlock(nn.Layer):
+    def __init__(self, config, stage_index):
+        super().__init__()
+        self.config = config
+        blocks = config.block_configs[stage_index]
+
+        self.layers = nn.LayerList()
+        for (
+            kernel_size,
+            in_channels,
+            out_channels,
+            stride,
+            use_squeeze_excitation,
+        ) in blocks:
+            scaled_in_channels = make_divisible(
+                in_channels * config.scale, config.divisor
+            )
+            scaled_out_channels = make_divisible(
+                out_channels * config.scale, config.divisor
             )
 
+            depthwise_block = PPLCNetDepthwiseSeparableConvLayer(
+                in_channels=scaled_in_channels,
+                out_channels=scaled_out_channels,
+                kernel_size=kernel_size,
+                stride=stride,
+                use_squeeze_excitation=use_squeeze_excitation,
+                config=config,
+            )
+            self.layers.append(depthwise_block)
 
-class ConvBNLayer(nn.Layer):
-    """
-    ConvBNLayer: Combination layer of convolution, batch normalization and activation function
+    def forward(self, hidden_states):
+        for layer in self.layers:
+            hidden_states = layer(hidden_states)
+        return hidden_states
 
-    Args:
-        num_channels (int): Number of input channels
-        filter_size (int): Kernel size of convolution layer
-        num_filters (int): Number of output channels
-        stride (int): Stride of convolution layer
-        num_groups (int): Number of groups for grouped convolution, default 1
-        lr_mult (float): Learning rate multiplier for layer parameters, default 1.0
-        act (str): Activation function type, default "hardswish"
 
-    Returns:
-        paddle.Tensor: Output tensor after convolution + batch normalization + activation
-    """
+class PPLCNetEncoder(PretrainedModel):
+    def __init__(self, config: PPLCNetConfig) -> None:
+        super().__init__(config)
 
-    def __init__(
-        self,
-        num_channels: int,
-        filter_size: int,
-        num_filters: int,
-        stride: int,
-        num_groups: int = 1,
-        lr_mult: float = 1.0,
-        act: str = "hardswish",
-    ) -> None:
-        super().__init__()
-
-        self.conv = nn.Conv2D(
-            in_channels=num_channels,
-            out_channels=num_filters,
-            kernel_size=filter_size,
-            stride=stride,
-            padding=(filter_size - 1) // 2,
-            groups=num_groups,
-            weight_attr=ParamAttr(initializer=KaimingNormal(), learning_rate=lr_mult),
-            bias_attr=False,
+        # stem
+        self.convolution = PPLCNetConvLayer(
+            in_channels=3,
+            kernel_size=3,
+            out_channels=make_divisible(
+                config.stem_channels * config.scale, config.divisor
+            ),
+            stride=config.stem_stride,
+            activation=config.hidden_act,
         )
+        # stages
+        self.blocks = nn.LayerList()
+        for stage_index in range(len(config.block_configs)):
+            block = PPLCNetBlock(config, stage_index)
+            self.blocks.append(block)
 
-        self.bn = nn.BatchNorm2D(
-            num_filters,
-            weight_attr=ParamAttr(regularizer=L2Decay(0.0), learning_rate=lr_mult),
-            bias_attr=ParamAttr(regularizer=L2Decay(0.0), learning_rate=lr_mult),
-        )
-        self.act = _create_act(act)
+    def forward(self, pixel_values):
+        hidden_states = self.convolution(pixel_values)
+        for block in self.blocks:
+            hidden_states = block(hidden_states)
 
-    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
-        x = self.conv(x)
-        x = self.bn(x)
-        x = self.act(x)
-        return x
-
-
-class DepthwiseSeparable(nn.Layer):
-    """
-    DepthwiseSeparable: Depthwise separable convolution layer with optional SE attention module
-
-    Args:
-        num_channels (int): Number of input channels
-        num_filters (int): Number of output channels
-        stride (int): Stride of depthwise convolution layer
-        dw_size (int): Kernel size of depthwise convolution, default 3
-        use_se (bool): Whether to use SE attention module, default False
-        lr_mult (float): Learning rate multiplier for layer parameters, default 1.0
-        act (str): Activation function type, default "hardswish"
-
-    Returns:
-        paddle.Tensor: Output tensor after depthwise separable convolution
-    """
-
-    def __init__(
-        self,
-        num_channels: int,
-        num_filters: int,
-        stride: int,
-        reduction: int,
-        dw_size: int,
-        use_se: bool,
-        lr_mult: float,
-        act: str,
-    ) -> None:
-        super().__init__()
-        self.use_se = use_se
-        self.dw_conv = ConvBNLayer(
-            num_channels=num_channels,
-            num_filters=num_channels,
-            filter_size=dw_size,
-            stride=stride,
-            num_groups=num_channels,
-            lr_mult=lr_mult,
-            act=act,
-        )
-        self.se = (
-            SEModule(num_channels, reduction, lr_mult) if use_se else nn.Identity()
-        )
-        self.pw_conv = ConvBNLayer(
-            num_channels=num_channels,
-            filter_size=1,
-            num_filters=num_filters,
-            stride=1,
-            lr_mult=lr_mult,
-            act=act,
-        )
-
-    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
-        x = self.dw_conv(x)
-        x = self.se(x)
-        x = self.pw_conv(x)
-        return x
-
-
-class SEModule(nn.Layer):
-    """
-    SEModule: Squeeze-and-Excitation attention module for channel-wise feature recalibration
-
-    Args:
-        channel (int): Number of input channels
-        reduction (int): Channel reduction ratio for SE module, default 4
-        lr_mult (float): Learning rate multiplier for module parameters, default 1.0
-
-    Returns:
-        paddle.Tensor: Attention-weighted tensor after SE module processing
-    """
-
-    def __init__(self, channel: int, reduction: int, lr_mult: float = 1.0) -> None:
-        super().__init__()
-        self.avg_pool = AdaptiveAvgPool2D(1)
-        conv_kwargs = {
-            "kernel_size": 1,
-            "stride": 1,
-            "padding": 0,
-            "weight_attr": ParamAttr(learning_rate=lr_mult),
-            "bias_attr": ParamAttr(learning_rate=lr_mult),
-        }
-        self.conv1 = nn.Conv2D(channel, channel // reduction, **conv_kwargs)
-        self.conv2 = nn.Conv2D(channel // reduction, channel, **conv_kwargs)
-        self.relu = nn.ReLU()
-        self.hardsigmoid = nn.Hardsigmoid()
-
-    def forward(self, x: paddle.Tensor) -> paddle.Tensor:
-        identity = x
-        x = self.avg_pool(x)
-        x = self.conv1(x)
-        x = self.relu(x)
-        x = self.conv2(x)
-        x = self.hardsigmoid(x)
-        x = paddle.multiply(x=identity, y=x)
-        return x
+        return hidden_states
 
 
 class PPLCNet(BatchNormHFStateDictMixin, PretrainedModel):
-    """
-    PPLCNet: Lightweight convolutional neural network for image classification tasks
-
-    Args:
-        config (PPLCNetConfig): Configuration instance containing model hyperparameters
-            - scale (float): Channel scale factor for network width adjustment
-            - class_num (int): Number of classification categories
-            - dropout_prob (float): Dropout probability for last convolution layer
-            - class_expand (int): Expansion channel number for last convolution layer
-            - stride_list (List[int]): Stride list for different blocks, length must be 5
-            - use_last_conv (bool): Whether to use last convolution layer before fc
-            - act (str): Activation function type used in network
-            - lr_mult_list (List[float]): Learning rate multipliers for different layers, length must be 6
-            - net_config (Dict[str, Any]): Network configuration dict containing block parameters
-
-    Returns:
-        List[numpy.ndarray]: List containing classification probability numpy array
-    """
-
     config_class = PPLCNetConfig
 
     def __init__(self, config: PPLCNetConfig) -> None:
         super().__init__(config)
 
-        self.scale = config.scale
-        self.class_num = config.class_num
-        self.dropout_prob = config.dropout_prob
-        self.class_expand = config.class_expand
-        self.stride_list = config.stride_list
-        self.reduction = config.reduction
-        self.use_last_conv = config.use_last_conv
-        self.act = config.act
-        self.lr_mult_list = (
-            eval(config.lr_mult_list)
-            if isinstance(config.lr_mult_list, str)
-            else config.lr_mult_list
+        self.encoder = PPLCNetEncoder(config)
+        self.config = config
+        self.num_labels = config.num_labels
+        last_block_out_channels = config.block_configs[-1][-1][2]
+        self.avg_pool = nn.AdaptiveAvgPool2D(1)
+        self.last_convolution = nn.Conv2d(
+            in_channels=make_divisible(
+                last_block_out_channels * config.scale, config.divisor
+            ),
+            out_channels=config.class_expand,
+            kernel_size=1,
+            stride=1,
+            padding=0,
+            bias=False,
         )
-        self.net_config = config.net_config
-
-        assert isinstance(
-            self.lr_mult_list, (list, tuple)
-        ), f"lr_mult_list should be in (list, tuple) but got {type(self.lr_mult_list)}"
-        assert (
-            len(self.lr_mult_list) == 6
-        ), f"lr_mult_list length should be 6 but got {len(self.lr_mult_list)}"
-        assert isinstance(
-            self.stride_list, (list, tuple)
-        ), f"stride_list should be in (list, tuple) but got {type(self.stride_list)}"
-        assert (
-            len(self.stride_list) == 5
-        ), f"stride_list length should be 5 but got {len(self.stride_list)}"
-
-        for i, stride in enumerate(self.stride_list[1:]):
-            self.net_config["blocks{}".format(i + 3)][0][3] = stride
-
-        self.conv1 = ConvBNLayer(
-            num_channels=3,
-            filter_size=3,
-            num_filters=make_divisible(16 * self.scale),
-            stride=self.stride_list[0],
-            lr_mult=self.lr_mult_list[0],
-            act=self.act,
-        )
-
-        def _build_block(block_name, lr_idx):
-            return nn.Sequential(
-                *[
-                    DepthwiseSeparable(
-                        num_channels=make_divisible(in_c * self.scale),
-                        num_filters=make_divisible(out_c * self.scale),
-                        dw_size=k,
-                        stride=s,
-                        reduction=self.reduction,
-                        use_se=se,
-                        lr_mult=self.lr_mult_list[lr_idx],
-                        act=self.act,
-                    )
-                    for i, (k, in_c, out_c, s, se) in enumerate(
-                        self.net_config[block_name]
-                    )
-                ]
-            )
-
-        self.blocks2 = _build_block("blocks2", 1)
-        self.blocks3 = _build_block("blocks3", 2)
-        self.blocks4 = _build_block("blocks4", 3)
-        self.blocks5 = _build_block("blocks5", 4)
-        self.blocks6 = _build_block("blocks6", 5)
-
-        self.avg_pool = AdaptiveAvgPool2D(1)
-        self.last_conv = None
-        if self.use_last_conv:
-            self.last_conv = nn.Conv2D(
-                in_channels=make_divisible(
-                    self.net_config["blocks6"][-1][2] * self.scale
-                ),
-                out_channels=self.class_expand,
-                kernel_size=1,
-                stride=1,
-                padding=0,
-                bias_attr=False,
-            )
-            self.act = _create_act(self.act)
-            self.dropout = nn.Dropout(p=self.dropout_prob, mode="downscale_in_infer")
+        self.act_fn = ACT2FN[config.hidden_act]
+        self.hidden_dropout_prob = config.hidden_dropout_prob
 
         self.flatten = nn.Flatten(start_axis=1, stop_axis=-1)
-        if self.use_last_conv:
-            fc_in_channels = self.class_expand
-        else:
-            fc_in_channels = make_divisible(
-                self.net_config["blocks6"][-1][2] * self.scale
-            )
-        self.fc = nn.Linear(fc_in_channels, self.class_num)
-        self.out_act = nn.Softmax(axis=-1)
+        self.head = (
+            nn.Linear(config.class_expand, config.num_labels)
+            if config.num_labels > 0
+            else nn.Identity()
+        )
 
-    add_inference_operations("pplcnet_forward")
-
-    @benchmark.timeit_with_options(name="pplcnet_forward")
     def forward(self, x: List) -> List:
+        pixel_values = paddle.to_tensor(x[0])
 
-        x = paddle.to_tensor(x[0])
+        outputs = self.encoder(pixel_values)
 
-        x = self.conv1(x)
+        last_hidden_state = self.avg_pool(outputs)
 
-        x = self.blocks2(x)
-        x = self.blocks3(x)
-        x = self.blocks4(x)
-        x = self.blocks5(x)
-        x = self.blocks6(x)
+        last_hidden_state = self.last_convolution(last_hidden_state)
+        last_hidden_state = self.act_fn(last_hidden_state)
+        last_hidden_state = last_hidden_state * (1 - self.hidden_dropout_prob)
 
-        x = self.avg_pool(x)
+        last_hidden_state = self.flatten(last_hidden_state)
+        last_hidden_state = self.head(last_hidden_state)
 
-        if self.last_conv is not None:
-            x = self.last_conv(x)
-            x = self.act(x)
-            x = self.dropout(x)
-        x = self.flatten(x)
-        x = self.fc(x)
+        # align postprocessing in ClasTransformersPredictor.process
+        last_hidden_state = last_hidden_state.softmax()
 
-        x = self.out_act(x)
-
-        return [x.cpu().numpy()]
+        return [last_hidden_state.cpu().numpy()]
 
     def get_transpose_weight_keys(self):
-        t_layers = ["fc"]
+        t_layers = ["head"]
         keys = []
         for key, _ in self.get_hf_state_dict().items():
             for t_layer in t_layers:

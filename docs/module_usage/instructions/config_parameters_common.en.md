@@ -282,3 +282,30 @@ comments: true
 
 </tbody>
 </table>
+
+# Pdparams2safetensors
+
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Data Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>input_path</td>
+<td>str</td>
+<td>Path to dynamic graph weights (file or folder)</td>
+<td></td>
+</tr>
+<tr>
+<td>output_dir</td>
+<td>str</td>
+<td>Path for the converted safetensors format model</td>
+<td></td>
+</tr>
+</tbody>
+</table>
