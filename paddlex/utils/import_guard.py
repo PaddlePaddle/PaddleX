@@ -24,12 +24,14 @@ def import_paddle():
 
 
 def import_paddle_module(module_name):
-    """Import a `paddle` module while preserving existing root handlers."""
+    """Import a `paddle` module while preserving the root logger's existing
+    handlers and level."""
     if module_name != "paddle" and not module_name.startswith("paddle."):
         raise ValueError(f"Expected a paddle module name, but got {module_name!r}.")
 
     root_logger = logging.getLogger()
     existing_handler_ids = {id(handler) for handler in root_logger.handlers}
+    existing_level = root_logger.level
     try:
         return importlib.import_module(module_name)
     finally:
@@ -39,3 +41,5 @@ def import_paddle_module(module_name):
             if isinstance(handler, logging.StreamHandler):
                 root_logger.removeHandler(handler)
                 handler.close()
+        if root_logger.level != existing_level:
+            root_logger.setLevel(existing_level)
