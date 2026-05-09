@@ -17,6 +17,7 @@ import queue
 import re
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -173,6 +174,15 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 ],
             )
 
+            lp = config.get("layout_prep_cpu_workers", 0)
+            try:
+                self.layout_prep_cpu_workers = max(0, int(lp))
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    "`layout_prep_cpu_workers` must be a non-negative integer "
+                    "(0 disables parallel CPU layout preparation)."
+                ) from exc
+
     def close(self):
         if hasattr(self, "vl_rec_model"):
             self.vl_rec_model.close()
@@ -289,26 +299,41 @@ class _PaddleOCRVLPipeline(BasePipeline):
             vis_image_labels += ["chart"]
         if not use_seal_recognition:
             image_labels += ["seal"]
-        for i, (image, layout_det_res, imgs_in_doc_for_img) in enumerate(
-            zip(images, layout_det_results, imgs_in_doc)
-        ):
+        # Per-page pixel kwargs extracted from vlm_kwargs (avoid pop in parallel)
+        ocr_min_pixels = vlm_kwargs.pop("ocr_min_pixels", default_min_pixels)
+        ocr_max_pixels = vlm_kwargs.pop("ocr_max_pixels", default_max_pixels)
+        table_min_pixels = vlm_kwargs.pop("table_min_pixels", default_min_pixels)
+        table_max_pixels = vlm_kwargs.pop("table_max_pixels", default_max_pixels)
+        chart_min_pixels = vlm_kwargs.pop("chart_min_pixels", default_min_pixels)
+        chart_max_pixels = vlm_kwargs.pop("chart_max_pixels", default_max_pixels)
+        formula_min_pixels = vlm_kwargs.pop("formula_min_pixels", default_min_pixels)
+        formula_max_pixels = vlm_kwargs.pop("formula_max_pixels", default_max_pixels)
+        seal_min_pixels = vlm_kwargs.pop("seal_min_pixels", default_min_pixels)
+        seal_max_pixels = vlm_kwargs.pop("seal_max_pixels", default_max_pixels)
+
+        def _process_single_page(args):
+            """Process a single page's CPU work: filter, crop, merge, prepare VLM inputs."""
+            i, image, layout_det_res, imgs_in_doc_for_img = args
             layout_det_res = filter_overlap_boxes(layout_det_res, layout_shape_mode)
             boxes = layout_det_res["boxes"]
             blocks_for_img = self.crop_by_boxes(image, boxes, layout_shape_mode)
-            del layout_det_res, boxes
             if merge_layout_blocks:
                 blocks_for_img = merge_blocks(
                     blocks_for_img, non_merge_labels=image_labels + ["table"]
                 )
-            blocks.append(blocks_for_img)
+
+            page_vlm_entries = []
+            page_has_spotting = False
+            page_drop_figures = set()
+
             for j, block in enumerate(blocks_for_img):
                 block_img = block["img"]
                 block_label = block["label"]
                 if block_label not in image_labels and block_img is not None:
                     figure_token_map = {}
                     text_prompt = "OCR:"
-                    min_pixels = vlm_kwargs.pop("ocr_min_pixels", default_min_pixels)
-                    max_pixels = vlm_kwargs.pop("ocr_max_pixels", default_max_pixels)
+                    blk_min_pixels = ocr_min_pixels
+                    blk_max_pixels = ocr_max_pixels
                     drop_figures = []
                     if block_label == "table":
                         text_prompt = "Table Recognition:"
@@ -317,65 +342,106 @@ class _PaddleOCRVLPipeline(BasePipeline):
                                 block_img, block["box"], imgs_in_doc_for_img
                             )
                         )
-                        min_pixels = vlm_kwargs.pop(
-                            "table_min_pixels", default_min_pixels
-                        )
-                        max_pixels = vlm_kwargs.pop(
-                            "table_max_pixels", default_max_pixels
-                        )
+                        blk_min_pixels = table_min_pixels
+                        blk_max_pixels = table_max_pixels
                     elif block_label == "chart" and use_chart_recognition:
                         text_prompt = "Chart Recognition:"
-                        min_pixels = vlm_kwargs.pop(
-                            "chart_min_pixels", default_min_pixels
-                        )
-                        max_pixels = vlm_kwargs.pop(
-                            "chart_max_pixels", default_max_pixels
-                        )
+                        blk_min_pixels = chart_min_pixels
+                        blk_max_pixels = chart_max_pixels
                     elif "formula" in block_label and block_label != "formula_number":
                         text_prompt = "Formula Recognition:"
                         crop_img = crop_margin(block_img)
                         w, h, _ = crop_img.shape
                         if w > 2 and h > 2:
                             block_img = crop_img
-                        min_pixels = vlm_kwargs.pop(
-                            "formula_min_pixels", default_min_pixels
-                        )
-                        max_pixels = vlm_kwargs.pop(
-                            "formula_max_pixels", default_max_pixels
-                        )
+                        blk_min_pixels = formula_min_pixels
+                        blk_max_pixels = formula_max_pixels
                     elif block_label == "spotting":
                         text_prompt = "Spotting:"
-                        has_spotting = True
-                        min_pixels = 112896
-                        max_pixels = 1605632
+                        page_has_spotting = True
+                        blk_min_pixels = 112896
+                        blk_max_pixels = 1605632
                         block_img = pre_process_for_spotting(block_img)
                     elif block_label == "seal" and use_seal_recognition:
                         text_prompt = "Seal Recognition:"
-                        min_pixels = vlm_kwargs.pop(
-                            "seal_min_pixels", default_min_pixels
+                        blk_min_pixels = seal_min_pixels
+                        blk_max_pixels = seal_max_pixels
+
+                    page_vlm_entries.append(
+                        (
+                            i,
+                            j,
+                            block_img,
+                            text_prompt,
+                            (blk_min_pixels, blk_max_pixels),
+                            figure_token_map,
                         )
-                        max_pixels = vlm_kwargs.pop(
-                            "seal_max_pixels", default_max_pixels
-                        )
-                    pixel_key = (min_pixels, max_pixels)
-                    if pixel_key not in batch_dict_by_pixel:
-                        batch_dict_by_pixel[pixel_key] = {
-                            "images": [],
-                            "queries": [],
-                            "figure_token_maps": [],
-                            "vlm_block_ids": [],
-                            "curr_vlm_block_idx": 0,
-                        }
-                    batch_dict_by_pixel[pixel_key]["images"].append(block_img)
-                    batch_dict_by_pixel[pixel_key]["queries"].append(text_prompt)
-                    batch_dict_by_pixel[pixel_key]["figure_token_maps"].append(
-                        figure_token_map
                     )
-                    batch_dict_by_pixel[pixel_key]["vlm_block_ids"].append((i, j))
-                    id2pixel_key_map[(i, j)] = pixel_key
-                    drop_figures_set.update(drop_figures)
-            del blocks_for_img
-        del images, layout_det_results
+                    page_drop_figures.update(drop_figures)
+
+            return (
+                i,
+                blocks_for_img,
+                page_vlm_entries,
+                page_has_spotting,
+                page_drop_figures,
+            )
+
+        # Per-page CPU work: optional thread pool.
+        num_pages = len(images)
+        page_args = [
+            (i, images[i], layout_det_results[i], imgs_in_doc[i])
+            for i in range(num_pages)
+        ]
+
+        max_workers = (
+            min(self.layout_prep_cpu_workers, num_pages) if num_pages > 0 else 0
+        )
+        if num_pages > 1 and max_workers > 1:
+            with ThreadPoolExecutor(max_workers=max_workers) as cpu_pool:
+                page_results = list(cpu_pool.map(_process_single_page, page_args))
+        elif num_pages > 1:
+            page_results = [_process_single_page(a) for a in page_args]
+        else:
+            page_results = [_process_single_page(page_args[0])]
+
+        # Merge per-page results into shared structures (sequential, fast)
+        for (
+            page_idx,
+            blocks_for_img,
+            page_vlm_entries,
+            page_has_spotting,
+            page_drop_figures,
+        ) in page_results:
+            blocks.append(blocks_for_img)
+            if page_has_spotting:
+                has_spotting = True
+            drop_figures_set.update(page_drop_figures)
+            for (
+                i,
+                j,
+                block_img,
+                text_prompt,
+                pixel_key,
+                figure_token_map,
+            ) in page_vlm_entries:
+                if pixel_key not in batch_dict_by_pixel:
+                    batch_dict_by_pixel[pixel_key] = {
+                        "images": [],
+                        "queries": [],
+                        "figure_token_maps": [],
+                        "vlm_block_ids": [],
+                        "curr_vlm_block_idx": 0,
+                    }
+                batch_dict_by_pixel[pixel_key]["images"].append(block_img)
+                batch_dict_by_pixel[pixel_key]["queries"].append(text_prompt)
+                batch_dict_by_pixel[pixel_key]["figure_token_maps"].append(
+                    figure_token_map
+                )
+                batch_dict_by_pixel[pixel_key]["vlm_block_ids"].append((i, j))
+                id2pixel_key_map[(i, j)] = pixel_key
+
+        del images, layout_det_results, page_results
 
         if vlm_kwargs is None:
             vlm_kwargs = {}
@@ -805,6 +871,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     except queue.Empty:
                         if event_data_loading_done.is_set():
                             event_cv_processing_done.set()
+                            queue_cv.put(None)  # Sentinel to wake VLM worker
                             break
                         continue
                     if not item[0]:
@@ -829,6 +896,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             def _worker_vlm():
                 MAX_QUEUE_DELAY_SECS = 0.5
                 MAX_NUM_BOXES = self.vl_rec_model.batch_sampler.batch_size
+                cv_done = False
 
                 while not event_shutdown.is_set():
                     results_cv_list = []
@@ -845,6 +913,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             item = queue_cv.get(timeout=remaining_time)
                         except queue.Empty:
                             break
+                        if item is None:
+                            # Sentinel from CV worker — no more data coming
+                            cv_done = True
+                            break
                         if not item[0]:
                             queue_vlm.put(item)
                             should_break = True
@@ -858,8 +930,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     if should_break:
                         break
                     if not results_cv_list:
-                        if event_cv_processing_done.is_set():
+                        if cv_done or event_cv_processing_done.is_set():
                             event_vlm_processing_done.set()
+                            queue_vlm.put(None)  # Sentinel to wake consumer
                             break
                         continue
 
@@ -876,6 +949,31 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         del merged_results_cv
                     except Exception as e:
                         queue_vlm.put((False, "vlm", e))
+                        break
+
+                    # After processing accumulated batch, check if CV is done
+                    if cv_done:
+                        # Drain any remaining items from queue_cv
+                        while True:
+                            try:
+                                item = queue_cv.get_nowait()
+                            except queue.Empty:
+                                break
+                            if item is None or not item[0]:
+                                break
+                            results_cv_list_final = [item[1]]
+                            merged = [
+                                list(chain.from_iterable(lists))
+                                for lists in zip(*results_cv_list_final)
+                            ]
+                            try:
+                                for result_vlm in _process_vlm(merged):
+                                    queue_vlm.put((True, result_vlm))
+                            except Exception as e:
+                                queue_vlm.put((False, "vlm", e))
+                                break
+                        event_vlm_processing_done.set()
+                        queue_vlm.put(None)  # Sentinel to wake consumer
                         break
 
             thread_input = threading.Thread(
@@ -896,6 +994,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         if event_vlm_processing_done.is_set():
                             break
                         continue
+                    if item is None:
+                        # Sentinel — VLM worker is done
+                        break
                     if not item[0]:
                         raise RuntimeError(
                             f"Exception from the '{item[1]}' worker: {item[2]}"
