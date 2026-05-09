@@ -25,6 +25,7 @@ from PIL import Image
 from pydantic import BaseModel, computed_field, model_validator
 
 from ..layout_parsing.utils import (
+    calculate_bbox_area,
     calculate_overlap_ratio,
     calculate_projection_overlap_ratio,
 )
@@ -74,38 +75,6 @@ def calculate_polygon_overlap_ratio(
         raise ValueError(f"Unknown mode: {mode}")
 
 
-def _compute_pairwise_overlap_small(coords: np.ndarray) -> np.ndarray:
-    """
-    Compute pairwise overlap ratio (mode="small") for all boxes using vectorized operations.
-
-    Args:
-        coords (np.ndarray): Shape (n, 4), each row is [x1, y1, x2, y2].
-
-    Returns:
-        np.ndarray: Shape (n, n) symmetric matrix of overlap ratios.
-    """
-    x1 = coords[:, 0]
-    y1 = coords[:, 1]
-    x2 = coords[:, 2]
-    y2 = coords[:, 3]
-
-    areas = (x2 - x1) * (y2 - y1)
-
-    inter_x1 = np.maximum(x1[:, None], x1[None, :])
-    inter_y1 = np.maximum(y1[:, None], y1[None, :])
-    inter_x2 = np.minimum(x2[:, None], x2[None, :])
-    inter_y2 = np.minimum(y2[:, None], y2[None, :])
-
-    inter_w = np.maximum(0, inter_x2 - inter_x1)
-    inter_h = np.maximum(0, inter_y2 - inter_y1)
-    inter_area = inter_w * inter_h
-
-    small_area = np.minimum(areas[:, None], areas[None, :])
-    with np.errstate(divide="ignore", invalid="ignore"):
-        overlap = np.where(small_area > 0, inter_area / small_area, 0.0)
-    return overlap
-
-
 def filter_overlap_boxes(
     layout_det_res: Dict[str, List[Dict]], layout_shape_mode: str
 ) -> Dict[str, List[Dict]]:
@@ -122,30 +91,19 @@ def filter_overlap_boxes(
     boxes = [
         box for box in layout_det_res_filtered["boxes"] if box["label"] != "reference"
     ]
+    dropped_indexes = set()
 
-    if not boxes:
-        layout_det_res_filtered["boxes"] = boxes
-        return layout_det_res_filtered
-
-    n = len(boxes)
-    coords = np.array([box["coordinate"] for box in boxes], dtype=np.float64)
-    widths = coords[:, 2] - coords[:, 0]
-    heights = coords[:, 3] - coords[:, 1]
-    areas = widths * heights
-
-    # Drop boxes that are too small
-    dropped_indexes = set(np.where((widths < 6) | (heights < 6))[0].tolist())
-
-    # Compute full pairwise overlap matrix once
-    overlap_matrix = _compute_pairwise_overlap_small(coords)
-
-    for i in range(n):
-        if i in dropped_indexes:
-            continue
-        for j in range(i + 1, n):
+    for i in range(len(boxes)):
+        x1, y1, x2, y2 = boxes[i]["coordinate"]
+        w, h = x2 - x1, y2 - y1
+        if w < 6 or h < 6:
+            dropped_indexes.add(i)
+        for j in range(i + 1, len(boxes)):
             if i in dropped_indexes or j in dropped_indexes:
                 continue
-            overlap_ratio = overlap_matrix[i, j]
+            overlap_ratio = calculate_overlap_ratio(
+                boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
+            )
             if (
                 boxes[i]["label"] == "inline_formula"
                 or boxes[j]["label"] == "inline_formula"
@@ -163,6 +121,8 @@ def filter_overlap_boxes(
                     )
                     if poly_overlap_ratio < 0.7:
                         continue
+                box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
+                box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
                 labels = {boxes[i]["label"], boxes[j]["label"]}
                 if labels & {"image", "table", "seal", "chart"} and len(labels) > 1:
                     if "table" not in labels or labels <= {
@@ -172,7 +132,7 @@ def filter_overlap_boxes(
                         "chart",
                     }:
                         continue
-                if areas[i] >= areas[j]:
+                if box_area_i >= box_area_j:
                     dropped_indexes.add(j)
                 else:
                     dropped_indexes.add(i)
