@@ -605,6 +605,77 @@ _DOC_LAYOUT_PLUS_LABEL2ID = {v: int(k) for k, v in _DOC_LAYOUT_PLUS_ID2LABEL.ite
 _DOC_BLOCK_LABELS = {"0": "Region"}
 _DOC_BLOCK_LABEL2ID = {"Region": 0}
 
+
+# PP-FormulaNet configs (L and _plus-L share the vision encoder + decoder
+# architecture; only max_position_embeddings differs). Field order matches
+# the published config.json on PaddlePaddle/PP-FormulaNet-L_safetensors and
+# PaddlePaddle/PP-FormulaNet_plus-L_safetensors.
+_PP_FORMULANET_VISION = {
+    "image_size": 768,
+    "output_channels": 256,
+    "num_channels": 3,
+    "patch_size": 16,
+    "hidden_act": "gelu",
+    "layer_norm_eps": 1e-6,
+    "attention_dropout": 0.0,
+    "qkv_bias": True,
+    "use_abs_pos": True,
+    "use_rel_pos": True,
+    "window_size": 14,
+    "hidden_size": 768,
+    "num_hidden_layers": 12,
+    "num_attention_heads": 12,
+    "global_attn_indexes": [2, 5, 8, 11],
+    "mlp_dim": 3072,
+    "post_conv_in_channels": 256,
+    "post_conv_mid_channels": 512,
+    "post_conv_out_channels": 1024,
+    "decoder_hidden_size": 512,
+}
+
+
+def _pp_formulanet_text(max_position_embeddings):
+    return {
+        "activation_dropout": 0.0,
+        "activation_function": "gelu",
+        "attention_dropout": 0.0,
+        "bos_token_id": 0,
+        "d_model": 512,
+        "decoder_attention_heads": 16,
+        "decoder_ffn_dim": 2048,
+        "decoder_layerdrop": 0.0,
+        "decoder_layers": 8,
+        "dropout": 0.1,
+        "encoder_attention_heads": 16,
+        "encoder_layers": 12,
+        "eos_token_id": 2,
+        "forced_eos_token_id": 2,
+        "init_std": 0.02,
+        "max_position_embeddings": max_position_embeddings,
+        "num_hidden_layers": 12,
+        "pad_token_id": 1,
+        "scale_embedding": True,
+        "tie_word_embeddings": False,
+        "vocab_size": 50000,
+    }
+
+
+_PP_FORMULANET_CONFIG_L = {
+    "model_type": "pp_formulanet",
+    "text_config": _pp_formulanet_text(1024),
+    "vision_config": dict(_PP_FORMULANET_VISION),
+}
+
+# Published _plus-L/config.json omits vision_config.decoder_hidden_size and
+# relies on the HF default (512). Match that exactly.
+_pp_formulanet_plus_vision = dict(_PP_FORMULANET_VISION)
+_pp_formulanet_plus_vision.pop("decoder_hidden_size")
+_PP_FORMULANET_CONFIG_PLUS_L = {
+    "model_type": "pp_formulanet",
+    "text_config": _pp_formulanet_text(2560),
+    "vision_config": _pp_formulanet_plus_vision,
+}
+
 # Model config registry
 MODEL_CONFIGS = {
     "PP-LCNet_x1_0_doc_ori": {
@@ -630,6 +701,32 @@ MODEL_CONFIGS = {
     "PP-OCRv5_server_det": _PPOCRV5_SERVER_DET_CONFIG,
     "PP-OCRv5_mobile_rec": _PPOCRV5_MOBILE_REC_CONFIG,
     "PP-OCRv5_server_rec": _PPOCRV5_SERVER_REC_CONFIG,
+    "SLANet": {
+        "model_type": "slanet",
+        "backbone_config": {
+            "model_type": "pp_lcnet",
+            "scale": 1,
+            "out_features": ["stage2", "stage3", "stage4", "stage5"],
+            "out_indices": [2, 3, 4, 5],
+        },
+        "post_conv_out_channels": 96,
+        "out_channels": 50,
+        "hidden_size": 256,
+        "max_text_length": 500,
+    },
+    "SLANet_plus": {
+        "model_type": "slanet",
+        "backbone_config": {
+            "model_type": "pp_lcnet",
+            "scale": 1,
+            "out_features": ["stage2", "stage3", "stage4", "stage5"],
+            "out_indices": [2, 3, 4, 5],
+        },
+        "post_conv_out_channels": 96,
+        "out_channels": 50,
+        "hidden_size": 256,
+        "max_text_length": 500,
+    },
     "SLANeXt_wired": {
         "model_type": "slanext",
         "vision_config": {
@@ -703,6 +800,8 @@ MODEL_CONFIGS = {
         _DOC_BLOCK_LABEL2ID,
     ),
     "UVDoc": _UVDOC_CONFIG,
+    "PP-FormulaNet-L": _PP_FORMULANET_CONFIG_L,
+    "PP-FormulaNet_plus-L": _PP_FORMULANET_CONFIG_PLUS_L,
     "PP-Chart2Table": {
         "model_type": "pp_chart2table",
         "architectures": ["GotOcr2ForConditionalGeneration"],

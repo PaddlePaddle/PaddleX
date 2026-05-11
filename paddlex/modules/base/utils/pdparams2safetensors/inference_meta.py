@@ -436,6 +436,70 @@ def _meta_slanext(model_name):
     }
 
 
+def _meta_slanet(model_name):
+    # Max-batch dim in the HPI hint mirrors the uploaded inference.yml:
+    # SLANet uses batch=8; SLANet_plus uses batch=1.
+    max_batch = 8 if model_name == "SLANet" else 1
+    return {
+        "Hpi": _hpi_simple(
+            "x",
+            [
+                [1, 3, 32, 32],
+                [1, 3, 64, 448],
+                [max_batch, 3, 488, 488],
+            ],
+        ),
+        "PreProcess": {
+            "transform_ops": [
+                {"DecodeImage": {"channel_first": False, "img_mode": "BGR"}},
+                {
+                    "TableLabelEncode": {
+                        "learn_empty_box": False,
+                        "loc_reg_num": 8,
+                        "max_text_length": 500,
+                        "merge_no_span_structure": True,
+                        "replace_empty_cell_token": False,
+                    }
+                },
+                {
+                    "TableBoxEncode": {
+                        "in_box_format": "xyxyxyxy",
+                        "out_box_format": "xyxyxyxy",
+                    }
+                },
+                {"ResizeTableImage": {"max_len": 488}},
+                {
+                    "NormalizeImage": {
+                        "mean": [0.485, 0.456, 0.406],
+                        "order": "hwc",
+                        "scale": "1./255.",
+                        "std": [0.229, 0.224, 0.225],
+                    }
+                },
+                {"PaddingTableImage": {"size": [488, 488]}},
+                {"ToCHWImage": None},
+                {
+                    "KeepKeys": {
+                        "keep_keys": [
+                            "image",
+                            "structure",
+                            "bboxes",
+                            "bbox_masks",
+                            "length",
+                            "shape",
+                        ]
+                    }
+                },
+            ]
+        },
+        "PostProcess": {
+            "name": "TableLabelDecode",
+            "merge_no_span_structure": True,
+            "character_dict": _SLANEXT_CHARACTER_DICT,
+        },
+    }
+
+
 def _meta_uvdoc():
     return {
         "Hpi": _hpi_simple(
@@ -450,6 +514,49 @@ def _meta_chart2table():
     }
 
 
+def _meta_pp_formulanet(model_name):
+    """Build inference.yml metadata for PP-FormulaNet-L / PP-FormulaNet_plus-L.
+
+    The ``character_dict`` (UniMERNet tokenizer) is filled in by the converter
+    in :meth:`WeightConverter._save_inference_yml` — ``tokenizer.json`` is
+    resolved from the input dir or the official_models cache, and
+    ``tokenizer_config.json`` is hardcoded as ``UNIMERNET_TOKENIZER_CONFIG``.
+
+    Mirrors the inference.yml published with the official safetensors repos
+    (PaddlePaddle/PP-FormulaNet-L_safetensors etc.). Note the static-graph
+    input is 1-channel: ``LatexImageFormat`` selects a single channel from
+    the BGR/RGB image; the model expands 1->3 internally.
+    """
+    return {
+        "Hpi": _hpi_simple("x", [[1, 1, 768, 768], [1, 1, 768, 768], [8, 1, 768, 768]]),
+        "PreProcess": {
+            "transform_ops": [
+                {"UniMERNetImgDecode": {"input_size": [768, 768]}},
+                {"UniMERNetTestTransform": None},
+                {"LatexImageFormat": None},
+                {
+                    "UniMERNetLabelEncode": {
+                        # Matches the published artifact for both variants;
+                        # this op is registered as a no-op in the predictor,
+                        # so the exact value isn't load-bearing at runtime.
+                        "max_seq_len": 2560,
+                        "rec_char_dict_path": "ppocr/utils/dict/unimernet_tokenizer",
+                    }
+                },
+                {
+                    "KeepKeys": {
+                        "keep_keys": ["image", "label", "attention_mask", "filename"]
+                    }
+                },
+            ]
+        },
+        "PostProcess": {
+            "name": "UniMERNetDecode",
+            # ``character_dict`` is injected by WeightConverter._save_inference_yml.
+        },
+    }
+
+
 _INFERENCE_META_REGISTRY = {
     "PP-LCNet_x1_0_doc_ori": _meta_cls_doc_ori,
     "PP-LCNet_x1_0_table_cls": _meta_cls_table,
@@ -459,6 +566,8 @@ _INFERENCE_META_REGISTRY = {
     "PP-OCRv5_server_det": _meta_det,
     "PP-OCRv5_mobile_rec": _meta_rec,
     "PP-OCRv5_server_rec": _meta_rec,
+    "SLANet": lambda: _meta_slanet("SLANet"),
+    "SLANet_plus": lambda: _meta_slanet("SLANet_plus"),
     "SLANeXt_wired": lambda: _meta_slanext("SLANeXt_wired"),
     "SLANeXt_wireless": lambda: _meta_slanext("SLANeXt_wireless"),
     "PP-DocLayoutV2": _meta_doclayoutv3,
@@ -476,6 +585,8 @@ _INFERENCE_META_REGISTRY = {
         _LABEL_DOC_BLOCK_LAYOUT, _RTDETR_PREPROCESS_640, 640
     ),
     "UVDoc": _meta_uvdoc,
+    "PP-FormulaNet-L": lambda: _meta_pp_formulanet("PP-FormulaNet-L"),
+    "PP-FormulaNet_plus-L": lambda: _meta_pp_formulanet("PP-FormulaNet_plus-L"),
     "PP-Chart2Table": _meta_chart2table,
 }
 
@@ -611,6 +722,26 @@ PREPROCESSOR_CONFIGS = {
     "PP-OCRv5_server_det": _SERVER_DET_PREPROC,
     "PP-OCRv5_mobile_rec": _MOBILE_REC_PREPROC,
     "PP-OCRv5_server_rec": _SERVER_REC_PREPROC,
+    "SLANet": {
+        "image_processor_type": "SLANeXtImageProcessor",
+        "do_resize": True,
+        "size": {"height": 488, "width": 488},
+        "pad_size": {"height": 488, "width": 488},
+        "do_normalize": True,
+        "image_mean": [0.485, 0.456, 0.406],
+        "image_std": [0.229, 0.224, 0.225],
+        "do_pad": True,
+    },
+    "SLANet_plus": {
+        "image_processor_type": "SLANeXtImageProcessor",
+        "do_resize": True,
+        "size": {"height": 488, "width": 488},
+        "pad_size": {"height": 488, "width": 488},
+        "do_normalize": True,
+        "image_mean": [0.485, 0.456, 0.406],
+        "image_std": [0.229, 0.224, 0.225],
+        "do_pad": True,
+    },
     "SLANeXt_wired": {
         "do_resize": True,
         "size": {"height": 512, "width": 512},
@@ -635,6 +766,9 @@ PREPROCESSOR_CONFIGS = {
     "PP-DocLayout_plus-L": _rtdetr_preproc("RTDetrImageProcessor", 800, 800),
     "PP-DocBlockLayout": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "UVDoc": _UVDOC_PREPROC,
+    # PP-FormulaNet uses processor_config.json instead of preprocessor_config.json,
+    # so it has no entry here — see UNIMERNET_PROCESSOR_CONFIG and
+    # WeightConverter._save_pp_formulanet_assets.
     "PP-Chart2Table": {
         "_valid_processor_keys": _VALID_PROCESSOR_KEYS,
         "do_normalize": True,
@@ -753,4 +887,109 @@ CHART2TABLE_TOKENIZER_CONFIG = {
     "pad_token": "<|endoftext|>",
     "tokenizer_class": "Qwen2Tokenizer",
     "unk_token": "<|endoftext|>",
+}
+
+
+# PP-FormulaNet tokenizer assets
+def _unimernet_special_token(content):
+    return {
+        "content": content,
+        "lstrip": False,
+        "normalized": False,
+        "rstrip": False,
+        "single_word": False,
+        "special": True,
+    }
+
+
+# Mirrors tokenizer_config.json published with
+# PaddlePaddle/PP-FormulaNet-L_safetensors and PP-FormulaNet_plus-L_safetensors.
+# tokenizer.json itself is too large to hardcode (~2.1 MB) — it is resolved at
+# conversion time via the input dir or the official_models cache.
+UNIMERNET_TOKENIZER_CONFIG = {
+    "added_tokens_decoder": {
+        str(i): _unimernet_special_token(content)
+        for i, content in enumerate(
+            [
+                "<s>",
+                "<pad>",
+                "</s>",
+                "<unk>",
+                "[START_REF]",
+                "[END_REF]",
+                "[IMAGE]",
+                "<fragments>",
+                "</fragments>",
+                "<work>",
+                "</work>",
+                "[START_SUP]",
+                "[END_SUP]",
+                "[START_SUB]",
+                "[END_SUB]",
+                "[START_DNA]",
+                "[END_DNA]",
+                "[START_AMINO]",
+                "[END_AMINO]",
+                "[START_SMILES]",
+                "[END_SMILES]",
+                "[START_I_SMILES]",
+                "[END_I_SMILES]",
+            ]
+        )
+    },
+    "additional_special_tokens": [],
+    "bos_token": "<s>",
+    "clean_up_tokenization_spaces": False,
+    "eos_token": "</s>",
+    "max_length": 4096,
+    "model_max_length": 768,
+    "pad_to_multiple_of": None,
+    "pad_token": "<pad>",
+    "pad_token_type_id": 0,
+    "padding_side": "right",
+    # Standalone tokenizer_config.json on the published HF repo uses
+    # "NougatProcessor"; the embedded copy in inference.yml uses
+    # "VariableDonutProcessor". WeightConverter._save_inference_yml swaps it
+    # at injection time. Either value is functionally equivalent at runtime
+    # since UniMERNetDecode only reads added_tokens_decoder.
+    "processor_class": "NougatProcessor",
+    "stride": 0,
+    "tokenizer_class": "NougatTokenizer",
+    "truncation_side": "right",
+    "truncation_strategy": "longest_first",
+    "unk_token": "<unk>",
+    "vocab_file": None,
+}
+
+
+# Mirrors processor_config.json published with PP-FormulaNet HF safetensors repos.
+UNIMERNET_PROCESSOR_CONFIG = {
+    "image_processor": {
+        "do_align_long_axis": False,
+        "do_crop_margin": True,
+        "do_normalize": True,
+        "do_pad": True,
+        "do_rescale": True,
+        "do_resize": True,
+        "do_thumbnail": True,
+        "size": {"height": 768, "width": 768},
+        "image_mean": [0.7931, 0.7931, 0.7931],
+        "image_std": [0.1738, 0.1738, 0.1738],
+        "image_processor_type": "PPFormulaNetImageProcessor",
+        "resample": 2,
+        "return_tensors": "pt",
+    },
+    "processor_class": "PPFormulaNetProcessor",
+}
+
+
+# Mirrors generation_config.json published with PP-FormulaNet HF safetensors repos.
+UNIMERNET_GENERATION_CONFIG = {
+    "bos_token_id": 0,
+    "eos_token_id": 2,
+    "forced_eos_token_id": 2,
+    "decoder_start_token_id": 2,
+    "max_length": 1537,
+    "pad_token_id": 1,
+    "use_cache": True,
 }

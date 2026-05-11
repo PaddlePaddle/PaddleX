@@ -123,8 +123,16 @@ class TableLabelDecode:
 
     def __call__(self, pred, img_size, ori_img_size):
         """apply"""
-        bbox_preds = np.array(pred[0])
-        structure_probs = np.array(pred[1])
+        # Structure-only runners (SLANet / SLANeXt paddle_dynamic, which have
+        # no location head) return a single-element prediction. Treat the
+        # missing bbox slot as "no cell polygons" — the downstream pipeline
+        # already has an empty-bbox fallback path.
+        if len(pred) == 1:
+            bbox_preds = None
+            structure_probs = np.array(pred[0])
+        else:
+            bbox_preds = np.array(pred[0])
+            structure_probs = np.array(pred[1])
 
         bbox_list, structure_str_list, structure_scores = self.decode(
             structure_probs, bbox_preds, img_size, ori_img_size
@@ -168,7 +176,7 @@ class TableLabelDecode:
                 if char_idx in ignored_tokens:
                     continue
                 text = self.character[char_idx]
-                if text in self.td_token:
+                if text in self.td_token and bbox_preds is not None:
                     bbox = bbox_preds[batch_idx, idx]
                     h_scale, w_scale = self._get_bbox_scales(
                         padding_size[batch_idx], ori_img_size[batch_idx]
