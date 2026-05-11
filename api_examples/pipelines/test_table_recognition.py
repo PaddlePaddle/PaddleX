@@ -17,7 +17,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="table_recognition")
 
 output = pipeline.predict(
-    "./test_samples/table_recognition.jpg",
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )

@@ -16,7 +16,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="image_classification")
 
-output = pipeline.predict("./test_samples/general_image_classification_001.jpg", topk=5)
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg", topk=5)
 
 # output = pipeline.predict("./test_samples/财报1.pdf")
 

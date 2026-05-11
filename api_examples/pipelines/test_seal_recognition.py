@@ -16,7 +16,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="seal_recognition")
 output = pipeline.predict(
-    "./test_samples/seal_text_det.png",
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )

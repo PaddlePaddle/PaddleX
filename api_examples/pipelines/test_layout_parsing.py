@@ -17,7 +17,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="layout_parsing")
 
 output = pipeline.predict(
-    "./test_samples/demo_paper.png",
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,

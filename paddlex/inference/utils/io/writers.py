@@ -349,7 +349,13 @@ class OpenCVImageWriterBackend(_ImageWriterBackend):
             arr = obj
         else:
             raise TypeError("Unsupported object type")
-        return cv2.imwrite(out_path, arr)
+        ext = Path(out_path).suffix
+        success, buf = cv2.imencode(ext, arr)
+        if not success:
+            return False
+        with open(out_path, "wb") as f:
+            f.write(buf.tobytes())
+        return True
 
 
 class PILImageWriterBackend(_ImageWriterBackend):

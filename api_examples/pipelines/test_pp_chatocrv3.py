@@ -16,7 +16,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="PP-ChatOCRv3-doc")
 
-img_path = "./test_samples/vehicle_certificate-1.png"
+img_path = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_certificate-1.png"
 key_list = ["驾驶室准乘人数"]
 
 # img_path = "./test_samples/财报1.pdf"

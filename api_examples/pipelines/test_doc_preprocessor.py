@@ -17,25 +17,25 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="doc_preprocessor")
 
 output = pipeline.predict(
-    "./test_samples/img_rot180_demo.jpg",
+    "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg",
     use_doc_orientation_classify=True,
     use_doc_unwarping=False,
 )
 
 # output = pipeline.predict(
-#     "./test_samples/img_rot180_demo.jpg",
+#     "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg",
 #     use_doc_orientation_classify=False,
 #     use_doc_unwarping=True,
 # )
 
 # output = pipeline.predict(
-#     "./test_samples/img_rot180_demo.jpg",
+#     "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg",
 #     use_doc_orientation_classify=True,
 #     use_doc_unwarping=True,
 # )
 
 # output = pipeline.predict(
-#     "./test_samples/img_rot180_demo.jpg",
+#     "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg",
 #     use_doc_orientation_classify=False,
 #     use_doc_unwarping=False,
 # )

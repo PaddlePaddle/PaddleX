@@ -15,7 +15,7 @@
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="anomaly_detection")
-output = pipeline.predict("./test_samples/uad_grid.png")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png")
 
 for res in output:
     print(res)
