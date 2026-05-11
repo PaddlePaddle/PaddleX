@@ -38,6 +38,7 @@ from .utils.pdparams2safetensors import (
     PP_CHART2TABLE_MAPPING,
     PP_DOCLAYOUTV2_DROP_PREFIXES,
     PP_DOCLAYOUTV2_MAPPING,
+    PP_FORMULANET_MAPPING,
     PPLCNET_MAPPING,
     PPOCRV5_MOBILE_DET_MAPPING,
     PPOCRV5_MOBILE_REC_MAPPING,
@@ -48,8 +49,13 @@ from .utils.pdparams2safetensors import (
     RTDETR_MAPPING,
     SERVER_DET_DROP_PREFIXES,
     SERVER_REC_DROP_PREFIXES,
+    SLANET_DROP_PREFIXES,
+    SLANET_MAPPING,
     SLANEXT_DROP_PREFIXES,
     SLANEXT_MAPPING,
+    UNIMERNET_GENERATION_CONFIG,
+    UNIMERNET_PROCESSOR_CONFIG,
+    UNIMERNET_TOKENIZER_CONFIG,
     UVDOC_DROP_PREFIXES,
     UVDOC_MAPPING,
     apply_key_mapping,
@@ -75,6 +81,8 @@ _MODEL_REGISTRY = {
     "PP-OCRv5_server_det": (PPOCRV5_SERVER_DET_MAPPING, SERVER_DET_DROP_PREFIXES),
     "PP-OCRv5_mobile_rec": (PPOCRV5_MOBILE_REC_MAPPING, REC_DROP_PREFIXES),
     "PP-OCRv5_server_rec": (PPOCRV5_SERVER_REC_MAPPING, SERVER_REC_DROP_PREFIXES),
+    "SLANet": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
+    "SLANet_plus": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
     "SLANeXt_wired": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "SLANeXt_wireless": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "PP-DocLayoutV2": (PP_DOCLAYOUTV2_MAPPING, PP_DOCLAYOUTV2_DROP_PREFIXES),
@@ -84,8 +92,14 @@ _MODEL_REGISTRY = {
     "PP-DocLayout_plus-L": (RTDETR_MAPPING, []),
     "PP-DocBlockLayout": (RTDETR_MAPPING, []),
     "UVDoc": (UVDOC_MAPPING, UVDOC_DROP_PREFIXES),
+    "PP-FormulaNet-L": (PP_FORMULANET_MAPPING, []),
+    "PP-FormulaNet_plus-L": (PP_FORMULANET_MAPPING, []),
     "PP-Chart2Table": (PP_CHART2TABLE_MAPPING, PP_CHART2TABLE_DROP_PREFIXES),
 }
+
+# Models that need processor_config.json + tokenizer files instead of the
+# default preprocessor_config.json output.
+PP_FORMULANET_MODELS = ("PP-FormulaNet-L", "PP-FormulaNet_plus-L")
 
 
 _TRANSPOSE_SUBSTRINGS = [
@@ -121,6 +135,8 @@ _TRANSPOSE_SUBSTRINGS = [
     "kv_mapper",
     "clip_mapper",
     "mm_projector_vary",
+    # PP-FormulaNet projector linear (renamed to multi_modal_projector.linear_2)
+    "enc_to_dec_proj",
     "score_head",
     "enc_score_head",
     "dec_score_head",
@@ -349,6 +365,9 @@ class WeightConverter:
         if self.model_name in PP_CHART2TABLE_MODELS:
             self._save_llm_config()
 
+        if self.model_name in PP_FORMULANET_MODELS:
+            self._save_pp_formulanet_assets()
+
         logging.info(f"Conversion complete. Output saved to: {self.output_dir}")
 
     def _convert_weights(self, key_mapping, drop_prefixes):
@@ -455,6 +474,11 @@ class WeightConverter:
 
     def _save_preprocessor_config(self):
         """Save preprocessor_config.json — user-provided or official default."""
+        if self.model_name in PP_FORMULANET_MODELS:
+            # PP-FormulaNet ships processor_config.json (HF AutoProcessor) instead;
+            # see _save_pp_formulanet_assets.
+            return
+
         if "preprocessor_config.json" in self._user_configs:
             data = self._user_configs["preprocessor_config.json"]
         else:
@@ -480,6 +504,19 @@ class WeightConverter:
                 data.setdefault("PostProcess", {})[
                     "character_dict"
                 ] = load_character_dict()
+            elif self.model_name in PP_FORMULANET_MODELS:
+                # UniMERNetDecode reads the tokenizer from
+                # PostProcess.character_dict — fast_tokenizer_file is the
+                # parsed tokenizer.json content (~2 MB), tokenizer_config_file
+                # is hardcoded. The embedded copy uses processor_class
+                # "VariableDonutProcessor" (matches the published inference.yml);
+                # the standalone tokenizer_config.json uses "NougatProcessor".
+                tokenizer_config = dict(UNIMERNET_TOKENIZER_CONFIG)
+                tokenizer_config["processor_class"] = "VariableDonutProcessor"
+                data.setdefault("PostProcess", {})["character_dict"] = {
+                    "fast_tokenizer_file": self._load_unimernet_fast_tokenizer(),
+                    "tokenizer_config_file": tokenizer_config,
+                }
 
         out_path = os.path.join(self.output_dir, "inference.yml")
         with open(out_path, "w", encoding="utf-8") as f:
@@ -560,3 +597,89 @@ class WeightConverter:
             f"model is cached at {cache_path} (run inference once to download). "
             f"For directory input, include qwen.tiktoken in the input directory."
         )
+
+    def _resolve_unimernet_tokenizer_source(self):
+        """Resolve filesystem path to tokenizer.json (PP-FormulaNet fast tokenizer).
+
+        Resolution chain (mirrors :meth:`_resolve_tiktoken_source`):
+            input dir → ~/.paddlex/official_models/{name}_safetensors/tokenizer.json
+            → FileNotFoundError
+        """
+        if self._input_is_dir:
+            src = Path(self.input_path) / "tokenizer.json"
+            if src.exists():
+                return str(src)
+            logging.warning(
+                f"tokenizer.json not found in {self.input_path}. "
+                "Falling back to official model cache."
+            )
+
+        from ...utils.cache import CACHE_DIR
+
+        cache_path = (
+            Path(CACHE_DIR)
+            / "official_models"
+            / f"{self.model_name}_safetensors"
+            / "tokenizer.json"
+        )
+        if cache_path.exists():
+            return str(cache_path)
+
+        raise FileNotFoundError(
+            f"tokenizer.json not found. For single-file input, ensure the official "
+            f"model is cached at {cache_path} (run "
+            f"`create_model('{self.model_name}', engine='paddle_dynamic')` once "
+            f"to download). For directory input, include tokenizer.json in the "
+            f"input directory."
+        )
+
+    def _load_unimernet_fast_tokenizer(self):
+        """Load tokenizer.json content as a parsed dict (for inference.yml embedding)."""
+        path = self._resolve_unimernet_tokenizer_source()
+        logging.info(f"Loaded tokenizer.json: {path}")
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+
+    def _save_pp_formulanet_assets(self):
+        """Save HF-style assets for PP-FormulaNet (transformers-engine compatible).
+
+        Outputs ``processor_config.json``, ``generation_config.json``,
+        ``tokenizer_config.json`` (all hardcoded), and copies ``tokenizer.json``
+        from the input dir or official_models cache. The tokenizer JSON is also
+        already embedded in inference.yml (read by UniMERNetDecode) — saving the
+        standalone file lets HF AutoTokenizer load the converted directory.
+        """
+        import shutil
+
+        # Copy tokenizer.json (the heavy fast tokenizer file)
+        tokenizer_src = self._resolve_unimernet_tokenizer_source()
+        tokenizer_dst = os.path.join(self.output_dir, "tokenizer.json")
+        shutil.copy2(tokenizer_src, tokenizer_dst)
+        logging.info(f"Copied tokenizer.json to: {tokenizer_dst}")
+
+        # JSON assets: user-provided (if input is a dir) or hardcoded defaults
+        _ASSET_DEFAULTS = {
+            "processor_config.json": UNIMERNET_PROCESSOR_CONFIG,
+            "generation_config.json": UNIMERNET_GENERATION_CONFIG,
+            "tokenizer_config.json": UNIMERNET_TOKENIZER_CONFIG,
+        }
+        for fname, default_data in _ASSET_DEFAULTS.items():
+            if self._input_is_dir:
+                src = Path(self.input_path) / fname
+                if src.exists():
+                    with open(src, encoding="utf-8") as f:
+                        data = json.load(f)
+                    logging.info(f"Loaded user asset: {src}")
+                else:
+                    data = default_data
+                    logging.warning(
+                        f"{fname} not found in {self.input_path}. "
+                        f"Using default for {self.model_name}."
+                    )
+            else:
+                data = default_data
+
+            out_path = os.path.join(self.output_dir, fname)
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            logging.info(f"Saved {fname} to: {out_path}")

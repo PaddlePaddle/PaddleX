@@ -13,12 +13,13 @@
 # limitations under the License.
 
 import numpy as np
+from PIL import Image
 
 from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..predictors import RunnerPredictor
+from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import (
     LatexImageFormat,
     LaTeXOCRDecode,
@@ -32,6 +33,8 @@ from .processors import (
     UniMERNetTestTransform,
 )
 from .result import FormulaRecResult
+
+FORMULA_REC_TRANSFORMERS_MODELS = ["PP-FormulaNet-L", "PP-FormulaNet_plus-L"]
 
 
 class FormulaRecRunnerPredictor(RunnerPredictor):
@@ -186,3 +189,46 @@ class FormulaRecRunnerPredictor(RunnerPredictor):
     @register("KeepKeys")
     def foo(self, *args, **kwargs):
         return None, None
+
+
+class FormulaRecTransformersPredictor(TransformersPredictor):
+    """Text recognition predictor backed by Hugging Face transformers."""
+
+    def __init__(self, *args, return_word_box: bool = False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.return_word_box = return_word_box
+        self.read_op = ReadImage(format="RGB")
+        self.processor, self.infer = self._build()
+
+    def _build_batch_sampler(self):
+        return ImageBatchSampler()
+
+    def _get_result_class(self):
+        return FormulaRecResult
+
+    def _build(self):
+        from transformers import AutoModelForImageTextToText, AutoProcessor
+
+        processor = self._load_pretrained_processor(AutoProcessor)
+        model = self._load_pretrained_model(AutoModelForImageTextToText)
+        return processor, model
+
+    def process(self, batch_data):
+        batch_raw_imgs = self.read_op(imgs=batch_data.instances)
+        images = [Image.fromarray(img) for img in batch_raw_imgs]
+
+        model_inputs = self.preprocess_images(images=images)
+        outputs = self.generate(model_inputs, {"do_sample": False})
+        rec_formula = self.postprocess(outputs)
+
+        return {
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
+            "input_img": batch_raw_imgs,
+            "rec_formula": rec_formula,
+        }
+
+    def postprocess(self, outputs, **kwargs):
+        rec_formula = self.processor.post_process(outputs, **kwargs)
+
+        return rec_formula

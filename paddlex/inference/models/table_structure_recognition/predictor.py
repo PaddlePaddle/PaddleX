@@ -25,7 +25,12 @@ from ..predictors import RunnerPredictor, TransformersPredictor
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 
-TABLE_REC_TRANSFORMERS_MODELS = ["SLANeXt_wired", "SLANeXt_wireless"]
+TABLE_REC_TRANSFORMERS_MODELS = [
+    "SLANet",
+    "SLANet_plus",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
+]
 
 
 class TableRunnerPredictor(RunnerPredictor):
@@ -173,10 +178,10 @@ class TableTransformersPredictor(TransformersPredictor):
         return TableRecResult
 
     def _build(self) -> Tuple:
-        from transformers import AutoImageProcessor, SLANeXtForTableRecognition
+        from transformers import AutoImageProcessor, AutoModelForTableRecognition
 
         image_processor = self._load_pretrained_processor(AutoImageProcessor)
-        model = self._load_pretrained_model(SLANeXtForTableRecognition)
+        model = self._load_pretrained_model(AutoModelForTableRecognition)
 
         return image_processor, model
 
