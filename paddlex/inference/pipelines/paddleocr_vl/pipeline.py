@@ -269,145 +269,191 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
         return True
 
-    def get_layout_parsing_results(
+    @benchmark.timeit_with_options(name="paddleocr_vl_filter_overlap_boxes")
+    def _paddleocr_vl_filter_overlap_boxes(self, layout_det_res, layout_shape_mode):
+        return filter_overlap_boxes(layout_det_res, layout_shape_mode)
+
+    @benchmark.timeit_with_options(name="paddleocr_vl_crop_layout_regions")
+    def _paddleocr_vl_crop_layout_regions(self, image, boxes, layout_shape_mode):
+        return self.crop_by_boxes(image, boxes, layout_shape_mode)
+
+    @benchmark.timeit_with_options(name="paddleocr_vl_merge_adjacent_blocks")
+    def _paddleocr_vl_merge_adjacent_blocks(self, blocks_for_img, layout_prep_cfg):
+        if not layout_prep_cfg["merge_layout_blocks"]:
+            return blocks_for_img
+        return merge_blocks(
+            blocks_for_img,
+            non_merge_labels=layout_prep_cfg["image_labels"] + ["table"],
+        )
+
+    def _paddleocr_vl_collect_page_vlm_entries_core(
         self,
-        images,
-        layout_det_results,
-        imgs_in_doc,
-        use_chart_recognition=False,
-        use_seal_recognition=False,
-        use_ocr_for_image_block=False,
-        vlm_kwargs=None,
-        merge_layout_blocks=True,
-        layout_shape_mode="auto",
+        page_idx,
+        blocks_for_img,
+        imgs_in_doc_for_img,
+        layout_prep_cfg,
     ):
+        page_vlm_entries = []
+        page_has_spotting = False
+        page_drop_figures = set()
+
+        for j, block in enumerate(blocks_for_img):
+            block_img = block["img"]
+            block_label = block["label"]
+            if (
+                block_label not in layout_prep_cfg["image_labels"]
+                and block_img is not None
+            ):
+                figure_token_map = {}
+                text_prompt = "OCR:"
+                blk_min_pixels = layout_prep_cfg["ocr_min_pixels"]
+                blk_max_pixels = layout_prep_cfg["ocr_max_pixels"]
+                drop_figures = []
+                if block_label == "table":
+                    text_prompt = "Table Recognition:"
+                    block_img, figure_token_map, drop_figures = (
+                        tokenize_figure_of_table(
+                            block_img, block["box"], imgs_in_doc_for_img
+                        )
+                    )
+                    blk_min_pixels = layout_prep_cfg["table_min_pixels"]
+                    blk_max_pixels = layout_prep_cfg["table_max_pixels"]
+                elif (
+                    block_label == "chart" and layout_prep_cfg["use_chart_recognition"]
+                ):
+                    text_prompt = "Chart Recognition:"
+                    blk_min_pixels = layout_prep_cfg["chart_min_pixels"]
+                    blk_max_pixels = layout_prep_cfg["chart_max_pixels"]
+                elif "formula" in block_label and block_label != "formula_number":
+                    text_prompt = "Formula Recognition:"
+                    crop_img = crop_margin(block_img)
+                    w, h, _ = crop_img.shape
+                    if w > 2 and h > 2:
+                        block_img = crop_img
+                    blk_min_pixels = layout_prep_cfg["formula_min_pixels"]
+                    blk_max_pixels = layout_prep_cfg["formula_max_pixels"]
+                elif block_label == "spotting":
+                    text_prompt = "Spotting:"
+                    page_has_spotting = True
+                    blk_min_pixels = 112896
+                    blk_max_pixels = 1605632
+                    block_img = pre_process_for_spotting(block_img)
+                elif block_label == "seal" and layout_prep_cfg["use_seal_recognition"]:
+                    text_prompt = "Seal Recognition:"
+                    blk_min_pixels = layout_prep_cfg["seal_min_pixels"]
+                    blk_max_pixels = layout_prep_cfg["seal_max_pixels"]
+
+                page_vlm_entries.append(
+                    (
+                        page_idx,
+                        j,
+                        block_img,
+                        text_prompt,
+                        (blk_min_pixels, blk_max_pixels),
+                        figure_token_map,
+                    )
+                )
+                page_drop_figures.update(drop_figures)
+
+        return page_vlm_entries, page_has_spotting, page_drop_figures
+
+    @benchmark.timeit_with_options(name="paddleocr_vl_collect_block_vlm_inputs")
+    def _paddleocr_vl_collect_block_vlm_inputs(
+        self,
+        page_idx,
+        blocks_for_img,
+        imgs_in_doc_for_img,
+        layout_prep_cfg,
+    ):
+        return self._paddleocr_vl_collect_page_vlm_entries_core(
+            page_idx,
+            blocks_for_img,
+            imgs_in_doc_for_img,
+            layout_prep_cfg,
+        )
+
+    def _paddleocr_vl_prepare_page_core(self, payload):
+        """Filter → crop → merge → build VLM inputs (safe for thread pool; no nested timers)."""
+        i, image, layout_det_res, imgs_in_doc_for_img, layout_prep_cfg = payload
+        layout_det_res = filter_overlap_boxes(
+            layout_det_res, layout_prep_cfg["layout_shape_mode"]
+        )
+        boxes = layout_det_res["boxes"]
+        blocks_for_img = self.crop_by_boxes(
+            image, boxes, layout_prep_cfg["layout_shape_mode"]
+        )
+        if layout_prep_cfg["merge_layout_blocks"]:
+            blocks_for_img = merge_blocks(
+                blocks_for_img,
+                non_merge_labels=layout_prep_cfg["image_labels"] + ["table"],
+            )
+        (
+            page_vlm_entries,
+            page_has_spotting,
+            page_drop_figures,
+        ) = self._paddleocr_vl_collect_page_vlm_entries_core(
+            i, blocks_for_img, imgs_in_doc_for_img, layout_prep_cfg
+        )
+        return (
+            i,
+            blocks_for_img,
+            page_vlm_entries,
+            page_has_spotting,
+            page_drop_figures,
+        )
+
+    def _paddleocr_vl_prepare_page_serial_benchmarked(self, payload):
+        (
+            i,
+            image,
+            layout_det_res,
+            imgs_in_doc_for_img,
+            layout_prep_cfg,
+        ) = payload
+        layout_det_res = self._paddleocr_vl_filter_overlap_boxes(
+            layout_det_res, layout_prep_cfg["layout_shape_mode"]
+        )
+        boxes = layout_det_res["boxes"]
+        blocks_for_img = self._paddleocr_vl_crop_layout_regions(
+            image, boxes, layout_prep_cfg["layout_shape_mode"]
+        )
+        blocks_for_img = self._paddleocr_vl_merge_adjacent_blocks(
+            blocks_for_img, layout_prep_cfg
+        )
+        (
+            page_vlm_entries,
+            page_has_spotting,
+            page_drop_figures,
+        ) = self._paddleocr_vl_collect_block_vlm_inputs(
+            i,
+            blocks_for_img,
+            imgs_in_doc_for_img,
+            layout_prep_cfg,
+        )
+        return (
+            i,
+            blocks_for_img,
+            page_vlm_entries,
+            page_has_spotting,
+            page_drop_figures,
+        )
+
+    @benchmark.timeit_with_options(name="paddleocr_vl_layout_prep_parallel")
+    def _paddleocr_vl_layout_prep_parallel_pages(self, page_payloads, max_workers):
+        with ThreadPoolExecutor(max_workers=max_workers) as cpu_pool:
+            return list(
+                cpu_pool.map(self._paddleocr_vl_prepare_page_core, page_payloads)
+            )
+
+    @benchmark.timeit_with_options(name="paddleocr_vl_aggregate_vlm_batches")
+    def _paddleocr_vl_aggregate_vlm_batches(self, page_results):
         blocks = []
         has_spotting = False
         drop_figures_set = set()
-        min_pixels = vlm_kwargs.pop("min_pixels", None)
-        default_min_pixels = min_pixels if min_pixels is not None else 112896
-        max_pixels = vlm_kwargs.pop("max_pixels", None)
-        default_max_pixels = max_pixels if max_pixels is not None else 1003520
-
         batch_dict_by_pixel = {}
         id2pixel_key_map = {}
-        image_path_to_obj_map = {}
-        vis_image_labels = IMAGE_LABELS + ["seal"]
-        image_labels = [] if use_ocr_for_image_block else IMAGE_LABELS.copy()
-        if not use_chart_recognition:
-            image_labels += ["chart"]
-            vis_image_labels += ["chart"]
-        if not use_seal_recognition:
-            image_labels += ["seal"]
-        # Per-page pixel kwargs extracted from vlm_kwargs (avoid pop in parallel)
-        ocr_min_pixels = vlm_kwargs.pop("ocr_min_pixels", default_min_pixels)
-        ocr_max_pixels = vlm_kwargs.pop("ocr_max_pixels", default_max_pixels)
-        table_min_pixels = vlm_kwargs.pop("table_min_pixels", default_min_pixels)
-        table_max_pixels = vlm_kwargs.pop("table_max_pixels", default_max_pixels)
-        chart_min_pixels = vlm_kwargs.pop("chart_min_pixels", default_min_pixels)
-        chart_max_pixels = vlm_kwargs.pop("chart_max_pixels", default_max_pixels)
-        formula_min_pixels = vlm_kwargs.pop("formula_min_pixels", default_min_pixels)
-        formula_max_pixels = vlm_kwargs.pop("formula_max_pixels", default_max_pixels)
-        seal_min_pixels = vlm_kwargs.pop("seal_min_pixels", default_min_pixels)
-        seal_max_pixels = vlm_kwargs.pop("seal_max_pixels", default_max_pixels)
-
-        def _process_single_page(args):
-            """Process a single page's CPU work: filter, crop, merge, prepare VLM inputs."""
-            i, image, layout_det_res, imgs_in_doc_for_img = args
-            layout_det_res = filter_overlap_boxes(layout_det_res, layout_shape_mode)
-            boxes = layout_det_res["boxes"]
-            blocks_for_img = self.crop_by_boxes(image, boxes, layout_shape_mode)
-            if merge_layout_blocks:
-                blocks_for_img = merge_blocks(
-                    blocks_for_img, non_merge_labels=image_labels + ["table"]
-                )
-
-            page_vlm_entries = []
-            page_has_spotting = False
-            page_drop_figures = set()
-
-            for j, block in enumerate(blocks_for_img):
-                block_img = block["img"]
-                block_label = block["label"]
-                if block_label not in image_labels and block_img is not None:
-                    figure_token_map = {}
-                    text_prompt = "OCR:"
-                    blk_min_pixels = ocr_min_pixels
-                    blk_max_pixels = ocr_max_pixels
-                    drop_figures = []
-                    if block_label == "table":
-                        text_prompt = "Table Recognition:"
-                        block_img, figure_token_map, drop_figures = (
-                            tokenize_figure_of_table(
-                                block_img, block["box"], imgs_in_doc_for_img
-                            )
-                        )
-                        blk_min_pixels = table_min_pixels
-                        blk_max_pixels = table_max_pixels
-                    elif block_label == "chart" and use_chart_recognition:
-                        text_prompt = "Chart Recognition:"
-                        blk_min_pixels = chart_min_pixels
-                        blk_max_pixels = chart_max_pixels
-                    elif "formula" in block_label and block_label != "formula_number":
-                        text_prompt = "Formula Recognition:"
-                        crop_img = crop_margin(block_img)
-                        w, h, _ = crop_img.shape
-                        if w > 2 and h > 2:
-                            block_img = crop_img
-                        blk_min_pixels = formula_min_pixels
-                        blk_max_pixels = formula_max_pixels
-                    elif block_label == "spotting":
-                        text_prompt = "Spotting:"
-                        page_has_spotting = True
-                        blk_min_pixels = 112896
-                        blk_max_pixels = 1605632
-                        block_img = pre_process_for_spotting(block_img)
-                    elif block_label == "seal" and use_seal_recognition:
-                        text_prompt = "Seal Recognition:"
-                        blk_min_pixels = seal_min_pixels
-                        blk_max_pixels = seal_max_pixels
-
-                    page_vlm_entries.append(
-                        (
-                            i,
-                            j,
-                            block_img,
-                            text_prompt,
-                            (blk_min_pixels, blk_max_pixels),
-                            figure_token_map,
-                        )
-                    )
-                    page_drop_figures.update(drop_figures)
-
-            return (
-                i,
-                blocks_for_img,
-                page_vlm_entries,
-                page_has_spotting,
-                page_drop_figures,
-            )
-
-        # Per-page CPU work: optional thread pool.
-        num_pages = len(images)
-        page_args = [
-            (i, images[i], layout_det_results[i], imgs_in_doc[i])
-            for i in range(num_pages)
-        ]
-
-        max_workers = (
-            min(self.layout_prep_cpu_workers, num_pages) if num_pages > 0 else 0
-        )
-        if num_pages > 1 and max_workers > 1:
-            with ThreadPoolExecutor(max_workers=max_workers) as cpu_pool:
-                page_results = list(cpu_pool.map(_process_single_page, page_args))
-        elif num_pages > 1:
-            page_results = [_process_single_page(a) for a in page_args]
-        else:
-            page_results = [_process_single_page(page_args[0])]
-
-        # Merge per-page results into shared structures (sequential, fast)
         for (
-            page_idx,
+            _,
             blocks_for_img,
             page_vlm_entries,
             page_has_spotting,
@@ -441,22 +487,32 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 batch_dict_by_pixel[pixel_key]["vlm_block_ids"].append((i, j))
                 id2pixel_key_map[(i, j)] = pixel_key
 
-        del images, layout_det_results, page_results
+        return (
+            blocks,
+            has_spotting,
+            drop_figures_set,
+            batch_dict_by_pixel,
+            id2pixel_key_map,
+        )
 
+    @benchmark.timeit_with_options(name="paddleocr_vl_run_vl_recognition_batches")
+    def _paddleocr_vl_run_vl_recognition_batches(
+        self, batch_dict_by_pixel, has_spotting, vlm_kwargs
+    ):
         if vlm_kwargs is None:
             vlm_kwargs = {}
         elif vlm_kwargs.get("max_new_tokens", None) is None:
             vlm_kwargs["max_new_tokens"] = 4096
 
         for pixel_key in batch_dict_by_pixel:
-            min_pixels, max_pixels = pixel_key
+            min_px, max_px = pixel_key
             kwargs = {
                 "use_cache": True,
-                "min_pixels": min_pixels,
-                "max_pixels": max_pixels,
+                "min_pixels": min_px,
+                "max_pixels": max_px,
                 **vlm_kwargs,
             }
-            images = batch_dict_by_pixel[pixel_key]["images"]
+            pv_images = batch_dict_by_pixel[pixel_key]["images"]
             queries = batch_dict_by_pixel[pixel_key]["queries"]
             batch_results = list(
                 self.vl_rec_model.predict(
@@ -465,18 +521,28 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             "image": image,
                             "query": query,
                         }
-                        for image, query in zip(images, queries)
+                        for image, query in zip(pv_images, queries)
                     ],
                     skip_special_tokens=False if has_spotting else True,
                     **kwargs,
                 )
             )
-            del images, queries
+            del pv_images, queries
             batch_dict_by_pixel[pixel_key]["vlm_results"] = batch_results
 
+    @benchmark.timeit_with_options(name="paddleocr_vl_assemble_parsing_results")
+    def _paddleocr_vl_assemble_parsing_results(
+        self,
+        blocks,
+        batch_dict_by_pixel,
+        id2pixel_key_map,
+        drop_figures_set,
+        vis_image_labels,
+    ):
         parsing_res_lists = []
         table_res_lists = []
         spotting_res_list = []
+        image_path_to_obj_map = {}
         table_blocks = []
         for i, blocks_for_img in enumerate(blocks):
             parsing_res_list = []
@@ -566,7 +632,6 @@ class _PaddleOCRVLPipeline(BasePipeline):
 
                 parsing_res_list.append(block_info)
                 del block_info, block_img
-            # TODO(changdazhou): append table res to table_res_list
             for blk_info in table_blocks:
                 block = blk_info["block"]
                 figure_token_map = blk_info["figure_token_map"]
@@ -577,6 +642,119 @@ class _PaddleOCRVLPipeline(BasePipeline):
             table_res_lists.append(table_res_list)
             spotting_res_list.append(spotting_res)
             del parsing_res_list, table_res_list, spotting_res
+
+        return parsing_res_lists, table_res_lists, spotting_res_list
+
+    def get_layout_parsing_results(
+        self,
+        images,
+        layout_det_results,
+        imgs_in_doc,
+        use_chart_recognition=False,
+        use_seal_recognition=False,
+        use_ocr_for_image_block=False,
+        vlm_kwargs=None,
+        merge_layout_blocks=True,
+        layout_shape_mode="auto",
+    ):
+        if vlm_kwargs is None:
+            vlm_kwargs = {}
+
+        min_pixels = vlm_kwargs.pop("min_pixels", None)
+        default_min_pixels = min_pixels if min_pixels is not None else 112896
+        max_pixels = vlm_kwargs.pop("max_pixels", None)
+        default_max_pixels = max_pixels if max_pixels is not None else 1003520
+
+        vis_image_labels = IMAGE_LABELS + ["seal"]
+        image_labels = [] if use_ocr_for_image_block else IMAGE_LABELS.copy()
+        if not use_chart_recognition:
+            image_labels += ["chart"]
+            vis_image_labels += ["chart"]
+        if not use_seal_recognition:
+            image_labels += ["seal"]
+        ocr_min_pixels = vlm_kwargs.pop("ocr_min_pixels", default_min_pixels)
+        ocr_max_pixels = vlm_kwargs.pop("ocr_max_pixels", default_max_pixels)
+        table_min_pixels = vlm_kwargs.pop("table_min_pixels", default_min_pixels)
+        table_max_pixels = vlm_kwargs.pop("table_max_pixels", default_max_pixels)
+        chart_min_pixels = vlm_kwargs.pop("chart_min_pixels", default_min_pixels)
+        chart_max_pixels = vlm_kwargs.pop("chart_max_pixels", default_max_pixels)
+        formula_min_pixels = vlm_kwargs.pop("formula_min_pixels", default_min_pixels)
+        formula_max_pixels = vlm_kwargs.pop("formula_max_pixels", default_max_pixels)
+        seal_min_pixels = vlm_kwargs.pop("seal_min_pixels", default_min_pixels)
+        seal_max_pixels = vlm_kwargs.pop("seal_max_pixels", default_max_pixels)
+
+        layout_prep_cfg = {
+            "layout_shape_mode": layout_shape_mode,
+            "merge_layout_blocks": merge_layout_blocks,
+            "image_labels": image_labels,
+            "use_chart_recognition": use_chart_recognition,
+            "use_seal_recognition": use_seal_recognition,
+            "ocr_min_pixels": ocr_min_pixels,
+            "ocr_max_pixels": ocr_max_pixels,
+            "table_min_pixels": table_min_pixels,
+            "table_max_pixels": table_max_pixels,
+            "chart_min_pixels": chart_min_pixels,
+            "chart_max_pixels": chart_max_pixels,
+            "formula_min_pixels": formula_min_pixels,
+            "formula_max_pixels": formula_max_pixels,
+            "seal_min_pixels": seal_min_pixels,
+            "seal_max_pixels": seal_max_pixels,
+        }
+
+        num_pages = len(images)
+        page_payloads = [
+            (
+                i,
+                images[i],
+                layout_det_results[i],
+                imgs_in_doc[i],
+                layout_prep_cfg,
+            )
+            for i in range(num_pages)
+        ]
+
+        max_workers = (
+            min(self.layout_prep_cpu_workers, num_pages) if num_pages > 0 else 0
+        )
+        if num_pages > 1 and max_workers > 1:
+            page_results = self._paddleocr_vl_layout_prep_parallel_pages(
+                page_payloads, max_workers
+            )
+        elif num_pages > 1:
+            page_results = [
+                self._paddleocr_vl_prepare_page_serial_benchmarked(p)
+                for p in page_payloads
+            ]
+        else:
+            page_results = [
+                self._paddleocr_vl_prepare_page_serial_benchmarked(page_payloads[0])
+            ]
+
+        (
+            blocks,
+            has_spotting,
+            drop_figures_set,
+            batch_dict_by_pixel,
+            id2pixel_key_map,
+        ) = self._paddleocr_vl_aggregate_vlm_batches(page_results)
+
+        del images, layout_det_results, page_results
+
+        self._paddleocr_vl_run_vl_recognition_batches(
+            batch_dict_by_pixel, has_spotting, vlm_kwargs
+        )
+
+        (
+            parsing_res_lists,
+            table_res_lists,
+            spotting_res_list,
+        ) = self._paddleocr_vl_assemble_parsing_results(
+            blocks,
+            batch_dict_by_pixel,
+            id2pixel_key_map,
+            drop_figures_set,
+            vis_image_labels,
+        )
 
         return (
             parsing_res_lists,
