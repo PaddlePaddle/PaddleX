@@ -402,7 +402,7 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
         return DocVLMResult
 
     def __call__(self, input, batch_size=None, **kwargs):
-        yield from self.apply(input, **kwargs)
+        yield from super().__call__(input, batch_size=batch_size, **kwargs)
 
     def predict(self, input, **kwargs):
         """Alias for __call__ for pipeline compatibility."""
