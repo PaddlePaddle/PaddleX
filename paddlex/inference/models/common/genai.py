@@ -23,6 +23,7 @@ from typing_extensions import Literal
 
 from ....utils import logging
 from ....utils.deps import class_requires_deps
+from ...utils.benchmark import add_inference_operations, benchmark
 
 SERVER_BACKENDS = [
     "fastdeploy-server",
@@ -31,6 +32,8 @@ SERVER_BACKENDS = [
     "mlx-vlm-server",
     "llama-cpp-server",
 ]
+
+add_inference_operations("GenAIClientInfer")
 
 
 class GenAIConfig(BaseModel):
@@ -527,6 +530,7 @@ class GenAIClient(object):
     def openai_client(self):
         return self._client
 
+    @benchmark.timeit_with_options(name="GenAIClientInfer")
     def create_chat_completion(self, messages, *, return_future=False, **kwargs):
         async def _create_chat_completion_with_semaphore(*args, **kwargs):
             async with self._semaphore:
