@@ -27,6 +27,7 @@ from ....utils.deps import require_genai_client_plugin
 from ....utils.device import TemporaryDeviceChanger
 from ....utils.import_guard import import_paddle
 from ...common.batch_sampler import DocVLMBatchSampler
+from ...utils.benchmark import benchmark
 from ...utils.misc import is_bfloat16_available
 from ..predictors import (
     GenAIClientPredictor,
@@ -402,7 +403,7 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
         return DocVLMResult
 
     def __call__(self, input, batch_size=None, **kwargs):
-        yield from self.apply(input, **kwargs)
+        yield from super().__call__(input, batch_size=batch_size, **kwargs)
 
     def predict(self, input, **kwargs):
         """Alias for __call__ for pipeline compatibility."""
@@ -446,6 +447,138 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
         )
         return format_doc_vlm_result_dict(preds, data, add_input_path=True)
 
+    @benchmark.timeit_with_options(name="doc_vlm_genai_prepare_requests")
+    def _doc_vlm_genai_build_request_specs(
+        self,
+        client,
+        data,
+        image_format,
+        max_new_tokens,
+        skip_special_tokens,
+        repetition_penalty,
+        temperature,
+        top_p,
+        min_pixels,
+        max_pixels,
+    ):
+        specs = []
+        for item in data:
+            image = item["image"]
+            if isinstance(image, str):
+                if image.startswith("http://") or image.startswith("https://"):
+                    image_url = image
+                else:
+                    from PIL import Image
+
+                    with Image.open(image) as img:
+                        img = img.convert("RGB")
+                        with io.BytesIO() as buf:
+                            img.save(buf, format=image_format)
+                            image_url = (
+                                f"data:image/{image_format.lower()};base64,"
+                                + base64.b64encode(buf.getvalue()).decode("ascii")
+                            )
+            elif isinstance(image, np.ndarray):
+                import cv2
+                from PIL import Image
+
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(image)
+                with io.BytesIO() as buf:
+                    img.save(buf, format=image_format)
+                    image_url = (
+                        f"data:image/{image_format.lower()};base64,"
+                        + base64.b64encode(buf.getvalue()).decode("ascii")
+                    )
+            else:
+                raise TypeError(f"Not supported image type: {type(image)}")
+
+            if client.backend == "fastdeploy-server":
+                request_kwargs = {
+                    "temperature": 1 if temperature is None else temperature,
+                    "top_p": 0 if top_p is None else top_p,
+                }
+            else:
+                request_kwargs = {
+                    "temperature": 0 if temperature is None else temperature,
+                }
+                if top_p is not None:
+                    request_kwargs["top_p"] = top_p
+
+            if client.backend in ["mlx-vlm-server", "llama-cpp-server"]:
+                max_tokens_name = "max_tokens"
+            else:
+                max_tokens_name = "max_completion_tokens"
+
+            if max_new_tokens is not None:
+                request_kwargs[max_tokens_name] = max_new_tokens
+            elif is_in_group(self.model_name, "PaddleOCR-VL"):
+                request_kwargs[max_tokens_name] = PADDLEOCR_VL_MAX_NEW_TOKENS
+
+            request_kwargs["extra_body"] = {}
+            if skip_special_tokens is not None:
+                if client.backend in (
+                    "fastdeploy-server",
+                    "vllm-server",
+                    "sglang-server",
+                    "mlx-vlm-server",
+                    "llama-cpp-server",
+                ):
+                    request_kwargs["extra_body"][
+                        "skip_special_tokens"
+                    ] = skip_special_tokens
+                else:
+                    raise ValueError("Not supported")
+
+            if repetition_penalty is not None:
+                request_kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
+
+            if min_pixels is not None:
+                if client.backend == "vllm-server":
+                    request_kwargs["extra_body"]["mm_processor_kwargs"] = (
+                        request_kwargs["extra_body"].get("mm_processor_kwargs", {})
+                    )
+                    request_kwargs["extra_body"]["mm_processor_kwargs"][
+                        "min_pixels"
+                    ] = min_pixels
+                else:
+                    warnings.warn(
+                        f"{repr(client.backend)} does not support `min_pixels`."
+                    )
+
+            if max_pixels is not None:
+                if client.backend == "vllm-server":
+                    request_kwargs["extra_body"]["mm_processor_kwargs"] = (
+                        request_kwargs["extra_body"].get("mm_processor_kwargs", {})
+                    )
+                    request_kwargs["extra_body"]["mm_processor_kwargs"][
+                        "max_pixels"
+                    ] = max_pixels
+                else:
+                    warnings.warn(
+                        f"{repr(client.backend)} does not support `max_pixels`."
+                    )
+
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": image_url}},
+                        {"type": "text", "text": item["query"]},
+                    ],
+                }
+            ]
+            specs.append((messages, request_kwargs))
+        return specs
+
+    @benchmark.timeit_with_options(name="doc_vlm_genai_collect_responses")
+    def _doc_vlm_genai_collect_responses(self, futures):
+        results = []
+        for future in futures:
+            result = future.result()
+            results.append(result.choices[0].message.content)
+        return results
+
     def _genai_client_process(
         self,
         data,
@@ -459,131 +592,29 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
     ):
         client = self.genai_client
         futures = []
-        if client.backend == "llama-cpp-server":
-            image_format = "PNG"
-        else:
-            image_format = "JPEG"
+        image_format = "PNG" if client.backend == "llama-cpp-server" else "JPEG"
         try:
-            for item in data:
-                image = item["image"]
-                if isinstance(image, str):
-                    if image.startswith("http://") or image.startswith("https://"):
-                        image_url = image
-                    else:
-                        from PIL import Image
-
-                        with Image.open(image) as img:
-                            img = img.convert("RGB")
-                            with io.BytesIO() as buf:
-                                img.save(buf, format=image_format)
-                                image_url = (
-                                    f"data:image/{image_format.lower()};base64,"
-                                    + base64.b64encode(buf.getvalue()).decode("ascii")
-                                )
-                elif isinstance(image, np.ndarray):
-                    import cv2
-                    from PIL import Image
-
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                    img = Image.fromarray(image)
-                    with io.BytesIO() as buf:
-                        img.save(buf, format=image_format)
-                        image_url = (
-                            f"data:image/{image_format.lower()};base64,"
-                            + base64.b64encode(buf.getvalue()).decode("ascii")
-                        )
-                else:
-                    raise TypeError(f"Not supported image type: {type(image)}")
-
-                if client.backend == "fastdeploy-server":
-                    kwargs = {
-                        "temperature": 1 if temperature is None else temperature,
-                        "top_p": 0 if top_p is None else top_p,
-                    }
-                else:
-                    kwargs = {
-                        "temperature": 0 if temperature is None else temperature,
-                    }
-                    if top_p is not None:
-                        kwargs["top_p"] = top_p
-
-                if client.backend in ["mlx-vlm-server", "llama-cpp-server"]:
-                    max_tokens_name = "max_tokens"
-                else:
-                    max_tokens_name = "max_completion_tokens"
-
-                if max_new_tokens is not None:
-                    kwargs[max_tokens_name] = max_new_tokens
-                elif is_in_group(self.model_name, "PaddleOCR-VL"):
-                    kwargs[max_tokens_name] = PADDLEOCR_VL_MAX_NEW_TOKENS
-
-                kwargs["extra_body"] = {}
-                if skip_special_tokens is not None:
-                    if client.backend in (
-                        "fastdeploy-server",
-                        "vllm-server",
-                        "sglang-server",
-                        "mlx-vlm-server",
-                        "llama-cpp-server",
-                    ):
-                        kwargs["extra_body"][
-                            "skip_special_tokens"
-                        ] = skip_special_tokens
-                    else:
-                        raise ValueError("Not supported")
-
-                if repetition_penalty is not None:
-                    kwargs["extra_body"]["repetition_penalty"] = repetition_penalty
-
-                if min_pixels is not None:
-                    if client.backend == "vllm-server":
-                        kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
-                            "extra_body"
-                        ].get("mm_processor_kwargs", {})
-                        kwargs["extra_body"]["mm_processor_kwargs"][
-                            "min_pixels"
-                        ] = min_pixels
-                    else:
-                        warnings.warn(
-                            f"{repr(client.backend)} does not support `min_pixels`."
-                        )
-
-                if max_pixels is not None:
-                    if client.backend == "vllm-server":
-                        kwargs["extra_body"]["mm_processor_kwargs"] = kwargs[
-                            "extra_body"
-                        ].get("mm_processor_kwargs", {})
-                        kwargs["extra_body"]["mm_processor_kwargs"][
-                            "max_pixels"
-                        ] = max_pixels
-                    else:
-                        warnings.warn(
-                            f"{repr(client.backend)} does not support `max_pixels`."
-                        )
-
+            specs = self._doc_vlm_genai_build_request_specs(
+                client,
+                data,
+                image_format,
+                max_new_tokens,
+                skip_special_tokens,
+                repetition_penalty,
+                temperature,
+                top_p,
+                min_pixels,
+                max_pixels,
+            )
+            for messages, request_kwargs in specs:
                 future = client.create_chat_completion(
-                    [
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "image_url", "image_url": {"url": image_url}},
-                                {"type": "text", "text": item["query"]},
-                            ],
-                        }
-                    ],
+                    messages,
                     return_future=True,
                     timeout=600,
-                    **kwargs,
+                    **request_kwargs,
                 )
-
                 futures.append(future)
-
-            results = []
-            for future in futures:
-                result = future.result()
-                results.append(result.choices[0].message.content)
-
-            return results
+            return self._doc_vlm_genai_collect_responses(futures)
         except Exception:
             # Cancel all pending futures to avoid wasting resources
             for future in futures:
