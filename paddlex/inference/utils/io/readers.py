@@ -28,6 +28,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("pypdfium2"):
     import pypdfium2 as pdfium
+
     from ..pdfium_lock import pdfium_lock
 if is_dep_available("soundfile"):
     import soundfile
@@ -38,6 +39,7 @@ __all__ = [
     "VideoReader",
     "CSVReader",
     "PDFReader",
+    "TIFFReader",
     "YAMLReader",
     "AudioReader",
 ]
@@ -310,11 +312,47 @@ class PDFReaderBackend(_BaseReaderBackend):
                 doc = self.load_file(str(in_path))
             try:
                 for page in doc:
-                    image = page.render(scale=self._scale, rotation=self._rotation).to_numpy()
+                    image = page.render(
+                        scale=self._scale, rotation=self._rotation
+                    ).to_numpy()
                     page.close()
                     yield image
             finally:
                 doc.close()
+
+
+class TIFFReader(_BaseReader):
+    """TIFFReader for multi-page TIFF files."""
+
+    def __init__(self, backend="pillow", **bk_args):
+        super().__init__(backend, **bk_args)
+
+    def load(self, in_path):
+        return self._backend.load_file(str(in_path))
+
+    def read(self, img):
+        yield from self._backend.read_file(img)
+
+    def _init_backend(self, bk_type, bk_args):
+        return TIFFReaderBackend(**bk_args)
+
+    def get_type(self):
+        return ReaderType.IMAGE
+
+
+@class_requires_deps("opencv-contrib-python")
+class TIFFReaderBackend(_BaseReaderBackend):
+    """Backend for reading multi-page TIFF files via Pillow, output BGR numpy arrays."""
+
+    def load_file(self, in_path):
+        return Image.open(in_path)
+
+    def read_file(self, img):
+        n_frames = getattr(img, "n_frames", 1)
+        for i in range(n_frames):
+            img.seek(i)
+            frame = img.convert("RGB")
+            yield cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
 
 
 class TXTReaderBackend(_BaseReaderBackend):
