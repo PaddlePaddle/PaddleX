@@ -29,6 +29,8 @@ from paddlex.inference.serving.infra.utils import (
     infer_file_type,
     is_url,
     read_pdf,
+    read_tiff,
+    is_tiff_bytes,
     write_to_temp_file,
 )
 
@@ -49,5 +51,7 @@ __all__ = [
     "infer_file_type",
     "is_url",
     "read_pdf",
+    "read_tiff",
+    "is_tiff_bytes",
     "write_to_temp_file",
 ]

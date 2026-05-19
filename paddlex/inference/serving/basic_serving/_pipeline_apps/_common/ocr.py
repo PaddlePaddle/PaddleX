@@ -20,7 +20,7 @@ from typing_extensions import Literal
 from ......utils import logging
 from ......utils.deps import function_requires_deps, is_dep_available
 from ....infra import utils as serving_utils
-from ....infra.models import ImageInfo, PDFInfo
+from ....infra.models import ImageInfo, PDFInfo, TIFFInfo
 from ....infra.storage import SupportsGetURL, create_storage
 from ....schemas.shared.ocr import BaseInferRequest
 from ..._app import AppContext
@@ -82,7 +82,7 @@ def get_file_type(request: BaseInferRequest) -> Literal["PDF", "IMAGE"]:
 
 async def get_images(
     request: BaseInferRequest, app_context: AppContext
-) -> Tuple[List[np.ndarray], Union[ImageInfo, PDFInfo]]:
+) -> Tuple[List[np.ndarray], Union[ImageInfo, PDFInfo, TIFFInfo]]:
     file_type = get_file_type(request)
 
     try:
@@ -97,7 +97,7 @@ async def get_images(
             max_num_imgs=app_context.extra["max_num_input_imgs"],
         )
     except serving_utils.ImageTooLargeError as e:
-        logging.error("Input image or PDF page exceeds pixel limit: %s", e)
+        logging.error("Input image or document page exceeds pixel limit: %s", e)
         raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:
         logging.error("Failed to read input file: %s", e)
