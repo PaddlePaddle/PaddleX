@@ -31,7 +31,7 @@ from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
 from ....utils.deps import function_requires_deps, is_dep_available
-from ....utils.flags import PDF_RENDER_SCALE
+from ....utils.flags import PDF_MIN_RENDER_SCALE, PDF_RENDER_SCALE
 from ...utils.pdfium_lock import pdfium_lock
 from .models import ImageInfo, PDFInfo, PDFPageInfo, TIFFInfo
 
@@ -50,6 +50,7 @@ __all__ = [
     "FileType",
     "MAX_IMAGE_PIXELS",
     "ImageTooLargeError",
+    "get_pdf_render_scale_within_pixel_limit",
     "generate_log_id",
     "is_url",
     "infer_file_type",
@@ -122,18 +123,40 @@ def ensure_image_pixel_limit(
         )
 
 
-def _ensure_pdf_page_pixel_limit_before_render(
-    page_size: Tuple[float, float], *, page_index: int
-) -> None:
+def _estimate_pdf_render_pixels(
+    page_size: Tuple[float, float], scale: float
+) -> Tuple[int, int, int]:
     w_pdf, h_pdf = float(page_size[0]), float(page_size[1])
-    pixels = w_pdf * PDF_RENDER_SCALE * h_pdf * PDF_RENDER_SCALE
-    if pixels > MAX_IMAGE_PIXELS:
-        w_px = int(math.ceil(w_pdf * PDF_RENDER_SCALE))
-        h_px = int(math.ceil(h_pdf * PDF_RENDER_SCALE))
-        est = w_px * h_px
+    w_px = int(math.ceil(w_pdf * scale))
+    h_px = int(math.ceil(h_pdf * scale))
+    return w_px, h_px, w_px * h_px
+
+
+def get_pdf_render_scale_within_pixel_limit(
+    page_size: Tuple[float, float],
+    *,
+    page_index: int,
+    min_scale: float = PDF_MIN_RENDER_SCALE,
+) -> float:
+    w_pdf, h_pdf = float(page_size[0]), float(page_size[1])
+    if w_pdf <= 0 or h_pdf <= 0:
+        raise ValueError(
+            f"Page {page_index}: Invalid PDF page size width={w_pdf}, height={h_pdf}."
+        )
+    if min_scale <= 0:
+        raise ValueError(f"Minimum PDF render scale must be positive, got {min_scale}.")
+
+    _, _, default_pixels = _estimate_pdf_render_pixels(page_size, PDF_RENDER_SCALE)
+    if default_pixels <= MAX_IMAGE_PIXELS:
+        return PDF_RENDER_SCALE
+
+    _, _, min_pixels = _estimate_pdf_render_pixels(page_size, min_scale)
+    if min_pixels > MAX_IMAGE_PIXELS:
+        w_px, h_px, est = _estimate_pdf_render_pixels(page_size, min_scale)
         msg = (
             f"Page {page_index}: Estimated render size width={w_px}, height={h_px} "
-            f"(pixel count {est}) would exceed maximum allowed {MAX_IMAGE_PIXELS}."
+            f"(pixel count {est}) at minimum PDF render scale {min_scale} would exceed "
+            f"maximum allowed {MAX_IMAGE_PIXELS}."
         )
         raise ImageTooLargeError(
             msg,
@@ -143,6 +166,17 @@ def _ensure_pdf_page_pixel_limit_before_render(
             max_pixels=MAX_IMAGE_PIXELS,
             page_index=page_index,
         )
+
+    upper = min(PDF_RENDER_SCALE, math.sqrt(MAX_IMAGE_PIXELS / (w_pdf * h_pdf)))
+    lower = min_scale
+    for _ in range(32):
+        scale = (lower + upper) / 2
+        _, _, pixels = _estimate_pdf_render_pixels(page_size, scale)
+        if pixels <= MAX_IMAGE_PIXELS:
+            lower = scale
+        else:
+            upper = scale
+    return lower
 
 
 P = ParamSpec("P")
@@ -275,10 +309,9 @@ def read_pdf(
                         break
                     page_number += 1
                     page_size = page.get_size()
-                    _ensure_pdf_page_pixel_limit_before_render(
+                    zoom = get_pdf_render_scale_within_pixel_limit(
                         page_size, page_index=page_number
                     )
-                    zoom = PDF_RENDER_SCALE
                     deg = 0
                     image = page.render(scale=zoom, rotation=deg).to_numpy()
                     ensure_image_pixel_limit(image, page_index=page_number)
