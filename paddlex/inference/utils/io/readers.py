@@ -23,6 +23,8 @@ import yaml
 from PIL import Image, ImageOps
 
 from ....utils.deps import class_requires_deps, is_dep_available
+from ....utils.flags import PDF_MIN_RENDER_SCALE
+from ..pdf_rendering import render_pdf_page_to_numpy
 
 if is_dep_available("opencv-contrib-python"):
     import cv2
@@ -311,10 +313,14 @@ class PILImageReaderBackend(_ImageReaderBackend):
 @class_requires_deps("pypdfium2", "opencv-contrib-python")
 class PDFReaderBackend(_BaseReaderBackend):
 
-    def __init__(self, rotate=0, zoom=2.0):
+    def __init__(
+        self, rotate=0, zoom=2.0, max_pixels=None, min_scale=PDF_MIN_RENDER_SCALE
+    ):
         super().__init__()
         self._rotation = rotate
         self._scale = zoom
+        self._max_pixels = max_pixels
+        self._min_scale = min_scale
 
     def load_file(self, in_path):
         """load pdf file"""
@@ -330,14 +336,24 @@ class PDFReaderBackend(_BaseReaderBackend):
             else:
                 doc = self.load_file(str(in_path))
             try:
-                for page in doc:
-                    image = page.render(
-                        scale=self._scale, rotation=self._rotation
-                    ).to_numpy()
-                    page.close()
+                for page_index, page in enumerate(doc, start=1):
+                    try:
+                        image = self._render_page(page, page_index=page_index)
+                    finally:
+                        page.close()
                     yield image
             finally:
                 doc.close()
+
+    def _render_page(self, page, *, page_index):
+        return render_pdf_page_to_numpy(
+            page,
+            page_index=page_index,
+            requested_scale=self._scale,
+            rotation=self._rotation,
+            min_scale=self._min_scale,
+            max_pixels=self._max_pixels,
+        )
 
 
 @class_requires_deps("opencv-contrib-python")
