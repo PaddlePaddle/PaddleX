@@ -63,6 +63,10 @@ Benchmark 功能会统计产线在端到端推理过程中，所有操作的平�
 创建 `test_infer.py` 脚本：
 
 ```python
+import os
+
+os.environ["PADDLE_PDX_PIPELINE_BENCHMARK"] = "True"
+
 from paddlex import create_pipeline
 from paddlex.inference.utils.benchmark import benchmark
 
@@ -84,7 +88,7 @@ benchmark.save_pipeline_data("./benchmark") # 将benchmark数据保存至benchma
 执行脚本：
 
 ```bash
-PADDLE_PDX_PIPELINE_BENCHMARK=True python test_infer.py
+python test_infer.py
 ```
 
 运行示例程序所得到的 benchmark 结果如下：

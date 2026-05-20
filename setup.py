@@ -347,7 +347,7 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.append("hpip_links.html")
     pkg_data.append("hpip_links_cu12.html")
-    pkg_data.append("inference/utils/hpi_model_info_collection.json")
+    pkg_data.append("inference/models/runners/hpi/hpi_model_info_collection.json")
     genai_chat_templates = [
         Path(p).relative_to("paddlex").as_posix()
         for p in glob.glob("paddlex/inference/genai/chat_templates/*.jinja")
