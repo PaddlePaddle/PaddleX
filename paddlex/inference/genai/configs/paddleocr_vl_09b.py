@@ -67,7 +67,7 @@ def get_config(backend):
             }
         else:
             return {
-                remote_code_key: False,
+                remote_code_key: True,
                 "gpu-memory-utilization": 0.5,
                 "max-model-len": 16384,
                 "max-num-batched-tokens": 131072,
