@@ -440,3 +440,32 @@ Finally, the response from the service needs to be parsed. The raw response body
 ```
 
 `outputs[0].data[0]` is a JSON string. The internal fields follow the same format as the response body in the basic serving solution. For detailed parsing rules, please refer to the usage guide for each specific pipeline.
+
+## 3. Returning Images as URLs
+
+Both basic serving and high-stability serving return image fields (such as `outputImages`, `inputImage`, `markdown.images`) inline as base64-encoded strings by default. When the response contains large images or a multi-page PDF, base64 encoding can significantly inflate the payload. You can switch to URL mode: the server writes images to object storage and only returns pre-signed URLs in the response.
+
+Both deployment modes share the same configuration. Add the following to the `Serving.extra` section of the pipeline configuration file:
+
+```yaml
+Serving:
+  extra:
+    file_storage:
+      type: bos
+      endpoint: <BOS endpoint>
+      ak: <Access Key>
+      sk: <Secret Key>
+      bucket_name: <bucket name>
+      key_prefix: <optional, prefix for uploaded keys>
+    return_img_urls: true
+    url_expires_in: 3600  # Lifetime of the pre-signed URL in seconds; -1 means no expiry
+```
+
+- Basic serving: write the configuration to the pipeline config file passed to `paddlex --serve --pipeline`.
+- High-stability serving: write the configuration to `server/pipeline_config.yaml` inside the SDK and restart the container.
+
+Notes:
+
+- `file_storage.type` supports `bos`, `file_system`, and `memory`; **only `bos` provides pre-signed URLs**. When `return_img_urls: true` is enabled, `file_storage` must be `bos`, otherwise the server fails to start.
+- Field types are unchanged; only the value changes from a base64 string to a pre-signed URL that can be fetched within `url_expires_in` seconds.
+- Use cases: responses containing large images; multi-page PDFs where inline base64 would bloat the payload; downstream consumers that need to download or persist images asynchronously.

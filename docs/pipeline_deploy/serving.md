@@ -438,3 +438,32 @@ curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
 ```
 
 其中 `outputs[0].data[0]` 是一个 JSON 字符串，其中的字段与基础服务化部署方案中的响应体保持一致，具体解析规则可以查看各产线使用教程。
+
+## 3. 配置图像 URL 返回
+
+基础服务化与高稳定性服务化默认以 base64 编码内联返回响应中的图像字段（如 `outputImages`、`inputImage`、`markdown.images` 等）。当响应包含较大图像或多页 PDF 时，base64 会显著增加响应体积。可改为 URL 模式：服务端将图像写入对象存储，响应中只返回预签名 URL。
+
+两种部署方案共用同一组配置项。在产线配置文件的 `Serving.extra` 节中配置：
+
+```yaml
+Serving:
+  extra:
+    file_storage:
+      type: bos
+      endpoint: <BOS endpoint>
+      ak: <Access Key>
+      sk: <Secret Key>
+      bucket_name: <bucket name>
+      key_prefix: <可选，上传 key 前缀>
+    return_img_urls: true
+    url_expires_in: 3600  # 预签名 URL 有效期（秒），-1 表示不过期
+```
+
+- 基础服务化：上述配置写入 `paddlex --serve --pipeline` 指定的产线配置文件。
+- 高稳定性服务化：上述配置写入 SDK 内的 `server/pipeline_config.yaml`，重启容器后生效。
+
+注意事项：
+
+- `file_storage.type` 支持 `bos`、`file_system`、`memory`；其中**只有 `bos` 提供预签名 URL 能力**。启用 `return_img_urls: true` 时 `file_storage` 必须为 `bos`，否则服务启动失败。
+- 启用前后字段类型不变，值的形态从 base64 字符串切换为可在 `url_expires_in` 秒内 GET 下载的预签名 URL。
+- 适用场景：响应包含较大图像；多页 PDF 内联 base64 易致响应膨胀；调用方需异步下载或持久化图像。
