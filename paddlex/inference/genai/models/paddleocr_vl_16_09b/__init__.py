@@ -1,4 +1,4 @@
-# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2025 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import importlib
-from types import ModuleType
 
-from ..name_mappings import pipeline_name_to_mod_name
+from ..paddleocr_vl_09b import get_network_class, get_processor_class
 
-
-def get_pipeline_schema_mod(pipeline_name: str) -> ModuleType:
-    mod_name = pipeline_name_to_mod_name(pipeline_name)
-    mod = importlib.import_module(f".{mod_name}", package=__package__)
-    return mod
+__all__ = ["get_network_class", "get_processor_class"]
