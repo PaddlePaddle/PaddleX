@@ -309,15 +309,18 @@ class TritonPythonModel(BaseTritonPythonModel):
                 show_formula_number=input.showFormulaNumber,
             )
             md_text = md_data["markdown_texts"]
-            md_imgs = app_common.postprocess_images(
-                md_data["markdown_images"],
-                log_id,
-                filename_template=f"markdown_{i}/{{key}}",
-                file_storage=self.context["file_storage"],
-                return_urls=self.context["return_img_urls"],
-                url_expires_in=self.context["url_expires_in"],
-                max_img_size=self.context["max_output_img_size"],
-            )
+            if input.returnMarkdownImages:
+                md_imgs = app_common.postprocess_images(
+                    md_data["markdown_images"],
+                    log_id,
+                    filename_template=f"markdown_{i}/{{key}}",
+                    file_storage=self.context["file_storage"],
+                    return_urls=self.context["return_img_urls"],
+                    url_expires_in=self.context["url_expires_in"],
+                    max_img_size=self.context["max_output_img_size"],
+                )
+            else:
+                md_imgs = None
             if visualize_enabled:
                 imgs = {
                     "input_img": img,

@@ -65,7 +65,7 @@ class TritonPythonModel(BaseTritonPythonModel):
             )
             layout_parsing_result["markdown"] = dict(
                 text=md_data["markdown_texts"],
-                images=markdown_images,
+                images=markdown_images if input.returnMarkdownImages else None,
             )
             if app_common.normalize_output_formats(input.outputFormats):
                 res_obj = restructured_results[0]
@@ -94,7 +94,11 @@ class TritonPythonModel(BaseTritonPythonModel):
                 )
                 layout_parsing_result["markdown"] = dict(
                     text=md_data["markdown_texts"],
-                    images=old_page.markdownImages,
+                    images=(
+                        old_page.markdownImages
+                        if input.returnMarkdownImages
+                        else None
+                    ),
                 )
                 if app_common.normalize_output_formats(input.outputFormats):
                     app_common.refill_paddleocr_vl_images_from_markdown(

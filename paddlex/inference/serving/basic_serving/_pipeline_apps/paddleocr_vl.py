@@ -108,16 +108,19 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 show_formula_number=request.showFormulaNumber,
             )
             md_text = md_data["markdown_texts"]
-            md_imgs = await serving_utils.call_async(
-                common.postprocess_images,
-                md_data["markdown_images"],
-                log_id,
-                filename_template=f"markdown_{i}/{{key}}",
-                file_storage=ctx.extra["file_storage"],
-                return_urls=ctx.extra["return_img_urls"],
-                url_expires_in=ctx.extra["url_expires_in"],
-                max_img_size=ctx.extra["max_output_img_size"],
-            )
+            if request.returnMarkdownImages:
+                md_imgs = await serving_utils.call_async(
+                    common.postprocess_images,
+                    md_data["markdown_images"],
+                    log_id,
+                    filename_template=f"markdown_{i}/{{key}}",
+                    file_storage=ctx.extra["file_storage"],
+                    return_urls=ctx.extra["return_img_urls"],
+                    url_expires_in=ctx.extra["url_expires_in"],
+                    max_img_size=ctx.extra["max_output_img_size"],
+                )
+            else:
+                md_imgs = None
             if visualize_enabled:
                 imgs = {
                     "input_img": img,
@@ -215,7 +218,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             )
             layout_parsing_result["markdown"] = dict(
                 text=md_data["markdown_texts"],
-                images=markdown_images,
+                images=markdown_images if request.returnMarkdownImages else None,
             )
             if normalize_output_formats(request.outputFormats):
                 res_obj = restructured_results[0]
@@ -243,7 +246,11 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 )
                 layout_parsing_result["markdown"] = dict(
                     text=md_data["markdown_texts"],
-                    images=old_page.markdownImages,
+                    images=(
+                        old_page.markdownImages
+                        if request.returnMarkdownImages
+                        else None
+                    ),
                 )
                 if normalize_output_formats(request.outputFormats):
                     refill_paddleocr_vl_images_from_markdown(
