@@ -1601,7 +1601,7 @@ By default, there is no limit on how many PDF pages are processed. To cap the nu
 </tr>
 </tbody>
 </table>
-<p>Image fields in the element schema below (e.g. <code>outputImages</code>, <code>inputImage</code>, <code>markdown.images</code>) are returned inline as JPEG base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Images as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
+<p>Image and file fields in the element schema below (e.g. <code>outputImages</code>, <code>inputImage</code>, <code>markdown.images</code>, <code>exports</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Response Files as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in<code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
@@ -1625,17 +1625,17 @@ By default, there is no limit on how many PDF pages are processed. To cap the nu
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code>|<code>null</code></td>
-<td>Refer to the <code>img</code> property description of the prediction results. The image is in JPEG format and encoded using Base64.</td>
+<td>Refer to the <code>img</code> property description of the prediction results. The image is in JPEG format, encoded as Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code>|<code>null</code></td>
-<td>Input image. The image is in JPEG format and encoded using Base64.</td>
+<td>Input image. The image is in JPEG format, encoded as Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code>|<code>null</code></td>
-<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
+<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content by default, or a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>
@@ -1657,7 +1657,7 @@ By default, there is no limit on how many PDF pages are processed. To cap the nu
 <tr>
 <td><code>images</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Key-value pairs of relative paths to Markdown images and Base64-encoded images. <code>null</code> or omitted when <code>returnMarkdownImages</code> is <code>false</code> in the request.</td>
+<td>Key-value pairs of relative Markdown image paths and their image data. Values are Base64-encoded by default; returned as pre-signed URLs when URL-return mode is enabled. The field is <code>null</code> or omitted when <code>returnMarkdownImages</code> is <code>false</code> in the request.</td>
 </tr>
 </tbody>
 </table>

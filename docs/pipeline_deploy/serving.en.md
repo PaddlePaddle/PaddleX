@@ -441,9 +441,11 @@ Finally, the response from the service needs to be parsed. The raw response body
 
 `outputs[0].data[0]` is a JSON string. The internal fields follow the same format as the response body in the basic serving solution. For detailed parsing rules, please refer to the usage guide for each specific pipeline.
 
-## 3. Returning Images as URLs
+## 3. Returning Response Files as URLs
 
-Both basic serving and high-stability serving return image fields (such as `outputImages`, `inputImage`, `markdown.images`) inline as base64-encoded strings by default. When the response contains large images or a multi-page PDF, base64 encoding can significantly inflate the payload. You can switch to URL mode: the server writes images to object storage and only returns pre-signed URLs in the response.
+By default, both basic serving and high-stability serving return image and file fields in the response — for example `outputImages`, `inputImage`, `markdown.images`, and `exports` (docx, ...) — inline as Base64-encoded strings. When the response contains large images or a multi-page PDF, Base64 encoding can significantly inflate the payload. You can switch to URL mode: the server writes those files to object storage and returns pre-signed URLs instead.
+
+> The configuration key is historically named `return_img_urls`, but it currently controls every Base64-inlined file field in the response, not just images.
 
 Both deployment modes share the same configuration. Add the following to the `Serving.extra` section of the pipeline configuration file:
 
@@ -452,20 +454,30 @@ Serving:
   extra:
     file_storage:
       type: bos
-      endpoint: <BOS endpoint>
-      ak: <Access Key>
-      sk: <Secret Key>
+      endpoint: <BOS endpoint, e.g. https://bj.bcebos.com>
+      ak: <Baidu Cloud AK>
+      sk: <Baidu Cloud SK>
       bucket_name: <bucket name>
-      key_prefix: <optional, prefix for uploaded keys>
+      key_prefix: <optional, object key prefix>
     return_img_urls: true
-    url_expires_in: 3600  # Lifetime of the pre-signed URL in seconds; -1 means no expiry
+    url_expires_in: 3600  # Pre-signed URL lifetime in seconds; -1 means no expiry
 ```
 
-- Basic serving: write the configuration to the pipeline config file passed to `paddlex --serve --pipeline`.
-- High-stability serving: write the configuration to `server/pipeline_config.yaml` inside the SDK and restart the container.
+Field reference:
+
+- `endpoint`: BOS endpoint, required.
+- `ak`: Baidu Cloud AK, required.
+- `sk`: Baidu Cloud SK, required.
+- `bucket_name`: BOS bucket name, required.
+- `key_prefix`: optional object key prefix.
+
+Where to put the configuration:
+
+- Basic serving: write it to the pipeline config file passed to `paddlex --serve --pipeline`.
+- High-stability serving: write it to `server/pipeline_config.yaml` inside the SDK and restart the container.
 
 Notes:
 
 - `file_storage.type` supports `bos`, `file_system`, and `memory`; **only `bos` provides pre-signed URLs**. When `return_img_urls: true` is enabled, `file_storage` must be `bos`, otherwise the server fails to start.
-- Field types are unchanged; only the value changes from a base64 string to a pre-signed URL that can be fetched within `url_expires_in` seconds.
-- Use cases: responses containing large images; multi-page PDFs where inline base64 would bloat the payload; downstream consumers that need to download or persist images asynchronously.
+- Field types are unchanged; only the value changes from a Base64 string to a pre-signed URL that can be fetched within `url_expires_in` seconds.
+- For details on how to obtain the AK/SK, see the [Baidu Intelligent Cloud documentation](https://cloud.baidu.com/doc/BOS/index.html).
