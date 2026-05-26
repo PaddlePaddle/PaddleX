@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-paddlex_version='>=3.3.6,<3.4'
-build_for_sm120='false'
+paddlex_version='>=3.6'
 tag_suffix='latest'
 
 while [[ $# -gt 0 ]]; do

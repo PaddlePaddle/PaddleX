@@ -17,13 +17,12 @@ ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
-ARG PADDLEX_VERSION=">=3.5.3,<3.4"
+ARG PADDLEX_VERSION=">=3.6"
 RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install "paddlex${PADDLEX_VERSION}"
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-   python -m pip install vllm==0.21.0
-#    paddlex --install genai-vllm-server
+   paddlex --install genai-vllm-server
 
 EXPOSE 8080
 
