@@ -53,6 +53,8 @@ def get_env_device():
         return "intel_hpu"
     elif "iluvatar_gpu" in paddle.device.get_all_custom_device_type():
         return "iluvatar_gpu"
+    elif "metax_gpu" in paddle.device.get_all_custom_device_type():
+        return "metax_gpu"
     elif paddle.is_compiled_with_rocm():
         return "rocm"
     elif paddle.is_compiled_with_xpu():
@@ -65,7 +67,7 @@ try:
 except ImportError:
     fused_rotary_position_embedding = None
 try:
-    if get_env_device() in ["npu", "mlu", "gcu", "iluvatar_gpu"]:
+    if get_env_device() in ["npu", "mlu", "gcu", "iluvatar_gpu", "metax_gpu"]:
         from paddle.base import core
 
         for lib in os.listdir(os.getenv("CUSTOM_DEVICE_ROOT")):
@@ -88,7 +90,7 @@ def fusion_rope(
     rotary_emb,
     context_parallel_degree=-1,
 ):
-    if get_env_device() not in ["gcu", "intel_hpu", "iluvatar_gpu"]:
+    if get_env_device() not in ["gcu", "intel_hpu", "iluvatar_gpu", "metax_gpu"]:
         assert past_key_value is None, "fuse rotary not support cache kv for now"
     batch_size, seq_length, num_heads, head_dim = query_states.shape
     _, kv_seq_len, num_key_value_heads, _ = key_states.shape
@@ -97,7 +99,7 @@ def fusion_rope(
             get_env_device() == "gpu"
         ), "context parallel only support cuda device for now"
         kv_seq_len *= context_parallel_degree
-    if get_env_device() not in ["gcu", "intel_hpu", "iluvatar_gpu"]:
+    if get_env_device() not in ["gcu", "intel_hpu", "iluvatar_gpu", "metax_gpu"]:
         cos, sin = rotary_emb(value_states, seq_len=kv_seq_len)
     if get_env_device() == "npu":
         query_states = core.eager._run_custom_op("fused_rope", query_states, cos, sin)[
