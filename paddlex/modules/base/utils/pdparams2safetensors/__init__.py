@@ -14,6 +14,7 @@
 
 from .fusion import (
     fuse_v6_medium_det_state_dict,
+    fuse_v6_rec_state_dict,
     fuse_v6_small_det_state_dict,
 )
 from .inference_meta import (
@@ -42,7 +43,10 @@ from .mapping import (
     PPOCRV5_SERVER_REC_MAPPING,
     PPOCRV6_DET_DROP_PREFIXES,
     PPOCRV6_MEDIUM_DET_MAPPING,
+    PPOCRV6_REC_DROP_PREFIXES,
     PPOCRV6_SMALL_DET_MAPPING,
+    PPOCRV6_SMALL_REC_MAPPING,
+    PPOCRV6_TINY_REC_MAPPING,
     REC_DROP_PREFIXES,
     RTDETR_MAPPING,
     SERVER_DET_DROP_PREFIXES,

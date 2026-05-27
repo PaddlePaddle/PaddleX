@@ -46,7 +46,10 @@ from .utils.pdparams2safetensors import (
     PPOCRV5_SERVER_REC_MAPPING,
     PPOCRV6_DET_DROP_PREFIXES,
     PPOCRV6_MEDIUM_DET_MAPPING,
+    PPOCRV6_REC_DROP_PREFIXES,
     PPOCRV6_SMALL_DET_MAPPING,
+    PPOCRV6_SMALL_REC_MAPPING,
+    PPOCRV6_TINY_REC_MAPPING,
     PREPROCESSOR_CONFIGS,
     REC_DROP_PREFIXES,
     RTDETR_MAPPING,
@@ -64,6 +67,7 @@ from .utils.pdparams2safetensors import (
     apply_key_mapping,
     build_inference_meta,
     fuse_v6_medium_det_state_dict,
+    fuse_v6_rec_state_dict,
     fuse_v6_small_det_state_dict,
     load_character_dict,
     rename_bn_keys,
@@ -92,6 +96,12 @@ _MODEL_REGISTRY = {
     "PP-OCRv6_small_det": (PPOCRV6_SMALL_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
     "PP-OCRv6_tiny_det": (PPOCRV6_SMALL_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
     "PP-OCRv6_medium_det": (PPOCRV6_MEDIUM_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
+    # PP-OCRv6 rec: small/medium share the SVTR encoder + CTC head class;
+    # tiny has a simpler Conv1D head. All three need backbone RepDWConv
+    # fusion (see ``_PRE_MAP_FUSERS``).
+    "PP-OCRv6_small_rec": (PPOCRV6_SMALL_REC_MAPPING, PPOCRV6_REC_DROP_PREFIXES),
+    "PP-OCRv6_medium_rec": (PPOCRV6_SMALL_REC_MAPPING, PPOCRV6_REC_DROP_PREFIXES),
+    "PP-OCRv6_tiny_rec": (PPOCRV6_TINY_REC_MAPPING, PPOCRV6_REC_DROP_PREFIXES),
     "SLANet": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
     "SLANet_plus": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
     "SLANeXt_wired": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
@@ -117,7 +127,21 @@ _PRE_MAP_FUSERS = {
     "PP-OCRv6_small_det": fuse_v6_small_det_state_dict,
     "PP-OCRv6_tiny_det": fuse_v6_small_det_state_dict,
     "PP-OCRv6_medium_det": fuse_v6_medium_det_state_dict,
+    "PP-OCRv6_small_rec": fuse_v6_rec_state_dict,
+    "PP-OCRv6_medium_rec": fuse_v6_rec_state_dict,
+    "PP-OCRv6_tiny_rec": fuse_v6_rec_state_dict,
 }
+
+# Rec models that ship a per-checkpoint character dict — used by
+# WeightConverter to inject ``character_list`` into preprocessor_config.json
+# and ``character_dict`` into inference.yml.
+_REC_CHARACTER_DICT_MODELS = (
+    "PP-OCRv5_mobile_rec",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv6_small_rec",
+    "PP-OCRv6_medium_rec",
+    "PP-OCRv6_tiny_rec",
+)
 
 # Models that need processor_config.json + tokenizer files instead of the
 # default preprocessor_config.json output.
@@ -516,8 +540,10 @@ class WeightConverter:
             data = self._user_configs["preprocessor_config.json"]
         else:
             data = dict(PREPROCESSOR_CONFIGS.get(self.model_name, {}))
-            if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
-                data["character_list"] = ["blank"] + load_character_dict() + [" "]
+            if self.model_name in _REC_CHARACTER_DICT_MODELS:
+                data["character_list"] = (
+                    ["blank"] + load_character_dict(self.model_name) + [" "]
+                )
 
         out_path = os.path.join(self.output_dir, "preprocessor_config.json")
         with open(out_path, "w", encoding="utf-8") as f:
@@ -533,10 +559,10 @@ class WeightConverter:
         else:
             data = {"Global": {"model_name": self.model_name}}
             data.update(build_inference_meta(self.model_name))
-            if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
+            if self.model_name in _REC_CHARACTER_DICT_MODELS:
                 data.setdefault("PostProcess", {})[
                     "character_dict"
-                ] = load_character_dict()
+                ] = load_character_dict(self.model_name)
             elif self.model_name in PP_FORMULANET_MODELS:
                 # UniMERNetDecode reads the tokenizer from
                 # PostProcess.character_dict — fast_tokenizer_file is the

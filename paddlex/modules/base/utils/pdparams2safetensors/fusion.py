@@ -33,6 +33,11 @@ import numpy as np
 _REP_DW_PATTERN = re.compile(
     r"^backbone\.blocks_s(\d+)\.(\d+)\.token_mixer\.rep_dw\.(.+)$"
 )
+# Rec models use a different prefix (``blocks{N}`` without ``_s``) and a
+# different zero-based offset (``N-2`` instead of ``N-1``).
+_REP_DW_PATTERN_REC = re.compile(
+    r"^backbone\.blocks(\d+)\.(\d+)\.token_mixer\.rep_dw\.(.+)$"
+)
 _NECK_INPUT_DW_PATTERN_SMALL = re.compile(r"^neck\.inp_conv_dw\.(\d+)\.(.+)$")
 _NECK_REPARAM_PATTERN_MEDIUM = re.compile(
     r"^neck\.(inp_conv|pan_lat_conv)\.(\d+)\.(.+)$"
@@ -255,6 +260,30 @@ def fuse_v6_small_det_state_dict(state_dict):
         layer = group_id  # only one capture group besides the sub-key
         prefix = f"model.neck.input_conv.{layer}.depthwise_convolution"
         w, b = _fuse_neck_input_depthwise_reparam_small(params)
+        passthrough[f"{prefix}.weight"] = w
+        passthrough[f"{prefix}.bias"] = b
+
+    return passthrough
+
+
+def fuse_v6_rec_state_dict(state_dict):
+    """Fuse RepDWConv backbone blocks for v6 rec models (small/medium/tiny).
+
+    The rec head is regex-mappable end-to-end (no reparam fusion needed),
+    so only the backbone ``token_mixer.rep_dw`` groups get collapsed here.
+    Stage indices are one-based and offset by ``-2`` (training uses
+    ``blocks2..blocks5``, HF uses ``encoder.blocks.0..3``).
+    """
+    groups, passthrough = _collect_groups(
+        state_dict,
+        group_patterns=[("rep_dw", _REP_DW_PATTERN_REC)],
+    )
+
+    for group_id, params in groups["rep_dw"].items():
+        stage_one_based, layer = group_id.split("\x00")
+        stage = int(stage_one_based) - 2
+        prefix = f"model.backbone.encoder.blocks.{stage}.blocks.{layer}.token_conv"
+        w, b = _fuse_rep_dw(params)
         passthrough[f"{prefix}.weight"] = w
         passthrough[f"{prefix}.bias"] = b
 

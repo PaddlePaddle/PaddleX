@@ -1108,6 +1108,216 @@ PPOCRV6_MEDIUM_DET_MAPPING = [
 ]
 
 
+# PP-OCRv6 rec shared backbone blocks. Same internal token_mixer/SE/
+# channel_mixer layout as v6 det, but rec uses ``backbone.blocks{N}`` (no
+# ``_s``) with N=2..5 mapping to ``encoder.blocks.{N-2}``.
+_PPLCNETV4_REC_BACKBONE_BLOCKS_MAPPING = [
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.token_mixer\.dw_conv\.conv\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.token_conv.convolution.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.token_mixer\.dw_conv\.bn\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.token_conv.normalization.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.token_mixer\.se\.conv1\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.token_squeeze_excitation.convolutions.0.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.token_mixer\.se\.conv2\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.token_squeeze_excitation.convolutions.2.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.channel_mixer\.expand\.conv\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.channel_conv1.convolution.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.channel_mixer\.expand\.bn\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.channel_conv1.normalization.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.channel_mixer\.compress\.conv\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.channel_conv2.convolution.",
+    ),
+    (
+        r"^backbone\.blocks(\d+)\.(\d+)\.channel_mixer\.compress\.bn\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-2}.blocks.{m.group(2)}.channel_conv2.normalization.",
+    ),
+]
+
+# PP-OCRv6_small_rec / PP-OCRv6_medium_rec stem (PaddleOCR keeps the large
+# stem inside ``backbone.conv1.*`` here instead of ``backbone.stem.*``).
+_PPOCRV6_LARGE_REC_STEM_MAPPING = [
+    (
+        r"^backbone\.conv1\.stem(\d+)a\.bn\.",
+        r"model.backbone.encoder.convolution.stem\1a.normalization.",
+    ),
+    (
+        r"^backbone\.conv1\.stem(\d+)b\.bn\.",
+        r"model.backbone.encoder.convolution.stem\1b.normalization.",
+    ),
+    (
+        r"^backbone\.conv1\.stem(\d+)a\.conv\.",
+        r"model.backbone.encoder.convolution.stem\1a.convolution.",
+    ),
+    (
+        r"^backbone\.conv1\.stem(\d+)b\.conv\.",
+        r"model.backbone.encoder.convolution.stem\1b.convolution.",
+    ),
+    (
+        r"^backbone\.conv1\.stem(\d+)\.bn\.",
+        r"model.backbone.encoder.convolution.stem\1.normalization.",
+    ),
+    (
+        r"^backbone\.conv1\.stem(\d+)\.conv\.",
+        r"model.backbone.encoder.convolution.stem\1.convolution.",
+    ),
+]
+
+# PP-OCRv6_tiny_rec stem (small stem: ``Sequential(conv1, gelu, conv2)`` so
+# the state dict carries the activation's position as index .1, which has
+# no params and therefore no mapping).
+_PPOCRV6_SMALL_REC_STEM_MAPPING = [
+    (
+        r"^backbone\.conv1\.0\.conv\.",
+        r"model.backbone.encoder.convolution.conv1.convolution.",
+    ),
+    (
+        r"^backbone\.conv1\.0\.bn\.",
+        r"model.backbone.encoder.convolution.conv1.normalization.",
+    ),
+    (
+        r"^backbone\.conv1\.2\.conv\.",
+        r"model.backbone.encoder.convolution.conv2.convolution.",
+    ),
+    (
+        r"^backbone\.conv1\.2\.bn\.",
+        r"model.backbone.encoder.convolution.conv2.normalization.",
+    ),
+]
+
+# PP-OCRv6_{small,medium}_rec SVTR encoder + CTC head. Two parallel naming
+# schemes coexist for the pre-SVTR conv blocks: ``conv{1..4}``/``conv1x1``
+# (mobile) maps to ``conv_block.{0..4}``, while ``skip_conv``/
+# ``conv_reduce``/``local_conv`` (server) maps to ``conv_block.{0,1,2}``.
+# Released checkpoints use only one of the two paths, so both sets coexist
+# safely.
+_PPOCRV6_SVTR_ENCODER_MAPPING = [
+    # Mobile pre-SVTR convs
+    (
+        r"^head\.ctc_encoder\.encoder\.conv1\.conv\.",
+        r"head.encoder.conv_block.0.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv1\.norm\.",
+        r"head.encoder.conv_block.0.normalization.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv2\.conv\.",
+        r"head.encoder.conv_block.1.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv2\.norm\.",
+        r"head.encoder.conv_block.1.normalization.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv3\.conv\.",
+        r"head.encoder.conv_block.2.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv3\.norm\.",
+        r"head.encoder.conv_block.2.normalization.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv4\.conv\.",
+        r"head.encoder.conv_block.3.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv4\.norm\.",
+        r"head.encoder.conv_block.3.normalization.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv1x1\.conv\.",
+        r"head.encoder.conv_block.4.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv1x1\.norm\.",
+        r"head.encoder.conv_block.4.normalization.",
+    ),
+    # Server pre-SVTR convs
+    (
+        r"^head\.ctc_encoder\.encoder\.skip_conv\.conv\.",
+        r"head.encoder.conv_block.0.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.skip_conv\.norm\.",
+        r"head.encoder.conv_block.0.normalization.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv_reduce\.conv\.",
+        r"head.encoder.conv_block.1.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.conv_reduce\.norm\.",
+        r"head.encoder.conv_block.1.normalization.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.local_conv\.0\.",
+        r"head.encoder.conv_block.2.convolution.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.local_conv\.1\.",
+        r"head.encoder.conv_block.2.normalization.",
+    ),
+    # SVTR transformer blocks
+    (
+        r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.norm1\.",
+        r"head.encoder.svtr_block.\1.layer_norm1.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.norm2\.",
+        r"head.encoder.svtr_block.\1.layer_norm2.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.mixer\.qkv\.",
+        r"head.encoder.svtr_block.\1.self_attn.qkv.",
+    ),
+    (
+        r"^head\.ctc_encoder\.encoder\.svtr_block\.(\d+)\.mixer\.proj\.",
+        r"head.encoder.svtr_block.\1.self_attn.projection.",
+    ),
+    # ``svtr_block.{N}.mlp.*`` and ``encoder.norm.*`` and any remaining
+    # ``head.ctc_encoder.encoder.*`` get the bare ``head.encoder.*`` rewrite.
+    (r"^head\.ctc_encoder\.encoder\.", r"head.encoder."),
+    # CTC head Linear
+    (r"^head\.ctc_head\.fc\.", r"head.head."),
+]
+
+# PP-OCRv6_small_rec / PP-OCRv6_medium_rec (same architecture — only the
+# config dims differ between variants).
+PPOCRV6_SMALL_REC_MAPPING = [
+    *_PPOCRV6_LARGE_REC_STEM_MAPPING,
+    *_PPLCNETV4_REC_BACKBONE_BLOCKS_MAPPING,
+    *_PPOCRV6_SVTR_ENCODER_MAPPING,
+]
+
+# PP-OCRv6_tiny_rec (Conv1D head + Linear; no SVTR encoder).
+PPOCRV6_TINY_REC_MAPPING = [
+    *_PPOCRV6_SMALL_REC_STEM_MAPPING,
+    *_PPLCNETV4_REC_BACKBONE_BLOCKS_MAPPING,
+    # Head: two Linear projections
+    (r"^head\.ctc_head\.fc1\.", r"head.fc1."),
+    (r"^head\.ctc_head\.fc2\.", r"head.fc2."),
+    # Head: guide_layer is Sequential(Conv1D, BN, Hardswish, Conv1D, BN);
+    # indices .2 (Hardswish) and .5 don't appear in state_dict.
+    (r"^head\.ctc_head\.guide_layer\.0\.", r"head.conv1."),
+    (r"^head\.ctc_head\.guide_layer\.1\.", r"head.norm1."),
+    (r"^head\.ctc_head\.guide_layer\.3\.", r"head.conv2."),
+    (r"^head\.ctc_head\.guide_layer\.4\.", r"head.norm2."),
+]
+
+
 # Keys to drop during conversion (training-only / tied weights)
 UVDOC_DROP_PREFIXES = [
     "out_point_positions3D.",
@@ -1157,4 +1367,10 @@ SERVER_DET_DROP_PREFIXES = [
 PPOCRV6_DET_DROP_PREFIXES = [
     "head.thresh.",
     "head.aux_",
+]
+
+# PP-OCRv6 rec: GTC head + pre-GTC alignment branch are training-only.
+PPOCRV6_REC_DROP_PREFIXES = [
+    "head.gtc_head.",
+    "head.before_gtc.",
 ]
