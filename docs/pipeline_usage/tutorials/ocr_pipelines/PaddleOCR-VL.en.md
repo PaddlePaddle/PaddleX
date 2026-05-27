@@ -1071,8 +1071,8 @@ Below are the API references for basic service-based deployment and examples of 
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible to the server, or the Base64-encoded result of the content of the aforementioned file types.
-By default, there is no limit on how many PDF pages are processed. To cap the number of pages processed on the server, set <code>Serving.extra.max_num_input_imgs</code> to a positive integer in the pipeline configuration file, for example:
+<td>The URL of image files (including TIFF; multi-page TIFF is processed page by page) or PDF file accessible to the server, or the Base64-encoded result of the content of the aforementioned file types.
+By default, there is no page limit. To set a page limit on the server, set <code>Serving.extra.max_num_input_imgs</code> to a positive integer in the pipeline configuration file, for example:
 <pre><code>Serving:
   extra:
     max_num_input_imgs: 10
@@ -1083,7 +1083,7 @@ By default, there is no limit on how many PDF pages are processed. To cap the nu
 <tr>
 <td><code>fileType</code></td>
 <td><code>integer</code>|<code>null</code></td>
-<td>File type.<code>0</code> represents a PDF file,<code>1</code> represents an image file. If this property is not present in the request body, the file type will be inferred from the URL.</td>
+<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file (including TIFF). If this property is not present in the request body, the file type will be inferred from the URL.</td>
 <td>No</td>
 </tr>
 <tr>
