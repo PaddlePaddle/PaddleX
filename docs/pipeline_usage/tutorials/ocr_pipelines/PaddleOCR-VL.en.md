@@ -39,7 +39,7 @@ This document applies to the PaddleOCR-VL series pipelines in PaddleX. PaddleX r
 </tbody>
 </table>
 
-A PaddleOCR-VL pipeline consists of layout detection, region cropping, reading-order handling, VLM recognition, and result assembly. `PaddleOCR-VL-0.9B`, `PaddleOCR-VL-1.5-0.9B`, and `PaddleOCR-VL-1.6-0.9B` are VLM submodels inside the pipelines; they are not complete PaddleX pipelines. If you only start or call a VLM inference service, you are only running the VLM recognition stage. The PaddleX pipeline is still responsible for layout detection, cropping, ordering, and result assembly.
+A PaddleOCR-VL pipeline consists of layout analysis, region cropping, reading-order handling, VLM recognition, and result assembly. `PaddleOCR-VL-0.9B`, `PaddleOCR-VL-1.5-0.9B`, and `PaddleOCR-VL-1.6-0.9B` are VLM submodels inside the pipelines; they are not complete PaddleX pipelines. If you only start or call a VLM inference service, you are only running the VLM recognition stage, which does not provide the full pipeline capability.
 
 ## 1. Environment Preparation
 
@@ -119,7 +119,7 @@ The following table lists the PaddleOCR-VL series pipeline prediction parameters
 </tr>
 <tr>
 <td><code>layout_nms</code></td>
-<td>Whether to use NMS post-processing for layout detection.</td>
+<td>Whether to use NMS post-processing for layout analysis.</td>
 <td><code>bool</code></td>
 </tr>
 <tr>
@@ -134,7 +134,7 @@ The following table lists the PaddleOCR-VL series pipeline prediction parameters
 </tr>
 <tr>
 <td><code>use_queues</code></td>
-<td>Whether to enable internal queues. When enabled, PDF rendering, layout detection, and VLM inference can run asynchronously in separate threads.</td>
+<td>Whether to enable internal queues. When enabled, PDF rendering, layout analysis, and VLM inference can run asynchronously in separate threads.</td>
 <td><code>bool</code></td>
 </tr>
 <tr>
@@ -391,7 +391,7 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
 <tr>
   <td><code>layout_shape_mode</code></td>
   <td>
-    <b>Meaning:</b>Specifies the geometric representation mode for layout detection results. It defines how the boundaries of detected regions (e.g., text blocks, images, tables) are calculated and displayed.<br/>
+    <b>Meaning:</b>Specifies the geometric representation mode for layout analysis results. It defines how the boundaries of detected regions (e.g., text blocks, images, tables) are calculated and displayed.<br/>
     <b>Description:</b> Value descriptions:
     <ul>
       <li>
@@ -669,7 +669,7 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
 
     - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring PaddleOCR-VL.
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
-        - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection module.
+        - `use_layout_detection`: `(bool)` Controls whether to enable the layout analysis module.
         - `use_chart_recognition`: `(bool)` Controls whether to enable the chart recognition function.
         - `format_block_content`: `(bool)` Controls whether to save the formatted markdown content in `JSON`. When set to `True`, the `block_content` of image-type blocks will contain image path information (e.g., `<img src="..." />`). When set to `False` (default), the `block_content` of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to `True`.
         - `merge_layout_blocks`: `(bool)` Controls whether to merge the layout frames of multi-column layouts or top-and-bottom alternating column layouts.
@@ -697,7 +697,7 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
     - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring PaddleOCR-VL.
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
-        - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection module.
+        - `use_layout_detection`: `(bool)` Controls whether to enable the layout analysis module.
         - `use_chart_recognition`: `(bool)` Controls whether to enable the chart recognition function.
         - `format_block_content`: `(bool)` Controls whether to save the formatted markdown content in `JSON`. When set to `True`, the `block_content` of image-type blocks will contain image path information (e.g., `<img src="..." />`). When set to `False` (default), the `block_content` of image-type blocks will only contain OCR-recognized text content without image paths. To include image paths in JSON output, set this parameter to `True`.
 
@@ -756,7 +756,7 @@ The inference performance under the default configuration is not fully optimized
 1. Start the VLM inference service;
 2. Configure the PaddleX pipeline to call the VLM inference service as a client.
 
-The VLM inference service only handles the VLM recognition stage of the complete pipeline. Layout detection, cropping, reading-order handling, and result assembly are still performed by the PaddleX pipeline. When starting the service, use the VLM submodel name that corresponds to the selected pipeline. See the pipeline table at the beginning of this document for the mapping.
+The VLM inference service only handles the VLM recognition stage of the complete pipeline. Layout analysis, cropping, reading-order handling, and result assembly are still performed by the PaddleX pipeline, so local inference with the layout parsing model is still required. When starting the service, use the VLM submodel name that corresponds to the selected pipeline. See the pipeline table at the beginning of this document for the mapping.
 
 ### 3.1 Starting the VLM Inference Service
 

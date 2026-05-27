@@ -39,7 +39,7 @@ PaddleOCR-VL 是一款先进、高效的文档解析模型，专为文档中的�
 </tbody>
 </table>
 
-PaddleOCR-VL 系列产线均由版面检测、区域裁剪、阅读顺序处理、VLM 识别和结果组装等步骤组成。`PaddleOCR-VL-0.9B`、`PaddleOCR-VL-1.5-0.9B`、`PaddleOCR-VL-1.6-0.9B` 等是产线中的 VLM 子模型，并不等同于完整的产线。若仅启动或调用 VLM 推理服务，则只完成了完整流程中的 VLM 识别环节，不对应产线完整能力。
+PaddleOCR-VL 系列产线均由版面分析、区域裁剪、阅读顺序处理、VLM 识别和结果组装等步骤组成。`PaddleOCR-VL-0.9B`、`PaddleOCR-VL-1.5-0.9B`、`PaddleOCR-VL-1.6-0.9B` 等是产线中的 VLM 子模型，并不等同于完整的产线。若仅启动或调用 VLM 推理服务，则只完成了完整流程中的 VLM 识别环节，不对应产线完整能力。
 
 ## 1. 环境准备
 
@@ -117,7 +117,7 @@ paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bceb
 </tr>
 <tr>
 <td><code>layout_nms</code></td>
-<td>版面检测是否使用后处理 NMS。</td>
+<td>版面分析是否使用后处理 NMS。</td>
 <td><code>bool</code></td>
 </tr>
 <tr>
@@ -132,7 +132,7 @@ paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bceb
 </tr>
 <tr>
 <td><code>use_queues</code></td>
-<td>是否启用内部队列。启用后，PDF 页面渲染、版面检测和 VLM 推理可分别在独立线程中异步执行。</td>
+<td>是否启用内部队列。启用后，PDF 页面渲染、版面分析和 VLM 推理可分别在独立线程中异步执行。</td>
 <td><code>bool</code></td>
 </tr>
 <tr>
@@ -377,7 +377,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>layout_shape_mode</code></td>
-<td><b>含义：</b>用于指定版面检测结果的几何形状表示模式。该参数决定了检测区域（如文本块、图片、表格等）边界的计算方式及展示形态。<br/>
+<td><b>含义：</b>用于指定版面分析结果的几何形状表示模式。该参数决定了检测区域（如文本块、图片、表格等）边界的计算方式及展示形态。<br/>
 <b>说明：</b>取值说明：
     <ul>
     <li><b>rect (矩形)</b>: 输出水平正向的边界框（包含 x1, y1, x2, y2）。适用于标准的水平排版版面。</li>
@@ -651,7 +651,7 @@ for res in output:
     - `model_settings`: `(Dict[str, bool])` 配置 PaddleOCR-VL 所需的模型参数
 
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
-        - `use_layout_detection`: `(bool)` 控制是否启用版面检测模块
+        - `use_layout_detection`: `(bool)` 控制是否启用版面分析模块
         - `use_chart_recognition`: `(bool)` 控制是否开启图表识别功能
         - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容。当设置为`True`时，图片类型的 block 的 `block_content` 将包含图片路径信息（如 `<img src="..." />`）；当设置为`False`（默认）时，图片类型的 block 的 `block_content` 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为`True`。
         - `merge_layout_blocks`: `(bool)` 控制是否对多栏布局或上下交错分栏的版面框进行合并
@@ -680,7 +680,7 @@ for res in output:
     - `model_settings`: `(Dict[str, bool])` 配置 PaddleOCR-VL 所需的模型参数
 
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
-        - `use_layout_detection`: `(bool)` 控制是否启用版面检测模块
+        - `use_layout_detection`: `(bool)` 控制是否启用版面分析模块
         - `use_chart_recognition`: `(bool)` 控制是否开启图表识别功能
         - `format_block_content`: `(bool)` 控制是否在`JSON`中保存格式化后的markdown内容。当设置为`True`时，图片类型的 block 的 `block_content` 将包含图片路径信息（如 `<img src="..." />`）；当设置为`False`（默认）时，图片类型的 block 的 `block_content` 仅包含 OCR 识别的文本内容，不包含图片路径。如需在 JSON 输出中获取图片地址，请将此参数设置为`True`。
 
@@ -738,7 +738,7 @@ for res in output:
 1. 启动 VLM 推理服务；
 2. 配置 PaddleX 产线，作为客户端调用 VLM 推理服务。
 
-需要注意，VLM 推理服务只负责完整产线中的 VLM 识别阶段；版面检测、裁图、阅读顺序处理和结果组装仍由 PaddleX 产线完成（仍需要用到推理引擎）。启动服务时请使用与所选产线对应的 VLM 子模型名称，具体对应关系见本文开头的产线表。
+需要注意，VLM 推理服务只负责完整产线中的 VLM 识别阶段；版面分析、裁图、阅读顺序处理和结果组装仍由 PaddleX 产线完成（仍需要进行版面解析模型本地推理）。启动服务时请使用与所选产线对应的 VLM 子模型名称，具体对应关系见本文开头的产线表。
 
 ### 3.1 启动 VLM 推理服务
 
