@@ -124,15 +124,7 @@ PaddleX 已支持统一的 `engine` + `engine_config` 推理配置方式，推�
 * 当显式传入 `engine_config` 时，`pp_option`、`hpi_config`、`genai_config` 将作为兼容参数被忽略；
 * 推荐仅使用 `engine` + `engine_config` 组合，避免混用旧参数。
 
-#### 4.3 是否必须安装 PaddlePaddle
-
-默认情况下，PaddleX 大多数能力依赖 PaddlePaddle；但在以下场景可不安装 PaddlePaddle：
-
-* 使用 `engine="transformers"` 推理支持该引擎的模型；
-
-> 注意：如果实际运行过程中涉及 `paddle` / `hpi` 等依赖本地 Paddle 能力的引擎，仍需要安装 PaddlePaddle；使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。
-
-#### 4.4 示例
+#### 4.3 示例
 
 使用 Transformers 引擎：
 
@@ -154,7 +146,7 @@ model = create_model(
 )
 ```
 
-#### 4.5 各引擎 `engine_config` 字段说明
+#### 4.4 各引擎 `engine_config` 字段说明
 
 以下字段基于当前代码中的配置模型整理（含字段含义）：
 

@@ -15,7 +15,7 @@
 import importlib
 from types import ModuleType
 
-from ..infra.name_mappings import pipeline_name_to_mod_name
+from ..name_mappings import pipeline_name_to_mod_name
 
 
 def get_pipeline_schema_mod(pipeline_name: str) -> ModuleType:

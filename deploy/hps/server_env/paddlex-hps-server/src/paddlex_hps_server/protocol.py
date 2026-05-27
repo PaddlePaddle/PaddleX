@@ -22,6 +22,7 @@ from paddlex.inference.serving.infra.models import (
     ImageInfo,
     PDFInfo,
     PDFPageInfo,
+    TIFFInfo,
     Response,
     ResultT,
 )
@@ -32,6 +33,7 @@ __all__ = [
     "ImageInfo",
     "PDFInfo",
     "PDFPageInfo",
+    "TIFFInfo",
     "generate_log_id",
     "AIStudioOutputWithoutResult",
     "AIStudioOutputWithResult",

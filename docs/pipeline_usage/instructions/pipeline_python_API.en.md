@@ -189,15 +189,7 @@ SubModules:
 * When `engine` is explicitly set, `use_hpip` is ignored;
 * When `engine_config` is explicitly set, `pp_option` and `hpi_config` are usually unnecessary compatibility options.
 
-#### 4.5 Is PaddlePaddle Required?
-
-PaddlePaddle is not required in the following scenarios:
-
-* The relevant module runs with `engine="transformers"`;
-
-> Note: If a module finally runs on `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
-
-#### 4.6 `engine_config` Fields by Engine
+#### 4.5 `engine_config` Fields by Engine
 
 The following field sets also apply to submodules in a pipeline:
 
@@ -248,7 +240,7 @@ The following field sets also apply to submodules in a pipeline:
 
 ### 5. Compatibility Configuration (`PaddlePredictorOption`)
 
-`PaddlePredictorOption` is retained as a compatibility layer. For new projects, prefer `engine_config`.
+`PaddlePredictorOption` is retained as a compatibility layer. For new projects, prefer the unified `engine` + `engine_config` configuration style; legacy parameters such as `use_hpip` and `hpi_config` should also be migrated to this style over time.
 
 * Effective scope: mainly compatibility settings for `paddle_static`;
 * Common fields:

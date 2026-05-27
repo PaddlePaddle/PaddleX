@@ -15,7 +15,6 @@
 import asyncio
 import base64
 import io
-import math
 import mimetypes
 import re
 import tempfile
@@ -31,9 +30,14 @@ from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
 from ....utils.deps import function_requires_deps, is_dep_available
-from ....utils.flags import PDF_RENDER_SCALE
+from ....utils.flags import PDF_MIN_RENDER_SCALE, PDF_RENDER_SCALE
+from ...utils.pdf_rendering import DEFAULT_MAX_IMAGE_PIXELS, PDFRenderSizeError
+from ...utils.pdf_rendering import (
+    get_pdf_render_scale_within_pixel_limit as _get_pdf_render_scale_within_pixel_limit,
+)
+from ...utils.pdf_rendering import render_pdf_page_to_numpy
 from ...utils.pdfium_lock import pdfium_lock
-from .models import ImageInfo, PDFInfo, PDFPageInfo
+from .models import ImageInfo, PDFInfo, PDFPageInfo, TIFFInfo
 
 if is_dep_available("aiohttp"):
     import aiohttp
@@ -50,6 +54,7 @@ __all__ = [
     "FileType",
     "MAX_IMAGE_PIXELS",
     "ImageTooLargeError",
+    "get_pdf_render_scale_within_pixel_limit",
     "generate_log_id",
     "is_url",
     "infer_file_type",
@@ -62,6 +67,8 @@ __all__ = [
     "data_frame_to_bytes",
     "base64_encode",
     "read_pdf",
+    "read_tiff",
+    "is_tiff_bytes",
     "file_to_images",
     "get_image_info",
     "write_to_temp_file",
@@ -72,7 +79,7 @@ __all__ = [
 
 FileType: TypeAlias = Literal["IMAGE", "PDF", "VIDEO", "AUDIO"]
 
-MAX_IMAGE_PIXELS: int = 178_956_970
+MAX_IMAGE_PIXELS: int = DEFAULT_MAX_IMAGE_PIXELS
 
 
 class ImageTooLargeError(Exception):
@@ -109,7 +116,7 @@ def ensure_image_pixel_limit(
             f"maximum allowed {MAX_IMAGE_PIXELS}."
         )
         if page_index is not None:
-            msg = f"PDF page {page_index}: {msg}"
+            msg = f"Page {page_index}: {msg}"
         raise ImageTooLargeError(
             msg,
             width=w,
@@ -120,27 +127,37 @@ def ensure_image_pixel_limit(
         )
 
 
-def _ensure_pdf_page_pixel_limit_before_render(
-    page_size: Tuple[float, float], *, page_index: int
-) -> None:
-    w_pdf, h_pdf = float(page_size[0]), float(page_size[1])
-    pixels = w_pdf * PDF_RENDER_SCALE * h_pdf * PDF_RENDER_SCALE
-    if pixels > MAX_IMAGE_PIXELS:
-        w_px = int(math.ceil(w_pdf * PDF_RENDER_SCALE))
-        h_px = int(math.ceil(h_pdf * PDF_RENDER_SCALE))
-        est = w_px * h_px
-        msg = (
-            f"PDF page {page_index}: Estimated render size width={w_px}, height={h_px} "
-            f"(pixel count {est}) would exceed maximum allowed {MAX_IMAGE_PIXELS}."
-        )
-        raise ImageTooLargeError(
-            msg,
-            width=w_px,
-            height=h_px,
-            pixel_count=est,
-            max_pixels=MAX_IMAGE_PIXELS,
+def get_pdf_render_scale_within_pixel_limit(
+    page_size: Tuple[float, float],
+    *,
+    page_index: int,
+    requested_scale: float = PDF_RENDER_SCALE,
+    min_scale: float = PDF_MIN_RENDER_SCALE,
+    max_pixels: int = MAX_IMAGE_PIXELS,
+) -> float:
+    try:
+        return _get_pdf_render_scale_within_pixel_limit(
+            page_size,
             page_index=page_index,
+            requested_scale=requested_scale,
+            min_scale=min_scale,
+            max_pixels=max_pixels,
         )
+    except PDFRenderSizeError as exc:
+        raise _pdf_render_size_error_to_image_too_large_error(exc) from exc
+
+
+def _pdf_render_size_error_to_image_too_large_error(
+    exc: PDFRenderSizeError,
+) -> ImageTooLargeError:
+    return ImageTooLargeError(
+        str(exc),
+        width=exc.width,
+        height=exc.height,
+        pixel_count=exc.pixel_count,
+        max_pixels=exc.max_pixels,
+        page_index=exc.page_index,
+    )
 
 
 P = ParamSpec("P")
@@ -272,13 +289,19 @@ def read_pdf(
                     if max_num_imgs is not None and len(images) >= max_num_imgs:
                         break
                     page_number += 1
-                    page_size = page.get_size()
-                    _ensure_pdf_page_pixel_limit_before_render(
-                        page_size, page_index=page_number
-                    )
-                    zoom = PDF_RENDER_SCALE
-                    deg = 0
-                    image = page.render(scale=zoom, rotation=deg).to_numpy()
+                    try:
+                        image = render_pdf_page_to_numpy(
+                            page,
+                            page_index=page_number,
+                            requested_scale=PDF_RENDER_SCALE,
+                            rotation=0,
+                            min_scale=PDF_MIN_RENDER_SCALE,
+                            max_pixels=MAX_IMAGE_PIXELS,
+                        )
+                    except PDFRenderSizeError as exc:
+                        raise _pdf_render_size_error_to_image_too_large_error(
+                            exc
+                        ) from exc
                     ensure_image_pixel_limit(image, page_index=page_number)
                     images.append(image)
                     page_info = PDFPageInfo(
@@ -295,6 +318,42 @@ def read_pdf(
         pages=page_info_list,
     )
     return images, pdf_info
+
+
+_TIFF_MAGIC = (b"II\x2a\x00", b"MM\x00\x2a")
+
+
+def is_tiff_bytes(data: bytes) -> bool:
+    return len(data) >= 4 and data[:4] in _TIFF_MAGIC
+
+
+@function_requires_deps("opencv-contrib-python")
+def read_tiff(
+    bytes_: bytes, max_num_imgs: Optional[int] = None
+) -> Tuple[List[np.ndarray], TIFFInfo]:
+    images: List[np.ndarray] = []
+    page_info_list: List[PDFPageInfo] = []
+    with Image.open(io.BytesIO(bytes_)) as img:
+        n_frames = getattr(img, "n_frames", 1)
+        for page_number in range(1, n_frames + 1):
+            if max_num_imgs is not None and len(images) >= max_num_imgs:
+                break
+            img.seek(page_number - 1)
+            frame = img.convert("RGB")
+            image = cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
+            ensure_image_pixel_limit(image, page_index=page_number)
+            images.append(image)
+            page_info_list.append(
+                PDFPageInfo(
+                    width=image.shape[1],
+                    height=image.shape[0],
+                )
+            )
+    tiff_info = TIFFInfo(
+        numPages=len(page_info_list),
+        pages=page_info_list,
+    )
+    return images, tiff_info
 
 
 @overload
@@ -321,7 +380,11 @@ def file_to_images(
     file_type: Literal["IMAGE", "PDF"],
     *,
     max_num_imgs: Optional[int] = ...,
-) -> Union[Tuple[List[np.ndarray], ImageInfo], Tuple[List[np.ndarray], PDFInfo]]: ...
+) -> Union[
+    Tuple[List[np.ndarray], ImageInfo],
+    Tuple[List[np.ndarray], PDFInfo],
+    Tuple[List[np.ndarray], TIFFInfo],
+]: ...
 
 
 def file_to_images(
@@ -329,10 +392,22 @@ def file_to_images(
     file_type: Literal["IMAGE", "PDF"],
     *,
     max_num_imgs: Optional[int] = None,
-) -> Union[Tuple[List[np.ndarray], ImageInfo], Tuple[List[np.ndarray], PDFInfo]]:
+) -> Union[
+    Tuple[List[np.ndarray], ImageInfo],
+    Tuple[List[np.ndarray], PDFInfo],
+    Tuple[List[np.ndarray], TIFFInfo],
+]:
     if file_type == "IMAGE":
-        images = [image_bytes_to_array(file_bytes)]
-        data_info = get_image_info(images[0])
+        if is_tiff_bytes(file_bytes):
+            with Image.open(io.BytesIO(file_bytes)) as img:
+                if getattr(img, "n_frames", 1) > 1:
+                    images, data_info = read_tiff(file_bytes, max_num_imgs=max_num_imgs)
+                else:
+                    images = [image_bytes_to_array(file_bytes)]
+                    data_info = get_image_info(images[0])
+        else:
+            images = [image_bytes_to_array(file_bytes)]
+            data_info = get_image_info(images[0])
     elif file_type == "PDF":
         images, data_info = read_pdf(file_bytes, max_num_imgs=max_num_imgs)
     else:

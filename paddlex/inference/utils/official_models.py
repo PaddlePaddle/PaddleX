@@ -71,6 +71,7 @@ ALL_MODELS = [
     "ResNet200_vd",
     "PaddleOCR-VL",
     "PaddleOCR-VL-1.5",
+    "PaddleOCR-VL-1.6",
     "PP-LCNet_x0_25",
     "PP-LCNet_x0_25_textline_ori",
     "PP-LCNet_x0_35",
@@ -376,6 +377,7 @@ OCR_MODELS = [
     "el_PP-OCRv5_mobile_rec",
     "PaddleOCR-VL",
     "PaddleOCR-VL-1.5",
+    "PaddleOCR-VL-1.6",
     "PicoDet_layout_1x",
     "PicoDet_layout_1x_table",
     "PicoDet-L_layout_17cls",
@@ -473,6 +475,7 @@ SAFETENSORS_SUPPORTED_MODELS_WITH_SUFFIX: Set[str] = {
 SAFETENSORS_SUPPORTED_MODELS_WITHOUT_SUFFIX: Set[str] = {
     "PaddleOCR-VL-0.9B",
     "PaddleOCR-VL-1.5-0.9B",
+    "PaddleOCR-VL-1.6-0.9B",
 }
 
 SAFETENSORS_SUPPORTED_MODELS: Set[str] = (

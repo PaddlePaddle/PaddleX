@@ -275,7 +275,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                 max_num_imgs=self.context["max_num_input_imgs"],
             )
         except utils.ImageTooLargeError as e:
-            logging.error("Input image or PDF page exceeds pixel limit: %s", e)
+            logging.error("Input image or document page exceeds pixel limit: %s", e)
             return protocol.create_aistudio_output_without_result(
                 422,
                 str(e),

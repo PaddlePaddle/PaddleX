@@ -22,6 +22,7 @@ from ....utils.cache import CACHE_DIR
 from ....utils.download import download
 from ....utils.flags import PDF_RENDER_SCALE
 from ...utils.io import PDFReader, TIFFReader
+from ...utils.pdf_rendering import DEFAULT_MAX_IMAGE_PIXELS
 from .base_batch_sampler import BaseBatchSampler, Batch
 
 
@@ -63,7 +64,9 @@ class ImageBatchSampler(BaseBatchSampler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pdf_reader = PDFReader(zoom=PDF_RENDER_SCALE)
+        self.pdf_reader = PDFReader(
+            zoom=PDF_RENDER_SCALE, max_pixels=DEFAULT_MAX_IMAGE_PIXELS
+        )
         self.tiff_reader = TIFFReader()
 
     # XXX: auto download for url

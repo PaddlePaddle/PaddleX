@@ -147,7 +147,7 @@ def set_env_for_device_type(device_type):
         }
         _set(envs)
     if device_type.lower() == "metax_gpu":
-        envs = {"FLAGS_use_stride_kernel": "0"}
+        envs = {"FLAGS_use_stride_kernel": "1"}
         _set(envs)
     if device_type.lower() == "mlu":
         envs = {
