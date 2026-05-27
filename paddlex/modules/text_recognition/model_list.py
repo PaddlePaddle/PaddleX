@@ -44,4 +44,7 @@ MODELS = [
     "devanagari_PP-OCRv5_mobile_rec",
     "ta_PP-OCRv5_mobile_rec",
     "te_PP-OCRv5_mobile_rec",
+    "PP-OCRv6_medium_rec",
+    "PP-OCRv6_small_rec",
+    "PP-OCRv6_tiny_rec",
 ]
