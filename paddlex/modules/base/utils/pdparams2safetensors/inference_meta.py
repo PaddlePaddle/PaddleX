@@ -564,8 +564,19 @@ _INFERENCE_META_REGISTRY = {
     "PP-LCNet_x1_0_textline_ori": _meta_cls_textline,
     "PP-OCRv5_mobile_det": _meta_det,
     "PP-OCRv5_server_det": _meta_det,
+    # PP-OCRv6 det shares the v5 DB postprocess + Hpi shapes; only
+    # preprocessor_config.json differs (see _PPOCRV6_DET_PREPROC).
+    "PP-OCRv6_small_det": _meta_det,
+    "PP-OCRv6_tiny_det": _meta_det,
+    "PP-OCRv6_medium_det": _meta_det,
     "PP-OCRv5_mobile_rec": _meta_rec,
     "PP-OCRv5_server_rec": _meta_rec,
+    # v6 rec inference.yml matches v5 rec exactly (same Hpi shapes, same
+    # CTC transform_ops); only the per-model character_dict differs and is
+    # injected by WeightConverter._save_inference_yml.
+    "PP-OCRv6_small_rec": _meta_rec,
+    "PP-OCRv6_medium_rec": _meta_rec,
+    "PP-OCRv6_tiny_rec": _meta_rec,
     "SLANet": lambda: _meta_slanet("SLANet"),
     "SLANet_plus": lambda: _meta_slanet("SLANet_plus"),
     "SLANeXt_wired": lambda: _meta_slanext("SLANeXt_wired"),
@@ -667,6 +678,19 @@ _SERVER_DET_PREPROC = {
     "do_to_chw": True,
 }
 
+# PP-OCRv6 det: same image processor class as v5 server, but the released
+# checkpoints differ in side-length policy (``limit_side_len=736`` /
+# ``limit_type=min``) and add ``do_convert_rgb``.
+_PPOCRV6_DET_PREPROC = {
+    **_DET_PREPROC_BASE,
+    "do_convert_rgb": True,
+    "image_processor_type": "PPOCRV5ServerDetImageProcessor",
+    "limit_side_len": 736,
+    "limit_type": "min",
+    "normalize_order": "hwc",
+    "do_to_chw": True,
+}
+
 _REC_PREPROC_BASE = {
     "size": {"height": 48, "width": 320},
     "pad_size": {"height": 48, "width": 320},
@@ -720,8 +744,17 @@ PREPROCESSOR_CONFIGS = {
     "PP-LCNet_x1_0_textline_ori": _PPLCNET_TEXTLINE_PREPROC,
     "PP-OCRv5_mobile_det": _MOBILE_DET_PREPROC,
     "PP-OCRv5_server_det": _SERVER_DET_PREPROC,
+    "PP-OCRv6_small_det": _PPOCRV6_DET_PREPROC,
+    "PP-OCRv6_tiny_det": _PPOCRV6_DET_PREPROC,
+    "PP-OCRv6_medium_det": _PPOCRV6_DET_PREPROC,
     "PP-OCRv5_mobile_rec": _MOBILE_REC_PREPROC,
     "PP-OCRv5_server_rec": _SERVER_REC_PREPROC,
+    # v6 rec preprocessor_config.json is exactly _REC_PREPROC_BASE + per-model
+    # character_list (injected separately). No model_type field, no extra
+    # tweaks like the v5 mobile/server split.
+    "PP-OCRv6_small_rec": _REC_PREPROC_BASE,
+    "PP-OCRv6_medium_rec": _REC_PREPROC_BASE,
+    "PP-OCRv6_tiny_rec": _REC_PREPROC_BASE,
     "SLANet": {
         "image_processor_type": "SLANeXtImageProcessor",
         "do_resize": True,
@@ -798,23 +831,34 @@ def build_inference_meta(model_name):
 
 
 # Character dict loading
-_BUNDLED_DICT_PATH = (
-    Path(__file__).resolve().parent.parent.parent / "res" / "ppocrv5_dict.txt"
-)
+_RES_DIR = Path(__file__).resolve().parent.parent.parent / "res"
+_BUNDLED_DICT_PATH = _RES_DIR / "ppocrv5_dict.txt"
+
+# Per-model bundled character dict. v6 small/medium share one dict, tiny
+# has its own; everything not in here defaults to the v5 dict.
+_REC_DICT_PATHS = {
+    "PP-OCRv5_mobile_rec": _BUNDLED_DICT_PATH,
+    "PP-OCRv5_server_rec": _BUNDLED_DICT_PATH,
+    "PP-OCRv6_small_rec": _RES_DIR / "ppocrv6_rec_dict.txt",
+    "PP-OCRv6_medium_rec": _RES_DIR / "ppocrv6_rec_dict.txt",
+    "PP-OCRv6_tiny_rec": _RES_DIR / "ppocrv6_tiny_rec_dict.txt",
+}
 
 
-def load_character_dict():
-    """Load PP-OCRv5 character dict from bundled file.
+def load_character_dict(model_name=None):
+    """Load the character dict bundled for ``model_name``.
 
-    Returns list of character strings (18383 chars).
+    Returns a list of character strings (no leading ``"blank"`` and no
+    trailing space). ``model_name=None`` keeps the legacy v5 behavior.
     """
-    if not _BUNDLED_DICT_PATH.exists():
+    path = _REC_DICT_PATHS.get(model_name, _BUNDLED_DICT_PATH)
+    if not path.exists():
         raise FileNotFoundError(
-            f"Bundled character dict not found at {_BUNDLED_DICT_PATH}. "
+            f"Bundled character dict not found at {path}. "
             "This file is required for rec model conversion."
         )
-    chars = _BUNDLED_DICT_PATH.read_text("utf-8").rstrip("\n").split("\n")
-    logging.info(f"Loaded character dict ({len(chars)} chars)")
+    chars = path.read_text("utf-8").rstrip("\n").split("\n")
+    logging.info(f"Loaded character dict ({len(chars)} chars) for {model_name!r}")
     return chars
 
 

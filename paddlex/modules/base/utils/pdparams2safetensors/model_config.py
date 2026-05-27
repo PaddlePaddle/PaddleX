@@ -103,6 +103,136 @@ _PPOCRV5_SERVER_DET_CONFIG = {
     "kernel_list": [3, 2, 2],
 }
 
+# PP-OCRv6 det configs (values mirror the released safetensors config.json)
+_PPOCRV6_SMALL_DET_BACKBONE_BASE = {
+    "model_type": "pp_lcnet_v4",
+    "stem_type": "large",
+    "out_features": ["stage1", "stage2", "stage3", "stage4"],
+    "out_indices": [1, 2, 3, 4],
+}
+
+_PPOCRV6_SMALL_DET_CONFIG = {
+    "model_type": "pp_ocrv6_small_det",
+    "reduction": 4,
+    "layer_list_out_channels": [48, 96, 192, 384],
+    "neck_out_channels": 96,
+    "kernel_list": [3, 2, 2],
+    "interpolate_mode": "nearest",
+    "dilated_kernel_size": 7,
+    "backbone_config": {
+        **_PPOCRV6_SMALL_DET_BACKBONE_BASE,
+        "stem_channels": [3, 24, 48],
+        "block_configs": [
+            [[3, 48, 48, 1, True], [3, 48, 48, 1, False]],
+            [[3, 48, 96, 2, False], [3, 96, 96, 1, True], [3, 96, 96, 1, False]],
+            [
+                [3, 96, 192, 2, False],
+                [3, 192, 192, 1, True],
+                [3, 192, 192, 1, False],
+                [3, 192, 192, 1, True],
+                [3, 192, 192, 1, False],
+            ],
+            [
+                [3, 192, 384, 2, False],
+                [3, 384, 384, 1, True],
+                [3, 384, 384, 1, False],
+            ],
+        ],
+    },
+}
+
+_PPOCRV6_TINY_DET_CONFIG = {
+    "model_type": "pp_ocrv6_small_det",  # shares the small_det class
+    "reduction": 4,
+    "layer_list_out_channels": [32, 48, 64, 160],
+    "neck_out_channels": 64,
+    "kernel_list": [3, 2, 2],
+    "interpolate_mode": "nearest",
+    "dilated_kernel_size": 5,
+    "backbone_config": {
+        **_PPOCRV6_SMALL_DET_BACKBONE_BASE,
+        "stem_channels": [3, 16, 32],
+        "block_configs": [
+            [[3, 32, 32, 1, True], [3, 32, 32, 1, False]],
+            [[3, 32, 48, 2, False], [3, 48, 48, 1, True], [3, 48, 48, 1, False]],
+            [
+                [3, 48, 64, 2, False],
+                [3, 64, 64, 1, True],
+                [3, 64, 64, 1, False],
+                [3, 64, 64, 1, True],
+                [3, 64, 64, 1, False],
+            ],
+            [
+                [3, 64, 160, 2, False],
+                [3, 160, 160, 1, True],
+                [3, 160, 160, 1, False],
+            ],
+        ],
+    },
+}
+
+_PPOCRV6_MEDIUM_DET_INTRACLASS_BLOCK_CONFIG = {
+    "reduce_channel": [1, 1, 0],
+    "return_channel": [1, 1, 0],
+    "vertical_long_to_small_conv_longratio": [[7, 1], [1, 1], [3, 0]],
+    "vertical_long_to_small_conv_midratio": [[5, 1], [1, 1], [2, 0]],
+    "vertical_long_to_small_conv_shortratio": [[3, 1], [1, 1], [1, 0]],
+    "horizontal_small_to_long_conv_longratio": [[1, 7], [1, 1], [0, 3]],
+    "horizontal_small_to_long_conv_midratio": [[1, 5], [1, 1], [0, 2]],
+    "horizontal_small_to_long_conv_shortratio": [[1, 3], [1, 1], [0, 1]],
+    "symmetric_conv_long_longratio": [[7, 7], [1, 1], [3, 3]],
+    "symmetric_conv_long_midratio": [[5, 5], [1, 1], [2, 2]],
+    "symmetric_conv_long_shortratio": [[3, 3], [1, 1], [1, 1]],
+}
+
+_PPOCRV6_MEDIUM_DET_CONFIG = {
+    "model_type": "pp_ocrv6_medium_det",
+    "mode": "large",
+    "upsample_mode": "nearest",
+    "upsample_align_mode": 1,
+    "backbone_config": {
+        "model_type": "pp_lcnet_v4",
+        "stem_channels": [3, 64, 128],
+        "stem_type": "large",
+        "out_features": ["stage1", "stage2", "stage3", "stage4"],
+        "out_indices": [1, 2, 3, 4],
+        "block_configs": [
+            [[3, 128, 128, 1, True], [3, 128, 128, 1, False]],
+            [
+                [3, 128, 256, 2, False],
+                [3, 256, 256, 1, True],
+                [3, 256, 256, 1, False],
+            ],
+            [
+                [3, 256, 512, 2, False],
+                [3, 512, 512, 1, True],
+                [3, 512, 512, 1, False],
+                [3, 512, 512, 1, True],
+                [3, 512, 512, 1, False],
+            ],
+            [
+                [3, 512, 896, 2, False],
+                [3, 896, 896, 1, True],
+                [3, 896, 896, 1, False],
+            ],
+        ],
+    },
+    "use_lab": False,
+    "use_last_conv": True,
+    "class_expand": 2048,
+    "class_num": 1000,
+    "out_indices": [0, 1, 2, 3],
+    "neck_out_channels": 256,
+    "reduce_factor": 2,
+    "intraclass_block_number": 4,
+    "intraclass_block_config": _PPOCRV6_MEDIUM_DET_INTRACLASS_BLOCK_CONFIG,
+    "head_in_channels": 1024,
+    "scale_factor": 2,
+    "scale_factor_list": [1, 2, 4, 8],
+    "hidden_act": "relu",
+    "kernel_list": [3, 2, 2],
+}
+
 _PPOCRV5_REC_BASE = {
     "hidden_act": "silu",
     "hidden_size": 120,
@@ -161,6 +291,110 @@ _PPOCRV5_SERVER_REC_CONFIG = {
         "stage_downsample_strides": [[2, 1], [1, 2], [2, 1], [2, 1]],
     },
     **_PPOCRV5_REC_BASE,
+}
+
+# PP-OCRv6 rec configs (values mirror the released safetensors config.json)
+_PPOCRV6_REC_BACKBONE_BASE = {
+    "model_type": "pp_lcnet_v4",
+    "stem_type": "large",
+    "out_features": ["stage1", "stage2", "stage3", "stage4"],
+    "out_indices": [1, 2, 3, 4],
+}
+
+_PPOCRV6_SMALL_REC_CONFIG = {
+    "model_type": "pp_ocrv6_small_rec",
+    "backbone_config": {
+        **_PPOCRV6_REC_BACKBONE_BASE,
+        "stem_channels": [3, 48, 96],
+        "block_configs": [
+            [[3, 96, 96, 1, True]],
+            [[3, 96, 96, 1, False], [3, 96, 96, 1, False]],
+            [
+                [3, 96, 192, [2, 1], False],
+                [3, 192, 192, 1, True],
+                [3, 192, 192, 1, False],
+                [3, 192, 192, 1, True],
+                [3, 192, 192, 1, False],
+                [3, 192, 192, 1, True],
+                [3, 192, 192, 1, False],
+            ],
+            [
+                [3, 192, 384, [2, 1], False],
+                [3, 384, 384, 1, True],
+                [3, 384, 384, 1, False],
+            ],
+        ],
+    },
+    "hidden_act": "silu",
+    "hidden_size": 120,
+    "mlp_ratio": 2.0,
+    "depth": 2,
+    "head_out_channels": 18714,
+    "conv_kernel_size": [1, 7],
+}
+
+_PPOCRV6_MEDIUM_REC_CONFIG = {
+    "model_type": "pp_ocrv6_small_rec",  # shares the small_rec class
+    "backbone_config": {
+        **_PPOCRV6_REC_BACKBONE_BASE,
+        "stem_channels": [3, 64, 128],
+        "block_configs": [
+            [[3, 128, 128, 1, True]],
+            [
+                [3, 128, 256, 1, False],
+                [3, 256, 256, 1, False],
+                [3, 256, 256, 1, True],
+            ],
+            [
+                [3, 256, 512, [2, 1], False],
+                [3, 512, 512, 1, True],
+                [3, 512, 512, 1, False],
+                [3, 512, 512, 1, True],
+                [3, 512, 512, 1, False],
+                [3, 512, 512, 1, True],
+                [3, 512, 512, 1, False],
+            ],
+            [
+                [3, 512, 768, [2, 1], False],
+                [3, 768, 768, 1, True],
+                [3, 768, 768, 1, False],
+            ],
+        ],
+    },
+    "hidden_act": "silu",
+    "hidden_size": 192,
+    "mlp_ratio": 4.0,
+    "depth": 2,
+    "head_out_channels": 18714,
+    "conv_kernel_size": [1, 7],
+}
+
+_PPOCRV6_TINY_REC_CONFIG = {
+    "model_type": "pp_ocrv6_tiny_rec",
+    "backbone_config": {
+        "model_type": "pp_lcnet_v4",
+        "stem_channels": [3, 24, 48],
+        "stem_type": "small",
+        "out_features": ["stage1", "stage2", "stage3", "stage4"],
+        "out_indices": [1, 2, 3, 4],
+        "block_configs": [
+            [[3, 48, 48, 1, True]],
+            [[3, 48, 48, 1, False]],
+            [
+                [3, 48, 96, [2, 1], False],
+                [3, 96, 96, 1, True],
+                [3, 96, 96, 1, False],
+            ],
+            [
+                [3, 96, 160, [2, 1], False],
+                [3, 160, 160, 1, True],
+                [3, 160, 160, 1, False],
+                [3, 160, 160, 1, False],
+            ],
+        ],
+    },
+    "hidden_size": 80,
+    "head_out_channels": 7180,
 }
 
 # RT-DETR / DocLayout configs
@@ -699,6 +933,12 @@ MODEL_CONFIGS = {
     },
     "PP-OCRv5_mobile_det": _PPOCRV5_MOBILE_DET_CONFIG,
     "PP-OCRv5_server_det": _PPOCRV5_SERVER_DET_CONFIG,
+    "PP-OCRv6_small_det": _PPOCRV6_SMALL_DET_CONFIG,
+    "PP-OCRv6_tiny_det": _PPOCRV6_TINY_DET_CONFIG,
+    "PP-OCRv6_medium_det": _PPOCRV6_MEDIUM_DET_CONFIG,
+    "PP-OCRv6_small_rec": _PPOCRV6_SMALL_REC_CONFIG,
+    "PP-OCRv6_medium_rec": _PPOCRV6_MEDIUM_REC_CONFIG,
+    "PP-OCRv6_tiny_rec": _PPOCRV6_TINY_REC_CONFIG,
     "PP-OCRv5_mobile_rec": _PPOCRV5_MOBILE_REC_CONFIG,
     "PP-OCRv5_server_rec": _PPOCRV5_SERVER_REC_CONFIG,
     "SLANet": {
