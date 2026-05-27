@@ -453,8 +453,8 @@ Serving:
     file_storage:
       type: bos
       endpoint: <BOS 访问域名，例如 https://bj.bcebos.com>
-      ak: <百度智能云 AK>
-      sk: <百度智能云 SK>
+      ak: xxx
+      sk: xxx
       bucket_name: <存储空间名称>
       key_prefix: <可选，对象 key 前缀>
     return_img_urls: true

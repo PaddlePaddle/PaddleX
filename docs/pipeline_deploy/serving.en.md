@@ -455,8 +455,8 @@ Serving:
     file_storage:
       type: bos
       endpoint: <BOS endpoint, e.g. https://bj.bcebos.com>
-      ak: <Baidu Cloud AK>
-      sk: <Baidu Cloud SK>
+      ak: xxx
+      sk: xxx
       bucket_name: <bucket name>
       key_prefix: <optional, object key prefix>
     return_img_urls: true
@@ -466,8 +466,8 @@ Serving:
 Field reference:
 
 - `endpoint`: BOS endpoint, required.
-- `ak`: Baidu Cloud AK, required.
-- `sk`: Baidu Cloud SK, required.
+- `ak`: Baidu Intelligent Cloud Access Key (required).
+- `sk`: Baidu Intelligent Cloud Secret Key (required).
 - `bucket_name`: BOS bucket name, required.
 - `key_prefix`: optional object key prefix.
 
@@ -480,4 +480,4 @@ Notes:
 
 - `file_storage.type` supports `bos`, `file_system`, and `memory`; **only `bos` provides pre-signed URLs**. When `return_img_urls: true` is enabled, `file_storage` must be `bos`, otherwise the server fails to start.
 - Field types are unchanged; only the value changes from a Base64 string to a pre-signed URL that can be fetched within `url_expires_in` seconds.
-- For details on how to obtain the AK/SK, see the [Baidu Intelligent Cloud documentation](https://cloud.baidu.com/doc/BOS/index.html).
+- For more information on obtaining AK/SK and other details, refer to the [Baidu Intelligent Cloud Official Documentation](https://cloud.baidu.com/doc/BOS/index.html).
