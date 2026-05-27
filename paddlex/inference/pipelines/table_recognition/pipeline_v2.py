@@ -460,6 +460,9 @@ class _TableRecognitionPipelineV2(BasePipeline):
             """
             # Number of input rectangles
             num_rects = len(rectangles)
+            # Guard: N must be >= 1 for KMeans
+            if N <= 0 or num_rects == 0:
+                return []
             # If N is greater than or equal to the number of rectangles, return the original rectangles
             if N >= num_rects:
                 return rectangles
@@ -545,12 +548,13 @@ class _TableRecognitionPipelineV2(BasePipeline):
             else:
                 # Need to combine ocr_miss_boxes into N rectangles
                 N = html_pred_boxes_nums - len(cells_det_results)
-                # Combine ocr_miss_boxes into N rectangles
-                ocr_supp_boxes = combine_rectangles(ocr_miss_boxes, N)
-                # Combine cells_det_results and ocr_supp_boxes
-                final_results = np.concatenate(
-                    (cells_det_results, ocr_supp_boxes), axis=0
-                ).tolist()
+                if N <= 0:
+                    final_results = cells_det_results.tolist()
+                else:
+                    ocr_supp_boxes = combine_rectangles(ocr_miss_boxes, N)
+                    final_results = np.concatenate(
+                        (cells_det_results, ocr_supp_boxes), axis=0
+                    ).tolist()
         if len(final_results) <= 0.6 * html_pred_boxes_nums:
             final_results = combine_rectangles(ocr_det_results, html_pred_boxes_nums)
         return final_results
