@@ -938,6 +938,176 @@ PP_FORMULANET_MAPPING = [
 ]
 
 
+# PP-OCRv6 det shared backbone fragments (PPLCNetV4 + PaddleOCR training names).
+# The training-time module names ``backbone.blocks_s{N}`` use a one-based
+# stage index; the HF inference modules use a zero-based ``encoder.blocks.{N}``
+# index, hence the ``int(stage)-1`` in the lambdas. ``token_mixer.rep_dw`` and
+# the neck DilatedReparamBlock branches are not in these rules — they're handled
+# by :mod:`.fusion` before this mapping runs (see
+# ``_PRE_MAP_FUSERS`` in :mod:`..weight_converter`).
+_PPLCNETV4_BACKBONE_MAPPING = [
+    # Stem
+    (
+        r"^backbone\.stem\.stem(\d+)a\.bn\.",
+        r"model.backbone.encoder.convolution.stem\1a.normalization.",
+    ),
+    (
+        r"^backbone\.stem\.stem(\d+)b\.bn\.",
+        r"model.backbone.encoder.convolution.stem\1b.normalization.",
+    ),
+    (
+        r"^backbone\.stem\.stem(\d+)a\.conv\.",
+        r"model.backbone.encoder.convolution.stem\1a.convolution.",
+    ),
+    (
+        r"^backbone\.stem\.stem(\d+)b\.conv\.",
+        r"model.backbone.encoder.convolution.stem\1b.convolution.",
+    ),
+    (
+        r"^backbone\.stem\.stem(\d+)\.bn\.",
+        r"model.backbone.encoder.convolution.stem\1.normalization.",
+    ),
+    (
+        r"^backbone\.stem\.stem(\d+)\.conv\.",
+        r"model.backbone.encoder.convolution.stem\1.convolution.",
+    ),
+    # Block stages (one-based stage -> zero-based)
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.token_mixer\.dw_conv\.conv\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.token_conv.convolution.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.token_mixer\.dw_conv\.bn\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.token_conv.normalization.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.token_mixer\.se\.conv1\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.token_squeeze_excitation.convolutions.0.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.token_mixer\.se\.conv2\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.token_squeeze_excitation.convolutions.2.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.channel_mixer\.expand\.conv\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.channel_conv1.convolution.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.channel_mixer\.expand\.bn\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.channel_conv1.normalization.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.channel_mixer\.compress\.conv\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.channel_conv2.convolution.",
+    ),
+    (
+        r"^backbone\.blocks_s(\d+)\.(\d+)\.channel_mixer\.compress\.bn\.",
+        lambda m: f"model.backbone.encoder.blocks.{int(m.group(1))-1}.blocks.{m.group(2)}.channel_conv2.normalization.",
+    ),
+]
+
+# PP-OCRv6 det DB head — shared by small/tiny/medium det
+_PPOCRV6_DET_HEAD_MAPPING = [
+    (r"^head\.binarize\.conv1\.", r"head.conv_down.convolution."),
+    (r"^head\.binarize\.conv_bn1\.", r"head.conv_down.norm."),
+    (r"^head\.binarize\.bn1\.", r"head.conv_down.norm."),
+    (r"^head\.binarize\.conv2\.", r"head.conv_up.convolution."),
+    (r"^head\.binarize\.conv_bn2\.", r"head.conv_up.norm."),
+    (r"^head\.binarize\.bn2\.", r"head.conv_up.norm."),
+    (r"^head\.binarize\.conv3\.", r"head.conv_final."),
+]
+
+# PP-OCRv6_small_det / PP-OCRv6_tiny_det (same architecture — only config differs)
+PPOCRV6_SMALL_DET_MAPPING = [
+    *_PPLCNETV4_BACKBONE_MAPPING,
+    # Neck: insert_conv keeps in_conv + se_block sub-modules
+    (r"^neck\.ins_conv\.(\d+)\.in_conv\.", r"model.neck.insert_conv.\1.in_conv."),
+    (
+        r"^neck\.ins_conv\.(\d+)\.se_block\.conv1\.",
+        r"model.neck.insert_conv.\1.squeeze_excitation_block.conv1.",
+    ),
+    (
+        r"^neck\.ins_conv\.(\d+)\.se_block\.conv2\.",
+        r"model.neck.insert_conv.\1.squeeze_excitation_block.conv2.",
+    ),
+    # Neck: input_conv pointwise/SE (depthwise comes from .fusion)
+    (r"^neck\.inp_conv_pw\.(\d+)\.", r"model.neck.input_conv.\1.pointwise_convolution."),
+    (
+        r"^neck\.inp_conv_se\.(\d+)\.conv1\.",
+        r"model.neck.input_conv.\1.squeeze_excitation_module.conv1.",
+    ),
+    (
+        r"^neck\.inp_conv_se\.(\d+)\.conv2\.",
+        r"model.neck.input_conv.\1.squeeze_excitation_module.conv2.",
+    ),
+    *_PPOCRV6_DET_HEAD_MAPPING,
+]
+
+# PP-OCRv6_medium_det (PAN-style neck with per-stage intraclass blocks)
+PPOCRV6_MEDIUM_DET_MAPPING = [
+    *_PPLCNETV4_BACKBONE_MAPPING,
+    # Neck: simple convs (training-time conv = HF conv)
+    (
+        r"^neck\.ins_conv\.(\d+)\.",
+        r"model.neck.input_channel_adjustment_convolution.\1.",
+    ),
+    (
+        r"^neck\.pan_head_conv\.(\d+)\.",
+        r"model.neck.path_aggregation_head_convolution.\1.",
+    ),
+    # Neck: intraclass blocks (one-based incl{N} -> zero-based intraclass_blocks.{N-1})
+    (
+        r"^neck\.incl(\d+)\.conv1x1_reduce_channel\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.conv_reduce_channel.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.conv1x1_return_channel\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.conv_final.convolution.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.bn\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.conv_final.norm.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.v_layer_7x1\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.vertical_long_to_small_conv_longratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.v_layer_5x1\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.vertical_long_to_small_conv_midratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.v_layer_3x1\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.vertical_long_to_small_conv_shortratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.q_layer_1x7\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.horizontal_small_to_long_conv_longratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.q_layer_1x5\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.horizontal_small_to_long_conv_midratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.q_layer_1x3\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.horizontal_small_to_long_conv_shortratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.c_layer_7x7\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.symmetric_conv_long_longratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.c_layer_5x5\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.symmetric_conv_long_midratio.",
+    ),
+    (
+        r"^neck\.incl(\d+)\.c_layer_3x3\.",
+        lambda m: f"model.neck.intraclass_blocks.{int(m.group(1))-1}.symmetric_conv_long_shortratio.",
+    ),
+    *_PPOCRV6_DET_HEAD_MAPPING,
+]
+
+
 # Keys to drop during conversion (training-only / tied weights)
 UVDOC_DROP_PREFIXES = [
     "out_point_positions3D.",
@@ -981,4 +1151,10 @@ MOBILE_DET_DROP_PREFIXES = [
 SERVER_DET_DROP_PREFIXES = [
     "head.thresh.",
     "backbone.last_conv.",
+]
+
+# PP-OCRv6 det: DBNet aux/threshold branches are inference-time no-ops.
+PPOCRV6_DET_DROP_PREFIXES = [
+    "head.thresh.",
+    "head.aux_",
 ]

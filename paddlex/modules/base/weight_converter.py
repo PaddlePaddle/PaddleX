@@ -44,6 +44,9 @@ from .utils.pdparams2safetensors import (
     PPOCRV5_MOBILE_REC_MAPPING,
     PPOCRV5_SERVER_DET_MAPPING,
     PPOCRV5_SERVER_REC_MAPPING,
+    PPOCRV6_DET_DROP_PREFIXES,
+    PPOCRV6_MEDIUM_DET_MAPPING,
+    PPOCRV6_SMALL_DET_MAPPING,
     PREPROCESSOR_CONFIGS,
     REC_DROP_PREFIXES,
     RTDETR_MAPPING,
@@ -60,6 +63,8 @@ from .utils.pdparams2safetensors import (
     UVDOC_MAPPING,
     apply_key_mapping,
     build_inference_meta,
+    fuse_v6_medium_det_state_dict,
+    fuse_v6_small_det_state_dict,
     load_character_dict,
     rename_bn_keys,
 )
@@ -81,6 +86,12 @@ _MODEL_REGISTRY = {
     "PP-OCRv5_server_det": (PPOCRV5_SERVER_DET_MAPPING, SERVER_DET_DROP_PREFIXES),
     "PP-OCRv5_mobile_rec": (PPOCRV5_MOBILE_REC_MAPPING, REC_DROP_PREFIXES),
     "PP-OCRv5_server_rec": (PPOCRV5_SERVER_REC_MAPPING, SERVER_REC_DROP_PREFIXES),
+    # PP-OCRv6 det: small/tiny share the architecture; medium has its own
+    # PAN-style neck. All three need pre-mapping reparam fusion — see
+    # ``_PRE_MAP_FUSERS`` below.
+    "PP-OCRv6_small_det": (PPOCRV6_SMALL_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
+    "PP-OCRv6_tiny_det": (PPOCRV6_SMALL_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
+    "PP-OCRv6_medium_det": (PPOCRV6_MEDIUM_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
     "SLANet": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
     "SLANet_plus": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
     "SLANeXt_wired": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
@@ -95,6 +106,17 @@ _MODEL_REGISTRY = {
     "PP-FormulaNet-L": (PP_FORMULANET_MAPPING, []),
     "PP-FormulaNet_plus-L": (PP_FORMULANET_MAPPING, []),
     "PP-Chart2Table": (PP_CHART2TABLE_MAPPING, PP_CHART2TABLE_DROP_PREFIXES),
+}
+
+# Pre-map fusers: model_name -> callable that collapses multi-key training
+# modules (e.g. RepDWConv / DilatedReparamBlock) into single (weight, bias)
+# pairs in HF inference naming. Runs after drop-prefixes + BN renaming +
+# paddle->numpy preprocessing, but before ``apply_key_mapping``, so the
+# fuser's outputs bypass the regex mapping entirely.
+_PRE_MAP_FUSERS = {
+    "PP-OCRv6_small_det": fuse_v6_small_det_state_dict,
+    "PP-OCRv6_tiny_det": fuse_v6_small_det_state_dict,
+    "PP-OCRv6_medium_det": fuse_v6_medium_det_state_dict,
 }
 
 # Models that need processor_config.json + tokenizer files instead of the
@@ -389,6 +411,17 @@ class WeightConverter:
 
         state_dict = rename_bn_keys(state_dict)
         numpy_sd = _preprocess_tensors(state_dict)
+
+        fuser = _PRE_MAP_FUSERS.get(self.model_name)
+        if fuser is not None:
+            before = len(numpy_sd)
+            numpy_sd = fuser(numpy_sd)
+            logging.info(
+                "Pre-map fusion for %s: %d -> %d keys",
+                self.model_name,
+                before,
+                len(numpy_sd),
+            )
 
         if key_mapping:
             numpy_sd = apply_key_mapping(numpy_sd, key_mapping)

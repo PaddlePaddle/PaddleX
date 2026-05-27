@@ -564,6 +564,11 @@ _INFERENCE_META_REGISTRY = {
     "PP-LCNet_x1_0_textline_ori": _meta_cls_textline,
     "PP-OCRv5_mobile_det": _meta_det,
     "PP-OCRv5_server_det": _meta_det,
+    # PP-OCRv6 det shares the v5 DB postprocess + Hpi shapes; only
+    # preprocessor_config.json differs (see _PPOCRV6_DET_PREPROC).
+    "PP-OCRv6_small_det": _meta_det,
+    "PP-OCRv6_tiny_det": _meta_det,
+    "PP-OCRv6_medium_det": _meta_det,
     "PP-OCRv5_mobile_rec": _meta_rec,
     "PP-OCRv5_server_rec": _meta_rec,
     "SLANet": lambda: _meta_slanet("SLANet"),
@@ -667,6 +672,19 @@ _SERVER_DET_PREPROC = {
     "do_to_chw": True,
 }
 
+# PP-OCRv6 det: same image processor class as v5 server, but the released
+# checkpoints differ in side-length policy (``limit_side_len=736`` /
+# ``limit_type=min``) and add ``do_convert_rgb``.
+_PPOCRV6_DET_PREPROC = {
+    **_DET_PREPROC_BASE,
+    "do_convert_rgb": True,
+    "image_processor_type": "PPOCRV5ServerDetImageProcessor",
+    "limit_side_len": 736,
+    "limit_type": "min",
+    "normalize_order": "hwc",
+    "do_to_chw": True,
+}
+
 _REC_PREPROC_BASE = {
     "size": {"height": 48, "width": 320},
     "pad_size": {"height": 48, "width": 320},
@@ -720,6 +738,9 @@ PREPROCESSOR_CONFIGS = {
     "PP-LCNet_x1_0_textline_ori": _PPLCNET_TEXTLINE_PREPROC,
     "PP-OCRv5_mobile_det": _MOBILE_DET_PREPROC,
     "PP-OCRv5_server_det": _SERVER_DET_PREPROC,
+    "PP-OCRv6_small_det": _PPOCRV6_DET_PREPROC,
+    "PP-OCRv6_tiny_det": _PPOCRV6_DET_PREPROC,
+    "PP-OCRv6_medium_det": _PPOCRV6_DET_PREPROC,
     "PP-OCRv5_mobile_rec": _MOBILE_REC_PREPROC,
     "PP-OCRv5_server_rec": _SERVER_REC_PREPROC,
     "SLANet": {
