@@ -2,13 +2,15 @@
 comments: true
 ---
 
-# PaddleOCR-VL介绍
+# PaddleOCR-VL 系列产线使用教程
 
 PaddleOCR-VL 是一款先进、高效的文档解析模型，专为文档中的元素识别设计。其核心组件为 PaddleOCR-VL-0.9B，这是一种紧凑而强大的视觉语言模型（VLM），它由 NaViT 风格的动态分辨率视觉编码器与 ERNIE-4.5-0.3B 语言模型组成，能够实现精准的元素识别。该模型支持 109 种语言，并在识别复杂元素（如文本、表格、公式和图表）方面表现出色，同时保持极低的资源消耗。通过在广泛使用的公开基准与内部基准上的全面评测，PaddleOCR-VL 在页级级文档解析与元素级识别均达到 SOTA 表现。它显著优于现有的基于Pipeline方案和文档解析多模态方案以及先进的通用多模态大模型，并具备更快的推理速度。这些优势使其非常适合在真实场景中落地部署。
 
-**2026年1月29日，我们发布了PaddleOCR-VL-1.5。PaddleOCR-VL-1.5不仅以94.5%精度大幅刷新了评测集OmniDocBench v1.5，更创新性地支持了异形框定位，使得PaddleOCR-VL-1.5 在扫描、倾斜、弯折、屏幕拍摄及复杂光照等真实场景中均表现优异。此外，模型还新增了印章识别与文本检测识别能力，关键指标持续领跑。**
+2026年1月29日，我们发布了PaddleOCR-VL-1.5。PaddleOCR-VL-1.5不仅以94.5%精度大幅刷新了评测集OmniDocBench v1.5，更创新性地支持了异形框定位，使得PaddleOCR-VL-1.5 在扫描、倾斜、弯折、屏幕拍摄及复杂光照等真实场景中均表现优异。此外，模型还新增了印章识别与文本检测识别能力，关键指标持续领跑。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl_1_5/paddleocr-vl-1.5_metrics.png"/>
+**2026年5月28日，我们发布了PaddleOCR-VL-1.6。PaddleOCR-VL-1.6以96.3%精度再次刷新评测集OmniDocBench v1.6，并在OmniDocBench v1.5、Real5-OmniDocBench上同步达到全新SOTA，文本、公式、表格识别全面领先开源与闭源方案。此外，模型在古籍、生僻字识别上大幅提升，印章、spotting、图表识别等多场景能力也显著增强，且模型结构与PaddleOCR-VL-1.5完全一致，支持零成本无缝迁移。**
+
+PaddleOCR-VL 系列产线具有相似的接口。本文档适用于 PaddleOCR-VL 系列产线，并主要以 PaddleOCR-VL（v1）为例说明用法。
 
 ## 1. 环境准备
 
@@ -46,8 +48,6 @@ python -m pip install paddlex
   </tr>
 </tbody>
 </table>
-
-目前 PaddleOCR-VL 暂不支持 CPU 及 Arm 架构，后续将根据实际需求扩展更多硬件支持，敬请期待！
 
 ## 2. 快速开始
 

@@ -2,13 +2,15 @@
 comments: true
 ---
 
-# PaddleOCR-VL Introduction
+# Tutorial for PaddleOCR-VL Series Pipelines
 
 PaddleOCR-VL is a SOTA and resource-efficient model tailored for document parsing. Its core component is PaddleOCR-VL-0.9B, a compact yet powerful vision-language model (VLM) that integrates a NaViT-style dynamic resolution visual encoder with the ERNIE-4.5-0.3B language model to enable accurate element recognition. This innovative model efficiently supports 109 languages and excels in recognizing complex elements (e.g., text, tables, formulas, and charts), while maintaining minimal resource consumption. Through comprehensive evaluations on widely used public benchmarks and in-house benchmarks, PaddleOCR-VL achieves SOTA performance in both page-level document parsing and element-level recognition. It significantly outperforms existing solutions, exhibits strong competitiveness against top-tier VLMs, and delivers fast inference speeds. These strengths make it highly suitable for practical deployment in real-world scenarios.
 
-**On January 29, 2026, we released PaddleOCR-VL-1.5. PaddleOCR-VL-1.5 not only significantly improved the accuracy on the OmniDocBench v1.5 evaluation set to 94.5%, but also innovatively supports irregular-shaped bounding box localization. As a result, PaddleOCR-VL-1.5 demonstrates outstanding performance in real-world scenarios such as Skew, Warping, Screen Photography, Illumination, and Scanning. In addition, the model has added new capabilities for seal (stamp) recognition and text detection and recognition, with key metrics continuing to lead the industry.**
+On January 29, 2026, we released PaddleOCR-VL-1.5. PaddleOCR-VL-1.5 not only significantly improved the accuracy on the OmniDocBench v1.5 evaluation set to 94.5%, but also innovatively supports irregular-shaped bounding box localization. As a result, PaddleOCR-VL-1.5 demonstrates outstanding performance in real-world scenarios such as Skew, Warping, Screen Photography, Illumination, and Scanning. In addition, the model has added new capabilities for seal (stamp) recognition and text detection and recognition, with key metrics continuing to lead the industry.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/paddleocr_vl_1_5/paddleocr-vl-1.5_metrics.png"/>
+**On May 28, 2026, we released PaddleOCR-VL-1.6. With an accuracy of 96.3%, PaddleOCR-VL-1.6 once again set a new benchmark on OmniDocBench v1.6, while also achieving new state-of-the-art (SOTA) results on OmniDocBench v1.5 and Real5-OmniDocBench. It delivers industry-leading performance in text, formula, and table recognition across both open-source and proprietary solutions. In addition, the model shows substantial improvements in ancient document and rare character recognition, as well as significantly enhanced capabilities in multiple scenarios such as seal recognition, spotting, and chart understanding. The model architecture remains fully consistent with PaddleOCR-VL-1.5, enabling seamless migration at zero cost.**
+
+The PaddleOCR-VL series pipelines have similar interfaces. This document applies to the PaddleOCR-VL pipelines and primarily uses PaddleOCR-VL (v1) as an example to demonstrate the usage.
 
 ## 1. Environment Preparation
 
@@ -46,8 +48,6 @@ Running the PaddleOCR-VL has the following GPU hardware requirements:
   </tr>
 </tbody>
 </table>
-
-The PaddleOCR-VL currently does not support CPU or Arm architecture. Support for more hardware will be expanded based on actual requirements in the future. Stay tuned!
 
 ## 2. Quick Start
 
