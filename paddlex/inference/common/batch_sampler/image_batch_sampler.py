@@ -21,7 +21,8 @@ from ....utils import logging
 from ....utils.cache import CACHE_DIR
 from ....utils.download import download
 from ....utils.flags import PDF_RENDER_SCALE
-from ...utils.io import PDFReader
+from ...utils.io import PDFReader, TIFFReader
+from ...utils.pdf_rendering import DEFAULT_MAX_IMAGE_PIXELS
 from .base_batch_sampler import BaseBatchSampler, Batch
 
 
@@ -44,20 +45,29 @@ class ImgBatch(Batch):
 
 class ImageBatchSampler(BaseBatchSampler):
 
+    TIFF_SUFFIX = ["tiff", "tif"]
     IMG_SUFFIX = [
-        "bmp", "dib", 
-        "jpeg", "jpg", 
-        "png", 
-        "webp", 
-        "pbm", "pgm", "ppm", "pnm", 
-        "sr", "ras", 
-        "tiff", "tif"
-    ]
+        "bmp",
+        "dib",
+        "jpeg",
+        "jpg",
+        "png",
+        "webp",
+        "pbm",
+        "pgm",
+        "ppm",
+        "pnm",
+        "sr",
+        "ras",
+    ] + TIFF_SUFFIX
     PDF_SUFFIX = ["pdf"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pdf_reader = PDFReader(zoom=PDF_RENDER_SCALE)
+        self.pdf_reader = PDFReader(
+            zoom=PDF_RENDER_SCALE, max_pixels=DEFAULT_MAX_IMAGE_PIXELS
+        )
+        self.tiff_reader = TIFFReader()
 
     # XXX: auto download for url
     def _download_from_url(self, in_path):
@@ -118,10 +128,19 @@ class ImageBatchSampler(BaseBatchSampler):
                         if input.startswith("http")
                         else input
                     )
-                    batch.append(file_path, file_path, None, None)
-                    if len(batch) == self.batch_size:
-                        yield batch
-                        batch = ImgBatch()
+                    if suffix in self.TIFF_SUFFIX:
+                        img = self.tiff_reader.load(file_path)
+                        page_count = getattr(img, "n_frames", 1)
+                        for page_idx, page_img in enumerate(self.tiff_reader.read(img)):
+                            batch.append(page_img, file_path, page_idx, page_count)
+                            if len(batch) == self.batch_size:
+                                yield batch
+                                batch = ImgBatch()
+                    else:
+                        batch.append(file_path, file_path, None, None)
+                        if len(batch) == self.batch_size:
+                            yield batch
+                            batch = ImgBatch()
                 elif Path(input).is_dir():
                     file_list = self._get_files_list(input)
                     yield from self.sample(file_list)
