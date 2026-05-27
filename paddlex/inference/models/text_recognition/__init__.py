@@ -34,6 +34,18 @@ def _load_ppocrv5_server_rec():
     return PPOCRV5ServerRec
 
 
+def _load_ppocrv6_small_rec():
+    from .modeling import PPOCRV6SmallRec
+
+    return PPOCRV6SmallRec
+
+
+def _load_ppocrv6_tiny_rec():
+    from .modeling import PPOCRV6TinyRec
+
+    return PPOCRV6TinyRec
+
+
 register_predictor_binding_map(
     TextRecRunnerPredictor,
     {
@@ -65,6 +77,24 @@ register_predictor_binding_map(
                 ("PP-OCRv5_server_rec",),
                 runner_builder=create_pretrained_dynamic_runner_builder(
                     _load_ppocrv5_server_rec,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            ),
+            create_binding_registration(
+                ("PP-OCRv6_small_rec", "PP-OCRv6_medium_rec"),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv6_small_rec,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            ),
+            create_binding_registration(
+                ("PP-OCRv6_tiny_rec",),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv6_tiny_rec,
                     use_safetensors=True,
                     convert_from_hf=True,
                     dtype="float32",

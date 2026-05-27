@@ -34,6 +34,18 @@ def _load_ppocrv5_server_det():
     return PPOCRV5ServerDet
 
 
+def _load_ppocrv6_small_det():
+    from .modeling import PPOCRV6SmallDet
+
+    return PPOCRV6SmallDet
+
+
+def _load_ppocrv6_medium_det():
+    from .modeling import PPOCRV6MediumDet
+
+    return PPOCRV6MediumDet
+
+
 register_predictor_binding_map(
     TextDetRunnerPredictor,
     {
@@ -51,6 +63,22 @@ register_predictor_binding_map(
                 ("PP-OCRv5_server_det",),
                 runner_builder=create_pretrained_dynamic_runner_builder(
                     _load_ppocrv5_server_det,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                ),
+            ),
+            create_binding_registration(
+                ("PP-OCRv6_small_det", "PP-OCRv6_tiny_det"),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv6_small_det,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                ),
+            ),
+            create_binding_registration(
+                ("PP-OCRv6_medium_det",),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppocrv6_medium_det,
                     use_safetensors=True,
                     convert_from_hf=True,
                 ),
