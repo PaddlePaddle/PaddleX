@@ -142,7 +142,7 @@ When installing PaddleX on Linux, we <b>strongly recommend using the official Pa
 
 With the official Docker image, <b>PaddlePaddle, PaddleX (wheel and all plugins), and the CUDA stack are preconfigured</b>; <b>pull the image and start the container to begin</b>. <b>Note: the PaddleX official image is not the same as the PaddlePaddle framework official image—the latter does not include PaddleX.</b>
 
-With a custom installation, you usually install the PaddlePaddle framework or other dependencies per Sections 4 and 5 first, then obtain the PaddleX source code, and finally choose an installation mode.
+With a custom installation, you usually install the required inference engine per Section 4 first, then obtain the PaddleX source code, and finally choose an installation mode.
 
 > ❗ You do not need to match the host CUDA version; only the GPU driver version matters.
 
@@ -296,12 +296,11 @@ Available dependency groups:
 
 Each pipeline belongs to exactly one dependency group; each pipeline’s doc states its group. For a single module, install any dependency group that covers the pipelines using that module to enable the related basic features.
 
-## 4 Installing the PaddlePaddle framework
+## 4 Installing Inference Engines
 
-When you run inference with the PaddlePaddle framework, install it following the [PaddlePaddle local installation tutorial](paddlepaddle_install.en.md).
+In addition to installing PaddleX itself, install the inference engine required by your actual usage scenario.
 
-## 5 Additional dependencies for non-Paddle engines
-
-When you use non-Paddle engines for inference, install the matching dependencies:
-
-- `engine="transformers"`: install the `transformers` library (e.g. `pip install transformers`) and configure the environment per the [Transformers installation guide](https://huggingface.co/docs/transformers/installation).
+| Inference engine | Installation |
+| - | - |
+| PaddlePaddle | Install PaddlePaddle by following the [PaddlePaddle local installation tutorial](paddlepaddle_install.en.md). |
+| Transformers | Install Hugging Face Transformers (`>=5.8.0`), for example `python -m pip install "transformers>=5.8.0"`, and configure the underlying inference framework according to the [Transformers installation guide](https://huggingface.co/docs/transformers/installation). |
