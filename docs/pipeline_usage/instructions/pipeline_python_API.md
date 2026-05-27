@@ -190,15 +190,7 @@ SubModules:
 * 显式设置 `engine` 时，`use_hpip` 不再生效；
 * 显式设置 `engine_config` 时，`pp_option` 与 `hpi_config` 作为兼容参数通常不再需要。
 
-#### 4.5 是否必须安装 PaddlePaddle
-
-在以下场景中可以不安装 PaddlePaddle：
-
-* 产线中相关模型使用 `engine="transformers"`；
-
-> 注意：若产线中模块最终使用 `paddle` / `hpi` 引擎，仍需安装 PaddlePaddle；使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。
-
-#### 4.6 各引擎 `engine_config` 字段说明
+#### 4.5 各引擎 `engine_config` 字段说明
 
 以下字段同样适用于产线中各子模块（全局配置可被子模块覆盖）：
 
@@ -249,7 +241,7 @@ SubModules:
 
 ### 5. 兼容配置（`PaddlePredictorOption`）
 
-`PaddlePredictorOption` 作为兼容配置保留，建议新项目优先使用 `engine_config`。
+`PaddlePredictorOption` 作为兼容配置保留，建议新项目优先使用统一的 `engine` + `engine_config` 配置方式；`use_hpip`、`hpi_config` 等旧参数也建议逐步迁移到该配置方式。
 
 * 生效范围：主要用于 `paddle_static` 兼容配置；
 * 常用字段：

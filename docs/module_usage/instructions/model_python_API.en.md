@@ -122,15 +122,7 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
 * If `engine_config` is explicitly provided, `pp_option`, `hpi_config`, and `genai_config` are compatibility options and will be ignored;
 * Prefer using only `engine` + `engine_config` to avoid ambiguity.
 
-#### 4.3 Is PaddlePaddle Required?
-
-By default, most PaddleX capabilities depend on PaddlePaddle. However, PaddlePaddle is not required in these cases:
-
-* Using `engine="transformers"` (for models that support this engine);
-
-> Note: If your actual runtime path uses `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
-
-#### 4.4 Examples
+#### 4.3 Examples
 
 Using the Transformers engine:
 
@@ -152,7 +144,7 @@ model = create_model(
 )
 ```
 
-#### 4.5 `engine_config` Fields by Engine
+#### 4.4 `engine_config` Fields by Engine
 
 The following field sets are based on the current code implementation (with meanings):
 
