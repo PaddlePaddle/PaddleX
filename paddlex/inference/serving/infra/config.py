@@ -27,6 +27,7 @@ SERVING_CONFIG_KEY: Final[str] = "Serving"
 
 class AppConfig(BaseModel):
     visualize: bool = True
+    return_urls: Optional[bool] = None
     extra: Optional[Dict[str, Any]] = None
 
 
