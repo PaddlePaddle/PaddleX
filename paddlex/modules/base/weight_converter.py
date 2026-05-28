@@ -38,22 +38,37 @@ from .utils.pdparams2safetensors import (
     PP_CHART2TABLE_MAPPING,
     PP_DOCLAYOUTV2_DROP_PREFIXES,
     PP_DOCLAYOUTV2_MAPPING,
+    PP_FORMULANET_MAPPING,
     PPLCNET_MAPPING,
     PPOCRV5_MOBILE_DET_MAPPING,
     PPOCRV5_MOBILE_REC_MAPPING,
     PPOCRV5_SERVER_DET_MAPPING,
     PPOCRV5_SERVER_REC_MAPPING,
+    PPOCRV6_DET_DROP_PREFIXES,
+    PPOCRV6_MEDIUM_DET_MAPPING,
+    PPOCRV6_REC_DROP_PREFIXES,
+    PPOCRV6_SMALL_DET_MAPPING,
+    PPOCRV6_SMALL_REC_MAPPING,
+    PPOCRV6_TINY_REC_MAPPING,
     PREPROCESSOR_CONFIGS,
     REC_DROP_PREFIXES,
     RTDETR_MAPPING,
     SERVER_DET_DROP_PREFIXES,
     SERVER_REC_DROP_PREFIXES,
+    SLANET_DROP_PREFIXES,
+    SLANET_MAPPING,
     SLANEXT_DROP_PREFIXES,
     SLANEXT_MAPPING,
+    UNIMERNET_GENERATION_CONFIG,
+    UNIMERNET_PROCESSOR_CONFIG,
+    UNIMERNET_TOKENIZER_CONFIG,
     UVDOC_DROP_PREFIXES,
     UVDOC_MAPPING,
     apply_key_mapping,
     build_inference_meta,
+    fuse_v6_medium_det_state_dict,
+    fuse_v6_rec_state_dict,
+    fuse_v6_small_det_state_dict,
     load_character_dict,
     rename_bn_keys,
 )
@@ -75,6 +90,20 @@ _MODEL_REGISTRY = {
     "PP-OCRv5_server_det": (PPOCRV5_SERVER_DET_MAPPING, SERVER_DET_DROP_PREFIXES),
     "PP-OCRv5_mobile_rec": (PPOCRV5_MOBILE_REC_MAPPING, REC_DROP_PREFIXES),
     "PP-OCRv5_server_rec": (PPOCRV5_SERVER_REC_MAPPING, SERVER_REC_DROP_PREFIXES),
+    # PP-OCRv6 det: small/tiny share the architecture; medium has its own
+    # PAN-style neck. All three need pre-mapping reparam fusion — see
+    # ``_PRE_MAP_FUSERS`` below.
+    "PP-OCRv6_small_det": (PPOCRV6_SMALL_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
+    "PP-OCRv6_tiny_det": (PPOCRV6_SMALL_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
+    "PP-OCRv6_medium_det": (PPOCRV6_MEDIUM_DET_MAPPING, PPOCRV6_DET_DROP_PREFIXES),
+    # PP-OCRv6 rec: small/medium share the SVTR encoder + CTC head class;
+    # tiny has a simpler Conv1D head. All three need backbone RepDWConv
+    # fusion (see ``_PRE_MAP_FUSERS``).
+    "PP-OCRv6_small_rec": (PPOCRV6_SMALL_REC_MAPPING, PPOCRV6_REC_DROP_PREFIXES),
+    "PP-OCRv6_medium_rec": (PPOCRV6_SMALL_REC_MAPPING, PPOCRV6_REC_DROP_PREFIXES),
+    "PP-OCRv6_tiny_rec": (PPOCRV6_TINY_REC_MAPPING, PPOCRV6_REC_DROP_PREFIXES),
+    "SLANet": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
+    "SLANet_plus": (SLANET_MAPPING, SLANET_DROP_PREFIXES),
     "SLANeXt_wired": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "SLANeXt_wireless": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "PP-DocLayoutV2": (PP_DOCLAYOUTV2_MAPPING, PP_DOCLAYOUTV2_DROP_PREFIXES),
@@ -84,8 +113,39 @@ _MODEL_REGISTRY = {
     "PP-DocLayout_plus-L": (RTDETR_MAPPING, []),
     "PP-DocBlockLayout": (RTDETR_MAPPING, []),
     "UVDoc": (UVDOC_MAPPING, UVDOC_DROP_PREFIXES),
+    "PP-FormulaNet-L": (PP_FORMULANET_MAPPING, []),
+    "PP-FormulaNet_plus-L": (PP_FORMULANET_MAPPING, []),
     "PP-Chart2Table": (PP_CHART2TABLE_MAPPING, PP_CHART2TABLE_DROP_PREFIXES),
 }
+
+# Pre-map fusers: model_name -> callable that collapses multi-key training
+# modules (e.g. RepDWConv / DilatedReparamBlock) into single (weight, bias)
+# pairs in HF inference naming. Runs after drop-prefixes + BN renaming +
+# paddle->numpy preprocessing, but before ``apply_key_mapping``, so the
+# fuser's outputs bypass the regex mapping entirely.
+_PRE_MAP_FUSERS = {
+    "PP-OCRv6_small_det": fuse_v6_small_det_state_dict,
+    "PP-OCRv6_tiny_det": fuse_v6_small_det_state_dict,
+    "PP-OCRv6_medium_det": fuse_v6_medium_det_state_dict,
+    "PP-OCRv6_small_rec": fuse_v6_rec_state_dict,
+    "PP-OCRv6_medium_rec": fuse_v6_rec_state_dict,
+    "PP-OCRv6_tiny_rec": fuse_v6_rec_state_dict,
+}
+
+# Rec models that ship a per-checkpoint character dict — used by
+# WeightConverter to inject ``character_list`` into preprocessor_config.json
+# and ``character_dict`` into inference.yml.
+_REC_CHARACTER_DICT_MODELS = (
+    "PP-OCRv5_mobile_rec",
+    "PP-OCRv5_server_rec",
+    "PP-OCRv6_small_rec",
+    "PP-OCRv6_medium_rec",
+    "PP-OCRv6_tiny_rec",
+)
+
+# Models that need processor_config.json + tokenizer files instead of the
+# default preprocessor_config.json output.
+PP_FORMULANET_MODELS = ("PP-FormulaNet-L", "PP-FormulaNet_plus-L")
 
 
 _TRANSPOSE_SUBSTRINGS = [
@@ -121,6 +181,8 @@ _TRANSPOSE_SUBSTRINGS = [
     "kv_mapper",
     "clip_mapper",
     "mm_projector_vary",
+    # PP-FormulaNet projector linear (renamed to multi_modal_projector.linear_2)
+    "enc_to_dec_proj",
     "score_head",
     "enc_score_head",
     "dec_score_head",
@@ -349,6 +411,9 @@ class WeightConverter:
         if self.model_name in PP_CHART2TABLE_MODELS:
             self._save_llm_config()
 
+        if self.model_name in PP_FORMULANET_MODELS:
+            self._save_pp_formulanet_assets()
+
         logging.info(f"Conversion complete. Output saved to: {self.output_dir}")
 
     def _convert_weights(self, key_mapping, drop_prefixes):
@@ -370,6 +435,17 @@ class WeightConverter:
 
         state_dict = rename_bn_keys(state_dict)
         numpy_sd = _preprocess_tensors(state_dict)
+
+        fuser = _PRE_MAP_FUSERS.get(self.model_name)
+        if fuser is not None:
+            before = len(numpy_sd)
+            numpy_sd = fuser(numpy_sd)
+            logging.info(
+                "Pre-map fusion for %s: %d -> %d keys",
+                self.model_name,
+                before,
+                len(numpy_sd),
+            )
 
         if key_mapping:
             numpy_sd = apply_key_mapping(numpy_sd, key_mapping)
@@ -455,12 +531,19 @@ class WeightConverter:
 
     def _save_preprocessor_config(self):
         """Save preprocessor_config.json — user-provided or official default."""
+        if self.model_name in PP_FORMULANET_MODELS:
+            # PP-FormulaNet ships processor_config.json (HF AutoProcessor) instead;
+            # see _save_pp_formulanet_assets.
+            return
+
         if "preprocessor_config.json" in self._user_configs:
             data = self._user_configs["preprocessor_config.json"]
         else:
             data = dict(PREPROCESSOR_CONFIGS.get(self.model_name, {}))
-            if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
-                data["character_list"] = ["blank"] + load_character_dict() + [" "]
+            if self.model_name in _REC_CHARACTER_DICT_MODELS:
+                data["character_list"] = (
+                    ["blank"] + load_character_dict(self.model_name) + [" "]
+                )
 
         out_path = os.path.join(self.output_dir, "preprocessor_config.json")
         with open(out_path, "w", encoding="utf-8") as f:
@@ -476,10 +559,23 @@ class WeightConverter:
         else:
             data = {"Global": {"model_name": self.model_name}}
             data.update(build_inference_meta(self.model_name))
-            if self.model_name in ("PP-OCRv5_mobile_rec", "PP-OCRv5_server_rec"):
+            if self.model_name in _REC_CHARACTER_DICT_MODELS:
                 data.setdefault("PostProcess", {})[
                     "character_dict"
-                ] = load_character_dict()
+                ] = load_character_dict(self.model_name)
+            elif self.model_name in PP_FORMULANET_MODELS:
+                # UniMERNetDecode reads the tokenizer from
+                # PostProcess.character_dict — fast_tokenizer_file is the
+                # parsed tokenizer.json content (~2 MB), tokenizer_config_file
+                # is hardcoded. The embedded copy uses processor_class
+                # "VariableDonutProcessor" (matches the published inference.yml);
+                # the standalone tokenizer_config.json uses "NougatProcessor".
+                tokenizer_config = dict(UNIMERNET_TOKENIZER_CONFIG)
+                tokenizer_config["processor_class"] = "VariableDonutProcessor"
+                data.setdefault("PostProcess", {})["character_dict"] = {
+                    "fast_tokenizer_file": self._load_unimernet_fast_tokenizer(),
+                    "tokenizer_config_file": tokenizer_config,
+                }
 
         out_path = os.path.join(self.output_dir, "inference.yml")
         with open(out_path, "w", encoding="utf-8") as f:
@@ -560,3 +656,89 @@ class WeightConverter:
             f"model is cached at {cache_path} (run inference once to download). "
             f"For directory input, include qwen.tiktoken in the input directory."
         )
+
+    def _resolve_unimernet_tokenizer_source(self):
+        """Resolve filesystem path to tokenizer.json (PP-FormulaNet fast tokenizer).
+
+        Resolution chain (mirrors :meth:`_resolve_tiktoken_source`):
+            input dir → ~/.paddlex/official_models/{name}_safetensors/tokenizer.json
+            → FileNotFoundError
+        """
+        if self._input_is_dir:
+            src = Path(self.input_path) / "tokenizer.json"
+            if src.exists():
+                return str(src)
+            logging.warning(
+                f"tokenizer.json not found in {self.input_path}. "
+                "Falling back to official model cache."
+            )
+
+        from ...utils.cache import CACHE_DIR
+
+        cache_path = (
+            Path(CACHE_DIR)
+            / "official_models"
+            / f"{self.model_name}_safetensors"
+            / "tokenizer.json"
+        )
+        if cache_path.exists():
+            return str(cache_path)
+
+        raise FileNotFoundError(
+            f"tokenizer.json not found. For single-file input, ensure the official "
+            f"model is cached at {cache_path} (run "
+            f"`create_model('{self.model_name}', engine='paddle_dynamic')` once "
+            f"to download). For directory input, include tokenizer.json in the "
+            f"input directory."
+        )
+
+    def _load_unimernet_fast_tokenizer(self):
+        """Load tokenizer.json content as a parsed dict (for inference.yml embedding)."""
+        path = self._resolve_unimernet_tokenizer_source()
+        logging.info(f"Loaded tokenizer.json: {path}")
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+
+    def _save_pp_formulanet_assets(self):
+        """Save HF-style assets for PP-FormulaNet (transformers-engine compatible).
+
+        Outputs ``processor_config.json``, ``generation_config.json``,
+        ``tokenizer_config.json`` (all hardcoded), and copies ``tokenizer.json``
+        from the input dir or official_models cache. The tokenizer JSON is also
+        already embedded in inference.yml (read by UniMERNetDecode) — saving the
+        standalone file lets HF AutoTokenizer load the converted directory.
+        """
+        import shutil
+
+        # Copy tokenizer.json (the heavy fast tokenizer file)
+        tokenizer_src = self._resolve_unimernet_tokenizer_source()
+        tokenizer_dst = os.path.join(self.output_dir, "tokenizer.json")
+        shutil.copy2(tokenizer_src, tokenizer_dst)
+        logging.info(f"Copied tokenizer.json to: {tokenizer_dst}")
+
+        # JSON assets: user-provided (if input is a dir) or hardcoded defaults
+        _ASSET_DEFAULTS = {
+            "processor_config.json": UNIMERNET_PROCESSOR_CONFIG,
+            "generation_config.json": UNIMERNET_GENERATION_CONFIG,
+            "tokenizer_config.json": UNIMERNET_TOKENIZER_CONFIG,
+        }
+        for fname, default_data in _ASSET_DEFAULTS.items():
+            if self._input_is_dir:
+                src = Path(self.input_path) / fname
+                if src.exists():
+                    with open(src, encoding="utf-8") as f:
+                        data = json.load(f)
+                    logging.info(f"Loaded user asset: {src}")
+                else:
+                    data = default_data
+                    logging.warning(
+                        f"{fname} not found in {self.input_path}. "
+                        f"Using default for {self.model_name}."
+                    )
+            else:
+                data = default_data
+
+            out_path = os.path.join(self.output_dir, fname)
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            logging.info(f"Saved {fname} to: {out_path}")

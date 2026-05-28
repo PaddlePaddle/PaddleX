@@ -807,3 +807,6 @@ PIPELINE_ARGUMENTS = {
     "multilingual_speech_recognition": None,
     "text_to_speech": None,
 }
+
+PIPELINE_ARGUMENTS["PaddleOCR-VL-1.5"] = PIPELINE_ARGUMENTS["PaddleOCR-VL"]
+PIPELINE_ARGUMENTS["PaddleOCR-VL-1.6"] = PIPELINE_ARGUMENTS["PaddleOCR-VL"]

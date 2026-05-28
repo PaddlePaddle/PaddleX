@@ -25,7 +25,6 @@ from PIL import Image
 from pydantic import BaseModel, computed_field, model_validator
 
 from ..layout_parsing.utils import (
-    calculate_bbox_area,
     calculate_overlap_ratio,
     calculate_projection_overlap_ratio,
 )
@@ -75,6 +74,37 @@ def calculate_polygon_overlap_ratio(
         raise ValueError(f"Unknown mode: {mode}")
 
 
+def _compute_pairwise_overlap_small(
+    coords: np.ndarray,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Compute pairwise overlap ratio (mode="small") and bbox areas.
+
+    This only replaces the numeric overlap/area calculation. The caller keeps
+    the original sequential dropping order because it affects inline formulas.
+    """
+    x1 = coords[:, 0]
+    y1 = coords[:, 1]
+    x2 = coords[:, 2]
+    y2 = coords[:, 3]
+
+    areas = np.abs((x2 - x1) * (y2 - y1))
+
+    inter_x1 = np.maximum(x1[:, None], x1[None, :])
+    inter_y1 = np.maximum(y1[:, None], y1[None, :])
+    inter_x2 = np.minimum(x2[:, None], x2[None, :])
+    inter_y2 = np.minimum(y2[:, None], y2[None, :])
+
+    inter_w = np.maximum(0, inter_x2 - inter_x1)
+    inter_h = np.maximum(0, inter_y2 - inter_y1)
+    inter_area = inter_w * inter_h
+
+    small_area = np.minimum(areas[:, None], areas[None, :])
+    with np.errstate(divide="ignore", invalid="ignore"):
+        overlap = np.where(small_area > 0, inter_area / small_area, 0.0)
+    return overlap, areas
+
+
 def filter_overlap_boxes(
     layout_det_res: Dict[str, List[Dict]], layout_shape_mode: str
 ) -> Dict[str, List[Dict]]:
@@ -91,19 +121,23 @@ def filter_overlap_boxes(
     boxes = [
         box for box in layout_det_res_filtered["boxes"] if box["label"] != "reference"
     ]
+    if not boxes:
+        layout_det_res_filtered["boxes"] = boxes
+        return layout_det_res_filtered
+
+    coords = np.array([box["coordinate"] for box in boxes], dtype=np.float64)
+    widths = coords[:, 2] - coords[:, 0]
+    heights = coords[:, 3] - coords[:, 1]
+    overlap_matrix, areas = _compute_pairwise_overlap_small(coords)
     dropped_indexes = set()
 
     for i in range(len(boxes)):
-        x1, y1, x2, y2 = boxes[i]["coordinate"]
-        w, h = x2 - x1, y2 - y1
-        if w < 6 or h < 6:
+        if widths[i] < 6 or heights[i] < 6:
             dropped_indexes.add(i)
         for j in range(i + 1, len(boxes)):
             if i in dropped_indexes or j in dropped_indexes:
                 continue
-            overlap_ratio = calculate_overlap_ratio(
-                boxes[i]["coordinate"], boxes[j]["coordinate"], "small"
-            )
+            overlap_ratio = overlap_matrix[i, j]
             if (
                 boxes[i]["label"] == "inline_formula"
                 or boxes[j]["label"] == "inline_formula"
@@ -121,8 +155,6 @@ def filter_overlap_boxes(
                     )
                     if poly_overlap_ratio < 0.7:
                         continue
-                box_area_i = calculate_bbox_area(boxes[i]["coordinate"])
-                box_area_j = calculate_bbox_area(boxes[j]["coordinate"])
                 labels = {boxes[i]["label"], boxes[j]["label"]}
                 if labels & {"image", "table", "seal", "chart"} and len(labels) > 1:
                     if "table" not in labels or labels <= {
@@ -132,7 +164,7 @@ def filter_overlap_boxes(
                         "chart",
                     }:
                         continue
-                if box_area_i >= box_area_j:
+                if areas[i] >= areas[j]:
                     dropped_indexes.add(j)
                 else:
                     dropped_indexes.add(i)
@@ -208,26 +240,45 @@ def merge_images(images, aligns="center", layout_shape_mode="auto"):
         aligns = [aligns] * (len(images) - 1)
     if len(aligns) != len(images) - 1:
         raise ValueError("The length of aligns must be len(images) - 1")
-    # TODO(changdazhou): need to support merge by polygon
-    merged = to_pil_image(images[0])
-    for i in range(1, len(images)):
-        img2 = to_pil_image(images[i])
+
+    # Convert all images to PIL once upfront (avoids repeated conversion)
+    pil_images = [to_pil_image(img) for img in images]
+
+    # Simulate the iterative merge to compute each image's final x-offset,
+    # without allocating intermediate canvases.
+    x_offsets = [0] * len(pil_images)
+    merged_w = pil_images[0].width
+
+    for i in range(1, len(pil_images)):
+        img2_w = pil_images[i].width
+        step_w = max(merged_w, img2_w)
         align = aligns[i - 1]
-        w = max(merged.width, img2.width)
-        h = merged.height + img2.height
-        new_img = Image.new("RGB", (w, h), (255, 255, 255))
+
         if align == "center":
-            x1 = (w - merged.width) // 2
-            x2 = (w - img2.width) // 2
+            x1 = (step_w - merged_w) // 2
+            x2 = (step_w - img2_w) // 2
         elif align == "right":
-            x1 = w - merged.width
-            x2 = w - img2.width
+            x1 = step_w - merged_w
+            x2 = step_w - img2_w
         else:  # left
-            x1 = x2 = 0
-        new_img.paste(merged, (x1, 0))
-        new_img.paste(img2, (x2, merged.height))
-        merged = new_img
-    return to_np_array(merged)
+            x1 = 0
+            x2 = 0
+
+        # All previously placed images shift by x1
+        for k in range(i):
+            x_offsets[k] += x1
+        x_offsets[i] = x2
+        merged_w = step_w
+
+    # Single canvas allocation
+    total_h = sum(img.height for img in pil_images)
+    canvas = Image.new("RGB", (merged_w, total_h), (255, 255, 255))
+    y_offset = 0
+    for i, img in enumerate(pil_images):
+        canvas.paste(img, (x_offsets[i], y_offset))
+        y_offset += img.height
+
+    return to_np_array(canvas)
 
 
 def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
@@ -393,14 +444,15 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
 def paint_token(image, box, token_str):
     """
     Fill a rectangular area in the image with a white background and write the given token string.
+    Paints directly on the provided image (in-place).
 
     Args:
-        image (np.ndarray): Image to paint on.
+        image (np.ndarray): Image to paint on (modified in-place).
         box (tuple): (x1, y1, x2, y2) coordinates of rectangle.
         token_str (str): Token string to write.
 
     Returns:
-        np.ndarray: Modified image.
+        np.ndarray: The same image (modified in-place).
     """
     import cv2
 
@@ -424,8 +476,7 @@ def paint_token(image, box, token_str):
     box_w = x2 - x1
     box_h = y2 - y1
 
-    img = image.copy()
-    cv2.rectangle(img, (x1, y1), (x2, y2), color=(255, 255, 255), thickness=-1)
+    cv2.rectangle(image, (x1, y1), (x2, y2), color=(255, 255, 255), thickness=-1)
 
     # automatically set scale and thickness according to length of the shortest side
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -440,7 +491,7 @@ def paint_token(image, box, token_str):
     text_y = y1 + (box_h + text_h) // 2
 
     cv2.putText(
-        img,
+        image,
         token_str,
         (text_x, text_y),
         font,
@@ -449,7 +500,7 @@ def paint_token(image, box, token_str):
         font_thickness,
         lineType=cv2.LINE_AA,
     )
-    return img
+    return image
 
 
 def tokenize_figure_of_table(table_block_img, table_box, figures):
@@ -486,6 +537,8 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
     drop_idxes = []
     random_map = gen_random_map(len(figures))
     random.shuffle(random_map)
+    # Copy once; paint_token modifies in-place
+    table_block_img = table_block_img.copy()
     for figure_id, figure in enumerate(figures):
         figure_x_min, figure_y_min, figure_x_max, figure_y_max = figure["coordinate"]
         if (
@@ -1031,14 +1084,17 @@ def crop_margin(img):
     if gray.dtype != np.uint8:
         gray = gray.astype(np.uint8)
 
-    max_val = gray.max()
-    min_val = gray.min()
+    max_val = int(gray.max())
+    min_val = int(gray.min())
 
     if max_val == min_val:
         return img
 
-    data = (gray - min_val) / (max_val - min_val) * 255
-    data = data.astype(np.uint8)
+    # Use a LUT (lookup table) to normalize: avoids intermediate float64 array.
+    lut = np.zeros(256, dtype=np.uint8)
+    for v in range(min_val, max_val + 1):
+        lut[v] = int((v - min_val) / (max_val - min_val) * 255)
+    data = cv2.LUT(gray, lut)
 
     _, binary = cv2.threshold(data, 200, 255, cv2.THRESH_BINARY_INV)
     coords = cv2.findNonZero(binary)
@@ -1065,18 +1121,14 @@ def pre_process_for_spotting(image: np.ndarray) -> Dict[str, List]:
     h, w = image.shape[:2]
 
     if w < 1500 and h < 1500:
-        image = to_pil_image(image)
-        process_w, process_h = w * 2, h * 2
+        pil_img = to_pil_image(image)
         try:
             resample_filter = Image.Resampling.LANCZOS
         except AttributeError:
             resample_filter = Image.LANCZOS
-
-        image = image.resize((process_w, process_h), resample_filter)
-        inference_img = to_np_array(image)
-    else:
-        inference_img = image
-    return inference_img
+        pil_img = pil_img.resize((w * 2, h * 2), resample_filter)
+        return to_np_array(pil_img)
+    return image
 
 
 def post_process_for_spotting(

@@ -142,6 +142,13 @@ class BasePredictor(ABC, metaclass=ABCMeta):
             if isinstance(results, list):
                 for idx, single in enumerate(results):
                     item = {"result": single}
+                    for k, v in pred.items():
+                        if k == "result":
+                            continue
+                        if isinstance(v, list) and idx < len(v):
+                            item[k] = v[idx]
+                        else:
+                            item[k] = v
                     if input_paths and idx < len(input_paths):
                         item["input_path"] = input_paths[idx]
                     yield self.result_class(item)

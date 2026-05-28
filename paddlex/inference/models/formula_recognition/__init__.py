@@ -13,16 +13,42 @@
 # limitations under the License.
 
 from ....modules.formula_recognition.model_list import MODELS
-from ..bindings import register_predictor_binding_map
-from .predictor import FormulaRecRunnerPredictor
+from ..bindings import create_binding_registration, register_predictor_binding_map
+from ..runners import create_pretrained_dynamic_runner_builder
+from .predictor import (
+    FORMULA_REC_TRANSFORMERS_MODELS,
+    FormulaRecRunnerPredictor,
+    FormulaRecTransformersPredictor,
+)
+
+
+def _load_pp_formulanet():
+    from .modeling import PPFormulaNet
+
+    return PPFormulaNet
+
 
 register_predictor_binding_map(
     FormulaRecRunnerPredictor,
     {
         "paddle_static": MODELS,
+        "paddle_dynamic": create_binding_registration(
+            ("PP-FormulaNet-L", "PP-FormulaNet_plus-L"),
+            runner_builder=create_pretrained_dynamic_runner_builder(
+                _load_pp_formulanet,
+                use_safetensors=True,
+                convert_from_hf=True,
+                dtype="float32",
+            ),
+        ),
         "hpi": MODELS,
         "onnxruntime": MODELS,
     },
+)
+
+register_predictor_binding_map(
+    FormulaRecTransformersPredictor,
+    {"transformers": FORMULA_REC_TRANSFORMERS_MODELS},
 )
 
 # Backward compatibility

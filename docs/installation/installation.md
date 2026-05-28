@@ -142,7 +142,7 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 
 当您使用官方 Docker 镜像安装时，其中<b>已经内置了 PaddlePaddle、PaddleX（包括wheel包和所有插件）</b>，并配置好了相应的CUDA环境，<b>您获取 Docker 镜像并启动容器即可开始使用</b>。<b>请注意，PaddleX 官方 Docker 镜像与飞桨框架官方 Docker 镜像不同，后者并没有预装 PaddleX。</b>
 
-当您使用自定义方式安装时，通常需要先参考第 4 节或第 5 节安装飞桨框架或其他依赖，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
+当您使用自定义方式安装时，通常需要先参考第 4 节安装所需的推理引擎，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
 
 > ❗ 无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。
 
@@ -290,12 +290,11 @@ PaddleX 目前提供如下依赖组：
 
 每一条产线属于且仅属于一个依赖组；在各产线的使用文档中可以了解产线属于哪一依赖组。对于单功能模块，安装任意包含该模块的产线对应的依赖组后即可使用相关的基础功能。
 
-## 4 安装飞桨框架
+## 4 安装推理引擎
 
-当您使用飞桨框架进行推理时，需要参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装飞桨框架。
+除了安装 PaddleX 本身，还需要按实际使用场景安装对应的推理引擎。
 
-## 5 安装非 Paddle 引擎的额外依赖
-
-当您使用非 Paddle 引擎推理时，需要安装对应依赖：
-
-- `engine="transformers"`：安装 `transformers` 库（例如 `pip install transformers`），并参考 [Transformers 官方文档](https://huggingface.co/docs/transformers/installation) 配置运行环境。
+| 推理引擎 | 安装方式 |
+| - | - |
+| PaddlePaddle | 请参考 [飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md) 安装。 |
+| Transformers | 安装 Hugging Face Transformers（`>=5.8.0`），例如 `python -m pip install "transformers>=5.8.0"`，并参考 [Transformers 官方文档](https://huggingface.co/docs/transformers/installation) 配置底层推理框架。 |

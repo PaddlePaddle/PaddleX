@@ -13,6 +13,9 @@
 # limitations under the License.
 
 MODELS = [
+    "PP-OCRv6_medium_rec",
+    "PP-OCRv6_small_rec",
+    "PP-OCRv6_tiny_rec",
     "PP-OCRv3_mobile_rec",
     "en_PP-OCRv3_mobile_rec",
     "korean_PP-OCRv3_mobile_rec",
