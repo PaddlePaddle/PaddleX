@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import warnings
 from typing import Final, List, Tuple, Union
 
 import numpy as np
@@ -39,8 +40,20 @@ def update_app_context(app_context: AppContext) -> None:
     app_context.extra["file_storage"] = None
     if "file_storage" in extra_cfg:
         app_context.extra["file_storage"] = create_storage(extra_cfg["file_storage"])
-    app_context.extra["return_img_urls"] = extra_cfg.get("return_img_urls", False)
-    if app_context.extra["return_img_urls"]:
+    return_urls = app_context.config.return_urls
+    if "return_img_urls" in extra_cfg:
+        warnings.warn(
+            "`Serving.extra.return_img_urls` is deprecated; use the top-level "
+            "`Serving.return_urls` field instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if return_urls is None:
+            return_urls = bool(extra_cfg["return_img_urls"])
+    if return_urls is None:
+        return_urls = False
+    app_context.extra["return_urls"] = return_urls
+    if app_context.extra["return_urls"]:
         file_storage = app_context.extra["file_storage"]
         if not file_storage:
             raise ValueError(

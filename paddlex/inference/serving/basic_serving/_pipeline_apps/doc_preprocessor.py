@@ -65,7 +65,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                 log_id,
                 "output_img.png",
                 file_storage=ctx.extra["file_storage"],
-                return_url=ctx.extra["return_img_urls"],
+                return_url=ctx.extra["return_urls"],
                 max_img_size=ctx.extra["max_output_img_size"],
             )
             if visualize_enabled:
@@ -79,7 +79,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                     log_id,
                     filename_template=f"{{key}}_{i}.jpg",
                     file_storage=ctx.extra["file_storage"],
-                    return_urls=ctx.extra["return_img_urls"],
+                    return_urls=ctx.extra["return_urls"],
                     url_expires_in=ctx.extra["url_expires_in"],
                     max_img_size=ctx.extra["max_output_img_size"],
                 )
