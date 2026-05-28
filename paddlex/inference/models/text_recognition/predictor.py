@@ -62,6 +62,9 @@ TEXT_REC_TRANSFORMERS_MODELS = [
     "ta_PP-OCRv5_mobile_rec",
     "devanagari_PP-OCRv5_mobile_rec",
     "cyrillic_PP-OCRv5_mobile_rec",
+    "PP-OCRv6_medium_rec",
+    "PP-OCRv6_small_rec",
+    "PP-OCRv6_tiny_rec",
 ]
 
 

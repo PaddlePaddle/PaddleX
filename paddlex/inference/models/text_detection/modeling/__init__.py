@@ -14,3 +14,5 @@
 
 from .pp_ocrv5_mobile_det import PPOCRV5MobileDet
 from .pp_ocrv5_server_det import PPOCRV5ServerDet
+from .pp_ocrv6_medium_det import PPOCRV6MediumDet
+from .pp_ocrv6_small_det import PPOCRV6SmallDet

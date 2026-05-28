@@ -33,7 +33,13 @@ _TEXT_DET_MAX_LIMIT_MODELS = {
     "PP-OCRv3_server_det",
     "PP-OCRv3_mobile_det",
 }
-TEXT_DET_TRANSFORMERS_MODELS = ["PP-OCRv5_server_det", "PP-OCRv5_mobile_det"]
+TEXT_DET_TRANSFORMERS_MODELS = [
+    "PP-OCRv5_server_det",
+    "PP-OCRv5_mobile_det",
+    "PP-OCRv6_medium_det",
+    "PP-OCRv6_small_det",
+    "PP-OCRv6_tiny_det",
+]
 
 
 def _get_text_det_resize_cfg(config):
