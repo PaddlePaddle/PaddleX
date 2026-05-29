@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import warnings
 from typing import Final, List, Tuple, Union
 
 import numpy as np
@@ -20,7 +21,7 @@ from typing_extensions import Literal
 from ......utils import logging
 from ......utils.deps import function_requires_deps, is_dep_available
 from ....infra import utils as serving_utils
-from ....infra.models import ImageInfo, PDFInfo
+from ....infra.models import ImageInfo, PDFInfo, TIFFInfo
 from ....infra.storage import SupportsGetURL, create_storage
 from ....schemas.shared.ocr import BaseInferRequest
 from ..._app import AppContext
@@ -39,8 +40,20 @@ def update_app_context(app_context: AppContext) -> None:
     app_context.extra["file_storage"] = None
     if "file_storage" in extra_cfg:
         app_context.extra["file_storage"] = create_storage(extra_cfg["file_storage"])
-    app_context.extra["return_img_urls"] = extra_cfg.get("return_img_urls", False)
-    if app_context.extra["return_img_urls"]:
+    return_urls = app_context.config.return_urls
+    if "return_img_urls" in extra_cfg:
+        warnings.warn(
+            "`Serving.extra.return_img_urls` is deprecated; use the top-level "
+            "`Serving.return_urls` field instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if return_urls is None:
+            return_urls = bool(extra_cfg["return_img_urls"])
+    if return_urls is None:
+        return_urls = False
+    app_context.extra["return_urls"] = return_urls
+    if app_context.extra["return_urls"]:
         file_storage = app_context.extra["file_storage"]
         if not file_storage:
             raise ValueError(
@@ -82,7 +95,7 @@ def get_file_type(request: BaseInferRequest) -> Literal["PDF", "IMAGE"]:
 
 async def get_images(
     request: BaseInferRequest, app_context: AppContext
-) -> Tuple[List[np.ndarray], Union[ImageInfo, PDFInfo]]:
+) -> Tuple[List[np.ndarray], Union[ImageInfo, PDFInfo, TIFFInfo]]:
     file_type = get_file_type(request)
 
     try:
@@ -97,7 +110,7 @@ async def get_images(
             max_num_imgs=app_context.extra["max_num_input_imgs"],
         )
     except serving_utils.ImageTooLargeError as e:
-        logging.error("Input image or PDF page exceeds pixel limit: %s", e)
+        logging.error("Input image or document page exceeds pixel limit: %s", e)
         raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:
         logging.error("Failed to read input file: %s", e)

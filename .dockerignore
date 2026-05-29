@@ -41,7 +41,3 @@ pip-wheel-metadata/
 *.log
 test_output/
 htmlcov/
-
-# Large local deps (mounted read-only in Dockerfile GPU stage, not needed in COPY)
-deploy/hps/server_env/cudnn-linux-x86_64-*.tar.xz
-deploy/hps/server_env/TensorRT-*.tar.gz

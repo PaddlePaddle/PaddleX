@@ -95,3 +95,6 @@ INFER_BENCHMARK_USE_CACHE_FOR_READ = get_flag_from_env_var(
 )
 
 PDF_RENDER_SCALE = get_flag_from_env_var("PADDLE_PDX_PDF_RENDER_SCALE", 2.0, float)
+PDF_MIN_RENDER_SCALE = get_flag_from_env_var(
+    "PADDLE_PDX_PDF_MIN_RENDER_SCALE", 0.1, float
+)

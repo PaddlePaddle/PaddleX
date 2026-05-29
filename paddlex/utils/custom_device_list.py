@@ -314,6 +314,7 @@ GCU_WHITELIST = [
 ]
 
 METAX_GPU_WHITELIST = [
+    "RT-DETR-H_layout_3cls",
     "ConvNeXt_base_224",
     "ConvNeXt_base_384",
     "ConvNeXt_large_224",

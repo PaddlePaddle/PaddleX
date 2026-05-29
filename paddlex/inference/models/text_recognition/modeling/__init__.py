@@ -14,3 +14,5 @@
 
 from .pp_ocrv5_mobile_rec import PPOCRV5MobileRec
 from .pp_ocrv5_server_rec import PPOCRV5ServerRec
+from .pp_ocrv6_small_rec import PPOCRV6SmallRec
+from .pp_ocrv6_tiny_rec import PPOCRV6TinyRec

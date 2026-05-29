@@ -17,7 +17,11 @@
 PP_DOCBEE_MODELS = ("PP-DocBee-2B", "PP-DocBee-7B")
 PP_DOCBEE2_MODELS = ("PP-DocBee2-3B",)
 PP_CHART2TABLE_MODELS = ("PP-Chart2Table",)
-PADDLEOCR_VL_MODELS = ("PaddleOCR-VL-0.9B", "PaddleOCR-VL-1.5-0.9B")
+PADDLEOCR_VL_MODELS = (
+    "PaddleOCR-VL-0.9B",
+    "PaddleOCR-VL-1.5-0.9B",
+    "PaddleOCR-VL-1.6-0.9B",
+)
 
 # Model group: maps family name to set of model names.
 MODEL_GROUP = {

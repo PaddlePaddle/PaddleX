@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import warnings
+
 from typing import Any, Dict, Final, List, Tuple
 
 from paddlex_hps_server import (
@@ -32,7 +34,7 @@ class TritonPythonModel(BaseTritonPythonModel):
         super().initialize(args)
         self.context = {}
         self.context["file_storage"] = None
-        self.context["return_img_urls"] = False
+        self.context["return_urls"] = self.app_config.return_urls
         self.context["url_expires_in"] = -1
         self.context["max_num_input_imgs"] = _DEFAULT_MAX_NUM_INPUT_IMGS
         self.context["max_output_img_size"] = _DEFAULT_MAX_OUTPUT_IMG_SIZE
@@ -42,9 +44,16 @@ class TritonPythonModel(BaseTritonPythonModel):
                     self.app_config.extra["file_storage"]
                 )
             if "return_img_urls" in self.app_config.extra:
-                self.context["return_img_urls"] = self.app_config.extra[
-                    "return_img_urls"
-                ]
+                warnings.warn(
+                    "`Serving.extra.return_img_urls` is deprecated; use the "
+                    "top-level `Serving.return_urls` field instead.",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                if self.context["return_urls"] is None:
+                    self.context["return_urls"] = bool(
+                        self.app_config.extra["return_img_urls"]
+                    )
             if "url_expires_in" in self.app_config.extra:
                 self.context["url_expires_in"] = self.app_config.extra["url_expires_in"]
             if "max_num_input_imgs" in self.app_config.extra:
@@ -55,7 +64,9 @@ class TritonPythonModel(BaseTritonPythonModel):
                 self.context["max_output_img_size"] = self.app_config.extra[
                     "max_output_img_size"
                 ]
-        if self.context["return_img_urls"]:
+        if self.context["return_urls"] is None:
+            self.context["return_urls"] = False
+        if self.context["return_urls"]:
             file_storage = self.context["file_storage"]
             if not file_storage:
                 raise ValueError(
@@ -130,7 +141,7 @@ class TritonPythonModel(BaseTritonPythonModel):
                     log_id,
                     filename_template=f"{{key}}_{i}.jpg",
                     file_storage=self.context["file_storage"],
-                    return_urls=self.context["return_img_urls"],
+                    return_urls=self.context["return_urls"],
                     url_expires_in=self.context["url_expires_in"],
                     max_img_size=self.context["max_output_img_size"],
                 )

@@ -20,6 +20,7 @@ from .readers import (
     MarkDownReader,
     PDFReader,
     ReaderType,
+    TIFFReader,
     VideoReader,
     YAMLReader,
 )

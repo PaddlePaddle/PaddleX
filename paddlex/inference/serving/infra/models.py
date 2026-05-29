@@ -30,6 +30,7 @@ __all__ = [
     "ImageInfo",
     "PDFPageInfo",
     "PDFInfo",
+    "TIFFInfo",
     "DataInfo",
     "PrimaryOperations",
 ]
@@ -73,7 +74,13 @@ class PDFInfo(BaseModel):
     type: Literal["pdf"] = "pdf"
 
 
-DataInfo: TypeAlias = Union[ImageInfo, PDFInfo]
+class TIFFInfo(BaseModel):
+    numPages: int
+    pages: List[PDFPageInfo]
+    type: Literal["tiff"] = "tiff"
+
+
+DataInfo: TypeAlias = Union[ImageInfo, PDFInfo, TIFFInfo]
 
 # Should we use generics?
 PrimaryOperations: TypeAlias = Dict[str, Tuple[str, BaseModel, BaseModel]]
