@@ -449,12 +449,13 @@ Finally, the response from the service needs to be parsed. The raw response body
 
 By default, both basic serving and high-stability serving return image and file fields in the response — for example `outputImages`, `inputImage`, `markdown.images`, and `exports` (docx, ...) — inline as Base64-encoded strings. When the response contains large images or a multi-page PDF, Base64 encoding can significantly inflate the payload. You can switch to URL mode: the server writes those files to object storage and returns pre-signed URLs instead.
 
-> The configuration key is historically named `return_img_urls`, but it currently controls every Base64-inlined file field in the response, not just images.
+> This switch is the top-level `Serving.return_urls` field; it controls every Base64-inlined file field in the response (images as well as exported files such as `exports`), not just images. The legacy `Serving.extra.return_img_urls` key is still honored at startup (with a deprecation warning), but new configurations should use `Serving.return_urls`.
 
-Both deployment modes share the same configuration. Add the following to the `Serving.extra` section of the pipeline configuration file:
+Both deployment modes share the same configuration. Add the following to the `Serving` section of the pipeline configuration file (`return_urls` is a top-level field, while `file_storage` and `url_expires_in` live under `Serving.extra`):
 
 ```yaml
 Serving:
+  return_urls: true
   extra:
     file_storage:
       type: bos
@@ -463,7 +464,6 @@ Serving:
       sk: xxx
       bucket_name: <bucket name>
       key_prefix: <optional, object key prefix>
-    return_img_urls: true
     url_expires_in: 3600  # Pre-signed URL lifetime in seconds; -1 means no expiry
 ```
 
@@ -482,6 +482,6 @@ Where to put the configuration:
 
 Notes:
 
-- `file_storage.type` supports `bos`, `file_system`, and `memory`; **only `bos` provides pre-signed URLs**. When `return_img_urls: true` is enabled, `file_storage` must be `bos`, otherwise the server fails to start.
+- `file_storage.type` supports `bos`, `file_system`, and `memory`; **only `bos` provides pre-signed URLs**. When `return_urls: true` is enabled, `file_storage` must be `bos`, otherwise the server fails to start.
 - Field types are unchanged; only the value changes from a Base64 string to a pre-signed URL that can be fetched within `url_expires_in` seconds.
 - For more information on obtaining AK/SK and other details, refer to the [Baidu Intelligent Cloud Official Documentation](https://cloud.baidu.com/doc/BOS/index.html).

@@ -447,12 +447,13 @@ curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
 
 基础服务化与高稳定性服务化默认以 Base64 编码内联返回响应中的图像与文件字段，例如 `outputImages`、`inputImage`、`markdown.images`、`exports`（docx 等）。当响应中包含较大图像或多页 PDF 时，Base64 会显著增加响应体积。可改为 URL 模式：服务端将这些文件写入对象存储，响应中只返回预签名 URL。
 
-> 配置项历史名为 `return_img_urls`，但当前实际控制响应中所有 Base64 内联文件字段，不仅是图像。
+> 该开关为顶层字段 `Serving.return_urls`，控制响应中所有 Base64 内联文件字段（图像以及 `exports` 等导出文件），不仅是图像。旧配置项 `Serving.extra.return_img_urls` 仍被兼容（启动时给出弃用告警），新配置请改用 `Serving.return_urls`。
 
-两种部署方案共用同一组配置项。在产线配置文件的 `Serving.extra` 节中配置：
+两种部署方案共用同一组配置项。在产线配置文件的 `Serving` 节中配置（`return_urls` 为顶层字段，`file_storage`、`url_expires_in` 位于 `Serving.extra`）：
 
 ```yaml
 Serving:
+  return_urls: true
   extra:
     file_storage:
       type: bos
@@ -461,7 +462,6 @@ Serving:
       sk: xxx
       bucket_name: <存储空间名称>
       key_prefix: <可选，对象 key 前缀>
-    return_img_urls: true
     url_expires_in: 3600  # 预签名 URL 有效期（秒），-1 表示不过期
 ```
 
@@ -480,6 +480,6 @@ Serving:
 
 注意事项：
 
-- `file_storage.type` 支持 `bos`、`file_system`、`memory`；其中**仅 `bos` 提供预签名 URL 能力**。启用 `return_img_urls: true` 时 `file_storage` 必须为 `bos`，否则服务启动失败。
+- `file_storage.type` 支持 `bos`、`file_system`、`memory`；其中**仅 `bos` 提供预签名 URL 能力**。启用 `return_urls: true` 时 `file_storage` 必须为 `bos`，否则服务启动失败。
 - 启用前后字段类型不变，值的形态从 Base64 字符串切换为可在 `url_expires_in` 秒内 GET 下载的预签名 URL。
 - 有关 AK/SK 获取等更多信息，请参考 [百度智能云官方文档](https://cloud.baidu.com/doc/BOS/index.html)。
