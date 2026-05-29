@@ -775,7 +775,7 @@ docker run \
     paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
-For Blackwell GPUs, replace the image above with the SM120-specific image:
+For Blackwell GPUs, replace the image above with the dedicated image:
 
 ```bash
 docker run \
