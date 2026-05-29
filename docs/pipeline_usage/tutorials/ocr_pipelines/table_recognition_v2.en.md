@@ -1927,6 +1927,7 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 </tr>
 </tbody>
 </table>
+<p>Image fields in the element schema below (e.g. <code>outputImages</code>, <code>inputImage</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Response Files as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in <code>tableRecResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
@@ -1945,12 +1946,12 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Refer to the <code>img</code> property description of the pipeline prediction results. The images are in JPEG format and are Base64-encoded.</td>
+<td>Refer to the <code>img</code> property description of the pipeline prediction results. The images are in JPEG format and are Base64-encoded by default; returned as pre-signed URLs when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The input image. The image is in JPEG format and is Base64-encoded.</td>
+<td>The input image. The image is in JPEG format and is Base64-encoded by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>

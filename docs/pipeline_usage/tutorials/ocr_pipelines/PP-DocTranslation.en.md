@@ -1850,6 +1850,7 @@ To remove the page limit, please add the following configuration to the pipeline
 </tr>
 </tbody>
 </table>
+<p>Image and file fields in the element schema below (e.g. <code>outputImages</code>, <code>inputImage</code>, <code>markdown.images</code>, <code>exports</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Response Files as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
@@ -1873,17 +1874,17 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>See the description of the <code>img</code> field in the pipeline prediction results. Images are JPEG and Base64-encoded.</td>
+<td>See the description of the <code>img</code> field in the pipeline prediction results. Images are JPEG and Base64-encoded by default; returned as pre-signed URLs when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Input image. JPEG format, Base64-encoded.</td>
+<td>Input image. JPEG format, Base64-encoded by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Optional additional exports such as <code>docx</code>, present only when <code>outputFormats</code> is requested. The <code>content</code> field is Base64-encoded file bytes.</td>
+<td>Optional additional exports such as <code>docx</code>, present only when <code>outputFormats</code> is requested. The <code>content</code> field is Base64-encoded file bytes by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>
@@ -1905,7 +1906,7 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>images</code></td>
 <td><code>object</code></td>
-<td>Mapping from relative Markdown image paths to Base64-encoded image data.</td>
+<td>Mapping from relative Markdown image paths to Base64-encoded image data by default; returned as pre-signed URLs when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>isStart</code></td>

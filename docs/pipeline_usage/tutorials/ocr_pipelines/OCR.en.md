@@ -2556,6 +2556,7 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 </tr>
 </tbody>
 </table>
+<p>Image fields in the element schema below (e.g. <code>ocrImage</code>, <code>docPreprocessingImage</code>, <code>inputImage</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Response Files as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in <code>ocrResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
@@ -2574,17 +2575,17 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <tr>
 <td><code>ocrImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The OCR result image, which marks the detected text positions. The image is in JPEG format and encoded in Base64.</td>
+<td>The OCR result image, which marks the detected text positions. The image is in JPEG format and encoded in Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>docPreprocessingImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The visualization result image. The image is in JPEG format and encoded in Base64.</td>
+<td>The visualization result image. The image is in JPEG format and encoded in Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The input image. The image is in JPEG format and encoded in Base64.</td>
+<td>The input image. The image is in JPEG format and encoded in Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>
