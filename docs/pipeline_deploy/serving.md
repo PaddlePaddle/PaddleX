@@ -445,7 +445,7 @@ curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
 
 ## 3. 以 URL 形式返回响应文件
 
-基础服务化与高稳定性服务化默认以 Base64 编码内联返回响应中的图像与文件字段，例如 `outputImages`、`inputImage`、`markdown.images`、`exports`（docx 等）。当响应中包含较大图像或多页 PDF 时，Base64 会显著增加响应体积。可改为 URL 模式：服务端将这些文件写入对象存储，响应中只返回预签名 URL。
+基础服务化与高稳定性服务化默认以 Base64 编码内联返回响应中的图像与文件字段，例如 `outputImages`、`inputImage`、`markdown.images`、`exports`（docx 等）。当响应中包含较大图像或多页 PDF 时，Base64 会显著增加响应体积。可配置服务改为以 URL 形式返回：响应中相应字段的值变为可下载的 URL，而非内联 Base64。
 
 > 该开关为顶层字段 `Serving.return_urls`，控制响应中所有 Base64 内联文件字段（图像以及 `exports` 等导出文件），不仅是图像。旧配置项 `Serving.extra.return_img_urls` 仍被兼容（启动时给出弃用告警），新配置请改用 `Serving.return_urls`。
 
