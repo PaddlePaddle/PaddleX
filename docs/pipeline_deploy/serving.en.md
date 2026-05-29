@@ -270,7 +270,7 @@ Find the high-stability serving SDK corresponding to the pipeline in the table b
 </table>
 </details>
 
-For manual packaging, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README_en.md#2-pipeline-material-packaging).
+For manual packaging, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README_en.md#2-pipeline-material-packaging).
 
 ### 2.2 Adjust Configurations
 
@@ -331,7 +331,7 @@ First, pull the Docker image as needed:
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.6-cpu
     ```
 
-If you need to build the image on your own, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README_en.md#1-image-building)
+If you need to build the image on your own, please refer to [the `hps` project documentation](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README_en.md#1-image-building)
 
 With the image prepared, navigate to the `server` directory and execute the following command to run the server:
 
