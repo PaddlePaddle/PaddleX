@@ -445,7 +445,7 @@ Finally, the response from the service needs to be parsed. The raw response body
 
 `outputs[0].data[0]` is a JSON string. The internal fields follow the same format as the response body in the basic serving solution. For detailed parsing rules, please refer to the usage guide for each specific pipeline.
 
-## 3. Returning Response Files as URLs
+## 3. Returning Binary Content as URLs
 
 By default, both basic serving and high-stability serving return image and file fields in the response — for example `outputImages`, `inputImage`, `markdown.images`, and `exports` (docx, ...) — inline as Base64-encoded strings. When the response contains large images or a multi-page PDF, Base64 encoding can significantly inflate the payload. You can configure the service to return these fields as downloadable URLs instead of inline Base64.
 

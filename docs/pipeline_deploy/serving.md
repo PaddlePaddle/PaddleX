@@ -443,7 +443,7 @@ curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
 
 其中 `outputs[0].data[0]` 是一个 JSON 字符串，其中的字段与基础服务化部署方案中的响应体保持一致，具体解析规则可以查看各产线使用教程。
 
-## 3. 以 URL 形式返回响应文件
+## 3. 以 URL 形式返回二进制内容
 
 基础服务化与高稳定性服务化默认以 Base64 编码内联返回响应中的图像与文件字段，例如 `outputImages`、`inputImage`、`markdown.images`、`exports`（docx 等）。当响应中包含较大图像或多页 PDF 时，Base64 会显著增加响应体积。可配置服务改为以 URL 形式返回：响应中相应字段的值变为可下载的 URL，而非内联 Base64。
 
