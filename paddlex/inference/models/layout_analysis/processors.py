@@ -213,7 +213,7 @@ def extract_polygon_points_by_masks(boxes, masks, scale_ratio, layout_shape_mode
     h_m, w_m = masks.shape[1:]
     polygon_points = []
 
-    max_box_w = max(boxes[:, 4] - boxes[:, 3])
+    max_box_w = max(boxes[:, 4] - boxes[:, 2])
 
     for i in range(len(boxes)):
         x_min, y_min, x_max, y_max = boxes[i, 2:6].astype(np.int32)
