@@ -762,9 +762,9 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 #### 3.1.1 Using Docker Images
 
-PaddleX provides a vLLM Docker image to quickly start a VLM inference service. For common NVIDIA GPUs, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`. For NVIDIA 50 series GPUs (SM120 / Compute Capability 12.x), use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`.
+PaddleX provides a vLLM Docker image to quickly start a VLM inference service. For NVIDIA GPUs other than the Blackwell architecture, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`. For Blackwell GPUs, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`.
 
-Using a common NVIDIA GPU and `PaddleOCR-VL-1.6-0.9B` as an example:
+Using an NVIDIA GPU other than the Blackwell architecture and `PaddleOCR-VL-1.6-0.9B` as an example:
 
 ```bash
 docker run \
@@ -775,7 +775,7 @@ docker run \
     paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
-For NVIDIA 50 series GPUs, replace the image above with the SM120-specific image:
+For Blackwell GPUs, replace the image above with the dedicated image:
 
 ```bash
 docker run \

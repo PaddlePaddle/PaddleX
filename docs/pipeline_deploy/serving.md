@@ -270,7 +270,7 @@ paddlex --serve --pipeline image_classification --use_hpip
 </table>
 </details>
 
-如需手动打包可参考 [`hps` 项目文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README.md#2-产线物料打包)。
+如需手动打包可参考 [`hps` 项目文档](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README.md#2-产线物料打包)。
 
 ### 2.2 调整配置
 
@@ -331,7 +331,7 @@ paddlex --serve --pipeline image_classification --use_hpip
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.6-cpu
     ```
 
-如需自定义构建镜像可参考 [`hps` 项目文档](https://github.com/PaddlePaddle/PaddleX/blob/develop/deploy/hps/README.md#1-镜像构建)。
+如需自定义构建镜像可参考 [`hps` 项目文档](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README.md#1-镜像构建)。
 
 准备好镜像后，切换到 `server` 目录，执行如下命令运行服务器：
 
