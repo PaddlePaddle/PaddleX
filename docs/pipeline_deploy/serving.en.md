@@ -447,9 +447,7 @@ Finally, the response from the service needs to be parsed. The raw response body
 
 ## 3. Returning Binary Content as URLs
 
-By default, both basic serving and high-stability serving return image and file fields in the response — for example `outputImages`, `inputImage`, `markdown.images`, and `exports` (docx, ...) — inline as Base64-encoded strings. When the response contains large images or a multi-page PDF, Base64 encoding can significantly inflate the payload. You can configure the service to return these fields as downloadable URLs instead of inline Base64.
-
-> This switch is the top-level `Serving.return_urls` field; it controls every Base64-inlined file field in the response (images as well as exported files such as `exports`), not just images. The legacy `Serving.extra.return_img_urls` key is still honored at startup (with a deprecation warning), but new configurations should use `Serving.return_urls`.
+By default, both basic serving and high-stability serving return images and other binary content in the response inline as Base64-encoded strings. When the response contains large images or a multi-page PDF, Base64 encoding can significantly inflate the payload; you can configure the service to return URLs instead.
 
 Both deployment modes share the same configuration. Add the following to the `Serving` section of the pipeline configuration file (`return_urls` is a top-level field, while `file_storage` and `url_expires_in` live under `Serving.extra`):
 
