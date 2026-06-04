@@ -444,3 +444,42 @@ Finally, the response from the service needs to be parsed. The raw response body
 ```
 
 `outputs[0].data[0]` is a JSON string. The internal fields follow the same format as the response body in the basic serving solution. For detailed parsing rules, please refer to the usage guide for each specific pipeline.
+
+## 3. Returning Binary Content as URLs
+
+By default, both basic serving and high-stability serving return images and other binary content in the response inline as Base64-encoded strings. When the response contains large images or a multi-page PDF, Base64 encoding can significantly inflate the payload; you can configure the service to return URLs instead.
+
+Both deployment modes share the same configuration. Add the following to the `Serving` section of the pipeline configuration file (`return_urls` is a top-level field, while `file_storage` and `url_expires_in` live under `Serving.extra`):
+
+```yaml
+Serving:
+  return_urls: true
+  extra:
+    file_storage:
+      type: bos
+      endpoint: <BOS endpoint, e.g. https://bj.bcebos.com>
+      ak: xxx
+      sk: xxx
+      bucket_name: <bucket name>
+      key_prefix: <optional, object key prefix>
+    url_expires_in: 3600  # Pre-signed URL lifetime in seconds; -1 means no expiry
+```
+
+Field reference:
+
+- `endpoint`: BOS endpoint, required.
+- `ak`: Baidu Intelligent Cloud Access Key (required).
+- `sk`: Baidu Intelligent Cloud Secret Key (required).
+- `bucket_name`: BOS bucket name, required.
+- `key_prefix`: optional object key prefix.
+
+Where to put the configuration:
+
+- Basic serving: write it to the pipeline config file passed to `paddlex --serve --pipeline`.
+- High-stability serving: write it to `server/pipeline_config.yaml` inside the SDK and restart the container.
+
+Notes:
+
+- `file_storage.type` supports `bos`, `file_system`, and `memory`; **only `bos` provides pre-signed URLs**. When `return_urls: true` is enabled, `file_storage` must be `bos`, otherwise the server fails to start.
+- Field types are unchanged; only the value changes from a Base64 string to a pre-signed URL that can be fetched within `url_expires_in` seconds.
+- For more information on obtaining AK/SK and other details, refer to the [Baidu Intelligent Cloud Official Documentation](https://cloud.baidu.com/doc/BOS/index.html).

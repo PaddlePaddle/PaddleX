@@ -66,6 +66,7 @@ class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     markdownIgnoreLabels: Optional[List[str]] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
+    returnMarkdownImages: bool = True
     visualize: Optional[bool] = None
     logId: Optional[str] = None
 
