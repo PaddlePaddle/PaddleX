@@ -68,6 +68,7 @@ class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     vlmExtraArgs: Optional[dict] = None
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
+    returnMarkdownImages: bool = True
     restructurePages: bool = False
     mergeTables: bool = True
     relevelTitles: bool = True
@@ -242,6 +243,7 @@ class RestructurePagesRequest(OutputFormatsMixin):
     concatenatePages: bool = False
     prettifyMarkdown: bool = True
     showFormulaNumber: bool = False
+    returnMarkdownImages: bool = True
     logId: Optional[str] = None
 
 

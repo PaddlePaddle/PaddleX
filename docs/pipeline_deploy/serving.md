@@ -442,3 +442,42 @@ curl -s -X POST http://localhost:8000/v2/models/ocr/infer \
 ```
 
 其中 `outputs[0].data[0]` 是一个 JSON 字符串，其中的字段与基础服务化部署方案中的响应体保持一致，具体解析规则可以查看各产线使用教程。
+
+## 3. 以 URL 形式返回二进制内容
+
+基础服务化与高稳定性服务化默认以 Base64 编码内联返回响应中的图像等二进制内容。当响应中包含较大图像或多页 PDF 时，Base64 会显著增加响应体积，可配置服务返回 URL。
+
+两种部署方案共用同一组配置项。在产线配置文件的 `Serving` 节中配置（`return_urls` 为顶层字段，`file_storage`、`url_expires_in` 位于 `Serving.extra`）：
+
+```yaml
+Serving:
+  return_urls: true
+  extra:
+    file_storage:
+      type: bos
+      endpoint: <BOS 访问域名，例如 https://bj.bcebos.com>
+      ak: xxx
+      sk: xxx
+      bucket_name: <存储空间名称>
+      key_prefix: <可选，对象 key 前缀>
+    url_expires_in: 3600  # 预签名 URL 有效期（秒），-1 表示不过期
+```
+
+字段说明：
+
+- `endpoint`：BOS 访问域名，必须配置。
+- `ak`：百度智能云 AK，必须配置。
+- `sk`：百度智能云 SK，必须配置。
+- `bucket_name`：BOS 存储空间名称，必须配置。
+- `key_prefix`：可选，写入对象的 key 前缀。
+
+部署方式落地：
+
+- 基础服务化：上述配置写入 `paddlex --serve --pipeline` 指定的产线配置文件。
+- 高稳定性服务化：上述配置写入 SDK 内的 `server/pipeline_config.yaml`，重启容器后生效。
+
+注意事项：
+
+- `file_storage.type` 支持 `bos`、`file_system`、`memory`；其中**仅 `bos` 提供预签名 URL 能力**。启用 `return_urls: true` 时 `file_storage` 必须为 `bos`，否则服务启动失败。
+- 启用前后字段类型不变，值的形态从 Base64 字符串切换为可在 `url_expires_in` 秒内 GET 下载的预签名 URL。
+- 有关 AK/SK 获取等更多信息，请参考 [百度智能云官方文档](https://cloud.baidu.com/doc/BOS/index.html)。

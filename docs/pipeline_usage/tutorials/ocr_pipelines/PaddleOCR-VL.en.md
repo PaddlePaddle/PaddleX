@@ -1231,6 +1231,12 @@ By default, there is no page limit. To set a page limit on the server, set <code
 <td>No</td>
 </tr>
 <tr>
+<td><code>returnMarkdownImages</code></td>
+<td><code>boolean</code></td>
+<td>Whether to return the images referenced in the Markdown. Default <code>true</code>; when set to <code>false</code>, <code>markdown.images</code> is <code>null</code> or omitted and the server skips image encoding / URL upload.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>restructurePages</code></td>
 <td><code>boolean</code></td>
 <td>Whether to restructure results across multiple pages. The default is <code>false</code>.</td>
@@ -1293,6 +1299,7 @@ By default, there is no page limit. To set a page limit on the server, set <code
 </tr>
 </tbody>
 </table>
+<p>Image and other binary file fields in the element schema below (e.g. <code>outputImages</code>, <code>inputImage</code>, <code>markdown.images</code>, <code>exports</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Binary Content as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in<code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
@@ -1316,17 +1323,17 @@ By default, there is no page limit. To set a page limit on the server, set <code
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code>|<code>null</code></td>
-<td>Refer to the <code>img</code> property description of the prediction results. The image is in JPEG format and encoded using Base64.</td>
+<td>Refer to the <code>img</code> property description of the prediction results. The image is in JPEG format, encoded as Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code>|<code>null</code></td>
-<td>Input image. The image is in JPEG format and encoded using Base64.</td>
+<td>Input image. The image is in JPEG format, encoded as Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code>|<code>null</code></td>
-<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
+<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content by default, or a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>
@@ -1347,8 +1354,8 @@ By default, there is no page limit. To set a page limit on the server, set <code
 </tr>
 <tr>
 <td><code>images</code></td>
-<td><code>object</code></td>
-<td>Key-value pairs of relative paths to Markdown images and Base64-encoded images.</td>
+<td><code>object</code> | <code>null</code></td>
+<td>Key-value pairs of relative Markdown image paths and their image data. Values are Base64-encoded by default; returned as pre-signed URLs when URL-return mode is enabled. The field is <code>null</code> or omitted when <code>returnMarkdownImages</code> is <code>false</code> in the request.</td>
 </tr>
 </tbody>
 </table>
@@ -1406,6 +1413,12 @@ By default, there is no page limit. To set a page limit on the server, set <code
     <td><code>showFormulaNumber</code></td>
     <td><code>boolean</code></td>
     <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>returnMarkdownImages</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to return the images referenced in the Markdown (from <code>pages[].markdownImages</code> in the request). Default <code>true</code>; when set to <code>false</code>, <code>markdown.images</code> is <code>null</code> or omitted and the server does not back-fill it.</td>
     <td>No</td>
     </tr>
     <tr>
