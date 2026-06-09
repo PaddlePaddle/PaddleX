@@ -243,7 +243,7 @@ EXTRAS = {
             "vllm == 0.10.2",
         ],
         "paddle2onnx": [
-            "paddle2onnx == 2.1.0",
+            "paddle2onnx == 2.0.2rc3",
         ],
         "serving": [
             "aiohttp >= 3.9",
