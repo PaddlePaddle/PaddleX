@@ -1909,6 +1909,33 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv6_medium_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_detection/PP-OCRv6_medium_det.yaml">PP-OCRv6_medium_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_detection/PP-OCRv6_small_det.yaml">PP-OCRv6_small_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_detection/PP-OCRv6_tiny_det.yaml">PP-OCRv6_tiny_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+</tr>
+<tr>
 <td>PP-OCRv5_server_det</td>
 <td>83.8</td>
 <td>89.55 / 70.19</td>
@@ -2011,6 +2038,33 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <th>模型存储大小（MB）</th>
 <th>yaml 文件</th>
 <th>模型下载链接</th>
+</tr>
+<tr>
+<td>PP-OCRv6_medium_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_recognition/PP-OCRv6_medium_rec.yaml">PP-OCRv6_medium_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_recognition/PP-OCRv6_small_rec.yaml">PP-OCRv6_small_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_recognition/PP-OCRv6_tiny_rec.yaml">PP-OCRv6_tiny_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 </tr>
 <tr>
 <td>PP-OCRv5_server_rec</td>

@@ -2027,6 +2027,33 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <tbody>
 
 <tr>
+<td>PP-OCRv6_medium_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_detection/PP-OCRv6_medium_det.yaml">PP-OCRv6_medium_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_detection/PP-OCRv6_small_det.yaml">PP-OCRv6_small_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_det</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_detection/PP-OCRv6_tiny_det.yaml">PP-OCRv6_tiny_det.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+<tr>
 <td>PP-OCRv5_server_det</td>
 <td>83.8</td>
 <td>89.55 / 70.19</td>
@@ -2132,6 +2159,33 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <th>Model Download Link</th>
 </tr>
 
+<tr>
+<td>PP-OCRv6_medium_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_recognition/PP-OCRv6_medium_rec.yaml">PP-OCRv6_medium_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_recognition/PP-OCRv6_small_rec.yaml">PP-OCRv6_small_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_rec</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/modules/text_recognition/PP-OCRv6_tiny_rec.yaml">PP-OCRv6_tiny_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+</tr>
 <tr>
 <td>PP-OCRv5_server_rec</td>
 <td>86.38</td>
