@@ -51,7 +51,7 @@ packaging==24.2
     # via
     #   -c requirements/cpu.txt
     #   onnxruntime
-paddle2onnx==2.1.0
+paddle2onnx==2.0.2rc3
     # via -r requirements/cpu_hpi.in
 polygraphy==0.49.20
     # via paddle2onnx
