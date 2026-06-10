@@ -7,7 +7,7 @@ comments: true
 ## 1. Introduction to the OCR pipeline
 OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols.
 
-The General OCR pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This pipeline integrates the end-to-end OCR series systems, PP-OCRv5 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The pipeline also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for custom development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
+The General OCR pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This pipeline supports PP-OCRv3, PP-OCRv4, PP-OCRv5, and PP-OCRv6 models and recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The pipeline also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for custom development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png"/>
 
@@ -116,6 +116,33 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv6_medium_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>86.2*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>59.4</td>
+<td>PP-OCRv6 medium-scale text detection model based on PPLCNetV4 + RepLKFPN, highest accuracy, suitable for server deployment</td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>84.1*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>9.6</td>
+<td>PP-OCRv6 small text detection model, balancing accuracy and efficiency, suitable for mobile deployment</td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>80.6*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>1.9</td>
+<td>PP-OCRv6 ultra-lightweight text detection model (0.43M params), suitable for edge/IoT scenarios</td>
+</tr>
+<tr>
 <td>PP-OCRv5_server_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">Training Model</a></td>
 <td>83.8</td>
@@ -182,6 +209,31 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <th>Introduction</th>
 </tr>
 <tr>
+<td>PP-OCRv6_medium_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv6_medium_rec_pretrained.pdparams">Training Model</a></td>
+<td>83.2*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>73.3</td>
+<td rowspan="3">PP-OCRv6 text recognition models based on PPLCNetV4 + LightSVTR + CTC/NRTR multi-head decoder, single model supports 50 languages (tiny: 49)</td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv6_small_rec_pretrained.pdparams">Training Model</a></td>
+<td>81.3*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>20.4</td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv6_tiny_rec_pretrained.pdparams">Training Model</a></td>
+<td>73.5*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>4.4</td>
+</tr>
+<tr>
 <td>PP-OCRv5_server_rec</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>86.38</td>
@@ -241,6 +293,22 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 
 <details><summary> 👉Model List Details</summary>
 
+* <b>PP-OCRv6 Multi-Scenario Model</b>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Chinese Recognition Avg Accuracy (%)</th>
+<th>English Recognition Avg Accuracy (%)</th>
+<th>Traditional Chinese Recognition Avg Accuracy (%)</th>
+<th>Japanese Recognition Avg Accuracy (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (MB)</th>
+<th>Introduction</th>
+</tr>
+</table>
+
 * <b>PP-OCRv5 Multi-Scenario Model</b>
 
 <table>
@@ -254,6 +322,40 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (MB)</th>
 <th>Description</th>
+</tr>
+<tr>
+<td>PP-OCRv6_medium_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+<td rowspan="3">PP-OCRv6 text recognition models</td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>-</td>
 </tr>
 <tr>
 <td>PP-OCRv5_server_rec</td>
@@ -469,6 +571,51 @@ el_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-mo
 <td>-</td>
 <td>7.5</td>
 <td>The Greek recognition model trained based on the PP-OCRv5 recognition model supports recognition of Greek, English, and numbers.</td>
+</tr>
+<tr>
+<td>arabic_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/arabic_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/arabic_PP-OCRv5_mobile_rec_pretrained.pdparams">Pretrained Model</a></td>
+<td>81.27</td>
+<td>-</td>
+<td>-</td>
+<td>7.6</td>
+<td>Ultra-lightweight Arabic character recognition model trained based on the PP-OCRv5 recognition model, supports Arabic letters and number recognition</td>
+</tr>
+<tr>
+<td>cyrillic_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/cyrillic_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/cyrillic_PP-OCRv5_mobile_rec_pretrained.pdparams">Pretrained Model</a></td>
+<td>80.27</td>
+<td>-</td>
+<td>-</td>
+<td>7.7</td>
+<td>Ultra-lightweight Cyrillic character recognition model trained based on the PP-OCRv5 recognition model, supports Cyrillic letters and number recognition</td>
+</tr>
+<tr>
+<td>devanagari_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/devanagari_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/devanagari_PP-OCRv5_mobile_rec_pretrained.pdparams">Pretrained Model</a></td>
+<td>84.96</td>
+<td>-</td>
+<td>-</td>
+<td>7.5</td>
+<td>Ultra-lightweight Devanagari script recognition model trained based on the PP-OCRv5 recognition model, supports Hindi, Sanskrit and other Devanagari letters, as well as number recognition</td>
+</tr>
+<tr>
+<td>te_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/te_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/te_PP-OCRv5_mobile_rec_pretrained.pdparams">Pretrained Model</a></td>
+<td>87.65</td>
+<td>-</td>
+<td>-</td>
+<td>7.5</td>
+<td>Ultra-lightweight Telugu script recognition model trained based on the PP-OCRv5 recognition model, supports Telugu script and number recognition</td>
+</tr>
+<tr>
+<td>ta_PP-OCRv5_mobile_rec</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/ta_PP-OCRv5_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ta_PP-OCRv5_mobile_rec_pretrained.pdparams">Pretrained Model</a></td>
+<td>94.2</td>
+<td>-</td>
+<td>-</td>
+<td>7.5</td>
+<td>Ultra-lightweight Tamil script recognition model trained based on the PP-OCRv5 recognition model, supports Tamil script and number recognition</td>
 </tr>
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td>
@@ -1954,6 +2101,27 @@ In the above Python script, the following steps are executed:
 <td>None</td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/pipeline_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/pipeline_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -2370,7 +2538,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. By default, for PDF files exceeding 10 pages, only the first 10 pages will be processed.<br />
+<td>The URL of image files (including TIFF; multi-page TIFF is processed page by page) or PDF file accessible by the server, or the Base64-encoded content of the file. By default, for PDF or multi-page TIFF files exceeding 10 pages, only the first 10 pages will be processed.<br />
 To remove the page limit, please add the following configuration to the pipeline configuration file:
 <pre><code>Serving:
   extra:
@@ -2381,7 +2549,7 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>fileType</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>The type of the file. <code>0</code> for PDF files, <code>1</code> for image files. If this attribute is missing, the file type will be inferred from the URL.</td>
+<td>The type of the file. <code>0</code> for PDF files, <code>1</code> for image files (including TIFF). If this attribute is missing, the file type will be inferred from the URL.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -2439,6 +2607,12 @@ To remove the page limit, please add the following configuration to the pipeline
 <td>No</td>
 </tr>
 <tr>
+<td><code>returnWordBox</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>return_word_box</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>visualize</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>
@@ -2484,6 +2658,7 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 </tr>
 </tbody>
 </table>
+<p>Image fields in the element schema below (e.g. <code>ocrImage</code>, <code>docPreprocessingImage</code>, <code>inputImage</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Binary Content as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in <code>ocrResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
@@ -2502,17 +2677,17 @@ If neither the request body nor the configuration file is set (If <code>visualiz
 <tr>
 <td><code>ocrImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The OCR result image, which marks the detected text positions. The image is in JPEG format and encoded in Base64.</td>
+<td>The OCR result image, which marks the detected text positions. The image is in JPEG format and encoded in Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>docPreprocessingImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The visualization result image. The image is in JPEG format and encoded in Base64.</td>
+<td>The visualization result image. The image is in JPEG format and encoded in Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>The input image. The image is in JPEG format and encoded in Base64.</td>
+<td>The input image. The image is in JPEG format and encoded in Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>
@@ -2991,7 +3166,7 @@ SubPipelines:
 SubModules:
   TextDetection:
     module_name: text_detection
-    model_name: PP-OCRv5_mobile_det
+    model_name: PP-OCRv6_medium_det
     model_dir: null # Replace with the path to the fine-tuned text detection model weights.
     ...
   TextLineOrientation:
@@ -3001,7 +3176,7 @@ SubModules:
     batch_size: 1
   TextRecognition:
     module_name: text_recognition
-    model_name: PP-OCRv5_mobile_rec
+    model_name: PP-OCRv6_medium_rec
     model_dir: null  # Replace with the path to the fine-tuned text recognition model weights.
     batch_size: 1
 ```

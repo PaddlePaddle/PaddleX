@@ -268,3 +268,75 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "arabic_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "arabic_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "te_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "te_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "ta_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "ta_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "devanagari_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "devanagari_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "cyrillic_PP-OCRv5_mobile_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "cyrillic_PP-OCRv5_mobile_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv6_tiny_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv6_tiny_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv6_small_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv6_small_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv6_medium_rec",
+        "suite": "TextRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv6_medium_rec.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)

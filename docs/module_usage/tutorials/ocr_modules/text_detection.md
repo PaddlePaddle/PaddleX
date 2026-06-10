@@ -24,6 +24,33 @@ comments: true
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv6_medium_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+<td>86.2*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>60</td>
+<td>PP-OCRv6 的中等规模文本检测模型，基于 PPLCNetV4 + RepLKFPN，精度最高，适合服务端部署</td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+<td>84.1*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>9.6</td>
+<td>PP-OCRv6 的小型文本检测模型，兼顾精度与效率，适合移动端部署</td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+<td>80.6*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>1.9</td>
+<td>PP-OCRv6 的超轻量文本检测模型（0.43M 参数），适合端侧/IoT 场景</td>
+</tr>
+<tr>
 <td>PP-OCRv5_server_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">训练模型</a></td>
 <td>83.8</td>
@@ -79,6 +106,8 @@ comments: true
 </tr>
 </tbody>
 </table>
+
+> *注：PP-OCRv6 指标基于内部多场景评估集测得，PP-OCRv5/v4 指标基于通用评估集测得，两者评估集不同，指标不可直接对比。
 
 <strong>测试环境说明:</strong>
 
@@ -223,7 +252,6 @@ for res in output:
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
 <li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
 
-
 <td>None</td>
 </tr>
 <tr>
@@ -271,6 +299,27 @@ for res in output:
 <td>高性能推理配置</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>推理引擎</td>
+<td><code>str | None</code></td>
+<td>可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>推理引擎配置</td>
+<td><code>dict | None</code></td>
+<td>不同引擎支持不同字段，请参考<a href="../../instructions/model_python_API.md#4-推理引擎与配置">推理引擎与配置</a>。</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>用于改变运行模式等配置项</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>关于推理配置的详细说明，请参考<a href="../../instructions/model_python_API.md#5-兼容配置paddlepredictoroption">兼容配置（PaddlePredictorOption）</a>。</td>
 <td><code>None</code></td>
 </tr>
 </table>
@@ -330,7 +379,6 @@ for res in output:
 <ul>
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
 <li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -450,7 +498,6 @@ for res in output:
 <td rowspan="1">获取格式为<code>dict</code>的可视化图像</td>
 </tr>
 </table>
-
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考 [PaddleX单模型Python脚本使用说明](../../../module_usage/instructions/model_python_API.md)。
 
@@ -602,7 +649,6 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yam
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
 
-
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 <code>precision</code>、<code>recall</code>、<code>hmean</code>。</p></details>
@@ -628,7 +674,30 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yam
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
 
 * 也可以用 PaddleX 的 wheel 包进行推理，方便地将模型集成到您自己的项目中。
-#### 4.4.2 模型集成
+#### 4.4.2 权重转换
+
+本模块支持将 Paddle 动态图权重（`.pdparams`）转换为 `safetensors` 格式，方便在 PaddleX 的 `paddle_dynamic` 和 `transformers` 引擎中直接加载使用。支持权重转换的模型包括：`PP-OCRv5_mobile_det`、`PP-OCRv5_server_det`。
+
+* 通过命令行的方式进行权重转换，以 `PP-OCRv5_mobile_det` 模型为例：
+
+```bash
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* 参数说明：
+    * `Global.mode`：指定模式为权重转换：`pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`：输入的 `.pdparams` 权重文件路径（也可指定包含该文件的目录）
+    * `Pdparams2safetensors.output_dir`：转换后的 `safetensors` 格式模型输出目录
+
+转换完成后，输出目录中将包含 `model.safetensors`、`config.json`、`preprocess_config.json`、`inference.yml` 等文件，可直接用于推理。
+
+其他相关参数均可通过修改 `.yaml` 配置文件中的 `Pdparams2safetensors` 下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+
+#### 4.4.3 模型集成
+
 模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
 
 1.<b>产线集成</b>

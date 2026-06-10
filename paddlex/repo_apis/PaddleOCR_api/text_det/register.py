@@ -105,3 +105,30 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv6_tiny_det",
+        "suite": "TextDet",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv6_tiny_det.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv6_small_det",
+        "suite": "TextDet",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv6_small_det.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-OCRv6_medium_det",
+        "suite": "TextDet",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-OCRv6_medium_det.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)

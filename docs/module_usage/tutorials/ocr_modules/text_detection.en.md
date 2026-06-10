@@ -24,6 +24,33 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv6_medium_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>86.2*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>59.4</td>
+<td>PP-OCRv6 medium-scale text detection model based on PPLCNetV4 + RepLKFPN, highest accuracy, suitable for server deployment</td>
+</tr>
+<tr>
+<td>PP-OCRv6_small_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>84.1*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>9.6</td>
+<td>PP-OCRv6 small text detection model, balancing accuracy and efficiency, suitable for mobile deployment</td>
+</tr>
+<tr>
+<td>PP-OCRv6_tiny_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>80.6*</td>
+<td>- / -</td>
+<td>- / -</td>
+<td>1.9</td>
+<td>PP-OCRv6 ultra-lightweight text detection model (0.43M params), suitable for edge/IoT scenarios</td>
+</tr>
+<tr>
 <td>PP-OCRv5_server_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv5_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv5_server_det_pretrained.pdparams">Training Model</a></td>
 <td>83.8</td>
@@ -226,7 +253,6 @@ Relevant methods, parameters, and explanations are as follows:
 <li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
 <li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
 
-
 <td>None</td>
 </tr>
 <tr>
@@ -274,6 +300,27 @@ Relevant methods, parameters, and explanations are as follows:
 <td>High-performance inference configuration</td>
 <td><code>dict</code> | <code>None</code></td>
 <td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>Inference engine</td>
+<td><code>str | None</code></td>
+<td>Optional <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>engine_config</code></td>
+<td>Inference engine configuration</td>
+<td><code>dict | None</code></td>
+<td>Different engines support different fields, please refer to <a href="../../instructions/model_python_API.en.md#4-inference-engine-and-configuration">Inference Engine and Configuration</a>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>pp_option</code></td>
+<td>Used for changing runtime mode and other configuration items</td>
+<td><code>PaddlePredictorOption</code></td>
+<td>For detailed inference configuration, please refer to <a href="../../instructions/model_python_API.en.md#5-compatibility-configuration-paddlepredictoroption">Compatible Configuration (PaddlePredictorOption)</a>.</td>
 <td><code>None</code></td>
 </tr>
 </table>
@@ -333,7 +380,6 @@ Relevant methods, parameters, and explanations are as follows:
 <ul>
 <li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
 <li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
-
 
 <td>None</td>
 </tr>
@@ -635,7 +681,30 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 * Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
 
-#### 4.4.2 Model Integration
+#### 4.4.2 Weight Conversion
+
+This module supports converting Paddle dynamic graph weights (`.pdparams`) to `safetensors` format for direct use with PaddleX's `paddle_dynamic` and `transformers` engines. Models supporting weight conversion in this module: `PP-OCRv5_mobile_det`, `PP-OCRv5_server_det`.
+
+* To perform weight conversion via command line, taking `PP-OCRv5_mobile_det` as an example:
+
+```bash
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv5_mobile_det.yaml \
+    -o Global.mode=pdparams2safetensors \
+    -o Pdparams2safetensors.input_path=./path/to/model.pdparams \
+    -o Pdparams2safetensors.output_dir=./output/safetensors/
+```
+
+* Parameter description:
+    * `Global.mode`: Set the mode to weight conversion: `pdparams2safetensors`
+    * `Pdparams2safetensors.input_path`: Path to the input `.pdparams` weight file (or a directory containing one)
+    * `Pdparams2safetensors.output_dir`: Output directory for the converted `safetensors` model
+
+After conversion, the output directory will contain `model.safetensors`, `config.json`, `preprocess_config.json`, `inference.yml`, and other files ready for inference.
+
+For other related parameters, please refer to [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+
+#### 4.4.3 Model Integration
+
 Models can be directly integrated into PaddleX pipelines or into your own projects.
 
 1.<b>Pipeline Integration</b>
