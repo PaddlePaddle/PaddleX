@@ -7340,13 +7340,13 @@ In short, just three steps:</p>
 <h2 id="ii-api-description">II. API Description<a class="headerlink" href="#ii-api-description" title="Permanent link">&para;</a></h2>
 <h3 id="1-instantiate-the-prediction-model-object-by-calling-the-create_model-method">1. Instantiate the Prediction Model Object by Calling the <code>create_model()</code> Method<a class="headerlink" href="#1-instantiate-the-prediction-model-object-by-calling-the-create_model-method" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>create_model</code>: Instantiate the prediction model object;</li>
+<li><code>create_model</code>: Instantiate the prediction model object;<ul>
 <li>Parameters:<ul>
 <li><code>model_name</code>: <code>str</code> type, model name, such as "PP-LCNet_x1_0", "/path/to/PP-LCNet_x1_0_infer/";</li>
 <li><code>model_dir</code>: <code>str | None</code> type, local path to directory of inference model files ，such as "/path/to/PP-LCNet_x1_0_infer/", default to <code>None</code>, means that use the official model specified by <code>model_name</code>;</li>
 <li><code>batch_size</code>: <code>int</code> type, default to <code>1</code>;</li>
 <li><code>device</code>: <code>str</code> type, used to set the inference device, such as "cpu", "gpu:2" for GPU settings. By default, using 0 id GPU if available, otherwise CPU;</li>
-<li><code>engine</code>: <code>str | None</code> type, inference engine. Available values: <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>genai_client</code>. Default is <code>None</code>, which is auto-resolved and is typically equivalent to <code>paddle</code>;</li>
+<li><code>engine</code>: <code>str | None</code> type, inference engine. Available values: <code>paddle</code>, <code>paddle_static</code>, <code>paddle_dynamic</code>, <code>hpi</code>, <code>flexible</code>, <code>transformers</code>, <code>onnxruntime</code>, <code>genai_client</code>. Default is <code>None</code>, which is auto-resolved and is typically equivalent to <code>paddle</code>;</li>
 <li><code>engine_config</code>: <code>dict | None</code> type, engine-specific configuration. See <a href="#4-inference-engine-and-configuration">4-Inference Engine and Configuration</a>;</li>
 <li><code>pp_option</code>: <code>PaddlePredictorOption</code> type, used to change inference settings (e.g. the operating mode). See "5. Compatibility Configuration (<code>PaddlePredictorOption</code>)" for details;</li>
 <li><code>use_hpip</code>: <code>bool</code> type, whether to enable the high-performance inference plugin (effective only when <code>engine=None</code>);</li>
@@ -7356,32 +7356,44 @@ In short, just three steps:</p>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <h3 id="2-perform-inference-prediction-by-calling-the-predict-method-of-the-prediction-model-object">2. Perform Inference Prediction by Calling the <code>predict()</code> Method of the Prediction Model Object<a class="headerlink" href="#2-perform-inference-prediction-by-calling-the-predict-method-of-the-prediction-model-object" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>predict</code>: Use the defined prediction model to predict the input data;</li>
+<li><code>predict</code>: Use the defined prediction model to predict the input data;<ul>
 <li>Parameters:<ul>
 <li><code>input</code>: Any type, supports str type representing the path of the file to be predicted, or a directory containing files to be predicted, or a network URL; for CV models, supports numpy.ndarray representing image data; for TS models, supports pandas.DataFrame type data; also supports list types composed of the above types;</li>
 </ul>
 </li>
 <li>Return Value: <code>generator</code>, using <code>for-in</code> or <code>next()</code> to iterate, and the prediction result of one sample would be returned per call.</li>
 </ul>
+</li>
+</ul>
 <h3 id="3-visualize-the-prediction-results">3. Visualize the Prediction Results<a class="headerlink" href="#3-visualize-the-prediction-results" title="Permanent link">&para;</a></h3>
 <p>The prediction results support to be accessed, visualized, and saved, which can be achieved through corresponding attributes or methods, specifically as follows:</p>
 <h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
 <ul>
-<li><code>str</code>: Representation of the prediction result in <code>str</code> type;</li>
+<li><code>str</code>: Representation of the prediction result in <code>str</code> type;<ul>
 <li>Returns: A <code>str</code> type, the string representation of the prediction result.</li>
-<li><code>json</code>: The prediction result in JSON format;</li>
+</ul>
+</li>
+<li><code>json</code>: The prediction result in JSON format;<ul>
 <li>Returns: A <code>dict</code> type.</li>
-<li><code>img</code>: The visualization image of the prediction result. Available only when the results support visual representation;</li>
+</ul>
+</li>
+<li><code>img</code>: The visualization image of the prediction result. Available only when the results support visual representation;<ul>
 <li>Returns: A <code>PIL.Image</code> type.</li>
-<li><code>html</code>: The HTML representation of the prediction result. Available only when the results support representation in HTML format;</li>
+</ul>
+</li>
+<li><code>html</code>: The HTML representation of the prediction result. Available only when the results support representation in HTML format;<ul>
 <li>Returns: A <code>str</code> type.</li>
+</ul>
+</li>
 <li><em><code>more attrs</code></em>: The prediction result of different models support different representation methods. Please refer to the specific model tutorial documentation for details.</li>
 </ul>
 <h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
 <ul>
-<li><code>print()</code>: Outputs the prediction result. Note that when the prediction result is not convenient for direct output, relevant content will be omitted;</li>
+<li><code>print()</code>: Outputs the prediction result. Note that when the prediction result is not convenient for direct output, relevant content will be omitted;<ul>
 <li>Parameters:<ul>
 <li><code>json_format</code>: <code>bool</code> type, default is <code>False</code>, indicating that json formatting is not used;</li>
 <li><code>indent</code>: <code>int</code> type, default is <code>4</code>, valid when <code>json_format</code> is <code>True</code>, indicating the indentation level for json formatting;</li>
@@ -7389,7 +7401,9 @@ In short, just three steps:</p>
 </ul>
 </li>
 <li>Return Value: None;</li>
-<li><code>save_to_json()</code>: Saves the prediction result as a JSON file. Note that when the prediction result contains data that cannot be serialized in JSON, automatic format conversion will be performed to achieve serialization and saving;</li>
+</ul>
+</li>
+<li><code>save_to_json()</code>: Saves the prediction result as a JSON file. Note that when the prediction result contains data that cannot be serialized in JSON, automatic format conversion will be performed to achieve serialization and saving;<ul>
 <li>Parameters:<ul>
 <li><code>save_path</code>: <code>str</code> type, the path to save the result;</li>
 <li><code>indent</code>: <code>int</code> type, default is <code>4</code>, valid when <code>json_format</code> is <code>True</code>, indicating the indentation level for json formatting;</li>
@@ -7397,30 +7411,40 @@ In short, just three steps:</p>
 </ul>
 </li>
 <li>Return Value: None;</li>
-<li><code>save_to_img()</code>: Visualizes the prediction result and saves it as an image. Available only when the results support representation in the form of images;</li>
+</ul>
+</li>
+<li><code>save_to_img()</code>: Visualizes the prediction result and saves it as an image. Available only when the results support representation in the form of images;<ul>
 <li>Parameters:<ul>
 <li><code>save_path</code>: <code>str</code> type, the path to save the result.</li>
 </ul>
 </li>
 <li>Returns: None.</li>
-<li><code>save_to_csv()</code>: Saves the prediction result as a CSV file. Available only when the results support representation in CSV format;</li>
+</ul>
+</li>
+<li><code>save_to_csv()</code>: Saves the prediction result as a CSV file. Available only when the results support representation in CSV format;<ul>
 <li>Parameters:<ul>
 <li><code>save_path</code>: <code>str</code> type, the path to save the result.</li>
 </ul>
 </li>
 <li>Returns: None.</li>
-<li><code>save_to_html()</code>: Saves the prediction result as an HTML file. Available only when the results support representation in HTML format;</li>
+</ul>
+</li>
+<li><code>save_to_html()</code>: Saves the prediction result as an HTML file. Available only when the results support representation in HTML format;<ul>
 <li>Parameters:<ul>
 <li><code>save_path</code>: <code>str</code> type, the path to save the result.</li>
 </ul>
 </li>
 <li>Returns: None.</li>
-<li><code>save_to_xlsx()</code>: Saves the prediction result as an XLSX file. Available only when the results support representation in XLSX format;</li>
+</ul>
+</li>
+<li><code>save_to_xlsx()</code>: Saves the prediction result as an XLSX file. Available only when the results support representation in XLSX format;<ul>
 <li>Parameters:<ul>
 <li><code>save_path</code>: <code>str</code> type, the path to save the result.</li>
 </ul>
 </li>
 <li>Returns: None.</li>
+</ul>
+</li>
 </ul>
 <h3 id="4-inference-engine-and-configuration">4. Inference Engine and Configuration<a class="headerlink" href="#4-inference-engine-and-configuration" title="Permanent link">&para;</a></h3>
 <p>PaddleX now supports unified inference configuration via <code>engine</code> + <code>engine_config</code>. This is the recommended way for new code.</p>
@@ -7431,16 +7455,19 @@ In short, just three steps:</p>
 <li><code>paddle_dynamic</code>: Paddle dynamic graph engine;</li>
 <li><code>hpi</code>: High-performance inference plugin;</li>
 <li><code>flexible</code>: Flexible runtime engine;</li>
-<li><code>transformers</code>: Hugging Face Transformers-based engine;</li>
+<li><code>transformers</code>: Hugging Face Transformers engine;</li>
+<li><code>onnxruntime</code>: ONNX Runtime engine;</li>
 <li><code>genai_client</code>: Client engine for remote generative AI services.</li>
 </ul>
 <h4 id="42-priority-rules">4.2 Priority Rules<a class="headerlink" href="#42-priority-rules" title="Permanent link">&para;</a></h4>
 <ul>
-<li>When <code>engine=None</code>, PaddleX resolves the final engine in the following order:</li>
+<li>When <code>engine=None</code>, PaddleX resolves the final engine in the following order:<ul>
 <li>If <code>genai_config.backend</code> is a server backend (such as <code>fastdeploy-server</code>, <code>vllm-server</code>, <code>sglang-server</code>, <code>mlx-vlm-server</code>, or <code>llama-cpp-server</code>), it resolves to <code>genai_client</code>;</li>
 <li>Otherwise, if <code>use_hpip=True</code>, it resolves to <code>hpi</code>;</li>
 <li>Otherwise, if the model only supports <code>flexible</code>, it resolves to <code>flexible</code>;</li>
 <li>Otherwise, it is equivalent to <code>paddle</code>; if <code>model_dir</code> is provided, it is resolved to <code>paddle_static</code> or <code>paddle_dynamic</code> based on local model files; otherwise it is resolved from model support, preferring <code>paddle_static</code>;</li>
+</ul>
+</li>
 <li>If <code>engine</code> is explicitly provided, <code>use_hpip</code> is ignored;</li>
 <li>If <code>engine_config</code> is explicitly provided, <code>pp_option</code>, <code>hpi_config</code>, and <code>genai_config</code> are compatibility options and will be ignored;</li>
 <li>Prefer using only <code>engine</code> + <code>engine_config</code> to avoid ambiguity.</li>
@@ -7466,7 +7493,7 @@ In short, just three steps:</p>
 <h4 id="44-engine_config-fields-by-engine">4.4 <code>engine_config</code> Fields by Engine<a class="headerlink" href="#44-engine_config-fields-by-engine" title="Permanent link">&para;</a></h4>
 <p>The following field sets are based on the current code implementation (with meanings):</p>
 <ul>
-<li><code>paddle_static</code>:</li>
+<li><code>paddle_static</code>:<ul>
 <li><code>run_mode</code>: execution mode (for example, <code>paddle</code>, <code>trt_fp32</code>, <code>trt_fp16</code>, <code>mkldnn</code>);</li>
 <li><code>device_type</code> / <code>device_id</code>: target device type and device index;</li>
 <li><code>cpu_threads</code>: number of CPU inference threads;</li>
@@ -7482,9 +7509,13 @@ In short, just three steps:</p>
 <li><code>trt_shape_range_info_path</code>: path to the shape range info file;</li>
 <li><code>trt_allow_rebuild_at_runtime</code>: whether TensorRT engine rebuild is allowed at runtime;</li>
 <li><code>mkldnn_cache_capacity</code>: oneDNN (MKLDNN) cache capacity.</li>
-<li><code>paddle_dynamic</code>:</li>
+</ul>
+</li>
+<li><code>paddle_dynamic</code>:<ul>
 <li><code>device_type</code> / <code>device_id</code>: device placement for dynamic graph execution.</li>
-<li><code>hpi</code>:</li>
+</ul>
+</li>
+<li><code>hpi</code>:<ul>
 <li><code>model_name</code>: model name (usually auto-injected internally);</li>
 <li><code>device_type</code> / <code>device_id</code>: target device and device index;</li>
 <li><code>auto_config</code>: whether backend and default config are selected automatically;</li>
@@ -7492,7 +7523,9 @@ In short, just three steps:</p>
 <li><code>backend_config</code>: backend-specific options (for example, <code>run_mode</code>, TensorRT precision);</li>
 <li><code>hpi_info</code>: model-level prior metadata (for example, candidate dynamic shapes);</li>
 <li><code>auto_paddle2onnx</code>: whether to auto-convert Paddle model to ONNX when needed.</li>
-<li><code>transformers</code>:</li>
+</ul>
+</li>
+<li><code>transformers</code>:<ul>
 <li><code>dtype</code>: model/inference precision dtype;</li>
 <li><code>device_type</code> / <code>device_id</code>: inference device type and device index;</li>
 <li><code>trust_remote_code</code>: whether to trust and execute remote custom code from model repos;</li>
@@ -7501,13 +7534,33 @@ In short, just three steps:</p>
 <li><code>model_kwargs</code>: extra kwargs passed to model loading;</li>
 <li><code>processor_kwargs</code>: extra kwargs passed to processor / image processor loading;</li>
 <li><code>tokenizer_kwargs</code>: compatibility kwargs that are merged with <code>processor_kwargs</code>.</li>
-<li><code>genai_client</code>:</li>
+</ul>
+</li>
+<li><code>onnxruntime</code>:<ul>
+<li><code>device_type</code> / <code>device_id</code>: inference device type and device index;</li>
+<li><code>providers</code>: list of execution providers (e.g., <code>CUDAExecutionProvider</code>, <code>CPUExecutionProvider</code>);</li>
+<li><code>provider_options</code>: provider-specific configuration;</li>
+<li><code>graph_optimization_level</code>: graph optimization level;</li>
+<li><code>intra_op_num_threads</code>: number of intra-op threads;</li>
+<li><code>inter_op_num_threads</code>: number of inter-op threads;</li>
+<li><code>execution_mode</code>: execution mode (e.g., <code>sequential</code>, <code>parallel</code>);</li>
+<li><code>log_severity_level</code>: log severity level;</li>
+<li><code>enable_mem_pattern</code>: whether to enable memory pattern;</li>
+<li><code>enable_cpu_mem_arena</code>: whether to enable CPU memory arena;</li>
+<li><code>session_options</code>: ONNX Runtime session options.</li>
+</ul>
+</li>
+<li><code>genai_client</code>:<ul>
 <li><code>backend</code>: remote service backend type;</li>
 <li><code>server_url</code>: service endpoint (required for server backends);</li>
 <li><code>max_concurrency</code>: client-side max concurrent requests;</li>
 <li><code>client_kwargs</code>: extra kwargs passed to the OpenAI-compatible client.</li>
-<li><code>flexible</code>:</li>
+</ul>
+</li>
+<li><code>flexible</code>:<ul>
 <li>No fixed schema; fields are model-specific.</li>
+</ul>
+</li>
 </ul>
 <blockquote>
 <p>Notes:
@@ -7518,12 +7571,14 @@ In short, just three steps:</p>
 <p><code>PaddlePredictorOption</code> is kept for backward compatibility. For new code, prefer <code>engine_config</code>.</p>
 <ul>
 <li>Effective scope: mainly compatibility settings for <code>engine="paddle_static"</code>;</li>
-<li>Common fields:</li>
+<li>Common fields:<ul>
 <li><code>run_mode</code>: execution mode (for example, <code>paddle</code>, <code>trt_fp32</code>, <code>trt_fp16</code>, <code>mkldnn</code>);</li>
 <li><code>device</code>: inference device (for example, <code>cpu</code>, <code>gpu:0</code>);</li>
 <li><code>cpu_threads</code>: CPU inference thread count;</li>
 <li><code>trt_dynamic_shapes</code>: TensorRT dynamic shape configuration;</li>
 <li><code>trt_dynamic_shape_input_data</code>: input fill data used for dynamic-shape collection.</li>
+</ul>
+</li>
 <li>Migration tip: if both <code>engine_config</code> and <code>pp_option</code> are provided, <code>engine_config</code> takes precedence. Prefer migrating to <code>engine + engine_config</code>.</li>
 </ul>
 
@@ -7548,7 +7603,7 @@ In short, just three steps:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 10, 2026 10:57:23 UTC">June 10, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 11, 2026 09:46:05 UTC">June 11, 2026</span>
   </span>
 
     
@@ -7558,7 +7613,7 @@ In short, just three steps:</p>
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 10, 2026 10:57:23 UTC">June 10, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 11, 2026 09:46:05 UTC">June 11, 2026</span>
   </span>
 
     
@@ -7573,7 +7628,7 @@ In short, just three steps:</p>
     </span>
     <nav>
       
-        <a href="mailto:weixin_46524038@noreply.gitcode.com">weixin_46524038</a>
+        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
     </nav>
   </span>
 

@@ -7296,7 +7296,7 @@ You're not viewing the latest version.
 <ul>
 <li><code>pipeline</code>：模型产线名称或是模型产线配置文件的本地路径，如模型产线名 “image_classification”，或模型产线配置文件路径 “path/to/image_classification.yaml”；</li>
 <li><code>input</code>：待预测数据文件路径，支持本地文件路径、包含待预测数据文件的本地目录、文件URL链接；</li>
-<li><code>engine</code>：推理引擎，可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>；</li>
+<li><code>engine</code>：推理引擎，可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>onnxruntime</code>、<code>genai_client</code>；</li>
 <li><code>device</code>：用于设置模型推理设备，如为GPU则可以指定卡号，如 “cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；</li>
 <li><code>save_path</code>：预测结果的保存路径，默认情况下，不保存预测结果；</li>
 <li><code>use_hpip</code>：启用高性能推理插件；</li>
@@ -7390,6 +7390,7 @@ You're not viewing the latest version.
 <li><code>paddle_dynamic</code>：<code>device_type/device_id</code>（动态图执行设备）；</li>
 <li><code>hpi</code>：<code>model_name</code>（一般自动注入）、<code>device_type/device_id</code>、<code>auto_config</code>（自动选后端）、<code>backend</code>（指定后端）、<code>backend_config</code>（后端参数）、<code>hpi_info</code>（模型先验信息）、<code>auto_paddle2onnx</code>（自动 Paddle2ONNX）；</li>
 <li><code>transformers</code>：<code>dtype</code>（精度）、<code>device_map</code>（设备映射）、<code>trust_remote_code</code>（是否信任远程代码）、<code>attn_implementation</code>（注意力实现）、<code>generation_config</code>（生成参数）、<code>model_kwargs</code>、<code>tokenizer_kwargs</code>；</li>
+<li><code>onnxruntime</code>：<code>device_type/device_id</code>（设备）、<code>providers</code>（执行提供者列表）、<code>provider_options</code>（提供者专属配置）、<code>graph_optimization_level</code>（图优化级别）、<code>intra_op_num_threads</code>（节点内线程数）、<code>inter_op_num_threads</code>（节点间线程数）、<code>execution_mode</code>（执行模式）、<code>log_severity_level</code>（日志严重级别）、<code>enable_mem_pattern</code>（是否启用内存模式）、<code>enable_cpu_mem_arena</code>（是否启用 CPU 内存池）、<code>session_options</code>（ONNX Runtime 会话选项）；</li>
 <li><code>genai_client</code>：<code>backend</code>（服务后端）、<code>server_url</code>（服务地址）、<code>max_concurrency</code>（并发上限）、<code>client_kwargs</code>（客户端透传参数）；</li>
 <li><code>flexible</code>：无固定字段约束。</li>
 </ul>
@@ -7409,6 +7410,7 @@ You're not viewing the latest version.
 <p>以下场景可在未安装 PaddlePaddle 时运行（前提是模型和依赖已满足）：</p>
 <ul>
 <li>使用 <code>transformers</code> 引擎；</li>
+<li>使用 <code>onnxruntime</code> 引擎；</li>
 </ul>
 <blockquote>
 <p>注意：若产线中任一模块最终走 <code>paddle</code> / <code>hpi</code> 引擎，仍需安装 PaddlePaddle；使用 <code>flexible</code> 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。</p>
@@ -7435,7 +7437,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月10日 10:57:23 UTC">2026年6月10日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月11日 09:46:05 UTC">2026年6月11日</span>
   </span>
 
     
@@ -7445,7 +7447,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月10日 10:57:23 UTC">2026年6月10日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月11日 09:46:05 UTC">2026年6月11日</span>
   </span>
 
     
@@ -7460,7 +7462,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:weixin_46524038@noreply.gitcode.com">weixin_46524038</a>
+        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
     </nav>
   </span>
 

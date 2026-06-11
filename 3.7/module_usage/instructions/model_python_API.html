@@ -7340,13 +7340,13 @@ You're not viewing the latest version.
 <h2 id="api">二、API说明<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
 <h3 id="1-create_model">1. 调用<code>create_model()</code>方法实例化预测模型对象<a class="headerlink" href="#1-create_model" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>create_model</code>：实例化预测模型对象；</li>
+<li><code>create_model</code>：实例化预测模型对象；<ul>
 <li>参数：<ul>
 <li><code>model_name</code>：<code>str</code> 类型，模型名，如“PP-LCNet_x1_0”；</li>
 <li><code>model_dir</code>：<code>str | None</code> 类型，本地 inference 模型文件目录路径，如“/path/to/PP-LCNet_x1_0_infer/”，默认为 <code>None</code>，表示使用<code>model_name</code>指定的官方推理模型或不使用本地模型；</li>
 <li><code>batch_size</code>：<code>int</code> 类型，默认为 <code>1</code>；</li>
 <li><code>device</code>：<code>str</code> 类型，用于设置模型推理设备，如为GPU设置则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；</li>
-<li><code>engine</code>：<code>str | None</code> 类型，推理引擎，可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>genai_client</code>。默认为 <code>None</code>，会根据配置自动解析，常见情况下等价于 <code>paddle</code>；</li>
+<li><code>engine</code>：<code>str | None</code> 类型，推理引擎，可选 <code>paddle</code>、<code>paddle_static</code>、<code>paddle_dynamic</code>、<code>hpi</code>、<code>flexible</code>、<code>transformers</code>、<code>onnxruntime</code>、<code>genai_client</code>。默认为 <code>None</code>，会根据配置自动解析，常见情况下等价于 <code>paddle</code>；</li>
 <li><code>engine_config</code>：<code>dict | None</code> 类型，推理引擎配置。不同引擎支持不同字段，详见下文<a href="#4-推理引擎与配置">4-推理引擎与配置</a>；</li>
 <li><code>pp_option</code>：<code>PaddlePredictorOption</code> 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文<a href="#5-兼容配置paddlepredictoroption">5-兼容配置（PaddlePredictorOption）</a>；</li>
 <li><code>use_hpip</code>：<code>bool</code> 类型，是否启用高性能推理插件（仅在 <code>engine=None</code> 时生效）；</li>
@@ -7356,32 +7356,44 @@ You're not viewing the latest version.
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <h3 id="2-predict">2. 调用预测模型对象的<code>predict()</code>方法进行推理预测<a class="headerlink" href="#2-predict" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>predict</code>：使用定义的预测模型，对输入数据进行预测；</li>
+<li><code>predict</code>：使用定义的预测模型，对输入数据进行预测；<ul>
 <li>参数：<ul>
 <li><code>input</code>：任意类型，支持str类型表示的待预测数据文件路径，或是包含待预测文件的目录，或是网络URL；对于CV模型，支持numpy.ndarray表示的图像数据；对于TS模型，支持pandas.DataFrame类型数据；同样支持上述类型所构成的list类型；</li>
 </ul>
 </li>
 <li>返回值：<code>generator</code>，需通过<code>for-in</code>或<code>next()</code>方式进行遍历，每次访问返回一个样本的预测结果；</li>
 </ul>
+</li>
+</ul>
 <h3 id="3">3. 对预测结果进行可视化<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
 <p>模型的预测结果支持直接访问与保存等操作，可通过相应的属性或方法实现，具体如下：</p>
 <h4 id="_2">属性：<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
 <ul>
-<li><code>str</code>：<code>str</code> 类型表示的预测结果；</li>
+<li><code>str</code>：<code>str</code> 类型表示的预测结果；<ul>
 <li>返回值：<code>str</code> 类型，预测结果的str表示；</li>
-<li><code>json</code>：json格式表示的预测结果；</li>
+</ul>
+</li>
+<li><code>json</code>：json格式表示的预测结果；<ul>
 <li>返回值：<code>dict</code> 类型；</li>
-<li><code>img</code>：预测结果的可视化图，仅当该模型预测结果支持可视化表示时可用；</li>
+</ul>
+</li>
+<li><code>img</code>：预测结果的可视化图，仅当该模型预测结果支持可视化表示时可用；<ul>
 <li>返回值：<code>PIL.Image</code> 类型；</li>
-<li><code>html</code>：预测结果的HTML表示，仅当该模型预测结果支持以HTML形式表示时可用；</li>
+</ul>
+</li>
+<li><code>html</code>：预测结果的HTML表示，仅当该模型预测结果支持以HTML形式表示时可用；<ul>
 <li>返回值：<code>str</code> 类型；</li>
+</ul>
+</li>
 <li><em><code>更多</code></em>：不同模型的预测结果支持不同的表示方式，更多属性请参考具体模型文档；</li>
 </ul>
 <h4 id="_3">方法：<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h4>
 <ul>
-<li><code>print()</code>：将预测结果输出，需要注意，当预测结果不便于直接输出时，会省略相关内容；</li>
+<li><code>print()</code>：将预测结果输出，需要注意，当预测结果不便于直接输出时，会省略相关内容；<ul>
 <li>参数：<ul>
 <li><code>json_format</code>：<code>bool</code>类型，默认为<code>False</code>，表示不使用json格式化输出；</li>
 <li><code>indent</code>：<code>int</code>类型，默认为<code>4</code>，当<code>json_format</code>为<code>True</code>时有效，表示json格式化的类型；</li>
@@ -7389,7 +7401,9 @@ You're not viewing the latest version.
 </ul>
 </li>
 <li>返回值：无；</li>
-<li><code>save_to_json()</code>：将预测结果保存为json格式的文件，需要注意，当预测结果包含无法json序列化的数据时，会自动进行格式转换以实现序列化保存；</li>
+</ul>
+</li>
+<li><code>save_to_json()</code>：将预测结果保存为json格式的文件，需要注意，当预测结果包含无法json序列化的数据时，会自动进行格式转换以实现序列化保存；<ul>
 <li>参数：<ul>
 <li><code>save_path</code>：<code>str</code>类型，结果保存的路径；</li>
 <li><code>indent</code>：<code>int</code>类型，默认为<code>4</code>，当<code>json_format</code>为<code>True</code>时有效，表示json格式化的类型；</li>
@@ -7397,30 +7411,40 @@ You're not viewing the latest version.
 </ul>
 </li>
 <li>返回值：无；</li>
-<li><code>save_to_img()</code>：将预测结果可视化并保存为图像，仅当该模型预测结果支持以图像形式表示时可用；</li>
+</ul>
+</li>
+<li><code>save_to_img()</code>：将预测结果可视化并保存为图像，仅当该模型预测结果支持以图像形式表示时可用；<ul>
 <li>参数：<ul>
 <li><code>save_path</code>：<code>str</code>类型，结果保存的路径；</li>
 </ul>
 </li>
 <li>返回值：无；</li>
-<li><code>save_to_csv()</code>：将预测结果保存为CSV文件，仅当该模型预测结果支持以CSV形式表示时可用；</li>
+</ul>
+</li>
+<li><code>save_to_csv()</code>：将预测结果保存为CSV文件，仅当该模型预测结果支持以CSV形式表示时可用；<ul>
 <li>参数：<ul>
 <li><code>save_path</code>：<code>str</code>类型，结果保存的路径；</li>
 </ul>
 </li>
 <li>返回值：无；</li>
-<li><code>save_to_html()</code>：将预测结果保存为HTML文件，仅当该模型预测结果支持以HTML形式表示时可用；</li>
+</ul>
+</li>
+<li><code>save_to_html()</code>：将预测结果保存为HTML文件，仅当该模型预测结果支持以HTML形式表示时可用；<ul>
 <li>参数：<ul>
 <li><code>save_path</code>：<code>str</code>类型，结果保存的路径；</li>
 </ul>
 </li>
 <li>返回值：无；</li>
-<li><code>save_to_xlsx()</code>：将预测结果保存为XLSX文件，仅当该模型预测结果支持以XLSX形式表示时可用；</li>
+</ul>
+</li>
+<li><code>save_to_xlsx()</code>：将预测结果保存为XLSX文件，仅当该模型预测结果支持以XLSX形式表示时可用；<ul>
 <li>参数：<ul>
 <li><code>save_path</code>：<code>str</code>类型，结果保存的路径；</li>
 </ul>
 </li>
 <li>返回值：无；</li>
+</ul>
+</li>
 <li><em><code>更多</code></em>：不同模型的预测结果支持不同的存储方式，更多方法请参考具体模型文档；</li>
 </ul>
 <h3 id="4">4. 推理引擎与配置<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
@@ -7432,16 +7456,19 @@ You're not viewing the latest version.
 <li><code>paddle_dynamic</code>：Paddle 动态图推理；</li>
 <li><code>hpi</code>：高性能推理插件；</li>
 <li><code>flexible</code>：灵活运行时引擎；</li>
-<li><code>transformers</code>：基于 Hugging Face Transformers 的推理引擎；</li>
+<li><code>transformers</code>：Hugging Face Transformers 推理引擎；</li>
+<li><code>onnxruntime</code>：ONNX Runtime 推理引擎；</li>
 <li><code>genai_client</code>：调用外部生成式 AI 服务的客户端引擎。</li>
 </ul>
 <h4 id="42">4.2 配置优先级<a class="headerlink" href="#42" title="Permanent link">&para;</a></h4>
 <ul>
-<li>当 <code>engine=None</code> 时，会按以下顺序自动解析最终引擎：</li>
+<li>当 <code>engine=None</code> 时，会按以下顺序自动解析最终引擎：<ul>
 <li>若 <code>genai_config.backend</code> 指向服务器后端（如 <code>fastdeploy-server</code>、<code>vllm-server</code>、<code>sglang-server</code>、<code>mlx-vlm-server</code>、<code>llama-cpp-server</code>），则解析为 <code>genai_client</code>；</li>
 <li>否则，若 <code>use_hpip=True</code>，则优先解析为 <code>hpi</code>；</li>
 <li>否则，若该模型仅支持 <code>flexible</code>，则解析为 <code>flexible</code>；</li>
 <li>否则，等价于 <code>paddle</code>；若传入 <code>model_dir</code>，则根据本地模型文件解析为 <code>paddle_static</code> 或 <code>paddle_dynamic</code>；否则根据模型支持情况自动选择，优先 <code>paddle_static</code>；</li>
+</ul>
+</li>
 <li>当显式传入 <code>engine</code> 时，<code>use_hpip</code> 不再生效；</li>
 <li>当显式传入 <code>engine_config</code> 时，<code>pp_option</code>、<code>hpi_config</code>、<code>genai_config</code> 将作为兼容参数被忽略；</li>
 <li>推荐仅使用 <code>engine</code> + <code>engine_config</code> 组合，避免混用旧参数。</li>
@@ -7467,7 +7494,7 @@ You're not viewing the latest version.
 <h4 id="44-engine_config">4.4 各引擎 <code>engine_config</code> 字段说明<a class="headerlink" href="#44-engine_config" title="Permanent link">&para;</a></h4>
 <p>以下字段基于当前代码中的配置模型整理（含字段含义）：</p>
 <ul>
-<li><code>paddle_static</code>：</li>
+<li><code>paddle_static</code>：<ul>
 <li><code>run_mode</code>：运行模式（如 <code>paddle</code>、<code>trt_fp32</code>、<code>trt_fp16</code>、<code>mkldnn</code> 等）；</li>
 <li><code>device_type</code> / <code>device_id</code>：目标设备类型和设备编号；</li>
 <li><code>cpu_threads</code>：CPU 推理线程数；</li>
@@ -7483,9 +7510,13 @@ You're not viewing the latest version.
 <li><code>trt_shape_range_info_path</code>：shape range 信息文件路径；</li>
 <li><code>trt_allow_rebuild_at_runtime</code>：运行时是否允许重建 TRT 引擎；</li>
 <li><code>mkldnn_cache_capacity</code>：oneDNN（MKLDNN）缓存容量。</li>
-<li><code>paddle_dynamic</code>：</li>
+</ul>
+</li>
+<li><code>paddle_dynamic</code>：<ul>
 <li><code>device_type</code> / <code>device_id</code>：动态图执行时的设备类型和设备编号。</li>
-<li><code>hpi</code>：</li>
+</ul>
+</li>
+<li><code>hpi</code>：<ul>
 <li><code>model_name</code>：模型名（内部自动注入，一般无需手动填）；</li>
 <li><code>device_type</code> / <code>device_id</code>：推理设备类型和设备编号；</li>
 <li><code>auto_config</code>：是否由系统自动选择最优后端和默认配置；</li>
@@ -7493,7 +7524,9 @@ You're not viewing the latest version.
 <li><code>backend_config</code>：后端专属配置（例如指定 <code>run_mode</code>、TRT 精度等）；</li>
 <li><code>hpi_info</code>：模型级先验信息（例如候选动态 shape）；</li>
 <li><code>auto_paddle2onnx</code>：缺少 ONNX 模型时是否自动触发 Paddle2ONNX 转换。</li>
-<li><code>transformers</code>：</li>
+</ul>
+</li>
+<li><code>transformers</code>：<ul>
 <li><code>dtype</code>：模型权重/推理使用的数据类型（如 <code>float16</code>）；</li>
 <li><code>device_type</code> / <code>device_id</code>：推理设备类型和设备编号；</li>
 <li><code>trust_remote_code</code>：是否信任并执行 Hugging Face 仓库中的自定义代码；</li>
@@ -7502,13 +7535,33 @@ You're not viewing the latest version.
 <li><code>model_kwargs</code>：传给模型加载接口的额外参数；</li>
 <li><code>processor_kwargs</code>：传给 processor / image processor 加载接口的额外参数；</li>
 <li><code>tokenizer_kwargs</code>：兼容保留的额外加载参数，会与 <code>processor_kwargs</code> 合并使用。</li>
-<li><code>genai_client</code>：</li>
+</ul>
+</li>
+<li><code>onnxruntime</code>：<ul>
+<li><code>device_type</code> / <code>device_id</code>：推理设备类型和设备编号；</li>
+<li><code>providers</code>：执行提供者列表（如 <code>CUDAExecutionProvider</code>、<code>CPUExecutionProvider</code>）；</li>
+<li><code>provider_options</code>：执行提供者专属配置；</li>
+<li><code>graph_optimization_level</code>：图优化级别；</li>
+<li><code>intra_op_num_threads</code>：节点内线程数；</li>
+<li><code>inter_op_num_threads</code>：节点间线程数；</li>
+<li><code>execution_mode</code>：执行模式（如 <code>sequential</code>、<code>parallel</code>）；</li>
+<li><code>log_severity_level</code>：日志严重级别；</li>
+<li><code>enable_mem_pattern</code>：是否启用内存模式；</li>
+<li><code>enable_cpu_mem_arena</code>：是否启用 CPU 内存池；</li>
+<li><code>session_options</code>：ONNX Runtime 会话选项。</li>
+</ul>
+</li>
+<li><code>genai_client</code>：<ul>
 <li><code>backend</code>：远端服务类型（如 <code>vllm-server</code>、<code>sglang-server</code>）；</li>
 <li><code>server_url</code>：服务地址（服务器后端必填）；</li>
 <li><code>max_concurrency</code>：客户端最大并发请求数；</li>
 <li><code>client_kwargs</code>：透传给 OpenAI 兼容客户端的其他参数（如 <code>api_key</code>）。</li>
-<li><code>flexible</code>：</li>
+</ul>
+</li>
+<li><code>flexible</code>：<ul>
 <li>无固定字段约束，按具体模型自定义解析。</li>
+</ul>
+</li>
 </ul>
 <blockquote>
 <p>说明：
@@ -7519,12 +7572,14 @@ You're not viewing the latest version.
 <p><code>PaddlePredictorOption</code> 保留为兼容能力，建议新代码优先使用 <code>engine_config</code>。</p>
 <ul>
 <li>生效范围：主要用于 <code>engine="paddle_static"</code> 的兼容配置；</li>
-<li>常用字段：</li>
+<li>常用字段：<ul>
 <li><code>run_mode</code>：运行模式（如 <code>paddle</code>、<code>trt_fp32</code>、<code>trt_fp16</code>、<code>mkldnn</code>）；</li>
 <li><code>device</code>：推理设备（如 <code>cpu</code>、<code>gpu:0</code>）；</li>
 <li><code>cpu_threads</code>：CPU 推理线程数；</li>
 <li><code>trt_dynamic_shapes</code>：TensorRT 动态形状配置；</li>
 <li><code>trt_dynamic_shape_input_data</code>：动态形状采集时的输入填充数据。</li>
+</ul>
+</li>
 <li>迁移建议：当 <code>engine_config</code> 与 <code>pp_option</code> 同时传入时，优先使用 <code>engine_config</code>，建议逐步迁移到 <code>engine + engine_config</code>。</li>
 </ul>
 
@@ -7549,7 +7604,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月10日 10:57:23 UTC">2026年6月10日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月11日 09:46:05 UTC">2026年6月11日</span>
   </span>
 
     
@@ -7559,7 +7614,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月10日 10:57:23 UTC">2026年6月10日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月11日 09:46:05 UTC">2026年6月11日</span>
   </span>
 
     
@@ -7574,7 +7629,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:weixin_46524038@noreply.gitcode.com">weixin_46524038</a>
+        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
     </nav>
   </span>
 
