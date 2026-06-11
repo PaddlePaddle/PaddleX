@@ -108,8 +108,8 @@ PaddleX now supports unified inference configuration via `engine` + `engine_conf
 * `paddle_dynamic`: Paddle dynamic graph engine;
 * `hpi`: High-performance inference plugin;
 * `flexible`: Flexible runtime engine;
-* `transformers`: Hugging Face Transformers-based engine;
-* `onnxruntime`: ONNX Runtime-based engine;
+* `transformers`: Hugging Face Transformers engine;
+* `onnxruntime`: ONNX Runtime engine;
 * `genai_client`: Client engine for remote generative AI services.
 
 #### 4.2 Priority Rules

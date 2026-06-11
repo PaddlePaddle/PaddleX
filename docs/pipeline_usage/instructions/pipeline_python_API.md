@@ -108,8 +108,8 @@ PaddleX 产线支持统一的 `engine` + `engine_config` 配置，并支持“�
 * `paddle_dynamic`：Paddle 动态图推理；
 * `hpi`：高性能推理插件；
 * `flexible`：灵活运行时引擎；
-* `transformers`：基于 Hugging Face Transformers 的推理引擎；
-* `onnxruntime`：基于 ONNX Runtime 的推理引擎；
+* `transformers`：Hugging Face Transformers 推理引擎；
+* `onnxruntime`：ONNX Runtime 推理引擎；
 * `genai_client`：调用外部生成式 AI 服务的客户端引擎。
 
 #### 4.2 扁平与分桶 `engine_config`
