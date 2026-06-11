@@ -23,7 +23,7 @@ This single step completes the inference prediction and saves the prediction res
 
 * `pipeline`: The name of the pipeline or the local path to the pipeline configuration file, such as the pipeline name "image_classification", or the path to the pipeline configuration file "path/to/image_classification.yaml";
 * `input`: The path to the data file to be predicted, supporting local file paths, local directories containing data files to be predicted, and file URL links;
-* `engine`: Inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `genai_client`;
+* `engine`: Inference engine. Available values: `paddle`, `paddle_static`, `paddle_dynamic`, `hpi`, `flexible`, `transformers`, `onnxruntime`, `genai_client`;
 * `device`: Used to set the inference device. If set for GPU, you can specify the card number, such as "cpu", "gpu:2". By default, if a GPU is available, GPU 0 will be used; otherwise, the CPU will be used;
 * `save_path`: The save path for prediction results. By default, the prediction results will not be saved;
 * `use_hpip`: Enable the high-performance inference plugin;
@@ -143,6 +143,7 @@ For CLI usage, `engine_config` is mainly set in YAML. Common fields and meanings
 * `paddle_dynamic`: `device_type/device_id` (dynamic graph execution device);
 * `hpi`: `model_name` (usually auto-injected), `device_type/device_id`, `auto_config` (auto backend selection), `backend` (explicit backend), `backend_config` (backend-specific options), `hpi_info` (model prior metadata), `auto_paddle2onnx` (auto conversion to ONNX when needed);
 * `transformers`: `dtype` (precision), `device_map` (placement), `trust_remote_code`, `attn_implementation`, `generation_config`, `model_kwargs`, `tokenizer_kwargs`;
+* `onnxruntime`: `device_type/device_id` (target device), `providers` (execution providers), `provider_options` (provider-specific configuration), `graph_optimization_level`, `intra_op_num_threads` (intra-op threads), `inter_op_num_threads` (inter-op threads), `execution_mode`, `log_severity_level`, `enable_mem_pattern`, `enable_cpu_mem_arena`, `session_options` (ONNX Runtime session options);
 * `genai_client`: `backend` (service backend type), `server_url` (service endpoint), `max_concurrency` (concurrency limit), `client_kwargs` (client passthrough options);
 * `flexible`: no fixed schema.
 
@@ -162,5 +163,6 @@ For CLI usage, `engine_config` is mainly set in YAML. Common fields and meanings
 You can run without PaddlePaddle in the following scenarios (if model and dependencies are satisfied):
 
 * Using `transformers` engine;
+* Using `onnxruntime` engine;
 
 > Note: If any module finally runs on `paddle` or `hpi`, PaddlePaddle is required. For `flexible` engine, whether PaddlePaddle is required depends on the model implementation; please refer to the corresponding model/pipeline documentation.
