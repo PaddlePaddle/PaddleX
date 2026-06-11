@@ -24,7 +24,7 @@ paddlex --pipeline image_classification \
 
 * `pipeline`：模型产线名称或是模型产线配置文件的本地路径，如模型产线名 “image_classification”，或模型产线配置文件路径 “path/to/image_classification.yaml”；
 * `input`：待预测数据文件路径，支持本地文件路径、包含待预测数据文件的本地目录、文件URL链接；
-* `engine`：推理引擎，可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`genai_client`；
+* `engine`：推理引擎，可选 `paddle`、`paddle_static`、`paddle_dynamic`、`hpi`、`flexible`、`transformers`、`onnxruntime`、`genai_client`；
 * `device`：用于设置模型推理设备，如为GPU则可以指定卡号，如 “cpu”、“gpu:2”，默认情况下，如GPU可用，则使用GPU 0，否则使用CPU；
 * `save_path`：预测结果的保存路径，默认情况下，不保存预测结果；
 * `use_hpip`：启用高性能推理插件；
@@ -144,6 +144,7 @@ CLI 下 `engine_config` 主要通过配置文件设置，常用字段及含义�
 * `paddle_dynamic`：`device_type/device_id`（动态图执行设备）；
 * `hpi`：`model_name`（一般自动注入）、`device_type/device_id`、`auto_config`（自动选后端）、`backend`（指定后端）、`backend_config`（后端参数）、`hpi_info`（模型先验信息）、`auto_paddle2onnx`（自动 Paddle2ONNX）；
 * `transformers`：`dtype`（精度）、`device_map`（设备映射）、`trust_remote_code`（是否信任远程代码）、`attn_implementation`（注意力实现）、`generation_config`（生成参数）、`model_kwargs`、`tokenizer_kwargs`；
+* `onnxruntime`：`device_type/device_id`（设备）、`providers`（执行提供者列表）、`provider_options`（提供者专属配置）、`graph_optimization_level`（图优化级别）、`intra_op_num_threads`（节点内线程数）、`inter_op_num_threads`（节点间线程数）、`execution_mode`（执行模式）、`log_severity_level`（日志严重级别）、`enable_mem_pattern`（是否启用内存模式）、`enable_cpu_mem_arena`（是否启用 CPU 内存池）、`session_options`（ONNX Runtime 会话选项）；
 * `genai_client`：`backend`（服务后端）、`server_url`（服务地址）、`max_concurrency`（并发上限）、`client_kwargs`（客户端透传参数）；
 * `flexible`：无固定字段约束。
 
@@ -163,5 +164,6 @@ CLI 下 `engine_config` 主要通过配置文件设置，常用字段及含义�
 以下场景可在未安装 PaddlePaddle 时运行（前提是模型和依赖已满足）：
 
 * 使用 `transformers` 引擎；
+* 使用 `onnxruntime` 引擎；
 
 > 注意：若产线中任一模块最终走 `paddle` / `hpi` 引擎，仍需安装 PaddlePaddle；使用 `flexible` 引擎时，是否依赖飞桨框架取决于具体模型实现，请参考对应模型/产线文档说明。
