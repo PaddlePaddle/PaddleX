@@ -92,7 +92,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 <tbody>
 <tr>
 <td>PP-OCRv6_medium_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_medium_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv6_medium_det_pretrained.pdparams">训练模型</a></td>
 <td>86.2*</td>
 <td>- / -</td>
 <td>- / -</td>
@@ -101,7 +101,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 </tr>
 <tr>
 <td>PP-OCRv6_small_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_small_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv6_small_det_pretrained.pdparams">训练模型</a></td>
 <td>84.1*</td>
 <td>- / -</td>
 <td>- / -</td>
@@ -110,7 +110,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 </tr>
 <tr>
 <td>PP-OCRv6_tiny_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-OCRv6_tiny_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv6_tiny_det_pretrained.pdparams">训练模型</a></td>
 <td>80.6*</td>
 <td>- / -</td>
 <td>- / -</td>
