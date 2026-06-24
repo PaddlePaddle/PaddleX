@@ -11924,6 +11924,10 @@
         "onnxruntime",
         "paddle"
       ],
+      "korean_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
       "latin_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
@@ -11933,6 +11937,14 @@
         "paddle"
       ],
       "eslav_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "th_PP-OCRv5_mobile_rec": [
+        "onnxruntime",
+        "paddle"
+      ],
+      "el_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
       ],
