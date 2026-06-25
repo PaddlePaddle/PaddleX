@@ -295,6 +295,18 @@ class _LayoutParsingPipelineV2(BasePipeline):
             )
             return False
 
+        if input_params["use_formula_recognition"] and not self.use_formula_recognition:
+            logging.error(
+                "Set use_formula_recognition, but the models for formula recognition are not initialized.",
+            )
+            return False
+
+        if input_params["use_chart_recognition"] and not self.use_chart_recognition:
+            logging.error(
+                "Set use_chart_recognition, but the models for chart recognition are not initialized.",
+            )
+            return False
+
         return True
 
     def standardized_data(
