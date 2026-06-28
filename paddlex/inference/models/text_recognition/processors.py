@@ -42,6 +42,16 @@ def validate_text_rec_image_array(img: np.ndarray, index: Optional[int] = None) 
         )
 
 
+def is_japanese_kana_char(char: str) -> bool:
+    """Return True for Japanese kana characters that should receive char boxes."""
+    code = ord(char)
+    return (
+        0x3040 <= code <= 0x309F  # Hiragana
+        or 0x30A0 <= code <= 0x30FF  # Katakana, including prolonged sound mark
+        or 0xFF65 <= code <= 0xFF9F  # Halfwidth Katakana
+    )
+
+
 @benchmark.timeit
 @class_requires_deps("opencv-contrib-python")
 class OCRReisizeNormImg:
@@ -171,7 +181,7 @@ class BaseRecLabelDecode:
         valid_col = np.where(selection == True)[0]
 
         for c_i, char in enumerate(text):
-            if "\u4e00" <= char <= "\u9fff":
+            if "\u4e00" <= char <= "\u9fff" or is_japanese_kana_char(char):
                 c_state = "cn"
             elif bool(re.search("[a-zA-Z0-9]", char)):
                 c_state = "en&num"
