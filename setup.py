@@ -58,7 +58,8 @@ BASE_DEP_SPECS = {
     "numpy": ">= 1.24, < 2.4",
     "openai": ">= 1.63",
     "OpenCC": "",
-    "opencv-contrib-python": "== 4.10.0.84",
+    "opencv-contrib-python": ">=4.10",
+    "opencv-contrib-python-headless": ">=4.10",
     "openpyxl": "",
     "packaging": "",
     "pandas": ">= 1.3",
@@ -278,6 +279,24 @@ def _sort_dep_specs(dep_specs):
     return sorted(dep_specs, key=str.lower)
 
 
+def _to_headless(deps):
+    """Swap the GUI OpenCV build for the headless one.
+
+    Accepts a list of dependency names (as used by the ``base`` extras) or full
+    dependency specifiers (as used by the ``plugins`` extras) and returns a new
+    list where ``opencv-contrib-python`` is replaced by
+    ``opencv-contrib-python-headless``, preserving any version specifier. The
+    list is returned unchanged when it contains no OpenCV dependency.
+    """
+    headless = []
+    for dep in deps:
+        name = dep.split(" ", 1)[0]
+        if name == "opencv-contrib-python":
+            dep = "opencv-contrib-python-headless" + dep[len(name):]
+        headless.append(dep)
+    return headless
+
+
 def readme():
     """get readme"""
     with open("README.md", "r", encoding="utf-8") as file:
@@ -297,10 +316,24 @@ def extras():
         extra_dep_specs = _get_dep_specs(extra_deps)
         dic[extra_name] = _sort_dep_specs(extra_dep_specs)
         base_dep_specs.update(extra_dep_specs)
+
+        # For extras that pull in the GUI OpenCV build, expose a `-headless`
+        # counterpart that uses `opencv-contrib-python-headless` instead, so it
+        # can be installed in headless environments (servers, containers, CI)
+        # without the system GUI libraries (e.g. libGL) the GUI build requires.
+        headless_deps = _to_headless(extra_deps)
+        if headless_deps != extra_deps:
+            dic[extra_name + "-headless"] = _sort_dep_specs(
+                _get_dep_specs(headless_deps)
+            )
     dic["base"] = _sort_dep_specs(base_dep_specs)
 
     for extra_name, extra_dep_specs in EXTRAS["plugins"].items():
         dic[extra_name] = _sort_dep_specs(extra_dep_specs)
+
+        headless_dep_specs = _to_headless(extra_dep_specs)
+        if headless_dep_specs != extra_dep_specs:
+            dic[extra_name + "-headless"] = _sort_dep_specs(headless_dep_specs)
 
     return dic
 
