@@ -1345,6 +1345,24 @@
         "paddle_mkldnn",
         "paddle"
       ],
+      "PP-OCRv6_medium_rec": [
+        "openvino",
+        "paddle_mkldnn",
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-OCRv6_small_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
       "PP-OCRv5_server_rec": [
         "paddle_mkldnn",
         "paddle",
@@ -1418,6 +1436,24 @@
         "paddle"
       ],
       "ta_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "openvino",
+        "paddle_mkldnn",
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-OCRv6_small_det": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_tiny_det": [
         "openvino",
         "onnxruntime",
         "paddle_mkldnn",
@@ -2837,6 +2873,24 @@
         "paddle_mkldnn",
         "paddle"
       ],
+      "PP-OCRv6_medium_rec": [
+        "openvino",
+        "paddle_mkldnn",
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-OCRv6_small_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
       "PP-OCRv5_server_rec": [
         "paddle_mkldnn",
         "openvino",
@@ -2910,6 +2964,24 @@
         "paddle"
       ],
       "ta_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "openvino",
+        "paddle_mkldnn",
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-OCRv6_small_det": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_tiny_det": [
         "openvino",
         "onnxruntime",
         "paddle_mkldnn",
@@ -4333,6 +4405,24 @@
         "paddle_mkldnn",
         "paddle"
       ],
+      "PP-OCRv6_medium_rec": [
+        "openvino",
+        "paddle_mkldnn",
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-OCRv6_small_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
       "PP-OCRv5_server_rec": [
         "paddle_mkldnn",
         "openvino",
@@ -4406,6 +4496,24 @@
         "paddle"
       ],
       "ta_PP-OCRv5_mobile_rec": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "openvino",
+        "paddle_mkldnn",
+        "onnxruntime",
+        "paddle"
+      ],
+      "PP-OCRv6_small_det": [
+        "openvino",
+        "onnxruntime",
+        "paddle_mkldnn",
+        "paddle"
+      ],
+      "PP-OCRv6_tiny_det": [
         "openvino",
         "onnxruntime",
         "paddle_mkldnn",
@@ -5775,6 +5883,21 @@
         "paddle",
         "onnxruntime"
       ],
+      "PP-OCRv6_medium_rec": [
+        "onnxruntime",
+        "paddle",
+        "tensorrt"
+      ],
+      "PP-OCRv6_small_rec": [
+        "paddle",
+        "onnxruntime",
+        "tensorrt"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
       "PP-OCRv5_server_rec": [
         "paddle_tensorrt_fp16",
         "tensorrt_fp16",
@@ -5852,6 +5975,21 @@
         "tensorrt",
         "onnxruntime",
         "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "onnxruntime",
+        "paddle",
+        "tensorrt"
+      ],
+      "PP-OCRv6_small_det": [
+        "paddle",
+        "onnxruntime",
+        "tensorrt"
+      ],
+      "PP-OCRv6_tiny_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
       ],
       "PP-OCRv5_server_det": [
         "paddle"
@@ -7220,6 +7358,21 @@
         "paddle",
         "onnxruntime"
       ],
+      "PP-OCRv6_medium_rec": [
+        "onnxruntime",
+        "paddle",
+        "tensorrt"
+      ],
+      "PP-OCRv6_small_rec": [
+        "paddle",
+        "onnxruntime",
+        "tensorrt"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
       "PP-OCRv5_server_rec": [
         "paddle_tensorrt_fp16",
         "tensorrt_fp16",
@@ -7297,6 +7450,21 @@
         "tensorrt",
         "onnxruntime",
         "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "onnxruntime",
+        "paddle",
+        "tensorrt"
+      ],
+      "PP-OCRv6_small_det": [
+        "paddle",
+        "onnxruntime",
+        "tensorrt"
+      ],
+      "PP-OCRv6_tiny_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
       ],
       "PP-OCRv5_server_det": [
         "onnxruntime",
@@ -8670,6 +8838,21 @@
         "paddle",
         "onnxruntime"
       ],
+      "PP-OCRv6_medium_rec": [
+        "onnxruntime",
+        "paddle",
+        "tensorrt"
+      ],
+      "PP-OCRv6_small_rec": [
+        "paddle",
+        "onnxruntime",
+        "tensorrt"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
       "PP-OCRv5_server_rec": [
         "paddle_tensorrt_fp16",
         "tensorrt_fp16",
@@ -8747,6 +8930,21 @@
         "tensorrt",
         "onnxruntime",
         "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "onnxruntime",
+        "paddle",
+        "tensorrt"
+      ],
+      "PP-OCRv6_small_det": [
+        "paddle",
+        "onnxruntime",
+        "tensorrt"
+      ],
+      "PP-OCRv6_tiny_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
       ],
       "PP-OCRv5_server_det": [
         "onnxruntime",
@@ -9765,6 +9963,20 @@
         "paddle",
         "onnxruntime"
       ],
+      "PP-OCRv6_medium_rec": [
+        "paddle",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_small_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
       "PP-OCRv5_server_rec": [
         "onnxruntime",
         "paddle"
@@ -9816,6 +10028,20 @@
       "ta_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "paddle",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_small_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_tiny_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
       ],
       "PP-OCRv5_server_det": [
         "paddle"
@@ -10837,6 +11063,20 @@
         "paddle",
         "onnxruntime"
       ],
+      "PP-OCRv6_medium_rec": [
+        "paddle",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_small_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
       "PP-OCRv5_server_rec": [
         "onnxruntime",
         "paddle"
@@ -10888,6 +11128,20 @@
       "ta_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "paddle",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_small_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_tiny_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
       ],
       "PP-OCRv5_server_det": [
         "onnxruntime",
@@ -11912,6 +12166,20 @@
         "paddle",
         "onnxruntime"
       ],
+      "PP-OCRv6_medium_rec": [
+        "paddle",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_small_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_tiny_rec": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
       "PP-OCRv5_server_rec": [
         "onnxruntime",
         "paddle"
@@ -11963,6 +12231,20 @@
       "te_PP-OCRv5_mobile_rec": [
         "onnxruntime",
         "paddle"
+      ],
+      "PP-OCRv6_medium_det": [
+        "paddle",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_small_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
+      ],
+      "PP-OCRv6_tiny_det": [
+        "paddle",
+        "tensorrt",
+        "onnxruntime"
       ],
       "PP-OCRv5_server_det": [
         "onnxruntime",
