@@ -1042,13 +1042,31 @@ def truncate_repetitive_content(
     if not stripped_content:
         return content
 
-    # Priority 1: Phrase-level suffix repetition in long single lines.
-    if "\n" not in stripped_content and len(stripped_content) > 100:
-        suffix_match = find_repeating_suffix(stripped_content, min_len=8, min_repeats=5)
-        if suffix_match:
-            prefix, repeating_unit, count = suffix_match
-            if len(repeating_unit) * count > len(stripped_content) * 0.5:
-                return prefix
+    # Priority 1: Phrase-level suffix repetition, checked line by line.
+    #
+    # Per line rather than only for single-line content: a block that decodes a few valid lines and
+    # then loops on the last one passes every check below, because Priority 2 is skipped once a
+    # newline is present and Priority 3 needs `line_threshold` near-identical lines.
+    #
+    # The trailing U+FFFD is dropped first: a generation stopped at max_new_tokens can be cut in the
+    # middle of a character, and decoding leaves a replacement character at the end.
+    # find_repeating_suffix() anchors on the exact suffix, so that one character stops every
+    # candidate unit from matching and the check silently returns the degenerate text unchanged.
+    truncated_lines = []
+    suffix_repetition_found = False
+    for line in content.split("\n"):
+        candidate = line.strip().rstrip("\ufffd").rstrip()
+        if len(candidate) > 100:
+            suffix_match = find_repeating_suffix(candidate, min_len=8, min_repeats=5)
+            if suffix_match:
+                prefix, repeating_unit, count = suffix_match
+                if len(repeating_unit) * count > len(candidate) * 0.5:
+                    truncated_lines.append(prefix)
+                    suffix_repetition_found = True
+                    continue
+        truncated_lines.append(line)
+    if suffix_repetition_found:
+        return "\n".join(truncated_lines)
 
     # Priority 2: Full-string character-level repetition (e.g., 'ababab')
     if "\n" not in stripped_content and len(stripped_content) > min_len:
