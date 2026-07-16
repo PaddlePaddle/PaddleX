@@ -191,8 +191,15 @@ def _header_image_width(
     return Inches(1.0)  # fallback
 
 
-def _set_paragraph_style(para, config):
-    """Apply font/alignment config to a Word paragraph."""
+def _set_paragraph_style(para, config, doc=None):
+    """Apply font/alignment config to a Word paragraph.
+
+    If ``config`` contains a ``level`` key (defined in ``BASE_STYLE_MAP`` for
+    title-like blocks such as ``doc_title``, ``content_title`` and
+    ``paragraph_title``), the corresponding Word Heading style is applied so
+    that the generated document has a proper heading hierarchy (enabling
+    Word's navigation pane, outline view and auto-generated TOC).
+    """
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.oxml.ns import qn
     from docx.shared import Inches, Pt
@@ -208,6 +215,22 @@ def _set_paragraph_style(para, config):
         para.paragraph_format.first_line_indent = Inches(0.3)
     # Force single line spacing to prevent default 1.15x from consuming extra vertical space
     para.paragraph_format.line_spacing = 1.0
+
+    # Apply Heading style based on level. BASE_STYLE_MAP already defines
+    # ``level`` for title blocks (doc_title=0, content_title=1,
+    # paragraph_title=2) but it was never consumed, so all paragraphs ended
+    # up as Normal. See issue #4207.
+    level = config.get("level")
+    if level is not None and doc is not None:
+        try:
+            if level == 0:
+                para.style = doc.styles["Title"]
+            else:
+                heading_name = "Heading %d" % min(level, 9)
+                if heading_name in [s.name for s in doc.styles]:
+                    para.style = doc.styles[heading_name]
+        except Exception:
+            pass
 
 
 def _write_mixed_runs(para, parts: List[Tuple[str, bool]], config: dict) -> None:
@@ -612,7 +635,7 @@ def _write_block(
         omml_elem = _latex_to_omml(raw_latex, display=is_display) if raw_latex else None
 
         para = doc.add_paragraph()
-        _set_paragraph_style(para, config)
+        _set_paragraph_style(para, config, doc)
         if space_before_emu is not None:
             para.paragraph_format.space_before = Emu(space_before_emu)
             para.paragraph_format.space_after = Emu(0)
@@ -653,7 +676,7 @@ def _write_block(
 
             if has_formula:
                 para = doc.add_paragraph()
-                _set_paragraph_style(para, config)
+                _set_paragraph_style(para, config, doc)
                 if first and space_before_emu is not None:
                     para.paragraph_format.space_before = Emu(space_before_emu)
                     para.paragraph_format.space_after = Emu(0)
@@ -662,7 +685,7 @@ def _write_block(
                 _write_mixed_runs(para, parts, config)
             else:
                 para = doc.add_paragraph(line)
-                _set_paragraph_style(para, config)
+                _set_paragraph_style(para, config, doc)
                 if first and space_before_emu is not None:
                     para.paragraph_format.space_before = Emu(space_before_emu)
                     para.paragraph_format.space_after = Emu(0)
