@@ -478,6 +478,7 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
             handle_funcs_dict=handle_funcs_dict,
             show_formula_number=show_formula_number,
             imgs_in_doc=self["imgs_in_doc"],
+            image_path_transform=self._get_markdown_image_path,
         )
         result["page_index"] = self["page_index"]
         result["input_path"] = self["input_path"]
