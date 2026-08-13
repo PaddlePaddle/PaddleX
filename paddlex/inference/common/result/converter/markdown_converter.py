@@ -39,6 +39,7 @@ class MarkdownConverter:
         use_seg_flag=False,
         get_seg_flag_func=None,
         imgs_in_doc=None,
+        image_path_transform=None,
     ) -> dict:
         """Convert *blocks* to Markdown.
 
@@ -55,12 +56,43 @@ class MarkdownConverter:
             get_seg_flag_func: ``(block, prev_block) -> (start, end)`` called
                 when *use_seg_flag* is *True*.
             imgs_in_doc: Extra images to include (list of ``{"path", "img"}``).
+            image_path_transform: Optional ``(path, source) -> path`` callback.
+                ``source`` is the block or extra-image dictionary that owns the
+                path. The transformed path is used in both the Markdown and the
+                returned image mapping.
 
         Returns:
             dict with keys ``markdown_texts``, ``markdown_images``, and
             optionally ``page_continuation_flags``.
         """
-        blocks_list = list(blocks)  # ensure indexable for lookahead
+        imgs_in_doc = list(imgs_in_doc or [])
+        blocks_list = []
+        for original_block in blocks:
+            block = original_block
+            if image_path_transform is not None:
+                new_content = block.content
+                if isinstance(new_content, str):
+                    for img in imgs_in_doc:
+                        old_path = img["path"]
+                        new_path = image_path_transform(old_path, block)
+                        if old_path != new_path:
+                            new_content = new_content.replace(old_path, new_path)
+
+                image = block.image
+                new_image = image
+                if image is not None:
+                    new_path = image_path_transform(image["path"], block)
+                    if new_path != image["path"]:
+                        if isinstance(new_content, str):
+                            new_content = new_content.replace(image["path"], new_path)
+                        new_image = {**image, "path": new_path}
+
+                if new_content != block.content or new_image is not image:
+                    block = copy.copy(block)
+                    block.content = new_content
+                    block.image = new_image
+
+            blocks_list.append(block)
 
         markdown_content = ""
         markdown_images: dict = {}
@@ -115,6 +147,13 @@ class MarkdownConverter:
                     )
                 last_label = label
 
+        if imgs_in_doc:
+            for img in imgs_in_doc:
+                img_path = img["path"]
+                if image_path_transform is not None:
+                    img_path = image_path_transform(img_path, img)
+                markdown_images[img_path] = img["img"]
+
         # --- build return dict ---
         result = {
             "markdown_texts": markdown_content,
@@ -128,9 +167,5 @@ class MarkdownConverter:
                 page_first_element_seg_start_flag,
                 seg_end_flag,
             )
-
-        if imgs_in_doc:
-            for img in imgs_in_doc:
-                result["markdown_images"][img["path"]] = img["img"]
 
         return result
