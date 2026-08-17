@@ -592,7 +592,6 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
             if self.attn_backend not in {
                 _Backend.FLASH_ATTN,
                 _Backend.TORCH_SDPA,
-                _Backend.XFORMERS,
             }:
                 raise RuntimeError(
                     f"PaddleOCR-VL does not support {self.attn_backend} backend now."
@@ -653,18 +652,6 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
                     output_i = rearrange(output_i, "b h s d -> b s h d ")
                     outputs.append(output_i)
                 context_layer = torch.cat(outputs, dim=1)
-            elif self.attn_backend == _Backend.XFORMERS:
-                from xformers import ops as xops
-                from xformers.ops.fmha.attn_bias import BlockDiagonalMask
-
-                seqlens = (cu_seqlens[1:] - cu_seqlens[:-1]).tolist()
-                attn_bias = BlockDiagonalMask.from_seqlens(
-                    q_seqlen=seqlens, kv_seqlen=None, device=q.device
-                )
-
-                context_layer = xops.memory_efficient_attention_forward(
-                    q, k, v, attn_bias=attn_bias, p=0, scale=None
-                )
 
             context_layer = rearrange(
                 context_layer, "b s h d -> b s (h d)"

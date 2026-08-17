@@ -375,7 +375,6 @@ def install(args):
 
         for plugin_type in plugin_types:
             if "vllm" in plugin_type or "sglang" in plugin_type:
-                install_packages(["xformers"], constraints="required")
                 if is_cuda_available():
                     try:
                         install_packages(["wheel"], constraints="required")
