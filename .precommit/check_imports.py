@@ -102,7 +102,6 @@ MOD_TO_DEP = {
     "uvicorn": "uvicorn",
     "uvloop": "uvloop",
     "vllm": "vllm",
-    "xformers": "xformers",
     "yarl": "yarl",
     "bidi": "python-bidi",
 }
