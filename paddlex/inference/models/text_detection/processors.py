@@ -20,6 +20,7 @@ import numpy as np
 from ....utils import logging
 from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+from ._large_input_warning import LargeDetectorInputWarner
 
 if is_dep_available("opencv-contrib-python"):
     import cv2
@@ -35,6 +36,7 @@ class DetResizeForTest:
     def __init__(self, input_shape=None, max_side_limit=4000, **kwargs):
         self.resize_type = 0
         self.keep_ratio = False
+        self._large_input_warner = LargeDetectorInputWarner()
         if input_shape is not None:
             self.input_shape = input_shape
             self.resize_type = 3
@@ -71,6 +73,8 @@ class DetResizeForTest:
             img, shape = self.resize(
                 ori_img, limit_side_len, limit_type, max_side_limit
             )
+            if img is not None:
+                self._large_input_warner.warn(ori_img.shape, img.shape, logging.warning)
             resize_imgs.append(img)
             img_shapes.append(shape)
         return resize_imgs, img_shapes
