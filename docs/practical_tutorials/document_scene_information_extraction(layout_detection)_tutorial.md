@@ -64,7 +64,6 @@ pipeline = create_pipeline(pipeline="./PP-ChatOCRv3-doc.yaml")
 visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True)
 
@@ -581,16 +580,19 @@ python main.py -c paddlex/configs/modules/layout_detection/RT-DETR-H_layout_3cls
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 
-参考2.1 填写大语言模型的 ak/sk(access_token)， 同时将`PP-ChatOCRv3-doc.yaml`中的`LayoutDetection.model_dir`字段修改为上面微调后的模型路径，修改后版面模型部分的配置如下：
+参考2.1 填写大语言模型的 ak/sk(access_token)， 同时将`PP-ChatOCRv3-doc.yaml`中的`SubPipelines.LayoutParser.SubModules.LayoutDetection.model_dir`字段修改为上面微调后的模型路径，修改后版面模型部分的配置如下：
 
 ```yaml
-......
+# ...
+SubPipelines:
+  LayoutParser:
+    # ...
     SubModules:
       LayoutDetection:
         module_name: layout_detection
         model_name: RT-DETR-H_layout_3cls
         model_dir: output/best_model/inference
-......
+# ...
 ```
 
 修改后，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可应用配置。
@@ -603,7 +605,6 @@ pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True)
 
@@ -646,7 +647,6 @@ pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True)
 
