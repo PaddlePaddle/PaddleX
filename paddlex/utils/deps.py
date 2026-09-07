@@ -109,6 +109,13 @@ def is_dep_available(dep, /, check_version=False):
         return importlib.util.find_spec("fastdeploy") is not None
     elif dep == "onnxruntime":
         return importlib.util.find_spec("onnxruntime") is not None
+    elif dep == "opencv-contrib-python":
+        # `cv2` is provided by several mutually exclusive distributions
+        # (`opencv-python`, `opencv-python-headless`, `opencv-contrib-python`,
+        # `opencv-contrib-python-headless`). Headless builds are commonly used in
+        # containers and other environments without GUI libraries, so check for the
+        # import package rather than for a specific distribution.
+        return importlib.util.find_spec("cv2") is not None
     version = get_dep_version(dep)
     if version is None:
         return False
