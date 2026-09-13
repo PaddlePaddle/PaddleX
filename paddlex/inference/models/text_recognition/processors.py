@@ -15,6 +15,7 @@
 
 import math
 import re
+import unicodedata
 from typing import List, Optional
 
 import numpy as np
@@ -173,7 +174,9 @@ class BaseRecLabelDecode:
         for c_i, char in enumerate(text):
             if "\u4e00" <= char <= "\u9fff":
                 c_state = "cn"
-            elif bool(re.search("[a-zA-Z0-9]", char)):
+            elif bool(re.search("[a-zA-Z0-9]", char)) or (
+                char.isalpha() and unicodedata.name(char, "").startswith("LATIN ")
+            ):
                 c_state = "en&num"
             else:
                 c_state = "symbol"
