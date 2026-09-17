@@ -104,8 +104,41 @@ def eager_attention_forward(
     attention_mask,
     scaling: float,
     dropout: float = 0.0,
+    query_chunk_size: Optional[int] = None,
     **kwargs,
 ):
+    if query_chunk_size is not None and query_chunk_size <= 0:
+        raise ValueError("query_chunk_size must be positive")
+    if (
+        query_chunk_size is not None
+        and query.shape[-2] > query_chunk_size
+        and not (module.training and dropout != 0)
+        and not paddle.is_grad_enabled()
+    ):
+        # Every query still attends to every key. Bound only the temporary
+        # score/softmax workspace, without changing image resolution or tokens.
+        outputs = []
+        for start in range(0, query.shape[-2], query_chunk_size):
+            end = min(start + query_chunk_size, query.shape[-2])
+            mask = attention_mask
+            if mask is not None and mask.ndim >= 2 and mask.shape[-2] != 1:
+                mask = mask[..., start:end, :]
+            output, weights = eager_attention_forward(
+                module,
+                query[..., start:end, :],
+                key,
+                value,
+                mask,
+                scaling=scaling,
+                dropout=dropout,
+                **kwargs,
+            )
+            outputs.append(output)
+            del weights, output
+        # SiglipAttention does not expose attention weights. Reconstructing
+        # them here would defeat the memory bound.
+        return paddle.concat(outputs, axis=1), None
+
     origin_dtype = query.dtype
 
     attn_weights = paddle.matmul(x=query.scale(scaling), y=key, transpose_y=True)
@@ -197,6 +230,7 @@ class SiglipAttention(nn.Layer):
                 is_causal=self.is_causal,
                 scaling=self.scale,
                 dropout=0.0 if not self.training else self.dropout,
+                query_chunk_size=256,
             )
             attn_output = attn_output.reshape([B, L, D])
         else:
