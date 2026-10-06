@@ -68,6 +68,37 @@ TEXT_REC_TRANSFORMERS_MODELS = [
 ]
 
 
+def _word_box_width_ratios(
+    batch_raw_imgs,
+    indices,
+    rec_image_shape,
+    batch_num,
+    width_scale,
+    width_limit,
+    input_shape,
+):
+    """Return the valid and padded width ratios used to place word boxes."""
+    _, imgH, imgW = rec_image_shape[:3]
+    max_wh_ratio = imgW / imgH
+    dynamic = input_shape is None
+    cap_ratio = None
+    if dynamic and (width_scale != 1.0 or width_limit is not None):
+        cap_ratio = (3200 if width_limit is None else width_limit) / imgH
+        max_wh_ratio = min(max_wh_ratio, cap_ratio)
+
+    wh_ratio_list = []
+    for ino in range(min(len(batch_raw_imgs), batch_num)):
+        h, w = batch_raw_imgs[indices[ino]].shape[0:2]
+        wh_ratio = w * 1.0 / h
+        if dynamic:
+            wh_ratio *= width_scale
+        if cap_ratio is not None:
+            wh_ratio = min(wh_ratio, cap_ratio)
+        max_wh_ratio = max(max_wh_ratio, wh_ratio)
+        wh_ratio_list.append(wh_ratio)
+    return wh_ratio_list, max_wh_ratio
+
+
 def get_text_rec_vis_font(model_name):
     if model_name.startswith(("PP-OCR", "en_PP-OCR")):
         return SIMFANG_FONT
@@ -125,9 +156,19 @@ class TextRecRunnerPredictor(RunnerPredictor):
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, *args, input_shape=None, return_word_box=False, **kwargs):
+    def __init__(
+        self,
+        *args,
+        input_shape=None,
+        width_scale=1.0,
+        width_limit=None,
+        return_word_box=False,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.input_shape = input_shape
+        self.width_scale = width_scale
+        self.width_limit = width_limit
         self.return_word_box = return_word_box
         self.vis_font = self.get_vis_font()
         self.pre_tfs, self.post_op = self._build()
@@ -165,21 +206,20 @@ class TextRecRunnerPredictor(RunnerPredictor):
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
         batch_preds = self.runner(x=x)
         batch_num = self.batch_sampler.batch_size
-        img_num = len(batch_raw_imgs)
         rec_image_shape = next(
             op["RecResizeImg"]["image_shape"]
             for op in self.config["PreProcess"]["transform_ops"]
             if "RecResizeImg" in op
         )
-        imgC, imgH, imgW = rec_image_shape[:3]
-        max_wh_ratio = imgW / imgH
-        end_img_no = min(img_num, batch_num)
-        wh_ratio_list = []
-        for ino in range(0, end_img_no):
-            h, w = batch_raw_imgs[indices[ino]].shape[0:2]
-            wh_ratio = w * 1.0 / h
-            max_wh_ratio = max(max_wh_ratio, wh_ratio)
-            wh_ratio_list.append(wh_ratio)
+        wh_ratio_list, max_wh_ratio = _word_box_width_ratios(
+            batch_raw_imgs,
+            indices,
+            rec_image_shape,
+            batch_num,
+            self.width_scale,
+            self.width_limit,
+            self.input_shape,
+        )
         texts, scores = self.post_op(
             batch_preds,
             return_word_box=return_word_box or self.return_word_box,
@@ -211,7 +251,10 @@ class TextRecRunnerPredictor(RunnerPredictor):
     @register("RecResizeImg")
     def build_resize(self, image_shape, **kwargs):
         return "ReisizeNorm", OCRReisizeNormImg(
-            rec_image_shape=image_shape, input_shape=self.input_shape
+            rec_image_shape=image_shape,
+            input_shape=self.input_shape,
+            width_scale=self.width_scale,
+            width_limit=self.width_limit,
         )
 
     def build_postprocess(self, **kwargs):
@@ -237,7 +280,19 @@ class TextRecRunnerPredictor(RunnerPredictor):
 class TextRecTransformersPredictor(TransformersPredictor):
     """Text recognition predictor backed by Hugging Face transformers."""
 
-    def __init__(self, *args, return_word_box: bool = False, **kwargs):
+    def __init__(
+        self,
+        *args,
+        return_word_box: bool = False,
+        width_scale=1.0,
+        width_limit=None,
+        **kwargs,
+    ):
+        if width_scale != 1.0 or width_limit is not None:
+            raise ValueError(
+                "width_scale and width_limit are only supported by the Paddle "
+                "text recognition preprocessing path."
+            )
         super().__init__(*args, **kwargs)
         self.return_word_box = return_word_box
         self.vis_font = get_text_rec_vis_font(self.model_name)
