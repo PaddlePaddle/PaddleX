@@ -65,9 +65,11 @@ class PaddleOCRVLForConditionalGeneration(Ernie4_5PretrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
     config_class = PaddleOCRVLConfig
     _no_split_modules = ["Ernie4_5DecoderLayer", "SiglipEncoderLayer"]
-    # Keep visual encoder in fp32 for ROCm stability (MIOpen bf16 conv has bugs)
-    # This also improves precision for vision processing
-    _keep_in_fp32_modules = ["visual", "mlp_AR"]
+    # NOTE: Previously _keep_in_fp32_modules = ["visual", "mlp_AR"] was set here
+    # to work around MIOpen BF16 convolution bugs on ROCm. This is no longer needed
+    # after Paddle framework adds BF16 conv kernel registration for HIP backend.
+    # See: https://github.com/PaddlePaddle/Paddle/pull/78587
+    _keep_in_fp32_modules = None
     base_model_prefix = ""
 
     def __init__(self, config):
