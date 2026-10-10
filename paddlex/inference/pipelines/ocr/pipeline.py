@@ -142,7 +142,10 @@ class _OCRPipeline(BasePipeline):
         self.return_word_box = text_rec_config.get("return_word_box", False)
         self.input_shape = text_rec_config.get("input_shape", None)
         self.text_rec_model = self.create_model(
-            text_rec_config, input_shape=self.input_shape
+            text_rec_config,
+            input_shape=self.input_shape,
+            width_scale=text_rec_config.get("width_scale", 1.0),
+            width_limit=text_rec_config.get("width_limit", None),
         )
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
         self.img_reader = ReadImage(format="BGR")
