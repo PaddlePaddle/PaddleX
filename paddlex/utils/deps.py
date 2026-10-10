@@ -280,6 +280,10 @@ def is_genai_engine_plugin_available(backend="any"):
             from .env import is_cuda_available
 
             if is_cuda_available():
+                if "vllm" in backend:
+                    vllm_version = get_dep_version("vllm")
+                    if Version(vllm_version) >= Version("0.12.0"):
+                        return True
                 return is_dep_available("xformers") and is_dep_available("flash-attn")
             return True
         return False
