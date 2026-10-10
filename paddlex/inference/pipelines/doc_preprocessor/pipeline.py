@@ -28,6 +28,10 @@ from ..components import rotate_image
 from .result import DocPreprocessorResult
 
 
+def _to_bgr_contiguous(image: np.ndarray) -> np.ndarray:
+    return np.ascontiguousarray(image[:, :, ::-1])
+
+
 @benchmark.time_methods
 class _DocPreprocessorPipeline(BasePipeline):
     """Doc Preprocessor Pipeline"""
@@ -182,7 +186,7 @@ class _DocPreprocessorPipeline(BasePipeline):
 
             if model_settings["use_doc_unwarping"]:
                 output_imgs = [
-                    item["doctr_img"][:, :, ::-1]
+                    _to_bgr_contiguous(item["doctr_img"])
                     for item in self.doc_unwarping_model(rot_imgs)
                 ]
             else:
