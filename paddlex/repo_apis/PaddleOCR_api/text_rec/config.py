@@ -340,16 +340,16 @@ class TextRecConfig(BaseConfig):
         assert isinstance(print_mem_info, bool), "print_mem_info should be a bool"
         self.update({"Global.print_mem_info": f"{print_mem_info}"})
 
-    def update_shared_memory(self, shared_memeory: bool):
+    def update_shared_memory(self, shared_memory: bool):
         """update shared memory setting of train and eval dataloader
 
         Args:
-            shared_memeory (bool): whether or not to use shared memory
+            shared_memory (bool): whether or not to use shared memory
         """
-        assert isinstance(shared_memeory, bool), "shared_memeory should be a bool"
+        assert isinstance(shared_memory, bool), "shared_memory should be a bool"
         _cfg = {
-            "Train.loader.use_shared_memory": f"{shared_memeory}",
-            "Train.loader.use_shared_memory": f"{shared_memeory}",
+            "Train.loader.use_shared_memory": f"{shared_memory}",
+            "Train.loader.use_shared_memory": f"{shared_memory}",
         }
         self.update(_cfg)
 

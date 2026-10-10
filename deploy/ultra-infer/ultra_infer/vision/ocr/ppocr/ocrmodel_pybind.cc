@@ -69,26 +69,26 @@ void BindPPOCRModel(pybind11::module &m) {
         return results;
       });
 
-  pybind11::class_<vision::ocr::UVDocWarpper, UltraInferModel>(m,
-                                                               "UVDocWarpper")
+  pybind11::class_<vision::ocr::UVDocWrapper, UltraInferModel>(m,
+                                                               "UVDocWrapper")
       .def(pybind11::init<std::string, std::string, RuntimeOption,
                           ModelFormat>())
       .def(pybind11::init<>())
       .def_property_readonly("preprocessor",
-                             &vision::ocr::UVDocWarpper::GetPreprocessor)
+                             &vision::ocr::UVDocWrapper::GetPreprocessor)
       .def_property_readonly("postprocessor",
-                             &vision::ocr::UVDocWarpper::GetPostprocessor)
+                             &vision::ocr::UVDocWrapper::GetPostprocessor)
       .def("clone",
-           [](vision::ocr::UVDocWarpper &self) { return self.Clone(); })
+           [](vision::ocr::UVDocWrapper &self) { return self.Clone(); })
       .def("predict",
-           [](vision::ocr::UVDocWarpper &self, pybind11::array &data) {
+           [](vision::ocr::UVDocWrapper &self, pybind11::array &data) {
              auto mat = PyArrayToCvMat(data);
              FDTensor res;
              self.Predict(mat, &res);
              res.StopSharing();
              return res;
            })
-      .def("batch_predict", [](vision::ocr::UVDocWarpper &self,
+      .def("batch_predict", [](vision::ocr::UVDocWrapper &self,
                                std::vector<pybind11::array> &data) {
         std::vector<cv::Mat> images;
         for (size_t i = 0; i < data.size(); ++i) {

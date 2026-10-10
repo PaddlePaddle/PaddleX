@@ -102,10 +102,10 @@ class PPYOLOE(UltraInferModel):
         """Load a PPYOLOE model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ppyoloe/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ppyoloe/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ppyoloe/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PPYOLOE, self).__init__(runtime_option)
 
@@ -175,9 +175,9 @@ class PPYOLO(PPYOLOE):
         """Load a PPYOLO model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ppyolo/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ppyolo/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ppyolo/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -216,10 +216,10 @@ class PaddleYOLOX(PPYOLOE):
         """Load a YOLOX model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g yolox/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g yolox/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolox/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -258,10 +258,10 @@ class PicoDet(PPYOLOE):
         """Load a PicoDet model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g picodet/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g picodet/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g picodet/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -297,10 +297,10 @@ class FasterRCNN(PPYOLOE):
         """Load a FasterRCNN model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g fasterrcnn/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g fasterrcnn/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g fasterrcnn/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -339,10 +339,10 @@ class YOLOv3(PPYOLOE):
         """Load a YOLOv3 model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g yolov3/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g yolov3/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolov3/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -381,10 +381,10 @@ class SOLOv2(PPYOLOE):
         """Load a SOLOv2 model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g solov2/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g solov2/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g solov2/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g solov2/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -423,10 +423,10 @@ class MaskRCNN(PPYOLOE):
         """Load a MaskRCNN model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g fasterrcnn/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g fasterrcnn/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g fasterrcnn/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -474,10 +474,10 @@ class SSD(PPYOLOE):
         """Load a SSD model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ssd/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ssd/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ssd/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -516,10 +516,10 @@ class PaddleYOLOv5(PPYOLOE):
         """Load a YOLOv5 model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g yolov5/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g yolov5/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolov5/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -545,10 +545,10 @@ class PaddleYOLOv6(PPYOLOE):
         """Load a YOLOv6 model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g yolov6/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g yolov6/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolov6/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -574,10 +574,10 @@ class PaddleYOLOv7(PPYOLOE):
         """Load a YOLOv7 model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g yolov7/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g yolov7/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolov7/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -603,10 +603,10 @@ class PaddleYOLOv8(PPYOLOE):
         """Load a YOLOv8 model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g yolov8/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g yolov8/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolov8/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g yolov8/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -629,10 +629,10 @@ class RTMDet(PPYOLOE):
         """Load a RTMDet model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g rtmdet/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g rtmdet/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g rtmdet/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -658,10 +658,10 @@ class CascadeRCNN(PPYOLOE):
         """Load a CascadeRCNN model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g cascadercnn/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g cascadercnn/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g cascadercnn/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -687,10 +687,10 @@ class PSSDet(PPYOLOE):
         """Load a PSSDet model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g pssdet/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g pssdet/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g pssdet/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -716,10 +716,10 @@ class RetinaNet(PPYOLOE):
         """Load a RetinaNet model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g retinanet/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g retinanet/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g retinanet/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -745,10 +745,10 @@ class PPYOLOESOD(PPYOLOE):
         """Load a PPYOLOESOD model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ppyoloesod/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ppyoloesod/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ppyoloesod/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -774,10 +774,10 @@ class FCOS(PPYOLOE):
         """Load a FCOS model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g fcos/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g fcos/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g fcos/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -803,10 +803,10 @@ class TTFNet(PPYOLOE):
         """Load a TTFNet model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ttfnet/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ttfnet/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ttfnet/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -832,10 +832,10 @@ class TOOD(PPYOLOE):
         """Load a TOOD model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g tood/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g tood/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g tood/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -861,10 +861,10 @@ class GFL(PPYOLOE):
         """Load a GFL model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g gfl/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g gfl/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g gfl/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)
@@ -890,10 +890,10 @@ class PaddleDetectionModel(UltraInferModel):
         """Load a PaddleDetectionModel model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ppyoloe/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ppyoloe/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ppyoloe/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PaddleDetectionModel, self).__init__(runtime_option)
 
@@ -963,10 +963,10 @@ class PPYOLOER(PPYOLOE):
         """Load a PPYOLOER model exported by PaddleDetection.
 
         :param model_file: (str)Path of model file, e.g ppyoloe_r/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g ppyoloe_r/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g ppyoloe_r/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe_r/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
 
         super(PPYOLOE, self).__init__(runtime_option)

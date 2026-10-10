@@ -32,7 +32,7 @@ class PPTracking(UltraInferModel):
         :param params_file: (str)Path of parameters file, e.g ppyoloe/model.pdiparams
         :param config_file: (str)Path of configuration file for deployment, e.g ppyoloe/infer_cfg.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PPTracking, self).__init__(runtime_option)
 
