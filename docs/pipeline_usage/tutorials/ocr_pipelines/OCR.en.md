@@ -2407,6 +2407,8 @@ In the above Python script, the following steps are executed:
 - The prediction results obtained through the `json` attribute are of type `dict`, and the content is consistent with the data saved by calling the `save_to_json()` method.
 - The prediction results returned by the `img` attribute are of type `dict`. The keys are `ocr_res_img` and `preprocessed_img`, and the corresponding values are two `Image.Image` objects: one for displaying the visualization image of OCR results, and the other for showing the visualization image of image preprocessing. If the image preprocessing sub-module is not used, the dictionary will only contain `ocr_res_img`.
 
+For multi-image workloads, set `batch_size: 4` and `batch_recognition_across_images: True` in the OCR pipeline YAML to recognize crops from all images in each pipeline batch together. Crops are sorted by aspect ratio and recognition results are restored to their original image and polygon order. `SubModules.TextRecognition.batch_size` still limits each recognition model batch. The option defaults to `False`; `batch_size: 1` cannot combine crops across images. Changing the recognition batch composition can change padding and slightly affect scores, so validate accuracy and throughput on your own data before enabling it. This option does not change detection batching or make the inference runner asynchronous.
+
 Additionally, you can obtain the OCR pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```
