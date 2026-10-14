@@ -2398,6 +2398,8 @@ for res in output:
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
 - `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `ocr_res_img` 和 `preprocessed_img`，对应的值是两个 `Image.Image` 对象：一个用于显示 OCR 结果的可视化图像，另一个用于展示图像预处理的可视化图像。如果没有使用图像预处理子模块，则字典中只包含 `ocr_res_img`。
 
+使用 runner 检测后端时，可在 OCR 产线 YAML 中设置 `batch_detection_by_shape: True`，将预处理后张量形状完全相同的图片分组检测；顶层 `batch_size` 和 `SubModules.TextDetection.batch_size` 需要大于 1。每组不增加 padding，使用每张图片自己的 resize 元数据还原检测坐标，并按原图顺序回写检测框和分数。该选项默认关闭，不启用异步推理，仅适用于 `TextDetRunnerPredictor`，不适用于 Transformers 检测后端；启用前请验证模型精度和设备吞吐。
+
 此外，您可以获取OCR产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```
