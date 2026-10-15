@@ -595,6 +595,8 @@ class _TableRecognitionPipelineV2(BasePipeline):
             intersection_area = (x_right - x_left) * (y_bottom - y_top)
             box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
             box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
+            if box2_area <= 0:
+                return 0.0
             # return intersection_area / float(box1_area + box2_area - intersection_area)
             return intersection_area / box2_area
 
