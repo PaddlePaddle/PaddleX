@@ -403,9 +403,6 @@ class PaddleStaticRunner(InferenceRunner):
                 config.set_optimization_level(3)
                 if self._model_name == "PP-DocLayoutV3":
                     config.delete_pass("matmul_add_act_fuse_pass")
-                if paddle.is_compiled_with_rocm():
-                    config.delete_pass("conv2d_add_act_fuse_pass")
-                    config.delete_pass("conv2d_add_fuse_pass")
             elif self._config["device_type"] == "npu":
                 config.enable_custom_device("npu", self._config.get("device_id", 0))
                 if hasattr(config, "enable_new_ir"):
@@ -459,9 +456,6 @@ class PaddleStaticRunner(InferenceRunner):
                 config.disable_mkldnn()
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
-                if paddle.is_compiled_with_rocm():
-                    config.delete_pass("conv2d_add_act_fuse_pass")
-                    config.delete_pass("conv2d_add_fuse_pass")
             elif self._config["device_type"] == "iluvatar_gpu":
                 config.enable_custom_device(
                     "iluvatar_gpu", int(self._config.get("device_id", 0))
@@ -493,18 +487,12 @@ class PaddleStaticRunner(InferenceRunner):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-                if paddle.is_compiled_with_rocm():
-                    config.delete_pass("conv2d_add_act_fuse_pass")
-                    config.delete_pass("conv2d_add_fuse_pass")
         config.enable_memory_optim()
         for del_p in self._config.get("delete_pass", []):
             config.delete_pass(del_p)
 
         if not DEBUG:
             config.disable_glog_info()
-        if paddle.is_compiled_with_rocm():
-            config.delete_pass("conv2d_add_act_fuse_pass")
-            config.delete_pass("conv2d_add_fuse_pass")
 
         predictor = paddle_inference.create_predictor(config)
 
