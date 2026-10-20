@@ -13,7 +13,9 @@
 # limitations under the License.
 
 
-from ....utils.deps import require_deps
+from packaging.version import Version
+
+from ....utils.deps import get_dep_version, require_deps
 
 __all__ = ["get_config"]
 
@@ -49,9 +51,15 @@ def get_config(backend):
 
         import torch
 
+        tf_version = get_dep_version("transformers")
+        if Version(tf_version) >= Version("5.0.0"):
+            remote_code_key = "no-trust-remote-code"
+        else:
+            remote_code_key = "trust-remote-code"
+
         if torch.xpu.is_available():
             return {
-                "trust-remote-code": True,
+                remote_code_key: True,
                 "max-num-batched-tokens": 16384,
                 "no-enable-prefix-caching": True,
                 "mm-processor-cache-gb": 0,
@@ -59,7 +67,7 @@ def get_config(backend):
             }
         else:
             return {
-                "trust-remote-code": True,
+                remote_code_key: True,
                 "gpu-memory-utilization": 0.5,
                 "max-model-len": 16384,
                 "max-num-batched-tokens": 131072,

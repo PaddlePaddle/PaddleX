@@ -236,11 +236,7 @@ EXTRAS = {
             "transformers",
         ],
         "genai-vllm-server": [
-            "einops",
-            "torch == 2.8.0",
-            "transformers < 5.0.0",
-            "uvloop",
-            "vllm == 0.10.2",
+            "vllm == 0.21.0",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.0.2rc3",
