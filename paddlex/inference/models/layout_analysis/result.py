@@ -102,23 +102,6 @@ def draw_box(img: Image.Image, boxes: List[dict]) -> Image.Image:
 
 
 @function_requires_deps("opencv-contrib-python")
-def restore_to_draw_masks(img_size, boxes):
-    """
-    Restores extracted masks to the original shape and draws them on a blank image.
-
-    """
-    restored_masks = []
-
-    for i, box_info in enumerate(boxes):
-        restored_mask = np.zeros(img_size, dtype=np.uint8)
-        polygon = np.array(box_info["polygon_points"], dtype=np.int32)
-        polygon = polygon.reshape((-1, 1, 2))  # shape: (N, 1, 2)
-        cv2.fillPoly(restored_mask, [polygon], 1)
-        restored_masks.append(restored_mask)
-
-    return np.array(restored_masks)
-
-
 def draw_mask(im, boxes, img_size):
     """
     Args:
@@ -133,21 +116,33 @@ def draw_mask(im, boxes, img_size):
     im = np.array(im).astype("float32")
     clsid2color = {}
 
-    np_masks = restore_to_draw_masks(img_size, boxes)
     im_h, im_w = im.shape[:2]
-    np_masks = np_masks[:, :im_h, :im_w]
+    mask_h, mask_w = min(img_size[0], im_h), min(img_size[1], im_w)
 
-    # draw mask
-    for i, mask in enumerate(np_masks):
-        clsid = int(boxes[i]["cls_id"])
+    # draw mask; rasterize and blend only inside each polygon's bounding box
+    for i, box_info in enumerate(boxes):
+        clsid = int(box_info["cls_id"])
         if clsid not in clsid2color:
             color_index = i % len(color_list)
             clsid2color[clsid] = np.array(color_list[color_index])
         color_mask = clsid2color[clsid]
-        idx = np.nonzero(mask)
-        im[idx[0], idx[1], :] = (1.0 - alpha) * im[
-            idx[0], idx[1], :
-        ] + alpha * color_mask
+
+        polygon = np.array(box_info["polygon_points"], dtype=np.int32).reshape(
+            (-1, 1, 2)
+        )
+        x0 = max(int(polygon[..., 0].min()), 0)
+        y0 = max(int(polygon[..., 1].min()), 0)
+        x1 = min(int(polygon[..., 0].max()) + 1, mask_w)
+        y1 = min(int(polygon[..., 1].max()) + 1, mask_h)
+        if x0 >= x1 or y0 >= y1:
+            continue
+        mask = np.zeros((y1 - y0, x1 - x0), dtype=np.uint8)
+        cv2.fillPoly(mask, [polygon - np.array([x0, y0], dtype=np.int32)], 1)
+        region = im[y0:y1, x0:x1]
+        blended = (1.0 - alpha) * region + alpha * color_mask
+        np.copyto(
+            region, blended, casting="same_kind", where=mask.view(bool)[..., None]
+        )
 
     img = Image.fromarray(np.uint8(im))
     font_size = int(0.018 * img.width) + 2
