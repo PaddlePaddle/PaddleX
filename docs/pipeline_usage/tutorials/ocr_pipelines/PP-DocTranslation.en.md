@@ -679,7 +679,6 @@ else:
         input_path,
         use_doc_orientation_classify=False,
         use_doc_unwarping=False,
-        use_common_ocr=True,
         use_seal_recognition=True,
         use_table_recognition=True,
 )
@@ -1480,7 +1479,6 @@ visual_predict_res = pipeline.visual_predict(
     img_path,
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True,
 )

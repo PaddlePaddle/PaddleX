@@ -66,7 +66,6 @@ pipeline = create_pipeline(pipeline="./PP-ChatOCRv3-doc.yaml")
 visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True)
 
@@ -392,16 +391,19 @@ python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_se
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 
-参考2.1 填写大语言模型的 ak/sk(access_token)， 并将`PP-ChatOCRv3-doc.yaml`中的`SubPipelines.SealRecognition.SealOCR.SubModules.TextDetection.model_dir`字段修改为上面微调后的模型路径，修改后配置如下：
+参考2.1 填写大语言模型的 ak/sk(access_token)， 并将`PP-ChatOCRv3-doc.yaml`中的`SubPipelines.LayoutParser.SubPipelines.SealRecognition.SubPipelines.SealOCR.SubModules.TextDetection.model_dir`字段修改为上面微调后的模型路径，修改后配置如下：
 
 ```yaml
-......
+# ...
 SubPipelines:
-    ...
-    SealRecognition:
-        ...
+  LayoutParser:
+    # ...
+    SubPipelines:
+      SealRecognition:
+        # ...
+        SubPipelines:
           SealOCR:
-            ...
+            # ...
             SubModules:
               TextDetection:
                 module_name: seal_text_detection
@@ -413,7 +415,7 @@ SubPipelines:
                 thresh: 0.2
                 box_thresh: 0.6
                 unclip_ratio: 0.5
-......
+# ...
 ```
 
 修改后，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可应用配置。
@@ -426,7 +428,6 @@ pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True)
 
@@ -470,7 +471,6 @@ pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True)
 

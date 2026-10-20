@@ -447,7 +447,6 @@ visual_predict_res = pipeline.visual_predict(
     input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
-    use_common_ocr=True,
     use_seal_recognition=True,
     use_table_recognition=True,
 )
