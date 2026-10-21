@@ -2407,6 +2407,8 @@ In the above Python script, the following steps are executed:
 - The prediction results obtained through the `json` attribute are of type `dict`, and the content is consistent with the data saved by calling the `save_to_json()` method.
 - The prediction results returned by the `img` attribute are of type `dict`. The keys are `ocr_res_img` and `preprocessed_img`, and the corresponding values are two `Image.Image` objects: one for displaying the visualization image of OCR results, and the other for showing the visualization image of image preprocessing. If the image preprocessing sub-module is not used, the dictionary will only contain `ocr_res_img`.
 
+For runner-based text detection, set `batch_detection_by_shape: True` in the OCR pipeline YAML to group images with identical preprocessed tensor shapes. Set the pipeline `batch_size` and `SubModules.TextDetection.batch_size` above 1 to batch multiple images. Each shape group is inferred without adding padding, and polygons/scores are restored to the original image order with each image's resize metadata. The option defaults to `False` and does not enable asynchronous inference. It is supported by `TextDetRunnerPredictor`, not the Transformers detection backend; validate model accuracy and device throughput before enabling it.
+
 Additionally, you can obtain the OCR pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```

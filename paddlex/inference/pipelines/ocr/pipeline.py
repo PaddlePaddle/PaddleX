@@ -145,6 +145,7 @@ class _OCRPipeline(BasePipeline):
             text_rec_config, input_shape=self.input_shape
         )
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
+        self.batch_detection_by_shape = config.get("batch_detection_by_shape", False)
         self.img_reader = ReadImage(format="BGR")
 
     def rotate_image(
@@ -344,6 +345,9 @@ class _OCRPipeline(BasePipeline):
             text_rec_score_thresh = self.text_rec_score_thresh
         if return_word_box is None:
             return_word_box = self.return_word_box
+
+        if self.batch_detection_by_shape:
+            text_det_params["batch_by_shape"] = True
 
         for _, batch_data in enumerate(self.batch_sampler(input)):
             image_arrays = self.img_reader(batch_data.instances)

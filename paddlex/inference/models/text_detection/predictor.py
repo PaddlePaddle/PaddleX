@@ -127,6 +127,7 @@ class TextDetRunnerPredictor(RunnerPredictor):
         box_thresh: Union[float, None] = None,
         unclip_ratio: Union[float, None] = None,
         max_side_limit: Union[int, None] = None,
+        batch_by_shape: bool = False,
     ):
 
         batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
@@ -140,16 +141,38 @@ class TextDetRunnerPredictor(RunnerPredictor):
         )
         batch_imgs = self.pre_tfs["Normalize"](imgs=batch_imgs)
         batch_imgs = self.pre_tfs["ToCHW"](imgs=batch_imgs)
-        x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
-
-        batch_preds = self.runner(x=x)
-        polys, scores = self.post_op(
-            batch_preds,
-            batch_shapes,
-            thresh=thresh or self.thresh,
-            box_thresh=box_thresh or self.box_thresh,
-            unclip_ratio=unclip_ratio or self.unclip_ratio,
-        )
+        if batch_by_shape:
+            buckets = {}
+            for idx, img in enumerate(batch_imgs):
+                buckets.setdefault(tuple(img.shape), []).append(idx)
+            polys, scores = [None] * len(batch_imgs), [None] * len(batch_imgs)
+            for indices in buckets.values():
+                x = self.pre_tfs["ToBatch"](imgs=[batch_imgs[idx] for idx in indices])
+                bucket_polys, bucket_scores = self.post_op(
+                    self.runner(x=x),
+                    [batch_shapes[idx] for idx in indices],
+                    thresh=thresh or self.thresh,
+                    box_thresh=box_thresh or self.box_thresh,
+                    unclip_ratio=unclip_ratio or self.unclip_ratio,
+                )
+                if len(bucket_polys) != len(indices) or len(bucket_scores) != len(
+                    indices
+                ):
+                    raise ValueError(
+                        "Text detection result count does not match image count."
+                    )
+                for idx, poly, score in zip(indices, bucket_polys, bucket_scores):
+                    polys[idx], scores[idx] = poly, score
+        else:
+            x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
+            batch_preds = self.runner(x=x)
+            polys, scores = self.post_op(
+                batch_preds,
+                batch_shapes,
+                thresh=thresh or self.thresh,
+                box_thresh=box_thresh or self.box_thresh,
+                unclip_ratio=unclip_ratio or self.unclip_ratio,
+            )
         return {
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,
