@@ -26,12 +26,14 @@ __all__ = [
     "InMemoryStorageConfig",
     "FileSystemStorageConfig",
     "BOSConfig",
+    "OSSConfig",
     "FileStorageConfig",
     "SupportsGetURL",
     "Storage",
     "InMemoryStorage",
     "FileSystemStorage",
     "BOS",
+    "OSS",
     "create_storage",
 ]
 
@@ -57,8 +59,18 @@ class BOSConfig(BaseModel):
     type: Literal["bos"] = "bos"
 
 
+class OSSConfig(BaseModel):
+    endpoint: str
+    access_key_id: SecretStr
+    access_key_secret: SecretStr
+    bucket_name: str
+    key_prefix: Optional[str] = None
+
+    type: Literal["oss"] = "oss"
+
+
 FileStorageConfig = Annotated[
-    Union[InMemoryStorageConfig, FileSystemStorageConfig, BOSConfig],
+    Union[InMemoryStorageConfig, FileSystemStorageConfig, BOSConfig, OSSConfig],
     Discriminator("type"),
 ]
 
@@ -170,6 +182,46 @@ class BOS(Storage):
         return key
 
 
+@class_requires_deps("oss2")
+class OSS(Storage):
+    def __init__(self, config: OSSConfig) -> None:
+        import oss2
+
+        super().__init__()
+
+        # 创建认证对象
+        auth = oss2.Auth(
+            config.access_key_id.get_secret_value(),
+            config.access_key_secret.get_secret_value()
+        )
+
+        # 创建Bucket对象
+        self._bucket = oss2.Bucket(auth, config.endpoint, config.bucket_name)
+        self._key_prefix = config.key_prefix
+
+    def get(self, key: str) -> bytes:
+        key = self._get_full_key(key)
+        return self._bucket.get_object(key).read()
+
+    def set(self, key: str, value: bytes) -> None:
+        key = self._get_full_key(key)
+        self._bucket.put_object(key, value)
+
+    def delete(self, key: str) -> None:
+        key = self._get_full_key(key)
+        self._bucket.delete_object(key)
+
+    def get_url(self, key: str) -> str:
+        # 生成签名URL，有效期3600秒（1小时）
+        key = self._get_full_key(key)
+        return self._bucket.sign_url('GET', key, 3600)
+
+    def _get_full_key(self, key: str) -> str:
+        if self._key_prefix:
+            return f"{self._key_prefix}/{key}"
+        return key
+
+
 def create_storage(dic: Dict[str, Any], /) -> Storage:
     config = TypeAdapter(FileStorageConfig).validate_python(dic)
     if config.type == "memory":
@@ -178,5 +230,7 @@ def create_storage(dic: Dict[str, Any], /) -> Storage:
         return FileSystemStorage(config)
     elif config.type == "bos":
         return BOS(config)
+    elif config.type == "oss":
+        return OSS(config)
     else:
         assert_never(config)
