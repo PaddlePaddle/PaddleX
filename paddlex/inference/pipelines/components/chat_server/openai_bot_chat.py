@@ -135,7 +135,13 @@ class OpenAIBotChat(BaseChat):
                     temperature=temperature,
                     top_p=0.001,
                 )
-                llm_result["content"] = chat_completion.choices[0].message.content
+                if isinstance(chat_completion, str):
+                    chat_completion = json.loads(chat_completion)
+                    llm_result["content"] = chat_completion["choices"][0]["delta"][
+                        "content"
+                    ]
+                else:
+                    llm_result["content"] = chat_completion.choices[0].message.content
                 try:
                     llm_result["reasoning_content"] = chat_completion.choices[
                         0
