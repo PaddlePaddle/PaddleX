@@ -294,7 +294,7 @@ class CTCLabelDecode(BaseRecLabelDecode):
         """apply"""
         preds = np.array(pred[0])
         preds_idx = preds.argmax(axis=-1)
-        preds_prob = preds.max(axis=-1)
+        preds_prob = np.take_along_axis(preds, preds_idx[..., None], axis=-1)[..., 0]
         text = self.decode(
             preds_idx,
             preds_prob,
