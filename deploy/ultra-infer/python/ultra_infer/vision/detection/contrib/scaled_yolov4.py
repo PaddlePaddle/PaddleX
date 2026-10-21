@@ -29,9 +29,9 @@ class ScaledYOLOv4(UltraInferModel):
         """Load a ScaledYOLOv4 model exported by ScaledYOLOv4.
 
         :param model_file: (str)Path of model file, e.g ./scaled_yolov4.onnx
-        :param params_file: (str)Path of parameters file, e.g yolox/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g yolox/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         # 调用基函数进行backend_option的初始化
         # 初始化后的option保存在self._runtime_option

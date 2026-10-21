@@ -30,10 +30,10 @@ class PPMatting(UltraInferModel):
         """Load a PPMatting model exported by PaddleSeg.
 
         :param model_file: (str)Path of model file, e.g PPMatting-512/model.pdmodel
-        :param params_file: (str)Path of parameters file, e.g PPMatting-512/model.pdiparams, if the model_fomat is ModelFormat.ONNX, this param will be ignored, can be set as empty string
+        :param params_file: (str)Path of parameters file, e.g PPMatting-512/model.pdiparams, if the model_format is ModelFormat.ONNX, this param will be ignored, can be set as empty string
         :param config_file: (str)Path of configuration file for deployment, e.g PPMatting-512/deploy.yml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PPMatting, self).__init__(runtime_option)
 

@@ -30,7 +30,7 @@ class PPMSVSR(UltraInferModel):
         :param model_file: (str)Path of model file, e.g PPMSVSR/inference.pdmodel
         :param params_file: (str)Path of parameters file, e.g PPMSVSR/inference.pdiparams
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PPMSVSR, self).__init__(runtime_option)
 
@@ -65,7 +65,7 @@ class EDVR(PPMSVSR):
         :param model_file: (str)Path of model file, e.g EDVR/inference.pdmodel
         :param params_file: (str)Path of parameters file, e.g EDVR/inference.pdiparams
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PPMSVSR, self).__init__(runtime_option)
 
@@ -100,7 +100,7 @@ class BasicVSR(PPMSVSR):
         :param model_file: (str)Path of model file, e.g BasicVSR/inference.pdmodel
         :param params_file: (str)Path of parameters file, e.g BasicVSR/inference.pdiparams
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(PPMSVSR, self).__init__(runtime_option)
 

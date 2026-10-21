@@ -47,7 +47,7 @@ class Centerpoint(UltraInferModel):
         :param params_file: (str)Path of parameters file, e.g ./Centerpoint.pdiparams
         :param config_file: (str)Path of config file, e.g ./infer_cfg.yaml
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model
         """
         super(Centerpoint, self).__init__(runtime_option)
 

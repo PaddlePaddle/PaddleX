@@ -80,7 +80,7 @@ class UVDocPostprocessor:
         return self._postprocessor.run(runtime_results)
 
 
-class UVDocWarpper(UltraInferModel):
+class UVDocWrapper(UltraInferModel):
     def __init__(
         self,
         model_file="",
@@ -93,18 +93,18 @@ class UVDocWarpper(UltraInferModel):
         :param model_file: (str)Path of model file, e.g ./ch_PP-OCRv3_rec_infer/model.pdmodel.
         :param params_file: (str)Path of parameter file, e.g ./ch_PP-OCRv3_rec_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
-        super(UVDocWarpper, self).__init__(runtime_option)
+        super(UVDocWrapper, self).__init__(runtime_option)
 
         if len(model_file) == 0:
-            self._model = C.vision.ocr.UVDocWarpper()
+            self._model = C.vision.ocr.UVDocWrapper()
             self._runnable = False
         else:
-            self._model = C.vision.ocr.UVDocWarpper(
+            self._model = C.vision.ocr.UVDocWrapper(
                 model_file, params_file, self._runtime_option, model_format
             )
-            assert self.initialized, "UVDocWarpper initialize failed."
+            assert self.initialized, "UVDocWrapper initialize failed."
             self._runnable = True
 
     def clone(self):
@@ -112,11 +112,11 @@ class UVDocWarpper(UltraInferModel):
         :return: a new OCR recognition model object
         """
 
-        class UVDocWarpperClone(UVDocWarpper):
+        class UVDocWrapperClone(UVDocWrapper):
             def __init__(self, model):
                 self._model = model
 
-        clone_model = UVDocWarpperClone(self._model.clone())
+        clone_model = UVDocWrapperClone(self._model.clone())
         return clone_model
 
     def predict(self, input_image):
@@ -474,7 +474,7 @@ class DBDetector(UltraInferModel):
         :param model_file: (str)Path of model file, e.g ./ch_PP-OCRv3_det_infer/model.pdmodel.
         :param params_file: (str)Path of parameter file, e.g ./ch_PP-OCRv3_det_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(DBDetector, self).__init__(runtime_option)
 
@@ -620,7 +620,7 @@ class DBCURVEDetector(UltraInferModel):
         :param model_file: (str)Path of model file, e.g ./ch_PP-OCRv3_det_infer/model.pdmodel.
         :param params_file: (str)Path of parameter file, e.g ./ch_PP-OCRv3_det_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(DBCURVEDetector, self).__init__(runtime_option)
 
@@ -837,7 +837,7 @@ class Classifier(UltraInferModel):
         :param model_file: (str)Path of model file, e.g ./ch_ppocr_mobile_v2.0_cls_infer/model.pdmodel.
         :param params_file: (str)Path of parameter file, e.g ./ch_ppocr_mobile_v2.0_cls_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(Classifier, self).__init__(runtime_option)
 
@@ -1002,7 +1002,7 @@ class Recognizer(UltraInferModel):
         :param params_file: (str)Path of parameter file, e.g ./ch_PP-OCRv3_rec_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param label_path: (str)Path of label file used by OCR recognition model. e.g ./ppocr_keys_v1.txt
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(Recognizer, self).__init__(runtime_option)
 
@@ -1127,7 +1127,7 @@ class StructureV2Table(UltraInferModel):
         :param params_file: (str)Path of parameter file, e.g ./ch_ppocr_mobile_v2.0_cls_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param table_char_dict_path: (str)Path of table_char_dict file, e.g ../ppocr/utils/dict/table_structure_dict_ch.txt
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(StructureV2Table, self).__init__(runtime_option)
 
@@ -1232,7 +1232,7 @@ class StructureV2Layout(UltraInferModel):
         :param model_file: (str)Path of model file, e.g ./picodet_lcnet_x1_0_fgd_layout_infer/model.pdmodel.
         :param params_file: (str)Path of parameter file, e.g ./picodet_lcnet_x1_0_fgd_layout_infer/model.pdiparams, if the model format is ONNX, this parameter will be ignored.
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(StructureV2Layout, self).__init__(runtime_option)
 
@@ -1713,7 +1713,7 @@ class StructureV2SERViLayoutXLMModel(UltraInferModel):
         :param ser_dict_path: (str) class file path
         :param class_path: (str) class file path
         :param runtime_option: (ultra_infer.RuntimeOption)RuntimeOption for inference this model, if it's None, will use the default backend on CPU.
-        :param model_format: (ultra_infer.ModelForamt)Model format of the loaded model.
+        :param model_format: (ultra_infer.ModelFormat)Model format of the loaded model.
         """
         super(StructureV2SERViLayoutXLMModel, self).__init__(runtime_option)
 
