@@ -3174,6 +3174,21 @@ SubModules:
 ```
 随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
+### 4.3 密集连笔文字：加宽文本识别输入
+文本识别模型会将每个文本行缩放到模型输入高度，宽度随行的宽高比变化，最大为 3200 px。对于阿拉伯文等密集连笔文字，这可能使识别头每个字符对应的时间步过少。`TextRecognition` 提供两个可选参数来调整缩放；使用默认值时行为与之前完全一致：
+
+```yaml
+SubModules:
+  TextRecognition:
+    module_name: text_recognition
+    model_name: arabic_PP-OCRv5_mobile_rec
+    model_dir: null
+    width_scale: 2.0   # 作用于按宽高比计算出的宽度的倍数，默认 1.0
+    width_limit: 1280  # 缩放后宽度的上限（像素，整数），默认 null（沿用现有的 3200）
+```
+
+这两个参数仅适用于 Paddle 引擎的动态形状识别，固定 `input_shape` 时会被忽略；Transformers 引擎设置它们会报错。效果取决于文字类型和模型，启用前请在自己的数据上评估：在密集的阿拉伯文书籍文本行上，它们显著降低了字符错误率，而在英文单词图像上没有帮助。
+
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 

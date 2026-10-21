@@ -3183,6 +3183,21 @@ SubModules:
 
 Subsequently, refer to the command-line or Python script methods in [2.2 Local Experience](#22-local-experience) to load the modified pipeline configuration file.
 
+### 4.3 Dense or connected scripts: widening the recognition input
+The text recognition model resizes each text line to the model's input height, with a width that follows the line's aspect ratio, up to a maximum of 3200 px. For dense, connected scripts such as Arabic this can give the recognition head too few time steps per character. Two optional parameters of `TextRecognition` change the resize; with their defaults the behavior is exactly the same as before:
+
+```yaml
+SubModules:
+  TextRecognition:
+    module_name: text_recognition
+    model_name: arabic_PP-OCRv5_mobile_rec
+    model_dir: null
+    width_scale: 2.0   # multiplier applied to the aspect-ratio-derived width, default 1.0
+    width_limit: 1280  # maximum resized width in pixels (an integer), default null (the existing 3200)
+```
+
+They only apply to dynamic-shape recognition with the Paddle engine and are ignored when `input_shape` is fixed; the Transformers engine raises an error if either is set. The effect depends on the script and model, so measure on your own data before enabling them: on dense Arabic book lines they reduced the character error rate substantially, while on English word images they did not help.
+
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPUs, Kunlunxin XPUs, Ascend NPUs, and Cambricon MLUs. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 

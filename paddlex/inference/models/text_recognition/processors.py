@@ -15,6 +15,7 @@
 
 import math
 import re
+from numbers import Integral, Real
 from typing import List, Optional
 
 import numpy as np
@@ -47,11 +48,39 @@ def validate_text_rec_image_array(img: np.ndarray, index: Optional[int] = None) 
 class OCRReisizeNormImg:
     """for ocr image resize and normalization"""
 
-    def __init__(self, rec_image_shape=[3, 48, 320], input_shape=None):
+    def __init__(
+        self,
+        rec_image_shape=[3, 48, 320],
+        input_shape=None,
+        width_scale=1.0,
+        width_limit=None,
+    ):
+        """
+        Args:
+            width_scale (float): Horizontal stretch applied to each crop's aspect ratio
+                before the dynamic resize. More width gives the CTC head more time steps,
+                which helps dense scripts such as Arabic. 1.0 keeps the default behavior.
+            width_limit (int|None): Maximum resized width. None keeps the default of 3200.
+                Neither option affects the static path used when `input_shape` is set.
+        """
         super().__init__()
+        if (
+            isinstance(width_scale, bool)
+            or not isinstance(width_scale, Real)
+            or not math.isfinite(width_scale)
+            or width_scale <= 0
+        ):
+            raise ValueError(f"width_scale must be positive; got {width_scale}.")
+        if width_limit is not None and (
+            isinstance(width_limit, bool)
+            or not isinstance(width_limit, Integral)
+            or width_limit <= 0
+        ):
+            raise ValueError(f"width_limit must be positive; got {width_limit}.")
         self.rec_image_shape = rec_image_shape
         self.input_shape = input_shape
-        self.max_imgW = 3200
+        self.width_scale = width_scale
+        self.max_imgW = 3200 if width_limit is None else int(width_limit)
 
     def resize_norm_img(self, img, max_wh_ratio):
         """resize and normalize the img"""
@@ -64,7 +93,7 @@ class OCRReisizeNormImg:
             imgW = self.max_imgW
         else:
             h, w = img.shape[:2]
-            ratio = w / float(h)
+            ratio = w / float(h) * self.width_scale
             if math.ceil(imgH * ratio) > imgW:
                 resized_w = imgW
             else:
@@ -91,7 +120,7 @@ class OCRReisizeNormImg:
         imgC, imgH, imgW = self.rec_image_shape
         max_wh_ratio = imgW / imgH
         h, w = img.shape[:2]
-        wh_ratio = w * 1.0 / h
+        wh_ratio = w * 1.0 / h * self.width_scale
         max_wh_ratio = max(max_wh_ratio, wh_ratio)
         img = self.resize_norm_img(img, max_wh_ratio)
         return img
