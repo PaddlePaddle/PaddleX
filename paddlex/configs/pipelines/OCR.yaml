@@ -3,6 +3,9 @@ pipeline_name: OCR
 
 text_type: general
 
+batch_size: 1
+batch_recognition_across_images: False
+
 use_doc_preprocessor: True
 use_textline_orientation: True
 

@@ -2398,6 +2398,8 @@ for res in output:
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
 - `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `ocr_res_img` 和 `preprocessed_img`，对应的值是两个 `Image.Image` 对象：一个用于显示 OCR 结果的可视化图像，另一个用于展示图像预处理的可视化图像。如果没有使用图像预处理子模块，则字典中只包含 `ocr_res_img`。
 
+多图片场景可在 OCR 产线 YAML 中设置 `batch_size: 4` 和 `batch_recognition_across_images: True`，将同一个产线 batch 内所有图片的文字裁剪图合并识别。裁剪图统一按宽高比排序，识别结果按原始图片和检测框顺序还原；`SubModules.TextRecognition.batch_size` 仍控制识别模型每次执行的 batch 大小。该选项默认关闭，顶层 `batch_size: 1` 无法跨图片合批。识别 batch 的组成变化可能改变 padding 和分数，启用前请使用自己的数据验证精度和吞吐。该选项不改变检测合批，也不把推理 runner 改为异步。
+
 此外，您可以获取OCR产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```

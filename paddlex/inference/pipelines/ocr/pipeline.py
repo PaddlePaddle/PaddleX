@@ -145,7 +145,28 @@ class _OCRPipeline(BasePipeline):
             text_rec_config, input_shape=self.input_shape
         )
         self.batch_sampler = ImageBatchSampler(batch_size=config.get("batch_size", 1))
+        self.batch_recognition_across_images = config.get(
+            "batch_recognition_across_images", False
+        )
         self.img_reader = ReadImage(format="BGR")
+
+    def _recognize_crops(self, crops, return_word_box):
+        if not crops:
+            return []
+        indices = sorted(
+            range(len(crops)), key=lambda idx: crops[idx].shape[1] / crops[idx].shape[0]
+        )
+        sorted_results = list(
+            self.text_rec_model(
+                [crops[idx] for idx in indices], return_word_box=return_word_box
+            )
+        )
+        if len(sorted_results) != len(crops):
+            raise ValueError("Text recognition result count does not match crop count.")
+        results = [None] * len(crops)
+        for idx, result in zip(indices, sorted_results):
+            results[idx] = result
+        return results
 
     def rotate_image(
         self, image_array_list: List[np.ndarray], rotate_angle_list: List[int]
@@ -448,35 +469,25 @@ class _OCRPipeline(BasePipeline):
                         chunk_indices[i] : chunk_indices[i + 1]
                     ]
 
-                # TODO: Process all sub-images in the batch together
+                if self.batch_recognition_across_images:
+                    all_rec_results = self._recognize_crops(
+                        all_subs_of_imgs, return_word_box
+                    )
                 for i, idx in enumerate(indices):
                     all_subs_of_img = all_subs_of_imgs[
                         chunk_indices[i] : chunk_indices[i + 1]
                     ]
                     res = results[idx]
                     dt_polys = dt_polys_list[idx]
-                    sub_img_info_list = [
-                        {
-                            "sub_img_id": img_id,
-                            "sub_img_ratio": sub_img.shape[1] / float(sub_img.shape[0]),
-                        }
-                        for img_id, sub_img in enumerate(all_subs_of_img)
-                    ]
-                    sorted_subs_info = sorted(
-                        sub_img_info_list, key=lambda x: x["sub_img_ratio"]
-                    )
-                    sorted_subs_of_img = [
-                        all_subs_of_img[x["sub_img_id"]] for x in sorted_subs_info
-                    ]
-                    for i, rec_res in enumerate(
-                        self.text_rec_model(
-                            sorted_subs_of_img, return_word_box=return_word_box
+                    if self.batch_recognition_across_images:
+                        rec_results = all_rec_results[
+                            chunk_indices[i] : chunk_indices[i + 1]
+                        ]
+                    else:
+                        rec_results = self._recognize_crops(
+                            all_subs_of_img, return_word_box
                         )
-                    ):
-                        sub_img_id = sorted_subs_info[i]["sub_img_id"]
-                        sub_img_info_list[sub_img_id]["rec_res"] = rec_res
-                    for sno in range(len(sub_img_info_list)):
-                        rec_res = sub_img_info_list[sno]["rec_res"]
+                    for sno, rec_res in enumerate(rec_results):
                         if rec_res["rec_score"] >= text_rec_score_thresh:
                             if return_word_box:
                                 word_box_content_list, word_box_list = cal_ocr_word_box(
