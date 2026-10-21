@@ -1250,6 +1250,9 @@ class _TableRecognitionPipelineV2(BasePipeline):
                 elif table_angle == "270":
                     doc_preprocessor_image = np.rot90(doc_preprocessor_image, k=3)
                 if table_angle in ["90", "180", "270"]:
+                    doc_preprocessor_image = np.ascontiguousarray(
+                        doc_preprocessor_image
+                    )
                     overall_ocr_res = list(
                         self.general_ocr_pipeline(
                             doc_preprocessor_image,
@@ -1337,6 +1340,9 @@ class _TableRecognitionPipelineV2(BasePipeline):
                                 doc_preprocessor_image_copy, k=3
                             )
                         if table_angle in ["90", "180", "270"]:
+                            doc_preprocessor_image_copy = np.ascontiguousarray(
+                                doc_preprocessor_image_copy
+                            )
                             overall_ocr_res = list(
                                 self.general_ocr_pipeline(
                                     doc_preprocessor_image_copy,
