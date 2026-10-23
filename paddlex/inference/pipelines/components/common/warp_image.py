@@ -11,9 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import numpy as np
-
 from .....utils.deps import function_requires_deps, is_dep_available
 
 if is_dep_available("opencv-contrib-python"):
@@ -24,13 +22,11 @@ if is_dep_available("opencv-contrib-python"):
 def rotate_image(image, angle):
     if angle < 0 or angle >= 360:
         raise ValueError("`angle` should be in range [0, 360)")
-
     if angle < 1e-7:
         return image
-
     # Should we align corners?
     h, w = image.shape[:2]
-    center = (w / 2, h / 2)
+    center = ((w - 1) / 2.0, (h - 1) / 2.0)
     scale = 1.0
     mat = cv2.getRotationMatrix2D(center, angle, scale)
     cos = np.abs(mat[0, 0])
@@ -40,7 +36,6 @@ def rotate_image(image, angle):
     mat[0, 2] += (new_w - w) / 2
     mat[1, 2] += (new_h - h) / 2
     dst_size = (new_w, new_h)
-
     rotated = cv2.warpAffine(
         image,
         mat,
