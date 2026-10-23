@@ -197,6 +197,15 @@ def _set_paragraph_style(para, config):
     from docx.oxml.ns import qn
     from docx.shared import Inches, Pt
 
+    # Apply Word heading style when a level is defined in the style config
+    level = config.get("level")
+    if level is not None:
+        doc = para.part.document
+        if level == 0:
+            para.style = doc.styles["Title"]
+        else:
+            para.style = doc.styles["Heading " + str(min(level, 9))]
+
     run = para.runs[0] if para.runs else para.add_run()
     font_name = config.get("font", "Times New Roman")
     run.font.name = font_name
