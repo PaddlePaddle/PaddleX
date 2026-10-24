@@ -768,8 +768,16 @@ class _LayoutParsingPipelineV2(BasePipeline):
                 img_path = (
                     f"imgs/img_in_{block.label}_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
                 )
-                img = Image.fromarray(image[y_min:y_max, x_min:x_max, ::-1])
-                block.image = {"path": img_path, "img": img}
+                # Clamp to the page so negative coordinates do not wrap around,
+                # and leave `block.image` unset when nothing visible remains.
+                h, w = image.shape[:2]
+                crop_x_min, crop_x_max = max(0, min(x_min, w)), max(0, min(x_max, w))
+                crop_y_min, crop_y_max = max(0, min(y_min, h)), max(0, min(y_max, h))
+                if crop_x_max > crop_x_min and crop_y_max > crop_y_min:
+                    img = Image.fromarray(
+                        image[crop_y_min:crop_y_max, crop_x_min:crop_x_max, ::-1]
+                    )
+                    block.image = {"path": img_path, "img": img}
 
             layout_parsing_blocks.append(block)
 
