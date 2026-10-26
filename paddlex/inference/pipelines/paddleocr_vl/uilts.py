@@ -587,7 +587,7 @@ def untokenize_figure_of_table(table_res_str, figure_token_map, image_path_to_ob
         else:
             img_tags = []
             img_tags.append(
-                '<img src="{}" alt="Image"" />'.format(
+                '<img src="{}" alt="Image" />'.format(
                     img_path.replace("-\n", "").replace("\n", " ")
                 ),
             )
