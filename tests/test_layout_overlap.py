@@ -127,3 +127,13 @@ def test_preserves_larger_removal_mode(remove_overlaps):
         {"boxes": [box([0, 0, 100, 100], 0.2)] + children}, smaller=False
     )
     assert result["boxes"] == children
+
+
+def test_full_overlap_threshold_disables_removal(remove_overlaps):
+    boxes = [
+        box([0, 0, 100, 100], 0.2),
+        box([0, 0, 40, 100]),
+        box([60, 0, 100, 100]),
+    ]
+    result = remove_overlaps({"boxes": boxes}, threshold=1.0)
+    assert result["boxes"] == boxes

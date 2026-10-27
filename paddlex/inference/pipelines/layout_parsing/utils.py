@@ -436,9 +436,8 @@ def _low_confidence_text_containers(boxes):
             if x1 <= left < right <= x2 and y1 <= top < bottom <= y2:
                 min_right = min(min_right, right)
                 max_left = max(max_left, left)
-        # Distinct x intervals identify separate columns rather than duplicate
-        # detections or vertically stacked lines in the same paragraph. Find
-        # the pair in linear time so the complete pass remains O(n^2).
+        # Find horizontally disjoint regions in linear time so the complete
+        # pass remains O(n^2). Overlapping x intervals keep legacy selection.
         if max_left >= min_right:
             dropped.add(index)
     return dropped
@@ -461,7 +460,9 @@ def remove_overlap_blocks(
     """
     blocks = deepcopy(blocks)
     dropped_indexes = (
-        _low_confidence_text_containers(blocks["boxes"]) if smaller else set()
+        _low_confidence_text_containers(blocks["boxes"])
+        if smaller and threshold < 1.0
+        else set()
     )
     overlap_image_blocks = []
     # Iterate over each pair of blocks to find overlaps
