@@ -416,6 +416,34 @@ def _get_minbox_if_overlap_by_ratio(
     return None
 
 
+def _low_confidence_text_containers(boxes):
+    """Find text containers spanning higher-confidence, separate text regions."""
+    dropped = set()
+    for index, outer in enumerate(boxes):
+        if outer["label"] != "text" or outer.get("score") is None:
+            continue
+        x1, y1, x2, y2 = outer["coordinate"]
+        min_right, max_left = float("inf"), float("-inf")
+        for inner_index, inner in enumerate(boxes):
+            if (
+                inner_index == index
+                or inner["label"] != "text"
+                or inner.get("score") is None
+                or inner["score"] <= outer["score"]
+            ):
+                continue
+            left, top, right, bottom = inner["coordinate"]
+            if x1 <= left < right <= x2 and y1 <= top < bottom <= y2:
+                min_right = min(min_right, right)
+                max_left = max(max_left, left)
+        # Distinct x intervals identify separate columns rather than duplicate
+        # detections or vertically stacked lines in the same paragraph. Find
+        # the pair in linear time so the complete pass remains O(n^2).
+        if max_left >= min_right:
+            dropped.add(index)
+    return dropped
+
+
 def remove_overlap_blocks(
     blocks: List[Dict[str, List[int]]], threshold: float = 0.65, smaller: bool = True
 ) -> Tuple[List[Dict[str, List[int]]], List[Dict[str, List[int]]]]:
@@ -431,8 +459,10 @@ def remove_overlap_blocks(
         Tuple[List[Dict[str, List[int]]], List[Dict[str, List[int]]]]:
             A tuple containing the updated list of blocks and a list of dropped blocks.
     """
-    dropped_indexes = set()
     blocks = deepcopy(blocks)
+    dropped_indexes = (
+        _low_confidence_text_containers(blocks["boxes"]) if smaller else set()
+    )
     overlap_image_blocks = []
     # Iterate over each pair of blocks to find overlaps
     for i, block1 in enumerate(blocks["boxes"]):
