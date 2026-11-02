@@ -1136,18 +1136,13 @@ register_model_info(
 
 # PP-DocLayoutV4 is a layout *analysis* model (it also predicts reading order),
 # but unlike PP-DocLayoutV3 it emits 4-point quads instead of instance masks, so
-# it trains on COCODetDataset and belongs to the Det suite rather than InstanceSeg.
+# it belongs to the Det suite rather than InstanceSeg. Only prediction is
+# supported for now.
 register_model_info(
     {
         "model_name": "PP-DocLayoutV4",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayoutV4.yaml"),
-        "supported_apis": ["train", "evaluate", "predict", "export"],
-        "supported_dataset_types": ["COCODetDataset"],
-        "supported_train_opts": {
-            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
-            "dy2st": False,
-            "amp": ["OFF"],
-        },
+        "supported_apis": ["predict"],
     }
 )

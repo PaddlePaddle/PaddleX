@@ -190,7 +190,6 @@ for res in output:
 <li><b>字典</b>，key为<b>int</b>类型的<code>cls_id</code>，value为<b>tuple</b>，如 <code>{0: (1.1, 2.0)}</code></li>
 <li><b>None</b>，不指定，将默认使用PaddleX官方模型配置</li>
 </ul>
-PP-DocLayoutV4 的四边形边界和多边形模型的 <code>polygon_points</code> 也会以检测框中心为中心，沿原图横、纵轴同步缩放；缩放后的边界用于普通裁图和几何矫正裁图。本模块的重叠框过滤基于缩放前的预测几何进行；PaddleOCR-VL 产线关闭了本模块的重叠框过滤，改为在缩放后的边界上过滤，因此当 <code>layout_unclip_ratio</code> 不为 1 时，产线保留的版面块可能与本模块的输出不同。
 </td>
 <td>None</td>
 </tr>

@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""V4 unclipping must reach recognition crops, including page rectification."""
+"""V4 unclipping expands the boxes that reach recognition crops, including
+page rectification, and keeps the predicted quads."""
 
 import numpy as np
 import pytest
@@ -105,7 +106,6 @@ def _pixel_at_page_point(crop, point):
     return crop["img"][y, x]
 
 
-@pytest.mark.parametrize("shape_mode", ["auto", "rect"])
 @pytest.mark.parametrize(
     "ratio, expected_box",
     [
@@ -115,8 +115,8 @@ def _pixel_at_page_point(crop, point):
         ({0: (2.0, 1.5)}, [70, 60, 150, 120]),
     ],
 )
-def test_unclip_reveals_pixels_outside_original_quad(
-    ratio, expected_box, shape_mode, correction_mode
+def test_rect_unclip_reveals_pixels_outside_original_quad(
+    ratio, expected_box, correction_mode
 ):
     image = np.full((180, 240, 3), 255, dtype=np.uint8)
     quad = np.array([[[90, 70], [130, 70], [130, 110], [90, 110]]], dtype=np.float32)
@@ -128,32 +128,28 @@ def test_unclip_reveals_pixels_outside_original_quad(
     ]
     for point, color in markers:
         _paint(image, point, color)
-    result = _layout(quad, ratio, shape_mode)
+    result = _layout(quad, ratio, "rect")
     assert result[0]["coordinate"] == expected_box
-    crop = _crop(image, result, correction_mode, shape_mode)
+    crop = _crop(image, result, correction_mode, "rect")
     assert crop["box"] == expected_box
     for point, color in markers:
         # Verify actual source pixels reach recognition, not just larger metadata.
         np.testing.assert_allclose(_pixel_at_page_point(crop, point), color, atol=2)
 
 
-def test_skew_quad_expands_without_filling_enclosing_rectangle(correction_mode):
-    image = np.full((180, 240, 3), 255, dtype=np.uint8)
-    quad = np.array([[[90, 70], [130, 80], [120, 110], [80, 100]]], dtype=np.float32)
-    _paint(image, (65, 100), [10, 40, 200])
-    _paint(image, (60, 65), [0, 200, 0])
-    result = _layout(quad, [2.0, 1.5])
-    assert result[0]["coordinate"] == [55, 60, 155, 120]
-    crop = _crop(image, result, correction_mode)
-    np.testing.assert_allclose(
-        _pixel_at_page_point(crop, (65, 100)), [10, 40, 200], atol=2
-    )
-    assert not np.any(
-        np.all(np.abs(crop["img"].astype(int) - [0, 200, 0]) < 10, axis=-1)
-    )
-    np.testing.assert_array_equal(
-        result[0]["quad"], [[75, 60], [155, 75], [135, 120], [55, 105]]
-    )
+@pytest.mark.parametrize(
+    "quad, ratio, expected_box",
+    [
+        ([[90, 70], [130, 80], [120, 110], [80, 100]], [2.0, 1.5], [55, 60, 155, 120]),
+        ([[90, 70], [130, 70], [130, 110], [90, 110]], 0.5, [100, 80, 120, 100]),
+        ([[0, 0], [30, 0], [30, 20], [0, 20]], 2.0, [0, 0, 45, 30]),
+    ],
+)
+def test_unclip_expands_box_but_keeps_predicted_quad(quad, ratio, expected_box):
+    quads = np.array([quad], dtype=np.float32)
+    result = _layout(quads, ratio)
+    assert result[0]["coordinate"] == expected_box
+    np.testing.assert_array_equal(result[0]["quad"], quads[0])
 
 
 def test_class_specific_unclip_follows_sorted_boxes():
@@ -166,10 +162,12 @@ def test_class_specific_unclip_follows_sorted_boxes():
     )
     result = _layout(quads, {0: (2.0, 1.5)}, classes=[0, 1], order=[1, 0])
     assert [box["cls_id"] for box in result] == [1, 0]
+    assert [box["coordinate"] for box in result] == [
+        [10, 10, 30, 30],
+        [70, 60, 150, 120],
+    ]
     np.testing.assert_array_equal(result[0]["quad"], quads[1])
-    np.testing.assert_array_equal(
-        result[1]["quad"], [[70, 60], [150, 60], [150, 120], [70, 120]]
-    )
+    np.testing.assert_array_equal(result[1]["quad"], quads[0])
 
 
 @pytest.mark.parametrize("ratio", [1.0, [1.0, 1.0], {0: (1.0, 1.0)}, {1: (2.0, 2.0)}])
@@ -197,40 +195,3 @@ def test_unclip_does_not_mutate_or_reexpand_model_quads():
     second = _layout(quads, 2.0)
     assert first == second
     np.testing.assert_array_equal(quads, original)
-
-
-def test_unclip_supports_shrinking_quad(correction_mode):
-    image = np.full((180, 240, 3), 255, dtype=np.uint8)
-    _paint(image, (110, 90), [0, 0, 0])
-    _paint(image, (94, 90), [0, 200, 0])
-    quads = np.array([[[90, 70], [130, 70], [130, 110], [90, 110]]], dtype=np.float32)
-    result = _layout(quads, 0.5)
-    assert result[0]["coordinate"] == [100, 80, 120, 100]
-    np.testing.assert_array_equal(
-        result[0]["quad"], [[100, 80], [120, 80], [120, 100], [100, 100]]
-    )
-    crop = _crop(image, result, correction_mode)
-    np.testing.assert_allclose(_pixel_at_page_point(crop, (110, 90)), [0, 0, 0], atol=2)
-    assert not np.any(
-        np.all(np.abs(crop["img"].astype(int) - [0, 200, 0]) < 10, axis=-1)
-    )
-
-
-def test_unclip_at_page_edge_clips_boxes_but_preserves_quad_shape(correction_mode):
-    image = np.full((180, 240, 3), [17, 31, 49], dtype=np.uint8)
-    quads = np.array([[[0, 0], [30, 0], [30, 20], [0, 20]]], dtype=np.float32)
-    result = _layout(quads, 2.0)
-    assert result[0]["coordinate"] == [0, 0, 45, 30]
-    np.testing.assert_array_equal(
-        result[0]["quad"], [[-15, -10], [45, -10], [45, 30], [-15, 30]]
-    )
-    crop = _crop(image, result, correction_mode)
-    np.testing.assert_allclose(
-        _pixel_at_page_point(crop, (10, 10)), [17, 31, 49], atol=2
-    )
-    if "homography" in correction_mode:
-        np.testing.assert_array_equal(
-            _pixel_at_page_point(crop, (-10, -5)), [255, 255, 255]
-        )
-    else:
-        assert np.all(crop["img"] == [17, 31, 49])

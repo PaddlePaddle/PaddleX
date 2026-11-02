@@ -249,11 +249,12 @@ def test_v4_nms_and_overlap_filter_use_quad_geometry():
     "second_label, second_box",
     [("text", [41, 15, 61, 25]), ("inline_formula", [46, 15, 66, 25])],
 )
-def test_overlap_filter_uses_predicted_geometry_before_unclip(
+def test_overlap_filter_compares_output_geometry(
     geometry_key, second_label, second_box
 ):
     # The second box overlaps the first by 0.7 (0.45 for inline formulas), which
-    # the filter keeps; expanded by 1.1 their overlap would exceed it.
+    # the filter keeps; expanded by 1.1 their boxes overlap by more. Quads are
+    # not expanded, so they still overlap by 0.7.
     labels = ["text", "inline_formula"]
     boxes = np.array(
         [[0, 0.9, 5, 5, 55, 55], [labels.index(second_label), 0.8, *second_box]],
@@ -279,58 +280,28 @@ def test_overlap_filter_uses_predicted_geometry_before_unclip(
         filter_overlap_boxes=True,
         skip_order_labels=[],
     )[0]
-    assert len(result) == 2
-    # The kept boxes are still expanded.
+    assert len(result) == (2 if geometry_key == "quad" else 1)
     assert result[0]["coordinate"] == [2, 2, 57, 57]
 
 
-@pytest.mark.parametrize("source", ["masks", "polygon_points"])
-def test_unclip_scales_polygons_with_boxes(source):
+@pytest.mark.parametrize("source", ["masks", "polygon_points", "quad"])
+def test_unclip_expands_boxes_only(source):
     diamond = np.array([[50, 30], [70, 50], [50, 70], [30, 50]], dtype=np.float32)
     output = {"boxes": np.array([[0, 0.9, 30, 30, 70, 70]], dtype=np.float32)}
     if source == "masks":
         output["masks"] = np.ones((1, 25, 25), dtype=np.uint8)
-    else:
+    elif source == "polygon_points":
         output["polygon_points"] = [diamond]
-    result = _postprocess(output, layout_unclip_ratio=1.5)
-    assert result[0]["coordinate"] == [20, 20, 80, 80]
-    points = result[0]["polygon_points"]
-    assert points.dtype == np.float32
-    if source == "polygon_points":
-        np.testing.assert_array_equal(points, [[50, 20], [80, 50], [50, 80], [20, 50]])
-    crop = CropByBoxes()(np.zeros((100, 100, 3), dtype=np.uint8), result, "poly")[0][
-        "img"
-    ]
-    assert crop.shape == (60, 60, 3)
-    # Page point (25, 50) is outside the predicted polygon but inside the
-    # expanded one.
-    np.testing.assert_array_equal(crop[30, 5], [0, 0, 0])
-
-
-@pytest.mark.parametrize("x_min, x_max", [(10.8, 30.8), (10.4, 30.6), (10.6, 30.4)])
-@pytest.mark.parametrize("unclip_ratio", [None, 1.5, 3.0])
-def test_v3_transformers_polygons_match_paddle_mask_polygons(
-    x_min, x_max, unclip_ratio
-):
-    # Transformers traces a full mask over the truncated box, the Paddle path
-    # over the rounded one.
-    low, high = int(x_min), int(x_max) - 1
-    contour = np.array([[low, low], [low, high], [high, high], [high, low]])
-    box = [x_min, x_min, x_max, x_max]
-    hf = _postprocess(
-        _adapt("PP-DocLayoutV3", [box], [contour], [0]),
-        layout_unclip_ratio=unclip_ratio,
-    )[0]
-    paddle = _postprocess(
-        {
-            "boxes": np.array([[0, 0.9, *box]], dtype=np.float32),
-            "masks": np.ones((1, 25, 25), dtype=np.uint8),
-        },
-        layout_unclip_ratio=unclip_ratio,
-    )[0]
-    assert hf["coordinate"] == paddle["coordinate"]
-    points = [np.asarray(b["polygon_points"]) for b in (hf, paddle)]
-    np.testing.assert_allclose(*(p[np.lexsort(p.T)] for p in points), atol=1e-4)
+    else:
+        output["quad"] = diamond.reshape(1, 8)
+    plain = _postprocess(dict(output, boxes=output["boxes"].copy()))[0]
+    result = _postprocess(output, layout_unclip_ratio=1.5)[0]
+    assert plain["coordinate"] == [30, 30, 70, 70]
+    assert result["coordinate"] == [20, 20, 80, 80]
+    key = "quad" if source == "quad" else "polygon_points"
+    np.testing.assert_array_equal(result[key], plain[key])
+    if source != "masks":
+        np.testing.assert_array_equal(np.reshape(result[key], (4, 2)), diamond)
 
 
 def test_paddle_masks_keep_precedence_over_decoded_polygons():

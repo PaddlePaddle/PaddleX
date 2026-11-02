@@ -187,7 +187,6 @@ Relevant methods, parameters, and explanations are as follows:
 <li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as <b>tuple</b>, e.g., <code>{0: (1.1, 2.0)}</code></li>
 <li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
 </ul>
-The quadrilateral boundary of PP-DocLayoutV4 and the <code>polygon_points</code> of polygon models are also scaled about the detection box center along the original image's horizontal and vertical axes. The scaled boundary is used for both ordinary and geometrically corrected crops. This module filters overlapping boxes on the predicted geometry before scaling. The PaddleOCR-VL pipelines turn this filter off and filter on the scaled boundaries instead, so when <code>layout_unclip_ratio</code> is not 1, the blocks they keep may differ from the output of this module.
 </td>
 <td>None</td>
 </tr>

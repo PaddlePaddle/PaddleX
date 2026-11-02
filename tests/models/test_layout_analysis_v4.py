@@ -115,6 +115,38 @@ def test_other_paddle_outputs_use_detection_format():
     np.testing.assert_array_equal(results[1]["boxes"], boxes[1:])
 
 
+@pytest.mark.parametrize("with_order", [False, True])
+def test_plain_detection_quads_split_per_image(with_order):
+    bbox_pred = np.column_stack([_LABELS, _QUADS]).astype(np.float32)
+    if with_order:
+        # A pre-decoded reading order follows the quad.
+        bbox_pred = np.column_stack([bbox_pred, [1, 0, 2, 2, 1, 0]])
+    results = _runner_predictor()._format_output([bbox_pred, np.array([3, 3])])
+    assert [set(result) for result in results] == [{"boxes", "quad"}] * 2
+    np.testing.assert_array_equal(results[1]["quad"], _QUADS[3:])
+    expected = [0, 0.9, 10, 10, 40, 40] + ([1] if with_order else [])
+    np.testing.assert_allclose(results[0]["boxes"][0], expected)
+
+    page = LayoutAnalysisProcess(
+        labels=["text", "table", "image"], scale_size=[100, 100]
+    )(
+        results,
+        [{"ori_img_size": (100, 100)}] * 2,
+        threshold=0.5,
+        layout_nms=False,
+        layout_unclip_ratio=None,
+        layout_merge_bboxes_mode=None,
+        layout_shape_mode="auto",
+        filter_overlap_boxes=True,
+        skip_order_labels=[],
+    )
+    coordinates = [box["coordinate"] for box in page[1]]
+    if with_order:
+        assert coordinates == [[40, 10, 60, 30], [10, 10, 30, 30]]
+    else:
+        assert coordinates == [[10, 10, 30, 30], [40, 10, 60, 30]]
+
+
 @pytest.mark.parametrize("with_quad", [False, True])
 def test_paddle_outputs_with_masks_split_per_image(with_quad):
     pred = _paddle_outputs(with_warp=False)

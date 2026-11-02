@@ -30,6 +30,23 @@ LAYOUT_ANALYSIS_TRANSFORMERS_MODELS = [
 ]
 
 
+def _split_quad(bbox_pred):
+    """Split the quad off 4-point rows [label, score, x1, y1, ..., x4, y4, ...].
+
+    Returns the rows with the quad replaced by its axis-aligned box, keeping any
+    trailing columns (e.g. a pre-decoded reading order), and the quads [N, 8].
+    Rows with fewer than 10 columns carry no quad and are returned unchanged.
+    """
+    if bbox_pred.ndim != 2 or bbox_pred.shape[1] < 10:
+        return bbox_pred, None
+    quad = bbox_pred[:, 2:10]
+    points = quad.reshape(-1, 4, 2)
+    boxes = np.column_stack(
+        [bbox_pred[:, :2], points.min(axis=1), points.max(axis=1), bbox_pred[:, 10:]]
+    )
+    return boxes, quad
+
+
 class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
     """Layout analysis predictor."""
 
@@ -85,8 +102,13 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
                 masks return [bbox_pred, bbox_num, masks, qi, rel_logits,
                 roor_logits], where masks is [N, H, W]. In every layout, the
                 rows of bbox_pred may instead be [label, score, xmin, ymin,
-                xmax, ymax], which carry no quad. The outputs of the other
-                models are handled by ``DetRunnerPredictor``.
+                xmax, ymax], which carry no quad. Plain detection outputs
+                [bbox_pred, bbox_num] may also carry a quad at columns 2:10,
+                followed by optional columns such as a pre-decoded reading
+                order; outputs of any other length are read as plain
+                detection outputs too. Instance segmentation outputs
+                [bbox_pred, bbox_num, masks] are handled by
+                ``DetRunnerPredictor``.
 
         Returns:
             List[dict]: A list of dictionaries, one per image.
@@ -101,8 +123,16 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
             bbox_pred, bbox_num, qi, rel_logits, roor_logits = pred[:5]
             if len(pred) == 6:
                 warp_params = pred[5]
-        else:
+        elif len(pred) == 3:
             return super()._format_output(pred)
+        else:
+            boxes, quad = _split_quad(pred[0])
+            results = super()._format_output([boxes, pred[1]])
+            if quad is not None:
+                splits = np.cumsum(pred[1], dtype=np.int64)[:-1]
+                for result, image_quad in zip(results, np.split(quad, splits)):
+                    result["quad"] = image_quad
+            return results
 
         if bbox_pred.ndim != 2 or bbox_pred.shape[1] not in (6, 10):
             raise ValueError(
@@ -114,21 +144,8 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
                 f"Expected warp_params of shape [batch, 5], got {warp_params.shape}."
             )
 
-        quad = None
-        boxes = bbox_pred
-        if bbox_pred.shape[1] == 10:
-            # Detection uses the axis-aligned box of each quad.
-            quad = bbox_pred[:, 2:10]
-            xs, ys = quad[:, 0::2], quad[:, 1::2]
-            boxes = np.column_stack(
-                [
-                    bbox_pred[:, :2],
-                    xs.min(axis=1),
-                    ys.min(axis=1),
-                    xs.max(axis=1),
-                    ys.max(axis=1),
-                ]
-            )
+        # Detection uses the axis-aligned box of each quad.
+        boxes, quad = _split_quad(bbox_pred)
 
         results = []
         box_idx_start = 0
@@ -268,17 +285,6 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
         )
 
 
-def _polygon_to_rounded_box(polygon, box):
-    """Move a transformers polygon from its truncated box onto the rounded one."""
-    polygon = np.asarray(polygon, dtype=np.float64)
-    src, dst = np.trunc(box), np.round(box)
-    src_span = src[2:] - src[:2] - 1
-    scale = np.divide(
-        dst[2:] - dst[:2] - 1, src_span, out=np.ones(2), where=src_span > 0
-    )
-    return dst[:2] + (polygon - src[:2]) * scale
-
-
 class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
     """Layout analysis predictor backed by HuggingFace transformers."""
 
@@ -341,21 +347,14 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
                     )
                 output["quad"] = points.reshape(len(formatted), 8)
             else:
-                if len(points) != len(formatted):
-                    raise ValueError(
-                        f"Expected {len(formatted)} polygon_points, got {len(points)}."
-                    )
-                output["polygon_points"] = [
-                    _polygon_to_rounded_box(polygon, box)
-                    for polygon, box in zip(points, formatted[:, 2:6])
-                ]
+                output["polygon_points"] = [np.asarray(p) for p in points]
         if "warp_params" in prediction:
             warp_params = prediction["warp_params"].detach().cpu().numpy()
             if warp_params.shape != (5,):
                 raise ValueError(
                     f"Expected warp_params of shape [5], got {warp_params.shape}."
                 )
-            output["warp_params"] = warp_params.tolist()
+            output["warp_params"] = warp_params
         return output
 
     def process(
