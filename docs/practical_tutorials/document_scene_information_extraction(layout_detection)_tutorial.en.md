@@ -550,22 +550,17 @@ First, obtain and update the configuration file for the Document Information Ext
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 
-Modify the `Pipeline.layout_model` field in `PP-ChatOCRv3-doc.yaml` to the path of the fine-tuned model mentioned above. The modified configuration is as follows:
+Modify the `SubPipelines.LayoutParser.SubModules.LayoutDetection.model_dir` field in `PP-ChatOCRv3-doc.yaml` to the path of the fine-tuned model mentioned above. The relevant configuration is as follows:
 
 ```yaml
-Pipeline:
-  layout_model: ./output/best_model/inference
-  table_model: SLANet_plus
-  text_det_model: PP-OCRv4_server_det
-  text_rec_model: PP-OCRv4_server_rec
-  seal_text_det_model: PP-OCRv4_server_seal_det
-  doc_image_ori_cls_model: null
-  doc_image_unwarp_model: null
-  llm_name: "ernie-3.5"
-  llm_params:
-    api_type: qianfan
-    ak:
-    sk:
+SubPipelines:
+  LayoutParser:
+    # ...
+    SubModules:
+      LayoutDetection:
+        module_name: layout_detection
+        model_name: RT-DETR-H_layout_3cls
+        model_dir: ./output/best_model/inference
 ```
 
 After making the modifications, you only need to change the value of the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file to apply the configuration.

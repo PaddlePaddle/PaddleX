@@ -2168,7 +2168,7 @@ If you have obtained the configuration file, you can customize the PP-StructureV
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/PP-StructureV3.yaml")
 output = pipeline.predict(
-    input="./pp_structure_v3_demo.png",,
+    input="./pp_structure_v3_demo.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
