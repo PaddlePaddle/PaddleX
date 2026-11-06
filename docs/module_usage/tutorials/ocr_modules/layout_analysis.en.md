@@ -74,7 +74,9 @@ The meanings of the parameters are as follows:
   - `score`: Confidence score of the bounding box, a float.
   - `coordinate`: Coordinates of the bounding box, a list of floats in the format <code>[xmin, ymin, xmax, ymax]</code>.
   - `polygon_points`: List of instance segmentation contour points, in the format <code>[[x1, y1], [x2, y2], ...]</code>.
+  - `quad`: Output by PP-DocLayoutV4 only. The predicted quadrilateral, in the format <code>[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]</code> (top-left, top-right, bottom-right, bottom-left). In this case `coordinate` is the bounding rectangle of the quadrilateral.
   - `order`: Reading order index, an integer indicating the reading order of the region in the document (starting from 0).
+- `warp_params`: Output by PP-DocLayoutV4 models that predict page deformation only. The page-level deformation parameters <code>[roll_deg, quadrant_conf, shear_deg, kx, ky]</code>.
 </details>
 
 After running, the visualization result saved by `save_to_img()` is shown below, with each region annotated with its category, confidence score, instance segmentation mask, and reading order index:

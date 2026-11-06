@@ -24,93 +24,18 @@ import numpy as np
 from PIL import Image
 from pydantic import BaseModel, computed_field, model_validator
 
-from ...models.layout_analysis.processors import quad_area, quad_overlap_ratio
+from ...models.layout_analysis.processors import filter_boxes
 from ..layout_parsing.utils import (
     calculate_overlap_ratio,
     calculate_projection_overlap_ratio,
 )
 
 
-def make_valid(poly):
-    if not poly.is_valid:
-        poly = poly.buffer(0)
-    return poly
-
-
-def calculate_polygon_overlap_ratio(
-    polygon1: List[Tuple[int, int]],
-    polygon2: List[Tuple[int, int]],
-    mode: str = "union",
-) -> float:
-    """
-    Calculate the overlap ratio between two polygons.
-
-    Args:
-        polygon1 (List[Tuple[int, int]]): First polygon represented as a list of points.
-        polygon2 (List[Tuple[int, int]]): Second polygon represented as a list of points.
-        mode (str, optional): Overlap calculation mode. Defaults to "union".
-
-    Returns:
-        float: Overlap ratio value between 0 and 1.
-    """
-    try:
-        from shapely.geometry import Polygon
-    except ImportError:
-        raise ImportError("Please install Shapely library.")
-    poly1 = Polygon(polygon1)
-    poly2 = Polygon(polygon2)
-    poly1 = make_valid(poly1)
-    poly2 = make_valid(poly2)
-    intersection = poly1.intersection(poly2).area
-    union = poly1.union(poly2).area
-    if mode == "union":
-        return intersection / union
-    elif mode == "small":
-        small_area = min(poly1.area, poly2.area)
-        return intersection / small_area
-    elif mode == "large":
-        large_area = max(poly1.area, poly2.area)
-        return intersection / large_area
-    else:
-        raise ValueError(f"Unknown mode: {mode}")
-
-
-def _compute_pairwise_overlap_small(
-    coords: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Compute pairwise overlap ratio (mode="small") and bbox areas.
-
-    This only replaces the numeric overlap/area calculation. The caller keeps
-    the original sequential dropping order because it affects inline formulas.
-    """
-    x1 = coords[:, 0]
-    y1 = coords[:, 1]
-    x2 = coords[:, 2]
-    y2 = coords[:, 3]
-
-    areas = np.abs((x2 - x1) * (y2 - y1))
-
-    inter_x1 = np.maximum(x1[:, None], x1[None, :])
-    inter_y1 = np.maximum(y1[:, None], y1[None, :])
-    inter_x2 = np.minimum(x2[:, None], x2[None, :])
-    inter_y2 = np.minimum(y2[:, None], y2[None, :])
-
-    inter_w = np.maximum(0, inter_x2 - inter_x1)
-    inter_h = np.maximum(0, inter_y2 - inter_y1)
-    inter_area = inter_w * inter_h
-
-    small_area = np.minimum(areas[:, None], areas[None, :])
-    with np.errstate(divide="ignore", invalid="ignore"):
-        overlap = np.where(small_area > 0, inter_area / small_area, 0.0)
-    return overlap, areas
-
-
 def filter_overlap_boxes(
     layout_det_res: Dict[str, List[Dict]], layout_shape_mode: str
 ) -> Dict[str, List[Dict]]:
     """
-    Remove overlapping boxes from layout detection results based on a given overlap ratio.
+    Remove overlapping boxes from layout detection results with ``filter_boxes``.
 
     Args:
         layout_det_res (Dict[str, List[Dict]]): Layout detection result dict containing a 'boxes' list.
@@ -119,76 +44,9 @@ def filter_overlap_boxes(
         Dict[str, List[Dict]]: Filtered dict with overlapping boxes removed.
     """
     layout_det_res_filtered = deepcopy(layout_det_res)
-    boxes = [
-        box for box in layout_det_res_filtered["boxes"] if box["label"] != "reference"
-    ]
-    if not boxes:
-        layout_det_res_filtered["boxes"] = boxes
-        return layout_det_res_filtered
-
-    coords = np.array([box["coordinate"] for box in boxes], dtype=np.float64)
-    widths = coords[:, 2] - coords[:, 0]
-    heights = coords[:, 3] - coords[:, 1]
-    overlap_matrix, areas = _compute_pairwise_overlap_small(coords)
-    dropped_indexes = set()
-
-    for i in range(len(boxes)):
-        if widths[i] < 6 or heights[i] < 6:
-            dropped_indexes.add(i)
-        for j in range(i + 1, len(boxes)):
-            if i in dropped_indexes or j in dropped_indexes:
-                continue
-            # Use quad polygon overlap if both boxes have quad
-            if "quad" in boxes[i] and "quad" in boxes[j]:
-                overlap_ratio = quad_overlap_ratio(
-                    np.array(boxes[i]["quad"]).flatten(),
-                    np.array(boxes[j]["quad"]).flatten(),
-                    "small",
-                )
-            else:
-                overlap_ratio = overlap_matrix[i, j]
-            if (
-                boxes[i]["label"] == "inline_formula"
-                or boxes[j]["label"] == "inline_formula"
-            ):
-                if overlap_ratio > 0.5:
-                    if boxes[i]["label"] == "inline_formula":
-                        dropped_indexes.add(i)
-                    if boxes[j]["label"] == "inline_formula":
-                        dropped_indexes.add(j)
-                    continue
-            if overlap_ratio > 0.7:
-                if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
-                    poly_overlap_ratio = calculate_polygon_overlap_ratio(
-                        boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
-                    )
-                    if poly_overlap_ratio < 0.7:
-                        continue
-                labels = {boxes[i]["label"], boxes[j]["label"]}
-                if labels & {"image", "table", "seal", "chart"} and len(labels) > 1:
-                    if "table" not in labels or labels <= {
-                        "table",
-                        "image",
-                        "seal",
-                        "chart",
-                    }:
-                        continue
-                # Use quad area if available
-                if "quad" in boxes[i]:
-                    area_i = quad_area(np.array(boxes[i]["quad"]).flatten())
-                else:
-                    area_i = areas[i]
-                if "quad" in boxes[j]:
-                    area_j = quad_area(np.array(boxes[j]["quad"]).flatten())
-                else:
-                    area_j = areas[j]
-                if area_i >= area_j:
-                    dropped_indexes.add(j)
-                else:
-                    dropped_indexes.add(i)
-    layout_det_res_filtered["boxes"] = [
-        box for idx, box in enumerate(boxes) if idx not in dropped_indexes
-    ]
+    layout_det_res_filtered["boxes"] = filter_boxes(
+        layout_det_res_filtered["boxes"], layout_shape_mode
+    )
     return layout_det_res_filtered
 
 
@@ -581,8 +439,9 @@ def tokenize_figure_of_table(table_block_img, table_box, figures, crop_matrix=No
                 figure_y_max - table_y_min,
             ]
             if crop_matrix is not None:
-                draw_box = _box_through(crop_matrix, figure["coordinate"],
-                                        table_block_img.shape)
+                draw_box = _box_through(
+                    crop_matrix, figure["coordinate"], table_block_img.shape
+                )
                 if draw_box is None:
                     continue
             token_str = "[F" + str(random_map[figure_id]) + "]"
@@ -596,7 +455,9 @@ def tokenize_figure_of_table(table_block_img, table_box, figures, crop_matrix=No
 def _box_through(matrix, box, img_shape):
     """Axis-aligned box of `box`'s corners mapped by `matrix`, clipped to the image."""
     x1, y1, x2, y2 = [float(v) for v in box]
-    pts = np.array([[x1, y1, 1], [x2, y1, 1], [x2, y2, 1], [x1, y2, 1]], dtype=np.float64)
+    pts = np.array(
+        [[x1, y1, 1], [x2, y1, 1], [x2, y2, 1], [x1, y2, 1]], dtype=np.float64
+    )
     p = pts @ np.asarray(matrix, dtype=np.float64).T
     p = p[:, :2] / p[:, 2:3]
     h, w = img_shape[:2]

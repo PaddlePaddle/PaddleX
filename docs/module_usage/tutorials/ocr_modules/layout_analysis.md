@@ -76,7 +76,9 @@ for res in output:
   - `score`：目标框置信度，一个浮点数
   - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
   - `polygon_points`：实例分割轮廓点列表，格式为<code>[[x1, y1], [x2, y2], ...]</code>
+  - `quad`：仅 PP-DocLayoutV4 输出，模型预测的四边形顶点，格式为<code>[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]</code>，依次为左上、右上、右下、左下；此时 `coordinate` 为该四边形的外接矩形
   - `order`：阅读顺序编号，一个整数，表示该区域在文档中的阅读顺序（从0开始）
+- `warp_params`：仅预测页面形变的 PP-DocLayoutV4 模型输出，整页的形变参数 <code>[roll_deg, quadrant_conf, shear_deg, kx, ky]</code>
 </details>
 
 运行后，`save_to_img()` 保存的可视化结果如下，图中标注了各区域的类别、置信度、实例分割掩码及阅读顺序编号：

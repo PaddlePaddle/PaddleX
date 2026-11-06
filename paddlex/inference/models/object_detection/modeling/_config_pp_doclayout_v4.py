@@ -75,9 +75,7 @@ class PPDocLayoutV4Config(PretrainedConfig):
 
         # Encoder
         self.encoder_hidden_dim = kwargs.get("encoder_hidden_dim", 256)
-        self.encoder_in_channels = kwargs.get(
-            "encoder_in_channels", [512, 1024, 2048]
-        )
+        self.encoder_in_channels = kwargs.get("encoder_in_channels", [512, 1024, 2048])
         self.feat_strides = kwargs.get(
             "feat_strides", kwargs.get("feature_strides", [8, 16, 32])
         )
@@ -104,9 +102,7 @@ class PPDocLayoutV4Config(PretrainedConfig):
         # Decoder
         self.d_model = kwargs.get("d_model", 256)
         self.num_queries = kwargs.get("num_queries", 300)
-        self.decoder_in_channels = kwargs.get(
-            "decoder_in_channels", [256, 256, 256]
-        )
+        self.decoder_in_channels = kwargs.get("decoder_in_channels", [256, 256, 256])
         self.decoder_ffn_dim = kwargs.get("decoder_ffn_dim", 1024)
         self.num_feature_levels = kwargs.get("num_feature_levels", 3)
         self.decoder_n_points = kwargs.get("decoder_n_points", 4)

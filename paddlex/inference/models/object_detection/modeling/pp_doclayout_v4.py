@@ -65,6 +65,7 @@ from .pp_doclayout_v3 import (
 
 __all__ = ["PPDocLayoutV4"]
 
+
 def quad10d_to_rect(quad):
     """Convert the 10-D quad parameterization to ``(cx, cy, w, h)``.
 
@@ -114,6 +115,7 @@ class PPDocLayoutV4GlobalPointer(nn.Layer):
         eye_mask = paddle.eye(sequence_length, dtype=raw_logits.dtype).unsqueeze(0)
         return raw_logits - eye_mask * 1e4
 
+
 class PPDocLayoutV4S2RFusion(nn.Layer):
     """Fuse the ROOR successor matrix's transitive closure into the relative order.
 
@@ -148,9 +150,7 @@ class PPDocLayoutV4S2RFusion(nn.Layer):
         adjacency = F.sigmoid(roor_logits) * (1.0 - eye)
         # Clip row sums from below at 1 so dense rows are damped without
         # amplifying weak edges or terminal nodes.
-        adjacency = adjacency / paddle.clip(
-            adjacency.sum(-1, keepdim=True), min=1.0
-        )
+        adjacency = adjacency / paddle.clip(adjacency.sum(-1, keepdim=True), min=1.0)
 
         # Soft transitive closure S = sum_k damping^(k-1) * A^k.
         closure = adjacency
@@ -161,6 +161,7 @@ class PPDocLayoutV4S2RFusion(nn.Layer):
 
         prop = closure - closure.transpose([0, 2, 1])
         return self.a * prop + self.b * rel_dir
+
 
 class PPDocLayoutV4HybridEncoder(nn.Layer):
     """AIFI + top-down FPN + bottom-up PAN. V3's encoder without the mask head."""
@@ -175,7 +176,10 @@ class PPDocLayoutV4HybridEncoder(nn.Layer):
         self.num_pan_stages = len(self.in_channels) - 1
 
         self.aifi = nn.LayerList(
-            [PPDocLayoutV3AIFILayer(config) for _ in range(len(self.encode_proj_layers))]
+            [
+                PPDocLayoutV3AIFILayer(config)
+                for _ in range(len(self.encode_proj_layers))
+            ]
         )
 
         self.lateral_convs = nn.LayerList()
@@ -228,9 +232,7 @@ class PPDocLayoutV4HybridEncoder(nn.Layer):
             )
             fpn_feature_maps.append(
                 fpn_block(
-                    paddle.concat(
-                        [top_fpn_feature_map, backbone_feature_map], axis=1
-                    )
+                    paddle.concat([top_fpn_feature_map, backbone_feature_map], axis=1)
                 )
             )
 
@@ -251,6 +253,7 @@ class PPDocLayoutV4HybridEncoder(nn.Layer):
             )
 
         return pan_feature_maps
+
 
 class PPDocLayoutV4Decoder(nn.Layer):
     """Deformable decoder with per-layer bbox/class heads and quad references."""
@@ -320,8 +323,7 @@ class PPDocLayoutV4Decoder(nn.Layer):
             )
 
             reference_points = F.sigmoid(
-                self.bbox_embed[idx](hidden_states)
-                + inverse_sigmoid(reference_points)
+                self.bbox_embed[idx](hidden_states) + inverse_sigmoid(reference_points)
             )
 
             if idx != last_index:
@@ -360,8 +362,8 @@ class PPDocLayoutV4DeformConvHead(nn.Layer):
     which the canvas-referenced (roll, shear, kx, ky) need.  The receptive field
     is 15 cells (~240px at stride 16).
 
-    Parameters live under ``deform_head.body.*``; the ``deform_head`` prefix is
-    what ``deform_only_train`` keeps trainable.
+    Parameters live under ``deform_head.body.*``, so the head can be trained
+    alone by freezing every other prefix.
     """
 
     def __init__(self, in_ch, out_dim, width=128):
@@ -497,10 +499,14 @@ class PPDocLayoutV4Model(nn.Layer):
             offsets = paddle.to_tensor(
                 [
                     [
-                        0.5 - half, 0.5 - half,
-                        0.5 + half, 0.5 - half,
-                        0.5 + half, 0.5 + half,
-                        0.5 - half, 0.5 + half,
+                        0.5 - half,
+                        0.5 - half,
+                        0.5 + half,
+                        0.5 - half,
+                        0.5 + half,
+                        0.5 + half,
+                        0.5 - half,
+                        0.5 + half,
                     ]
                 ],
                 dtype=dtype,
@@ -515,7 +521,9 @@ class PPDocLayoutV4Model(nn.Layer):
         anchors = paddle.concat(anchors, axis=1)
         valid_mask = ((anchors > eps) & (anchors < 1 - eps)).all(axis=-1, keepdim=True)
         anchors = paddle.log(anchors / (1 - anchors))
-        anchors = paddle.where(valid_mask, anchors, paddle.full_like(anchors, float("inf")))
+        anchors = paddle.where(
+            valid_mask, anchors, paddle.full_like(anchors, float("inf"))
+        )
         return anchors, valid_mask
 
     def forward(self, pixel_values):
@@ -609,6 +617,7 @@ class PPDocLayoutV4Model(nn.Layer):
             )
         return outputs
 
+
 class PPDocLayoutV4PostProcess:
     """Decode quads to absolute corners and select the top-k query/class pairs.
 
@@ -646,19 +655,13 @@ class PPDocLayoutV4PostProcess:
         scores = F.sigmoid(logits)
         # Flattened top-k over query x class, so one query may appear several
         # times under different labels -- `qi` carries the original query index.
-        scores, flat_ind = paddle.topk(
-            scores.flatten(1), self.num_top_queries, axis=-1
-        )
+        scores, flat_ind = paddle.topk(scores.flatten(1), self.num_top_queries, axis=-1)
         labels = flat_ind % self.num_classes
         qi = flat_ind // self.num_classes
         batch_ind = (
-            paddle.arange(end=batch_size)
-            .unsqueeze(-1)
-            .tile([1, self.num_top_queries])
+            paddle.arange(end=batch_size).unsqueeze(-1).tile([1, self.num_top_queries])
         )
-        bbox_pred = paddle.gather_nd(
-            bbox_pred, paddle.stack([batch_ind, qi], axis=-1)
-        )
+        bbox_pred = paddle.gather_nd(bbox_pred, paddle.stack([batch_ind, qi], axis=-1))
 
         bbox_pred = paddle.concat(
             [
@@ -673,6 +676,7 @@ class PPDocLayoutV4PostProcess:
             [batch_size]
         )
         return bbox_pred, bbox_num, qi, rel_order_logits, roor_order_logits
+
 
 class PPDocLayoutV4(BatchNormHFStateDictMixin, PretrainedModel):
 

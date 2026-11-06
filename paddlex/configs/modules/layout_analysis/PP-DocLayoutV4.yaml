@@ -1,41 +1,13 @@
 Global:
   model: PP-DocLayoutV4
-  mode: check_dataset # check_dataset/train/evaluate/predict
+  mode: predict # only support predict
   dataset_dir: "./dataset/doclayoutv4_examples"
-  device: gpu:0,1,2,3
+  device: gpu:0
   output: "output"
-
-CheckDataset:
-  convert:
-    enable: False
-    src_dataset_type: null
-  split:
-    enable: False
-    train_percent: null
-    val_percent: null
-
-Train:
-  num_classes: 25
-  epochs_iters: 100
-  batch_size: 4
-  learning_rate: 0.0001
-  # Required for geometry-only training: use a trained V4 checkpoint (e.g. epoch122).
-  pretrain_weight_path: null
-  warmup_steps: 100
-  resume_path: null
-  log_interval: 10
-  eval_interval: 1
-
-Evaluate:
-  weight_path: "output/best_model/best_model.pdparams"
-  log_interval: 10
-
-Export:
-  weight_path: "output/best_model/best_model.pdparams"
 
 Predict:
   batch_size: 1
-  model_dir: "output/best_model/inference"
+  model_dir: null
   input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
   kernel_option:
     run_mode: paddle

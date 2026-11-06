@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# from typing import Any, List, Optional, Tuple, Union
 from typing import Any, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -29,6 +28,23 @@ LAYOUT_ANALYSIS_TRANSFORMERS_MODELS = [
     "PP-DocLayoutV3",
     "PP-DocLayoutV4",
 ]
+
+
+def _split_quad(bbox_pred):
+    """Split the quad off 4-point rows [label, score, x1, y1, ..., x4, y4, ...].
+
+    Returns the rows with the quad replaced by its axis-aligned box, keeping any
+    trailing columns (e.g. a pre-decoded reading order), and the quads [N, 8].
+    Rows with fewer than 10 columns carry no quad and are returned unchanged.
+    """
+    if bbox_pred.ndim != 2 or bbox_pred.shape[1] < 10:
+        return bbox_pred, None
+    quad = bbox_pred[:, 2:10]
+    points = quad.reshape(-1, 4, 2)
+    boxes = np.column_stack(
+        [bbox_pred[:, :2], points.min(axis=1), points.max(axis=1), bbox_pred[:, 10:]]
+    )
+    return boxes, quad
 
 
 class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
@@ -77,186 +93,79 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
         Transform batch outputs into a list of single image output.
 
         Args:
-            pred (Sequence[Any]): The input predictions, which can be either a list of 3 or 4 elements.
-                - When len(pred) == 6 and pred[2] is 3-D, it is expected to be in the format [bbox_pred, bbox_num, mask_pred, qi, rel_logits, roor_logits],
-                  compatible with Modeling_V2 output.
-                - When len(pred) == 5, it is expected to be in the format [bbox_pred, bbox_num, qi, rel_logits, roor_logits],
-                  compatible with DocLayoutV2 (no mask) output.
-                - When len(pred) == 6 and pred[2] is 2-D, it is the same as the
-                  5-output case plus a trailing `warp_params` tensor of shape
-                  [batch, 5] = (roll_deg, quadrant_conf, shear_deg, kx, ky).
-                - When len(pred) == 3, it is expected to be in the format [boxes, box_nums, masks],
-                  compatible with Instance Segmentation output.
-                - Otherwise it is treated as plain detection output [bbox_pred, bbox_num].
-                  In this case bbox_pred may have 6 columns (2-point box) or 10 columns
-                  (4-point / quad box); the quad is detected by column count and extracted
-                  automatically when present, so both models stay compatible.
+            pred (Sequence[Any]): The model outputs. PP-DocLayoutV4 returns
+                [bbox_pred, bbox_num, qi, rel_logits, roor_logits], where each row of
+                bbox_pred is [label, score, x1, y1, x2, y2, x3, y3, x4, y4] and qi
+                holds the query index of each row. Models that predict the page
+                deformation append warp_params [batch, 5] = (roll_deg,
+                quadrant_conf, shear_deg, kx, ky). Models that also predict
+                masks return [bbox_pred, bbox_num, masks, qi, rel_logits,
+                roor_logits], where masks is [N, H, W]. In every layout, the
+                rows of bbox_pred may instead be [label, score, xmin, ymin,
+                xmax, ymax], which carry no quad. Plain detection outputs
+                [bbox_pred, bbox_num] may also carry a quad at columns 2:10,
+                followed by optional columns such as a pre-decoded reading
+                order; outputs of any other length are read as plain
+                detection outputs too. Instance segmentation outputs
+                [bbox_pred, bbox_num, masks] are handled by
+                ``DetRunnerPredictor``.
 
         Returns:
-            List[dict]: A list of dictionaries, each containing either 'class_id' and 'masks' (for SOLOv2),
-                or 'boxes' and 'masks' (for Instance Segmentation), or just 'boxes' if no masks are provided.
+            List[dict]: A list of dictionaries, one per image.
         """
-        box_idx_start = 0
-        pred_box = []
-
-        # DocLayoutV3 V2: 6 outputs (bbox_pred, bbox_num, mask_pred, qi, rel_logits, roor_logits)
-        # `pred[2].ndim == 3` separates this from the maskless + angle model
-        # below, which also has 6 outputs but carries `qi` ([B, K], 2-D) in that
-        # slot instead of a mask batch ([N, H, W], 3-D).
+        masks = None
+        warp_params = None
+        # The 3-D mask batch tells this layout from V4 with warp_params, whose
+        # third output is the 2-D qi.
         if len(pred) == 6 and pred[2].ndim == 3:
-            bbox_pred, bbox_num, mask_pred, qi, rel_logits, roor_logits = pred
-
-            # Detect 4-point model output (10 columns: label, score, x1,y1,x2,y2,x3,y3,x4,y4)
-            quad_all = None
-            if bbox_pred.shape[1] == 10:
-                quad_all = bbox_pred[:, 2:10].copy()  # [B*K, 8]
-                xs = quad_all[:, 0::2]  # x1, x2, x3, x4
-                ys = quad_all[:, 1::2]  # y1, y2, y3, y4
-                bbox_pred = np.column_stack(
-                    [
-                        bbox_pred[:, 0],
-                        bbox_pred[:, 1],
-                        xs.min(axis=1),
-                        ys.min(axis=1),
-                        xs.max(axis=1),
-                        ys.max(axis=1),
-                    ]
-                )
-
-            results = []
-            box_idx_start = 0
-            for idx in range(len(bbox_num)):
-                K = int(bbox_num[idx])
-                box_idx_end = box_idx_start + K
-                result_dict = {
-                    "boxes": bbox_pred[box_idx_start:box_idx_end],
-                    "masks": mask_pred[box_idx_start:box_idx_end],
-                    "rel_logits": rel_logits[idx],
-                    "roor_logits": roor_logits[idx],
-                    "qi": qi[idx, :K],
-                }
-                if quad_all is not None:
-                    result_dict["quad"] = quad_all[box_idx_start:box_idx_end]
-                else:
-                    result_dict["quad"] = None
-                results.append(result_dict)
-                box_idx_start = box_idx_end
-            return results
-
-        # DocLayoutV2 without mask: 5 outputs (bbox_pred, bbox_num, qi, rel_logits, roor_logits),
-        # or 6 when the model also predicts the page deformation: a trailing
-        # [B, 5] `warp_params` = (roll_deg, quadrant_conf, shear_deg, kx, ky),
-        # passed through per image untouched (see components/common/page_rectify.py).
-        if len(pred) == 5 or len(pred) == 6:
+            bbox_pred, bbox_num, masks, qi, rel_logits, roor_logits = pred
+        elif len(pred) in (5, 6):
             bbox_pred, bbox_num, qi, rel_logits, roor_logits = pred[:5]
-            warp_params = pred[5] if len(pred) == 6 else None
-            if warp_params is not None and (
-                warp_params.ndim != 2 or warp_params.shape != (len(bbox_num), 5)
-            ):
-                raise ValueError(
-                    f"Expected the 6th output to be warp_params of shape "
-                    f"[batch, 5], got {warp_params.shape}."
-                )
-
-            # Detect 4-point model output (10 columns: label, score, x1,y1,x2,y2,x3,y3,x4,y4)
-            quad_all = None
-            if bbox_pred.shape[1] == 10:
-                quad_all = bbox_pred[:, 2:10].copy()  # [B*K, 8]
-                xs = quad_all[:, 0::2]
-                ys = quad_all[:, 1::2]
-                bbox_pred = np.column_stack(
-                    [
-                        bbox_pred[:, 0],
-                        bbox_pred[:, 1],
-                        xs.min(axis=1),
-                        ys.min(axis=1),
-                        xs.max(axis=1),
-                        ys.max(axis=1),
-                    ]
-                )
-
-            results = []
-            box_idx_start = 0
-            for idx in range(len(bbox_num)):
-                K = int(bbox_num[idx])
-                box_idx_end = box_idx_start + K
-                result_dict = {
-                    "boxes": bbox_pred[box_idx_start:box_idx_end],
-                    "rel_logits": rel_logits[idx],
-                    "roor_logits": roor_logits[idx],
-                    "qi": qi[idx, :K],
-                }
-                if quad_all is not None:
-                    result_dict["quad"] = quad_all[box_idx_start:box_idx_end]
-                else:
-                    result_dict["quad"] = None
-                if warp_params is not None:
-                    result_dict["warp_params"] = [float(v) for v in warp_params[idx]]
-
-                results.append(result_dict)
-                box_idx_start = box_idx_end
+            if len(pred) == 6:
+                warp_params = pred[5]
+        elif len(pred) == 3:
+            return super()._format_output(pred)
+        else:
+            boxes, quad = _split_quad(pred[0])
+            results = super()._format_output([boxes, pred[1]])
+            if quad is not None:
+                splits = np.cumsum(pred[1], dtype=np.int64)[:-1]
+                for result, image_quad in zip(results, np.split(quad, splits)):
+                    result["quad"] = image_quad
             return results
 
-        if len(pred) == 3:
-            # Adapt to Instance Segmentation
-            pred_mask = []
+        if bbox_pred.ndim != 2 or bbox_pred.shape[1] not in (6, 10):
+            raise ValueError(
+                "Expected bbox_pred of shape [N, 6] or [N, 10], "
+                f"got {bbox_pred.shape}."
+            )
+        if warp_params is not None and warp_params.shape != (len(bbox_num), 5):
+            raise ValueError(
+                f"Expected warp_params of shape [batch, 5], got {warp_params.shape}."
+            )
 
-        # Detect 4-point (quad) box output by column count instead of by
-        # len(pred), so any plain-detection output remains compatible.
-        # Quad models put the 8 corner coords at columns 2:10. There may be
-        # trailing metadata columns after the quad (e.g. a pre-decoded
-        # reading-order column -> 11 cols); those are kept and appended after
-        # the 6-column AABB so the post-processor can sort by them
-        # (it recognizes 7-/8-column ordered-detection boxes).
-        bbox_all = pred[0]
-        quad_all = None
-        if (
-            len(pred) != 3
-            and hasattr(bbox_all, "ndim")
-            and bbox_all.ndim == 2
-            and bbox_all.shape[1] >= 10
-        ):
-            quad_all = bbox_all[:, 2:10].copy()  # [B*K, 8]
-            xs = quad_all[:, 0::2]  # x1, x2, x3, x4
-            ys = quad_all[:, 1::2]  # y1, y2, y3, y4
-            cols = [
-                bbox_all[:, 0],
-                bbox_all[:, 1],
-                xs.min(axis=1),
-                ys.min(axis=1),
-                xs.max(axis=1),
-                ys.max(axis=1),
-            ]
-            # Preserve any trailing columns (reading order, etc.) after the quad.
-            if bbox_all.shape[1] > 10:
-                cols.append(bbox_all[:, 10:])
-            bbox_all = np.column_stack(cols)
+        # Detection uses the axis-aligned box of each quad.
+        boxes, quad = _split_quad(bbox_pred)
 
-        pred_quad = []
-        for idx in range(len(pred[1])):
-            np_boxes_num = pred[1][idx]
-            box_idx_end = box_idx_start + np_boxes_num
-            np_boxes = bbox_all[box_idx_start:box_idx_end]
-            pred_box.append(np_boxes)
-            if quad_all is not None:
-                pred_quad.append(quad_all[box_idx_start:box_idx_end])
-            if len(pred) == 3:
-                np_masks = pred[2][box_idx_start:box_idx_end]
-                pred_mask.append(np_masks)
+        results = []
+        box_idx_start = 0
+        for idx, num in enumerate(bbox_num):
+            box_idx_end = box_idx_start + int(num)
+            result = {
+                "boxes": boxes[box_idx_start:box_idx_end],
+                "qi": qi[idx, : int(num)],
+                "rel_logits": rel_logits[idx],
+                "roor_logits": roor_logits[idx],
+            }
+            if masks is not None:
+                result["masks"] = masks[box_idx_start:box_idx_end]
+            if quad is not None:
+                result["quad"] = quad[box_idx_start:box_idx_end]
+            if warp_params is not None:
+                result["warp_params"] = warp_params[idx].tolist()
+            results.append(result)
             box_idx_start = box_idx_end
-
-        if len(pred) == 3:
-            return [
-                {"boxes": np.asarray(pred_box[i]), "masks": np.asarray(pred_mask[i])}
-                for i in range(len(pred_box))
-            ]
-        elif quad_all is not None:
-            return [
-                {"boxes": np.array(pred_box[i]), "quad": pred_quad[i]}
-                for i in range(len(pred_box))
-            ]
-        else:
-            return [{"boxes": np.array(res)} for res in pred_box]
+        return results
 
     def process(
         self,
@@ -428,19 +337,24 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
         if "polygon_points" in prediction:
             points = prediction["polygon_points"]
             if self.model_name == "PP-DocLayoutV4":
-                # V4 predicts quads in original-image coordinates. Keep them in
-                # the same filtering/sorting path as the Paddle engine outputs.
+                # V4 predicts one quad [4, 2] per box, in original-image
+                # coordinates, like the Paddle engines.
                 points = points.detach().cpu().numpy()
+                if points.shape != (len(formatted), 4, 2):
+                    raise ValueError(
+                        f"Expected polygon_points of shape [{len(formatted)}, 4, 2], "
+                        f"got {points.shape}."
+                    )
                 output["quad"] = points.reshape(len(formatted), 8)
             else:
                 output["polygon_points"] = [np.asarray(p) for p in points]
         if "warp_params" in prediction:
-            warp = prediction["warp_params"].detach().cpu().numpy()
-            if warp.shape != (5,):
+            warp_params = prediction["warp_params"].detach().cpu().numpy()
+            if warp_params.shape != (5,):
                 raise ValueError(
-                    f"Expected page warp_params shape (5,), got {warp.shape}"
+                    f"Expected warp_params of shape [5], got {warp_params.shape}."
                 )
-            output["warp_params"] = warp
+            output["warp_params"] = warp_params
         return output
 
     def process(
