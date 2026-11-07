@@ -46,7 +46,7 @@ from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import construct_img_path, gather_imgs
 from .result import BaseResult, PaddleOCRVLBlock, PaddleOCRVLResult
 
-from .uilts import (
+from .utils import (
     convert_otsl_to_html,
     crop_margin,
     filter_overlap_boxes,
@@ -379,12 +379,15 @@ class _PaddleOCRVLPipeline(BasePipeline):
         }
 
     @benchmark.timeit_with_options(name="paddleocr_vl_merge_adjacent_blocks")
-    def _paddleocr_vl_merge_adjacent_blocks(self, blocks_for_img, layout_prep_cfg):
+    def _paddleocr_vl_merge_adjacent_blocks(
+        self, blocks_for_img, layout_prep_cfg, correction=None
+    ):
         if not layout_prep_cfg["merge_layout_blocks"]:
             return blocks_for_img
         return merge_blocks(
             blocks_for_img,
             non_merge_labels=layout_prep_cfg["image_labels"] + ["table"],
+            page_correction=correction,
         )
 
     def _paddleocr_vl_collect_page_vlm_entries_core(
@@ -526,6 +529,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             blocks_for_img = merge_blocks(
                 blocks_for_img,
                 non_merge_labels=layout_prep_cfg["image_labels"] + ["table"],
+                page_correction=correction,
             )
         (
             page_vlm_entries,
@@ -564,7 +568,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             correction=correction,
         )
         blocks_for_img = self._paddleocr_vl_merge_adjacent_blocks(
-            blocks_for_img, layout_prep_cfg
+            blocks_for_img, layout_prep_cfg, correction
         )
         (
             page_vlm_entries,
