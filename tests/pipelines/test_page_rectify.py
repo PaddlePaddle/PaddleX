@@ -21,6 +21,7 @@ to that rectify_page.py.
 
 import importlib.util
 import os
+from types import SimpleNamespace
 
 import cv2
 import numpy as np
@@ -33,9 +34,114 @@ from paddlex.inference.pipelines.components.common.page_rectify import (
     plan_page_correction,
     split_roll,
 )
-from paddlex.inference.pipelines.paddleocr_vl.uilts import tokenize_figure_of_table
+from paddlex.inference.pipelines.paddleocr_vl.pipeline import _PaddleOCRVLPipeline
+from paddlex.inference.pipelines.paddleocr_vl.utils import tokenize_figure_of_table
 
 REF = os.environ.get("LAYOUTMODEL_RECTIFY_REFERENCE")
+
+
+@pytest.mark.parametrize(
+    "prepare_page",
+    ["_paddleocr_vl_prepare_page_core", "_paddleocr_vl_prepare_page_serial_benchmarked"],
+)
+@pytest.mark.parametrize("min_roll", [0.0, 2.0], ids=["homography", "quarter_turn"])
+def test_rotated_text_is_grouped_in_the_corrected_page_frame(prepare_page, min_roll):
+    pipeline = object.__new__(_PaddleOCRVLPipeline)
+    pipeline.crop_by_boxes = CropByBoxes()
+    pipeline.vl_rec_model = SimpleNamespace(model_name="PaddleOCR-VL-1.6-0.9B")
+    image = np.full((160, 112, 3), 127, dtype=np.uint8)
+    boxes = [
+        {
+            "cls_id": 0,
+            "label": "text",
+            "score": 1.0,
+            "coordinate": [left, 50, right, 130],
+            "quad": [[left, 50], [right, 50], [right, 130], [left, 130]],
+        }
+        for left, right in [(10, 30), (34, 54)]
+    ]
+    layout = {"boxes": boxes, "warp_params": [90.0, 1.0, 0.0, 0.0, 0.0]}
+    config = {
+        "use_layout_deform": True,
+        "layout_deform_conf_thresh": 0.9,
+        "layout_deform_min_roll": min_roll,
+        "layout_deform_min_shear": 2.0,
+        "layout_deform_min_keystone": 2.0,
+        "layout_shape_mode": "auto",
+        "merge_layout_blocks": True,
+        "image_labels": [],
+        "ocr_min_pixels": 112896,
+        "ocr_max_pixels": 1003520,
+    }
+
+    _, blocks, entries, _, _ = getattr(pipeline, prepare_page)(
+        (0, image, layout, [], config)
+    )
+
+    # The side-by-side boxes become two stacked paragraphs after rectification.
+    # Both should reach recognition and still report coordinates on the input.
+    assert [block["group_id"] for block in blocks] == [0, 1]
+    assert len(entries) == 2
+    assert [entry[2].shape for entry in entries] == [(20, 80, 3)] * 2
+    assert [block["box"] for block in blocks] == [box["coordinate"] for box in boxes]
+    assert [block["quad"] for block in blocks] == [box["quad"] for box in boxes]
+
+
+@pytest.mark.parametrize(
+    "prepare_page",
+    ["_paddleocr_vl_prepare_page_core", "_paddleocr_vl_prepare_page_serial_benchmarked"],
+)
+@pytest.mark.parametrize(
+    "layout_shape_mode, expected_groups", [("auto", [0, 0]), ("rect", [0, 1])]
+)
+def test_skewed_columns_merge_using_crop_shape(
+    prepare_page, layout_shape_mode, expected_groups
+):
+    pipeline = object.__new__(_PaddleOCRVLPipeline)
+    pipeline.crop_by_boxes = CropByBoxes()
+    pipeline.vl_rec_model = SimpleNamespace(model_name="PaddleOCR-VL-1.6-0.9B")
+    image = np.full((1754, 1240, 3), 127, dtype=np.uint8)
+    warp_params = [3.0, 1.0, 0.0, 0.0, 0.0]
+    inverse = np.linalg.inv(plan_page_correction(image.shape, warp_params).homography)
+    boxes = []
+    for left, right in [(120, 550), (580, 1010)]:
+        # Place two tall columns 30 pixels apart in the corrected page frame.
+        upright = np.array([[left, 550], [right, 550], [right, 1150], [left, 1150]])
+        quad = cv2.perspectiveTransform(upright[None].astype(np.float64), inverse)[0]
+        box = np.r_[np.floor(quad.min(axis=0)), np.ceil(quad.max(axis=0))]
+        boxes.append(
+            {
+                "cls_id": 0,
+                "label": "text",
+                "score": 1.0,
+                "coordinate": box.astype(int).tolist(),
+                "quad": quad.tolist(),
+            }
+        )
+    config = {
+        "use_layout_deform": True,
+        "layout_deform_conf_thresh": 0.9,
+        "layout_deform_min_roll": 2.0,
+        "layout_deform_min_shear": 2.0,
+        "layout_deform_min_keystone": 2.0,
+        "layout_shape_mode": layout_shape_mode,
+        "merge_layout_blocks": True,
+        "image_labels": [],
+        "ocr_min_pixels": 112896,
+        "ocr_max_pixels": 1003520,
+    }
+
+    layout = {"boxes": boxes, "warp_params": warp_params}
+    _, blocks, entries, _, _ = getattr(pipeline, prepare_page)(
+        (0, image, layout, [], config)
+    )
+
+    # The corrected quads stay separate, while the transformed enclosing
+    # rectangles overlap. Only rect mode should use those rectangles.
+    assert [block["group_id"] for block in blocks] == expected_groups
+    assert len(entries) == len(set(expected_groups))
+    assert [block["box"] for block in blocks] == [box["coordinate"] for box in boxes]
+    assert [block["quad"] for block in blocks] == [box["quad"] for box in boxes]
 
 
 @pytest.fixture(scope="module")

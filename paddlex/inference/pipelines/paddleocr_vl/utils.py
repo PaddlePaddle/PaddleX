@@ -25,6 +25,7 @@ from PIL import Image
 from pydantic import BaseModel, computed_field, model_validator
 
 from ...models.layout_analysis.processors import filter_boxes
+from ..components.common.crop_image_regions import CropByBoxes
 from ..layout_parsing.utils import (
     calculate_overlap_ratio,
     calculate_projection_overlap_ratio,
@@ -157,17 +158,40 @@ def merge_images(images, aligns="center", layout_shape_mode="auto"):
     return to_np_array(canvas)
 
 
-def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
+def merge_blocks(
+    blocks, non_merge_labels, layout_shape_mode="auto", *, page_correction=None
+):
     """
     Merge blocks based on alignment and overlap logic, except for those with labels in non_merge_labels.
 
     Args:
         blocks (List[Dict]): List of block dicts.
         non_merge_labels (List[str]): Block labels that should not be merged.
+        layout_shape_mode: The shape mode used to crop the blocks.
+        page_correction: Optional page correction for spatial comparisons. The
+            returned blocks keep their original page coordinates.
 
     Returns:
         List[Dict]: List of processed (and possibly merged) blocks.
     """
+    if page_correction is None:
+        merge_boxes = [block["box"] for block in blocks]
+    else:
+        transform = page_correction.homography
+        if transform is None:
+            # Rotate about the origin. A common translation has no effect on
+            # the alignment, gaps, or overlaps used to group the boxes.
+            quarter_turn = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
+            transform = np.linalg.matrix_power(quarter_turn, page_correction.rot90_k)
+        transform = np.asarray(transform, dtype=np.float64)
+        merge_boxes = []
+        for block in blocks:
+            shape = CropByBoxes._region_shape(block, layout_shape_mode, block["box"])
+            points = np.asarray(shape, dtype=np.float64).reshape(-1, 2)
+            projected = np.column_stack((points, np.ones(len(points)))) @ transform.T
+            points = projected[:, :2] / projected[:, 2:3]
+            merge_boxes.append([*points.min(axis=0), *points.max(axis=0)])
+
     blocks_to_merge = []
     non_merge_blocks = {}
     for idx, block in enumerate(blocks):
@@ -192,9 +216,9 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
         else:
             return "center"
 
-    def overlapwith_other_box(block_idx, prev_idx, blocks):
-        prev_bbox = blocks[prev_idx]["box"]
-        block_bbox = blocks[block_idx]["box"]
+    def overlapwith_other_box(block_idx, prev_idx):
+        prev_bbox = merge_boxes[prev_idx]
+        block_bbox = merge_boxes[block_idx]
         x1 = min(prev_bbox[0], block_bbox[0])
         y1 = min(prev_bbox[1], block_bbox[1])
         x2 = max(prev_bbox[2], block_bbox[2])
@@ -206,7 +230,7 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
                 or other_block["label"] not in non_merge_labels
             ):
                 continue
-            other_bbox = other_block["box"]
+            other_bbox = merge_boxes[idx]
             if calculate_overlap_ratio(min_box, other_bbox) > 0:
                 return True
         return False
@@ -219,9 +243,9 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
             continue
 
         prev_idx, prev_block = blocks_to_merge[i - 1]
-        prev_bbox = prev_block["box"]
+        prev_bbox = merge_boxes[prev_idx]
         prev_label = prev_block["label"]
-        block_bbox = block["box"]
+        block_bbox = merge_boxes[idx]
         block_label = block["label"]
 
         iou_h = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
@@ -245,7 +269,7 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
                 is_aligned(block_bbox[0], prev_bbox[0])
                 ^ is_aligned(block_bbox[2], prev_bbox[2])
             )
-            and overlapwith_other_box(idx, prev_idx, blocks)
+            and overlapwith_other_box(idx, prev_idx)
         )
         if is_cross:
             align_mode = "center"
