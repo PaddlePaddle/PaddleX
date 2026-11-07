@@ -25,6 +25,7 @@ from PIL import Image
 from pydantic import BaseModel, computed_field, model_validator
 
 from ...models.layout_analysis.processors import filter_boxes
+from ..components.common.crop_image_regions import CropByBoxes
 from ..layout_parsing.utils import (
     calculate_overlap_ratio,
     calculate_projection_overlap_ratio,
@@ -166,21 +167,30 @@ def merge_blocks(
     Args:
         blocks (List[Dict]): List of block dicts.
         non_merge_labels (List[str]): Block labels that should not be merged.
+        layout_shape_mode: The shape mode used to crop the blocks.
         page_correction: Optional page correction for spatial comparisons. The
             returned blocks keep their original page coordinates.
 
     Returns:
         List[Dict]: List of processed (and possibly merged) blocks.
     """
-    merge_boxes = [block["box"] for block in blocks]
-    if page_correction is not None:
+    if page_correction is None:
+        merge_boxes = [block["box"] for block in blocks]
+    else:
         transform = page_correction.homography
         if transform is None:
             # Rotate about the origin. A common translation has no effect on
             # the alignment, gaps, or overlaps used to group the boxes.
             quarter_turn = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
             transform = np.linalg.matrix_power(quarter_turn, page_correction.rot90_k)
-        merge_boxes = [_box_through(transform, box) for box in merge_boxes]
+        transform = np.asarray(transform, dtype=np.float64)
+        merge_boxes = []
+        for block in blocks:
+            shape = CropByBoxes._region_shape(block, layout_shape_mode, block["box"])
+            points = np.asarray(shape, dtype=np.float64).reshape(-1, 2)
+            projected = np.column_stack((points, np.ones(len(points)))) @ transform.T
+            points = projected[:, :2] / projected[:, 2:3]
+            merge_boxes.append([*points.min(axis=0), *points.max(axis=0)])
 
     blocks_to_merge = []
     non_merge_blocks = {}
@@ -466,16 +476,14 @@ def tokenize_figure_of_table(table_block_img, table_box, figures, crop_matrix=No
     return table_block_img, token_map, drop_figures
 
 
-def _box_through(matrix, box, img_shape=None):
-    """Map box corners and enclose them, clipping when an image shape is given."""
+def _box_through(matrix, box, img_shape):
+    """Axis-aligned box of `box`'s corners mapped by `matrix`, clipped to the image."""
     x1, y1, x2, y2 = [float(v) for v in box]
     pts = np.array(
         [[x1, y1, 1], [x2, y1, 1], [x2, y2, 1], [x1, y2, 1]], dtype=np.float64
     )
     p = pts @ np.asarray(matrix, dtype=np.float64).T
     p = p[:, :2] / p[:, 2:3]
-    if img_shape is None:
-        return np.concatenate([p.min(axis=0), p.max(axis=0)]).tolist()
     h, w = img_shape[:2]
     bx1, by1 = np.clip(p.min(axis=0), 0, [w, h])
     bx2, by2 = np.clip(p.max(axis=0), 0, [w, h])

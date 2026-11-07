@@ -387,6 +387,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         return merge_blocks(
             blocks_for_img,
             non_merge_labels=layout_prep_cfg["image_labels"] + ["table"],
+            layout_shape_mode=layout_prep_cfg["layout_shape_mode"],
             page_correction=correction,
         )
 
@@ -529,6 +530,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             blocks_for_img = merge_blocks(
                 blocks_for_img,
                 non_merge_labels=layout_prep_cfg["image_labels"] + ["table"],
+                layout_shape_mode=layout_prep_cfg["layout_shape_mode"],
                 page_correction=correction,
             )
         (
