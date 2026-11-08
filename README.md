@@ -4,7 +4,7 @@
 
 <p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.13-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.9~3.13-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
@@ -588,7 +588,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
 
 ### 🛠️ 安装
 
-> ❗在安装 PaddleX 之前，请确保您已具备基本的 **Python 运行环境**（注：目前支持 Python 3.8 至 Python 3.13）。PaddleX 3.0.x 版本依赖的 PaddlePaddle 版本为 3.0.0 及以上版本，请在使用前务必保证版本的对应关系。
+> ❗在安装 PaddleX 之前，请确保您已具备基本的 **Python 运行环境**（注：目前支持 Python 3.9 至 Python 3.13）。PaddleX 3.0.x 版本依赖的 PaddlePaddle 版本为 3.0.0 及以上版本，请在使用前务必保证版本的对应关系。
 
 * **安装 PaddlePaddle**
 ```bash

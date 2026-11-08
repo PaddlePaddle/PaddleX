@@ -48,13 +48,7 @@ BASE_DEP_SPECS = {
     "lxml": "",
     "latex2mathml": "",
     "matplotlib": "",
-    "modelscope": [
-        # modelscope 1.29.2+ unconditionally imports `zoneinfo`, which is
-        # Python 3.9+ stdlib. Cap at < 1.29.2 to keep Py3.8 working; 1.29.0
-        # and 1.29.1 import cleanly.
-        '>= 1.28.0, < 1.29.2; python_version == "3.8"',
-        '>= 1.28.0; python_version >= "3.9"',
-    ],
+    "modelscope": ">= 1.28.0",
     "numpy": ">= 1.24, < 2.4",
     "openai": ">= 1.63",
     "OpenCC": "",
@@ -375,7 +369,7 @@ if __name__ == "__main__":
         long_description_content_type="text/markdown",
         author="PaddlePaddle Authors",
         author_email="",
-        python_requires=">=3.8",
+        python_requires=">=3.9",
         install_requires=dependencies(),
         extras_require=extras(),
         packages=pkgs,
@@ -395,7 +389,6 @@ if __name__ == "__main__":
             "Intended Audience :: Developers",
             "Intended Audience :: Education",
             "Intended Audience :: Science/Research",
-            "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",

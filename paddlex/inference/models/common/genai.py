@@ -166,7 +166,7 @@ class _AsyncThreadManager:
         1. Cancel all remaining tasks
         2. Wait for cancellation to complete
         3. Shutdown async generators (prevents ResourceWarning)
-        4. Shutdown default executor (Python 3.9+)
+        4. Shutdown default executor
         5. Close the event loop
         """
         if self.loop is None:
@@ -194,9 +194,7 @@ class _AsyncThreadManager:
             self.loop.run_until_complete(self.loop.shutdown_asyncgens())
 
             # Shutdown the default executor and wait for threads to finish
-            # Available since Python 3.9 - check for compatibility with Python 3.8
-            if hasattr(self.loop, "shutdown_default_executor"):
-                self.loop.run_until_complete(self.loop.shutdown_default_executor())
+            self.loop.run_until_complete(self.loop.shutdown_default_executor())
 
         except Exception as e:
             logging.warning(f"Error during event loop cleanup: {e}")
