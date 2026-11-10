@@ -10,9 +10,18 @@ ENV PYTHONDONTWRITEBYTECODE=1
 RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install torch==2.8.0
 
-ARG PADDLEX_VERSION=">=3.3.6,<3.4"
+ARG PADDLEX_VERSION
+ARG PADDLEX_WHEEL
 RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m pip install "paddlex${PADDLEX_VERSION}"
+    --mount=type=bind,target=/paddlex-build \
+    if [ -n "${PADDLEX_WHEEL}" ] && [ -z "${PADDLEX_VERSION}" ]; then \
+        python -m pip install "/paddlex-build/${PADDLEX_WHEEL}"; \
+    elif [ -n "${PADDLEX_VERSION}" ] && [ -z "${PADDLEX_WHEEL}" ]; then \
+        python -m pip install "paddlex${PADDLEX_VERSION}"; \
+    else \
+        echo "Set exactly one of PADDLEX_VERSION or PADDLEX_WHEEL." >&2; \
+        exit 2; \
+    fi
 
 ARG BUILD_FOR_SM120=false
 RUN --mount=type=cache,target=/root/.cache/pip \
