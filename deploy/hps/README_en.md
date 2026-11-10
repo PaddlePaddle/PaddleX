@@ -113,6 +113,10 @@ Build image script supports the following configuration options:
 <td><code>-p</code></td>
 <td>Python package index URL. If not specified, defaults to <code>https://pypi.org/simple</code>.</td>
 </tr>
+<tr>
+<td><code>-v</code></td>
+<td>PaddleX package version inside the image. Defaults to the Git tag on the current commit, and can be specified for candidate builds.</td>
+</tr>
 </tbody>
 </table>
 

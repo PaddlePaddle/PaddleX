@@ -110,8 +110,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     fi
 
 COPY . /tmp/PaddleX
+ARG PADDLEX_VERSION
 RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m pip install --no-deps /tmp/PaddleX
+    if [ -n "${PADDLEX_VERSION}" ]; then \
+        export SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PADDLEX="${PADDLEX_VERSION}"; \
+    fi \
+    && python -m pip install --no-deps /tmp/PaddleX
 
 COPY deploy/hps/server_env/paddlex-hps-server /tmp/paddlex-hps-server
 RUN --mount=type=cache,target=/root/.cache/pip \
