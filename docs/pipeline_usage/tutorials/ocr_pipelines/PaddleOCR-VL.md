@@ -36,6 +36,11 @@ PaddleOCR-VL 是一款先进、高效的文档解析模型，专为文档中的�
 <td><code>PP-DocLayoutV3</code></td>
 <td><code>PaddleOCR-VL-1.6-0.9B</code></td>
 </tr>
+<tr>
+<td><code>PaddleOCR-VL-1.8</code></td>
+<td><code>PP-DocLayoutV4</code></td>
+<td><code>PaddleOCR-VL-1.8-0.9B</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -52,21 +57,23 @@ python -m pip install "paddlex[ocr]"
 
 ## 2. 快速开始
 
-PaddleOCR-VL 系列产线支持 CLI 命令行方式和 Python API 两种使用方式，其中 CLI 命令行方式更简单，适合快速验证功能，而 Python API 方式更灵活，适合集成到现有项目中。下文以 `PaddleOCR-VL-1.6` 为主要示例。
+PaddleOCR-VL 系列产线支持 CLI 命令行方式和 Python API 两种使用方式，其中 CLI 命令行方式更简单，适合快速验证功能，而 Python API 方式更灵活，适合集成到现有项目中。下文以 `PaddleOCR-VL-1.8` 为主要示例。
+
+PaddleOCR-VL-1.8 使用 PP-DocLayoutV4。版面模型返回 `warp_params` 时，可用 `use_layout_deform=True`（HTTP 参数为 `useLayoutDeform`）矫正送入识别模块的裁图，默认关闭。
 
 ### 2.1 命令行方式体验
 
 ```bash
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 
 # 通过 --use_doc_orientation_classify 指定是否使用文档方向分类模型
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_orientation_classify True
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_orientation_classify True
 
 # 通过 --use_doc_unwarping 指定是否使用文本图像矫正模块
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_unwarping True
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_unwarping True
 
 # 通过 --use_layout_detection 指定是否使用版面区域检测排序模块
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_layout_detection False
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_layout_detection False
 ```
 
 <details><summary><b>命令行支持更多参数设置，点击展开以查看关键命令行参数的详细说明</b></summary>
@@ -176,7 +183,7 @@ paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bceb
 </details>
 <br />
 
-运行结果会被打印到终端上，默认配置的 PaddleOCR-VL 的运行结果如下：
+运行结果会被打印到终端上，以下以 PaddleOCR-VL-1.6 的输出为例。
 
 <details><summary> 👉点击展开</summary>
 <pre>
@@ -195,7 +202,7 @@ paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bceb
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.6")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.8")
 
 output = pipeline.predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png") # 传入图像文件或PDF文件
 
@@ -211,7 +218,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.6")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.8")
 
 output = pipeline.predict(input="./your_pdf_file.pdf")
 
@@ -245,7 +252,7 @@ for res in output:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>PaddleX 产线名称或产线配置文件路径。可使用 <code>PaddleOCR-VL</code>、<code>PaddleOCR-VL-1.5</code>、<code>PaddleOCR-VL-1.6</code>，也可传入自定义 YAML 文件路径。</td>
+<td>PaddleX 产线名称或产线配置文件路径。可使用 <code>PaddleOCR-VL</code>、<code>PaddleOCR-VL-1.5</code>、<code>PaddleOCR-VL-1.6</code>、<code>PaddleOCR-VL-1.8</code>，也可传入自定义 YAML 文件路径。</td>
 <td><code>str|None</code></td>
 <td><code>None</code></td>
 </tr>
@@ -746,7 +753,7 @@ for res in output:
 
 PaddleX 提供了 vLLM Docker 镜像，用于快速启动 VLM 推理服务。除 Blackwell 架构外的 NVIDIA GPU 可使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`，Blackwell 架构 GPU 请使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`。
 
-以除 Blackwell 架构外的 NVIDIA GPU 和 `PaddleOCR-VL-1.6-0.9B` 为例，可使用以下命令启动服务：
+以除 Blackwell 架构外的 NVIDIA GPU 和 `PaddleOCR-VL-1.8-0.9B` 为例，可使用以下命令启动服务：
 
 ```bash
 docker run \
@@ -754,7 +761,7 @@ docker run \
     --gpus all \
     --network host \
     ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
+    paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
 若使用 Blackwell 架构 GPU，可将上述镜像替换为专用版本：
@@ -765,7 +772,7 @@ docker run \
     --gpus all \
     --network host \
     ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120 \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
+    paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
 #### 3.1.2 通过 PaddleX CLI 启动
@@ -790,13 +797,13 @@ paddlex --install genai-vllm-server
 安装完成后，可通过 `paddlex_genai_server` 命令启动服务：
 
 ```bash
-paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend vllm --port 8118
+paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend vllm --port 8118
 
 # 如使用 SGLang 后端
-# paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend sglang --port 8118
+# paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend sglang --port 8118
 
 # 如使用 FastDeploy 后端
-# paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend fastdeploy --port 8118
+# paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend fastdeploy --port 8118
 ```
 
 该命令支持的参数如下：
@@ -847,10 +854,10 @@ paddlex --install genai-client
 接着，获取产线配置文件：
 
 ```bash
-paddlex --get_pipeline_config PaddleOCR-VL-1.6
+paddlex --get_pipeline_config PaddleOCR-VL-1.8
 ```
 
-配置文件的默认保存路径为 `PaddleOCR-VL-1.6.yaml`。将配置文件中的 `SubModules.VLRecognition.genai_config.backend` 和 `SubModules.VLRecognition.genai_config.server_url` 字段修改为与此前启动的服务相对应的值，例如：
+配置文件的默认保存路径为 `PaddleOCR-VL-1.8.yaml`。将配置文件中的 `SubModules.VLRecognition.genai_config.backend` 和 `SubModules.VLRecognition.genai_config.server_url` 字段修改为与此前启动的服务相对应的值，例如：
 
 ```yaml
 SubModules:
@@ -876,7 +883,7 @@ SubModules:
 之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：
 
 ```bash
-paddlex --pipeline PaddleOCR-VL-1.6.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL-1.8.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 ```
 
 或通过 Python API 调用：
@@ -884,7 +891,7 @@ paddlex --pipeline PaddleOCR-VL-1.6.yaml --input https://paddle-model-ecology.bj
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline("PaddleOCR-VL-1.6.yaml")
+pipeline = create_pipeline("PaddleOCR-VL-1.8.yaml")
 
 for res in pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png"):
     res.print()
@@ -911,7 +918,7 @@ paddlex --install serving
 通过 PaddleX CLI 运行服务器：
 
 ```bash
-paddlex --serve --pipeline PaddleOCR-VL-1.6
+paddlex --serve --pipeline PaddleOCR-VL-1.8
 ```
 
 可以看到类似以下展示的信息：
@@ -923,7 +930,7 @@ INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 ```
 
-如需调整配置（如模型路径、batch size、部署设备、VLM 服务端后端等），可指定 `--pipeline` 为自定义配置文件。`PaddleOCR-VL-1.5` 和 `PaddleOCR-VL-1.6` 在服务化部署中复用同一应用实现，但产线配置仍分别来自各自的顶层产线。
+如需调整配置（如模型路径、batch size、部署设备、VLM 服务端后端等），可指定 `--pipeline` 为自定义配置文件。`PaddleOCR-VL-1.5`、`PaddleOCR-VL-1.6` 和 `PaddleOCR-VL-1.8` 在服务化部署中复用同一应用实现，但产线配置仍分别来自各自的顶层产线。
 
 与服务化部署相关的命令行选项如下：
 

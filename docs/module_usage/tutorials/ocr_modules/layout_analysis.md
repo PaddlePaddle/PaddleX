@@ -8,7 +8,7 @@ comments: true
 
 版面分析任务在版面区域检测的基础上，进一步引入了**实例分割**与**阅读顺序预测**能力。通过对输入的文档图像进行分析，不仅能识别各类版面元素（如文字、图表、图像、公式、段落标题、摘要、参考文献等）并输出其边界框，还能同时输出每个区域的**精确轮廓掩码**和**阅读顺序编号**，为文档理解与信息抽取流程提供更完整的结构化信息。
 
-版面分析模块目前支持模型 PP-DocLayoutV3，基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。
+版面分析模块支持 PP-DocLayoutV3 和 PP-DocLayoutV4。PP-DocLayoutV3 基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。
 
 ![版面分析效果](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
 
@@ -34,6 +34,13 @@ comments: true
 <td>23.77</td>
 <td>126</td>
 <td>基于DETR在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报等场景的自建数据集上训练的版面分析模型，支持25类版面元素的实例分割及阅读顺序预测</td>
+</tr>
+<tr>
+<td>PP-DocLayoutV4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV4_infer.tar">推理模型</a></td>
+<td>–</td>
+<td>–</td>
+<td>输出四点框和阅读顺序。带形变头的权重还会输出页面形变参数。</td>
 </tr>
 </tbody>
 </table>
