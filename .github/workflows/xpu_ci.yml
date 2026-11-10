@@ -15,6 +15,9 @@ concurrency:
 
 jobs:
   CI_XPU:
+    # Temporarily pause all XPU jobs while no XPU runner is available.
+    # Remove this condition when XPU capacity is restored.
+    if: ${{ false }}
     timeout-minutes: 60
     runs-on: [self-hosted, XPU-P800-2Card]
     steps:
