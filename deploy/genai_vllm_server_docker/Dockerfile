@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 ARG PADDLEX_VERSION
 ARG PADDLEX_WHEEL
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,target=/paddlex-build \
+    --mount=type=bind,source=paddlex-wheel,target=/paddlex-build \
     if [ -n "${PADDLEX_WHEEL}" ] && [ -z "${PADDLEX_VERSION}" ]; then \
         python -m pip install "/paddlex-build/${PADDLEX_WHEEL}"; \
     elif [ -n "${PADDLEX_VERSION}" ] && [ -z "${PADDLEX_WHEEL}" ]; then \

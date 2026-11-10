@@ -67,8 +67,9 @@ if [[ -n "$paddlex_wheel" ]]; then
     wheel_name="${paddlex_wheel##*/}"
     context_dir="$(mktemp -d)"
     trap 'rm -rf -- "$context_dir"' EXIT
+    mkdir "$context_dir/paddlex-wheel"
     cp "$script_dir/Dockerfile" "$context_dir/"
-    cp "$paddlex_wheel" "$context_dir/$wheel_name"
+    cp "$paddlex_wheel" "$context_dir/paddlex-wheel/$wheel_name"
 fi
 
 docker build \
