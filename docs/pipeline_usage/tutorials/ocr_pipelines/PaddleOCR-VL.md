@@ -744,9 +744,9 @@ for res in output:
 
 #### 3.1.1 使用 Docker 镜像
 
-PaddleX 提供了 vLLM Docker 镜像，用于快速启动 VLM 推理服务。普通 NVIDIA GPU 可使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`，NVIDIA 50 系显卡（SM120 / Compute Capability 12.x）请使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`。
+PaddleX 提供了 vLLM Docker 镜像，用于快速启动 VLM 推理服务。除 Blackwell 架构外的 NVIDIA GPU 可使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`，Blackwell 架构 GPU 请使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`。
 
-以普通 NVIDIA GPU 和 `PaddleOCR-VL-1.6-0.9B` 为例，可使用以下命令启动服务：
+以除 Blackwell 架构外的 NVIDIA GPU 和 `PaddleOCR-VL-1.6-0.9B` 为例，可使用以下命令启动服务：
 
 ```bash
 docker run \
@@ -757,7 +757,7 @@ docker run \
     paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
-若使用 NVIDIA 50 系显卡，可将上述镜像替换为 SM120 专用版本：
+若使用 Blackwell 架构 GPU，可将上述镜像替换为专用版本：
 
 ```bash
 docker run \

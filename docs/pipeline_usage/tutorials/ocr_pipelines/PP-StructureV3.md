@@ -1405,11 +1405,11 @@ for item in markdown_images:
 
 **注：**
 
-- PP-StructureV3 产线使用的默认文本识别模型为 **中英文识别模型**，对于纯英文的识别能力有限，对于全英文场景，您可以将 [PP-StructureV3 配置文件](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-rc/paddlex/configs/pipelines/PP-StructureV3.yaml)中 `TextRecognition` 配置项下的 `model_name` 修改为 `en_PP-OCRv4_mobile_rec` 等英文识别模型以取得更好的识别效果。对应其他语言场景，也可以参考前文的模型列表，选择对应的语言识别模型进行替换。
+- PP-StructureV3 产线使用的默认文本识别模型为 **中英文识别模型**，对于纯英文的识别能力有限，对于全英文场景，您可以将 [PP-StructureV3 配置文件](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/pipelines/PP-StructureV3.yaml)中 `TextRecognition` 配置项下的 `model_name` 修改为 `en_PP-OCRv4_mobile_rec` 等英文识别模型以取得更好的识别效果。对应其他语言场景，也可以参考前文的模型列表，选择对应的语言识别模型进行替换。
 
 - 在示例代码中，`use_doc_orientation_classify`、`use_doc_unwarping`、`use_textline_orientation` 参数默认均设置为 `False`，分别表示关闭文档方向分类、文档扭曲矫正、文本行方向分类功能，如果需要使用这些功能，可以手动设置为 `True`。
 
-- PP-StructureV3 产线提供了灵活的参数配置，可以在使用过程中针对文档的特点灵活的调整版面检测、文本检测、文本识别等模块的参数，以获得更好的效果，更多详细配置可以参考[PP-StructureV3 配置文件](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-rc/paddlex/configs/pipelines/PP-StructureV3.yaml)。
+- PP-StructureV3 产线提供了灵活的参数配置，可以在使用过程中针对文档的特点灵活的调整版面检测、文本检测、文本识别等模块的参数，以获得更好的效果，更多详细配置可以参考[PP-StructureV3 配置文件](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/paddlex/configs/pipelines/PP-StructureV3.yaml)。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 <details><summary>（1）实例化 <code>create_pipeline</code> 实例化产线对象，具体参数说明如下：</summary>

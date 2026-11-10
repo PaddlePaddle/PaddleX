@@ -3,7 +3,7 @@ site_url: https://paddlepaddle.github.io/PaddleX/
 docs_dir: docs # 文档路径
  
 repo_url: https://github.com/PaddlePaddle/PaddleX #仓库地址
-edit_uri: edit/develop/docs/ #修改文件的路径
+edit_uri: !ENV [DOCS_EDIT_URI, edit/develop/docs/] #修改文件的路径
 theme:
   name: material
   # logo: ./static/images/logo.jpg #设置左上角logo

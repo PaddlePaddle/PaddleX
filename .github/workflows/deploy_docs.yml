@@ -25,6 +25,10 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mike mkdocs-material jieba mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin-2 mkdocs-git-authors-plugin mkdocs-static-i18n mkdocs-minify-plugin 
+      - name: Check docs GitHub source links
+        run: python tools/check_docs_github_links.py --repo-slug PaddlePaddle/PaddleX --forbidden-ref develop --forbidden-ref main --forbidden-ref master
+      - name: Resolve docs GitHub source refs
+        run: python tools/resolve_doc_github_refs.py --placeholder '{{PADDLEX_GITHUB_REF}}' --source-ref "${GITHUB_REF_NAME}"
       - name: Deploy docs (version from branch release/X → mike X)
         run: |
           git fetch origin gh-pages --depth=1
@@ -35,3 +39,5 @@ jobs:
           fi
           mike deploy --push --update-aliases "$VERSION" latest
           mike set-default --push latest
+        env:
+          DOCS_EDIT_URI: edit/${{ github.ref_name }}/docs/
