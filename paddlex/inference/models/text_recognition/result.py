@@ -15,9 +15,9 @@
 import copy
 
 import PIL
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageFont
 
-from ....utils.fonts import SIMFANG_FONT
+from ....utils.fonts import SIMFANG_FONT, draw_text
 from ...common.result import BaseCVResult, JsonMixin
 
 
@@ -50,13 +50,7 @@ class TextRecResult(BaseCVResult):
         new_image = Image.new("RGB", (image_width, new_image_height), (255, 255, 255))
         new_image.paste(image, (0, 0))
 
-        draw = ImageDraw.Draw(new_image)
-        draw.text(
-            (0, image_height),
-            text,
-            fill=(0, 0, 0),
-            font=font,
-        )
+        draw_text(new_image, (0, image_height), text, font=font, fill=(0, 0, 0))
         return {"res": new_image}
 
     def adjust_font_size(self, image_width, text, font_path):

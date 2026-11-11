@@ -67,6 +67,11 @@ TEXT_REC_TRANSFORMERS_MODELS = [
     "PP-OCRv6_tiny_rec",
 ]
 
+ARABIC_REC_MODELS = (
+    "arabic_PP-OCRv3_mobile_rec",
+    "arabic_PP-OCRv5_mobile_rec",
+)
+
 
 def get_text_rec_vis_font(model_name):
     if model_name.startswith(("PP-OCR", "en_PP-OCR")):
@@ -97,10 +102,7 @@ def get_text_rec_vis_font(model_name):
     if model_name == "el_PP-OCRv5_mobile_rec":
         return EL_FONT
 
-    if model_name in (
-        "arabic_PP-OCRv3_mobile_rec",
-        "arabic_PP-OCRv5_mobile_rec",
-    ):
+    if model_name in ARABIC_REC_MODELS:
         return ARABIC_FONT
 
     if model_name == "ka_PP-OCRv3_mobile_rec":
@@ -186,10 +188,7 @@ class TextRecRunnerPredictor(RunnerPredictor):
             wh_ratio_list=wh_ratio_list,
             max_wh_ratio=max_wh_ratio,
         )
-        if self.model_name in (
-            "arabic_PP-OCRv3_mobile_rec",
-            "arabic_PP-OCRv5_mobile_rec",
-        ):
+        if self.model_name in ARABIC_REC_MODELS:
             texts = [
                 (get_display(s[0]), s[1]) if isinstance(s, tuple) else get_display(s)
                 for s in texts
@@ -292,6 +291,8 @@ class TextRecTransformersPredictor(TransformersPredictor):
         model_inputs = self.preprocess_images(images=images)
         outputs = self.forward(model_inputs)
         texts, scores = self.postprocess(outputs)
+        if self.model_name in ARABIC_REC_MODELS and is_dep_available("python-bidi"):
+            texts = [get_display(s) for s in texts]
 
         return {
             "input_path": batch_data.input_paths,

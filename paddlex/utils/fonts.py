@@ -15,12 +15,16 @@
 from pathlib import Path
 
 import PIL
-from PIL import ImageFont
+from PIL import ImageDraw, ImageFont
 
 from . import logging
 from .cache import CACHE_DIR
+from .deps import is_dep_available
 from .download import download
 from .flags import LOCAL_FONT_FILE_PATH
+
+if is_dep_available("khatt"):
+    import khatt
 
 
 def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
@@ -68,6 +72,32 @@ def create_font_vertical(
         font = ImageFont.truetype(font_path, new_size, encoding="utf-8")
 
     return font
+
+
+def _contains_arabic(text: str) -> bool:
+    return any(
+        "\u0600" <= ch <= "\u06ff"
+        or "\u0750" <= ch <= "\u077f"
+        or "\u08a0" <= ch <= "\u08ff"
+        or "\ufb50" <= ch <= "\ufdff"
+        or "\ufe70" <= ch <= "\ufefc"
+        for ch in text
+    )
+
+
+def draw_text(image, xy, text, font, fill):
+    """
+    Draw text like `ImageDraw.Draw(image).text(xy, text, fill=fill, font=font)`.
+
+    Pillow only shapes Arabic when it has Raqm, which its Windows wheels and most
+    slim Docker images lack; without it, Arabic letters come out unjoined and left
+    to right. So when the text has Arabic and khatt is installed, khatt shapes and
+    draws it with the same font file and size.
+    """
+    if _contains_arabic(text) and is_dep_available("khatt"):
+        khatt.draw_text(image, xy, text, font=font.path, size_px=font.size, fill=fill)
+    else:
+        ImageDraw.Draw(image).text(xy, text, fill=fill, font=font)
 
 
 class Font:

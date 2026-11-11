@@ -52,6 +52,7 @@ MOD_TO_DEP = {
     "jieba": "jieba",
     "jinja2": "Jinja2",
     "joblib": "joblib",
+    "khatt": "khatt",
     "langchain": "langchain",
     "langchain_community": "langchain-community",
     "langchain_core": "langchain-core",

@@ -40,6 +40,7 @@ BASE_DEP_SPECS = {
     "jieba": "",
     "Jinja2": "",
     "joblib": "",
+    "khatt": '>= 0.7.1; python_version >= "3.10"',
     "langchain": ">= 0.2, < 1.0",
     "langchain-community": ">= 0.2, < 1.0",
     "langchain-core": "",
@@ -175,6 +176,7 @@ EXTRAS = {
         ],
         "ocr-core": [
             "imagesize",
+            "khatt",
             "opencv-contrib-python",
             "pyclipper",
             "pypdfium2",
@@ -186,6 +188,7 @@ EXTRAS = {
             "ftfy",
             "imagesize",
             "Jinja2",
+            "khatt",
             "latex2mathml",
             "lxml",
             "opencv-contrib-python",
