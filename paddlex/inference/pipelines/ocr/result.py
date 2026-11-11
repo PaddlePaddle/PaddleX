@@ -20,7 +20,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
-from ....utils.fonts import SIMFANG_FONT, create_font, create_font_vertical
+from ....utils.fonts import SIMFANG_FONT, create_font, create_font_vertical, draw_text
 from ...common.result import BaseCVResult, JsonMixin
 
 if is_dep_available("opencv-contrib-python"):
@@ -218,18 +218,15 @@ def draw_box_txt_fine(
 
     if box_height > 2 * box_width and box_height > 30:
         img_text = Image.new("RGB", (box_width, box_height), (255, 255, 255))
-        draw_text = ImageDraw.Draw(img_text)
+        draw = ImageDraw.Draw(img_text)
         if txt:
             font = create_font_vertical(txt, (box_width, box_height), font_path)
-            draw_vertical_text(
-                draw_text, (0, 0), txt, font, fill=(0, 0, 0), line_spacing=2
-            )
+            draw_vertical_text(draw, (0, 0), txt, font, fill=(0, 0, 0), line_spacing=2)
     else:
         img_text = Image.new("RGB", (box_width, box_height), (255, 255, 255))
-        draw_text = ImageDraw.Draw(img_text)
         if txt:
             font = create_font(txt, (box_width, box_height), font_path)
-            draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font)
+            draw_text(img_text, (0, 0), txt, font=font, fill=(0, 0, 0))
 
     pts1 = np.float32(
         [[0, 0], [box_width, 0], [box_width, box_height], [0, box_height]]
