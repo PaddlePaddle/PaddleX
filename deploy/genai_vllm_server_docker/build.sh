@@ -3,13 +3,12 @@
 set -e
 
 usage() {
-    echo "Usage: $0 (--pdx-version VERSION | --pdx-wheel PATH) [--sm120] [--tag-suffix TAG]"
+    echo "Usage: $0 (--pdx-version VERSION | --pdx-wheel PATH) [--tag-suffix TAG]"
 }
 
 paddlex_version=''
 paddlex_wheel=''
-build_for_sm120='false'
-tag_suffix=''
+tag_suffix='latest'
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -25,10 +24,6 @@ while [[ $# -gt 0 ]]; do
                 --tag-suffix) tag_suffix="$2" ;;
             esac
             shift 2
-            ;;
-        --sm120)
-            build_for_sm120='true'
-            shift
             ;;
         -h|--help)
             usage
@@ -46,14 +41,6 @@ if [[ -n "$paddlex_version" && -n "$paddlex_wheel" ]] ||
    [[ -z "$paddlex_version" && -z "$paddlex_wheel" ]]; then
     usage >&2
     exit 2
-fi
-
-if [[ -z "$tag_suffix" ]]; then
-    if [[ "$build_for_sm120" == 'true' ]]; then
-        tag_suffix='latest-sm120'
-    else
-        tag_suffix='latest'
-    fi
 fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -76,7 +63,9 @@ docker build \
     -t "ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:${tag_suffix}" \
     --build-arg PADDLEX_VERSION="$paddlex_version" \
     --build-arg PADDLEX_WHEEL="$wheel_name" \
-    --build-arg BUILD_FOR_SM120="$build_for_sm120" \
+    --build-arg VLLM_BASE_IMAGE \
+    --build-arg PIP_INDEX_URL \
+    --build-arg PIP_TRUSTED_HOST \
     --build-arg http_proxy="${http_proxy:-}" \
     --build-arg https_proxy="${https_proxy:-}" \
     --build-arg no_proxy="${no_proxy:-}" \

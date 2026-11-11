@@ -751,9 +751,9 @@ for res in output:
 
 #### 3.1.1 使用 Docker 镜像
 
-PaddleX 提供了 vLLM Docker 镜像，用于快速启动 VLM 推理服务。除 Blackwell 架构外的 NVIDIA GPU 可使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`，Blackwell 架构 GPU 请使用 `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`。
+PaddleX 为受支持的 NVIDIA GPU 提供统一的 Linux x86_64 vLLM Docker 镜像。镜像使用 vLLM 0.18.1 和 CUDA 12.9，vLLM 会根据 GPU 选择 attention 后端。在受支持的 Compute Capability 低于 8.0 的 GPU 上，vLLM 会在 BF16 不可用时回退到 FP16。
 
-以除 Blackwell 架构外的 NVIDIA GPU 和 `PaddleOCR-VL-1.8-0.9B` 为例，可使用以下命令启动服务：
+以 `PaddleOCR-VL-1.8-0.9B` 为例，可使用以下命令启动服务：
 
 ```bash
 docker run \
@@ -764,20 +764,9 @@ docker run \
     paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
-若使用 Blackwell 架构 GPU，可将上述镜像替换为专用版本：
-
-```bash
-docker run \
-    --rm \
-    --gpus all \
-    --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120 \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
-```
-
 #### 3.1.2 通过 PaddleX CLI 启动
 
-VLM 服务端依赖可能与本地产线客户端环境存在差异，因此建议为 VLM 推理服务单独创建虚拟环境。示例如下：
+VLM 服务端依赖可能与本地产线客户端环境存在差异，因此建议为 VLM 推理服务单独创建虚拟环境。以下 vLLM 安装命令适用于使用 CUDA 12.9 的 NVIDIA 环境，需使用 Python 3.10–3.13。
 
 ```bash
 # 创建虚拟环境
@@ -785,9 +774,9 @@ python -m venv .venv
 # 激活环境
 source .venv/bin/activate
 # 安装 PaddleX
-python -m pip install "paddlex[ocr]"
+python -m pip install paddlex
 # 安装 vLLM 服务器插件
-paddlex --install genai-vllm-server
+PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu129 paddlex --install genai-vllm-server
 # 或安装 SGLang 服务器插件
 # paddlex --install genai-sglang-server
 # 或安装 FastDeploy 服务器插件

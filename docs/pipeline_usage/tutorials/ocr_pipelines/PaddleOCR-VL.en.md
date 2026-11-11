@@ -769,9 +769,9 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 #### 3.1.1 Using Docker Images
 
-PaddleX provides a vLLM Docker image to quickly start a VLM inference service. For NVIDIA GPUs other than the Blackwell architecture, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`. For Blackwell GPUs, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`.
+PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.18.1 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
 
-Using an NVIDIA GPU other than the Blackwell architecture and `PaddleOCR-VL-1.8-0.9B` as an example:
+Using `PaddleOCR-VL-1.8-0.9B` as an example:
 
 ```bash
 docker run \
@@ -782,20 +782,9 @@ docker run \
     paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
-For Blackwell GPUs, replace the image above with the dedicated image:
-
-```bash
-docker run \
-    --rm \
-    --gpus all \
-    --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120 \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
-```
-
 #### 3.1.2 Starting Through PaddleX CLI
 
-VLM server dependencies may differ from the local pipeline client environment, so it is recommended to create a separate virtual environment for the VLM inference service:
+VLM server dependencies may differ from those of the local pipeline client. Create a separate virtual environment for the VLM service. The following vLLM installation command uses CUDA 12.9 on NVIDIA and requires Python 3.10–3.13.
 
 ```bash
 # Create a virtual environment
@@ -803,9 +792,9 @@ python -m venv .venv
 # Activate the environment
 source .venv/bin/activate
 # Install PaddleX
-python -m pip install "paddlex[ocr]"
+python -m pip install paddlex
 # Install the vLLM server plugin
-paddlex --install genai-vllm-server
+PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu129 paddlex --install genai-vllm-server
 # Or install the SGLang server plugin
 # paddlex --install genai-sglang-server
 # Or install the FastDeploy server plugin
