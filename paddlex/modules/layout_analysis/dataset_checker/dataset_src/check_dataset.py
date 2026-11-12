@@ -113,9 +113,7 @@ def check(dataset_dir, output, sample_num=10, require_segmentation=True):
             img_anns[ann["image_id"]].append(ann)
 
         if require_segmentation:
-            missing = [
-                ann["id"] for ann in datanno if not ann.get("segmentation")
-            ]
+            missing = [ann["id"] for ann in datanno if not ann.get("segmentation")]
             if missing:
                 raise CheckFailedError(
                     f"{len(missing)} annotation(s) in {tag}.json have no usable "

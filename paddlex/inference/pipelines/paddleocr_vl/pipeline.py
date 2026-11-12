@@ -45,7 +45,6 @@ from ..layout_parsing.merge_table import merge_tables_across_pages
 from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import construct_img_path, gather_imgs
 from .result import BaseResult, PaddleOCRVLBlock, PaddleOCRVLResult
-
 from .utils import (
     convert_otsl_to_html,
     crop_margin,
@@ -412,25 +411,27 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 figure_token_map = {}
                 text_prompt = "OCR:"
                 if self.vl_rec_model.model_name == "MinerU2.5":
-                        text_prompt = "\nText Recognition:"
+                    text_prompt = "\nText Recognition:"
                 if self.vl_rec_model.model_name == "Dolphinv2":
-                        text_prompt = "Read text in the image."
+                    text_prompt = "Read text in the image."
                 if self.vl_rec_model.model_name == "MonkeyOCR-pro-3B":
-                        text_prompt = "Please output the text content from the image."
+                    text_prompt = "Please output the text content from the image."
                 blk_min_pixels = layout_prep_cfg["ocr_min_pixels"]
                 blk_max_pixels = layout_prep_cfg["ocr_max_pixels"]
                 drop_figures = []
                 if block_label == "table":
                     text_prompt = "Table Recognition:"
                     if self.vl_rec_model.model_name == "MinerU2.5":
-                            text_prompt = "\nTable Recognition:"
+                        text_prompt = "\nTable Recognition:"
                     if self.vl_rec_model.model_name == "Dolphinv2":
-                            text_prompt = "Parse the table in the image."
+                        text_prompt = "Parse the table in the image."
                     if self.vl_rec_model.model_name == "MonkeyOCR-pro-3B":
-                            text_prompt = "This is the image of a table. Please output the table in html format."
+                        text_prompt = "This is the image of a table. Please output the table in html format."
                     block_img, figure_token_map, drop_figures = (
                         tokenize_figure_of_table(
-                            block_img, block["box"], imgs_in_doc_for_img,
+                            block_img,
+                            block["box"],
+                            imgs_in_doc_for_img,
                             crop_matrix=block.get("crop_matrix"),
                         )
                     )
@@ -445,11 +446,11 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 elif "formula" in block_label and block_label != "formula_number":
                     text_prompt = "Formula Recognition:"
                     if self.vl_rec_model.model_name == "MinerU2.5":
-                            text_prompt = "\nFormula Recognition:"
+                        text_prompt = "\nFormula Recognition:"
                     if self.vl_rec_model.model_name == "Dolphinv2":
-                            text_prompt = "Read formula in the image."
+                        text_prompt = "Read formula in the image."
                     if self.vl_rec_model.model_name == "MonkeyOCR-pro-3B":
-                            text_prompt = "Please write out the expression of the formula in the image using LaTeX format."
+                        text_prompt = "Please write out the expression of the formula in the image using LaTeX format."
                     crop_img = crop_margin(block_img)
                     w, h, _ = crop_img.shape
                     if w > 2 and h > 2:
@@ -1622,6 +1623,7 @@ class PaddleOCRVL15Pipeline(_BasePaddleOCRVLPipeline):
 @pipeline_requires_extra("ocr")
 class PaddleOCRVL16Pipeline(_BasePaddleOCRVLPipeline):
     entities = "PaddleOCR-VL-1.6"
+
 
 @pipeline_requires_extra("ocr")
 class PaddleOCRVL18Pipeline(_BasePaddleOCRVLPipeline):

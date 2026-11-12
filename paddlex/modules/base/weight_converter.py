@@ -645,8 +645,7 @@ class WeightConverter:
         # Transposes and fused-QKV slices are views. Safetensors requires dense
         # C-order storage; preserve scalar shapes while materializing each view.
         contiguous_sd = {
-            key: np.asarray(value, order="C")
-            for key, value in numpy_sd.items()
+            key: np.asarray(value, order="C") for key, value in numpy_sd.items()
         }
         save_file(contiguous_sd, out_path)
         logging.info(f"Saved model.safetensors to: {out_path}")
@@ -696,9 +695,9 @@ class WeightConverter:
             data = {"Global": {"model_name": self.model_name}}
             data.update(build_inference_meta(self.model_name))
             if self.model_name in _REC_CHARACTER_DICT_MODELS:
-                data.setdefault("PostProcess", {})[
-                    "character_dict"
-                ] = load_character_dict(self.model_name)
+                data.setdefault("PostProcess", {})["character_dict"] = (
+                    load_character_dict(self.model_name)
+                )
             elif self.model_name in PP_FORMULANET_MODELS:
                 # UniMERNetDecode reads the tokenizer from
                 # PostProcess.character_dict — fast_tokenizer_file is the

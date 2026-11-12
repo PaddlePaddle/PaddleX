@@ -232,7 +232,9 @@ class DetModel(BaseModel):
         if "save_results" in kwargs:
             cli_args.append(CLIArgument("--save_results", kwargs.pop("save_results")))
         if "save_threshold" in kwargs:
-            cli_args.append(CLIArgument("--save_threshold", kwargs.pop("save_threshold")))
+            cli_args.append(
+                CLIArgument("--save_threshold", kwargs.pop("save_threshold"))
+            )
         if "rtn_im_file" in kwargs:
             cli_args.append(CLIArgument("--rtn_im_file", kwargs.pop("rtn_im_file")))
         weight_path = abspath(weight_path)
