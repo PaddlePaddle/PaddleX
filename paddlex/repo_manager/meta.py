@@ -46,7 +46,6 @@ REPO_META = {
         "git_path": "/PaddlePaddle/PaddleClas.git",
         "platform": "github",
         "branch": "develop",
-        "update_ref_env": "PADDLE_PDX_PADDLECLAS_REF",
         "install_pkg": True,
         "dist_name": "paddleclas",
         "import_name": "paddleclas",
