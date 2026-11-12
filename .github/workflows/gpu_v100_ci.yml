@@ -165,6 +165,9 @@ jobs:
       - name: Run CI unittest
         if: steps.scope.outputs.SKIP != '1'
         env:
+          # PaddleClas develop has malformed backbone imports. Use the last
+          # revision before those imports until PaddleClas fixes them.
+          PADDLE_PDX_PADDLECLAS_REF: "8421b3f6ce91b1efb9b61370ed6fb695d5aea002"
           docker_image: ${{ env.PADDLEX_IMAGE }}
           TEST_RANGE: ${{ steps.scope.outputs.TEST_RANGE }}
           MD_NUM: ${{ steps.scope.outputs.MD_NUM }}
@@ -210,6 +213,7 @@ jobs:
             -e "CI_BASE_SHA=${CI_BASE_SHA}" \
             -e "CI_CLEAR_HOST_CACHE=${CI_CLEAR_HOST_CACHE}" \
             -e "USE_NEW_INFERENCE=1" \
+            -e PADDLE_PDX_PADDLECLAS_REF \
             -e "PADDLE_INSTALL_VERSION=${PADDLE_INSTALL_VERSION}" \
             "${docker_image}" \
             /bin/bash -c '

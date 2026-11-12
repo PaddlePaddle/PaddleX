@@ -191,13 +191,17 @@ class PPRepository(object):
 
     def update(self, platform=None):
         """update"""
-        branch = self.meta.get("branch", None)
+        ref_env = self.meta.get("update_ref_env")
+        ref_override = os.getenv(ref_env) if ref_env else None
+        ref = ref_override or self.meta.get("branch")
         git_url = f"https://{platform}{self.git_path}"
         with switch_working_dir(self.root_dir):
             try:
-                fetch_repo_using_git(branch=branch, url=git_url)
+                fetch_repo_using_git(branch=ref, url=git_url)
                 reset_repo_using_git("FETCH_HEAD")
             except Exception as e:
+                if ref_override:
+                    raise
                 logging.warning(
                     f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
