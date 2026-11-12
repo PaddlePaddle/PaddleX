@@ -73,8 +73,6 @@ RUN mkdir -p /paddlex/libs
 # Build stage 2 for GPU
 FROM build1 AS gpu-build2
 
-RUN mkdir -p /paddlex/tensorrt
-
 RUN --mount=type=bind,source=deploy/hps/server_env/cudnn-linux-x86_64-8.9.7.29_cuda11-archive.tar.xz,target=/tmp/cudnn-linux-x86_64-8.9.7.29_cuda11-archive.tar.xz \
     tar -xf /tmp/cudnn-linux-x86_64-8.9.7.29_cuda11-archive.tar.xz -C /paddlex \
     && mv /paddlex/cudnn-linux-x86_64-8.9.7.29_cuda11-archive/lib/* /paddlex/libs/
