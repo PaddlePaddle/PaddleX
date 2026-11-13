@@ -74,7 +74,8 @@ BASE_DEP_SPECS = {
     "scikit-image": "",
     "scikit-learn": "",
     "scipy": "",
-    "sentencepiece": "",
+    # 0.2.3 generates protobuf code that requires a 7.x runtime.
+    "sentencepiece": "< 0.2.3",
     "shapely": "",
     "soundfile": "",
     "tiktoken": "",
