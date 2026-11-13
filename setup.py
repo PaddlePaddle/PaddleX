@@ -236,7 +236,7 @@ EXTRAS = {
             "torch == 2.10.0",
             "transformers >= 4.56.0, < 5.0.0",
             "uvloop",
-            "vllm == 0.18.1",
+            "vllm == 0.19.0",
         ],
         "paddle2onnx": [
             "paddle2onnx == 2.0.2rc3",

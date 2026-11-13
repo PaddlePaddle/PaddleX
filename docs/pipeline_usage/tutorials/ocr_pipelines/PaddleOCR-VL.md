@@ -751,7 +751,7 @@ for res in output:
 
 #### 3.1.1 使用 Docker 镜像
 
-PaddleX 为受支持的 NVIDIA GPU 提供统一的 Linux x86_64 vLLM Docker 镜像。镜像使用 vLLM 0.18.1 和 CUDA 12.9，vLLM 会根据 GPU 选择 attention 后端。在受支持的 Compute Capability 低于 8.0 的 GPU 上，vLLM 会在 BF16 不可用时回退到 FP16。
+PaddleX 为受支持的 NVIDIA GPU 提供统一的 Linux x86_64 vLLM Docker 镜像。镜像使用 vLLM 0.19.0 和 CUDA 12.9，vLLM 会根据 GPU 选择 attention 后端。在受支持的 Compute Capability 低于 8.0 的 GPU 上，vLLM 会在 BF16 不可用时回退到 FP16。
 
 以 `PaddleOCR-VL-1.8-0.9B` 为例，可使用以下命令启动服务：
 
@@ -760,7 +760,7 @@ docker run \
     --rm \
     --gpus all \
     --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest \
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:paddlex3.8-vllm0.19.0 \
     paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 

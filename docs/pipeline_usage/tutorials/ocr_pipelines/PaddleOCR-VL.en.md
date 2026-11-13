@@ -769,7 +769,7 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 #### 3.1.1 Using Docker Images
 
-PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.18.1 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
+PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.19.0 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
 
 Using `PaddleOCR-VL-1.8-0.9B` as an example:
 
@@ -778,7 +778,7 @@ docker run \
     --rm \
     --gpus all \
     --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest \
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:paddlex3.8-vllm0.19.0 \
     paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 

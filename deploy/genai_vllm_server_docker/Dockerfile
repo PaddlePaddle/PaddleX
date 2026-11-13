@@ -1,4 +1,4 @@
-ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.18.1-x86_64
+ARG VLLM_BASE_IMAGE=vllm/vllm-openai:v0.19.0-x86_64
 FROM ${VLLM_BASE_IMAGE}
 
 RUN apt-get update \
@@ -23,7 +23,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
         echo "Set exactly one of PADDLEX_VERSION or PADDLEX_WHEEL." >&2; \
         exit 2; \
     fi \
-    && paddlex --install genai-vllm-server
+    && printf '%s\n' 'transformers==4.57.6' > /tmp/vllm-constraints.txt \
+    && PIP_CONSTRAINT=/tmp/vllm-constraints.txt paddlex --install genai-vllm-server \
+    && rm /tmp/vllm-constraints.txt
 
 EXPOSE 8080
 
