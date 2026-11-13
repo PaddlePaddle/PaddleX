@@ -185,6 +185,10 @@ class DetModel(BaseModel):
             cli_args.append(CLIArgument("--amp"))
         if num_workers is not None:
             config.update_num_workers(num_workers)
+        # eval.py merges argparse defaults over the YAML. Pass this explicitly
+        # so its default None cannot reset the configured metrics directory.
+        if config.dict.get("output_eval"):
+            cli_args.append(CLIArgument("--output_eval", config.output_eval))
 
         self._assert_empty_kwargs(kwargs)
 
@@ -221,22 +225,25 @@ class DetModel(BaseModel):
         else:
             cli_args.append(CLIArgument("--infer_dir", input_path))
         if "infer_list" in kwargs:
-            infer_list = abspath(kwargs.get("infer_list"))
+            infer_list = abspath(kwargs.pop("infer_list"))
             cli_args.append(CLIArgument("--infer_list", infer_list))
         if "visualize" in kwargs:
-            cli_args.append(CLIArgument("--visualize", kwargs["visualize"]))
+            cli_args.append(CLIArgument("--visualize", kwargs.pop("visualize")))
         if "save_results" in kwargs:
-            cli_args.append(CLIArgument("--save_results", kwargs["save_results"]))
+            cli_args.append(CLIArgument("--save_results", kwargs.pop("save_results")))
         if "save_threshold" in kwargs:
-            cli_args.append(CLIArgument("--save_threshold", kwargs["save_threshold"]))
+            cli_args.append(
+                CLIArgument("--save_threshold", kwargs.pop("save_threshold"))
+            )
         if "rtn_im_file" in kwargs:
-            cli_args.append(CLIArgument("--rtn_im_file", kwargs["rtn_im_file"]))
+            cli_args.append(CLIArgument("--rtn_im_file", kwargs.pop("rtn_im_file")))
         weight_path = abspath(weight_path)
         config.update_weights(weight_path)
         device_type, _ = parse_device(device)
         config.update_device(device_type)
         if save_dir is not None:
             save_dir = abspath(save_dir)
+            config.update_save_dir(save_dir)
             cli_args.append(CLIArgument("--output_dir", save_dir))
 
         self._assert_empty_kwargs(kwargs)
@@ -267,6 +274,9 @@ class DetModel(BaseModel):
             weight_path = abspath(weight_path)
         config.update_weights(weight_path)
         save_dir = abspath(save_dir)
+        # PaddleDetection also writes config.yaml to cfg.save_dir when uniform
+        # output is enabled. Keep that side effect inside the export directory.
+        config.update_save_dir(save_dir)
         cli_args.append(CLIArgument("--output_dir", save_dir))
         input_shape = kwargs.pop("input_shape", None)
         if input_shape is not None:

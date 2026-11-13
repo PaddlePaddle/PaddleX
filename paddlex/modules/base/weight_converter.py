@@ -38,6 +38,7 @@ from .utils.pdparams2safetensors import (
     PP_CHART2TABLE_MAPPING,
     PP_DOCLAYOUTV2_DROP_PREFIXES,
     PP_DOCLAYOUTV2_MAPPING,
+    PP_DOCLAYOUTV4_MAPPING,
     PP_FORMULANET_MAPPING,
     PPLCNET_MAPPING,
     PPOCRV5_MOBILE_DET_MAPPING,
@@ -80,6 +81,117 @@ def build_weight_converter(config: AttrDict) -> "WeightConverter":
     return WeightConverter(config)
 
 
+def _derive_doclayoutv4_s2r_config(config, numpy_sd):
+    """Reconcile PP-DocLayoutV4's S2R config fields with the actual checkpoint.
+
+    ``PPDocLayoutV4S2RFusion`` only stores ``a``; when ``s2r_learnable_b`` is
+    false the reference implementation keeps ``b`` as a plain Python float, so
+    its value has to travel in the config instead of the weights. That makes the
+    S2R block the one place where a wrong config silently produces wrong numbers
+    -- every weight still loads. The defaults in ``MODEL_CONFIGS`` match the one
+    published training recipe, but PaddleDetection's own class defaults differ
+    (``s2r_a_init=4.0``, ``s2r_learnable_b=True``), so a checkpoint from any
+    other recipe would be mis-described.
+
+    Whatever the weights can prove is taken from them; ``s2r_steps`` and
+    ``s2r_damping`` leave no trace in the checkpoint at all, so those are only
+    warned about. Drop a ``config.json`` next to the input ``.pdparams`` to
+    override the whole file.
+    """
+    config = dict(config)
+    has_a = "model.s2r_fusion.a" in numpy_sd
+    has_b = "model.s2r_fusion.b" in numpy_sd
+
+    if not has_a and not has_b:
+        if config.get("use_s2r"):
+            logging.warning(
+                "No s2r_fusion weights found in the checkpoint; writing "
+                "use_s2r: false. Reading order will use the relative-order "
+                "head alone."
+            )
+        config["use_s2r"] = False
+        return config
+
+    config["use_s2r"] = True
+    # `s2r_a_init` is deliberately left alone: `a` is a real parameter that the
+    # checkpoint overwrites, so the initializer has no effect on inference (the
+    # published config says 0.0 while the trained value is ~24). `b` is the
+    # opposite -- when it is not learnable there is no parameter to load.
+    config["s2r_learnable_b"] = has_b
+    if has_b:
+        config["s2r_b_init"] = float(numpy_sd["model.s2r_fusion.b"].reshape(-1)[0])
+        logging.info(
+            "Checkpoint carries s2r_fusion.b; writing s2r_learnable_b: true "
+            "with s2r_b_init %s.",
+            config["s2r_b_init"],
+        )
+    else:
+        logging.warning(
+            "Checkpoint has no s2r_fusion.b (s2r_learnable_b: false), so the "
+            "fused weight b cannot be recovered from the weights. Writing the "
+            "default s2r_b_init: %s -- if your training config used a "
+            "different value, supply your own config.json.",
+            config.get("s2r_b_init"),
+        )
+    logging.warning(
+        "s2r_steps (%s) and s2r_damping (%s) are not recoverable from a "
+        "checkpoint; the published defaults are being written. Override them "
+        "with your own config.json if your training config differed.",
+        config.get("s2r_steps"),
+        config.get("s2r_damping"),
+    )
+    return config
+
+
+def _split_doclayoutv4_projections(state_dict):
+    """Use the Transformers q/k and geometry-buffer names in V4 packages.
+
+    Linear tensors have already been transposed to HF [out, in] format.
+    The original fused projection stores all queries followed by all keys.
+    """
+    import numpy as np
+
+    state_dict = dict(state_dict)
+    for head in ("decoder_global_pointer", "decoder_roor_global_pointer"):
+        prefix = f"model.{head}."
+        for suffix in ("weight", "bias"):
+            fused = prefix + "dense." + suffix
+            if fused in state_dict:
+                q, k = np.split(state_dict.pop(fused), 2, axis=0)
+                state_dict[prefix + "q_proj." + suffix] = q
+                state_dict[prefix + "k_proj." + suffix] = k
+    return state_dict
+
+
+def _derive_doclayoutv4_deform_config(config, numpy_sd):
+    """Recover the optional geometric head architecture from checkpoint tensors."""
+    config = dict(config)
+    prefix = "model.deform_head.body."
+    present = any(key.startswith(prefix) for key in numpy_sd)
+    config.update(deform_pred=present, deform_out=present)
+    if present:
+        required = [
+            prefix + str(i) + suffix
+            for i in (0, 2, 4, 6)
+            for suffix in (".weight", ".bias")
+        ]
+        required.append("model.deform_head.bin_centers")
+        missing = [key for key in required if key not in numpy_sd]
+        if missing:
+            raise ValueError(f"Incomplete PP-DocLayoutV4 deformation head: {missing}")
+        centers = numpy_sd["model.deform_head.bin_centers"]
+        bins = int(centers.size)
+        if bins < 2 or numpy_sd[prefix + "6.weight"].shape[0] != 7 + 2 * bins:
+            raise ValueError("Inconsistent deformation bin count and output channels")
+        config.update(
+            deform_conv_width=int(numpy_sd[prefix + "0.weight"].shape[0]),
+            deform_kbins=bins,
+            deform_krange=float(max(abs(centers))),
+            deform_level=config.get("deform_level", 1),
+        )
+    return config
+
+
 # Model registry: model_name -> (key_mapping, drop_key_prefixes)
 _MODEL_REGISTRY = {
     "PP-LCNet_x1_0_doc_ori": (PPLCNET_MAPPING, []),
@@ -108,6 +220,7 @@ _MODEL_REGISTRY = {
     "SLANeXt_wireless": (SLANEXT_MAPPING, SLANEXT_DROP_PREFIXES),
     "PP-DocLayoutV2": (PP_DOCLAYOUTV2_MAPPING, PP_DOCLAYOUTV2_DROP_PREFIXES),
     "PP-DocLayoutV3": (RTDETR_MAPPING, []),
+    "PP-DocLayoutV4": (PP_DOCLAYOUTV4_MAPPING, []),
     "RT-DETR-L_wired_table_cell_det": (RTDETR_MAPPING, []),
     "RT-DETR-L_wireless_table_cell_det": (RTDETR_MAPPING, []),
     "PP-DocLayout_plus-L": (RTDETR_MAPPING, []),
@@ -194,6 +307,16 @@ _TRANSPOSE_SUBSTRINGS = [
     "query_pos_head",
     "dec_global_pointer",
     "dec_order_head",
+    # PP-DocLayoutV4 ROOR head: `dec_order_head` / `dec_global_pointer` are not
+    # substrings of these, so they need their own entries. The ROOR order head
+    # weight is square ([256, 256]), so a missing transpose here would corrupt
+    # the weights silently instead of failing to load.
+    "dec_roor_global_pointer",
+    "dec_roor_order_head",
+    "dec_rel_head",
+    "rel_scorer",
+    "dec_succ_head",
+    "succ_scorer",
     "attention_weights",
     "sampling_offsets",
     "value_proj",
@@ -404,7 +527,7 @@ class WeightConverter:
 
         os.makedirs(self.output_dir, exist_ok=True)
         self._save_safetensors(numpy_sd)
-        self._save_model_config()
+        self._save_model_config(numpy_sd)
         self._save_preprocessor_config()
         self._save_inference_yml()
 
@@ -454,6 +577,9 @@ class WeightConverter:
                 f"No key mapping defined for {self.model_name}. "
                 "Keys will be saved as-is from pdparams."
             )
+
+        if self.model_name == "PP-DocLayoutV4":
+            numpy_sd = _split_doclayoutv4_projections(numpy_sd)
 
         self._postprocess_weights(numpy_sd)
         return numpy_sd
@@ -512,18 +638,27 @@ class WeightConverter:
 
     def _save_safetensors(self, numpy_sd):
         """Save numpy state dict as model.safetensors."""
+        import numpy as np
         from safetensors.numpy import save_file
 
         out_path = os.path.join(self.output_dir, "model.safetensors")
-        save_file(numpy_sd, out_path)
+        # Transposes and fused-QKV slices are views. Safetensors requires dense
+        # C-order storage; preserve scalar shapes while materializing each view.
+        contiguous_sd = {
+            key: np.asarray(value, order="C") for key, value in numpy_sd.items()
+        }
+        save_file(contiguous_sd, out_path)
         logging.info(f"Saved model.safetensors to: {out_path}")
 
-    def _save_model_config(self):
+    def _save_model_config(self, numpy_sd=None):
         """Save config.json — user-provided or official default."""
-        data = self._user_configs.get(
-            "config.json",
-            MODEL_CONFIGS.get(self.model_name, {}),
-        )
+        if "config.json" in self._user_configs:
+            data = self._user_configs["config.json"]
+        else:
+            data = dict(MODEL_CONFIGS.get(self.model_name, {}))
+            if self.model_name == "PP-DocLayoutV4" and numpy_sd is not None:
+                data = _derive_doclayoutv4_s2r_config(data, numpy_sd)
+                data = _derive_doclayoutv4_deform_config(data, numpy_sd)
         out_path = os.path.join(self.output_dir, "config.json")
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
@@ -560,9 +695,9 @@ class WeightConverter:
             data = {"Global": {"model_name": self.model_name}}
             data.update(build_inference_meta(self.model_name))
             if self.model_name in _REC_CHARACTER_DICT_MODELS:
-                data.setdefault("PostProcess", {})[
-                    "character_dict"
-                ] = load_character_dict(self.model_name)
+                data.setdefault("PostProcess", {})["character_dict"] = (
+                    load_character_dict(self.model_name)
+                )
             elif self.model_name in PP_FORMULANET_MODELS:
                 # UniMERNetDecode reads the tokenizer from
                 # PostProcess.character_dict — fast_tokenizer_file is the

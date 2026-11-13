@@ -1,0 +1,69 @@
+_BASE_: ['PP-DocLayoutV4_det.yaml']
+
+# Page geometric-deformation prediction (roll / shear / kx / ky) on top of
+# modeling_v2_4point_s2r.  Every deformation-specific setting lives in this file;
+# the base config's behaviour is unchanged.
+#
+# The detector is frozen and only the deformation head on the stride-16 encoder
+# features is trained.  At inference the head outputs warp_params [B, 5] =
+# (roll, quadrant confidence, shear, kx, ky), all *rectifying* values, from which
+# tools/rectify_page.py::build_rectify builds the rectifying homography
+#     H = T(c) @ U(shear) @ R(roll) @ P(kx, ky) @ T(-c),   c = canvas centre
+
+# Start from a detector trained with modeling_v2_4point_s2r.yaml (its default
+# save_dir is `output`).  Outside deform_head the weights stay bit-identical to it.
+pretrain_weights: null  # Set Train.pretrain_weight_path to a trained V4 checkpoint.
+save_dir: output/modeling_v2_4point_s2r_geodeform
+
+# Train deform_head only: every other parameter gets stop_gradient, and the frozen
+# BatchNorm layers are kept in eval mode and excluded from EMA
+# (ppdet/engine/trainer.py), so the detection outputs match the starting checkpoint.
+deform_only_train: true
+
+DINOHeadV2:
+  deform_pred: true
+  deform_out: true             # emit warp_params at inference / export
+  deform_level: 1              # read the stride-16 encoder feature
+  deform_conv_width: 128
+  # 88 outputs: quadrant logits (4) + in-quadrant roll residual / 45 (1) +
+  # shear / 45 (1) + 41 bins each for kx and ky (+-1.5, softmax-expectation decode)
+  deform_kbins: 41
+  deform_krange: 1.5
+  # native losses (quadrant CE / residual L1 / shear L1 / kbins soft-CE)
+  deform_quadrant_coeff: 5.0
+  deform_angle_coeff: 0.1
+  deform_persp_coeff: 0.1
+  # rectification-space rectangle loss: the GT page quad and the layout elements
+  # must become axis-aligned rectangles under the predicted homography; ramped in
+  # linearly over the first 1200 steps
+  deform_rect_coeff: 50.0
+  deform_rect_warmup: 1200
+  deform_rect_max_elems: 64
+
+TrainReader:
+  sample_transforms:
+    - Decode: {}
+    - RandomDistort: {prob: 0.8}
+    # content orientation: with prob 0.3 a uniform 90/180/270 turn
+    # (orientation distribution ~71/10/10/9%)
+    - RandomRotate90Quad: {prob: 0.3, angles: [90, 180, 270], canonicalize: True, fill_value: [123.675, 116.28, 103.53]}
+    # framing + deformation in one step: the deformation is sampled from bands
+    # first (label = sampled value), then the page position / share is solved for,
+    # and the warp is applied about the centre of the square network input, so the
+    # label does not depend on page position or share.  Defaults are the final
+    # distribution.
+    - RandomPlaceWarpQuad: {fill_value: [123.675, 116.28, 103.53]}
+    # replace every margin with a natural image (no gate on page share).
+    # bg_dir must be a pool of text-free images: text in the background sits in a
+    # region whose ground truth says "nothing here".
+    - RandomSceneBackgroundQuad: {prob: 0.9, min_doc_share: 0.0, bg_dir: dataset/coco_test2017_textfree_v2, pad_ratio: 1.5, pad_gamma: 1.5, fill_value: [123.675, 116.28, 103.53]}
+    # photographic degradation: lighting gradient / vignetting, shadow, white
+    # balance, blur, noise, JPEG
+    - RandomPhotoQuad: {prob: 0.7}
+  batch_transforms:
+    - BatchRandomResize: {target_size: [672, 704, 736, 768, 800, 800, 800, 800, 832, 864, 896, 928], random_size: True, random_interp: True, keep_ratio: False}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    # deform_labels: derive deform_quadrant / deform_roll_res / deform_shear /
+    # deform_kx / deform_ky / deform_page_quad training targets from page_quad
+    - NormalizeQuad: {deform_labels: True}
+    - Permute: {}

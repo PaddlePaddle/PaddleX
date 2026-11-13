@@ -21,6 +21,10 @@ PADDLEOCR_VL_MODELS = (
     "PaddleOCR-VL-0.9B",
     "PaddleOCR-VL-1.5-0.9B",
     "PaddleOCR-VL-1.6-0.9B",
+    "PaddleOCR-VL-1.8-0.9B",
+    "MinerU2.5",
+    "Dolphinv2",
+    "MonkeyOCR-pro-3B",
 )
 
 # Model group: maps family name to set of model names.

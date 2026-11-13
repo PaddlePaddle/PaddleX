@@ -42,6 +42,11 @@ class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
     useLayoutDetection: Optional[bool] = None
+    useLayoutDeform: Optional[bool] = None
+    layoutDeformConfThresh: Optional[float] = None
+    layoutDeformMinRoll: Optional[float] = None
+    layoutDeformMinShear: Optional[float] = None
+    layoutDeformMinKeystone: Optional[float] = None
     useChartRecognition: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useOcrForImageBlock: Optional[bool] = None
@@ -147,7 +152,7 @@ class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
                     raise ValueError(
                         f"`layoutUnclipRatio`{context} must be > 0; got: {value}"
                     )
-            elif isinstance(value, list):
+            elif isinstance(value, (list, tuple)):
                 if len(value) != 2:
                     raise ValueError(
                         f"`layoutUnclipRatio`{context} must be two numbers; got: {len(value)} values"

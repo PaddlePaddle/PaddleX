@@ -239,6 +239,37 @@ official_categories = {
         {"name": "aside_text", "id": 18},
         {"name": "reference_content", "id": 19},
     ],
+    # PP-DocLayoutV4 trains in the Det suite, so `DetModel.export` consults this
+    # table to synthesize a temporary instance_val.json when no dataset is
+    # present. Order must match the exported `label_list` in inference.yml
+    # (== inference_meta._LABEL_DOC_LAYOUT_V2V3), not V3's config.json id2label.
+    "PP-DocLayoutV4": [
+        {"name": "abstract", "id": 0},
+        {"name": "algorithm", "id": 1},
+        {"name": "aside_text", "id": 2},
+        {"name": "chart", "id": 3},
+        {"name": "content", "id": 4},
+        {"name": "display_formula", "id": 5},
+        {"name": "doc_title", "id": 6},
+        {"name": "figure_title", "id": 7},
+        {"name": "footer", "id": 8},
+        {"name": "footer_image", "id": 9},
+        {"name": "footnote", "id": 10},
+        {"name": "formula_number", "id": 11},
+        {"name": "header", "id": 12},
+        {"name": "header_image", "id": 13},
+        {"name": "image", "id": 14},
+        {"name": "inline_formula", "id": 15},
+        {"name": "number", "id": 16},
+        {"name": "paragraph_title", "id": 17},
+        {"name": "reference", "id": 18},
+        {"name": "reference_content", "id": 19},
+        {"name": "seal", "id": 20},
+        {"name": "table", "id": 21},
+        {"name": "text", "id": 22},
+        {"name": "vertical_text", "id": 23},
+        {"name": "vision_footnote", "id": 24},
+    ],
     "PP-DocBlockLayout": [
         {"name": "Region", "id": 0},
     ],

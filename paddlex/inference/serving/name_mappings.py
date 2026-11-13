@@ -15,6 +15,7 @@
 PIPELINE_APP_ROUTER = {
     "PaddleOCR-VL-1.5": "PaddleOCR-VL",
     "PaddleOCR-VL-1.6": "PaddleOCR-VL",
+    "PaddleOCR-VL-1.8": "PaddleOCR-VL",
 }
 
 

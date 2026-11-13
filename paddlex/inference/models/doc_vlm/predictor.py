@@ -559,6 +559,19 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
                         f"{repr(client.backend)} does not support `max_pixels`."
                     )
 
+            if (
+                client.backend == "vllm-server"
+                and self.model_name == "PaddleOCR-VL-1.8-0.9B"
+                and (min_pixels is not None or max_pixels is not None)
+            ):
+                # vLLM uses the top-level limits to count image tokens, while
+                # the 1.8 HF processor reads resize limits from `size`.
+                # Keep both in sync to avoid mismatched image embeddings.
+                request_kwargs["extra_body"]["mm_processor_kwargs"]["size"] = {
+                    "min_pixels": 112896 if min_pixels is None else min_pixels,
+                    "max_pixels": 1003520 if max_pixels is None else max_pixels,
+                }
+
             messages = [
                 {
                     "role": "user",

@@ -14,6 +14,7 @@
 
 
 from ..object_detection import DetTrainer
+from .dataset_spec import get_dataset_spec
 from .model_list import MODELS
 
 
@@ -22,19 +23,29 @@ class LayoutAnalysisTrainer(DetTrainer):
 
     entities = MODELS
 
+    def update_config(self):
+        super().update_config()
+        # Training-time validation must also keep bbox.json out of the
+        # external PaddleDetection working directory.
+        self.pdx_config.update({"output_eval": self.pdx_config.save_dir})
+        if (
+            self.global_config.model == "PP-DocLayoutV4"
+            and self.pdx_config.dict.get("deform_only_train", False)
+            and not self.pdx_config.dict.get("pretrain_weights")
+            and not self.train_config.get("resume_path")
+        ):
+            raise ValueError(
+                "Geometry-only training requires a trained V4 detector. Set "
+                "Train.pretrain_weight_path or Train.resume_path before training."
+            )
+
     def _update_dataset(self):
         """update dataset settings"""
         metric = self.pdx_config.metric if "metric" in self.pdx_config else "COCO"
+        dataset_type, data_fields = get_dataset_spec(self.global_config.model)
         self.pdx_config.update_dataset(
             self.global_config.dataset_dir,
-            "COCOInstSegDataset",
-            data_fields=[
-                "image",
-                "gt_bbox",
-                "gt_class",
-                "gt_poly",
-                "is_crowd",
-                "gt_read_order",
-            ],
+            dataset_type,
+            data_fields=data_fields,
             metric=metric,
         )

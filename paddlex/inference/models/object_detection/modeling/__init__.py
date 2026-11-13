@@ -14,4 +14,5 @@
 
 from .pp_doclayout_v2 import PPDocLayoutV2
 from .pp_doclayout_v3 import PPDocLayoutV3
+from .pp_doclayout_v4 import PPDocLayoutV4
 from .rt_detr import RTDETR

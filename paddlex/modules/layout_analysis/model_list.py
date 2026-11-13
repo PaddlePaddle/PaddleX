@@ -15,4 +15,5 @@
 
 MODELS = [
     "PP-DocLayoutV3",
+    "PP-DocLayoutV4",
 ]

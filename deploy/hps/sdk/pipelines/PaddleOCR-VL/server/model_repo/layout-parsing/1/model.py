@@ -142,6 +142,15 @@ class TritonPythonModel(BaseTritonPythonModel):
                             ].useDocOrientationClassify,
                             use_doc_unwarping=inputs_g[0].useDocUnwarping,
                             use_layout_detection=inputs_g[0].useLayoutDetection,
+                            use_layout_deform=inputs_g[0].useLayoutDeform,
+                            layout_deform_conf_thresh=inputs_g[
+                                0
+                            ].layoutDeformConfThresh,
+                            layout_deform_min_roll=inputs_g[0].layoutDeformMinRoll,
+                            layout_deform_min_shear=inputs_g[0].layoutDeformMinShear,
+                            layout_deform_min_keystone=inputs_g[
+                                0
+                            ].layoutDeformMinKeystone,
                             use_chart_recognition=inputs_g[0].useChartRecognition,
                             use_seal_recognition=inputs_g[0].useSealRecognition,
                             use_ocr_for_image_block=inputs_g[0].useOcrForImageBlock,
@@ -207,44 +216,43 @@ class TritonPythonModel(BaseTritonPythonModel):
             else:
                 return obj
 
-        def _hash(input):
-            return hash(
-                tuple(
-                    map(
-                        _to_hashable,
-                        (
-                            (
-                                input.useDocOrientationClassify,
-                                input.useDocUnwarping,
-                                input.useLayoutDetection,
-                                input.useChartRecognition,
-                                input.useSealRecognition,
-                                input.useOcrForImageBlock,
-                                input.layoutThreshold,
-                                input.layoutNms,
-                                input.layoutUnclipRatio,
-                                input.layoutMergeBboxesMode,
-                                input.layoutShapeMode,
-                                input.promptLabel,
-                                input.formatBlockContent,
-                                input.repetitionPenalty,
-                                input.temperature,
-                                input.topP,
-                                input.minPixels,
-                                input.maxPixels,
-                                input.maxNewTokens,
-                                input.mergeLayoutBlocks,
-                                input.markdownIgnoreLabels,
-                                input.vlmExtraArgs,
-                            )
-                        ),
-                    )
+        def _group_key(input):
+            return tuple(
+                _to_hashable(value)
+                for value in (
+                    input.useDocOrientationClassify,
+                    input.useDocUnwarping,
+                    input.useLayoutDetection,
+                    input.useLayoutDeform,
+                    input.layoutDeformConfThresh,
+                    input.layoutDeformMinRoll,
+                    input.layoutDeformMinShear,
+                    input.layoutDeformMinKeystone,
+                    input.useChartRecognition,
+                    input.useSealRecognition,
+                    input.useOcrForImageBlock,
+                    input.layoutThreshold,
+                    input.layoutNms,
+                    input.layoutUnclipRatio,
+                    input.layoutMergeBboxesMode,
+                    input.layoutShapeMode,
+                    input.promptLabel,
+                    input.formatBlockContent,
+                    input.repetitionPenalty,
+                    input.temperature,
+                    input.topP,
+                    input.minPixels,
+                    input.maxPixels,
+                    input.maxNewTokens,
+                    input.mergeLayoutBlocks,
+                    input.markdownIgnoreLabels,
+                    input.vlmExtraArgs,
                 )
             )
 
         groups = {}
         for i, inp in enumerate(inputs):
-            group_key = _hash(inp)
+            group_key = _group_key(inp)
             if group_key not in groups:
                 groups[group_key] = []
             groups[group_key].append((i, inp))

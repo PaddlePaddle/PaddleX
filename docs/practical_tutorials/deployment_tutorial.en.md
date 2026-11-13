@@ -45,15 +45,9 @@ Find the corresponding installation command in the table below based on processo
     <th>Installation Command</th>
   </tr>
   <tr>
-    <td rowspan="7">x86-64</td>
-    <td rowspan="7">Linux</td>
-    <td rowspan="4">CPU</td>
-  </tr>
-  <tr>
-    <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device cpu --py 38</td>
-  </tr>
-  <tr>
+    <td rowspan="4">x86-64</td>
+    <td rowspan="4">Linux</td>
+    <td rowspan="2">CPU</td>
     <td>3.9</td>
     <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device cpu --py 39</td>
   </tr>
@@ -62,11 +56,7 @@ Find the corresponding installation command in the table below based on processo
     <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device cpu --py 310</td>
   </tr>
   <tr>
-    <td rowspan="3">GPU (CUDA 11.8 + cuDNN 8.6)</td>
-    <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 38</td>
-  </tr>
-  <tr>
+    <td rowspan="2">GPU (CUDA 11.8 + cuDNN 8.6)</td>
     <td>3.9</td>
     <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 39</td>
   </tr>

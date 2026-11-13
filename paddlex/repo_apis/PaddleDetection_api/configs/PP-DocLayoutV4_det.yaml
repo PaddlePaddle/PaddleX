@@ -1,0 +1,221 @@
+# Runtime
+epoch: 200
+log_iter: 10
+find_unused_parameters: true
+use_gpu: true
+use_xpu: false
+use_mlu: false
+use_npu: false
+use_ema: true
+ema_decay: 0.9999
+ema_decay_type: "exponential"
+ema_filter_no_grad: true
+save_dir: output
+snapshot_epoch: 10
+print_flops: false
+print_params: false
+eval_size: [800, 800]
+export_with_pir: True
+deform_only_train: false
+
+# Dataset
+# DocLayoutV3Metric decodes reading order and reports COCO box AP. It does
+# not calculate a separate reading-order accuracy metric. V4 returns
+# qi/rel_order_logits/roor_order_logits for the same decoding path.
+# NOTE: the AP is measured on the axis-aligned box enclosing the predicted
+# quad, not on the quad itself. There is no quad AP metric yet.
+metric: DocLayoutV3Metric
+DocLayoutV3Metric:
+  eval_mask: False  # V4 has no mask branch (with_mask: False)
+num_classes: 25
+
+worker_num: 24
+
+TrainDataset:
+  name: COCODetDataset
+  image_dir: images
+  anno_path: annotations/instance_train.json
+  dataset_dir: dataset/doclayoutv4_examples/
+  data_fields: ['image', 'gt_bbox', 'gt_quad', 'gt_class', 'is_crowd', 'gt_read_order']
+
+EvalDataset:
+  name: COCODetDataset
+  image_dir: images
+  anno_path: annotations/instance_val.json
+  dataset_dir: dataset/doclayoutv4_examples/
+  allow_empty: true
+
+TestDataset:
+  name: ImageFolder
+  anno_path: annotations/instance_val.json
+  dataset_dir: dataset/doclayoutv4_examples/
+TrainReader:
+  sample_transforms:
+    - Decode: {}
+    - RandomDistort: {prob: 0.8}
+    # Orthogonal orientation (MDPBench has ~17% of pages arriving landscape).
+    # canonicalize=True re-anchors quad corner 0 to the top-left of the rotated
+    # frame; without it the corner index convention silently cyclic-shifts.
+    - RandomRotate90Quad: {prob: 0.3, angles: [90, 180, 270], canonicalize: True, fill_value: [123.675, 116.28, 103.53]}
+    # Residual skew of hand-held photos, capped at 45 deg; combined with
+    # RandomRotate90Quad this spans 0-360.  gamma=4 skews sampling towards small
+    # angles while still reaching the long tail measured on MDPBench (3.1% of
+    # pages > 25 deg, max 44 deg).
+    - RandomTiltQuad: {prob: 0.3, max_angle: 45.0, gamma: 4.0, fill_value: [123.675, 116.28, 103.53]}
+    - RandomPerspectiveQuad: {prob: 0.3, degrees: 20, scale: 0.2, shear: 5.0, perspective: 0.0002, fit_output: True, fill_value: [123.675, 116.28, 103.53]}
+    - RandomExpand: {fill_value: [123.675, 116.28, 103.53]}
+    # Repaints the constant-colour filler left by the operators above with a real
+    # photograph, so "flat grey region" stops being a shortcut.  Must precede
+    # RandomCrop, which does not maintain doc_mask.
+    # bg_dir must be a pool of text-free images: a background containing text
+    # lands in a region whose ground truth says "nothing here".
+    # min_doc_share skips samples where RandomExpand shrank the document below
+    # 35% of the canvas ("a small document inside a photograph" is not the target
+    # form; MDPBench median document share is 69%).
+    - RandomSceneBackgroundQuad: {prob: 0.5, min_doc_share: 0.35, bg_dir: dataset/coco_test2017_textfree_v2, pad_ratio: 1.5, pad_gamma: 1.5, fill_value: [123.675, 116.28, 103.53]}
+    # clip_quad clips gt_quad into the crop window like gt_bbox, so a box
+    # straddling the border cannot keep corners outside the canvas.
+    - RandomCrop: {prob: 0.8, use_box_candidates: true, clip_quad: true}
+    # RandomFlip is not used: a mirror flip reverses quad winding, which the
+    # corner canonicalisation does not handle.
+  batch_transforms:
+    - BatchRandomResize: {target_size: [672, 704, 736, 768, 800, 800, 800, 800, 832, 864, 896, 928], random_size: True, random_interp: True, keep_ratio: False}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    # clip=False on purpose: out-of-range targets are safe (inverse_sigmoid
+    # clips internally, losses stay finite), and clipping per component would
+    # distort the shape of quads that legitimately extend past the canvas.
+    - NormalizeQuad: {clip: False}
+    - Permute: {}
+  batch_size: 8
+  shuffle: true
+  drop_last: true
+  collate_batch: false
+  use_shared_memory: true
+
+EvalReader:
+  sample_transforms:
+    - Decode: {}
+    - Resize: {target_size: [800, 800], keep_ratio: False, interp: 2}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    - Permute: {}
+  batch_size: 4
+  shuffle: false
+  drop_last: false
+
+TestReader:
+  inputs_def:
+    image_shape: [3, 800, 800]
+  sample_transforms:
+    - Decode: {}
+    - Resize: {target_size: [800, 800], keep_ratio: False, interp: 2}
+    - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
+    - Permute: {}
+  batch_size: 1
+  shuffle: false
+  drop_last: false
+# Model
+architecture: DETR
+with_mask: False
+pretrain_weights: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout_plus-L_pretrained.pdparams
+
+norm_type: sync_bn
+hidden_dim: 256
+use_focal_loss: True
+
+DETR:
+  backbone: PPHGNetV2
+  neck: HybridEncoder
+  transformer: RTDETRTransformerV2
+  detr_head: DINOHeadV2
+  post_process: DocLayoutV3PostProcessV2
+
+PPHGNetV2:
+  arch: 'L'
+  return_idx: [1, 2, 3]
+  freeze_stem_only: true
+  freeze_at: 0
+  freeze_norm: true
+  lr_mult_list: [0., 0.05, 0.05, 0.05, 0.05]
+
+HybridEncoder:
+  hidden_dim: 256
+  use_encoder_idx: [2]
+  num_encoder_layers: 1
+  encoder_layer:
+    name: TransformerLayer
+    d_model: 256
+    nhead: 8
+    dim_feedforward: 1024
+    dropout: 0.
+    activation: 'gelu'
+  expansion: 1.0
+RTDETRTransformerV2:
+  num_queries: 300
+  position_embed_type: sine
+  feat_strides: [8, 16, 32]
+  num_levels: 3
+  nhead: 8
+  num_decoder_layers: 6
+  dim_feedforward: 1024
+  dropout: 0.0
+  activation: relu
+  num_denoising: 100
+  label_noise_ratio: 0.5
+  box_noise_scale: 1.0
+  learnt_init_query: false
+  # 10-D box parameterization: [cx, cy, dx1, dy1, ..., dx4, dy4] -> 4-point quad.
+  num_coords: 10
+  # S2R (Successor -> Relation): rel = a * closure(roor) + b * rel_dir, a gated
+  # residual. a_init=0 makes the start point numerically identical to the
+  # baseline (rel = rel_dir); the closure term is only opened up by the
+  # optimizer when it actually lowers rel_loss, so the worst case degrades to
+  # the baseline. b is fixed at 1 (learnable_b=false) so rel_dir always carries
+  # full weight and the closure can only act as an additive correction.
+  use_s2r: true
+  s2r_steps: 3
+  s2r_damping: 0.5
+  s2r_a_init: 0.0
+  s2r_b_init: 1.0
+  s2r_learnable_b: false
+
+DINOHeadV2:
+  deform_pred: false
+  deform_out: false
+  loss:
+    name: DINOLossV2
+    loss_coeff: {class: 1, bbox: 5, giou: 2, rel_order: 10, roor_order: 3}
+    aux_loss: true
+    use_vfl: true
+    matcher:
+      name: HungarianMatcher
+      matcher_coeff: {class: 2, bbox: 5, giou: 2}
+
+DocLayoutV3PostProcessV2:
+  num_top_queries: 300
+  order_score_thr: 0.5
+  num_coords: 10
+# Optimizer
+LearningRate:
+  base_lr: 0.0004
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 1.0
+    milestones: [100]
+    use_warmup: true
+  - !LinearWarmup
+    start_factor: 0.001
+    steps: 100
+
+OptimizerBuilder:
+  clip_grad_by_norm: 0.1
+  regularizer: false
+  optimizer:
+    type: AdamW
+    weight_decay: 0.0001
+
+# Exporting the model
+export:
+  post_process: true
+  nms: true
+  benchmark: false
+  fuse_conv_bn: false

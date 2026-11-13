@@ -1,0 +1,2 @@
+# paddlex-hps-client
+tritonclient[grpc] == 2.57.0

@@ -34,6 +34,12 @@ def _load_ppdoclayoutv3():
     return PPDocLayoutV3
 
 
+def _load_ppdoclayoutv4():
+    from ..object_detection.modeling import PPDocLayoutV4
+
+    return PPDocLayoutV4
+
+
 register_predictor_binding_map(
     LayoutAnalysisRunnerPredictor,
     {
@@ -52,6 +58,15 @@ register_predictor_binding_map(
                 ("PP-DocLayoutV3",),
                 runner_builder=create_pretrained_dynamic_runner_builder(
                     _load_ppdoclayoutv3,
+                    use_safetensors=True,
+                    convert_from_hf=True,
+                    dtype="float32",
+                ),
+            ),
+            create_binding_registration(
+                ("PP-DocLayoutV4",),
+                runner_builder=create_pretrained_dynamic_runner_builder(
+                    _load_ppdoclayoutv4,
                     use_safetensors=True,
                     convert_from_hf=True,
                     dtype="float32",

@@ -7,7 +7,7 @@ comments: true
 ## I. Overview
 The layout analysis task builds upon layout area detection by further introducing **instance segmentation** and **reading order prediction** capabilities. By analyzing input document images, it not only identifies various layout elements (such as text, charts, images, formulas, paragraph titles, abstracts, references, etc.) and outputs their bounding boxes, but also simultaneously outputs the **precise contour mask** and **reading order index** for each region, providing more complete structural information for document understanding and information extraction workflows.
 
-The layout analysis module currently supports the PP-DocLayoutV3 model, which is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
+The layout analysis module supports PP-DocLayoutV3 and PP-DocLayoutV4. PP-DocLayoutV3 is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
 
 ![layout analysis](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
 
@@ -33,6 +33,13 @@ The layout analysis module currently supports the PP-DocLayoutV3 model, which is
 <td>23.77</td>
 <td>126</td>
 <td>A layout analysis model trained on a self-built dataset containing Chinese and English papers, multi-column magazines, newspapers, PPT, contracts, books, exams, and research reports using DETR. It supports instance segmentation and reading order prediction for 25 layout element categories.</td>
+</tr>
+<tr>
+<td>PP-DocLayoutV4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV4_infer.tar">Inference Model</a></td>
+<td>–</td>
+<td>–</td>
+<td>Predicts quadrilaterals and reading order. Checkpoints with a deformation head also return page deformation parameters.</td>
 </tr>
 </tbody>
 </table>
@@ -74,7 +81,9 @@ The meanings of the parameters are as follows:
   - `score`: Confidence score of the bounding box, a float.
   - `coordinate`: Coordinates of the bounding box, a list of floats in the format <code>[xmin, ymin, xmax, ymax]</code>.
   - `polygon_points`: List of instance segmentation contour points, in the format <code>[[x1, y1], [x2, y2], ...]</code>.
+  - `quad`: Output by PP-DocLayoutV4 only. The predicted quadrilateral, in the format <code>[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]</code> (top-left, top-right, bottom-right, bottom-left). In this case `coordinate` is the bounding rectangle of the quadrilateral.
   - `order`: Reading order index, an integer indicating the reading order of the region in the document (starting from 0).
+- `warp_params`: Output by PP-DocLayoutV4 models that predict page deformation only. The page-level deformation parameters <code>[roll_deg, quadrant_conf, shear_deg, kx, ky]</code>.
 </details>
 
 After running, the visualization result saved by `save_to_img()` is shown below, with each region annotated with its category, confidence score, instance segmentation mask, and reading order index:

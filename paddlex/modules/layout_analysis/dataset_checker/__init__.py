@@ -16,15 +16,17 @@ import os
 from pathlib import Path
 
 from ...base import BaseDatasetChecker
+from ..dataset_spec import get_dataset_spec, requires_segmentation
 from ..model_list import MODELS
 from .dataset_src import check, deep_analyse, split_dataset
 
 
 class LayoutAnalysisDatasetChecker(BaseDatasetChecker):
-    """Dataset Checker for Layout Analysis Model (PP-DocLayoutV3)
+    """Dataset Checker for Layout Analysis Models (PP-DocLayoutV3 / PP-DocLayoutV4)
 
-    PP-DocLayoutV3 is based on instance segmentation models with additional
-    'read_order' field in annotations for document layout analysis.
+    Both models expect COCO annotations with an extra 'read_order' field.
+    PP-DocLayoutV3 additionally needs 'segmentation' (it predicts instance
+    masks); PP-DocLayoutV4 predicts quads and needs no 'segmentation'.
     """
 
     entities = MODELS
@@ -85,7 +87,11 @@ class LayoutAnalysisDatasetChecker(BaseDatasetChecker):
         Returns:
             dict: dataset summary including read_order validation results.
         """
-        return check(dataset_dir, self.output)
+        return check(
+            dataset_dir,
+            self.output,
+            require_segmentation=requires_segmentation(self.global_config.model),
+        )
 
     def analyse(self, dataset_dir: str) -> dict:
         """deep analyse dataset
@@ -112,4 +118,4 @@ class LayoutAnalysisDatasetChecker(BaseDatasetChecker):
         Returns:
             str: dataset type
         """
-        return "COCOInstSegDataset"
+        return get_dataset_spec(self.global_config.model)[0]

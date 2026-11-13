@@ -401,7 +401,7 @@ class PaddleStaticRunner(InferenceRunner):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-                if self._model_name == "PP-DocLayoutV3":
+                if self._model_name in ("PP-DocLayoutV3", "PP-DocLayoutV4"):
                     config.delete_pass("matmul_add_act_fuse_pass")
                 if paddle.is_compiled_with_rocm():
                     config.delete_pass("conv2d_add_act_fuse_pass")

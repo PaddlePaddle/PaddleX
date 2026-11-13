@@ -21,7 +21,7 @@ from pathlib import Path
 from PIL import Image, ImageOps
 
 from .....utils.deps import function_requires_deps
-from .....utils.errors import DatasetFileNotFoundError
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 from .....utils.logging import error, info, warning
 from .utils.visualizer import draw_bbox, draw_mask
 
@@ -67,8 +67,14 @@ def validate_read_order(annotations, image_id):
 
 
 @function_requires_deps("pycocotools")
-def check(dataset_dir, output, sample_num=10):
-    """check dataset with read_order validation"""
+def check(dataset_dir, output, sample_num=10, require_segmentation=True):
+    """check dataset with read_order validation
+
+    Args:
+        require_segmentation (bool): reject annotations without a usable
+            `segmentation` field. True for mask models (PP-DocLayoutV3); False
+            for quad models (PP-DocLayoutV4), which carry no masks at all.
+    """
     from pycocotools.coco import COCO
 
     info(f"Checking dataset: {dataset_dir}")
@@ -105,6 +111,16 @@ def check(dataset_dir, output, sample_num=10):
         img_anns = defaultdict(list)
         for ann in datanno:
             img_anns[ann["image_id"]].append(ann)
+
+        if require_segmentation:
+            missing = [ann["id"] for ann in datanno if not ann.get("segmentation")]
+            if missing:
+                raise CheckFailedError(
+                    f"{len(missing)} annotation(s) in {tag}.json have no usable "
+                    f"`segmentation` field (first ids: {missing[:10]}). This model "
+                    f"predicts instance masks, so every annotation needs one. Use "
+                    f"a quad model such as PP-DocLayoutV4 for mask-free datasets."
+                )
 
         valid_count = 0
         invalid_images = []
@@ -149,7 +165,8 @@ def check(dataset_dir, output, sample_num=10):
             vis_im = draw_bbox(
                 img, coco, img_id
             )  # draw_bbox renders read_order automatically
-            vis_im = draw_mask(vis_im, coco, img_id)
+            if require_segmentation:
+                vis_im = draw_mask(vis_im, coco, img_id)
             vis_path = osp.join(vis_save_dir, file_name)
             Path(vis_path).parent.mkdir(parents=True, exist_ok=True)
             vis_im.save(vis_path)

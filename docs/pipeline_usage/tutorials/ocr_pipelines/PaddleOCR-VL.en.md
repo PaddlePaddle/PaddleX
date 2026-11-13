@@ -36,6 +36,11 @@ This document applies to the PaddleOCR-VL series pipelines in PaddleX. PaddleX r
 <td><code>PP-DocLayoutV3</code></td>
 <td><code>PaddleOCR-VL-1.6-0.9B</code></td>
 </tr>
+<tr>
+<td><code>PaddleOCR-VL-1.8</code></td>
+<td><code>PP-DocLayoutV4</code></td>
+<td><code>PaddleOCR-VL-1.8-0.9B</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -52,21 +57,23 @@ python -m pip install "paddlex[ocr]"
 
 ## 2. Quick Start
 
-The PaddleOCR-VL series pipelines support two usage methods: CLI command line and Python API. The CLI method is simpler and suitable for quickly verifying functionality, while the Python API method is more flexible and suitable for integration into existing projects. The following examples use `PaddleOCR-VL-1.6` as the primary pipeline.
+The PaddleOCR-VL series pipelines support two usage methods: CLI command line and Python API. The CLI method is simpler and suitable for quickly verifying functionality, while the Python API method is more flexible and suitable for integration into existing projects. The following examples use `PaddleOCR-VL-1.8` as the primary pipeline.
+
+PaddleOCR-VL-1.8 uses PP-DocLayoutV4. Set `use_layout_deform=True` (or `useLayoutDeform` over HTTP) to correct recognition crops when the layout model returns `warp_params`. It defaults to `False`.
 
 ### 2.1 Command Line Usage
 
 ```bash
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 
 # Use --use_doc_orientation_classify to enable document orientation classification
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_orientation_classify True
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_orientation_classify True
 
 # Use --use_doc_unwarping to enable document unwarping module
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_unwarping True
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_unwarping True
 
 # Use --use_layout_detection to enable layout detection
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_layout_detection False
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_layout_detection False
 ```
 
 <details><summary><b>Command line supports more parameters. Click to expand for detailed parameter descriptions</b></summary>
@@ -178,7 +185,7 @@ The following table lists the PaddleOCR-VL series pipeline prediction parameters
 </details>
 <br/>
 
-The inference result will be printed in the terminal. The default output of the PaddleOCR-VL pipeline is as follows:
+The inference result will be printed in the terminal. The following example shows output from PaddleOCR-VL-1.6.
 
 <details><summary> 👉Click to expand</summary>
 <pre>
@@ -197,7 +204,7 @@ The command line method is for quick testing and visualization. In actual projec
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.6")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.8")
 
 output = pipeline.predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png")
 
@@ -213,7 +220,7 @@ For PDF files, each page will be processed individually, and a separate Markdown
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.6")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.8")
 
 output = pipeline.predict(input="./your_pdf_file.pdf")
 
@@ -249,7 +256,7 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>PaddleX pipeline name or path to a pipeline config file. Supported names include <code>PaddleOCR-VL</code>, <code>PaddleOCR-VL-1.5</code>, and <code>PaddleOCR-VL-1.6</code>. A custom YAML file path can also be used.</td>
+<td>PaddleX pipeline name or path to a pipeline config file. Supported names include <code>PaddleOCR-VL</code>, <code>PaddleOCR-VL-1.5</code>, <code>PaddleOCR-VL-1.6</code>, and <code>PaddleOCR-VL-1.8</code>. A custom YAML file path can also be used.</td>
 <td><code>str|None</code></td>
 <td><code>None</code></td>
 </tr>
@@ -762,33 +769,22 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 #### 3.1.1 Using Docker Images
 
-PaddleX provides a vLLM Docker image to quickly start a VLM inference service. For NVIDIA GPUs other than the Blackwell architecture, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`. For Blackwell GPUs, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`.
+PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.19.0 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
 
-Using an NVIDIA GPU other than the Blackwell architecture and `PaddleOCR-VL-1.6-0.9B` as an example:
-
-```bash
-docker run \
-    --rm \
-    --gpus all \
-    --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
-```
-
-For Blackwell GPUs, replace the image above with the dedicated image:
+Using `PaddleOCR-VL-1.8-0.9B` as an example:
 
 ```bash
 docker run \
     --rm \
     --gpus all \
     --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120 \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:paddlex3.8-vllm0.19.0 \
+    paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
 #### 3.1.2 Starting Through PaddleX CLI
 
-VLM server dependencies may differ from the local pipeline client environment, so it is recommended to create a separate virtual environment for the VLM inference service:
+VLM server dependencies may differ from those of the local pipeline client. Create a separate virtual environment for the VLM service. The following vLLM installation command uses CUDA 12.9 on NVIDIA and requires Python 3.10–3.13.
 
 ```bash
 # Create a virtual environment
@@ -796,9 +792,9 @@ python -m venv .venv
 # Activate the environment
 source .venv/bin/activate
 # Install PaddleX
-python -m pip install "paddlex[ocr]"
+python -m pip install paddlex
 # Install the vLLM server plugin
-paddlex --install genai-vllm-server
+PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu129 paddlex --install genai-vllm-server
 # Or install the SGLang server plugin
 # paddlex --install genai-sglang-server
 # Or install the FastDeploy server plugin
@@ -808,13 +804,13 @@ paddlex --install genai-vllm-server
 After installation, start the service with `paddlex_genai_server`:
 
 ```bash
-paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend vllm --port 8118
+paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend vllm --port 8118
 
 # For the SGLang backend
-# paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend sglang --port 8118
+# paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend sglang --port 8118
 
 # For the FastDeploy backend
-# paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend fastdeploy --port 8118
+# paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend fastdeploy --port 8118
 ```
 
 The command supports the following parameters:
@@ -865,10 +861,10 @@ paddlex --install genai-client
 Next, obtain the pipeline configuration file:
 
 ```bash
-paddlex --get_pipeline_config PaddleOCR-VL-1.6
+paddlex --get_pipeline_config PaddleOCR-VL-1.8
 ```
 
-The default save path is `PaddleOCR-VL-1.6.yaml`. Modify `SubModules.VLRecognition.genai_config.backend` and `SubModules.VLRecognition.genai_config.server_url` in the config file to match the service, for example:
+The default save path is `PaddleOCR-VL-1.8.yaml`. Modify `SubModules.VLRecognition.genai_config.backend` and `SubModules.VLRecognition.genai_config.server_url` in the config file to match the service, for example:
 
 ```yaml
 SubModules:
@@ -894,7 +890,7 @@ SubModules:
 Then use the modified config file to run the pipeline. For CLI:
 
 ```bash
-paddlex --pipeline PaddleOCR-VL-1.6.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL-1.8.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 ```
 
 Or through the Python API:
@@ -902,7 +898,7 @@ Or through the Python API:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline("PaddleOCR-VL-1.6.yaml")
+pipeline = create_pipeline("PaddleOCR-VL-1.8.yaml")
 
 for res in pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png"):
     res.print()
@@ -927,7 +923,7 @@ paddlex --install serving
 Run the server via PaddleX CLI:
 
 ```bash
-paddlex --serve --pipeline PaddleOCR-VL-1.6
+paddlex --serve --pipeline PaddleOCR-VL-1.8
 ```
 
 You should see information similar to the following:
@@ -939,7 +935,7 @@ INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 ```
 
-If you need to adjust the configuration, such as model paths, batch size, deployment device, or VLM server backend, specify a custom configuration file through `--pipeline`. `PaddleOCR-VL-1.5` and `PaddleOCR-VL-1.6` share the same serving application implementation route internally, but their pipeline configs remain distinct.
+If you need to adjust the configuration, such as model paths, batch size, deployment device, or VLM server backend, specify a custom configuration file through `--pipeline`. `PaddleOCR-VL-1.5`, `PaddleOCR-VL-1.6`, and `PaddleOCR-VL-1.8` share the same serving application implementation route internally, but their pipeline configs remain distinct.
 
 The command-line options related to serving are as follows:
 

@@ -23,6 +23,22 @@ from ...base.utils.subprocess import CompletedProcess
 class DetRunner(BaseRunner):
     """DetRunner"""
 
+    def _evaluation_entrypoint(self, config_path, script):
+        # The adapter runs in each worker, including distributed training, and
+        # never writes to the external PaddleDetection checkout.
+        from ..config_helper import PPDetConfigMixin
+
+        config = PPDetConfigMixin().load_config_literally(config_path)
+        if (
+            config.get("metric") == "DocLayoutV3Metric"
+            and config.get("RTDETRTransformerV2", {}).get("num_coords") == 10
+        ):
+            return [
+                os.path.join(os.path.dirname(__file__), "_doclayout_v4_eval.py"),
+                os.path.join(self.runner_root_path, script),
+            ]
+        return [script]
+
     def train(
         self,
         config_path: str,
@@ -47,7 +63,7 @@ class DetRunner(BaseRunner):
         """
         args, env = self.distributed(device, ips, log_dir=save_dir)
         cli_args = self._gather_opts_args(cli_args)
-        cmd = [*args, "tools/train.py"]
+        cmd = [*args, *self._evaluation_entrypoint(config_path, "tools/train.py")]
         if do_eval:
             cmd.append("--eval")
         cmd.extend(["--config", config_path, *cli_args])
@@ -77,7 +93,13 @@ class DetRunner(BaseRunner):
         """
         args, env = self.distributed(device, ips)
         cli_args = self._gather_opts_args(cli_args)
-        cmd = [*args, "tools/eval.py", "--config", config_path, *cli_args]
+        cmd = [
+            *args,
+            *self._evaluation_entrypoint(config_path, "tools/eval.py"),
+            "--config",
+            config_path,
+            *cli_args,
+        ]
         cp = self.run_cmd(
             cmd, env=env, switch_wdir=True, echo=True, silent=False, capture_output=True
         )
@@ -101,7 +123,15 @@ class DetRunner(BaseRunner):
         """
         # `device` unused
         cli_args = self._gather_opts_args(cli_args)
-        cmd = [self.python, "tools/infer.py", "-c", config_path, *cli_args]
+        # Saving predictions uses the same DocLayoutV3Metric converter as
+        # evaluation, so ordered V4 quads need the process-local adapter here too.
+        cmd = [
+            self.python,
+            *self._evaluation_entrypoint(config_path, "tools/infer.py"),
+            "-c",
+            config_path,
+            *cli_args,
+        ]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
     def export(self, config_path: str, cli_args: list, device: str) -> CompletedProcess:

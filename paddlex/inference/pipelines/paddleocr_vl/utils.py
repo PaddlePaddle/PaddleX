@@ -24,92 +24,19 @@ import numpy as np
 from PIL import Image
 from pydantic import BaseModel, computed_field, model_validator
 
+from ...models.layout_analysis.processors import filter_boxes
+from ..components.common.crop_image_regions import CropByBoxes
 from ..layout_parsing.utils import (
     calculate_overlap_ratio,
     calculate_projection_overlap_ratio,
 )
 
 
-def make_valid(poly):
-    if not poly.is_valid:
-        poly = poly.buffer(0)
-    return poly
-
-
-def calculate_polygon_overlap_ratio(
-    polygon1: List[Tuple[int, int]],
-    polygon2: List[Tuple[int, int]],
-    mode: str = "union",
-) -> float:
-    """
-    Calculate the overlap ratio between two polygons.
-
-    Args:
-        polygon1 (List[Tuple[int, int]]): First polygon represented as a list of points.
-        polygon2 (List[Tuple[int, int]]): Second polygon represented as a list of points.
-        mode (str, optional): Overlap calculation mode. Defaults to "union".
-
-    Returns:
-        float: Overlap ratio value between 0 and 1.
-    """
-    try:
-        from shapely.geometry import Polygon
-    except ImportError:
-        raise ImportError("Please install Shapely library.")
-    poly1 = Polygon(polygon1)
-    poly2 = Polygon(polygon2)
-    poly1 = make_valid(poly1)
-    poly2 = make_valid(poly2)
-    intersection = poly1.intersection(poly2).area
-    union = poly1.union(poly2).area
-    if mode == "union":
-        return intersection / union
-    elif mode == "small":
-        small_area = min(poly1.area, poly2.area)
-        return intersection / small_area
-    elif mode == "large":
-        large_area = max(poly1.area, poly2.area)
-        return intersection / large_area
-    else:
-        raise ValueError(f"Unknown mode: {mode}")
-
-
-def _compute_pairwise_overlap_small(
-    coords: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Compute pairwise overlap ratio (mode="small") and bbox areas.
-
-    This only replaces the numeric overlap/area calculation. The caller keeps
-    the original sequential dropping order because it affects inline formulas.
-    """
-    x1 = coords[:, 0]
-    y1 = coords[:, 1]
-    x2 = coords[:, 2]
-    y2 = coords[:, 3]
-
-    areas = np.abs((x2 - x1) * (y2 - y1))
-
-    inter_x1 = np.maximum(x1[:, None], x1[None, :])
-    inter_y1 = np.maximum(y1[:, None], y1[None, :])
-    inter_x2 = np.minimum(x2[:, None], x2[None, :])
-    inter_y2 = np.minimum(y2[:, None], y2[None, :])
-
-    inter_w = np.maximum(0, inter_x2 - inter_x1)
-    inter_h = np.maximum(0, inter_y2 - inter_y1)
-    inter_area = inter_w * inter_h
-
-    small_area = np.minimum(areas[:, None], areas[None, :])
-    with np.errstate(divide="ignore", invalid="ignore"):
-        overlap = np.where(small_area > 0, inter_area / small_area, 0.0)
-    return overlap, areas
-
-
 def filter_overlap_boxes(
     layout_det_res: Dict[str, List[Dict]], layout_shape_mode: str
 ) -> Dict[str, List[Dict]]:
     """
-    Remove overlapping boxes from layout detection results based on a given overlap ratio.
+    Remove overlapping boxes from layout detection results with ``filter_boxes``.
 
     Args:
         layout_det_res (Dict[str, List[Dict]]): Layout detection result dict containing a 'boxes' list.
@@ -118,59 +45,9 @@ def filter_overlap_boxes(
         Dict[str, List[Dict]]: Filtered dict with overlapping boxes removed.
     """
     layout_det_res_filtered = deepcopy(layout_det_res)
-    boxes = [
-        box for box in layout_det_res_filtered["boxes"] if box["label"] != "reference"
-    ]
-    if not boxes:
-        layout_det_res_filtered["boxes"] = boxes
-        return layout_det_res_filtered
-
-    coords = np.array([box["coordinate"] for box in boxes], dtype=np.float64)
-    widths = coords[:, 2] - coords[:, 0]
-    heights = coords[:, 3] - coords[:, 1]
-    overlap_matrix, areas = _compute_pairwise_overlap_small(coords)
-    dropped_indexes = set()
-
-    for i in range(len(boxes)):
-        if widths[i] < 6 or heights[i] < 6:
-            dropped_indexes.add(i)
-        for j in range(i + 1, len(boxes)):
-            if i in dropped_indexes or j in dropped_indexes:
-                continue
-            overlap_ratio = overlap_matrix[i, j]
-            if (
-                boxes[i]["label"] == "inline_formula"
-                or boxes[j]["label"] == "inline_formula"
-            ):
-                if overlap_ratio > 0.5:
-                    if boxes[i]["label"] == "inline_formula":
-                        dropped_indexes.add(i)
-                    if boxes[j]["label"] == "inline_formula":
-                        dropped_indexes.add(j)
-                    continue
-            if overlap_ratio > 0.7:
-                if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
-                    poly_overlap_ratio = calculate_polygon_overlap_ratio(
-                        boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
-                    )
-                    if poly_overlap_ratio < 0.7:
-                        continue
-                labels = {boxes[i]["label"], boxes[j]["label"]}
-                if labels & {"image", "table", "seal", "chart"} and len(labels) > 1:
-                    if "table" not in labels or labels <= {
-                        "table",
-                        "image",
-                        "seal",
-                        "chart",
-                    }:
-                        continue
-                if areas[i] >= areas[j]:
-                    dropped_indexes.add(j)
-                else:
-                    dropped_indexes.add(i)
-    layout_det_res_filtered["boxes"] = [
-        box for idx, box in enumerate(boxes) if idx not in dropped_indexes
-    ]
+    layout_det_res_filtered["boxes"] = filter_boxes(
+        layout_det_res_filtered["boxes"], layout_shape_mode
+    )
     return layout_det_res_filtered
 
 
@@ -281,17 +158,40 @@ def merge_images(images, aligns="center", layout_shape_mode="auto"):
     return to_np_array(canvas)
 
 
-def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
+def merge_blocks(
+    blocks, non_merge_labels, layout_shape_mode="auto", *, page_correction=None
+):
     """
     Merge blocks based on alignment and overlap logic, except for those with labels in non_merge_labels.
 
     Args:
         blocks (List[Dict]): List of block dicts.
         non_merge_labels (List[str]): Block labels that should not be merged.
+        layout_shape_mode: The shape mode used to crop the blocks.
+        page_correction: Optional page correction for spatial comparisons. The
+            returned blocks keep their original page coordinates.
 
     Returns:
         List[Dict]: List of processed (and possibly merged) blocks.
     """
+    if page_correction is None:
+        merge_boxes = [block["box"] for block in blocks]
+    else:
+        transform = page_correction.homography
+        if transform is None:
+            # Rotate about the origin. A common translation has no effect on
+            # the alignment, gaps, or overlaps used to group the boxes.
+            quarter_turn = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
+            transform = np.linalg.matrix_power(quarter_turn, page_correction.rot90_k)
+        transform = np.asarray(transform, dtype=np.float64)
+        merge_boxes = []
+        for block in blocks:
+            shape = CropByBoxes._region_shape(block, layout_shape_mode, block["box"])
+            points = np.asarray(shape, dtype=np.float64).reshape(-1, 2)
+            projected = np.column_stack((points, np.ones(len(points)))) @ transform.T
+            points = projected[:, :2] / projected[:, 2:3]
+            merge_boxes.append([*points.min(axis=0), *points.max(axis=0)])
+
     blocks_to_merge = []
     non_merge_blocks = {}
     for idx, block in enumerate(blocks):
@@ -316,9 +216,9 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
         else:
             return "center"
 
-    def overlapwith_other_box(block_idx, prev_idx, blocks):
-        prev_bbox = blocks[prev_idx]["box"]
-        block_bbox = blocks[block_idx]["box"]
+    def overlapwith_other_box(block_idx, prev_idx):
+        prev_bbox = merge_boxes[prev_idx]
+        block_bbox = merge_boxes[block_idx]
         x1 = min(prev_bbox[0], block_bbox[0])
         y1 = min(prev_bbox[1], block_bbox[1])
         x2 = max(prev_bbox[2], block_bbox[2])
@@ -330,7 +230,7 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
                 or other_block["label"] not in non_merge_labels
             ):
                 continue
-            other_bbox = other_block["box"]
+            other_bbox = merge_boxes[idx]
             if calculate_overlap_ratio(min_box, other_bbox) > 0:
                 return True
         return False
@@ -343,9 +243,9 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
             continue
 
         prev_idx, prev_block = blocks_to_merge[i - 1]
-        prev_bbox = prev_block["box"]
+        prev_bbox = merge_boxes[prev_idx]
         prev_label = prev_block["label"]
-        block_bbox = block["box"]
+        block_bbox = merge_boxes[idx]
         block_label = block["label"]
 
         iou_h = calculate_projection_overlap_ratio(block_bbox, prev_bbox, "horizontal")
@@ -369,7 +269,7 @@ def merge_blocks(blocks, non_merge_labels, layout_shape_mode="auto"):
                 is_aligned(block_bbox[0], prev_bbox[0])
                 ^ is_aligned(block_bbox[2], prev_bbox[2])
             )
-            and overlapwith_other_box(idx, prev_idx, blocks)
+            and overlapwith_other_box(idx, prev_idx)
         )
         if is_cross:
             align_mode = "center"
@@ -503,7 +403,7 @@ def paint_token(image, box, token_str):
     return image
 
 
-def tokenize_figure_of_table(table_block_img, table_box, figures):
+def tokenize_figure_of_table(table_block_img, table_box, figures, crop_matrix=None):
     """
     Replace figures in a table area with tokens, return new image and token map.
 
@@ -511,6 +411,11 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
         table_block_img (np.ndarray): Table image.
         table_box (list): Table bounding box [x_min, y_min, x_max, y_max].
         figures (List[Dict]): List of figure dicts (must contain 'coordinate', 'path').
+        crop_matrix (np.ndarray, optional): 3x3 map from page pixels to
+            `table_block_img` pixels, set when the crop was geometrically
+            corrected (rotated / rectified).  The token is then painted over the
+            figure's position in the corrected crop.  None: the crop is the plain
+            axis-aligned cut at `table_box`, as before.
 
     Returns:
         Tuple[np.ndarray, Dict[str, str], List[str]]:
@@ -557,12 +462,34 @@ def tokenize_figure_of_table(table_block_img, table_box, figures):
                 figure_x_max - table_x_min,
                 figure_y_max - table_y_min,
             ]
+            if crop_matrix is not None:
+                draw_box = _box_through(
+                    crop_matrix, figure["coordinate"], table_block_img.shape
+                )
+                if draw_box is None:
+                    continue
             token_str = "[F" + str(random_map[figure_id]) + "]"
             table_block_img = paint_token(table_block_img, draw_box, token_str)
             # token_map[token_str] = f'<img src="{figure["path"]}" >'
             token_map[token_str] = figure["path"]
     drop_figures = [f["path"] for i, f in enumerate(figures) if i in drop_idxes]
     return table_block_img, token_map, drop_figures
+
+
+def _box_through(matrix, box, img_shape):
+    """Axis-aligned box of `box`'s corners mapped by `matrix`, clipped to the image."""
+    x1, y1, x2, y2 = [float(v) for v in box]
+    pts = np.array(
+        [[x1, y1, 1], [x2, y1, 1], [x2, y2, 1], [x1, y2, 1]], dtype=np.float64
+    )
+    p = pts @ np.asarray(matrix, dtype=np.float64).T
+    p = p[:, :2] / p[:, 2:3]
+    h, w = img_shape[:2]
+    bx1, by1 = np.clip(p.min(axis=0), 0, [w, h])
+    bx2, by2 = np.clip(p.max(axis=0), 0, [w, h])
+    if bx2 - bx1 < 1 or by2 - by1 < 1:
+        return None
+    return [int(round(bx1)), int(round(by1)), int(round(bx2)), int(round(by2))]
 
 
 def untokenize_figure_of_table(table_res_str, figure_token_map, image_path_to_obj_map):
@@ -1106,6 +1033,73 @@ def crop_margin(img):
     cropped = img[y : y + h, x : x + w]
 
     return cropped
+
+
+def smart_resize(
+    height,
+    width,
+    factor=28,
+    min_pixels=28 * 28 * 130,
+    max_pixels=28 * 28 * 1280,
+):
+    """Compute a resized (height, width) satisfying Qwen2-VL 约束：
+
+    1. 两个边长都能被 ``factor`` 整除；
+    2. 总像素数落在 [min_pixels, max_pixels]；
+    3. 尽量保持原始宽高比。
+
+    与 Qwen2-VL/Qwen2.5-VL 官方处理器的 smart_resize 一致。
+    """
+    if height < factor:
+        width = round((width * factor) / height)
+        height = factor
+    if width < factor:
+        height = round((height * factor) / width)
+        width = factor
+    if max(height, width) / min(height, width) > 200:
+        raise ValueError(
+            "absolute aspect ratio must be smaller than 200, got "
+            f"{max(height, width) / min(height, width)}"
+        )
+    h_bar = round(height / factor) * factor
+    w_bar = round(width / factor) * factor
+    if h_bar * w_bar > max_pixels:
+        beta = math.sqrt((height * width) / max_pixels)
+        h_bar = math.floor(height / beta / factor) * factor
+        w_bar = math.floor(width / beta / factor) * factor
+    elif h_bar * w_bar < min_pixels:
+        beta = math.sqrt(min_pixels / (height * width))
+        h_bar = math.ceil(height * beta / factor) * factor
+        w_bar = math.ceil(width * beta / factor) * factor
+    return h_bar, w_bar
+
+
+def resize_image_to_pixel_range(img, min_pixels, max_pixels, factor=28):
+    """按 Qwen2-VL smart_resize 把 BGR ndarray 缩放到 [min_pixels, max_pixels]。
+
+    用于服务端 Qwen2.5-VL 处理器（如 MonkeyOCR-pro-3B）不能通过
+    mm_processor_kwargs 下发 min_pixels/max_pixels 的场景：改为在客户端
+    预先把过小/过大的裁剪块缩放到合适尺寸，避免小图无法被正确识别。
+    通道顺序（BGR）在缩放中保持不变。
+    """
+    import cv2
+
+    if img is None or img.size == 0:
+        return img
+    h, w = img.shape[:2]
+    if h < 1 or w < 1:
+        return img
+    try:
+        new_h, new_w = smart_resize(
+            h, w, factor=factor, min_pixels=min_pixels, max_pixels=max_pixels
+        )
+    except ValueError:
+        # 极端宽高比（>200）不做缩放，交由服务端处理
+        return img
+    if new_h == h and new_w == w:
+        return img
+    interp = cv2.INTER_AREA if new_h * new_w < h * w else cv2.INTER_CUBIC
+    return cv2.resize(img, (new_w, new_h), interpolation=interp)
 
 
 ANNOT_TEXT_RE = re.compile(r"<\|TEXT_START\|>(.*?)<\|TEXT_END\|>", re.S)

@@ -89,6 +89,7 @@ MKLDNN_BLOCKLIST = [
     "PP-FormulaNet_plus-S",
     "PP-DocLayoutV2",
     "PP-DocLayoutV3",
+    "PP-DocLayoutV4",
 ]
 
 NEWIR_BLOCKLIST = [

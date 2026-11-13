@@ -110,6 +110,10 @@ comments: true
 <td><code>-p</code></td>
 <td>Python 包索引 URL，如不指定默认为 <code>https://pypi.org/simple</code>。</td>
 </tr>
+<tr>
+<td><code>-v</code></td>
+<td>镜像内安装的 PaddleX 版本。默认使用当前提交的 Git tag，构建候选版本时可以显式指定。</td>
+</tr>
 </tbody>
 </table>
 
