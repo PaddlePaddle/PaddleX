@@ -283,8 +283,8 @@ class PaddleStaticRunner(InferenceRunner):
         self.model_dir = Path(model_dir)
         self.model_file_prefix = model_file_prefix
         self._config = resolve_paddle_static_engine_config(model_name, config)
-        # A `run_mode` requested by the caller is never changed. One chosen by
-        # default may be changed once, see `_fall_back_from_mkldnn`.
+        # The fallback never changes a `run_mode` set in `config`. A default one
+        # may be changed once, see `_fall_back_from_mkldnn`.
         self._allow_mkldnn_fallback = (config or {}).get("run_mode") is None
         self.predictor = self._create()
         self.infer = PaddleRunnerChainLegacy(self.predictor)
@@ -313,12 +313,13 @@ class PaddleStaticRunner(InferenceRunner):
         an unimplemented feature in MKLDNN mode. Return whether it was rebuilt.
 
         Some PaddlePaddle releases cannot run some operators through oneDNN with
-        the new IR. For example, PaddlePaddle 3.3.0, 3.3.1 and 3.4.0 fail on any
-        model that has a `nearest_interp` operator, which includes the text
-        detection models (https://github.com/PaddlePaddle/Paddle/issues/77340).
+        the new IR. For example, PaddlePaddle 3.3.0, 3.3.1 and 3.4.0 fail on
+        models that have a `nearest_interp` or `bilinear_interp` operator, such
+        as the text detection models
+        (https://github.com/PaddlePaddle/Paddle/issues/77340).
         The affected models and PaddlePaddle versions cannot be listed reliably
         in advance, so the fallback happens when the error occurs. It applies
-        only when MKLDNN mode was chosen by default, and at most once.
+        only when `config` did not set `run_mode`, and at most once.
         """
         if (
             not self._allow_mkldnn_fallback
@@ -327,14 +328,18 @@ class PaddleStaticRunner(InferenceRunner):
         ):
             return False
         self._allow_mkldnn_fallback = False
+        self._config["run_mode"] = "paddle"
+        predictor = self._create()
+        if self._config["run_mode"] != "paddle":
+            # `_check_run_mode` put MKLDNN mode back (`LaTeX_OCR_rec` on CPU).
+            return False
         reason = (str(exc).strip().splitlines() or [repr(exc)])[0]
         logging.warning(
             f"The model({self._model_name}) failed to run in MKLDNN mode with the installed PaddlePaddle: {reason} "
             "Using `paddle` instead, which may be slower!"
         )
-        self._config["run_mode"] = "paddle"
-        self.predictor = self._create()
-        self.infer = PaddleRunnerChainLegacy(self.predictor)
+        self.predictor = predictor
+        self.infer = PaddleRunnerChainLegacy(predictor)
         return True
 
     def _check_run_mode(self):

@@ -167,9 +167,10 @@ def test_other_errors_in_mkldnn_mode_are_not_swallowed(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "run_mode, device_type", [("paddle", "cpu"), ("paddle", "gpu"), ("trt_fp32", "gpu")]
+    "run_mode, device_type",
+    [("paddle", "cpu"), ("paddle", "gpu"), ("trt_fp32", "gpu"), ("mkldnn", "gpu")],
 )
-def test_unimplemented_error_outside_mkldnn_mode_is_raised(
+def test_unimplemented_error_outside_mkldnn_mode_on_cpu_is_raised(
     monkeypatch, run_mode, device_type
 ):
     runner, created, warnings = _make_runner(
@@ -202,6 +203,34 @@ def test_fallback_is_tried_only_once(monkeypatch):
         runner(X)
     assert len(created) == 2
     assert len(warnings) == 1
+
+
+def test_no_fallback_when_the_run_mode_check_restores_mkldnn(monkeypatch):
+    """`_check_run_mode` forces MKLDNN mode for `LaTeX_OCR_rec` on CPU."""
+    error = NotImplementedError(ONEDNN_ERROR)
+    runner, created, warnings = _make_runner(
+        monkeypatch, run_mode="mkldnn", errors=[error, error]
+    )
+    fake_create = PaddleStaticRunner._create
+
+    def create_forcing_mkldnn(self):
+        self._config["run_mode"] = "mkldnn"
+        return fake_create(self)
+
+    monkeypatch.setattr(PaddleStaticRunner, "_create", create_forcing_mkldnn)
+
+    with pytest.raises(
+        NotImplementedError, match="ConvertPirAttribute2RuntimeAttribute"
+    ):
+        runner(X)
+    assert len(created) == 2
+    assert runner.predictor is created[0]
+    assert warnings == []
+
+    # The rebuild is not attempted again.
+    with pytest.raises(NotImplementedError):
+        runner(X)
+    assert len(created) == 2
 
 
 def test_exported_model_with_upsample_runs_in_default_cpu_mode(tmp_path):
