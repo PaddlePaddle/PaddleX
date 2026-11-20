@@ -118,7 +118,7 @@ class ClasRunnerPredictor(RunnerPredictor):
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
-            "class_ids": batch_class_ids,
+            "class_ids": list(batch_class_ids),
             "scores": batch_scores,
             "label_names": batch_label_names,
         }
@@ -251,7 +251,7 @@ class ClasTransformersPredictor(TransformersPredictor):
             "input_path": batch_data.input_paths,
             "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
-            "class_ids": indexes,
+            "class_ids": list(indexes),
             "scores": batch_scores,
             "label_names": batch_label_names,
         }
