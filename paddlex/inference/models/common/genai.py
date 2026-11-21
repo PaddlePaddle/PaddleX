@@ -84,7 +84,9 @@ class _AsyncThreadManager:
     event loop.
 
     Thread Safety:
-        - Only `run_async()` and `stop()` are designed to be called from other threads
+        - `start()`, `run_async()` and `stop()` may be called from any thread;
+          `start()` and `stop()` are serialized by a lock, so concurrent callers
+          never create more than one event loop
         - All internal asyncio operations are executed within the event loop thread
         - Uses `run_coroutine_threadsafe()` and `call_soon_threadsafe()` for cross-thread
           communication as recommended by Python documentation
@@ -112,6 +114,10 @@ class _AsyncThreadManager:
         self._event_cleanup_done = threading.Event()
         # Flag to reject new tasks during shutdown
         self._shutting_down = False
+        # Serializes start() and stop(). Without it, threads that call start()
+        # at the same time each see `is_running() == False` (self.loop is only
+        # assigned inside the new thread) and each create an event loop.
+        self._lifecycle_lock = threading.RLock()
 
     def start(self):
         """
@@ -123,6 +129,10 @@ class _AsyncThreadManager:
         The method blocks until the event loop is fully initialized and ready
         to accept tasks (synchronized via threading.Event).
         """
+        with self._lifecycle_lock:
+            self._start_locked()
+
+    def _start_locked(self):
         if self.is_running():
             return
 
@@ -227,6 +237,10 @@ class _AsyncThreadManager:
             mechanisms (run_coroutine_threadsafe, call_soon_threadsafe, Events)
             to communicate with the event loop thread.
         """
+        with self._lifecycle_lock:
+            self._stop_locked(timeout)
+
+    def _stop_locked(self, timeout: float):
         if not self.is_running():
             return
 
@@ -383,12 +397,22 @@ class _AsyncThreadManager:
 
 
 _async_thread_manager = None
+# Guards the creation of the global manager and the lazy start of its loop.
+# The first calls of a process often arrive from several threads at once (for
+# example the VLM worker of a pipeline under concurrent requests); without the
+# lock each of them could start its own event loop, and asyncio primitives
+# shared between the calls then fail with "... is bound to a different event
+# loop".
+_async_manager_lock = threading.Lock()
+_atexit_registered = False
 
 
 def get_async_manager():
     global _async_thread_manager
     if _async_thread_manager is None:
-        _async_thread_manager = _AsyncThreadManager()
+        with _async_manager_lock:
+            if _async_thread_manager is None:
+                _async_thread_manager = _AsyncThreadManager()
     return _async_thread_manager
 
 
@@ -415,11 +439,15 @@ def start_aio_loop():
         The atexit handler calls stop() which performs graceful shutdown,
         waiting for pending tasks to complete before terminating.
     """
+    global _atexit_registered
     manager = get_async_manager()
-    if not manager.is_running():
-        manager.start()
-        # Register graceful shutdown on program exit
-        atexit.register(manager.stop)
+    with _async_manager_lock:
+        if not manager.is_running():
+            manager.start()
+        if not _atexit_registered:
+            # Register graceful shutdown on program exit (once per process)
+            atexit.register(manager.stop)
+            _atexit_registered = True
 
 
 def close_aio_loop(timeout: float = 5.0):
@@ -524,7 +552,20 @@ class GenAIClient(object):
             model_name = run_async(self._get_model_name(), timeout=10)
         self._model_name = model_name
 
-        self._semaphore = asyncio.Semaphore(self._max_concurrency)
+        # Created lazily in the event loop that runs the calls (see
+        # `_get_semaphore`). An asyncio.Semaphore binds to the first loop that
+        # waits on it, so one created here would stay bound to a loop that was
+        # stopped and replaced later.
+        self._semaphore = None
+        self._semaphore_loop = None
+
+    def _get_semaphore(self):
+        # Runs inside the background loop only, so no lock is needed.
+        loop = asyncio.get_running_loop()
+        if self._semaphore is None or self._semaphore_loop is not loop:
+            self._semaphore = asyncio.Semaphore(self._max_concurrency)
+            self._semaphore_loop = loop
+        return self._semaphore
 
     @property
     def openai_client(self):
@@ -533,7 +574,7 @@ class GenAIClient(object):
     @benchmark.timeit_with_options(name="GenAIClientInfer")
     def create_chat_completion(self, messages, *, return_future=False, **kwargs):
         async def _create_chat_completion_with_semaphore(*args, **kwargs):
-            async with self._semaphore:
+            async with self._get_semaphore():
                 return await self._client.chat.completions.create(
                     *args,
                     **kwargs,
