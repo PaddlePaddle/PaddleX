@@ -13,25 +13,25 @@
 # limitations under the License.
 
 from ....utils import logging
-from ....utils.deps import (
-    get_dep_version,
-    is_genai_engine_plugin_available,
-    require_genai_engine_plugin,
-)
+from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
 from ..configs.utils import (
     backend_config_to_args,
     set_config_defaults,
     update_backend_config,
 )
 from ..models import ALL_MODEL_INFO, get_model_components, is_integrated_model_available
+from ._vllm_ocr_batching import (
+    OCR_BATCHED_ARCH,
+    OCR_BATCHED_IMPL,
+    enable_default_vision_batching,
+)
 
 
 def register_models():
     from vllm import ModelRegistry
 
-    vllm_version = get_dep_version("vllm")
-
     if is_genai_engine_plugin_available("vllm-server"):
+        ModelRegistry.register_model(OCR_BATCHED_ARCH, OCR_BATCHED_IMPL)
         for model_name in ALL_MODEL_INFO:
             if (
                 not is_integrated_model_available(model_name, "vllm")
@@ -57,6 +57,11 @@ def run_vllm_server(host, port, model_name, model_dir, config, chat_template_pat
     parser = FlexibleArgumentParser()
     parser = make_arg_parser(parser)
 
+    config = config.copy()
+    if model_name in ALL_MODEL_INFO and is_integrated_model_available(
+        model_name, "vllm"
+    ):
+        enable_default_vision_batching(config, model_dir)
     set_config_defaults(config, {"served-model-name": model_name})
 
     if chat_template_path:

@@ -771,6 +771,8 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.19.0 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
 
+No separate setting is needed for PaddleOCR-VL multi-image encoding when using `paddlex_genai_server`. Models that already batch images keep their existing implementation. For compatible vLLM built-in models that encode images one at a time, PaddleX batches images automatically with FP16/BF16, unquantized weights, TP=1, and vision FlashAttention or Torch SDPA. Single images, incompatible inputs, and explicit model architecture overrides keep the original path. This does not change the installed vLLM version or enable fused RoPE.
+
 Using `PaddleOCR-VL-1.8-0.9B` as an example:
 
 ```bash
