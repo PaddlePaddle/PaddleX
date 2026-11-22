@@ -889,6 +889,8 @@ SubModules:
       max_concurrency: 200
 ```
 
+With either remote configuration, the pipeline submits each region as soon as it is encoded and handles groups with different pixel limits concurrently. With `use_queues` enabled, it also allows a bounded number of VLM batches in flight while returning results in input order. `max_concurrency` still limits concurrent requests per client. This remote scheduling does not apply to local VLMs.
+
 Then use the modified config file to run the pipeline. For CLI:
 
 ```bash
