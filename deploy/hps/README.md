@@ -21,6 +21,22 @@ comments: true
 
 如需了解如何使用构建好的镜像与打包好的 SDK 启动服务器和调用服务，可参考 [PaddleX 服务化部署指南](https://paddlepaddle.github.io/PaddleX/latest/pipeline_deploy/serving.html)。
 
+## PaddleOCR-VL 1.8 接入 vLLM 0.33.0
+
+如果为 HPS 单独部署 vLLM 0.33.0 作为 VLM 后端，请把以下配置放在 **VLM 服务**的 `paddlex_genai_server --backend_config` YAML 文件中，而不是 HPS 的 `pipeline_config.yaml`：
+
+```yaml
+# HPS 兼容配置：仅用于受信任的内部客户端。
+trust-request-mm-kwargs: true
+# 可选性能调优；省略时默认是 1。
+prefill-schedule-interval: 8
+```
+
+- **`trust-request-mm-kwargs`**：HPS 会传入逐请求图像预处理参数 `mm_processor_kwargs`。vLLM 0.33.0 默认拒绝该字段，可能表现为 VLM 返回 HTTP 400、HPS 返回 HTTP 500。仅当 VLM 端口只允许受信任的内部客户端访问时启用；不要将启用此项的 VLM 端口直接暴露给不受信任的客户端。
+- **`prefill-schedule-interval`**：调节 VLM 引擎调度 prefill 的间隔，不是 HPS 正常运行的前提。`8` 是 A100 高吞吐场景的可选示例；需要结合负载实测吞吐和尾延迟。上游从 [vLLM 0.24.0](https://github.com/vllm-project/vllm/blob/v0.24.0/vllm/config/scheduler.py) 提供这个参数，但在单引擎（`data-parallel-size=1`）上从 [0.33.0](https://github.com/vllm-project/vllm/blob/v0.33.0/vllm/v1/core/sched/scheduler.py) 才生效。
+
+以上示例不改变默认 vLLM 版本。使用默认的 vLLM 0.19.0 时，不要传入上述两个参数。
+
 ## 1. 镜像构建
 
 本阶段主要介绍镜像构建的整体流程及关键步骤。
