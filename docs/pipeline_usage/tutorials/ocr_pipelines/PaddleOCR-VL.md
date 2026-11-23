@@ -753,6 +753,8 @@ for res in output:
 
 PaddleX 为受支持的 NVIDIA GPU 提供统一的 Linux x86_64 vLLM Docker 镜像。镜像使用 vLLM 0.19.0 和 CUDA 12.9，vLLM 会根据 GPU 选择 attention 后端。在受支持的 Compute Capability 低于 8.0 的 GPU 上，vLLM 会在 BF16 不可用时回退到 FP16。
 
+通过 `paddlex_genai_server` 启动时，PaddleOCR-VL 的多图视觉编码无需单独配置：已有合批的模型保留原生实现；对满足接口要求、仍逐图编码的 vLLM 内置模型，PaddleX 在未量化、单卡张量并行（TP=1）的 FP16/BF16 视觉 FlashAttention 或 Torch SDPA 路径上自动合批。单图、不兼容输入或显式指定模型架构时保留原有路径。这不会改变 vLLM 的安装版本或启用融合 RoPE。
+
 以 `PaddleOCR-VL-1.8-0.9B` 为例，可使用以下命令启动服务：
 
 ```bash
@@ -868,6 +870,8 @@ SubModules:
       server_url: http://127.0.0.1:8118/v1
       max_concurrency: 200
 ```
+
+两种远端配置都会在区域编码完成后立即提交请求，并发处理不同像素约束的区域组。开启已有的 `use_queues` 时，产线还可有界地并发处理多个 VLM 批次，结果仍按输入顺序返回；`max_concurrency` 继续限制每个客户端实际发出的并发请求。本地 VLM 不使用这套远端调度。
 
 之后，可以使用修改好的配置文件进行产线调用。例如通过 CLI 调用：
 

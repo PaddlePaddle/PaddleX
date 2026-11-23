@@ -771,6 +771,8 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.19.0 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
 
+No separate setting is needed for PaddleOCR-VL multi-image encoding when using `paddlex_genai_server`. Models that already batch images keep their existing implementation. For compatible vLLM built-in models that encode images one at a time, PaddleX batches images automatically with FP16/BF16, unquantized weights, TP=1, and vision FlashAttention or Torch SDPA. Single images, incompatible inputs, and explicit model architecture overrides keep the original path. This does not change the installed vLLM version or enable fused RoPE.
+
 Using `PaddleOCR-VL-1.8-0.9B` as an example:
 
 ```bash
@@ -886,6 +888,8 @@ SubModules:
       server_url: http://127.0.0.1:8118/v1
       max_concurrency: 200
 ```
+
+With either remote configuration, the pipeline submits each region as soon as it is encoded and handles groups with different pixel limits concurrently. With `use_queues` enabled, it also allows a bounded number of VLM batches in flight while returning results in input order. `max_concurrency` still limits concurrent requests per client. This remote scheduling does not apply to local VLMs.
 
 Then use the modified config file to run the pipeline. For CLI:
 

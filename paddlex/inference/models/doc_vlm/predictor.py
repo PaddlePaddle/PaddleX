@@ -607,19 +607,21 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
         futures = []
         image_format = "PNG" if client.backend == "llama-cpp-server" else "JPEG"
         try:
-            specs = self._doc_vlm_genai_build_request_specs(
-                client,
-                data,
-                image_format,
-                max_new_tokens,
-                skip_special_tokens,
-                repetition_penalty,
-                temperature,
-                top_p,
-                min_pixels,
-                max_pixels,
-            )
-            for messages, request_kwargs in specs:
+            # Encode and send one block at a time, so that the server starts on
+            # the first blocks while the rest are still being encoded.
+            for item in data:
+                ((messages, request_kwargs),) = self._doc_vlm_genai_build_request_specs(
+                    client,
+                    [item],
+                    image_format,
+                    max_new_tokens,
+                    skip_special_tokens,
+                    repetition_penalty,
+                    temperature,
+                    top_p,
+                    min_pixels,
+                    max_pixels,
+                )
                 future = client.create_chat_completion(
                     messages,
                     return_future=True,
