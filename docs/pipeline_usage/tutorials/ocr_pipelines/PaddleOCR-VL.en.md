@@ -788,6 +788,8 @@ docker run \
 
 For `PaddleOCR-VL-1.8-0.9B` on NVIDIA CUDA, PaddleX defaults to a 4 GiB KV cache and `max-num-batched-tokens: 32768`. The cache budget is not a limit on total VLM GPU memory. Use `--backend_config` to tune either value. To let vLLM size the cache by GPU memory utilization instead, specify `gpu-memory-utilization` without `kv-cache-memory-bytes` in the YAML file.
 
+For unquantized `PaddleOCR-VL-1.8-0.9B` with BF16 and vision FlashAttention on a single A100 (SM80), set `paddlex-vision-performance: true` in `--backend_config` to opt into fused vision RoPE. This option is off by default and accepts only vLLM `0.19.0` and `0.33.0`. It does not change the installed vLLM version, image batching, or the text decoding path. Leave it off on other versions or GPUs.
+
 VLM server dependencies may differ from those of the local pipeline client. Create a separate virtual environment for the VLM service. The following vLLM installation command uses CUDA 12.9 on NVIDIA and requires Python 3.10–3.13.
 
 ```bash
