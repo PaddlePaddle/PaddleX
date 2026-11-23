@@ -13,6 +13,21 @@
 # limitations under the License.
 
 
-from .paddleocr_vl_09b import get_config
+from .paddleocr_vl_09b import get_config as _get_base_config
 
 __all__ = ["get_config"]
+
+
+def get_config(backend):
+    config = _get_base_config(backend)
+    if backend == "vllm":
+        import torch
+
+        if torch.version.cuda is not None:
+            config.update(
+                {
+                    "kv-cache-memory-bytes": 4 << 30,
+                    "max-num-batched-tokens": 32768,
+                }
+            )
+    return config
