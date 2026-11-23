@@ -23,7 +23,8 @@ from ..models import ALL_MODEL_INFO, get_model_components, is_integrated_model_a
 from ._vllm_ocr_batching import (
     OCR_BATCHED_ARCH,
     OCR_BATCHED_IMPL,
-    enable_default_vision_batching,
+    VISION_ROPE_MODELS,
+    configure_vllm_ocr_vision,
 )
 
 
@@ -32,6 +33,8 @@ def register_models():
 
     if is_genai_engine_plugin_available("vllm-server"):
         ModelRegistry.register_model(OCR_BATCHED_ARCH, OCR_BATCHED_IMPL)
+        for arch, impl in VISION_ROPE_MODELS.items():
+            ModelRegistry.register_model(arch, impl)
         for model_name in ALL_MODEL_INFO:
             if (
                 not is_integrated_model_available(model_name, "vllm")
@@ -58,10 +61,13 @@ def run_vllm_server(host, port, model_name, model_dir, config, chat_template_pat
     parser = make_arg_parser(parser)
 
     config = config.copy()
-    if model_name in ALL_MODEL_INFO and is_integrated_model_available(
-        model_name, "vllm"
-    ):
-        enable_default_vision_batching(config, model_dir)
+    configure_vllm_ocr_vision(
+        config,
+        model_name,
+        model_dir,
+        model_name in ALL_MODEL_INFO
+        and is_integrated_model_available(model_name, "vllm"),
+    )
     set_config_defaults(config, {"served-model-name": model_name})
 
     if chat_template_path:

@@ -112,3 +112,57 @@ def test_does_not_replace_a_custom_checkpoint_architecture(batching):
     cfg = {}
     mod.enable_default_vision_batching(cfg, path)
     assert cfg == {}
+
+
+@pytest.mark.parametrize(
+    "version,schema,expected",
+    [
+        ("0.19.0", RaggedInputs, "PaddleXVisionBatchedRoPE"),
+        ("0.33.0", FlatInputs, "PaddleXVisionRoPE"),
+    ],
+)
+def test_rope_alias_preserves_batching_owner(
+    batching, monkeypatch, version, schema, expected
+):
+    mod, vllm_model, path = batching
+    vllm_model.PaddleOCRImagePixelInputs = schema
+    monkeypatch.setitem(sys.modules, "vllm", SimpleNamespace(__version__=version))
+    cfg = {mod.VISION_ROPE_OPTION: True, "hf-overrides": '{"another_setting": 3}'}
+    mod.configure_vllm_ocr_vision(cfg, "PaddleOCR-VL-1.8-0.9B", path, True)
+    assert mod.VISION_ROPE_OPTION not in cfg
+    overrides = json.loads(cfg["hf-overrides"])
+    assert overrides["architectures"] == [expected + NATIVE]
+    assert overrides["another_setting"] == 3
+    assert overrides["architectures"][0] in mod.VISION_ROPE_MODELS
+
+
+@pytest.mark.parametrize("value", [None, "true", 1])
+def test_rope_option_requires_yaml_boolean(batching, value):
+    mod, _, path = batching
+    with pytest.raises(ValueError, match="YAML boolean"):
+        mod.configure_vllm_ocr_vision(
+            {mod.VISION_ROPE_OPTION: value}, "PaddleOCR-VL-1.8-0.9B", path, True
+        )
+
+
+def test_rope_off_keeps_default_batching(batching):
+    mod, _, path = batching
+    cfg = {mod.VISION_ROPE_OPTION: False}
+    mod.configure_vllm_ocr_vision(cfg, "PaddleOCR-VL-1.8-0.9B", path, True)
+    assert json.loads(cfg["hf-overrides"])["architectures"] == [mod.OCR_BATCHED_ARCH]
+
+
+def test_rope_rejects_untested_runtime_and_schema(batching, monkeypatch):
+    mod, model, path = batching
+    vllm = SimpleNamespace(__version__="0.21.0")
+    monkeypatch.setitem(sys.modules, "vllm", vllm)
+    with pytest.raises(ValueError, match="0.19.0 or 0.33.0"):
+        mod.configure_vllm_ocr_vision(
+            {mod.VISION_ROPE_OPTION: True}, "PaddleOCR-VL-1.8-0.9B", path, True
+        )
+    vllm.__version__ = "0.19.0"
+    model.PaddleOCRImagePixelInputs = object
+    with pytest.raises(ValueError, match="image schema"):
+        mod.configure_vllm_ocr_vision(
+            {mod.VISION_ROPE_OPTION: True}, "PaddleOCR-VL-1.8-0.9B", path, True
+        )

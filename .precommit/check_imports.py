@@ -99,6 +99,7 @@ MOD_TO_DEP = {
     "transformers": "transformers",
     "typing_extensions": "typing-extensions",
     "ujson": "ujson",
+    "triton": "triton",
     "uvicorn": "uvicorn",
     "uvloop": "uvloop",
     "vllm": "vllm",
