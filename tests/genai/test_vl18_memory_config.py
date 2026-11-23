@@ -36,7 +36,7 @@ def load_config_module(name):
 
 
 @pytest.mark.parametrize("cuda,xpu", [("12.9", False), (None, True), (None, False)])
-def test_vl18_changes_only_nvidia_vllm_memory_defaults(monkeypatch, cuda, xpu):
+def test_vl18_changes_only_nvidia_vllm_defaults(monkeypatch, cuda, xpu):
     deps = ModuleType("paddlex.utils.deps")
     deps.require_deps = Mock()
     monkeypatch.setitem(sys.modules, "paddlex.utils.deps", deps)
@@ -55,6 +55,7 @@ def test_vl18_changes_only_nvidia_vllm_memory_defaults(monkeypatch, cuda, xpu):
             {
                 "kv-cache-memory-bytes": 4 << 30,
                 "max-num-batched-tokens": 32768,
+                "api-server-count": 2,
             }
         )
     assert config.get_config("vllm") == expected
@@ -90,3 +91,11 @@ def test_explicit_vllm_token_budget_overrides_default():
         {"max-num-batched-tokens": 32768}, {"max_num_batched_tokens": 65536}
     )
     assert utils.backend_config_to_args(config) == ["--max-num-batched-tokens", "65536"]
+
+
+def test_explicit_vllm_frontend_count_overrides_default():
+    utils = load_config_module("utils")
+    config = utils.merge_vllm_backend_config(
+        {"api-server-count": 2}, {"api_server_count": 1}
+    )
+    assert utils.backend_config_to_args(config) == ["--api-server-count", "1"]

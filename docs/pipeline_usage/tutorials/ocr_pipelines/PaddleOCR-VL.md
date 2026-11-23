@@ -768,7 +768,9 @@ docker run \
 
 #### 3.1.2 通过 PaddleX CLI 启动
 
-对 NVIDIA CUDA 上的 `PaddleOCR-VL-1.8-0.9B`，PaddleX 默认使用 4 GiB KV cache 和 `max-num-batched-tokens: 32768`。前者不是 VLM 服务的总显存上限。可通过 `--backend_config` 调整这两个值；若希望让 vLLM 按显存比例自动分配 KV cache，请在 YAML 中指定 `gpu-memory-utilization`，不同时指定 `kv-cache-memory-bytes`。
+对 NVIDIA CUDA 上的 `PaddleOCR-VL-1.8-0.9B`，PaddleX 默认使用 4 GiB KV cache、`max-num-batched-tokens: 32768` 和两个 vLLM HTTP 前端。两个前端共享推理引擎，并不加载两份模型。可通过 `--backend_config` 覆盖，例如设 `api-server-count: 1` 改用单前端。KV 预算不是 VLM 总显存上限；若希望让 vLLM 按显存比例自动分配 KV cache，请在 YAML 中指定 `gpu-memory-utilization`，不同时指定 `kv-cache-memory-bytes`。
+
+PaddleOCR-VL 1.8 的版面检测默认 `SubModules.LayoutDetection.batch_size: 4`。HPS SDK 的 `client/batch_client.py` 向 `/layout-parsing` 提交单页图片时，默认最多同时发出 160 个请求，可通过 `--concurrency` 调整。这是批量客户端参数，不是 HPS 网关并发上限。
 
 使用未量化的 `PaddleOCR-VL-1.8-0.9B` 时，可在 `--backend_config` 中显式设置 `paddlex-vision-performance: true`，启用融合视觉 RoPE。支持单张 A100（SM80，BF16、视觉 FlashAttention，vLLM `0.19.0` 或 `0.33.0`）或单张 V100（SM70，FP16、视觉 Torch SDPA，vLLM `0.19.0`）。该选项默认关闭，不会更换已安装的 vLLM 版本，也不改变多图合批或文本解码路径。其他配置请保持关闭。
 

@@ -786,7 +786,9 @@ docker run \
 
 #### 3.1.2 Starting Through PaddleX CLI
 
-For `PaddleOCR-VL-1.8-0.9B` on NVIDIA CUDA, PaddleX defaults to a 4 GiB KV cache and `max-num-batched-tokens: 32768`. The cache budget is not a limit on total VLM GPU memory. Use `--backend_config` to tune either value. To let vLLM size the cache by GPU memory utilization instead, specify `gpu-memory-utilization` without `kv-cache-memory-bytes` in the YAML file.
+For `PaddleOCR-VL-1.8-0.9B` on NVIDIA CUDA, PaddleX defaults to a 4 GiB KV cache, `max-num-batched-tokens: 32768`, and two vLLM HTTP frontends. The frontends share the inference engine; they do not load separate copies of the model. Use `--backend_config` to override these settings, for example `api-server-count: 1` for a single frontend. The cache budget is not a limit on total VLM GPU memory. To let vLLM size the cache by GPU memory utilization instead, specify `gpu-memory-utilization` without `kv-cache-memory-bytes` in the YAML file.
+
+The default layout detection setting for PaddleOCR-VL 1.8 is `SubModules.LayoutDetection.batch_size: 4`. The HPS SDK's `client/batch_client.py` sends one image per request to `/layout-parsing`, with up to 160 concurrent requests by default. Use `--concurrency` to override this client setting; it is not a gateway limit.
 
 For unquantized `PaddleOCR-VL-1.8-0.9B`, set `paddlex-vision-performance: true` in `--backend_config` to opt into fused vision RoPE. Supported configurations are a single A100 (SM80, BF16, vision FlashAttention, vLLM `0.19.0` or `0.33.0`) or a single V100 (SM70, FP16, vision Torch SDPA, vLLM `0.19.0`). This option is off by default. It does not change the installed vLLM version, image batching, or the text decoding path. Leave it off on other configurations.
 

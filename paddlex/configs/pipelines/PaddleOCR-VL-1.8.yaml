@@ -31,7 +31,7 @@ SubModules:
     module_name: layout_detection
     model_name: PP-DocLayoutV4
     model_dir: null
-    batch_size: 8
+    batch_size: 4
     threshold: 0.3
     layout_nms: True
     layout_unclip_ratio: [1.0, 1.0] 

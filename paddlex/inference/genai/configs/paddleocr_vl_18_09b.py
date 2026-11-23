@@ -28,6 +28,7 @@ def get_config(backend):
                 {
                     "kv-cache-memory-bytes": 4 << 30,
                     "max-num-batched-tokens": 32768,
+                    "api-server-count": 2,
                 }
             )
     return config
