@@ -26,6 +26,7 @@ if not all(map(is_dep_available, ("torch", "vllm", "triton"))):
     raise ImportError("Vision RoPE requires Torch, vLLM, and Triton.")
 else:
     import torch
+    from vllm import __version__ as vllm_version
     from vllm.model_executor.models.paddleocr_vl import (
         PaddleOCRVLDummyInputsBuilder,
         PaddleOCRVLForConditionalGeneration,
@@ -88,18 +89,24 @@ def _vision_support(vllm_config, encoder):
     if (
         torch.version.cuda is None
         or not torch.cuda.is_available()
-        or torch.cuda.get_device_capability() != (8, 0)
-        or vllm_config.model_config.dtype != torch.bfloat16
         or vllm_config.quant_config is not None
         or parallel.tensor_parallel_size != 1
         or parallel.pipeline_parallel_size != 1
         or parallel.data_parallel_size != 1
         or getattr(parallel, "enable_expert_parallel", False)
-        or getattr(getattr(encoder, "attn_backend", None), "name", None) != "FLASH_ATTN"
     ):
-        return (
-            "requires one SM80 GPU, BF16, unquantized weights and vision FlashAttention"
+        return "requires single-GPU CUDA inference with unquantized weights"
+    sm = torch.cuda.get_device_capability()
+    dtype = vllm_config.model_config.dtype
+    backend = getattr(getattr(encoder, "attn_backend", None), "name", None)
+    if not (
+        (sm, dtype, backend) == ((8, 0), torch.bfloat16, "FLASH_ATTN")
+        or (
+            (sm, dtype, backend) == ((7, 0), torch.float16, "TORCH_SDPA")
+            and vllm_version.split("+", 1)[0] == "0.19.0"
         )
+    ):
+        return "requires SM80/BF16/vision FlashAttention or SM70/FP16/vision Torch SDPA on vLLM 0.19.0"
     if not isinstance(encoder, SiglipEncoder) or not (
         _accepts_keywords(
             encoder.forward,
@@ -147,9 +154,11 @@ def _encode_vision_layers(encoder, inputs_embeds, cu_seqlens, image_grid_thw):
         raise ValueError("cu_seqlens cannot be None for SiglipEncoder.")
     if not isinstance(cu_seqlens, torch.Tensor):
         cu_seqlens = torch.tensor(cu_seqlens, dtype=torch.int32)
-    # Computed before the H2D copy: the attention wrappers call `.item()`
-    # on it, which would sync on every layer for a device tensor.
-    max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max()
+    max_seqlen = None
+    if encoder.attn_backend.name == "FLASH_ATTN":
+        # FlashAttention wrappers call `.item()` on this value. Compute it
+        # before the H2D copy when possible; Torch SDPA does not use it.
+        max_seqlen = (cu_seqlens[1:] - cu_seqlens[:-1]).max()
     if cu_seqlens.is_cpu and device.type == "cuda" and not cu_seqlens.is_pinned():
         cu_seqlens = cu_seqlens.pin_memory()
     cu_seqlens = cu_seqlens.to(device=device, non_blocking=True)
@@ -179,7 +188,7 @@ class _PaddleXSiglipEncoder(SiglipEncoder):
         width_position_ids=None,
     ):
         if (
-            inputs_embeds.dtype != torch.bfloat16
+            inputs_embeds.dtype not in (torch.bfloat16, torch.float16)
             or inputs_embeds.ndim != 3
             or inputs_embeds.shape[0] != 1
             or not inputs_embeds.is_cuda
@@ -214,7 +223,10 @@ class _VisionRoPEMixin:
         for layer in encoder.layers:
             layer.self_attn.__class__ = _FusedSiglipAttention
         encoder.__class__ = _PaddleXSiglipEncoder
-        logging.info("PaddleX fused vision RoPE enabled (SM80 BF16)")
+        logging.info(
+            f"PaddleX fused vision RoPE enabled ({vllm_config.model_config.dtype}, "
+            f"{encoder.attn_backend.name})"
+        )
 
 
 @MULTIMODAL_REGISTRY.register_processor(
