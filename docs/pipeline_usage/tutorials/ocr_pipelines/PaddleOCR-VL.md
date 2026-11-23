@@ -768,6 +768,8 @@ docker run \
 
 #### 3.1.2 通过 PaddleX CLI 启动
 
+对 NVIDIA CUDA 上的 `PaddleOCR-VL-1.8-0.9B`，PaddleX 默认使用 4 GiB KV cache 和 `max-num-batched-tokens: 32768`。前者不是 VLM 服务的总显存上限。可通过 `--backend_config` 调整这两个值；若希望让 vLLM 按显存比例自动分配 KV cache，请在 YAML 中指定 `gpu-memory-utilization`，不同时指定 `kv-cache-memory-bytes`。
+
 VLM 服务端依赖可能与本地产线客户端环境存在差异，因此建议为 VLM 推理服务单独创建虚拟环境。以下 vLLM 安装命令适用于使用 CUDA 12.9 的 NVIDIA 环境，需使用 Python 3.10–3.13。
 
 ```bash

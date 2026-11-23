@@ -26,6 +26,19 @@ def update_backend_config(config, overrides):
         config[k] = v
 
 
+def merge_vllm_backend_config(defaults, overrides):
+    overrides = {k.replace("_", "-"): v for k, v in overrides.items()}
+    config = {**defaults, **overrides}
+    cache_key = "kv-cache-memory-bytes"
+    # An explicit memory ratio without a byte budget still asks vLLM to size
+    # the cache automatically. A fixed byte budget takes precedence over it.
+    if config.get(cache_key) is None or (
+        "gpu-memory-utilization" in overrides and cache_key not in overrides
+    ):
+        config.pop(cache_key, None)
+    return config
+
+
 def set_config_defaults(config, defaults):
     for k, v in defaults.items():
         if k not in config:
