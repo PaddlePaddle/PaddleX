@@ -44,6 +44,9 @@ class TextRecTrainer(BaseTrainer):
             )
         if self.train_config.save_interval:
             self.pdx_config.update_save_interval(self.train_config.save_interval)
+        seed = self.train_config.get("seed", None)
+        if seed is not None:
+            self.pdx_config.update_seed(seed)
 
         if self.global_config["model"] == "LaTeX_OCR_rec":
             self.pdx_config.update_dataset(
