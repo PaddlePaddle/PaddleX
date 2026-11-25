@@ -32,6 +32,9 @@ class TextDetTrainer(BaseTrainer):
             )
         if self.train_config.save_interval:
             self.pdx_config.update_save_interval(self.train_config.save_interval)
+        seed = self.train_config.get("seed", None)
+        if seed is not None:
+            self.pdx_config.update_seed(seed)
 
         self.pdx_config.update_dataset(self.global_config.dataset_dir, "TextDetDataset")
         if self.train_config.pretrain_weight_path:

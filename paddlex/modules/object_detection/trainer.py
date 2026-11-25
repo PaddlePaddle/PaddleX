@@ -95,4 +95,13 @@ class DetTrainer(BaseTrainer):
         train_args["dy2st"] = self.train_config.get("dy2st", False)
         # amp support 'O1', 'O2', 'OFF'
         train_args["amp"] = self.train_config.get("amp", "OFF")
+        seed = self.train_config.get("seed", None)
+        if seed is not None:
+            # `--enable_ce` is PaddleDetection's only seeding switch, and it
+            # always seeds paddle/numpy/random with 0.
+            if seed != 0:
+                logging.warning(
+                    f"PaddleDetection only supports seed 0, got Train.seed={seed}."
+                )
+            train_args["enable_ce"] = True
         return train_args
