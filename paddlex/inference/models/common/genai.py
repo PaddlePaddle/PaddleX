@@ -381,12 +381,19 @@ class _AsyncThreadManager:
 
 
 _async_thread_manager = None
+# Guards creating and starting the global manager: the first requests may come
+# from several threads at once (e.g. concurrent block groups or VLM batches),
+# and each unguarded start() would launch its own event loop while all of them
+# share one AsyncOpenAI client.
+_async_thread_manager_lock = threading.Lock()
 
 
 def get_async_manager():
     global _async_thread_manager
     if _async_thread_manager is None:
-        _async_thread_manager = _AsyncThreadManager()
+        with _async_thread_manager_lock:
+            if _async_thread_manager is None:
+                _async_thread_manager = _AsyncThreadManager()
     return _async_thread_manager
 
 
@@ -414,10 +421,11 @@ def start_aio_loop():
         waiting for pending tasks to complete before terminating.
     """
     manager = get_async_manager()
-    if not manager.is_running():
-        manager.start()
-        # Register graceful shutdown on program exit
-        atexit.register(manager.stop)
+    with _async_thread_manager_lock:
+        if not manager.is_running():
+            manager.start()
+            # Register graceful shutdown on program exit
+            atexit.register(manager.stop)
 
 
 def close_aio_loop(timeout: float = 5.0):
