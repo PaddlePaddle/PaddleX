@@ -82,6 +82,18 @@ BASE_DEP_SPECS = _get_base_dep_specs()
 REQUIRED_DEP_SPECS = _get_base_dep_specs(required_only=True)
 
 
+# All of these distributions install the same `cv2` import package, so any one
+# of them satisfies a requirement on another. They are therefore checked by
+# import package instead of by distribution name, which would fail e.g. for an
+# `opencv-python-headless` install where `opencv-contrib-python` is required.
+_OPENCV_DISTRIBUTIONS = (
+    "opencv-contrib-python",
+    "opencv-contrib-python-headless",
+    "opencv-python",
+    "opencv-python-headless",
+)
+
+
 def get_dep_version(dep):
     try:
         return importlib.metadata.version(dep)
@@ -109,6 +121,8 @@ def is_dep_available(dep, /, check_version=False):
         return importlib.util.find_spec("fastdeploy") is not None
     elif dep == "onnxruntime":
         return importlib.util.find_spec("onnxruntime") is not None
+    elif dep in _OPENCV_DISTRIBUTIONS:
+        return importlib.util.find_spec("cv2") is not None
     version = get_dep_version(dep)
     if version is None:
         return False
