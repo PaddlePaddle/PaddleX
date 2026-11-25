@@ -39,6 +39,7 @@ class MarkdownConverter:
         use_seg_flag=False,
         get_seg_flag_func=None,
         imgs_in_doc=None,
+        page_index=None,
     ) -> dict:
         """Convert *blocks* to Markdown.
 
@@ -55,6 +56,11 @@ class MarkdownConverter:
             get_seg_flag_func: ``(block, prev_block) -> (start, end)`` called
                 when *use_seg_flag* is *True*.
             imgs_in_doc: Extra images to include (list of ``{"path", "img"}``).
+            page_index: Zero-based index of this page within a multi-page
+                document. When set to a value greater than ``0`` the emitted
+                image paths are namespaced by page so that pages saved into the
+                same directory do not overwrite each other. ``None`` / ``0`` (a
+                single page) leaves paths unchanged for backward compatibility.
 
         Returns:
             dict with keys ``markdown_texts``, ``markdown_images``, and
@@ -133,4 +139,42 @@ class MarkdownConverter:
             for img in imgs_in_doc:
                 result["markdown_images"][img["path"]] = img["img"]
 
+        # In a multi-page document every page is converted separately but saved
+        # into the same directory. Image filenames are derived from (label, box)
+        # only, so a figure at the same coordinates on different pages resolves
+        # to the same path and later pages silently overwrite earlier ones.
+        # Namespace the image paths of pages after the first by their page index
+        # so they stay unique (page 0 / single-page output is left unchanged).
+        if page_index:
+            result = MarkdownConverter._namespace_page_images(result, page_index)
+
+        return result
+
+    @staticmethod
+    def _namespace_page_images(result: dict, page_index: int) -> dict:
+        """Prefix every ``imgs/`` image path with ``imgs/page_{page_index}/``.
+
+        Rewrites both the ``markdown_images`` keys and the corresponding
+        references inside ``markdown_texts`` so they stay consistent. Paths are
+        rewritten longest-first so no path can match inside another during the
+        text substitution.
+        """
+        images = result.get("markdown_images") or {}
+        if not images:
+            return result
+
+        text = result.get("markdown_texts", "")
+        remapped: dict = {}
+        for path in sorted(images, key=len, reverse=True):
+            img = images[path]
+            if isinstance(path, str) and path.startswith("imgs/"):
+                new_path = f"imgs/page_{page_index}/" + path[len("imgs/") :]
+                if new_path != path:
+                    text = text.replace(path, new_path)
+                remapped[new_path] = img
+            else:
+                remapped[path] = img
+
+        result["markdown_texts"] = text
+        result["markdown_images"] = remapped
         return result
